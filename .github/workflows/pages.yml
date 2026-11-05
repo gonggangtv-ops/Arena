@@ -23,7 +23,7 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p site
-          cp app/src/main/assets/index.html app/src/main/assets/three.min.js app/src/main/assets/peerjs.min.js app/src/main/assets/turn.js site/
+          cp app/src/main/assets/index.html app/src/main/assets/three.min.js app/src/main/assets/gltf.min.js app/src/main/assets/models.js app/src/main/assets/peerjs.min.js app/src/main/assets/turn.js site/
           touch site/.nojekyll
 
       - name: Publish to gh-pages branch
