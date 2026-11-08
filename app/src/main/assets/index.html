@@ -23,6 +23,17 @@ h1{margin:0;font-size:clamp(24px,6.5vh,44px);letter-spacing:2px;color:var(--gold
 .wcard b{display:block;margin:1px 0;font-size:14px;color:#ffe9a8}
 .wcard small{color:var(--mute);font-size:11px;line-height:1.35;display:block}
 .wcard .sks{margin-top:3px;font-size:14px;letter-spacing:2px}
+#fuseOv{z-index:7;justify-content:flex-start;overflow-y:auto;touch-action:pan-y;background:radial-gradient(ellipse at 50% 0%,#2a1e10,#0c0a08 70%)}
+.fsub{max-width:900px;line-height:1.5}
+.fgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;max-width:1120px;width:100%;padding-bottom:12px}
+@media (max-width:900px){.fgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fcard{padding:7px 8px 8px;border-radius:10px;background:linear-gradient(#2a2014,#141009);border:1px solid var(--line);text-align:left;min-width:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+.fcard .fh2{display:flex;align-items:center;gap:7px}.fcard .ic{font-size:26px;line-height:1}
+.fcard b{font-size:14px;color:#ffe9a8;display:block}.fcard .rc{font-size:11.5px;color:#d8c8a0;margin-top:1px}
+.fcard small{display:block;color:var(--mute);font-size:11px;line-height:1.4;margin-top:4px}
+.fcard .sks{margin-top:5px;display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:#e8dcc0}
+.go.fz{border-color:#c89a3a;color:#ffe2a0}
 .looks{display:flex;gap:6px;align-items:center}
 .look{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0;box-shadow:inset 0 -4px 6px rgba(0,0,0,.35)}
 .look.sel{border-color:var(--gold);box-shadow:0 0 10px rgba(230,194,90,.6),inset 0 -4px 6px rgba(0,0,0,.35);transform:scale(1.12)}
@@ -115,9 +126,16 @@ select{font-family:inherit;font-size:14px;padding:6px 8px;border-radius:8px;bord
   <div class="row">
     <button class="go ghost small" id="viewBtn">มุมมอง: 3D</button>
     <button class="go ghost small" id="qBtn">กราฟิก: อัตโนมัติ</button>
+    <button class="go ghost small fz" id="fuseBtn">⚒️ สูตรหลอมอาวุธ</button>
   </div>
   <div class="msg" id="menuMsg"></div>
-  <div class="tip">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>จอยซ้าย = เดิน · ⚔️ = โจมตี · เดินชนอาวุธเพื่อเก็บ (🔄 เปลี่ยนอาวุธ) · แตะ ＋ อัปสกิล (อัลติเลเวล 6/11/16)</div>
+  <div class="tip">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
+<br>จอยซ้าย = เดิน · ⚔️ = โจมตี · เดินชนอาวุธเพื่อเก็บ (🔄 รับอาวุธ) · แตะ ＋ อัปสกิล (อัลติเลเวล 6/11/16)</div>
+</div>
+<div id="fuseOv" class="ov hidden">
+  <div class="rtop"><button class="go ghost small" id="fuseBack">← กลับ</button><div class="rtitle">⚒️ สูตรหลอมอาวุธ</div><span class="rsp"></span></div>
+  <div class="sub fsub">พกอาวุธ 2 ชนิด (ในมือ + สำรอง) · ครบ <b>10:00</b> จะหลอมรวมเป็นอาวุธใหม่ พร้อมสกิลใหม่ 3 อย่าง · ได้ระดับของชิ้นที่ดีกว่า ถ้าระดับเท่ากันตั้งแต่มหากาพย์ขึ้นไปจะได้สูงขึ้น 1 ขั้น · ธาตุ 🔥 เผาไหม้ ❄️ ทำช้า ⚡ สายฟ้ากระโดด</div>
+  <div class="fgrid" id="fuseGrid"></div>
 </div>
 <div id="rooms" class="ov hidden">
   <div class="rtop"><button class="go ghost small" id="roomsBack">← เมนู</button><div class="rtitle">🏠 ห้องออนไลน์</div><span class="rsp"></span></div>
@@ -177,7 +195,7 @@ select{font-family:inherit;font-size:14px;padding:6px 8px;border-radius:8px;bord
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
-const VER=7;
+const VER=8;
 // ===================== DATA =====================
 const TIERS=[{n:'ธรรมดา',c:'#dcdcdc',m:1,sa:0},{n:'หายาก',c:'#4aa8ff',m:1.17,sa:.08},{n:'มหากาพย์',c:'#b46bff',m:1.36,sa:.16},{n:'ตำนาน',c:'#ffb400',m:1.6,sa:.26},{n:'SSR',c:'#ff3d7f',m:1.9,sa:.38}];
 const HB={hp:610,mp:290,hpR:2.2,mpR:1.5,dmg:45,armor:2,mr:.18,spd:205};
@@ -244,6 +262,50 @@ const SKV={
   xbow:[{dmg:[65,100,135,170]},{dmg:[25,40,55,70],root:[1,1.15,1.3,1.45]},{dmg:[36,54,72],stun:[.5,.65,.8]}],
   storm:[{dmg:[74,118,162,206],n:[3,3,4,4]},{dmg:[18,27,36,45]},{dmg:[46,70,94],stun:[.6,.8,1]}]
 };
+// ===================== WEAPON FUSION =====================
+// Carry two different weapons; once the match clock passes 10:00 they fuse into one of these (new skills, better stats).
+// Recipe = the two weapons' families: M melee · R ranged · S spell (the spell's element flavours the result).
+const FUSE_AT=600;
+const WCAT={sword:'M',axe:'M',dagger:'M',gsword:'M',bow:'R',xbow:'R',fire:'S',frost:'S',storm:'S'};
+const CATN={M:'อาวุธประชิด',R:'อาวุธยิงไกล',S:'คทาเวท'};
+const ELEM={fire:{c:'#ff7a2a',n:'เพลิง',ic:'🔥',k:2,aoe:'burn',big:'meteor'},frost:{c:'#8fe3ff',n:'เหมันต์',ic:'❄️',k:3,aoe:'blizz',big:'blizz'},storm:{c:'#b9a6ff',n:'อัสนี',ic:'⚡',k:10,aoe:'static',big:'thunder'}};
+const FUSED={};const FK=[];
+(()=>{const tierNames=b=>[b,b+'ชั้นสูง',b+'มหากาพย์',b+'ตำนาน',b+' SSR'];
+  const add=(k,o)=>{o.names=tierNames(o.n);o.fused=1;WEAPONS[k]=o;FUSED[k]=o;FK.push(k)};
+  add('fMM',{n:'ดาบคู่ราชันย์',ic:'👑',arch:'MM',base:'sword',melee:1,range:100,atkT:.84,dmg:1.1,hp:120,armor:3,ls:.08,cleave:.45,crit:.1,critM:1.8,col:'#ffcf6a',glow:'#ff5a3a',
+    desc:'ดาบคู่โจมตีไวหนัก ดูดเลือด พุ่งทะลวงแนวศัตรู เลือดราชันย์บัฟตัวเอง กระโดดประหารฟันสองจังหวะ',rec:['M','M']});
+  add('fMR',{n:'หอกล่าวิญญาณ',ic:'🔱',arch:'MR',base:'gsword',melee:1,range:150,atkT:.88,dmg:1.26,hp:100,spd:.06,crit:.18,critM:1.9,cleave:.3,col:'#7ff0d8',glow:'#3affc8',
+    desc:'หอกระยะประชิดยาว ขว้างหอกทะลุ ก้าวลมพุ่งไปพร้อมคริ พายุวิญญาณหมุนรอบตัว',rec:['M','R']});
+  for(const e of['fire','frost','storm']){const E=ELEM[e];
+    add('fMS_'+e,{n:{fire:'ดาบเพลิงนรก',frost:'ดาบเหมันต์นิรันดร์',storm:'ดาบอัสนีบาต'}[e],ic:{fire:'🌋',frost:'🧊',storm:'🌩️'}[e],arch:'MS',el:e,base:'gsword',melee:1,range:112,atkT:.95,dmg:1.28,hp:130,armor:2,mp:120,mpR:.5,col:E.c,glow:E.c,
+      desc:`ดาบธาตุ${E.n} ฟันติดธาตุ ปล่อยคลื่นดาบ${E.n} ออร่า${E.n}รอบตัว กระโดดถล่มธาตุใส่พื้นที่`,rec:['M','S'],re:e});
+    add('fRS_'+e,{n:{fire:'ธนูสุริยันเพลิง',frost:'ธนูจันทร์เหมันต์',storm:'ธนูวายุอัสนี'}[e],ic:{fire:'☀️',frost:'🌙',storm:'🌪️'}[e],arch:'RS',el:e,base:'bow',melee:0,range:560,atkT:.86,dmg:1.02,pspd:1250,crit:.12,critM:1.7,mp:60,mpR:.3,col:E.c,glow:E.c,
+      desc:`ธนูธาตุ${E.n} ศรติดธาตุ ยิงศรสามทาง บ่อ${E.n}ใส่พื้นที่ ฝนศร${E.n}`,rec:['R','S'],re:e})}
+  add('fRR',{n:'หน้าไม้มังกรคู่',ic:'🐉',arch:'RR',base:'xbow',melee:0,range:580,atkT:.8,dmg:1.08,pspd:1500,crit:.15,critM:1.8,col:'#ffb46a',glow:'#ff7a2a',
+    desc:'หน้าไม้คู่ยิงรัว กับดักระเบิดตรึง ศรมังกรทะลวงทุกสิ่งในแนวยาว',rec:['R','R']});
+  for(const [k,a,b,n,ic] of[['fSS_steam','fire','frost','คทาสุริยันจันทรา','🌗'],['fSS_blaze','fire','storm','คทาพายุเพลิง','🌠'],['fSS_tempest','frost','storm','คทาพายุหิมะอัสนี','🌀']])
+    add(k,{n,ic,arch:'SS',el:a,el2:b,base:a,melee:0,range:520,atkT:.9,dmg:.98,hp:40,magic:1,pspd:900,mp:220,mpR:.8,col:ELEM[a].c,glow:ELEM[b].c,
+      desc:`คทาสองธาตุ ${ELEM[a].n}+${ELEM[b].n} ลูกแก้วคู่ธาตุ ระเบิดสองธาตุรอบตัว พายุสองธาตุถล่มพื้นที่`,rec:['S','S'],re:a+'+'+b});
+  // skills (cd / mana / range per level; ults have 3 levels)
+  const S4=(ic,n,cd,mp,rg)=>({ic,n,cd,mp,range:rg});
+  SK.fMM=[S4('🌪️','พายุดาบคู่',[9,8.5,8,7.5],[60,65,70,75],[420,440,460,480]),S4('🩸','เลือดราชันย์',[16,15,14,13],[60,70,80,90],[0,0,0,0]),S4('👑','ราชันย์ประหาร',[65,55,45],[150,200,250],[600,650,700])];
+  SKV.fMM=[{dmg:[60,95,130,165],slow:[.25,.3,.35,.4]},{sh:[100,160,220,280],as:[.25,.3,.35,.4]},{dmg:[220,330,440],dmg2:[70,105,140],stun:[1,1.2,1.4],r:[260,280,300]}];
+  SK.fMR=[S4('🔱','ขว้างหอกทะลุ',[8,7.5,7,6.5],[55,60,65,70],[650,700,750,800]),S4('💨','ก้าวลม',[12,11,10,9],[50,55,60,65],[420,440,460,480]),S4('🌀','พายุวิญญาณ',[60,52,44],[140,190,240],[300,320,340])];
+  SKV.fMR=[{dmg:[80,125,170,215]},{bs:[40,70,100,130]},{dmg:[30,44,58]}];
+  for(const e of['fire','frost','storm']){const E=ELEM[e];
+    SK['fMS_'+e]=[S4(E.ic,'คลื่นดาบ'+E.n,[8,7.5,7,6.5],[60,65,70,75],[600,620,640,660]),S4('✨','ออร่า'+E.n,[14,13,12,11],[60,70,80,90],[230,230,230,230]),S4({fire:'☄️',frost:'🌨️',storm:'🌩️'}[e],E.n+'ถล่มปฐพี',[65,55,45],[160,210,260],[620,660,700])];
+    SKV['fMS_'+e]=[{dmg:[90,140,190,240]},{dmg:[10,15,20,25]},{dmg:[240,350,460],r:[260,280,300],stun:[.8,1,1.2]}];
+    SK['fRS_'+e]=[S4('🏹','ศร'+E.n+'สามทาง',[7,6.5,6,5.5],[60,65,70,75],[620,620,620,620]),S4('🌀','บ่อ'+E.n,[13,12,11,10],[70,80,90,100],[600,600,600,600]),S4('🌧️','ฝนศร'+E.n,[60,52,44],[160,215,270],[700,700,700])];
+    SKV['fRS_'+e]=[{dmg:[60,95,130,165]},{dmg:[10,15,20,25]},{dmg:[34,50,66],stun:[.6,.8,1]}]}
+  SK.fRR=[S4('🎆','ยิงรัวมังกร',[8,7.5,7,6.5],[60,65,70,75],[600,600,600,600]),S4('💣','กับดักระเบิด',[12,11,10,9],[60,65,70,75],[600,600,600,600]),S4('🐉','ศรมังกรทะลวงฟ้า',[60,52,44],[150,200,250],[1300,1400,1500])];
+  SKV.fRR=[{dmg:[22,34,46,58]},{dmg:[70,105,140,175],root:[1,1.2,1.4,1.6]},{dmg:[300,440,580]}];
+  for(const k of['fSS_steam','fSS_blaze','fSS_tempest']){
+    SK[k]=[S4('🔮','ลูกแก้วคู่ธาตุ',[6.5,6,5.5,5],[70,80,90,100],[700,700,700,700]),S4('💫','ระเบิดสองธาตุ',[12,11,10,9],[80,90,100,110],[260,260,260,260]),S4('🌪️','พายุสองธาตุ',[65,55,45],[180,240,300],[700,700,700])];
+    SKV[k]=[{dmg:[45,70,95,120]},{dmg:[60,92,124,156]},{dmg:[30,44,58],stun:[.8,1,1.2]}]}})();
+const AW=WK.concat(FK);   // every weapon key (network index)
+function fuseKey(a,b){const ca=WCAT[a],cb=WCAT[b];if(!ca||!cb||a===b)return null;const c=[ca,cb].sort().join('');
+  if(c==='MM')return'fMM';if(c==='MR')return'fMR';if(c==='RR')return'fRR';const sp=[a,b].filter(k=>WCAT[k]==='S');
+  if(c==='MS')return'fMS_'+sp[0];if(c==='RS')return'fRS_'+sp[0];const s2=sp.sort().join('+');return s2==='fire+frost'?'fSS_steam':s2==='fire+storm'?'fSS_blaze':'fSS_tempest'}
 const ARMORS=[
   {n:'ชุดผ้าเดินทาง',ic:'👕',c:'#e8e2d0',armor:2,hp:60,mr:.04},
   {n:'เกราะหนัง',ic:'🦺',c:'#6fd46f',armor:4,hp:130,mr:.07},
@@ -288,7 +350,7 @@ const MS=2,WORLD=20000,CX=10000,CY=10000,MAXL=18,TOTAL_HEROES=32,MAX_HUMANS=32,D
 const PHASES=[{w:165,s:84,r:6600},{w:110,s:70,r:4900},{w:88,s:62,r:3500},{w:72,s:55,r:2400},{w:60,s:47,r:1520},{w:50,s:39,r:840},{w:38,s:30,r:360},{w:28,s:28,r:0}];
 const BOT_NAMES=['พายุ','ไฟป่า','เงามืด','สายฟ้า','หมาป่า','นินจา','ทอร์นาโด','เพชฌฆาต','มังกร','ฟีนิกซ์','อสุรา','กระทิง','พยัคฆ์','ราชสีห์','ภูตพราย','นาคา','อัศวินดำ','จิ้งจอก','เหยี่ยว','พรานป่า',
   'ครุฑ','หนุมาน','ยักษ์ทมิฬ','เทพธิดา','จอมขมังเวทย์','นักดาบเงา','ราชันย์','อินทรี','เสือดำ','สิงห์ทอง','วายุ','อัคนี','ธารา','ปฐพี','จันทรา','สุริยา','เพลิงนรก','น้ำแข็ง','ม้าศึก','แมงป่อง'];
-const AOE_KINDS=['spin','judg','cry','line','lotus','rain','boom','nova','meteor','burn','frost','blizz','slam','breath','quake','smoke','crescent','whirl','net','volley','static','thunder'];
+const AOE_KINDS=['spin','judg','cry','line','lotus','rain','boom','nova','meteor','burn','frost','blizz','slam','breath','quake','smoke','crescent','whirl','net','volley','static','thunder','spirit'];
 const AOE_COL={spin:'#ffcf8a',judg:'#ffe27a',cry:'#ff9a5a',line:'#ffb347',lotus:'#ff7ad0',rain:'#9dffc0',boom:'#ff7a2a',nova:'#ff6a1a',meteor:'#ff5a2a',burn:'#ff8a2a',frost:'#8fe3ff',blizz:'#cfefff',slam:'#ff4a4a',breath:'#ff6a1a',quake:'#ffb347',smoke:'#b8b8c8'};
 
 // ===================== UTIL =====================
@@ -384,6 +446,10 @@ const AU={ctx:null,muted:lsGet('ar_mute','0')==='1',
       case 'click':this.tone(800,.04,'square',.05);break;
       case 'mob':this.noise(.1,.15*v,'lowpass',500);break;
       case 'nomana':this.tone(220,.12,'square',.05);break;
+      // weapon fusion: a rising shimmer, then an anvil strike + bright chord
+      case 'fusing':this.tone(220,1.1,'sawtooth',.05*v,880);this.tone(330,1.1,'triangle',.05*v,1320,.1);this.noise(1.1,.08*v,'bandpass',800,3,0,5000);break;
+      case 'fuse':this.noise(.25,.4*v,'bandpass',2600,6);this.tone(1760,.5,'square',.05*v,1700);this.tone(110,.6,'sine',.35*v,55);[523,659,784,1047,1319].forEach((f,i)=>this.tone(f,.7,'triangle',.06*v,0,.08+i*.06,this.echo));break;
+      case 'fusewarn':[784,0,784].forEach((f,i)=>f&&this.tone(f,.5,'sine',.08,0,i*.22,this.echo));this.tone(392,1.2,'triangle',.05,0,.1,this.echo);break;
     }},
   playAt(n,x,y){const L=listener();if(!L)return this.play(n,.6);const d=Math.hypot(x-L.x,y-L.y);this.play(n,clamp(1-d/1300,0,1))},
   schedule(){const c=this.ctx;if(!c||c.state!=='running')return;
@@ -411,7 +477,7 @@ function battleHeat(){if(state!=='play'||!zone)return 0;return zone.st==='shrink
 // ===================== CANVAS / LAYOUT =====================
 const cv=$('c'),ctx=cv.getContext('2d');
 let W=0,H=0,DPR=1,Z=1;const SAFE={l:0,r:0,t:0,b:0};
-const UI={atk:{},sk:[{},{},{}],learn:[{},{},{}],joyHome:{},b:40,mute:{},s:1,swap:null,pot:null,bagBtn:null,bagOpen:false,bagRows:null,mouse:null,potP:-1,potT:0,cancel:null};
+const UI={atk:{},sk:[{},{},{}],learn:[{},{},{}],joyHome:{},b:40,mute:{},s:1,swap:null,pot:null,bagBtn:null,bagOpen:false,bagRows:null,mouse:null,potP:-1,potT:0,cancel:null,wsw:null,wsw2:null,wswT:0};
 const LC=document.createElement('canvas'),lctx=LC.getContext('2d');
 function resize(){
   DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;
@@ -857,7 +923,7 @@ const wdef=u=>u.wk?WEAPONS[u.wk]:FISTS;
 
 function mkUnit(o){return Object.assign({x:0,y:0,r:26,hp:1,maxHp:1,mp:0,maxMp:0,lvl:1,xp:0,dmgB:0,spdB:0,hpB:0,armorB:0,mrB:0,cd:[0,0,0],skl:[0,0,0],pts:0,
   atkCd:0,stunT:0,rootT:0,slowT:0,slowAmt:.4,buffT:0,revealT:0,reviveT:0,atkAnim:0,castAnim:0,dash:null,dead:false,kills:0,fx:0,fy:1,hurtT:0,mvx:0,mvy:0,
-  wk:null,wt:-1,at:-1,look:0,shieldHp:0,shieldT:0,invisT:0,invisSpd:0,bsDmg:0,bsReady:false,critNext:false,spinT:0,spinTick:0,spinDmg:0,lotusT:0,lotusTick:0,lotusDmg:0,lotusR:0,
+  wk:null,wt:-1,wk2:null,wt2:-1,fuseT:0,spinR:0,rapid:null,lsT:0,altE:false,at:-1,look:0,shieldHp:0,shieldT:0,invisT:0,invisSpd:0,bsDmg:0,bsReady:false,critNext:false,spinT:0,spinTick:0,spinDmg:0,lotusT:0,lotusTick:0,lotusDmg:0,lotusR:0,
   leap:null,kb:null,asT:0,asAmt:0,burnT:0,burnDps:0,burnSrc:null,deadT:0,bag:[0,0,0,0],bcd:[0,0,0,0],hotT:0,hotV:0,motT:0,motV:0,spdPT:0,
   hidden:false,inBush:false,wet:false,aegis:false,bonusNext:0,lastDmgT:-99,armorV:0,mr:.15,atkDmg:10,atkCdBase:1,range:60,melee:true,pspd:0,spdBase:180,hpRegen:0,mpRegen:0,
   ai:{t:0,wx:0,wy:0,px:0,py:0,stuckT:0,detT:0},tx:0,ty:0},o)}
@@ -880,7 +946,7 @@ function setupWorld(seed,cfg){
   units=[];UMAP=new Map();projs=[];aoes=[];parts=[];texts=[];swings=[];feedList=[];flies=[];fxq=[];deathOrder=[];
   items=WD.items.map(i=>Object.assign({},i));boxes=(WD.boxes||[]).map(b=>Object.assign({},b,{open:false}));
   for(const m of WD.mobs)addUnit(mkMob(m));
-  genArena(seed,normCfg(cfg),items);buildHide();zid=100000;zWave=null;nightN=0;
+  genArena(seed,normCfg(cfg),items);buildHide();zid=100000;zWave=null;nightN=0;fuseWarn=0;
   gameT=0;shakeA=0;gameOver=false;spectate=null;discovered=new Set();lastNight=false;campT=0;
   announce={txt:'🗡️ เก็บอาวุธใกล้ตัวเพื่อรับสกิล แล้วแตะ ＋ อัปสกิลแรก!',t:6};
   zone={x:ARENA.x,y:ARENA.y,r:ARENA.r,sx:0,sy:0,sr:0,tx:ARENA.x,ty:ARENA.y,tr:PHASES[0].r*ARENA.f,ph:0,st:'wait',t:PHASES[0].w*zTime()};
@@ -982,7 +1048,7 @@ function kill(t,src){
   t.hp=0;
   if(t.hero&&t.aegis){t.aegis=false;t.dead=true;t.reviveT=4;t.dash=null;t.leap=null;burstE(t.x,t.y,'#ffd35a',30);
     emit({t:'f',s:`⚜️ ${t.name} ใช้โล่อมตะ จะฟื้นใน 4 วิ`,v:[t.id]});return}
-  t.dead=true;t.spinT=0;t.lotusT=0;t.leap=null;t.dash=null;t.kb=null;burstE(t.x,t.y,t.def.color||t.def.col,28);fxE('die',{id:t.id,x:t.x|0,y:t.y|0});
+  t.dead=true;t.spinT=0;t.lotusT=0;t.leap=null;t.dash=null;t.kb=null;t.rapid=null;t.fuseT=0;burstE(t.x,t.y,t.def.color||t.def.col,28);fxE('die',{id:t.id,x:t.x|0,y:t.y|0});
   if(t.zombie){if(src&&src.hero){gainXp(src,t.def.xp*1.4*(t.scale||1)+6*src.lvl);zombieLoot(t,src)}sndAt('mob',t.x,t.y);t.deadAt=gameT;return}
   if(t.mob){if(src&&src.hero)gainXp(src,t.def.xp*1.6*(t.scale||1)+8*src.lvl);sndAt('mob',t.x,t.y);
     if(t.boss){const C=WD.castle;const k=C.keep;const fx=k.x+k.w/2,fy=k.y+k.h/2;const tx=lerp(fx,t.x,.45),ty=lerp(fy,t.y,.45);
@@ -1000,6 +1066,7 @@ function kill(t,src){
   if(killer){killer.kills++;gainXp(killer,160+40*t.lvl+60*Math.max(0,t.lvl-killer.lvl));heal(killer,killer.maxHp*.15)}
   dropItem({k:'c',x:t.x-25,y:t.y,n:2,gold:true});
   if(t.wk)dropItem({k:'w',x:t.x+25,y:t.y,wk:t.wk,tier:t.wt});
+  if(t.wk2)dropItem({k:'w',x:t.x+5,y:t.y-30,wk:t.wk2,tier:t.wt2});
   if(t.at>=0)dropItem({k:'r',x:t.x,y:t.y+28,tier:t.at});
   if(MC.ts>1){
     // team game: you are out only when your whole team is down
@@ -1030,9 +1097,10 @@ function proj(u,nx,ny,o){projs.push(Object.assign({x:u.x+nx*(u.r+4),y:u.y+ny*(u.
 function aoe(o){aoes.push(Object.assign({t:0,delay:0,done:false,vis:.35,fxT:0,type:'m'},o))}
 function clampTo(u,p,range){const dx=p.x-u.x,dy=p.y-u.y,d=Math.hypot(dx,dy);if(d<=range)return{x:p.x,y:p.y};return{x:u.x+dx/d*range,y:u.y+dy/d*range}}
 function landSpot(u,p){for(let k=0;k<=12;k++){const t=1-k/12;const q={x:lerp(u.x,p.x,t),y:lerp(u.y,p.y,t)};if(!blockedAt(q,u.r)&&!houseAt(q))return q}return{x:u.x,y:u.y}}
-const SWING_K={sword:0,axe:1,dagger:2,gsword:1};
+const SWING_K={sword:0,axe:1,dagger:2,gsword:1,fMM:0,fMR:2,fMS_fire:1,fMS_frost:1,fMS_storm:1};
+const BK={fire:1,frost:3,storm:10};   // basic-attack projectile kind per element
 function basic(u,ft){
-  if(u.dead||u.stunT>0||u.atkCd>0||u.dash||u.leap||u.spinT>0||u.lotusT>0||u.kb)return false;
+  if(u.dead||u.stunT>0||u.atkCd>0||u.dash||u.leap||u.spinT>0||u.lotusT>0||u.kb||u.fuseT>0)return false;
   const Wp=wdef(u);const t=ft||nearestEnemy(u,u.range+(u.melee?25:70),true);
   let nx=u.fx,ny=u.fy;if(t){const d=dist(u,t)||1;nx=(t.x-u.x)/d;ny=(t.y-u.y)/d;u.fx=nx;u.fy=ny}
   if(u.invisT>0){u.invisT=0;u.bsReady=true}
@@ -1042,24 +1110,30 @@ function basic(u,ft){
   if(u.bsReady&&t){dmg+=u.bsDmg;u.bsReady=false;crit=true;fxE('stab',{x:t.x|0,y:t.y|0})}
   if(!u.melee)u.atkSlowT=.25;
   if(u.melee){
-    const ang=Math.atan2(ny,nx);const sk=u.wk?SWING_K[u.wk]:3;emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:u.wk&&u.wt>=0?TIERS[u.wt].c:'#ffd6a8',k:sk});
+    const ang=Math.atan2(ny,nx);const sk=u.wk?SWING_K[u.wk]:3;emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:Wp.fused?Wp.glow:u.wk&&u.wt>=0?TIERS[u.wt].c:'#ffd6a8',k:sk});
     sndAt(sk===1?'heavy':sk===2?'stab':'swing',u.x,u.y);
-    let dealt=0,hitAny=false;
+    let dealt=0,hitAny=false,first=null;
     for(const o of units){if(o.dead||!isEnemy(u,o))continue;const d=dist(u,o);if(d>u.range+u.r+o.r)continue;
       let da=Math.abs(Math.atan2(o.y-u.y,o.x-u.x)-ang);if(da>Math.PI)da=Math.PI*2-da;if(da>1.1)continue;
       const main=o===t||(!t&&!hitAny);const amt=main?dmg:(Wp.cleave?dmg*Wp.cleave:0);if(amt<=0)continue;
-      dealt+=dealDamage(o,amt,'p',u,false,crit&&main);hitAny=true}
-    if(hitAny){sndAt(crit?'crit':'hit',u.x,u.y);if(Wp.ls)heal(u,dealt*Wp.ls)}
-  }else{const k=u.wk==='fire'?1:u.wk==='frost'?3:u.wk==='xbow'?7:u.wk==='storm'?10:0;proj(u,nx,ny,{spd:u.pspd,r:k===0||k===7?8:k===1?12:11,dmg,type:Wp.magic?'m':'p',crit,kind:k,slow:Wp.chill?1:0,slowAmt:Wp.chill||0,life:(u.range+80)/u.pspd});sndAt(k===0||k===7?'shoot':k===1?'orb':k===10?'blink':'ice',u.x,u.y)}
+      dealt+=dealDamage(o,amt,'p',u,false,crit&&main);hitAny=true;if(main)first=o}
+    if(hitAny){sndAt(crit?'crit':'hit',u.x,u.y);const ls=(Wp.ls||0)+(u.lsT>0?.1:0);if(ls)heal(u,dealt*ls);if(Wp.el&&first)elemHit(u,first,Wp.el,.45)}
+  }else{const F=Wp.fused?Wp:null;let k,el=null;
+    if(F){if(F.arch==='RS'){k=13;el=F.el}else if(F.arch==='RR')k=7;else{u.altE=!u.altE;el=u.altE&&F.el2?F.el2:F.el;k=BK[el]}}
+    else k=u.wk==='fire'?1:u.wk==='frost'?3:u.wk==='xbow'?7:u.wk==='storm'?10:0;
+    const o={spd:u.pspd,r:k===0||k===7||k===13?8:k===1?12:11,dmg,type:Wp.magic?'m':'p',crit,kind:k,slow:Wp.chill?1:0,slowAmt:Wp.chill||0,life:(u.range+80)/u.pspd,el,elP:.45};
+    if(F&&F.arch==='RR'){o.dmg=dmg*.58;for(const s of[-1,1]){const a=Math.atan2(ny,nx)+s*.05;proj(u,Math.cos(a),Math.sin(a),o)}}   // twin crossbows: two bolts a shot
+    else proj(u,nx,ny,o);
+    sndAt(k===0||k===7||k===13?'shoot':k===1?'orb':k===10?'blink':'ice',u.x,u.y)}
   u.atkCd=u.atkCdBase*(u.asT>0?1/(1+u.asAmt):1)*(isHuman(u)?1:1.1);return true;
 }
 // ap = aim point picked by the player (drag the skill button / mouse); without it the skill auto-targets
 function cast(u,i,ap){
-  if(u.dead||u.stunT>0||u.dash||u.leap||u.kb)return false;const L=u.skl[i];if(!L)return false;
+  if(u.dead||u.stunT>0||u.dash||u.leap||u.kb||u.fuseT>0)return false;const L=u.skl[i];if(!L)return false;
   if(!u.wk){if(isHuman(u)&&u.cd[i]<=0){fxTextFor(u.x,u.y-80,'ต้องเก็บอาวุธก่อนจึงใช้สกิลได้','#ffd0a0',1.4,[u.id]);u.cd[i]=1}return false}
   const s=SK[u.wk][i],li=L-1;if(u.cd[i]>0)return false;const cost=s.mp[li];
   if(u.mp<cost){if(isHuman(u))emit({t:'s',n:'nomana',x:0,y:0,g:1,v:[u.id]});return false}
-  if(u.rootT>0&&((u.wk==='sword'&&i!==1)||(u.wk==='dagger'&&i===0)||(u.wk==='bow'&&i===1)))return false;
+  if(u.rootT>0&&((u.wk==='sword'&&i!==1)||(u.wk==='dagger'&&i===0)||(u.wk==='bow'&&i===1)||ROOT_NO[u.wk+i]))return false;
   if((u.spinT>0||u.lotusT>0)&&!(i===1))return false;
   const V=SKV[u.wk][i],A=u.atkDmg,SA=1+spellAmp(u),rngS=s.range[li]||400;
   if(ap&&!(Math.hypot(ap.x-u.x,ap.y-u.y)>8))ap=null;
@@ -1071,7 +1145,7 @@ function cast(u,i,ap){
     case 'sword0':{face();const sp=1400;u.dash={vx:nx*sp,vy:ny*sp,t:Math.min(d+30,rngS)/sp,dmg:V.dmg[li]+.7*A,stun:V.stun[li],hit:new Set(),stop:true};sndAt('dash',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(ny,nx).toFixed(2)});break}
     case 'sword1':u.shieldHp=V.sh[li]+.08*u.maxHp;u.shieldT=4;u.castAnim=.4;sndAt('shield',u.x,u.y);fxE('shield',{id:u.id,x:u.x|0,y:u.y|0});break;
     case 'sword2':{face();const p=landSpot(u,clampTo(u,tg,rngS));u.leap={sx:u.x,sy:u.y,tx:p.x,ty:p.y,t:0,T:.55,dmg:V.dmg[li]+.8*A,stun:V.stun[li],r:V.r[li]};sndAt('leap',u.x,u.y);fxE('leap',{id:u.id,x:p.x|0,y:p.y|0,r:V.r[li]});break}
-    case 'axe0':u.spinT=1.75;u.spinTick=0;u.spinDmg=V.dmg[li]+.32*A;u.atkAnim=0;sndAt('spin',u.x,u.y);fxE('spin',{id:u.id,x:u.x|0,y:u.y|0});break;
+    case 'axe0':u.spinT=1.75;u.spinTick=0;u.spinR=0;u.spinDmg=V.dmg[li]+.32*A;u.atkAnim=0;sndAt('spin',u.x,u.y);fxE('spin',{id:u.id,x:u.x|0,y:u.y|0});break;
     case 'axe1':{u.castAnim=.4;for(const o of units){if(o.dead||!isEnemy(u,o)||dist(u,o)>rngS+o.r*.5)continue;o.slowT=Math.max(o.slowT,2.5);o.slowAmt=Math.max(o.slowT>2.5?o.slowAmt:0,V.slow[li])}
       u.asT=5;u.asAmt=V.as[li];u.buffT=3;sndAt('cry',u.x,u.y);fxE('cry',{id:u.id,x:u.x|0,y:u.y|0,r:rngS});break}
     case 'axe2':{face();const ang=Math.atan2(ny,nx);aoe({x:u.x+nx*20,y:u.y+ny*20,r:rngS,ang,len:rngS,w:V.w,shape:'line',dmg:V.dmg[li]+A,type:'p',owner:u,delay:.45,kind:'line',stun:V.stun[li],big:true});sndAt('heavy',u.x,u.y);break}
@@ -1096,7 +1170,7 @@ function cast(u,i,ap){
     // ---- greatsword ----
     case 'gsword0':{face();u.atkAnim=.3;const ang=Math.atan2(ny,nx);aoe({x:u.x,y:u.y,r:rngS,len:rngS,ang,arc:.95,shape:'cone',dmg:V.dmg[li]+.9*A,type:'p',owner:u,kind:'crescent',slow:1.6,slowAmt:V.slow[li],vis:.4});sndAt('heavy',u.x,u.y);emit({t:'k',a:6,x:u.x|0,y:u.y|0});break}
     case 'gsword1':{u.castAnim=.4;u.spinT=Math.max(u.spinT,.35);u.spinTick=99;aoe({x:u.x,y:u.y,r:rngS,dmg:V.dmg[li]+.6*A,type:'p',owner:u,kind:'whirl',kb:V.kb,stun:.5,vis:.45});sndAt('spin',u.x,u.y);break}
-    case 'gsword2':{face();proj(u,nx,ny,{spd:1050,r:62,dmg:V.dmg[li]+1.1*A,type:'p',kind:6,pierce:1,slow:2,slowAmt:.45,life:rngS/1050});sndAt('heavy',u.x,u.y);sndAt('lance',u.x,u.y);emit({t:'k',a:8,x:u.x|0,y:u.y|0});break}
+    case 'gsword2':{face();proj(u,nx,ny,{spd:1050,r:62,wr:20,dmg:V.dmg[li]+1.1*A,type:'p',kind:6,pierce:1,slow:2,slowAmt:.45,life:rngS/1050});sndAt('heavy',u.x,u.y);sndAt('lance',u.x,u.y);emit({t:'k',a:8,x:u.x|0,y:u.y|0});break}
     // ---- crossbow ----
     case 'xbow0':face();proj(u,nx,ny,{spd:1300,r:12,dmg:V.dmg[li]+.7*A,type:'p',kind:8,boom:130,btype:'p',life:rngS/1300});sndAt('shoot',u.x,u.y);break;
     case 'xbow1':face();proj(u,nx,ny,{spd:1000,r:16,dmg:V.dmg[li]+.2*A,type:'p',kind:9,boom:150,btype:'p',bkind:'net',broot:V.root[li],life:rngS/1000});sndAt('shoot',u.x,u.y);break;
@@ -1109,24 +1183,113 @@ function cast(u,i,ap){
       fxE('chain',{x:u.x|0,y:u.y|0,p:pts});sndAt('lance',t.x,t.y);break}
     case 'storm1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:rngS,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'static',follow:u,followAll:true,dot:3,tick:.5,slow:.6,slowAmt:.35});sndAt('nova',u.x,u.y);break;
     case 'storm2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:310,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'thunder',delay:.3,dot:1.6,tick:.32,endStun:V.stun[li]});sndAt('freeze',p.x,p.y);break}
+    default:if(!FUSED[u.wk]||castF(u,i,li,V,A,SA,rngS,tg,nx,ny,d,ft,ap,face)===false)return false;
   }
   u.mp-=cost;u.cd[i]=s.cd[li]*cdMul(u);return true;
 }
-// ---- equipment ----
-function botWantsWeapon(u,it){if(!u.wk)return 5+it.tier;if(it.wk===u.wk)return it.tier>u.wt?2+it.tier:-1;
+// ===================== FUSED WEAPONS: elements + the 18 new skills =====================
+const ROOT_NO={fMM0:1,fMM2:1,fMR1:1,fMS_fire2:1,fMS_frost2:1,fMS_storm2:1};
+const EL=['fire','frost','storm'];
+const EL_BURST={fire:'nova',frost:'frost',storm:'whirl'},EL_FIELD={fire:'burn',frost:'blizz',storm:'static'},EL_DOT={fire:'burn',frost:'blizz',storm:'thunder'};
+// element riders on hits: fire burns, frost chills, storm arcs to a second enemy. k = strength (basic attacks ~.45, skills 1)
+function elemHit(src,o,el,k){if(!o||o.dead||!el||!src)return;k=k||1;const amp=1+spellAmp(src);
+  if(el==='fire'){const dps=(10+1.1*src.lvl)*k*amp;if(o.burnT<=0||o.burnDps<dps){o.burnDps=dps;o.burnSrc=src}o.burnT=Math.max(o.burnT,2.5)}
+  else if(el==='frost'){const T=1.1+.6*k,s=.16+.16*k;o.slowAmt=Math.max(o.slowT>T?o.slowAmt:0,s);o.slowT=Math.max(o.slowT,T)}
+  else if(el==='storm'){if(Math.random()>.18+.42*k)return;let nb=null,bd=280;for(const q of units){if(q.dead||q===o||!isEnemy(src,q)||Math.abs(q.x-o.x)>bd)continue;const dd=dist(o,q);if(dd<bd){bd=dd;nb=q}}
+    const dm=(8+1.6*src.lvl)*(.4+.6*k)*amp,tg=nb||o;dealDamage(tg,dm,'m',src,true);if(!tg.dead)tg.stunT=Math.max(tg.stunT,.12*k);
+    if(nb)fxE('chain',{x:o.x|0,y:o.y|0,p:[[o.x|0,o.y|0],[nb.x|0,nb.y|0]]});else fxE('hit',{x:o.x|0,y:o.y|0,c:'#c8b4ff'})}}
+function castF(u,i,li,V,A,SA,rngS,tg,nx,ny,d,ft,ap,face){const F=WEAPONS[u.wk],e=F.el,ang=Math.atan2(ny,nx);
+  switch(F.arch+i){
+    // ---- 👑 twin royal swords ----
+    case 'MM0':{face();const sp=1500;u.dash={vx:nx*sp,vy:ny*sp,t:Math.min(d+80,rngS)/sp,dmg:V.dmg[li]+.75*A,stun:0,slow:V.slow[li],hit:new Set(),stop:false};
+      emit({t:'w',id:u.id,a:+ang.toFixed(2),r:150,c:F.glow,k:1});sndAt('dash',u.x,u.y);sndAt('heavy',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+ang.toFixed(2)});break}
+    case 'MM1':u.shieldHp=V.sh[li]+.06*u.maxHp;u.shieldT=4;u.asT=5;u.asAmt=V.as[li];u.buffT=3;u.lsT=5;u.castAnim=.4;sndAt('shield',u.x,u.y);sndAt('cry',u.x,u.y);
+      fxE('royal',{id:u.id,x:u.x|0,y:u.y|0});break;
+    case 'MM2':{face();const p=landSpot(u,clampTo(u,tg,rngS));u.leap={sx:u.x,sy:u.y,tx:p.x,ty:p.y,t:0,T:.5,dmg:V.dmg[li]+.9*A,stun:V.stun[li],r:V.r[li],k2:V.dmg2[li]+.5*A};
+      sndAt('leap',u.x,u.y);fxE('leap',{id:u.id,x:p.x|0,y:p.y|0,r:V.r[li]});break}
+    // ---- 🔱 soul-hunter spear ----
+    case 'MR0':face();proj(u,nx,ny,{spd:1500,r:24,dmg:V.dmg[li]+.85*A,type:'p',kind:11,pierce:1,slow:1.5,slowAmt:.35,life:rngS/1500});sndAt('lance',u.x,u.y);sndAt('heavy',u.x,u.y);break;
+    case 'MR1':{face();const sp=1350;u.dash={vx:nx*sp,vy:ny*sp,t:Math.max(.12,Math.min(d,rngS)/sp),hit:null};u.critNext=true;u.bonusNext=V.bs[li]+.3*A;u.atkCd=0;u.buffT=Math.max(u.buffT,2);
+      sndAt('dash',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+ang.toFixed(2)});fxE('gust',{x:u.x|0,y:u.y|0,a:+ang.toFixed(2)});break}
+    case 'MR2':u.spinT=2.2;u.spinTick=0;u.spinDmg=V.dmg[li]+.3*A;u.spinR=rngS;u.atkAnim=0;aoe({x:u.x,y:u.y,r:rngS,dmg:0,owner:u,kind:'spirit',follow:u,followAll:true,dot:2.2,tick:9});
+      sndAt('spin',u.x,u.y);sndAt('invis',u.x,u.y);break;
+    // ---- element blade ----
+    case 'MS0':face();proj(u,nx,ny,{spd:1150,r:56,wr:18,dmg:V.dmg[li]+.8*A,type:'p',kind:12,el:e,elP:1,pierce:1,life:rngS/1150});sndAt('heavy',u.x,u.y);sndAt(e==='fire'?'orb':e==='frost'?'ice':'lance',u.x,u.y);emit({t:'k',a:5,x:u.x|0,y:u.y|0});break;
+    case 'MS1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:rngS,dmg:(V.dmg[li]+.05*A)*SA,type:'m',owner:u,kind:EL_FIELD[e],follow:u,followAll:true,dot:4,tick:.5,el:e,elP:.6});sndAt(e==='frost'?'frost':'nova',u.x,u.y);break;
+    case 'MS2':{face();const p=landSpot(u,clampTo(u,tg,rngS));u.leap={sx:u.x,sy:u.y,tx:p.x,ty:p.y,t:0,T:.55,dmg:V.dmg[li]+.9*A,stun:V.stun[li],r:V.r[li],el:e};
+      sndAt('leap',u.x,u.y);fxE('leap',{id:u.id,x:p.x|0,y:p.y|0,r:V.r[li]});break}
+    // ---- element bow ----
+    case 'RS0':{face();const hs=new Set();for(let k=-1;k<=1;k++){const a=ang+k*.16;proj(u,Math.cos(a),Math.sin(a),{spd:1300,r:10,dmg:V.dmg[li]+.6*A,type:'p',kind:13,el:e,elP:1,life:rngS/1300,hit:hs})}sndAt('shoot',u.x,u.y);break}
+    case 'RS1':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:220,dmg:(V.dmg[li]+.05*A)*SA,type:'m',owner:u,kind:EL_FIELD[e],dot:4,tick:.5,el:e,elP:.7,slow:.6,slowAmt:.25});sndAt(e==='frost'?'frost':'nova',p.x,p.y);break}
+    case 'RS2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:280,dmg:V.dmg[li]+.15*A,type:'p',owner:u,kind:'rain',dot:3,tick:.3,el:e,elP:.5,endStun:V.stun[li]});
+      aoe({x:p.x,y:p.y,r:260,dmg:0,owner:u,kind:EL_FIELD[e],dot:3,tick:9});sndAt('rain',p.x,p.y);break}
+    // ---- 🐉 twin dragon crossbows ----
+    case 'RR0':{face();const t0=ft||(ap?tg.t:nearestEnemy(u,rngS+60,true));u.rapid={n:6,t:0,nx,ny,dmg:V.dmg[li]+.15*A,rng:rngS,tg:t0||null,side:1};sndAt('shoot',u.x,u.y);break}
+    case 'RR1':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:170,dmg:V.dmg[li]+.35*A,type:'p',owner:u,kind:'boom',delay:.9,root:V.root[li],slow:V.root[li]+1,slowAmt:.4});
+      fxE('trap',{x:p.x|0,y:p.y|0});sndAt('pick',p.x,p.y);break}
+    case 'RR2':face();proj(u,nx,ny,{spd:1700,r:46,dmg:V.dmg[li]+1.2*A,type:'p',kind:14,pierce:1,ghost:1,kbF:650,el:'fire',elP:.8,life:rngS/1700});sndAt('roar',u.x,u.y);sndAt('lance',u.x,u.y);emit({t:'k',a:9,x:u.x|0,y:u.y|0});break;
+    // ---- two-element staff ----
+    case 'SS0':{face();for(const [s,el] of[[-1,F.el],[1,F.el2]]){const a=ang+s*.08;proj(u,Math.cos(a),Math.sin(a),{spd:950,r:17,dmg:V.dmg[li]*SA,type:'m',kind:15,el,elP:1,boom:95,life:rngS/950})}sndAt('orb',u.x,u.y);sndAt('ice',u.x,u.y);break}
+    case 'SS1':{u.castAnim=.4;for(const o of units){if(o.dead||!isEnemy(u,o))continue;const dd=dist(u,o);if(dd>rngS+o.r*.6)continue;dealDamage(o,V.dmg[li]*SA,'m',u);if(o.dead)continue;
+        elemHit(u,o,F.el,.8);elemHit(u,o,F.el2,.8);if(!o.boss&&!o.golem){const kx=(o.x-u.x)/(dd||1),ky=(o.y-u.y)/(dd||1);o.kb={vx:kx*650,vy:ky*650,t:.26};o.dash=null}}
+      for(const el of[F.el,F.el2])aoe({x:u.x,y:u.y,r:rngS,dmg:0,owner:u,kind:EL_BURST[el],fxOnly:true,vis:.45});sndAt('nova',u.x,u.y);emit({t:'k',a:5,x:u.x|0,y:u.y|0});break}
+    case 'SS2':{face();const p=clampTo(u,tg,rngS);let n=0;for(const el of[F.el,F.el2]){aoe({x:p.x,y:p.y,r:320,dmg:V.dmg[li]*SA*.5,type:'m',owner:u,kind:EL_DOT[el],delay:.3,dot:3.5,tick:.35,el,elP:.5,endStun:n++?V.stun[li]:0})}
+      sndAt('freeze',p.x,p.y);sndAt('meteor',p.x,p.y);break}
+    default:return false}
+  return true}
+// twin-crossbow volley: one bolt every 0.09s, re-aimed at the locked target
+function rapidTick(u,dt){const R=u.rapid;if(u.stunT>0||u.kb||u.fuseT>0){u.rapid=null;return}R.t-=dt;
+  while(u.rapid&&R.t<=0){R.t+=.09;let nx=R.nx,ny=R.ny;if(R.tg&&!R.tg.dead&&dist(u,R.tg)<R.rng+120){const d=dist(u,R.tg)||1;nx=(R.tg.x-u.x)/d;ny=(R.tg.y-u.y)/d}
+    R.side=-R.side;const a=Math.atan2(ny,nx)+R.side*.05+rand(-.03,.03);u.fx=nx;u.fy=ny;u.atkAnim=.2;u.atkSlowT=.2;
+    proj(u,Math.cos(a),Math.sin(a),{spd:1600,r:9,dmg:R.dmg,type:'p',kind:8,life:R.rng/1600,boom:60,btype:'p',bkind:'boom'});sndAt('shoot',u.x,u.y);if(--R.n<=0)u.rapid=null}}
+// ---- equipment: a weapon in hand + a backup slot; at 10:00 two different weapons fuse into one ----
+function botWantsWeapon(u,it){if(!u.wk)return 5+it.tier;const fz=!!FUSED[it.wk];
+  if(it.wk===u.wk)return it.tier>u.wt?2+it.tier:-1;
+  if(FUSED[u.wk])return fz&&it.tier>u.wt?1+it.tier-u.wt:-1;   // already fused: only a better fused weapon
+  if(fz)return it.tier>=u.wt-1?3+it.tier:-1;                    // a fused weapon on the ground beats base gear
+  if(it.wk===u.wk2)return it.tier>u.wt2?1+it.tier-u.wt2:-1;
+  if(!u.wk2)return 2+it.tier*.4;                               // a second kind of weapon: it fuses at 10:00
   const pref=it.wk===u.ai.pref;if(it.tier>u.wt+(pref?0:1))return 1+it.tier-u.wt+(pref?1:0);if(pref&&it.tier>=u.wt&&u.wk!==u.ai.pref)return 1.5;return -1}
-function equipWeapon(u,it){it.dead=true;removeItem(it);
-  if(u.wk)dropItem({k:'w',x:u.x+rand(-25,25),y:u.y+30,wk:u.wk,tier:u.wt,np:{id:u.id,until:gameT+3}});
-  u.wk=it.wk;u.wt=it.tier;u.spinT=0;u.lotusT=0;recalc(u);sndAt('weapon',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:TIERS[it.tier].c});
-  if(isHuman(u))fxTextFor(u.x,u.y-84,`${WEAPONS[it.wk].ic} ${WEAPONS[it.wk].names[it.tier]} (${TIERS[it.tier].n})`,TIERS[it.tier].c,2,[u.id]);
-  if(it.tier===3)emit({t:'f',s:`⭐ ${u.name} ได้อาวุธตำนาน!`,v:isHuman(u)?[u.id]:[]});
-  if(it.tier===4){emit({t:'f',s:`🌈 ${u.name} ถืออาวุธระดับ SSR!`,v:isHuman(u)?[u.id]:[]});fxE('ssr',{id:u.id,x:u.x|0,y:u.y|0})}}
+// where a picked-up weapon goes: main / upMain / upBack / back (empty backup) / lift (fused into hand, old one to the backup) / push (new in hand, hand -> backup, backup dropped)
+function wSlot(u,it){if(!u.wk)return'main';if(it.wk===u.wk)return'upMain';if(it.wk===u.wk2)return'upBack';if(!u.wk2)return FUSED[it.wk]&&!FUSED[u.wk]?'lift':'back';return'push'}
+const wName=(k,t)=>`${WEAPONS[k].ic} ${WEAPONS[k].names[Math.max(0,t)]}`;
+function equipWeapon(u,it){it.dead=true;removeItem(it);const slot=wSlot(u,it),H=isHuman(u)?[u.id]:null;
+  const drop=(k,t)=>dropItem({k:'w',x:u.x+rand(-25,25),y:u.y+30,wk:k,tier:t,np:{id:u.id,until:gameT+3}});
+  if(slot==='upBack'||slot==='back'){if(slot==='upBack')drop(u.wk2,u.wt2);u.wk2=it.wk;u.wt2=it.tier;sndAt('armor',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:TIERS[it.tier].c});
+    if(H){const fk=!FUSED[u.wk]&&!FUSED[it.wk]?fuseKey(u.wk,it.wk):null;fxTextFor(u.x,u.y-84,`🎒 อาวุธสำรอง: ${wName(it.wk,it.tier)}`,TIERS[it.tier].c,2,H);
+      if(fk&&gameT<FUSE_AT)fxTextFor(u.x,u.y-110,`⚒️ นาที 10 จะหลอมเป็น ${WEAPONS[fk].ic} ${WEAPONS[fk].n}`,WEAPONS[fk].col,2.6,H)}
+    return}
+  if(slot==='upMain')drop(u.wk,u.wt);else if(slot==='push'){drop(u.wk2,u.wt2);u.wk2=u.wk;u.wt2=u.wt}else if(slot==='lift'){u.wk2=u.wk;u.wt2=u.wt}
+  u.wk=it.wk;u.wt=it.tier;u.spinT=0;u.lotusT=0;u.rapid=null;recalc(u);sndAt('weapon',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:TIERS[it.tier].c});
+  if(H)fxTextFor(u.x,u.y-84,`${wName(it.wk,it.tier)} (${TIERS[it.tier].n})`,TIERS[it.tier].c,2,H);
+  if(it.tier===3)emit({t:'f',s:`⭐ ${u.name} ได้อาวุธตำนาน!`,v:H||[]});
+  if(it.tier===4){emit({t:'f',s:`🌈 ${u.name} ถืออาวุธระดับ SSR!`,v:H||[]});fxE('ssr',{id:u.id,x:u.x|0,y:u.y|0})}}
+// swap the weapon in hand with the backup (T key / tap the weapon portrait)
+function swapWeapons(u){if(!u||u.dead||!u.wk2||u.fuseT>0||u.leap||u.dash)return false;const k=u.wk,t=u.wt;u.wk=u.wk2;u.wt=u.wt2;u.wk2=k;u.wt2=t;
+  u.spinT=0;u.lotusT=0;u.rapid=null;recalc(u);u.atkCd=Math.max(u.atkCd,.3);sndAt('weapon',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:TIERS[Math.max(0,u.wt)].c});
+  if(isHuman(u))fxTextFor(u.x,u.y-84,'🔁 '+wName(u.wk,u.wt),TIERS[Math.max(0,u.wt)].c,1.4,[u.id]);return true}
+// ---- fusion ----
+const canFuse=u=>!!(u.wk&&u.wk2&&!FUSED[u.wk]&&!FUSED[u.wk2]&&fuseKey(u.wk,u.wk2));
+const fuseTier=(a,b)=>Math.min(4,Math.max(a,b)+(a===b&&a>=2?1:0));
+function startFuse(u){u.fuseT=1.2;u.rapid=null;fxE('fusing',{id:u.id,x:u.x|0,y:u.y|0,a:AW.indexOf(u.wk),b:AW.indexOf(u.wk2)});sndAt('fusing',u.x,u.y);
+  if(isHuman(u))fxTextFor(u.x,u.y-96,'⚒️ กำลังหลอมอาวุธ…','#ffd27a',1.4,[u.id],1)}
+function fuseNow(u){u.fuseT=0;if(!canFuse(u))return;const a=u.wk,b=u.wk2,fk=fuseKey(a,b),t=fuseTier(u.wt,u.wt2),F=WEAPONS[fk];
+  u.wk=fk;u.wt=t;u.wk2=null;u.wt2=-1;u.spinT=0;u.lotusT=0;u.cd=[0,0,0];recalc(u);u.mp=u.maxMp;heal(u,u.maxHp*.3);
+  fxE('fuse',{id:u.id,x:u.x|0,y:u.y|0,w:AW.indexOf(fk),tr:t});sndAt('fuse',u.x,u.y);emit({t:'k',a:8,x:u.x|0,y:u.y|0});
+  if(isHuman(u)){emit({t:'f',s:`⚒️ ${u.name} ${WEAPONS[a].ic}+${WEAPONS[b].ic} → ${F.ic} ${F.names[t]}`,v:[u.id]});emit({t:'a',s:`⚒️ หลอมสำเร็จ! ${F.ic} ${F.names[t]}`,d:4,v:[u.id]});
+    fxTextFor(u.x,u.y-96,`${F.ic} ${F.n}`,F.col,2.4,[u.id],1)}
+  if(t===4)fxE('ssr',{id:u.id,x:u.x|0,y:u.y|0})}
+let fuseWarn=0;
+function fuseTick(){if(fuseWarn===0&&gameT>25){fuseWarn=1;emit({t:'f',s:'⚒️ พกอาวุธ 2 ชนิด · นาทีที่ 10 หลอมเป็นอาวุธใหม่'})}
+  if(fuseWarn===1&&gameT>=FUSE_AT-180){fuseWarn=2;emit({t:'f',s:'⚒️ อีก 3 นาทีหลอมอาวุธ · แตะรูปอาวุธเพื่อสลับ'})}
+  if(fuseWarn===2&&gameT>=FUSE_AT-30){fuseWarn=3;emit({t:'a',s:'⚒️ อีก 30 วิหลอมอาวุธ — พกอาวุธ 2 ชนิดไว้!',d:4});emit({t:'s',n:'fusewarn',x:0,y:0,g:1})}
+  if(fuseWarn===3&&gameT>=FUSE_AT){fuseWarn=4;emit({t:'a',s:'⚒️ ถึงเวลาหลอมอาวุธ!',d:3.5});emit({t:'f',s:'⚒️ เริ่มหลอม! ได้ชิ้นที่ 2 เมื่อไหร่หลอมทันที'})}}
 function equipArmor(u,it){it.dead=true;removeItem(it);
   if(u.at>=0)dropItem({k:'r',x:u.x+rand(-25,25),y:u.y+30,tier:u.at,np:{id:u.id,until:gameT+3}});
   u.at=it.tier;recalc(u);sndAt('armor',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:ARMORS[it.tier].c});
   if(isHuman(u))fxTextFor(u.x,u.y-84,`${ARMORS[it.tier].ic} ${ARMORS[it.tier].n}`,ARMORS[it.tier].c,2,[u.id])}
-function pickSwap(u,id){if(!u||u.dead)return;const it=items.find(i=>i.id===id&&!i.dead);if(!it||dist(u,it)>u.r+60)return;if(it.k==='w')equipWeapon(u,it);else if(it.k==='r')equipArmor(u,it)}
-function swapCandidate(u){if(!u||u.dead||!u.wk)return null;let best=null,bd=1e9;for(const it of items){if(it.dead||it.k!=='w'||it.wk===u.wk)continue;const d=dist(u,it);if(d>u.r+52||d>=bd)continue;best=it;bd=d}return best}
+function pickSwap(u,id){if(!u||u.dead||u.fuseT>0)return;const it=items.find(i=>i.id===id&&!i.dead);if(!it||dist(u,it)>u.r+60)return;if(it.k==='w')equipWeapon(u,it);else if(it.k==='r')equipArmor(u,it)}
+function swapCandidate(u){if(!u||u.dead||!u.wk)return null;let best=null,bd=1e9;for(const it of items){if(it.dead||it.k!=='w'||it.wk===u.wk||it.wk===u.wk2)continue;const d=dist(u,it);if(d>u.r+52||d>=bd)continue;best=it;bd=d}return best}
 // ---- house chests: press to open, BOX_RATE chance of loot ----
 const BOX_RATE=.2;
 function boxNear(u){if(!u||u.dead)return null;let best=null,bd=1e9;for(const b of boxes){if(b.open||Math.abs(b.x-u.x)>110||Math.abs(b.y-u.y)>110)continue;const d=dist(u,b);if(d>u.r+62||d>=bd)continue;
@@ -1147,7 +1310,7 @@ function tryPickup(u){
     const H=isHuman(u)?[u.id]:[];
     if(it.k==='c'){it.dead=true;removeItem(it);burstE(it.x,it.y,it.gold?'#ffd35a':'#e0b070',16);sndAt('chest',it.x,it.y);fxE('chest',{x:it.x|0,y:it.y|0,c:it.gold?'#ffd35a':'#e0b070'});
       for(let k=0;k<it.n;k++){const ii=pickW(ITEMS);const b=ii.id==='potion'?0:ii.id==='mana'?1:-1;const bagged=b>=0&&bagAdd(u,b);if(!bagged)applyItem(u,ii);if(H.length)fxTextFor(it.x,it.y-30-k*26,(bagged?'🎒 ':'')+ii.ic+' '+ii.name,'#ffe9a8',1.6,H)}
-      const r=Math.random();if(r<(it.gold?.55:.28))dropItem({k:'w',x:it.x+rand(-30,30),y:it.y+rand(10,30),wk:Math.random()<.5&&u.wk?u.wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier(it.gold?[15,40,35,10]:[50,36,14,0])});
+      const r=Math.random();if(r<(it.gold?.55:.28))dropItem({k:'w',x:it.x+rand(-30,30),y:it.y+rand(10,30),wk:Math.random()<.5&&u.wk&&!FUSED[u.wk]?u.wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier(it.gold?[15,40,35,10]:[50,36,14,0])});
       else if(r<(it.gold?.9:.5))dropItem({k:'r',x:it.x+rand(-30,30),y:it.y+rand(10,30),tier:pickTier(it.gold?[0,20,40,40,0]:[30,40,25,5,0])});
     }else if(it.k==='i'){const ii=ITEM_BY[it.it];const b=ii.id==='potion'?0:ii.id==='mana'?1:-1;
       if(b>=0&&u.bag[b]>=BAG[b].max&&(b===0?u.hp>u.maxHp*.9:u.mp>u.maxMp*.9)){if(H.length&&!(it.hint&&it.hint[u.id])){(it.hint=it.hint||{})[u.id]=1;fxTextFor(it.x,it.y-34,'🎒 กระเป๋าเต็ม','#c9d6d8',1.2,H)}continue}
@@ -1155,9 +1318,9 @@ function tryPickup(u){
     else if(it.k==='p'){const b=clamp(it.b|0,0,BAG.length-1);if(u.bag[b]>=BAG[b].max){if(H.length&&!(it.hint&&it.hint[u.id])){(it.hint=it.hint||{})[u.id]=1;fxTextFor(it.x,it.y-34,'🎒 กระเป๋าเต็ม','#c9d6d8',1.2,H)}continue}
       it.dead=true;removeItem(it);bagAdd(u,b);sndAt('pick',it.x,it.y);if(H.length)fxTextFor(it.x,it.y-30,'🎒 +'+BAG[b].ic+' '+BAG[b].n,'#ffe9a8',1.4,H)}
     else if(it.k==='a'){if(u.aegis)continue;it.dead=true;removeItem(it);u.aegis=true;emit({t:'s',n:'aegis',x:u.x|0,y:u.y|0,g:1});emit({t:'f',s:`⚜️ ${u.name} ได้โล่อมตะ (ฟื้นได้ 1 ครั้ง)`});burstE(u.x,u.y,'#ffe27a',24)}
-    else if(it.k==='w'){
-      if(!u.wk||(it.wk===u.wk&&it.tier>u.wt)||(!H.length&&botWantsWeapon(u,it)>0))equipWeapon(u,it);
-      else if(H.length){it.hint=it.hint||{};if(!it.hint[u.id]){it.hint[u.id]=1;fxTextFor(it.x,it.y-34,it.wk===u.wk?'มีอาวุธนี้ที่ดีกว่าแล้ว':'กดปุ่ม 🔄 เพื่อเปลี่ยนอาวุธ','#c9d6d8',1.4,H)}}}
+    else if(it.k==='w'){const sl=wSlot(u,it);
+      if(H.length?(sl==='main'||sl==='back'||sl==='lift'||sl==='upMain'&&it.tier>u.wt||sl==='upBack'&&it.tier>u.wt2):botWantsWeapon(u,it)>0)equipWeapon(u,it);
+      else if(H.length){it.hint=it.hint||{};if(!it.hint[u.id]){it.hint[u.id]=1;fxTextFor(it.x,it.y-34,sl==='upMain'||sl==='upBack'?'มีอาวุธนี้ที่ดีกว่าแล้ว':'กดปุ่ม 🔄 เพื่อรับอาวุธนี้','#c9d6d8',1.4,H)}}}
     else if(it.k==='r'){
       if(it.tier>u.at)equipArmor(u,it);
       else if(H.length){it.hint=it.hint||{};if(!it.hint[u.id]){it.hint[u.id]=1;fxTextFor(it.x,it.y-34,'มีเกราะที่ดีกว่าแล้ว','#c9d6d8',1.2,H)}}}
@@ -1194,7 +1357,12 @@ function pressPotion(b){UI.potP=b;UI.potT=.18;const me=ME();if(!me||me.dead)retu
 // ---- skill aiming: how each skill is pointed (dir = line/projectile, cone, area = circle at a spot, unit = an enemy near the spot, self = no aim) ----
 const SKA={sword:['dir','self','area'],axe:['self','self','dir'],dagger:['unit','self','self'],bow:['cone','dir','area'],fire:['dir','self','area'],frost:['dir','self','area'],
   gsword:['cone','self','dir'],xbow:['dir','dir','area'],storm:['unit','self','area']};
-function skAim(u,i){if(!u||!u.wk||!u.skl[i])return null;const li=u.skl[i]-1,s=SK[u.wk][i],V=SKV[u.wk][i],k=u.wk+i,t=SKA[u.wk][i];const range=s.range[li]||0;
+// fused weapons by archetype: aim kind, circle radius (V = the skill's own r) and line width per skill slot
+const SKA_F={MM:{t:['dir','self','area'],r:[0,0,'V'],w:[80,0,0]},MR:{t:['dir','dir','self'],r:[0,0,0],w:[48,50,0]},MS:{t:['dir','self','area'],r:[0,0,'V'],w:[112,0,0]},
+  RS:{t:['cone','area','area'],r:[0,220,280],w:[0,0,0]},RR:{t:['dir','area','dir'],r:[0,170,0],w:[40,0,92]},SS:{t:['dir','self','area'],r:[0,0,320],w:[44,0,0]}};
+function skAim(u,i){if(!u||!u.wk||!u.skl[i])return null;const li=u.skl[i]-1,s=SK[u.wk][i],V=SKV[u.wk][i],k=u.wk+i;const range=s.range[li]||0;
+  if(FUSED[u.wk]){const A=SKA_F[WEAPONS[u.wk].arch],t=A.t[i];let r=A.r[i]==='V'?V.r[li]:A.r[i];if(!r&&t==='self')r=range;return{t,range,r,w:A.w[i]||40,arc:t==='cone'?.32:0}}
+  const t=SKA[u.wk][i];
   const r={sword2:V.r&&V.r[li],bow2:260,fire2:V.r&&V.r[li],frost2:330,xbow2:250,storm2:310}[k]||(t==='self'?range:0);
   const w={sword0:70,axe2:V.w,bow1:30,fire0:40,frost0:34,gsword2:124,xbow0:30,xbow1:36}[k]||40;
   return{t,range,r,w,arc:k==='gsword0'?.95:k==='bow0'?.3:0}}
@@ -1211,6 +1379,8 @@ function finishAim(){const st=aimSt;aimSt=null;if(!st)return;const C=UI.cancel;
 // screen -> world (for the mouse on PC)
 function screenToWorld(x,y){if(view3D&&has3D()&&R3.ok&&R3.toGround)return R3.toGround(x,y);return{x:x/Z+cam.x,y:y/Z+cam.y}}
 function pressLearn(i){const me=ME();if(!me||!canLearn(me,i))return;if(net.mode==='client'){netSend({t:'l',i});me.pts--;me.skl[i]++;AU.play('learn')}else learn(me,i)}
+function pressSwapW(){const me=ME();if(!me||me.dead||!me.wk2||me.fuseT>0)return;UI.wswT=.2;
+  if(net.mode==='client'){netSend({t:'sw'});const k=me.wk,t=me.wt;me.wk=me.wk2;me.wt=me.wt2;me.wk2=k;me.wt2=t;AU.play('weapon',.7)}else swapWeapons(me)}
 function pressSwap(){press[4]=.2;const me=ME();const bx=boxNear(me);if(bx){if(net.mode==='client')netSend({t:'ob',id:bx.id});else openBox(me,bx.id);return}const it=swapCandidate(me);if(!it)return;if(net.mode==='client')netSend({t:'pk',id:it.id});else pickSwap(me,it.id)}
 cv.addEventListener('pointerdown',e=>{
   e.preventDefault();AU.init();if(state!=='play')return;const x=e.clientX,y=e.clientY;
@@ -1221,6 +1391,7 @@ cv.addEventListener('pointerdown',e=>{
     if(UI.bagBtn&&hitBtn(UI.bagBtn,x,y,1.25)){UI.bagOpen=!UI.bagOpen;AU.play('click');ptrs.set(e.pointerId,'sk');return}
     for(let b=0;b<2;b++)if(UI.pot&&UI.pot[b]&&hitBtn(UI.pot[b],x,y,1.25)){pressPotion(b);ptrs.set(e.pointerId,'sk');return}
     if(UI.swap&&x>UI.swap.x&&x<UI.swap.x+UI.swap.w&&y>UI.swap.y&&y<UI.swap.y+UI.swap.h){pressSwap();ptrs.set(e.pointerId,'sk');return}
+    if(me.wk2&&(UI.wsw&&hitBtn(UI.wsw,x,y,1.1)||UI.wsw2&&hitBtn(UI.wsw2,x,y,1.5))){pressSwapW();ptrs.set(e.pointerId,'sk');return}
     for(let i=0;i<3;i++)if(canLearn(me,i)&&hitBtn(UI.learn[i],x,y,1.35)){pressLearn(i);ptrs.set(e.pointerId,'sk');return}
     for(let i=0;i<3;i++)if(hitBtn(UI.sk[i],x,y,1.15)){if(e.pointerType==='mouse'){pressSkill(i);ptrs.set(e.pointerId,'sk');return}
       if(!aimSt&&startAim(i,e.pointerId,x,y))ptrs.set(e.pointerId,'aim');else ptrs.set(e.pointerId,'sk');return}
@@ -1239,7 +1410,7 @@ addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;keys[e.code]
   const map={Digit1:0,KeyQ:0,Digit2:1,KeyE:1,Digit3:2,KeyR:2};if(e.code in map){if(e.shiftKey)pressLearn(map[e.code]);else{const me=ME(),i=map[e.code];   // PC: skills fly toward the mouse
       const a=skAim(me,i);pressSkill(i,a&&a.t!=='self'&&UI.mouse?screenToWorld(UI.mouse.x,UI.mouse.y):null)}}
   const pm={Digit4:0,Digit5:1,Digit6:2,Digit7:3};if(e.code in pm)pressPotion(pm[e.code]);if(e.code==='KeyB')UI.bagOpen=!UI.bagOpen;
-  const lm={KeyZ:0,KeyX:1,KeyC:2};if(e.code in lm)pressLearn(lm[e.code]);if(e.code==='KeyM')AU.toggle();if(e.code==='KeyF'||e.code==='KeyG')pressSwap()});
+  const lm={KeyZ:0,KeyX:1,KeyC:2};if(e.code in lm)pressLearn(lm[e.code]);if(e.code==='KeyM')AU.toggle();if(e.code==='KeyF'||e.code==='KeyG')pressSwap();if(e.code==='KeyT')pressSwapW()});
 addEventListener('keyup',e=>{keys[e.code]=false});
 function localInput(){let mx=0,my=0;
   if(joy){const dx=joy.x-joy.ox,dy=joy.y-joy.oy,d=Math.hypot(dx,dy),R=UI.b*1.1;if(d>R){joy.ox=joy.x-dx/d*R;joy.oy=joy.y-dy/d*R}if(d>6){const k=Math.min(1,d/R);mx=dx/d*k;my=dy/d*k}}
@@ -1270,6 +1441,12 @@ function nearestShrine(u,range){let best=null,bd=range;for(const s of WD.shrines
 function aiSkills(u,t,d,hpR){const k=u.wk;if(!k)return;
   const can=i=>u.skl[i]>0&&u.cd[i]<=0&&u.mp>=SK[k][i].mp[u.skl[i]-1];const rg=i=>SK[k][i].range[u.skl[i]-1];
   const big=t.hero||t.golem||t.boss;const thr=t.hp/t.maxHp;
+  if(FUSED[k]){const a=WEAPONS[k].arch;
+    if(can(2)&&(big||Math.random()<.08)&&!(t.hero&&thr<.12)){
+      if(a==='MM'&&d>120&&d<rg(2)*.9||a==='MR'&&d<rg(2)*.7||a==='MS'&&d>100&&d<rg(2)*.9||a==='RS'&&d<rg(2)*.9||a==='RR'&&d<rg(2)*.75||a==='SS'&&d<rg(2)*.9)return cast(u,2)}
+    if(can(0)){if(a==='MM'&&d>110&&d<rg(0)*.9||a==='MR'&&d<rg(0)*.85||a==='MS'&&d<rg(0)*.8||a==='RS'&&d<rg(0)*.9||a==='RR'&&d<rg(0)*.85||a==='SS'&&d<rg(0)*.9)return cast(u,0)}
+    if(can(1)){if(a==='MM'&&d<240&&(t.hero||hpR<.75||big)||a==='MR'&&d>200&&d<rg(1)+120||a==='MS'&&d<220||a==='RS'&&d<rg(1)*.9||a==='RR'&&d<rg(1)*.85||a==='SS'&&d<rg(1)*.95)return cast(u,1)}
+    return}
   if(can(2)&&(big||Math.random()<.08)&&!(t.hero&&thr<.12)){
     if(k==='sword'&&d>140&&d<rg(2)*.9)return cast(u,2);if(k==='axe'&&d<520)return cast(u,2);if(k==='dagger'&&d<240)return cast(u,2);
     if(k==='bow'&&d<620)return cast(u,2);if(k==='fire'&&d<680)return cast(u,2);if(k==='frost'&&d<600)return cast(u,2);
@@ -1281,13 +1458,14 @@ function aiSkills(u,t,d,hpR){const k=u.wk;if(!k)return;
     if(k==='bow'&&((t.melee&&d<190)||(d<230&&hpR<.7)))return cast(u,1);if(k==='fire'&&d<210)return cast(u,1);if(k==='frost'&&d<230)return cast(u,1);
     if(k==='gsword'&&d<200)return cast(u,1);if(k==='xbow'&&d<520)return cast(u,1);if(k==='storm'&&d<220)return cast(u,1)}}
 function aiEscape(u,t,d){const k=u.wk;if(!k||!u.skl[1]||u.cd[1]>0)return;
+  if(FUSED[k]){const a=WEAPONS[k].arch;if(a==='MM'||a==='RR'||a==='RS'&&d<520||a==='SS'&&d<260)cast(u,1);return}
   if(k==='dagger'||k==='sword'||(k==='bow'&&d<320)||(k==='frost'&&d<220)||(k==='fire'&&d<210))cast(u,1)}
 function botThink(u,dt){
   const ai=u.ai;ai.t-=dt;const hpR=u.hp/u.maxHp;
   if(u.pts>0)botLearn(u);
   if(ai.t<=0){
     ai.t=rand(.25,.4);if(ai.agg===undefined)ai.agg=rand(.25,1);if(!ai.pref)ai.pref=WK[Math.floor(Math.random()*WK.length)];
-    ai.tgt=null;
+    ai.tgt=null;if(u.wk2&&u.fuseT<=0&&(FUSED[u.wk2]&&!FUSED[u.wk]||u.wt2>u.wt&&!FUSED[u.wk]))swapWeapons(u);
     const sight=Math.min(visionR(),300+90*zone.ph);
     if(gameT>=150&&u.wk){const h=nearestEnemy(u,sight,false);const eager=zone.ph<2?.03:zone.ph<4?.08:zone.ph<6?.18:.3;
       if(h&&(zone.ph>=6||(hpR>.6&&(power(u)>power(h)+2||Math.random()<ai.agg*eager))))ai.tgt=h}
@@ -1437,7 +1615,7 @@ function hitArea(a,u){if(a.shape==='line'){const ex=a.x+Math.cos(a.ang)*a.len,ey
   if(a.shape==='cone'){const d=dist(a,u);if(d>a.len+u.r*.5)return false;let da=Math.abs(Math.atan2(u.y-a.y,u.x-a.x)-a.ang);if(da>Math.PI)da=Math.PI*2-da;return da<a.arc||d<u.r+30}
   return dist(a,u)<a.r+u.r*.6}
 function hostUpdate(dt){
-  gameT+=dt;frameN++;PATHB=6;HEROES=units.filter(u=>u.hero&&!u.dead);{let n=0,t=0;for(const u of HEROES){n++;t+=u.lvl}avgLvl=n?t/n:1}sndBudget={};zoneTick(dt);dayTick();nightTick(dt);campT-=dt;if(campT<=0){campT=1;campTick()}
+  gameT+=dt;frameN++;PATHB=6;HEROES=units.filter(u=>u.hero&&!u.dead);{let n=0,t=0;for(const u of HEROES){n++;t+=u.lvl}avgLvl=n?t/n:1}sndBudget={};zoneTick(dt);dayTick();fuseTick();nightTick(dt);campT-=dt;if(campT<=0){campT=1;campTick()}
   const zph=zone.ph;
   for(const u of units){
     if(u.dead){if(u.reviveT>0){u.reviveT-=dt;if(u.reviveT<=0)reviveUnit(u)}continue}
@@ -1452,7 +1630,9 @@ function hostUpdate(dt){
       u.hp=Math.min(u.maxHp,u.hp+hr*dt);u.mp=Math.min(u.maxMp,u.mp+u.mpRegen*dt);
       for(const s of WD.shrines)if(Math.abs(u.x-s.x)<s.r&&dist(u,s)<s.r&&ooc>3){u.hp=Math.min(u.maxHp,u.hp+u.maxHp*.06*dt);u.mp=Math.min(u.maxMp,u.mp+u.maxMp*.06*dt);if(Math.random()<dt*5)burstE(u.x,u.y,'#8cffb0',3)}
       gainXp(u,3.2*dt*(1+.12*Math.max(0,avgLvl-u.lvl)));
-      if(u.spinT>0){u.spinT-=dt;u.spinTick-=dt;if(u.spinTick<=0){u.spinTick=.25;let tot=0;for(const o of units){if(o.dead||!isEnemy(u,o)||dist(u,o)>190+o.r*.6)continue;tot+=dealDamage(o,u.spinDmg,'p',u,true)}if(tot>0){heal(u,tot*.15);sndAt('hit',u.x,u.y)}}}
+      if(u.spinT>0){u.spinT-=dt;u.spinTick-=dt;if(u.spinTick<=0){u.spinTick=.25;let tot=0;const sr=u.spinR||190;for(const o of units){if(o.dead||!isEnemy(u,o)||Math.abs(o.x-u.x)>sr+60||dist(u,o)>sr+o.r*.6)continue;tot+=dealDamage(o,u.spinDmg,'p',u,true)}if(tot>0){heal(u,tot*.15);sndAt('hit',u.x,u.y)}}}
+      if(u.lsT>0)u.lsT-=dt;if(u.rapid)rapidTick(u,dt);
+      if(u.fuseT>0){u.fuseT-=dt;if(u.fuseT<=0)fuseNow(u)}else if(u.wk2&&gameT>=FUSE_AT&&canFuse(u))startFuse(u);
       if(u.lotusT>0){u.lotusT-=dt;u.lotusTick-=dt;if(u.lotusTick<=0){u.lotusTick=.2;for(const o of units){if(o.dead||!isEnemy(u,o)||dist(u,o)>u.lotusR+o.r*.5)continue;dealDamage(o,u.lotusDmg,'p',u,false);if(!o.dead){o.slowT=Math.max(o.slowT,.5);o.slowAmt=Math.max(o.slowT>.5?o.slowAmt:0,.2)}}}}
     }
     let m={mx:0,my:0};
@@ -1461,12 +1641,17 @@ function hostUpdate(dt){
     if(u.stunT>0||u.rootT>0){m.mx=0;m.my=0}
     u.mvx=m.mx;u.mvy=m.my;u.wet=u.hero&&inWater(u.x,u.y);
     if(u.leap){const L=u.leap;L.t+=dt;const k=Math.min(1,L.t/L.T);u.x=lerp(L.sx,L.tx,k);u.y=lerp(L.sy,L.ty,k);
-      if(k>=1){u.leap=null;aoe({x:u.x,y:u.y,r:L.r,dmg:L.dmg,type:'p',owner:u,kind:'judg',stun:L.stun,big:true});}}
+      if(k>=1){u.leap=null;
+        if(L.el){const e=L.el;aoe({x:u.x,y:u.y,r:L.r,dmg:L.dmg,type:'p',owner:u,kind:e==='fire'?'meteor':e==='frost'?'frost':'judg',stun:L.stun,big:true,el:e,elP:1,burn:e==='fire'?(16+1.4*u.lvl)*(1+spellAmp(u)):0});
+          if(e==='storm')aoe({x:u.x,y:u.y,r:L.r,dmg:L.dmg*.12,type:'m',owner:u,kind:'thunder',delay:.15,dot:1.2,tick:.3,el:e,elP:.4})}
+        else aoe({x:u.x,y:u.y,r:L.r,dmg:L.dmg,type:'p',owner:u,kind:'judg',stun:L.stun,big:true});
+        if(L.k2)aoe({x:u.x,y:u.y,r:L.r*1.1,dmg:L.k2,type:'p',owner:u,kind:'whirl',delay:.35,kb:520,vis:.45})}}
     else if(u.kb){u.x+=u.kb.vx*dt;u.y+=u.kb.vy*dt;const f=Math.exp(-7*dt);u.kb.vx*=f;u.kb.vy*=f;u.kb.t-=dt;if(u.kb.t<=0)u.kb=null}
     else if(u.dash){
       u.x+=u.dash.vx*dt;u.y+=u.dash.vy*dt;u.dash.t-=dt;
       if(u.dash.hit){for(const o of units){if(o.dead||!isEnemy(u,o)||u.dash.hit.has(o))continue;
-        if(dist(u,o)<u.r+o.r+10){u.dash.hit.add(o);dealDamage(o,u.dash.dmg,'p',u);o.stunT=Math.max(o.stunT,u.dash.stun);fxE('bash',{x:o.x|0,y:o.y|0});sndAt('hit',o.x,o.y);if(u.dash.stop){u.dash.t=0;break}}}}
+        if(dist(u,o)<u.r+o.r+10){u.dash.hit.add(o);dealDamage(o,u.dash.dmg,'p',u);o.stunT=Math.max(o.stunT,u.dash.stun);if(u.dash.slow&&!o.dead){o.slowAmt=Math.max(o.slowT>1.8?o.slowAmt:0,u.dash.slow);o.slowT=Math.max(o.slowT,1.8)}
+          fxE(u.dash.stop?'bash':'xcut',{x:o.x|0,y:o.y|0,a:+Math.atan2(u.dash.vy,u.dash.vx).toFixed(2)});sndAt('hit',o.x,o.y);if(u.dash.stop){u.dash.t=0;break}}}}
       if(u.dash&&u.dash.t<=0)u.dash=null;
     }else{const sp=speedOf(u);u.x+=m.mx*sp*dt;u.y+=m.my*sp*dt;
       if(m.mx||m.my){const l=Math.hypot(m.mx,m.my);if(!(isHuman(u)&&u.atkCd>-0.3&&nearestEnemy(u,u.range+70,true))){u.fx=m.mx/l;u.fy=m.my/l}}}
@@ -1481,16 +1666,18 @@ function hostUpdate(dt){
         const d=Math.hypot(dx,dy),mn=a.r+b.r;if(d<mn&&d>0){const p=(mn-d)/2;a.x-=dx/d*p;a.y-=dy/d*p;b.x+=dx/d*p;b.y+=dy/d*p}}}}}
   for(const p of projs){
     if(p.dead)continue;p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;
-    let hitS=solidAt(p.x,p.y)||forObstacles(p.x,p.y,p.r,o=>o.c===1?((p.x-o.x)**2+(p.y-o.y)**2<(o.r+p.r)**2):circRect(p.x,p.y,p.r,o));
+    const wr=p.wr||p.r;let hitS=!p.ghost&&(solidAt(p.x,p.y)||forObstacles(p.x,p.y,wr,o=>o.c===1?((p.x-o.x)**2+(p.y-o.y)**2<(o.r+wr)**2):circRect(p.x,p.y,wr,o)));
+    if(p.ghost&&(p.x<0||p.y<0||p.x>WORLD||p.y>WORLD))p.life=0;
     if(!hitS)for(const u of units){if(u.dead||!isEnemy(p.owner,u)||p.hit.has(u))continue;
       if(Math.abs(p.x-u.x)<u.r+p.r&&dist(p,u)<u.r+p.r){p.hit.add(u);
         if(!p.boom){dealDamage(u,p.dmg,p.crit?'pure':p.type,p.owner,false,p.crit);sndAt(p.crit?'crit':'hit',u.x,u.y);
-          if(!u.dead){if(p.slow){u.slowT=Math.max(u.slowT,p.slow);u.slowAmt=Math.max(u.slowT>p.slow?u.slowAmt:0,p.slowAmt)}if(p.root){u.rootT=Math.max(u.rootT,p.root);fxE('snare',{id:u.id,x:u.x|0,y:u.y|0})}}
-          if(p.kind===4)fxE('shatter',{x:u.x|0,y:u.y|0})}
+          if(!u.dead){if(p.slow){u.slowT=Math.max(u.slowT,p.slow);u.slowAmt=Math.max(u.slowT>p.slow?u.slowAmt:0,p.slowAmt)}if(p.root){u.rootT=Math.max(u.rootT,p.root);fxE('snare',{id:u.id,x:u.x|0,y:u.y|0})}
+            if(p.el)elemHit(p.owner,u,p.el,p.elP);if(p.kbF&&!u.boss&&!u.golem){const l=Math.hypot(p.vx,p.vy)||1;u.kb={vx:p.vx/l*p.kbF,vy:p.vy/l*p.kbF,t:.2};u.dash=null}}
+          if(p.kind===4)fxE('shatter',{x:u.x|0,y:u.y|0});else if(p.kind>=11)fxE('hit',{x:u.x|0,y:u.y|0,c:p.el?ELEM[p.el].c:p.kind===11?'#7ff0d8':'#ffb46a'})}
         if(!p.pierce){hitS=true;break}}}
     if(hitS||p.life<=0){p.dead=true;
-      if(p.boom){aoe({x:p.x,y:p.y,r:p.boom,dmg:p.dmg,type:p.btype||'m',owner:p.owner,kind:p.bkind||'boom',vis:.3,root:p.broot||0,slow:p.broot?p.broot+1:0,slowAmt:.4});sndAt(p.bkind==='net'?'frost':'boom',p.x,p.y)}
-      else if(hitS)fxE('hit',{x:p.x|0,y:p.y|0,c:p.kind===1?'#ffb070':p.kind===3||p.kind===4?'#bfefff':'#e8ffe0'})}
+      if(p.boom){aoe({x:p.x,y:p.y,r:p.boom,dmg:p.dmg,type:p.btype||'m',owner:p.owner,kind:p.bkind||(p.el?EL_BURST[p.el]:'boom'),vis:.3,root:p.broot||0,slow:p.broot?p.broot+1:0,slowAmt:.4,el:p.el,elP:p.elP});sndAt(p.bkind==='net'?'frost':'boom',p.x,p.y)}
+      else if(hitS)fxE('hit',{x:p.x|0,y:p.y|0,c:p.el?ELEM[p.el].c:p.kind===1?'#ffb070':p.kind===3||p.kind===4?'#bfefff':'#e8ffe0'})}
   }
   projs=projs.filter(p=>!p.dead);
   const fresh=[];
@@ -1507,7 +1694,8 @@ function hostUpdate(dt){
 }
 function applyAoe(a){for(const u of units){if(u.dead||!isEnemy(a.owner,u))continue;
   if(hitArea(a,u)){dealDamage(u,a.dmg,a.type,a.owner,!!a.dot&&a.kind!=='rain'&&a.kind!=='blizz'&&a.kind!=='volley'&&a.kind!=='thunder');if(u.dead)continue;
-    if(a.kb&&!u.boss&&!u.golem){const d=dist(a,u)||1;u.kb={vx:(u.x-a.x)/d*a.kb,vy:(u.y-a.y)/d*a.kb,t:.26};u.dash=null}if(a.stun)u.stunT=Math.max(u.stunT,a.stun);if(a.root)u.rootT=Math.max(u.rootT,a.root);if(a.slow){u.slowT=Math.max(u.slowT,a.slow);u.slowAmt=a.slowAmt||.4}}}}
+    if(a.kb&&!u.boss&&!u.golem){const d=dist(a,u)||1;u.kb={vx:(u.x-a.x)/d*a.kb,vy:(u.y-a.y)/d*a.kb,t:.26};u.dash=null}if(a.stun)u.stunT=Math.max(u.stunT,a.stun);if(a.root)u.rootT=Math.max(u.rootT,a.root);if(a.slow){u.slowT=Math.max(u.slowT,a.slow);u.slowAmt=a.slowAmt||.4}
+    if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP)}}}
 
 // ===================== SHARED VISUAL UPDATE =====================
 function fxUpdate(dt){
@@ -1723,6 +1911,7 @@ function hostOnData(cid,d){
   else if(d.t==='l'){const u=units.find(u=>u.ctrl===cid);if(u&&state==='play'&&d.i>=0&&d.i<3)learn(u,d.i|0)}
   else if(d.t==='pk'){const u=units.find(u=>u.ctrl===cid);if(u&&state==='play')pickSwap(u,d.id|0)}
   else if(d.t==='ob'){const u=units.find(u=>u.ctrl===cid);if(u&&state==='play')openBox(u,d.id|0)}
+  else if(d.t==='sw'){const u=units.find(u=>u.ctrl===cid);if(u&&state==='play')swapWeapons(u)}
   else if(d.t==='spec'){net.spec[cid]=d.id|0}
   else if(d.t==='ch'){const p=net.lobby.find(p=>p.ctrl===cid),now=performance.now();if(!p||now-(net.chatT[cid]||0)<600)return;net.chatT[cid]=now;
     const t=cleanMsg(d.s);if(t)hostChat(p.name,p.look,t)}
@@ -1806,10 +1995,10 @@ function decEv(a){if(!Array.isArray(a))return a;switch(a[0]){
 // ---- snapshots ----
 const f1=v=>Math.round(v*10)/10;
 function uflags(o){return(o.dead?1:0)|(o.stunT>0?2:0)|(o.slowT>0?4:0)|(o.buffT>0||o.asT>0?8:0)|(o.hurtT>0?16:0)|(o.hidden?32:0)|(o.inBush?64:0)|(o.dash?128:0)|(o.rootT>0?256:0)|(o.reviveT>0?512:0)
-  |(o.atkAnim>0?1024:0)|(o.castAnim>0?2048:0)|(o.wet?4096:0)|(o.shieldHp>0?8192:0)|(o.spinT>0?16384:0)|(o.lotusT>0?32768:0)|(o.leap?65536:0)|(o.invisT>0?131072:0)|(o.burnT>0?262144:0)|(o.aegis?524288:0)|(o.kb?1048576:0)|(o.rise>0?2097152:0)|(o.spdPT>0?4194304:0)}
-function heroRow(o){return[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp,o.lvl,o.wk?WK.indexOf(o.wk):-1,o.wt,o.at,o.kills,o.mp|0,o.maxMp,o.shieldHp|0]}
+  |(o.atkAnim>0?1024:0)|(o.castAnim>0?2048:0)|(o.wet?4096:0)|(o.shieldHp>0?8192:0)|(o.spinT>0?16384:0)|(o.lotusT>0?32768:0)|(o.leap?65536:0)|(o.invisT>0?131072:0)|(o.burnT>0?262144:0)|(o.aegis?524288:0)|(o.kb?1048576:0)|(o.rise>0?2097152:0)|(o.spdPT>0?4194304:0)|(o.fuseT>0?8388608:0)}
+function heroRow(o){return[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp,o.lvl,o.wk?AW.indexOf(o.wk):-1,o.wt,o.at,o.kills,o.mp|0,o.maxMp,o.shieldHp|0]}
 function selfRow(o){return[Math.round(o.xp),o.skl[0],o.skl[1],o.skl[2],o.pts,f1(Math.max(0,o.cd[0])),f1(Math.max(0,o.cd[1])),f1(Math.max(0,o.cd[2])),f1(o.armorV),Math.round(o.atkDmg),Math.round(o.spdB*100),Math.round(o.dmgB*100),Math.round(o.mr*100),f1(Math.max(0,o.shieldT)),
-  o.bag[0],o.bag[1],o.bag[2],o.bag[3],f1(Math.max(0,o.bcd[0])),f1(Math.max(0,o.bcd[1])),f1(Math.max(0,o.bcd[2])),f1(Math.max(0,o.bcd[3])),f1(Math.max(0,o.spdPT))]}
+  o.bag[0],o.bag[1],o.bag[2],o.bag[3],f1(Math.max(0,o.bcd[0])),f1(Math.max(0,o.bcd[1])),f1(Math.max(0,o.bcd[2])),f1(Math.max(0,o.bcd[3])),f1(Math.max(0,o.spdPT)),o.wk2?AW.indexOf(o.wk2):-1,o.wt2]}
 function mobRow(o){const r=[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp];if(o.zombie)r.push(ZK.indexOf(o.kind));return r}
 function aoeRow(a){return[a.x|0,a.y|0,a.r|0,f1(a.t),a.delay,a.dot||0,AOE_KINDS.indexOf(a.kind),f1(a.fxT),a.vis,a.ang!==undefined?Math.round(a.ang*100):0,a.shape==='line'?1:a.shape==='cone'?2:0,a.w||a.arc*100|0||0]}
 function snapFor(cid,c,budget){let F=evFocus(cid);F=F||{x:CX,y:CY};const R=1500;
@@ -1818,7 +2007,7 @@ function snapFor(cid,c,budget){let F=evFocus(cid);F=F||{x:CX,y:CY};const R=1500;
   const me=units.find(u=>u.ctrl===cid);const sel=me&&!me.dead?me:F.hero?F:me;
   const mobs=units.filter(o=>o.mob&&!o.dead&&near(o)).sort((a,b)=>(Math.abs(a.x-F.x)+Math.abs(a.y-F.y))-(Math.abs(b.x-F.x)+Math.abs(b.y-F.y))).slice(0,56).map(mobRow);
   const S={t:'S',n:++net.snapN,g:f1(gameT),a:alive,z:[zone.x|0,zone.y|0,zone.r|0,zone.tx|0,zone.ty|0,zone.tr|0,['wait','shrink','done'].indexOf(zone.st),f1(zone.t),zone.ph],h,f,
-    me:sel?[sel.id,...selfRow(sel)]:null,m:mobs,p:projs.filter(p=>near(p)).slice(0,40).map(p=>[p.x|0,p.y|0,p.vx|0,p.vy|0,p.kind,p.r]),o:aoes.filter(a=>near(a,a.r)).slice(0,24).map(aoeRow),e:[]};
+    me:sel?[sel.id,...selfRow(sel)]:null,m:mobs,p:projs.filter(p=>near(p)).slice(0,40).map(p=>{const a=[p.x|0,p.y|0,p.vx|0,p.vy|0,p.kind,p.r];if(p.el)a.push(EL.indexOf(p.el));return a}),o:aoes.filter(a=>near(a,a.r)).slice(0,24).map(aoeRow),e:[]};
   let size=jsonBytes(JSON.stringify(S));
   if(size>budget){S.m=S.m.slice(0,16);S.f=[];size=jsonBytes(JSON.stringify(S))}
   const ev=c.q.filter(q=>q[0]>(net.tr.kind==='room'?c.ea:0));
@@ -1843,17 +2032,18 @@ function clientStart(d){net.pendS=[];withLoading(()=>clientStart2(d))}
 function clientStart2(d){setupWorld(d.seed,d.cfg);if(view3D&&has3D()&&R3.ok)R3.sync();for(const h of d.heroes)addUnit(mkHero(h[0],h[1],h[3]?'remote':null,h[2],h[4]|0||h[0]));myId=d.you;alive=d.heroes.length;net.lastN=0;net.lastEv=0;enterPlay();const P=net.pendS||[];net.pendS=null;for(const q of P)applySnap(q)}
 function setFlags(u,fl){u.dead=!!(fl&1);u.stunT=fl&2?1:0;u.slowT=fl&4?1:0;u.buffT=fl&8?1:0;u.hurtT=fl&16?.1:0;u.hidden=!!(fl&32);u.inBush=!!(fl&64);u.dash=fl&128?{}:null;
   u.rootT=fl&256?1:0;u.reviveT=fl&512?1:0;if(fl&1024)u.atkAnim=Math.max(u.atkAnim,.2);if(fl&2048)u.castAnim=Math.max(u.castAnim,.3);u.wet=!!(fl&4096);
-  u.shieldHp=fl&8192?Math.max(1,u.shieldHp):0;u.spinT=fl&16384?1:0;u.lotusT=fl&32768?1:0;u.leap=fl&65536?(u.leap||{c:1}):null;u.invisT=fl&131072?1:0;u.burnT=fl&262144?1:0;u.aegis=!!(fl&524288);u.kb=fl&1048576?{}:null;u.rise=fl&2097152?1:0;u.spdPT=fl&4194304?1:0}
+  u.shieldHp=fl&8192?Math.max(1,u.shieldHp):0;u.spinT=fl&16384?1:0;u.lotusT=fl&32768?1:0;u.leap=fl&65536?(u.leap||{c:1}):null;u.invisT=fl&131072?1:0;u.burnT=fl&262144?1:0;u.aegis=!!(fl&524288);u.kb=fl&1048576?{}:null;u.rise=fl&2097152?1:0;u.spdPT=fl&4194304?1:0;u.fuseT=fl&8388608?1:0}
 function applySnap(d){
   if(d.n<=net.lastN)return;net.lastN=d.n;
   gameT=d.g;alive=d.a;const z=d.z;Object.assign(zone,{x:z[0],y:z[1],r:z[2],tx:z[3],ty:z[4],tr:z[5],st:['wait','shrink','done'][z[6]],t:z[7],ph:z[8]});
   const first=!net.lastSnap;
   const pos=(u,x,y,snap)=>{u.tx=x;u.ty=y;if(snap||first||u.dead||Math.hypot(u.x-x,u.y-y)>300){u.x=x;u.y=y}};
   for(const r of d.h){const u=UMAP.get(r[0]);if(!u)continue;const wasDead=u.dead;setFlags(u,r[4]);pos(u,r[1],r[2],wasDead);u.hp=r[3];u.fx=r[5]/99;u.fy=r[6]/99;u.maxHp=r[7];
-    u.lvl=r[8];u.wk=r[9]>=0?WK[r[9]]:null;u.wt=r[10];u.at=r[11];u.kills=r[12];u.mp=r[13];u.maxMp=r[14];u.shieldHp=r[15];u.far=false}
+    u.lvl=r[8];u.wk=r[9]>=0?AW[r[9]]||null:null;u.wt=r[10];u.at=r[11];u.kills=r[12];u.mp=r[13];u.maxMp=r[14];u.shieldHp=r[15];u.far=false}
   for(const r of d.f){const u=UMAP.get(r[0]);if(!u)continue;setFlags(u,r[3]);pos(u,r[1],r[2],true);u.far=true}
   if(d.me){const r=d.me,u=UMAP.get(r[0]);if(u){u.xp=r[1];u.skl=[r[2],r[3],r[4]];u.pts=r[5];u.cd=[r[6],r[7],r[8]];u.armorV=r[9];u.atkDmg=r[10];u.spdB=r[11]/100;u.dmgB=r[12]/100;u.mr=r[13]/100;u.shieldT=r[14];
-    if(r.length>=24){u.bag=[r[15]|0,r[16]|0,r[17]|0,r[18]|0];u.bcd=[+r[19]||0,+r[20]||0,+r[21]||0,+r[22]||0];u.spdPT=+r[23]||0}}}
+    if(r.length>=24){u.bag=[r[15]|0,r[16]|0,r[17]|0,r[18]|0];u.bcd=[+r[19]||0,+r[20]||0,+r[21]||0,+r[22]||0];u.spdPT=+r[23]||0}
+    if(r.length>=26){u.wk2=r[24]>=0?AW[r[24]]||null:null;u.wt2=r[25]|0}}}
   const inSnap=new Set();
   for(const r of d.m){let u=UMAP.get(r[0]);
     if(!u&&r.length>8&&ZK[r[8]]){u=mkZombie(r[0],ZK[r[8]],r[1],r[2],1);addUnit(u)}   // zombies are spawned by the host at night; clients meet them in the snapshot
@@ -1861,7 +2051,7 @@ function applySnap(d){
   for(const u of units)if(u.mob)u.inSnap=inSnap.has(u.id);
   if(units.some(u=>u.zombie&&!u.inSnap&&(u.dead||++u.missN>90))){units=units.filter(u=>!(u.zombie&&!u.inSnap&&(u.dead||u.missN>90)));UMAP=new Map(units.map(u=>[u.id,u]))}
   if(first){const me=ME();if(me){cam.x=me.x-W/2/Z;cam.y=me.y-H/2/Z}}
-  projs=d.p.map(p=>({x:p[0],y:p[1],vx:p[2],vy:p[3],kind:p[4],r:p[5]}));
+  projs=d.p.map(p=>({x:p[0],y:p[1],vx:p[2],vy:p[3],kind:p[4],r:p[5],el:p.length>6?EL[p[6]]||null:null}));
   aoes=d.o.map(a=>({x:a[0],y:a[1],r:a[2],t:a[3],delay:a[4],dot:a[5],kind:AOE_KINDS[a[6]],fxT:a[7],vis:a[8],ang:a[9]/100,shape:a[10]===1?'line':a[10]===2?'cone':null,len:a[2],w:a[10]===1?a[11]:0,arc:a[10]===2?a[11]/100:0,done:a[3]>=a[4]}));
   sndBudget={};for(const q of d.e){if(q[0]<=net.lastEv)continue;net.lastEv=q[0];const e=decEv(q[1]);if(e)applyEvent(e)}net.lastSnap=performance.now();
 }
@@ -1927,8 +2117,8 @@ function draw2D(){
   for(const t of WD.trees){if(!vis(t.x,t.y,t.cr))continue;ctx.fillStyle='#3b2a22';ctx.beginPath();ctx.arc(t.x,t.y,t.r,0,7);ctx.fill()}
   for(const s of swings){const k=s.life/s.max;ctx.strokeStyle=hexA(s.col,k*.9);ctx.lineWidth=10*k+2;ctx.beginPath();ctx.arc(s.u.x,s.u.y,s.r*.85,s.ang-1.1,s.ang+1.1);ctx.stroke()}
   for(const u of units){if(u.dead||!vis(u.x,u.y,80)||!unitVisibleTo(u,me,L))continue;drawUnit2D(u,me,u.inBush||u.invisT>0?.55:1)}
-  for(const p of projs){if(!vis(p.x,p.y))continue;if(p.kind===0||p.kind===5||p.kind===7){const a=Math.atan2(p.vy,p.vx);ctx.strokeStyle=p.kind===5?'#c8ff9a':'#e6fff0';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(p.x-Math.cos(a)*22,p.y-Math.sin(a)*22);ctx.lineTo(p.x,p.y);ctx.stroke()}
-    else{ctx.fillStyle=p.kind===2||p.kind===1?'#ff7a2a':p.kind===10?'#b9a6ff':p.kind===8?'#ff9a4a':p.kind===9?'#e8d8a8':p.kind===6?'#dfe8ff':'#bfefff';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()}}
+  for(const p of projs){if(!vis(p.x,p.y))continue;if(p.kind===0||p.kind===5||p.kind===7||p.kind===13||p.kind===11){const a=Math.atan2(p.vy,p.vx);ctx.strokeStyle=p.el?ELEM[p.el].c:p.kind===11?'#7ff0d8':p.kind===5?'#c8ff9a':'#e6fff0';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(p.x-Math.cos(a)*22,p.y-Math.sin(a)*22);ctx.lineTo(p.x,p.y);ctx.stroke()}
+    else{ctx.fillStyle=p.el?ELEM[p.el].c:p.kind===14?'#ff8a3a':p.kind===2||p.kind===1?'#ff7a2a':p.kind===10?'#b9a6ff':p.kind===8?'#ff9a4a':p.kind===9?'#e8d8a8':p.kind===6?'#dfe8ff':'#bfefff';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()}}
   for(const p of parts){if(!vis(p.x,p.y))continue;ctx.globalAlpha=clamp(p.life/p.max,0,1);ctx.fillStyle=p.col;if(p.line)ctx.fillRect(p.x-1.5,p.y-18,3,18);else{ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,7);ctx.fill()}}ctx.globalAlpha=1;
   for(const q of WD.walls){if(!vis(q.x+q.w/2,q.y+q.h/2,Math.max(q.w,q.h)))continue;ctx.fillStyle=q.castle?'#a8a094':'#e8dcc0';ctx.fillRect(q.x,q.y,q.w,q.h);ctx.strokeStyle='#5d4632';ctx.lineWidth=2;ctx.strokeRect(q.x,q.y,q.w,q.h)}
   for(const l of WD.lanterns){if(!vis(l.x,l.y))continue;ctx.fillStyle='#3a2a1e';ctx.fillRect(l.x-3,l.y-6,6,20);ctx.fillStyle=l.torch?'#ff8a2a':l.dire?'#c08aff':'#ffd27a';ctx.beginPath();ctx.arc(l.x,l.y-10,7,0,7);ctx.fill()}
@@ -2009,17 +2199,22 @@ function drawHUD(){
   ctx.textAlign='left';ctx.fillStyle='#e8e8e8';ctx.fillText(MC.ts>1?`🛡️ ${teamsLeft()} ทีม`:`👥 ${alive}`,tx+12*s,ty+th/2+1);ctx.textAlign='right';ctx.fillText(`💀 ${me.kills}`,tx+tw-12*s,ty+th/2+1);
   let zt='';if(zone.st==='wait')zt=`⏳ วงหดใน ${Math.ceil(zone.t)} วิ`;else if(zone.st==='shrink')zt='⚠️ วงกำลังหด';else zt='🔥 วงสุดท้าย';
   ctx.textAlign='center';ctx.font=`bold ${12*s}px system-ui,sans-serif`;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(zt,W/2,ty+th+12*s);ctx.fillStyle=zone.st==='shrink'?'#ffb0f0':'#f0f0f0';ctx.fillText(zt,W/2,ty+th+12*s);
+  const fl=fuseLine(me);if(fl){ctx.font=`bold ${11.5*s}px system-ui,sans-serif`;ctx.globalAlpha=fl.p?.65+.35*Math.sin(performance.now()/150):1;ctx.strokeText(fl.t,W/2,ty+th+28*s);ctx.fillStyle=fl.c;ctx.fillText(fl.t,W/2,ty+th+28*s);ctx.globalAlpha=1}
   ctx.textBaseline='alphabetic';
   drawMinimap(me,s);
   ctx.fillStyle='rgba(0,0,0,.5)';ctx.beginPath();ctx.arc(UI.mute.x,UI.mute.y,18,0,7);ctx.fill();ctx.font='17px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(AU.muted?'🔇':'🔊',UI.mute.x,UI.mute.y+1);ctx.textBaseline='alphabetic';
   if(net.mode!=='solo'){ctx.textAlign='right';ctx.font=`${11*s}px system-ui,sans-serif`;ctx.fillStyle='#bfe3ff';ctx.fillText(net.qm?'🌐 จับคู่ด่วน':`🌐 ${net.rname||'ห้อง '+net.code}`,UI.mute.x-26,UI.mute.y+4)}
   ctx.textAlign='right';ctx.font=`${12*s}px system-ui,sans-serif`;
-  feedList.forEach((f,i)=>{ctx.globalAlpha=clamp(f.t,0,1);const y=UI.mute.y+38+i*18*s;const w=ctx.measureText(f.txt).width+14;ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(W-SAFE.r-8-w,y-13*s,w,17*s);ctx.fillStyle=f.hl?'#ffe27a':'#fff';ctx.fillText(f.txt,W-SAFE.r-15,y)});ctx.globalAlpha=1;
+  // kill feed stays right of the clock / zone / fusion column: long lines shrink, then get cut with …
+  const fmax=Math.max(150*s,W-SAFE.r-8-(W/2+178*s))-14;
+  feedList.forEach((f,i)=>{ctx.globalAlpha=clamp(f.t,0,1);const y=UI.mute.y+38+i*18*s;let t=f.txt,fs=12*s;ctx.font=`${fs}px system-ui,sans-serif`;let w=ctx.measureText(t).width;
+    if(w>fmax){fs=Math.max(9.5*s,fs*fmax/w);ctx.font=`${fs}px system-ui,sans-serif`;w=ctx.measureText(t).width;if(w>fmax){while(t.length>4&&ctx.measureText(t+'…').width>fmax)t=t.slice(0,-1);t+='…';w=ctx.measureText(t).width}}
+    ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(W-SAFE.r-8-w-14,y-13*s,w+14,17*s);ctx.fillStyle=f.hl?'#ffe27a':'#fff';ctx.fillText(t,W-SAFE.r-15,y)});ctx.globalAlpha=1;
   UI.swap=null;
   if(me.dead){if(spectate!==null&&!gameOver){const t=UMAP.get(spectate);if(t){const st=`👁 กำลังดู ${t.name} · แตะจอเพื่อเปลี่ยน`;ctx.textAlign='center';ctx.font=`bold ${14*s}px system-ui,sans-serif`;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(st,W/2,H-24);ctx.fillStyle='#bfe3ff';ctx.fillText(st,W/2,H-24)}}
     if(me.reviveT>0){ctx.textAlign='center';ctx.font=`bold ${22*s}px system-ui,sans-serif`;ctx.fillStyle='#ffe27a';ctx.fillText('⚜️ กำลังฟื้นคืนชีพ…',W/2,H*.4)}
     drawAnnounce(s);ctx.restore();return}
-  if(Math.hypot(me.x-zone.x,me.y-zone.y)>zone.r){const t='อยู่นอกวง! รีบกลับเข้าวง';ctx.textAlign='center';ctx.font=`bold ${17*s}px system-ui,sans-serif`;ctx.globalAlpha=.6+.4*Math.sin(performance.now()/125);ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(t,W/2,ty+th+34*s);ctx.fillStyle='#ff6a6a';ctx.fillText(t,W/2,ty+th+34*s);ctx.globalAlpha=1;
+  if(Math.hypot(me.x-zone.x,me.y-zone.y)>zone.r){const t='อยู่นอกวง! รีบกลับเข้าวง';ctx.textAlign='center';ctx.font=`bold ${17*s}px system-ui,sans-serif`;ctx.globalAlpha=.6+.4*Math.sin(performance.now()/125);ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(t,W/2,ty+th+48*s);ctx.fillStyle='#ff6a6a';ctx.fillText(t,W/2,ty+th+48*s);ctx.globalAlpha=1;
     const a=Math.atan2(zone.y-me.y,zone.x-me.x),R=Math.min(W,H)*.32;ctx.save();ctx.translate(W/2+Math.cos(a)*R,H/2+Math.sin(a)*R);ctx.rotate(a);ctx.fillStyle='#ff6a6a';ctx.beginPath();ctx.moveTo(18,0);ctx.lineTo(-10,-12);ctx.lineTo(-4,0);ctx.lineTo(-10,12);ctx.fill();ctx.restore()}
   drawSense(me,s);drawAnnounce(s);if(aimSt)drawAim(me,s);
   const jx=joy?joy.ox:UI.joyHome.x,jy=joy?joy.oy:UI.joyHome.y,R=b*1.1;ctx.globalAlpha=joy?.9:.4;ctx.fillStyle='rgba(255,255,255,.1)';ctx.strokeStyle='rgba(201,169,74,.6)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(jx,jy,R,0,7);ctx.fill();ctx.stroke();
@@ -2044,7 +2239,13 @@ function drawSense(me,s){if(gameOver)return;const vr=visionR();
   if(fe){const p=.45+.35*Math.sin(performance.now()/180);edgeArrow(Math.atan2(fe.y-me.y,fe.x-me.x),'#ff6a5a','👣',p,s)}
   if(isNight()){let z=null,zd=900;for(const u of units){if(!u.zombie||u.dead||net.mode==='client'&&!u.inSnap)continue;const d=Math.hypot(u.x-me.x,u.y-me.y);if(d<vr*.85||d>zd)continue;zd=d;z=u}
     if(z)edgeArrow(Math.atan2(z.y-me.y,z.x-me.x),'#9dff6a','🧟',.75,s)}}
-function drawSwap(me,s,pr){const bx=boxNear(me);const it=bx?null:swapCandidate(me);if(!bx&&!it)return;const W2=it&&WEAPONS[it.wk];const txt=bx?'📦 เปิดกล่อง':`🔄 เปลี่ยนเป็น ${W2.ic} ${W2.names[it.tier]}`;
+// weapon fusion status under the clock: countdown + what your two weapons will become
+function fuseLine(me){if(!me||me.dead||!me.wk||FUSED[me.wk])return null;if(me.fuseT>0)return{t:'⚒️ กำลังหลอมอาวุธ…',c:'#ffd27a',p:1};
+  const left=FUSE_AT-gameT,fk=canFuse(me)?fuseKey(me.wk,me.wk2):null,F=fk&&WEAPONS[fk];
+  if(me.wk2&&FUSED[me.wk2])return{t:'⚒️ อาวุธสำรองหลอมแล้ว — แตะรูปอาวุธเพื่อใช้',c:'#ffd27a'};
+  if(left>0){const tt=`⚒️ หลอมอาวุธใน ${fmtT(left)}`;return F?{t:`${tt} · ${WEAPONS[me.wk].ic}+${WEAPONS[me.wk2].ic} → ${F.ic} ${F.n}`,c:left<30?'#ffd27a':'#f2e2b8',p:left<30?1:0}:{t:`${tt} · ต้องมีอาวุธ 2 ชนิด (1/2)`,c:'#c8c0b0'}}
+  return{t:'⚒️ เก็บอาวุธอีกชนิด — หลอมทันที',c:'#ffd27a'}}
+function drawSwap(me,s,pr){const bx=boxNear(me);const it=bx?null:swapCandidate(me);if(!bx&&!it)return;const W2=it&&WEAPONS[it.wk];const txt=bx?'📦 เปิดกล่อง':me.wk2?`🔄 รับ ${W2.ic} ${W2.names[it.tier]} · ทิ้ง ${WEAPONS[me.wk2].ic}`:`🔄 เก็บ ${W2.ic} ${W2.names[it.tier]}`;
   ctx.font=`bold ${13*s}px system-ui,sans-serif`;const w=ctx.measureText(txt).width+26*s,h=30*s;const x=clamp(pr.x+pr.w/2-w/2,SAFE.l+8,W-SAFE.r-w-8),y=pr.y-h-10*s-(me.pts>0?14*s:0);
   const pl=press[4]>0;ctx.globalAlpha=.94;panelBg(x,y,w,h,h/2);ctx.strokeStyle=bx?'#e8c050':TIERS[it.tier].c;ctx.lineWidth=2.5;rr(x,y,w,h,h/2);ctx.stroke();ctx.globalAlpha=1;
   ctx.fillStyle=pl?'#fff':'#ffe9a8';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,x+w/2,y+h/2+1);ctx.textBaseline='alphabetic';UI.swap={x,y,w,h}}
@@ -2110,7 +2311,14 @@ function drawPanel(me,s){
   const pr=ph*.42,pcx=px+pr+8*s,pcy=py+ph/2;const g=ctx.createRadialGradient(pcx,pcy-pr*.3,2,pcx,pcy,pr);g.addColorStop(0,hexA(LOOKS[me.look].c,1));g.addColorStop(1,'#140e0a');ctx.fillStyle=g;ctx.beginPath();ctx.arc(pcx,pcy,pr,0,7);ctx.fill();
   ctx.strokeStyle='rgba(0,0,0,.7)';ctx.lineWidth=4*s;ctx.beginPath();ctx.arc(pcx,pcy,pr+2*s,0,7);ctx.stroke();
   const xpk=me.lvl>=MAXL?1:clamp(me.xp/needXp(me.lvl),0,1);ctx.strokeStyle='#e6c25a';ctx.lineWidth=3*s;ctx.beginPath();ctx.arc(pcx,pcy,pr+2*s,-Math.PI/2,-Math.PI/2+Math.PI*2*xpk);ctx.stroke();
-  ctx.font=`${pr*1.05}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(me.wk?WEAPONS[me.wk].ic:'✊',pcx,pcy+1);
+  ctx.font=`${pr*1.05}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.fillText(me.wk?WEAPONS[me.wk].ic:'✊',pcx,pcy+1);
+  if(me.fuseT>0){const k=.5+.5*Math.sin(performance.now()/70);ctx.strokeStyle=`rgba(255,210,110,${.5+.5*k})`;ctx.lineWidth=(3+3*k)*s;ctx.beginPath();ctx.arc(pcx,pcy,pr+5*s,0,7);ctx.stroke()}
+  else if(me.wk&&FUSED[me.wk]){ctx.strokeStyle=hexA(WEAPONS[me.wk].glow,.75);ctx.lineWidth=2*s;ctx.beginPath();ctx.arc(pcx,pcy,pr+5*s,performance.now()/600,performance.now()/600+4.2);ctx.stroke()}
+  if(UI.wswT>0)UI.wswT-=1/60;UI.wsw={x:pcx,y:pcy,r:pr};UI.wsw2=null;
+  if(me.wk2){const cr=Math.max(11,pr*.5),cx=pcx-pr*.8,cy=pcy-pr*.84,pz=UI.wswT>0;UI.wsw2={x:cx,y:cy,r:cr};
+    ctx.fillStyle='#1b1410';ctx.beginPath();ctx.arc(cx,cy,cr*(pz?.88:1),0,7);ctx.fill();ctx.strokeStyle=TIERS[clamp(me.wt2|0,0,4)].c;ctx.lineWidth=2;ctx.stroke();
+    ctx.font=`${cr*1.1}px sans-serif`;ctx.fillStyle='#fff';ctx.fillText(WEAPONS[me.wk2].ic,cx,cy+1);
+    ctx.strokeStyle='#ffe9a8';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(cx+cr*.95,cy+cr*.62,cr*.38,-.4,3.6);ctx.stroke();ctx.fillStyle='#ffe9a8';ctx.beginPath();const ax=cx+cr*.95+Math.cos(3.6)*cr*.38,ay=cy+cr*.62+Math.sin(3.6)*cr*.38;ctx.moveTo(ax-3,ay-3);ctx.lineTo(ax+3,ay-2);ctx.lineTo(ax,ay+3);ctx.fill()}
   ctx.fillStyle='#1b1410';ctx.beginPath();ctx.arc(pcx+pr*.72,pcy+pr*.72,9*s,0,7);ctx.fill();ctx.strokeStyle='#c9a94a';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#ffe9a8';ctx.font=`bold ${10*s}px sans-serif`;ctx.fillText(me.lvl,pcx+pr*.72,pcy+pr*.72+1);
   const bx=pcx+pr+12*s,bw=px+pw-bx-10*s;
   const bar=(y,h,f,c1,c2,txt)=>{ctx.fillStyle='#0d0b09';ctx.fillRect(bx,y,bw,h);const gr=ctx.createLinearGradient(0,y,0,y+h);gr.addColorStop(0,c1);gr.addColorStop(1,c2);ctx.fillStyle=gr;ctx.fillRect(bx,y,bw*clamp(f,0,1),h);ctx.strokeStyle='rgba(0,0,0,.8)';ctx.lineWidth=1;ctx.strokeRect(bx,y,bw,h);
@@ -2204,6 +2412,13 @@ LOOKS.forEach((l,i)=>{const b=document.createElement('button');b.type='button';b
 const codexEl=$('codex');
 for(const k of WK){const d=WEAPONS[k];const el=document.createElement('div');el.className='wcard';
   el.innerHTML=`<div class="ic">${d.ic}</div><b>${d.n}</b><small>${d.desc}</small><div class="sks">${SK[k].map(s=>`<span title="${s.n}">${s.ic}</span>`).join(' ')}</div>`;codexEl.appendChild(el)}
+// fusion recipes: every fused weapon, what makes it and its three new skills
+function recipeTxt(F){const M='🗡️🪓🔪⚔️',R='🏹🎯',S=k=>WEAPONS[k].ic+' '+WEAPONS[k].n;
+  return F.arch==='MM'?`${M} ประชิด 2 ชนิด`:F.arch==='MR'?`${M} ประชิด + ${R} ยิงไกล`:F.arch==='RR'?'🏹 ธนูยาว + 🎯 หน้าไม้':F.arch==='MS'?`${M} ประชิด + ${S(F.el)}`:F.arch==='RS'?`${R} ยิงไกล + ${S(F.el)}`:`${WEAPONS[F.el].ic} + ${WEAPONS[F.el2].ic} คทา 2 ธาตุ`}
+{const G=$('fuseGrid');for(const k of FK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';el.style.borderColor=hexA(F.glow,.55);
+  el.innerHTML=`<div class="fh2"><span class="ic">${F.ic}</span><div><b>${F.n}</b><div class="rc">${recipeTxt(F)}</div></div></div><small>${F.desc}</small><div class="sks">${SK[k].map((s,i)=>`<span>${s.ic} ${['Q','E','R'][i]} · ${s.n}</span>`).join('')}</div>`;G.appendChild(el)}}
+$('fuseBtn').onclick=()=>{AU.init();AU.play('click');$('fuseOv').classList.remove('hidden')};
+$('fuseBack').onclick=()=>{AU.play('click');$('fuseOv').classList.add('hidden')};
 $('pname').value=lsGet('ar_name','ผู้เล่น'+Math.floor(rand(10,99)));$('pname').addEventListener('change',()=>lsSet('ar_name',$('pname').value.trim()));
 $('soloBtn').onclick=()=>{AU.init();AU.play('click');leaveNet();net.qm=false;hostStartMatch()};
 $('qmBtn').onclick=()=>{AU.init();AU.play('click');lsSet('ar_name',myName());quickMatch()};
@@ -3343,7 +3558,8 @@ function G_half(r){return r.G.half}
 // ===================== KayKit character models (KayKit Adventurers 2.0 FREE, Kay Lousberg, CC0) =====================
 // Heroes use rigged glTF characters when models.js + gltf.min.js are present; otherwise the procedural humanoid stays.
 // The character you see follows the weapon you hold (classless: pick up a bow and you become the ranger).
-const KK_FOR={none:'Rogue',sword:'Knight',axe:'Barbarian',dagger:'Rogue_Hooded',bow:'Ranger',fire:'Mage',frost:'Mage',gsword:'Knight',xbow:'Ranger',storm:'Mage'};
+const KK_FOR={none:'Rogue',sword:'Knight',axe:'Barbarian',dagger:'Rogue_Hooded',bow:'Ranger',fire:'Mage',frost:'Mage',gsword:'Knight',xbow:'Ranger',storm:'Mage',
+  fMM:'Knight',fMR:'Barbarian',fMS_fire:'Knight',fMS_frost:'Knight',fMS_storm:'Knight',fRS_fire:'Ranger',fRS_frost:'Ranger',fRS_storm:'Ranger',fRR:'Ranger',fSS_steam:'Mage',fSS_blaze:'Mage',fSS_tempest:'Mage'};
 const KK_UPPER=['spine','chest','upperarml','lowerarml','wristl','handl','handslotl','upperarmr','lowerarmr','wristr','handr','handslotr','head'];  // loader-sanitized bone names
 // overlay segments: [clip, startSec, endSec] played over `dur` seconds on the upper body
 const KK_SEG={throw:['Throw_U',.32,.95],use:['Use_Item_U',.18,.9],hit:['Hit_A_U',0,.6],chop:['1H_Melee_Attack_Chop_U',.15,.8],punch:['Unarmed_Melee_Attack_Punch_A_U',.1,.7]};
@@ -3406,13 +3622,28 @@ Object.assign(R3,{
   kkPaint(o,u){const em=KK_ARMOR[clamp((u.at|0),0,4)]||null;
     for(const n of o.parts){const nm=n.name||'';const cape=/Cape|BearHat|Hat|Mask/.test(nm)&&!/Head$/.test(nm);
       n.material=this.kkMat(n.userData.src,cape?LOOKS[clamp(u.look|0,0,LOOKS.length-1)].c:null,cape?null:em)}o.at=u.at},
-  kkItem(name,t,glow){const it=this.kk.items[name];if(!it)return null;const g=it.scene.clone(true);const em=t>=1?[TIERS[t].c,[0,.18,.3,.5,.8][t]]:null;
+  kkItem(name,t,glow){const it=this.kk.items[name];if(!it)return null;const g=it.scene.clone(true);const em=glow||(t>=1?[TIERS[t].c,[0,.18,.3,.5,.8][t]]:null);
     g.traverse(n=>{if(n.isMesh){n.castShadow=!!this.hi;n.material=this.kkMat(n.material,null,em)}});
     const tip=new THREE.Object3D();const d=it.hi.clone().sub(it.lo);if(d.z>d.y)tip.position.set(0,0,it.hi.z);else tip.position.set(0,it.hi.y,0);g.add(tip);g.userData.tip=tip;return g},
+  // the soul-hunter spear: no KayKit spear exists, so build one sized and aligned like the two-handed sword
+  kkSpear(t,F){const ref=this.kk.items.sword_2handed_color;if(!ref)return null;const d=ref.hi.clone().sub(ref.lo),z=d.z>d.y,L=(z?d.z:d.y)*1.4;
+    const outer=new THREE.Group(),g=new THREE.Group();outer.add(g);if(z)g.rotation.x=Math.PI/2;const G=this.G;
+    this.mesh(G.cyl,this.std('#4a3424',.75,0),0,L*.2,0,L*.022,L,L*.022,g);this.mesh(G.cyl,this.std('#d8a840',.3,.95),0,L*.66,0,L*.04,L*.05,L*.04,g);
+    const tip=this.mesh(G.cone4,this.std('#e8fff8',.15,.9,{emissive:F.glow,emissiveIntensity:.6+.15*t}),0,L*.8,0,L*.05,L*.24,L*.028,g);
+    this.mesh(G.oct,this.glowM(F.glow,.5),0,L*.8,0,L*.08,L*.2,L*.08,g);for(const s of[-1,1]){const w=this.mesh(G.cone4,this.std('#c8d8d0',.2,.9),s*L*.05,L*.68,0,L*.018,L*.09,L*.012,g);w.rotation.z=s*1.1}
+    const tp=new THREE.Object3D();tp.position.set(0,L*.92,0);g.add(tp);outer.userData.tip=tp;return outer},
   kkArm(o,u){for(const w of[o.wpnR,o.wpnL,o.book])if(w&&w.parent)w.parent.remove(w);o.wpnR=o.wpnL=o.book=o.wtip=null;
-    const wk=u.wk,t=Math.max(0,u.wt|0),R=o.bones.handslotr,Lh=o.bones.handslotl;o.wk=wk;o.wt=u.wt;
-    o.wglow=wk==='fire'?'#ffa040':wk==='frost'?'#9fe8ff':wk==='storm'?'#c8b4ff':t>=2?TIERS[t].c:null;if(!wk||!R||!Lh)return;
-    const put=(name,bone)=>{const g=this.kkItem(name,t);if(g)bone.add(g);return g};
+    const wk=u.wk,t=Math.max(0,u.wt|0),R=o.bones.handslotr,Lh=o.bones.handslotl;o.wk=wk;o.wt=u.wt;const F=wk&&FUSED[wk];
+    o.wglow=F?F.glow:wk==='fire'?'#ffa040':wk==='frost'?'#9fe8ff':wk==='storm'?'#c8b4ff':t>=2?TIERS[t].c:null;if(!wk||!R||!Lh)return;
+    const em=F?[F.glow,.5+.1*t]:null,put=(name,bone,e)=>{const g=this.kkItem(name,t,e||em);if(g)bone.add(g);return g};
+    if(F){const a=F.arch;   // fused weapons: KayKit parts recombined + an element glow
+      if(a==='MM'){o.wpnR=put('sword_1handed',R);o.wpnL=put('sword_1handed',Lh)}
+      else if(a==='MR'){o.wpnR=this.kkSpear(t,F);if(o.wpnR)R.add(o.wpnR)}
+      else if(a==='MS')o.wpnR=put('sword_2handed_color',R);
+      else if(a==='RS')o.wpnL=put('bow_withString',Lh);
+      else if(a==='RR'){o.wpnR=put('crossbow_2handed',R);o.wpnL=put('crossbow_2handed',Lh)}
+      else{o.wpnR=put('staff',R,[ELEM[F.el].c,.6+.1*t]);o.book=put('spellbook_open',Lh,[ELEM[F.el2].c,.55])}
+      const w=o.wpnR||o.wpnL;o.wtip=w&&w.userData.tip||null;return}
     if(wk==='sword'){o.wpnR=put('sword_1handed',R);o.wpnL=put('shield_badge_color',Lh)}
     else if(wk==='axe')o.wpnR=put('axe_2handed',R);
     else if(wk==='dagger'){o.wpnR=put('dagger',R);o.wpnL=put('dagger',Lh)}
@@ -3433,9 +3664,9 @@ Object.assign(R3,{
     if(KK_FOR[u.wk||'none']!==o.kkName){this.kkBuild(o,u)}else{if(o.wk!==u.wk||o.wt!==u.wt)this.kkArm(o,u);if(o.at!==u.at)this.kkPaint(o,u)}
     const k=o.mvK;const run=o.act.Running_A,idle=o.act.Idle_A;run.setEffectiveWeight(k);idle.setEffectiveWeight(1-k);run.timeScale=clamp(mv/230,.7,1.45);
     // one-shot upper-body moves keyed off the same timers the procedural rig used
-    const ranged=u.wk==='bow'||u.wk==='fire'||u.wk==='frost'||u.wk==='xbow'||u.wk==='storm';
+    const ranged=!!(u.wk&&!WEAPONS[u.wk].melee),bw=u.wk&&FUSED[u.wk]?FUSED[u.wk].base:u.wk;
     if(u.atkAnim>o.lastAtk+.05&&!(u.spinT>0))this.kkPlay(o,ranged?'use':'throw',ranged?.42:.36);
-    else if(u.castAnim>o.lastCast+.05)this.kkPlay(o,u.wk==='fire'||u.wk==='frost'||u.wk==='axe'||u.wk==='storm'||u.wk==='gsword'?'throw':'use',.5);
+    else if(u.castAnim>o.lastCast+.05)this.kkPlay(o,bw==='fire'||bw==='frost'||bw==='axe'||bw==='storm'||bw==='gsword'?'throw':'use',.5);
     else if(u.hurtT>o.lastHurt+.02&&!o.ov)this.kkPlay(o,'hit',.32,2.5);
     o.lastAtk=u.atkAnim||0;o.lastCast=u.castAnim||0;o.lastHurt=u.hurtT||0;
     if(o.ov){const v=o.ov;v.t+=dt;const e=Math.min(1,v.t/.07)*Math.min(1,Math.max(0,(v.dur-v.t)/.12));v.a.setEffectiveWeight(v.w*e);if(v.t>=v.dur){v.a.stop();o.ov=null}}
@@ -3446,7 +3677,7 @@ Object.assign(R3,{
     if(u.leap){if(o.leapT===undefined||o.leapT<0)o.leapT=0;o.leapT+=dt;const q=Math.min(1,o.leapT/.55);by+=Math.sin(Math.PI*q)*140}else o.leapT=-1;
     o.body.rotation.x=u.dash?.38:u.kb?-.3:0;o.body.position.y=by;
     if(u.stunT>0&&B.head)B.head.rotation.z+=Math.sin(T*6)*.3;
-    if(o.wtip&&(u.castAnim>0||u.atkAnim>0)&&Math.random()<.5){o.wtip.getWorldPosition(this.v);this.sp(true,{x:this.v.x,y:this.v.y,z:this.v.z,vy:30,l:.35,s:22,s1:4,c:u.wk==='fire'?'#ffb050':u.wk==='storm'?'#d8c8ff':'#bfefff',sp:u.wk==='fire'?3:4})}}
+    if(o.wtip&&(u.castAnim>0||u.atkAnim>0)&&Math.random()<.5){o.wtip.getWorldPosition(this.v);this.sp(true,{x:this.v.x,y:this.v.y,z:this.v.z,vy:30,l:.35,s:22,s1:4,c:FUSED[u.wk]?FUSED[u.wk].glow:u.wk==='fire'?'#ffb050':u.wk==='storm'?'#d8c8ff':'#bfefff',sp:u.wk==='fire'?3:4})}}
 });
 
 // ===================== FX 2: flash lights, lightning, bigger impacts, visuals for the new weapons =====================
@@ -3511,7 +3742,7 @@ Object.assign(R3,{
     if(a.kind==='crescent'){if(a.fx)return;a.fx=1;this.slash(a.x,a.y,a.ang,a.len||a.r,a.arc||1,'#dfe8ff',.38);this.slash(a.x,a.y,a.ang,(a.len||a.r)*.78,(a.arc||1)*.9,'#7aa8ff',.3);
       for(let i=0;i<34;i++){const aa=a.ang+rand(-a.arc,a.arc),d=rand(.3,1)*(a.len||a.r);this.sp(true,{x:a.x+Math.cos(aa)*d,y:gy+rand(10,50),z:a.y+Math.sin(aa)*d,vx:Math.cos(aa)*220,vz:Math.sin(aa)*220,vy:rand(20,90),l:.45,s:16,s1:3,c:i%3?'#dfe8ff':'#ffffff',sp:7})}
       this.flash(a.x+Math.cos(a.ang)*120,gy+70,a.y+Math.sin(a.ang)*120,'#cfdcff',3000,500,.3);this.shakeNear(a.x,a.y,7);return}
-    if(a.kind==='whirl'){if(a.fx)return;a.fx=1;this.slash(a.x,a.y,0,a.r,Math.PI,'#f2f6ff',.4);this.ring(a.x,a.y,20,a.r*1.4,'#ffffff',.6);this.ring(a.x,a.y,10,a.r*1.05,'#b8c8ff',.45);
+    if(a.kind==='whirl'){if(a.fx||a.t<a.delay)return;a.fx=1;this.slash(a.x,a.y,0,a.r,Math.PI,'#f2f6ff',.4);this.ring(a.x,a.y,20,a.r*1.4,'#ffffff',.6);this.ring(a.x,a.y,10,a.r*1.05,'#b8c8ff',.45);
       for(let i=0;i<30;i++){const aa=i/30*6.283;this.sp(false,{x:a.x+Math.cos(aa)*a.r*.6,y:gy+10,z:a.y+Math.sin(aa)*a.r*.6,vx:Math.cos(aa)*380,vz:Math.sin(aa)*380,vy:rand(20,80),l:.9,s:40,s1:120,c:'#b8a888',a:.5,sp:2,dr:.6})}
       this.sparks(a.x,gy+30,a.y,'#ffffff',26,520,.5,true);this.flash(a.x,gy+60,a.y,'#e0e8ff',3600,600,.35);this.shakeNear(a.x,a.y,10);return}
     if(a.kind==='net'){if(!a.fx){a.fx=1;this.ring(a.x,a.y,10,a.r*1.2,'#e8d8a8',.5);this.decal({x:a.x,y:a.y,r:a.r,c:'#ffffff',life:1.8,tex:'net',a:.95,fade:.3})}return}
@@ -3560,6 +3791,100 @@ Object.assign(R3,{
   P.initFX=function(){_init.call(this);this.fxInit()};
   P.aoeVis=function(a,T,dt,L){if(this.isNewAoe(a.kind)){this.aoeNew(a,T,dt);return}const had=a.fx;_aoe.call(this,a,T,dt,L);
     if(!had&&a.fx&&!a.dot)this.impact(a);else if(a.dot&&a.t>=a.delay)this.dotExtra(a,T,dt)}})();
+
+// ===================== FX 3: weapon fusion — fused weapon models, the fusing ritual, new projectiles and skill effects =====================
+Object.assign(AOE_COL,{spirit:'#7ff0d8'});Object.assign(FX_COL,{spirit:'#7ff0d8'});
+Object.assign(R3,{
+  fusings:[],fuseIcons:[],
+  // fused weapon as a procedural model (ground drops + the fallback humanoid): the base shape, always at least epic, wrapped in the fused glow
+  fusedWeapon(wk,tier,F,base){const G=this.G;let g;
+    if(F.arch==='MR'){g=new THREE.Group();const M=this.metalFor(Math.max(2,tier));
+      this.mesh(this.cylg(1.5,1.9,112),this.tstd('bark','#5a4030',.8,0),0,34,0,1,1,1,g,true);this.mesh(this.cylg(2.6,2.6,6),this.std('#d8a840',.3,.95),0,88,0,1,1,1,g);
+      this.mesh(this.extr('spear',[[-3.2,0],[3.2,0],[1.6,22],[0,30],[-1.6,22]],1.4,.3),M,0,90,0,1,1,1,g,true);for(const s of[-1,1]){const w=this.mesh(G.cone4,M,s*5,90,0,1.6,9,1,g);w.rotation.z=s*1.2}
+      const hd=new THREE.Group();hd.position.y=118;g.add(hd);g.userData.tip=hd}
+    else g=base(F.arch==='MM'?'sword':F.arch==='MS'?'gsword':F.arch==='RS'?'bow':F.arch==='RR'?'xbow':F.el,Math.max(2,tier));
+    const h=this.mesh(G.sph,this.glowM(F.glow,.28),0,F.arch==='RS'?0:30,0,9,F.arch==='RS'?30:34,9,g);h.userData.ownMat=0;
+    if(F.el2){const o=this.mesh(G.sph,this.glowM(ELEM[F.el2].c,.9),0,86,5,4.5,4.5,4.5,g);o.userData.ownMat=0}
+    g.userData.glow=F.glow;return g},
+  // ---- the fusing ritual: both weapons orbit the hero, spiral in, then flash into the new one ----
+  stepFusings(dt){const G=this.G;this.fusings=this.fusings.filter(f=>(f.t+=dt)<f.T&&f.u&&!f.u.dead);
+    for(const f of this.fusings){const u=f.u,k=f.t/f.T,gy=this.gY(u.x,u.y),r=lerp(130,10,k*k),h=gy+105+k*45,sp=4+k*16;
+      for(let j=0;j<2;j++){const ic=j?f.b:f.a;if(!ic)continue;const s=this.get('fuseIc',()=>{const m=new THREE.Sprite(new THREE.SpriteMaterial({map:this.emoji(ic),transparent:true,depthWrite:false,depthTest:false}));m.userData.ownMat=1;m.renderOrder=6;return m});
+        if(s.material.map!==this.emoji(ic)){s.material.map=this.emoji(ic);s.material.needsUpdate=true}const a=f.t*sp+j*Math.PI;s.position.set(u.x+Math.cos(a)*r,h+Math.sin(f.t*9+j)*8,u.y+Math.sin(a)*r);s.scale.setScalar(84*(1-k*.3));s.material.opacity=Math.min(1,f.t*6);
+        if(Math.random()<.8)this.sp(true,{x:s.position.x,y:s.position.y,z:s.position.z,l:.4,s:16,s1:3,c:j?f.cb:f.ca,sp:1})}
+      if(Math.random()<dt*40){const a=Math.random()*6.283,d=rand(30,140);this.sp(true,{x:u.x+Math.cos(a)*d,y:gy+6,z:u.y+Math.sin(a)*d,vx:-Math.cos(a)*d*1.6,vz:-Math.sin(a)*d*1.6,vy:rand(60,160),l:.55,s:10,s1:2,c:Math.random()<.5?'#ffd27a':'#fff2c0',sp:7,dr:.6})}
+      f.fl=(f.fl||0)-dt;if(f.fl<=0){f.fl=.18;this.flash(u.x,gy+90,u.y,'#ffcf6a',1400+2600*k,420,.2)}
+      if(Math.random()<dt*6)this.decal({x:u.x,y:u.y,r:90+60*k,c:'#ffcf6a',life:.5,tex:'rune',spin:4,a:.6})}
+    // the new weapon's icon rising above the hero after the fusion
+    this.fuseIcons=this.fuseIcons.filter(f=>(f.t+=dt)<1.8);
+    for(const f of this.fuseIcons){const s=this.get('fuseBig',()=>{const m=new THREE.Sprite(new THREE.SpriteMaterial({map:this.emoji(f.ic),transparent:true,depthWrite:false,depthTest:false}));m.userData.ownMat=1;m.renderOrder=7;return m});
+      if(s.material.map!==this.emoji(f.ic)){s.material.map=this.emoji(f.ic);s.material.needsUpdate=true}const k=f.t/1.8,u=f.u;const x=u?u.x:f.x,y=u?u.y:f.y;
+      s.position.set(x,this.gY(x,y)+160+k*90,y);s.scale.setScalar(96+40*Math.sin(Math.min(1,k*4)*Math.PI/2));s.material.opacity=k<.7?1:(1-k)/.3}},
+  fx3(e){const gy=e.x!==undefined?this.gY(e.x,e.y):0;const U=e.id!==undefined?UMAP.get(e.id):null;
+    switch(e.k){
+      case 'fusing':{const A=AW[e.a],B=AW[e.b];if(!U)break;this.fusings=this.fusings.filter(f=>f.u!==U);
+        this.fusings.push({u:U,t:0,T:1.25,a:A&&WEAPONS[A].ic,b:B&&WEAPONS[B].ic,ca:A&&WEAPONS[A].col||'#ffffff',cb:B&&WEAPONS[B].col||'#ffffff'});
+        this.ring(e.x,e.y,20,160,'#ffcf6a',.9);this.decal({x:e.x,y:e.y,r:150,c:'#ffcf6a',life:1.3,tex:'rune',spin:-3,a:.75,follow:U});break}
+      case 'fuse':{const k=AW[e.w],F=k&&WEAPONS[k];if(!F)break;const c=F.col,c2=F.glow;this.fusings=this.fusings.filter(f=>f.u!==U);
+        this.flash(e.x,gy+120,e.y,c2,7000,900,.9);this.shakeNear(e.x,e.y,9);
+        for(const [r,col,l] of[[260,'#ffffff',.5],[200,c,.8],[140,c2,1.1]])this.ring(e.x,e.y,10,r,col,l);
+        this.decal({x:e.x,y:e.y,r:170,c:c2,life:2.2,tex:'rune',spin:2.5,a:.85,follow:U});
+        this.sp(true,{x:e.x,y:gy+140,z:e.y,l:.45,s:320,s1:80,c:'#ffffff',sp:0,a:.7});
+        for(let i=0;i<26;i++)this.sp(true,{x:e.x+rand(-14,14),y:gy+rand(0,30),z:e.y+rand(-14,14),vy:rand(500,900),l:rand(.5,.9),s:rand(20,34),s1:4,c:i%2?c:c2,sp:1,dr:.5});   // light pillar
+        for(let i=0;i<60;i++){const a=Math.random()*6.283,v=rand(150,520);this.sp(true,{x:e.x,y:gy+60,z:e.y,vx:Math.cos(a)*v,vz:Math.sin(a)*v,vy:rand(100,420),l:rand(.6,1.2),s:rand(10,18),s1:2,c:i%3?c2:'#fff2c0',sp:7,g:500})}
+        if(F.el)for(let i=0;i<24;i++){const a=i/24*6.283;this.sp(true,{x:e.x+Math.cos(a)*40,y:gy+20,z:e.y+Math.sin(a)*40,vx:Math.cos(a)*340,vz:Math.sin(a)*340,vy:rand(20,90),l:.7,s:26,s1:6,c:ELEM[F.el].c,c2:F.el==='fire'?'#ff3a10':undefined,sp:F.el==='fire'?3:F.el==='frost'?4:7})}
+        this.fuseIcons.push({u:U,x:e.x,y:e.y,ic:F.ic,t:0});break}
+      case 'royal':{this.flash(e.x,gy+70,e.y,'#ff5a3a',3200,420,.45);this.ring(e.x,e.y,20,170,'#ffcf6a',.6);this.ring(e.x,e.y,10,120,'#ff3a3a',.5);
+        for(let i=0;i<24;i++){const a=i/24*6.283;this.sp(true,{x:e.x+Math.cos(a)*36,y:gy+rand(10,60),z:e.y+Math.sin(a)*36,vy:rand(80,200),vx:Math.cos(a)*40,vz:Math.sin(a)*40,l:.8,s:12,s1:3,c:i%2?'#ffcf6a':'#ff4a3a',sp:1})}break}
+      case 'xcut':{const a=e.a||0;for(const d of[-.7,.7])this.slash(e.x,e.y,a+d,70,.9,'#ffe2a0',.3);this.sparks(e.x,gy+40,e.y,'#fff0c0',10,320,.35,true);this.flash(e.x,gy+50,e.y,'#ffcf6a',1600,260,.18);break}
+      case 'gust':{const a=e.a||0;for(let i=0;i<22;i++){const s=rand(-30,30);this.sp(false,{x:e.x-Math.sin(a)*s,y:gy+rand(10,60),z:e.y+Math.cos(a)*s,vx:Math.cos(a)*rand(300,700),vz:Math.sin(a)*rand(300,700),vy:rand(0,30),l:.45,s:18,s1:46,c:'#d8fff4',a:.45,sp:2,dr:2})}break}
+      case 'trap':{this.ring(e.x,e.y,10,90,'#ffb46a',.5);this.decal({x:e.x,y:e.y,r:60,c:'#ff9a4a',life:.9,tex:'rune',spin:6,a:.8});this.sparks(e.x,gy+10,e.y,'#ffd27a',8,200,.3,true);break}}},
+  // ---- projectiles 11-15 ----
+  projF(p,y,ang,T){const G=this.G,ec=p.el?ELEM[p.el].c:null;
+    if(p.kind===11){const s=this.get('spearP',()=>{const g=new THREE.Group();const sh=this.mesh(G.cyl,this.std('#3a5a50',.6,.2,{emissive:'#1a6a58',emissiveIntensity:.6}),0,0,-10,1.6,70,1.6,g);sh.rotation.x=Math.PI/2;
+        const tp=this.mesh(G.cone4,this.std('#e8fff8',.1,.9,{emissive:'#3affc8',emissiveIntensity:1.3}),0,0,32,4.2,20,2.2,g);tp.rotation.x=Math.PI/2;const gl=this.mesh(G.sph,this.glowM('#7ff0d8',.4),0,0,10,7,7,46,g);return g});
+      s.position.set(p.x,y,p.y);s.rotation.y=ang;
+      for(let i=0;i<2;i++)this.sp(true,{x:p.x+rand(-6,6),y:y+rand(-6,6),z:p.y+rand(-6,6),vy:rand(-10,30),l:.45,s:14,s1:3,c:i?'#c8fff0':'#3affc8',sp:1});
+      if(Math.random()<.4)this.sp(false,{x:p.x,y,z:p.y,vy:20,l:.7,s:18,s1:40,c:'#b8fff0',a:.25,sp:2});return}
+    if(p.kind===12){const w=this.get('ewave',()=>{const g=new THREE.Group();const m=new THREE.Mesh(new THREE.TorusGeometry(1,.1,6,28,2.3),new THREE.MeshBasicMaterial({color:'#ffffff',transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false}));m.userData.ownMat=1;m.rotation.z=Math.PI/2-1.15;
+        const m2=new THREE.Mesh(new THREE.TorusGeometry(1,.26,6,28,2.3),new THREE.MeshBasicMaterial({color:'#ffffff',transparent:true,opacity:.55,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false}));m2.userData.ownMat=1;m2.rotation.z=Math.PI/2-1.15;g.add(m,m2);
+        const pv=new THREE.Group();pv.add(g);g.rotation.y=Math.PI/2;return pv});
+      w.children[0].children[1].material.color.set(ec||'#ffffff');if(this.post)w.children[0].children[0].material.color.set(ec||'#ffffff').lerp(this.col.set('#ffffff'),.6).multiplyScalar(2);
+      w.position.set(p.x,y-6,p.y);w.rotation.set(0,ang+Math.PI/2,0);w.scale.setScalar(p.r||56);
+      for(let i=0;i<3;i++){const s=rand(-1,1);this.sp(true,{x:p.x+Math.cos(ang)*s*p.r*.8,y:y+rand(-10,24),z:p.y-Math.sin(ang)*s*p.r*.8,vy:rand(20,80),l:.5,s:p.el==='fire'?28:18,s1:4,c:ec,c2:p.el==='fire'?'#ff3a10':undefined,sp:p.el==='fire'?3:p.el==='frost'?4:7})}
+      if(p.el==='storm'&&Math.random()<.4)this.bolt(p.x,y,p.y,p.x+rand(-60,60),y+rand(-30,30),p.y+rand(-60,60),'#c8b4ff',.07,2);
+      if(Math.random()<.3)this.decal({x:p.x,y:p.y,r:p.r*.7,c:ec,life:.8,tex:p.el==='fire'?'scorch':'shock',a:.45,fade:.9,normal:p.el==='fire'?1:0});return}
+    if(p.kind===13){const a=this.get('earrow',()=>{const g=new THREE.Group();const s=this.mesh(G.cyl,this.std('#e8dcc0',.6,0),0,0,0,1.4,36,1.4,g);s.rotation.x=Math.PI/2;
+        const tp=this.mesh(G.cone4,this.bas('#ffffff'),0,0,20,3.4,9,3.4,g);tp.rotation.x=Math.PI/2;const gl=this.mesh(G.sph,this.glowM('#ffffff',.6),0,0,16,6,6,10,g);gl.userData.ownMat=1;gl.material=gl.material.clone();g.userData.gl=gl;return g});
+      a.userData.gl.material.color.set(ec||'#ffffff');a.position.set(p.x,y,p.y);a.rotation.y=ang;
+      this.sp(true,{x:p.x,y,z:p.y,l:.3,s:14,s1:3,c:ec,c2:p.el==='fire'?'#ff3a10':undefined,sp:p.el==='fire'?3:1,a:.85});if(p.el==='storm'&&Math.random()<.25)this.bolt(p.x,y,p.y,p.x+rand(-30,30),y+rand(-14,14),p.y+rand(-30,30),'#c8b4ff',.05,1.4);return}
+    if(p.kind===14){const d=this.get('dragonP',()=>{const g=new THREE.Group();this.mesh(G.sph,this.glowM('#ff8a2a',.85),0,0,0,1,1,1.5,g);this.mesh(G.sph,this.bas('#fff2c8'),0,0,.2,.45,.45,.7,g);
+        for(const s of[-1,1]){const h=this.mesh(G.cone,this.std('#5a2a18',.6,0,{emissive:'#ff4a10',emissiveIntensity:.8}),s*.45,.45,-.4,.12,.8,.12,g);h.rotation.x=-1.9;h.rotation.z=s*.35}
+        for(const s of[-1,1])this.mesh(G.sph,this.glowM('#ffee6a',1),s*.3,.25,.95,.1,.1,.1,g);return g});
+      d.position.set(p.x,y+6,p.y);d.rotation.y=ang;d.scale.setScalar((p.r||46)*(1+Math.sin(T*24)*.06));
+      for(let i=0;i<4;i++)this.sp(true,{x:p.x+rand(-14,14),y:y+rand(-12,12),z:p.y+rand(-14,14),vx:rand(-60,60),vy:rand(20,90),vz:rand(-60,60),l:.6,s:rand(40,70),s1:8,c:'#ffd070',c2:'#ff2a00',sp:3,dr:1});
+      if(Math.random()<.6)this.sp(false,{x:p.x,y:y+10,z:p.y,vy:50,l:1.1,s:40,s1:110,c:'#3a2a26',a:.4,sp:2});
+      if(Math.random()<.5)this.decal({x:p.x,y:p.y,r:50,c:'#ffffff',life:3,tex:'scorch',normal:1,a:.6,fade:.6});this.flashT=(this.flashT||0)-.016;if(this.flashT<=0){this.flashT=.12;this.flash(p.x,y+40,p.y,'#ff7a2a',2400,500,.14)}return}
+    if(p.kind===15){const o=this.get('eorb',()=>{const g=new THREE.Group();const m=this.mesh(G.sph,this.glowM('#ffffff',.9),0,0,0,1,1,1,g);m.material=m.material.clone();m.userData.ownMat=1;g.userData.m=m;
+        this.mesh(G.sph,this.bas('#ffffff'),0,0,0,.5,.5,.5,g);for(const r of[0,1.2]){const t=this.mesh(G.torus,this.glowM('#ffffff',.5),0,0,0,1.5,1.5,1.5,g);t.rotation.set(r,r*.7,0)}return g});
+      o.userData.m.material.color.set(ec||'#ffffff');o.position.set(p.x,y,p.y);o.rotation.set(T*5,T*3,0);o.scale.setScalar((p.r||16)*(1+Math.sin(T*30)*.1));
+      for(let i=0;i<2;i++)this.sp(true,{x:p.x+rand(-6,6),y:y+rand(-6,6),z:p.y+rand(-6,6),vx:rand(-40,40),vy:rand(10,60),vz:rand(-40,40),l:.4,s:p.el==='fire'?30:16,s1:4,c:ec,c2:p.el==='fire'?'#ff3a10':undefined,sp:p.el==='fire'?3:p.el==='frost'?4:7});
+      if(p.el==='storm'&&Math.random()<.4)this.bolt(p.x,y,p.y,p.x+rand(-40,40),y+rand(-20,20),p.y+rand(-40,40),'#b9a6ff',.06,1.6);return}},
+  // the soul storm: ghost wisps circling at the spear's reach
+  spiritAoe(a,T,dt){const gy=this.gY(a.x,a.y);this.decal({x:a.x,y:a.y,r:a.r,c:'#7ff0d8',life:.05,tex:'rune',a:.42+.15*Math.sin(T*10)});
+    for(let i=0;i<Math.ceil(dt*40);i++){const an=Math.random()*6.283,r=a.r*rand(.55,1);this.sp(true,{x:a.x+Math.cos(an)*r,y:gy+rand(20,90),z:a.y+Math.sin(an)*r,vx:-Math.sin(an)*420,vz:Math.cos(an)*420,vy:rand(10,40),l:.5,s:rand(16,30),s1:4,c:Math.random()<.5?'#7ff0d8':'#e0fff8',sp:1,dr:1.2})}
+    a.fl=(a.fl||0)-dt;if(a.fl<=0){a.fl=.25;this.flash(a.x,gy+80,a.y,'#5affd0',1600,a.r*2.2,.22)}}
+});
+// hook into the earlier layers
+(()=>{const P=R3,_w=P.weapon,_arm=P.arm,_pn=P.projNew,_isN=P.isNewAoe,_an=P.aoeNew,_fx2=P.fx2,_ex=P.fxExtra;
+  P.weapon=function(wk,tier){const F=FUSED[wk];if(!F)return _w.call(this,wk,tier);return this.fusedWeapon(wk,tier,F,(k,t)=>_w.call(this,k,t))};
+  P.arm=function(o,u){_arm.call(this,o,u);const F=u.wk&&FUSED[u.wk];if(!F||!o.arms)return;const Lh=o.arms[1].hand;
+    if(F.arch==='MM'||F.arch==='RR'){const w=this.weapon(u.wk,u.wt);w.rotation.set(Math.PI/2,0,0);w.position.set(0,-1.5,2.2);Lh.add(w);o.wpnL=w}};
+  P.projNew=function(p,y,ang,T){if(p.kind>=11)return this.projF(p,y,ang,T);return _pn.call(this,p,y,ang,T)};
+  P.isNewAoe=function(k){return k==='spirit'||_isN.call(this,k)};
+  P.aoeNew=function(a,T,dt){if(a.kind==='spirit')return this.spiritAoe(a,T,dt);return _an.call(this,a,T,dt)};
+  P.fx2=function(e){_fx2.call(this,e);try{this.fx3(e)}catch(err){}};
+  P.fxExtra=function(T,dt,me,L){_ex.call(this,T,dt,me,L);this.stepFusings(dt)}})();
 
 // ===================== SETTINGS: view + graphics quality =====================
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto');
