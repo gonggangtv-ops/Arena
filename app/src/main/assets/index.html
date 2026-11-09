@@ -34,6 +34,11 @@ h1{margin:0;font-size:clamp(24px,6.5vh,44px);letter-spacing:2px;color:var(--gold
 .fcard small{display:block;color:var(--mute);font-size:11px;line-height:1.4;margin-top:4px}
 .fcard .sks{margin-top:5px;display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:#e8dcc0}
 .go.fz{border-color:#c89a3a;color:#ffe2a0}
+#credOv{z-index:7;justify-content:flex-start;overflow-y:auto;touch-action:pan-y;background:radial-gradient(ellipse at 50% 0%,#1e2418,#0b0c09 70%)}
+.cred{max-width:760px;width:100%;text-align:left;font-size:12.5px;line-height:1.55;color:#e8dcc0;padding-bottom:14px}
+.cred h4{margin:10px 0 4px;color:#ffe9a8;font-size:13.5px}.cred div{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.cred small{color:var(--mute)}.cred a{color:#9fd8ff;word-break:break-all}
+.credlink{background:none;border:0;color:#bfae88;font-size:11.5px;text-decoration:underline;cursor:pointer;margin-top:6px}
 .looks{display:flex;gap:6px;align-items:center}
 .look{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0;box-shadow:inset 0 -4px 6px rgba(0,0,0,.35)}
 .look.sel{border-color:var(--gold);box-shadow:0 0 10px rgba(230,194,90,.6),inset 0 -4px 6px rgba(0,0,0,.35);transform:scale(1.12)}
@@ -127,10 +132,17 @@ select{font-family:inherit;font-size:14px;padding:6px 8px;border-radius:8px;bord
     <button class="go ghost small" id="viewBtn">มุมมอง: 3D</button>
     <button class="go ghost small" id="qBtn">กราฟิก: อัตโนมัติ</button>
     <button class="go ghost small fz" id="fuseBtn">⚒️ สูตรหลอมอาวุธ</button>
+    <button class="go ghost small" id="sndBtn">เสียง: เปิดทั้งหมด</button>
   </div>
   <div class="msg" id="menuMsg"></div>
   <div class="tip">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
 <br>จอยซ้าย = เดิน · ⚔️ = โจมตี · เดินชนอาวุธเพื่อเก็บ (🔄 รับอาวุธ) · แตะ ＋ อัปสกิล (อัลติเลเวล 6/11/16)</div>
+  <button class="credlink" id="credBtn">🎵 เครดิตเสียงและเพลง</button>
+</div>
+<div id="credOv" class="ov hidden">
+  <div class="rtop"><button class="go ghost small" id="credBack">← กลับ</button><div class="rtitle">🎵 เครดิตเสียงและเพลง</div><span class="rsp"></span></div>
+  <div class="sub fsub">เสียงทั้งหมดเป็นผลงานเปิด (CC0 / CC BY) ตัดต่อ ปรับระดับเสียง และแปลงเป็น MP3 สำหรับเกมนี้</div>
+  <div class="cred" id="credList"></div>
 </div>
 <div id="fuseOv" class="ov hidden">
   <div class="rtop"><button class="go ghost small" id="fuseBack">← กลับ</button><div class="rtitle">⚒️ สูตรหลอมอาวุธ</div><span class="rsp"></span></div>
@@ -191,6 +203,7 @@ select{font-family:inherit;font-size:14px;padding:6px 8px;border-radius:8px;bord
 <script src="engine.min.js"></script>
 <script src="models.js"></script>
 <script src="peerjs.min.js"></script>
+<script src="sfx.js" async></script>
 <script src="turn.js"></script>
 <script>
 "use strict";
@@ -377,20 +390,113 @@ const fmtT=t=>{t=Math.max(0,Math.floor(t));return String(Math.floor(t/60)).padSt
 const randId=n=>{const A='abcdefghijkmnpqrstuvwxyz23456789';let s='';for(let i=0;i<n;i++)s+=A[Math.floor(Math.random()*A.length)];return s};
 
 // ===================== AUDIO =====================
-const AU={ctx:null,muted:lsGet('ar_mute','0')==='1',
+// ===================== AUDIO =====================
+// Recorded CC0 / CC BY sound bank (sfx.js, see CREDITS-AUDIO.md) + streamed music tracks (music/*.mp3).
+// Per-sound mix: v volume, r playback-rate range, rv reverb send, max voices, duck = dip the music;
+// use = play another bank entry, combo = timed layers [name, delay, volume], synth = also play the procedural voice.
+const SND={
+  swing:{v:.5,r:[.95,1.12]},stab:{use:'swing',v:.45,r:[1.18,1.36]},heavy:{v:.62,r:[.9,1.06]},
+  hit:{v:.5,r:[.88,1.1],max:5},hitm:{v:.4,r:[.92,1.1],max:4},crit:{v:.62,r:[.95,1.05],max:3},
+  shoot:{v:.5,r:[.95,1.1],max:4},bowdraw:{v:.45},ahit:{v:.48,max:4},
+  orb:{v:.42,r:[.95,1.12],max:3,rv:.15},fhit:{v:.4,r:[1.05,1.25],max:3,rv:.1},ice:{v:.4,max:3,rv:.12},ihit:{v:.4,max:3,rv:.1},
+  zap:{v:.36,max:3,rv:.12},ehit:{v:.4,max:3,rv:.1},lance:{v:.6,rv:.15},
+  boom:{v:.85,r:[.9,1.08],max:3,rv:.3,duck:1},nova:{v:.75,rv:.25,duck:1},frost:{v:.7,rv:.25},freeze:{v:.65,rv:.2},
+  thunder:{v:.8,rv:.3,duck:1},quake:{v:.85,r:[.85,1],rv:.3,duck:1},slam:{use:'quake'},meteor:{v:.7,rv:.3},breath:{v:.7,rv:.2},
+  shield:{v:.55,rv:.2},blink:{v:.5,rv:.2},invis:{use:'blink',v:.42,r:[.8,.9]},wind:{v:.45},dash:{use:'wind',v:.45,r:[1.1,1.3]},leap:{use:'wind',v:.5,r:[.82,.95]},
+  trap:{v:.6},buff:{v:.5,rv:.2},heal:{v:.5,rv:.2},speed:{v:.5},charge:{v:.6,rv:.2},revive:{v:.6,rv:.3},aegis:{v:.6,rv:.3},
+  cry:{v:.7,rv:.25,max:2},hurt:{v:.5,max:1},death:{v:.6,rv:.2,max:2},roar:{v:.85,r:[.9,1.05],rv:.3,max:2,duck:1},
+  mdie:{v:.5,max:3},mob:{use:'mdie'},mhurt:{v:.4,max:2},zdie:{v:.55,max:3},groan:{v:.5,r:[.85,1.05],max:2,rv:.15},howl:{v:.55,rv:.45},rubble:{v:.6},
+  step:{v:.16,r:[.85,1.15],max:2,rv:0},pick:{v:.5},gem:{v:.45},armor:{v:.55},weapon:{v:.6},lock:{v:.55},coins:{v:.45},bubble:{v:.45},glass:{v:.35},bag:{v:.45},
+  anvil:{v:.8,rv:.35},bell:{v:.55,rv:.5},lvl:{v:.55,rv:.2},learn:{v:.45,rv:0},click:{v:.4,max:2,rv:0},nomana:{v:.45,rv:0},win:{v:.7,rv:.1},achieve:{v:.6},
+  rain:{combo:[['bowdraw',0,.8],['shoot',.12,.9],['shoot',.19,.8],['shoot',.27,.8],['shoot',.36,.7]]},
+  spin:{combo:[['heavy',0,1],['wind',.04,.7],['heavy',.3,.9],['heavy',.6,.8],['heavy',.9,.7]]},
+  lotus:{combo:[0,1,2,3,4,5].flatMap(i=>[['swing',i*.17,.9],['hitm',i*.17+.06,.7]])},
+  potion:{combo:[['glass',0,.8],['bubble',.1,1],['heal',.32,.8]]},
+  chest:{combo:[['lock',0,1],['coins',.18,1]]},
+  rise:{combo:[['rubble',0,1],['groan',.35,1]]},
+  fusing:{combo:[['charge',0,1]]},
+  fuse:{combo:[['anvil',0,1],['bell',.04,.8],['buff',.12,.7],['lvl',.3,.6]]},
+  fusewarn:{combo:[['bell',0,1],['bell',.65,.9]]},
+  night:{combo:[['howl',.5,1]],synth:1},zone:{combo:[['bell',0,.6]],synth:1},
+};
+const MUS_VOL={menu:.85,day:.75,night:.85,battle:.8,final:.85},AMB_VOL={wind:.32,cave:.7};
+const AU={ctx:null,mode:lsGet('ar_mute','0')==='1'?2:(+lsGet('ar_snd','0')||0),   // 0 all on · 1 music off · 2 silent
+  get muted(){return this.mode===2},
+  buf:{},voices:{},lastI:{},nv:0,ready:false,trk:{},musCur:null,ambCur:null,musOk:false,combatT:-99,inCave:false,
   init(){
-    if(this.ctx){if(this.ctx.state==='suspended')this.ctx.resume();return}
+    if(this.ctx){if(this.ctx.state==='suspended')this.ctx.resume();this.gesture();return}
     const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
     const c=this.ctx=new AC();
-    this.master=c.createGain();this.master.gain.value=this.muted?0:.85;this.master.connect(c.destination);
-    this.sfx=c.createGain();this.sfx.gain.value=.9;this.sfx.connect(this.master);
-    this.mus=c.createGain();this.mus.gain.value=.3;this.mus.connect(this.master);
+    const comp=c.createDynamicsCompressor();comp.threshold.value=-12;comp.knee.value=10;comp.ratio.value=4;comp.attack.value=.004;comp.release.value=.22;comp.connect(c.destination);
+    this.master=c.createGain();this.master.gain.value=this.mode===2?0:.9;this.master.connect(comp);
+    this.sfx=c.createGain();this.sfx.connect(this.master);
+    this.amb=c.createGain();this.amb.gain.value=.9;this.amb.connect(this.sfx);
+    this.mus=c.createGain();this.mus.gain.value=this.mode===0?.42:0;this.mus.connect(this.master);
+    this.duckG=c.createGain();this.duckG.connect(this.mus);
+    this.rev=c.createConvolver();this.rev.buffer=this.ir(1.9);this.revG=c.createGain();this.revG.gain.value=.8;this.rev.connect(this.revG);this.revG.connect(this.master);
     const dl=c.createDelay();dl.delayTime.value=.375;const fb=c.createGain();fb.gain.value=.38;const wet=c.createGain();wet.gain.value=.35;
     dl.connect(fb);fb.connect(dl);dl.connect(wet);wet.connect(this.mus);this.echo=dl;
     const len=c.sampleRate;const b=c.createBuffer(1,len,c.sampleRate);const d=b.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;this.noiseBuf=b;
     this.beat=0;this.nextT=c.currentTime+.1;this.timer=setInterval(()=>this.schedule(),120);
+    this.loadPack();this.pickMusic();
   },
-  toggle(){this.muted=!this.muted;lsSet('ar_mute',this.muted?'1':'0');if(this.master)this.master.gain.setTargetAtTime(this.muted?0:.85,this.ctx.currentTime,.05)},
+  // a hall-like impulse response, darker towards the tail
+  ir(sec){const c=this.ctx,n=Math.floor(c.sampleRate*sec),b=c.createBuffer(2,n,c.sampleRate);
+    for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);let y=0;for(let i=0;i<n;i++){const t=i/n,k=.25+.7*t;y=y*k+(Math.random()*2-1)*(1-k);d[i]=i<c.sampleRate*.012?0:y*Math.pow(1-t,2.6)*2.2}}return b},
+  loadPack(){const P=window.SFX_PACK;if(!P){window.__sfxReady=()=>this.loadPack();return}if(this.loading||!this.ctx)return;this.loading=true;
+    const c=this.ctx,b64=s=>{const bin=atob(s),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u.buffer};let left=0;
+    for(const k in P){this.buf[k]=this.buf[k]||[];for(const s of P[k]){left++;const done=()=>{if(--left===0)this.ready=true};
+      try{const pr=c.decodeAudioData(b64(s),bb=>{this.buf[k].push(bb);done()},()=>done());if(pr&&pr.catch)pr.catch(()=>{})}catch(e){done()}}}},
+  toggle(){this.mode=(this.mode+1)%3;lsSet('ar_snd',String(this.mode));lsSet('ar_mute','0');
+    if(this.ctx){const t=this.ctx.currentTime;this.master.gain.setTargetAtTime(this.mode===2?0:.9,t,.05);this.mus.gain.setTargetAtTime(this.mode===0?.42:0,t,.2);this.pickMusic()}
+    return this.mode},
+  modeName(){return['เสียง: เปิดทั้งหมด','เสียง: ปิดเพลง','เสียง: ปิด'][this.mode]},
+  play(n,v,pan,far){if(!this.ctx||this.mode===2)return;v=v===undefined?1:v;if(v<.03)return;const d=SND[n];
+    if(d&&d.combo){let any=false;for(const [m,t,vv] of d.combo)any=this.smp(m,v*(vv==null?1:vv),pan,far,t)||any;if(d.synth||!any)this.synth(n,v);return}
+    if(!this.smp(n,v,pan,far,0))this.synth(n,v)},
+  smp(n,v,pan,far,delay){const d=SND[n]||{},key=d.use||n,L=this.buf[key];if(!L||!L.length)return false;const B=SND[key]||{};
+    const cap=d.max||B.max||4;if((this.voices[key]||0)>=cap||this.nv>=30)return true;
+    const c=this.ctx,t=c.currentTime+(delay||0);let i=Math.floor(Math.random()*L.length);if(L.length>1&&i===this.lastI[key])i=(i+1)%L.length;this.lastI[key]=i;
+    const src=c.createBufferSource();src.buffer=L[i];const r=d.r||B.r||[.96,1.04];src.playbackRate.value=r[0]+Math.random()*(r[1]-r[0]);
+    const g=c.createGain();g.gain.value=v*(d.v!=null?d.v:B.v!=null?B.v:.6);src.connect(g);let out=g;
+    if(pan&&c.createStereoPanner){const p=c.createStereoPanner();p.pan.value=clamp(pan,-1,1);out.connect(p);out=p}
+    if(far>.25){const f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=16000*Math.pow(1-far*.82,2)+500;out.connect(f);out=f}
+    out.connect(this.sfx);const rv=d.rv!=null?d.rv:B.rv!=null?B.rv:.08;if(rv>.01){const s=c.createGain();s.gain.value=rv*(1+(far||0)*.6);g.connect(s);s.connect(this.rev)}
+    this.voices[key]=(this.voices[key]||0)+1;this.nv++;src.onended=()=>{this.voices[key]--;this.nv--;try{g.disconnect();out.disconnect()}catch(e){}};src.start(t);
+    if((d.duck||B.duck)&&v>.45)this.duck(.5,1.3);return true},
+  duck(to,sec){const g=this.duckG.gain,t=this.ctx.currentTime;g.cancelScheduledValues(t);g.setTargetAtTime(to,t,.04);g.setTargetAtTime(1,t+sec*.35,sec*.45)},
+  // positioned sound: quieter + more muffled with distance, panned left/right of the listener
+  playAt(n,x,y){const L=listener();if(!L)return this.play(n,.6);const dx=x-L.x,d=Math.hypot(dx,y-L.y);const v=Math.pow(clamp(1-d/1500,0,1),1.35);if(v<.03)return;
+    this.play(n,v,clamp(dx/650,-1,1)*.7,clamp((d-320)/1100,0,1))},
+  // ---- music + ambience: streamed tracks, crossfaded ----
+  track(name){let T=this.trk[name];if(T)return T;const el=new Audio();el.src='music/'+name+'.mp3';el.loop=true;el.preload='auto';
+    const g=this.ctx.createGain();g.gain.value=0;g.connect(name in AMB_VOL?this.amb:this.duckG);T=this.trk[name]={el,g,ok:true,pend:false};
+    try{this.ctx.createMediaElementSource(el).connect(g)}catch(e){T.ok=false}
+    el.addEventListener('error',()=>{T.ok=false});el.addEventListener('playing',()=>{if(!(name in AMB_VOL))this.musOk=true});return T},
+  fade(name,vol){const T=this.track(name);if(!T.ok)return;const t=this.ctx.currentTime;T.g.gain.cancelScheduledValues(t);
+    if(vol>0){clearTimeout(T.to);if(T.el.paused){const p=T.el.play();if(p&&p.catch)p.catch(()=>{T.pend=true})}T.g.gain.setTargetAtTime(vol,t,.8)}
+    else{T.g.gain.setTargetAtTime(0,t,.7);clearTimeout(T.to);T.to=setTimeout(()=>{if(this.musCur!==name&&this.ambCur!==name)T.el.pause()},3500)}},
+  setMusic(m){if(this.mode!==0)m=null;if(m===this.musCur)return;if(this.musCur)this.fade(this.musCur,0);this.musCur=m;if(m)this.fade(m,MUS_VOL[m]||.8)},
+  setAmb(a){if(a===this.ambCur)return;if(this.ambCur)this.fade(this.ambCur,0);this.ambCur=a;if(a)this.fade(a,AMB_VOL[a]||.5)},
+  gesture(){for(const k in this.trk){const T=this.trk[k];if(T.pend&&(k===this.musCur||k===this.ambCur)){T.pend=false;const p=T.el.play();if(p&&p.catch)p.catch(()=>{T.pend=true})}}},
+  pickMusic(){if(!this.ctx)return;let m='menu',a=null;
+    if(state==='play'&&WD){const me=ME(),L=listener();
+      if(me&&!me.dead&&L){for(const u of units){if(!u.hero||u===me||u.dead||!isEnemy(me,u)||Math.abs(u.x-me.x)>700||Math.abs(u.y-me.y)>700)continue;if(dist(u,me)<650){this.combatT=gameT;break}}}
+      const fin=zone&&(zone.ph>=6||alive<=4),hot=gameT-this.combatT<10||battleHeat()>=1;
+      m=gameOver?null:fin?'final':isNight()?'night':hot?'battle':'day';
+      if(this.inCave){a='cave';if(m==='day')m=null}else a=isNight()||gameOver?null:'wind'}
+    this.setMusic(m);this.setAmb(this.mode===2?null:a)},
+  // per frame: footsteps, hurt grunts, zombies groaning at night, cave reverb, music state
+  tick(dt){if(!this.ctx)return;this.mt=(this.mt||0)-dt;if(this.mt<=0){this.mt=.5;this.pickMusic()}
+    if(state!=='play'||!WD)return;const me=ME(),L=listener();
+    if(me&&!me.dead){const lx=this.lx==null?me.x:this.lx,ly=this.ly==null?me.y:this.ly,sp=Math.hypot(me.x-lx,me.y-ly)/Math.max(dt,1e-3);this.lx=me.x;this.ly=me.y;
+      if(sp>60&&sp<900&&!me.dash&&!me.leap){this.stepT=(this.stepT||0)-dt*sp/300;if(this.stepT<=0){this.stepT=.36;this.play('step',1)}}
+      if(this.lhp!=null&&me.hp<this.lhp-Math.max(6,me.maxHp*.035)){this.combatT=gameT;if(gameT-(this.hurtT||-9)>1.4&&Math.random()<.6){this.hurtT=gameT;this.play('hurt',.75)}}
+      this.lhp=me.hp}else{this.lhp=null;this.lx=null}
+    if(L&&isNight()){this.gT=(this.gT||2)-dt;if(this.gT<=0){this.gT=1.4+Math.random()*2.4;let best=null,bd=1100;
+      for(const u of units){if(!u.zombie||u.dead)continue;const d=Math.abs(u.x-L.x)+Math.abs(u.y-L.y);if(d<bd){bd=d;best=u}}if(best)this.playAt('groan',best.x,best.y)}}
+    let cave=false;if(L)for(const c of WD.caves)if(Math.abs(L.x-c.x)<c.R+6&&dist(L,c)<c.R+6){cave=true;break}
+    if(cave!==this.inCave){this.inCave=cave;this.revG.gain.setTargetAtTime(cave?2.4:.8,this.ctx.currentTime,.4);this.mt=0}},
   tone(f,dur,type,vol,f2,delay,dest){const c=this.ctx;if(!c)return;const t=c.currentTime+(delay||0);const o=c.createOscillator(),g=c.createGain();
     o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+dur);
     g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0002,vol),t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
@@ -399,7 +505,8 @@ const AU={ctx:null,muted:lsGet('ar_mute','0')==='1',
     const f=c.createBiquadFilter();f.type=ftype||'lowpass';f.frequency.setValueAtTime(freq||1000,t);if(f2)f.frequency.exponentialRampToValueAtTime(f2,t+dur);f.Q.value=q||1;
     const g=c.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
     s.connect(f);f.connect(g);g.connect(dest||this.sfx);s.start(t,Math.random()*.5);s.stop(t+dur+.05)},
-  play(n,v){if(!this.ctx||this.muted)return;v=v===undefined?1:v;if(v<.03)return;
+  // procedural fallback voices (used until the sample bank is decoded, and for the musical stingers)
+  synth(n,v){v=v===undefined?1:v;
     switch(n){
       case 'swing':this.noise(.12,.28*v,'bandpass',2200,2,0,700);break;
       case 'heavy':this.noise(.22,.32*v,'bandpass',900,1.5,0,300);break;
@@ -451,8 +558,8 @@ const AU={ctx:null,muted:lsGet('ar_mute','0')==='1',
       case 'fuse':this.noise(.25,.4*v,'bandpass',2600,6);this.tone(1760,.5,'square',.05*v,1700);this.tone(110,.6,'sine',.35*v,55);[523,659,784,1047,1319].forEach((f,i)=>this.tone(f,.7,'triangle',.06*v,0,.08+i*.06,this.echo));break;
       case 'fusewarn':[784,0,784].forEach((f,i)=>f&&this.tone(f,.5,'sine',.08,0,i*.22,this.echo));this.tone(392,1.2,'triangle',.05,0,.1,this.echo);break;
     }},
-  playAt(n,x,y){const L=listener();if(!L)return this.play(n,.6);const d=Math.hypot(x-L.x,y-L.y);this.play(n,clamp(1-d/1300,0,1))},
-  schedule(){const c=this.ctx;if(!c||c.state!=='running')return;
+  // procedural music: only plays when the music files could not be loaded (offline / missing)
+  schedule(){const c=this.ctx;if(!c||c.state!=='running')return;if(this.musOk||this.mode!==0){this.nextT=c.currentTime+.1;return}
     const spb=60/76/2;const night=typeof isNight==='function'&&state==='play'&&isNight();
     const chords=night?[[57,60,64],[53,57,60],[50,53,57],[52,56,59]]:[[55,59,62],[52,55,59],[48,52,55],[50,54,57]];
     while(this.nextT<c.currentTime+.6){
@@ -1049,8 +1156,8 @@ function kill(t,src){
   if(t.hero&&t.aegis){t.aegis=false;t.dead=true;t.reviveT=4;t.dash=null;t.leap=null;burstE(t.x,t.y,'#ffd35a',30);
     emit({t:'f',s:`⚜️ ${t.name} ใช้โล่อมตะ จะฟื้นใน 4 วิ`,v:[t.id]});return}
   t.dead=true;t.spinT=0;t.lotusT=0;t.leap=null;t.dash=null;t.kb=null;t.rapid=null;t.fuseT=0;burstE(t.x,t.y,t.def.color||t.def.col,28);fxE('die',{id:t.id,x:t.x|0,y:t.y|0});
-  if(t.zombie){if(src&&src.hero){gainXp(src,t.def.xp*1.4*(t.scale||1)+6*src.lvl);zombieLoot(t,src)}sndAt('mob',t.x,t.y);t.deadAt=gameT;return}
-  if(t.mob){if(src&&src.hero)gainXp(src,t.def.xp*1.6*(t.scale||1)+8*src.lvl);sndAt('mob',t.x,t.y);
+  if(t.zombie){if(src&&src.hero){gainXp(src,t.def.xp*1.4*(t.scale||1)+6*src.lvl);zombieLoot(t,src)}sndAt('zdie',t.x,t.y);t.deadAt=gameT;return}
+  if(t.mob){if(src&&src.hero)gainXp(src,t.def.xp*1.6*(t.scale||1)+8*src.lvl);sndAt(t.boss||t.golem?'roar':'mdie',t.x,t.y);
     if(t.boss){const C=WD.castle;const k=C.keep;const fx=k.x+k.w/2,fy=k.y+k.h/2;const tx=lerp(fx,t.x,.45),ty=lerp(fy,t.y,.45);
       dropItem({k:'a',x:t.x,y:t.y});dropItem({k:'c',x:tx+60,y:ty,n:3,gold:true});dropItem({k:'w',x:tx-60,y:ty,wk:WK[Math.floor(Math.random()*WK.length)],tier:3});dropItem({k:'r',x:tx,y:ty+60,tier:4});dropItem({k:'i',x:tx,y:ty-60,it:'tome'});
       emit({t:'f',s:`🐉 ${src&&src.hero?src.name:'ใครบางคน'} ปราบมังกรเพลิง! สมบัติอยู่ในปราสาท`});emit({t:'a',s:'🐉 มังกรเพลิงพ่ายแพ้!',d:3})}
@@ -1117,14 +1224,14 @@ function basic(u,ft){
       let da=Math.abs(Math.atan2(o.y-u.y,o.x-u.x)-ang);if(da>Math.PI)da=Math.PI*2-da;if(da>1.1)continue;
       const main=o===t||(!t&&!hitAny);const amt=main?dmg:(Wp.cleave?dmg*Wp.cleave:0);if(amt<=0)continue;
       dealt+=dealDamage(o,amt,'p',u,false,crit&&main);hitAny=true;if(main)first=o}
-    if(hitAny){sndAt(crit?'crit':'hit',u.x,u.y);const ls=(Wp.ls||0)+(u.lsT>0?.1:0);if(ls)heal(u,dealt*ls);if(Wp.el&&first)elemHit(u,first,Wp.el,.45)}
+    if(hitAny){sndAt(crit?'crit':first&&first.hero?'hitm':'hit',u.x,u.y);const ls=(Wp.ls||0)+(u.lsT>0?.1:0);if(ls)heal(u,dealt*ls);if(Wp.el&&first)elemHit(u,first,Wp.el,.45)}
   }else{const F=Wp.fused?Wp:null;let k,el=null;
     if(F){if(F.arch==='RS'){k=13;el=F.el}else if(F.arch==='RR')k=7;else{u.altE=!u.altE;el=u.altE&&F.el2?F.el2:F.el;k=BK[el]}}
     else k=u.wk==='fire'?1:u.wk==='frost'?3:u.wk==='xbow'?7:u.wk==='storm'?10:0;
     const o={spd:u.pspd,r:k===0||k===7||k===13?8:k===1?12:11,dmg,type:Wp.magic?'m':'p',crit,kind:k,slow:Wp.chill?1:0,slowAmt:Wp.chill||0,life:(u.range+80)/u.pspd,el,elP:.45};
     if(F&&F.arch==='RR'){o.dmg=dmg*.58;for(const s of[-1,1]){const a=Math.atan2(ny,nx)+s*.05;proj(u,Math.cos(a),Math.sin(a),o)}}   // twin crossbows: two bolts a shot
     else proj(u,nx,ny,o);
-    sndAt(k===0||k===7||k===13?'shoot':k===1?'orb':k===10?'blink':'ice',u.x,u.y)}
+    sndAt(k===0||k===7||k===13?'shoot':k===1?'orb':k===10?'zap':'ice',u.x,u.y)}
   u.atkCd=u.atkCdBase*(u.asT>0?1/(1+u.asAmt):1)*(isHuman(u)?1:1.1);return true;
 }
 // ap = aim point picked by the player (drag the skill button / mouse); without it the skill auto-targets
@@ -1182,7 +1289,7 @@ function cast(u,i,ap){
         let nb=null,bd=330;for(const o of units){if(o.dead||hit.has(o)||!isEnemy(u,o))continue;const dd=dist(cur,o);if(dd<bd){bd=dd;nb=o}}cur=nb}
       fxE('chain',{x:u.x|0,y:u.y|0,p:pts});sndAt('lance',t.x,t.y);break}
     case 'storm1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:rngS,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'static',follow:u,followAll:true,dot:3,tick:.5,slow:.6,slowAmt:.35});sndAt('nova',u.x,u.y);break;
-    case 'storm2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:310,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'thunder',delay:.3,dot:1.6,tick:.32,endStun:V.stun[li]});sndAt('freeze',p.x,p.y);break}
+    case 'storm2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:310,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'thunder',delay:.3,dot:1.6,tick:.32,endStun:V.stun[li]});sndAt('thunder',p.x,p.y);break}
     default:if(!FUSED[u.wk]||castF(u,i,li,V,A,SA,rngS,tg,nx,ny,d,ft,ap,face)===false)return false;
   }
   u.mp-=cost;u.cd[i]=s.cd[li]*cdMul(u);return true;
@@ -1226,7 +1333,7 @@ function castF(u,i,li,V,A,SA,rngS,tg,nx,ny,d,ft,ap,face){const F=WEAPONS[u.wk],e
     // ---- 🐉 twin dragon crossbows ----
     case 'RR0':{face();const t0=ft||(ap?tg.t:nearestEnemy(u,rngS+60,true));u.rapid={n:6,t:0,nx,ny,dmg:V.dmg[li]+.15*A,rng:rngS,tg:t0||null,side:1};sndAt('shoot',u.x,u.y);break}
     case 'RR1':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:170,dmg:V.dmg[li]+.35*A,type:'p',owner:u,kind:'boom',delay:.9,root:V.root[li],slow:V.root[li]+1,slowAmt:.4});
-      fxE('trap',{x:p.x|0,y:p.y|0});sndAt('pick',p.x,p.y);break}
+      fxE('trap',{x:p.x|0,y:p.y|0});sndAt('trap',p.x,p.y);break}
     case 'RR2':face();proj(u,nx,ny,{spd:1700,r:46,dmg:V.dmg[li]+1.2*A,type:'p',kind:14,pierce:1,ghost:1,kbF:650,el:'fire',elP:.8,life:rngS/1700});sndAt('roar',u.x,u.y);sndAt('lance',u.x,u.y);emit({t:'k',a:9,x:u.x|0,y:u.y|0});break;
     // ---- two-element staff ----
     case 'SS0':{face();for(const [s,el] of[[-1,F.el],[1,F.el2]]){const a=ang+s*.08;proj(u,Math.cos(a),Math.sin(a),{spd:950,r:17,dmg:V.dmg[li]*SA,type:'m',kind:15,el,elP:1,boom:95,life:rngS/950})}sndAt('orb',u.x,u.y);sndAt('ice',u.x,u.y);break}
@@ -1234,10 +1341,12 @@ function castF(u,i,li,V,A,SA,rngS,tg,nx,ny,d,ft,ap,face){const F=WEAPONS[u.wk],e
         elemHit(u,o,F.el,.8);elemHit(u,o,F.el2,.8);if(!o.boss&&!o.golem){const kx=(o.x-u.x)/(dd||1),ky=(o.y-u.y)/(dd||1);o.kb={vx:kx*650,vy:ky*650,t:.26};o.dash=null}}
       for(const el of[F.el,F.el2])aoe({x:u.x,y:u.y,r:rngS,dmg:0,owner:u,kind:EL_BURST[el],fxOnly:true,vis:.45});sndAt('nova',u.x,u.y);emit({t:'k',a:5,x:u.x|0,y:u.y|0});break}
     case 'SS2':{face();const p=clampTo(u,tg,rngS);let n=0;for(const el of[F.el,F.el2]){aoe({x:p.x,y:p.y,r:320,dmg:V.dmg[li]*SA*.5,type:'m',owner:u,kind:EL_DOT[el],delay:.3,dot:3.5,tick:.35,el,elP:.5,endStun:n++?V.stun[li]:0})}
-      sndAt('freeze',p.x,p.y);sndAt('meteor',p.x,p.y);break}
+      sndAt(F.el==='storm'||F.el2==='storm'?'thunder':'freeze',p.x,p.y);sndAt(F.el==='fire'?'meteor':'frost',p.x,p.y);break}
     default:return false}
   return true}
 // twin-crossbow volley: one bolt every 0.09s, re-aimed at the locked target
+// impact sound by projectile kind: arrows thunk, fire bursts, ice cracks, lightning crackles
+function projHitSnd(p){const k=p.kind,e=p.el;if(e)return e==='fire'?'fhit':e==='frost'?'ihit':'ehit';return k===0||k===5||k===7||k===13?'ahit':k===1||k===2?'fhit':k===3||k===4?'ihit':k===10?'ehit':k===11?'hitm':'hit'}
 function rapidTick(u,dt){const R=u.rapid;if(u.stunT>0||u.kb||u.fuseT>0){u.rapid=null;return}R.t-=dt;
   while(u.rapid&&R.t<=0){R.t+=.09;let nx=R.nx,ny=R.ny;if(R.tg&&!R.tg.dead&&dist(u,R.tg)<R.rng+120){const d=dist(u,R.tg)||1;nx=(R.tg.x-u.x)/d;ny=(R.tg.y-u.y)/d}
     R.side=-R.side;const a=Math.atan2(ny,nx)+R.side*.05+rand(-.03,.03);u.fx=nx;u.fy=ny;u.atkAnim=.2;u.atkSlowT=.2;
@@ -1330,7 +1439,7 @@ function tryPickup(u){
 function bagAdd(u,b){if(!u.bag||u.bag[b]>=BAG[b].max)return false;u.bag[b]++;return true}
 function usePotion(u,b){const B=BAG[b];if(!B||!u||u.dead||!u.hero||u.bag[b]<=0||u.bcd[b]>0)return false;u.bag[b]--;u.bcd[b]=B.cd;
   if(B.k==='hp'){u.hotT=3;u.hotV=u.maxHp*.4/3}else if(B.k==='mp'){u.motT=2;u.motV=u.maxMp*.5/2}else if(B.k==='big'){u.hp=u.maxHp;u.mp=u.maxMp;burstE(u.x,u.y,'#ff9ae8',20)}else if(B.k==='spd')u.spdPT=6;
-  fxE('potion',{id:u.id,x:u.x|0,y:u.y|0,c:['#ff5a6a','#5aa8ff','#ff9ae8','#9dffb0'][b]});sndAt('potion',u.x,u.y);
+  fxE('potion',{id:u.id,x:u.x|0,y:u.y|0,c:['#ff5a6a','#5aa8ff','#ff9ae8','#9dffb0'][b]});sndAt('potion',u.x,u.y);if(B.k==='spd')sndAt('speed',u.x,u.y);
   if(isHuman(u))fxTextFor(u.x,u.y-80,B.ic+' '+B.n,'#ffe9a8',1.2,[u.id]);return true}
 function applyItem(u,it){
   switch(it.id){
@@ -1379,12 +1488,13 @@ function finishAim(){const st=aimSt;aimSt=null;if(!st)return;const C=UI.cancel;
 // screen -> world (for the mouse on PC)
 function screenToWorld(x,y){if(view3D&&has3D()&&R3.ok&&R3.toGround)return R3.toGround(x,y);return{x:x/Z+cam.x,y:y/Z+cam.y}}
 function pressLearn(i){const me=ME();if(!me||!canLearn(me,i))return;if(net.mode==='client'){netSend({t:'l',i});me.pts--;me.skl[i]++;AU.play('learn')}else learn(me,i)}
+function soundToggle(){AU.toggle();feedList.unshift({txt:['🔊 ','🔉 ','🔇 '][AU.mode]+AU.modeName(),t:2.5,hl:1});if(feedList.length>5)feedList.pop()}
 function pressSwapW(){const me=ME();if(!me||me.dead||!me.wk2||me.fuseT>0)return;UI.wswT=.2;
   if(net.mode==='client'){netSend({t:'sw'});const k=me.wk,t=me.wt;me.wk=me.wk2;me.wt=me.wt2;me.wk2=k;me.wt2=t;AU.play('weapon',.7)}else swapWeapons(me)}
 function pressSwap(){press[4]=.2;const me=ME();const bx=boxNear(me);if(bx){if(net.mode==='client')netSend({t:'ob',id:bx.id});else openBox(me,bx.id);return}const it=swapCandidate(me);if(!it)return;if(net.mode==='client')netSend({t:'pk',id:it.id});else pickSwap(me,it.id)}
 cv.addEventListener('pointerdown',e=>{
   e.preventDefault();AU.init();if(state!=='play')return;const x=e.clientX,y=e.clientY;
-  if(Math.hypot(x-UI.mute.x,y-UI.mute.y)<22){AU.toggle();return}
+  if(Math.hypot(x-UI.mute.x,y-UI.mute.y)<22){soundToggle();return}
   const me=ME();
   if(me&&!me.dead){
     if(UI.bagOpen&&UI.bagRows)for(const r of UI.bagRows)if(x>r.x&&x<r.x+r.w&&y>r.y&&y<r.y+r.h){pressPotion(r.b);ptrs.set(e.pointerId,'sk');return}
@@ -1410,7 +1520,7 @@ addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;keys[e.code]
   const map={Digit1:0,KeyQ:0,Digit2:1,KeyE:1,Digit3:2,KeyR:2};if(e.code in map){if(e.shiftKey)pressLearn(map[e.code]);else{const me=ME(),i=map[e.code];   // PC: skills fly toward the mouse
       const a=skAim(me,i);pressSkill(i,a&&a.t!=='self'&&UI.mouse?screenToWorld(UI.mouse.x,UI.mouse.y):null)}}
   const pm={Digit4:0,Digit5:1,Digit6:2,Digit7:3};if(e.code in pm)pressPotion(pm[e.code]);if(e.code==='KeyB')UI.bagOpen=!UI.bagOpen;
-  const lm={KeyZ:0,KeyX:1,KeyC:2};if(e.code in lm)pressLearn(lm[e.code]);if(e.code==='KeyM')AU.toggle();if(e.code==='KeyF'||e.code==='KeyG')pressSwap();if(e.code==='KeyT')pressSwapW()});
+  const lm={KeyZ:0,KeyX:1,KeyC:2};if(e.code in lm)pressLearn(lm[e.code]);if(e.code==='KeyM')soundToggle();if(e.code==='KeyF'||e.code==='KeyG')pressSwap();if(e.code==='KeyT')pressSwapW()});
 addEventListener('keyup',e=>{keys[e.code]=false});
 function localInput(){let mx=0,my=0;
   if(joy){const dx=joy.x-joy.ox,dy=joy.y-joy.oy,d=Math.hypot(dx,dy),R=UI.b*1.1;if(d>R){joy.ox=joy.x-dx/d*R;joy.oy=joy.y-dy/d*R}if(d>6){const k=Math.min(1,d/R);mx=dx/d*k;my=dy/d*k}}
@@ -1670,7 +1780,7 @@ function hostUpdate(dt){
     if(p.ghost&&(p.x<0||p.y<0||p.x>WORLD||p.y>WORLD))p.life=0;
     if(!hitS)for(const u of units){if(u.dead||!isEnemy(p.owner,u)||p.hit.has(u))continue;
       if(Math.abs(p.x-u.x)<u.r+p.r&&dist(p,u)<u.r+p.r){p.hit.add(u);
-        if(!p.boom){dealDamage(u,p.dmg,p.crit?'pure':p.type,p.owner,false,p.crit);sndAt(p.crit?'crit':'hit',u.x,u.y);
+        if(!p.boom){dealDamage(u,p.dmg,p.crit?'pure':p.type,p.owner,false,p.crit);sndAt(p.crit?'crit':projHitSnd(p),u.x,u.y);
           if(!u.dead){if(p.slow){u.slowT=Math.max(u.slowT,p.slow);u.slowAmt=Math.max(u.slowT>p.slow?u.slowAmt:0,p.slowAmt)}if(p.root){u.rootT=Math.max(u.rootT,p.root);fxE('snare',{id:u.id,x:u.x|0,y:u.y|0})}
             if(p.el)elemHit(p.owner,u,p.el,p.elP);if(p.kbF&&!u.boss&&!u.golem){const l=Math.hypot(p.vx,p.vy)||1;u.kb={vx:p.vx/l*p.kbF,vy:p.vy/l*p.kbF,t:.2};u.dash=null}}
           if(p.kind===4)fxE('shatter',{x:u.x|0,y:u.y|0});else if(p.kind>=11)fxE('hit',{x:u.x|0,y:u.y|0,c:p.el?ELEM[p.el].c:p.kind===11?'#7ff0d8':'#ffb46a'})}
@@ -1698,7 +1808,7 @@ function applyAoe(a){for(const u of units){if(u.dead||!isEnemy(a.owner,u))contin
     if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP)}}}
 
 // ===================== SHARED VISUAL UPDATE =====================
-function fxUpdate(dt){
+function fxUpdate(dt){AU.tick(dt);
   for(const p of parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.92;if(!p.line)p.vy*=.92;p.life-=dt}parts=parts.filter(p=>p.life>0);
   for(const t of texts){t.y-=38*dt;t.life-=dt}texts=texts.filter(t=>t.life>0);
   for(const s of swings)s.life-=dt;swings=swings.filter(s=>s.life>0);
@@ -2202,7 +2312,7 @@ function drawHUD(){
   const fl=fuseLine(me);if(fl){ctx.font=`bold ${11.5*s}px system-ui,sans-serif`;ctx.globalAlpha=fl.p?.65+.35*Math.sin(performance.now()/150):1;ctx.strokeText(fl.t,W/2,ty+th+28*s);ctx.fillStyle=fl.c;ctx.fillText(fl.t,W/2,ty+th+28*s);ctx.globalAlpha=1}
   ctx.textBaseline='alphabetic';
   drawMinimap(me,s);
-  ctx.fillStyle='rgba(0,0,0,.5)';ctx.beginPath();ctx.arc(UI.mute.x,UI.mute.y,18,0,7);ctx.fill();ctx.font='17px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(AU.muted?'🔇':'🔊',UI.mute.x,UI.mute.y+1);ctx.textBaseline='alphabetic';
+  ctx.fillStyle='rgba(0,0,0,.5)';ctx.beginPath();ctx.arc(UI.mute.x,UI.mute.y,18,0,7);ctx.fill();ctx.font='17px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(['🔊','🔉','🔇'][AU.mode],UI.mute.x,UI.mute.y+1);ctx.textBaseline='alphabetic';
   if(net.mode!=='solo'){ctx.textAlign='right';ctx.font=`${11*s}px system-ui,sans-serif`;ctx.fillStyle='#bfe3ff';ctx.fillText(net.qm?'🌐 จับคู่ด่วน':`🌐 ${net.rname||'ห้อง '+net.code}`,UI.mute.x-26,UI.mute.y+4)}
   ctx.textAlign='right';ctx.font=`${12*s}px system-ui,sans-serif`;
   // kill feed stays right of the clock / zone / fusion column: long lines shrink, then get cut with …
@@ -2418,6 +2528,31 @@ function recipeTxt(F){const M='🗡️🪓🔪⚔️',R='🏹🎯',S=k=>WEAPONS[
 {const G=$('fuseGrid');for(const k of FK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';el.style.borderColor=hexA(F.glow,.55);
   el.innerHTML=`<div class="fh2"><span class="ic">${F.ic}</span><div><b>${F.n}</b><div class="rc">${recipeTxt(F)}</div></div></div><small>${F.desc}</small><div class="sks">${SK[k].map((s,i)=>`<span>${s.ic} ${['Q','E','R'][i]} · ${s.n}</span>`).join('')}</div>`;G.appendChild(el)}}
 $('fuseBtn').onclick=()=>{AU.init();AU.play('click');$('fuseOv').classList.remove('hidden')};
+// sound credits (CC BY works must be credited; CC0 listed as thanks)
+const CREDITS=[['เพลง',[
+  ['Treasure Hunter (เมนู)','Tad Miller (TAD)','CC0','https://opengameart.org/node/127124'],
+  ['Woodland Fantasy (กลางวัน)','Matthew Pablo — matthewpablo.com','CC BY 3.0','https://opengameart.org/node/31929'],
+  ['Spooky Forest (กลางคืน)','Bendzer','CC BY 4.0','https://opengameart.org/node/94146'],
+  ['Determined Pursuit (ต่อสู้)','Emma_MA','CC0','https://opengameart.org/content/determined-pursuit-epic-orchestra-loop'],
+  ['Land of Fearless (วงสุดท้าย)','Alexandr Zhelanov','CC BY 4.0','https://opengameart.org/node/79931']]],
+ ['เสียงเอฟเฟกต์',[
+  ['JC Sounds - Fantasy SFX Pack Vol 1','JC Sounds','CC BY 4.0','https://opengameart.org/content/jc-sounds-fantasy-sfx-pack-vol-1'],
+  ['8 Magic Attacks · 8 Heals and Buffs SFX','Leohpaz','CC BY 4.0','https://opengameart.org/content/8-magic-attacks'],
+  ['Fantasy Sound Effects Library','Little Robot Sound Factory — www.littlerobotsoundfactory.com','CC BY 3.0','https://opengameart.org/content/fantasy-sound-effects-library'],
+  ['Impact Sounds · Interface Sounds · RPG Audio','Kenney — kenney.nl','CC0','https://kenney.nl/assets'],
+  ['80 CC0 RPG SFX · 80 CC0 creature SFX · 75 CC0 breaking/falling/hit · 40 CC0 water/slime','rubberduck','CC0','https://opengameart.org/users/rubberduck'],
+  ['Ice breaking/shattering','IgnasD','CC0','https://opengameart.org/content/ice-breakingshattering'],
+  ['Level up, power up, Coin get','wobbleboxx','CC0','https://opengameart.org/content/level-up-power-up-coin-get-13-sounds'],
+  ['Big scary troll sounds','Darsycho','CC0','https://opengameart.org/content/big-scary-troll-sounds'],
+  ['CC0 Deep Monster Roar','trazzz123','CC0','https://opengameart.org/content/cc0-deep-monster-roar'],
+  ['Zombie / Skeleton / Monster Voice Effects','ArcadeParty','CC0','https://opengameart.org/content/zombie-skeleton-monster-voice-effects'],
+  ['Zombies Sound Pack','artisticdude','CC0','https://opengameart.org/content/zombies-sound-pack'],
+  ['Male Grunt/Yelling sounds','HaelDB','CC0','https://opengameart.org/content/male-gruntyelling-sounds'],
+  ['15 vocal male strain/hurt/pain sounds','qubodup','CC0','https://opengameart.org/content/15-vocal-male-strainhurtpainjump-sounds'],
+  ['wind1','Luke.RUSTLTD','CC0','https://opengameart.org/content/wind1']]]];
+$('credList').innerHTML=CREDITS.map(([h,L])=>`<h4>${h}</h4>`+L.map(([t,a,l,u])=>`<div><b>${t}</b> — ${a} <small>(${l})</small><br><a href="${u}" target="_blank" rel="noopener">${u}</a></div>`).join('')).join('');
+$('credBtn').onclick=()=>{AU.init();AU.play('click');$('credOv').classList.remove('hidden')};
+$('credBack').onclick=()=>{AU.play('click');$('credOv').classList.add('hidden')};
 $('fuseBack').onclick=()=>{AU.play('click');$('fuseOv').classList.add('hidden')};
 $('pname').value=lsGet('ar_name','ผู้เล่น'+Math.floor(rand(10,99)));$('pname').addEventListener('change',()=>lsSet('ar_name',$('pname').value.trim()));
 $('soloBtn').onclick=()=>{AU.init();AU.play('click');leaveNet();net.qm=false;hostStartMatch()};
@@ -3893,6 +4028,8 @@ const QN={auto:'อัตโนมัติ',high:'สูง',low:'ประห�
 function syncViewBtn(){$('viewBtn').textContent=view3D&&has3D()&&R3.ok?'มุมมอง: 3D':'มุมมอง: 2D';$('qBtn').textContent='กราฟิก: '+QN[gfxQ];$('qBtn').classList.toggle('hidden',!(view3D&&has3D()&&R3.ok))}
 if(view3D&&!(has3D()&&R3.init()))view3D=false;syncViewBtn();
 $('viewBtn').onclick=()=>{AU.init();AU.play('click');if(!view3D){if(has3D()&&R3.init())view3D=true;else menuMsg('เครื่องนี้ไม่รองรับ 3D')}else view3D=false;lsSet('ar_view',view3D?'3d':'2d');syncViewBtn()};
+const syncSnd=()=>{$('sndBtn').textContent=AU.modeName()};syncSnd();
+$('sndBtn').onclick=()=>{AU.init();AU.toggle();syncSnd();AU.play('click')};
 $('qBtn').onclick=()=>{AU.init();AU.play('click');gfxQ=gfxQ==='auto'?'high':gfxQ==='high'?'low':'auto';lsSet('ar_q',gfxQ);if(has3D()&&R3.ok)R3.setQuality();syncViewBtn()};
 
 // ===================== LOOP =====================
