@@ -203,7 +203,6 @@ select{font-family:inherit;font-size:14px;padding:6px 8px;border-radius:8px;bord
   <div class="row"><button class="go ghost" id="watchBtn">ดูต่อ</button><button class="go" id="againBtn">กลับเมนู</button><button class="go ghost hidden" id="endMenu">เมนู</button></div>
 </div>
 <script src="engine.min.js"></script>
-<script src="models.js"></script>
 <script src="models2.js" async></script>
 <script src="peerjs.min.js"></script>
 <script src="sfx.js" async></script>
@@ -4043,12 +4042,13 @@ Object.assign(R3,{
 // ===================== Realistic-proportion characters (Quaternius, CC0) =====================
 // Heroes: Modular Character Outfits - Fantasy (peasant until you find armour, ranger gear after) on the Universal Base heads + hair,
 // animated with the Universal Animation Library. Night zombies are the same villagers, risen. Goblins = Puglin, trolls = Imp, wolves = Wolf.
-// Weapons are still the KayKit props (models.js), held in the new rig's hands. Falls back to the older models when models2.js is missing.
+// Weapons are built in code (r9.js) to fit this rig's hands. Falls back to the older procedural figures when models2.js is missing.
 const QN_S=74;                                    // world units per model metre: a hero stands ~132 tall
 const QN_UP=/^(spine_0[123]|neck_01|Head|clavicle_|upperarm_|lowerarm_|hand_|index_|middle_|ring_|pinky_|thumb_)/;
 // overlays: [clip, startSec, endSec] squeezed into the attack / cast time, upper body only
 const QN_SEG={slashA:['Sword_Regular_A',.04,.42],slashB:['Sword_Regular_B',.06,.5],heavy:['Sword_Attack',.35,1.15],punch:['Punch_Jab',.1,.6],cast:['Spell_Simple_Shoot',0,.5],shoot:['Pistol_Shoot',0,.5],
   throw:['OverhandThrow',.45,1.05],hit:['Hit_Chest',0,.33],scratch:['Zombie_Scratch',.45,1.25],hook:['Melee_Hook',.02,.46]};
+const QN_FING=/^(index|middle|ring|pinky)_0/,QN_WS=1.22;            // fingers are posed in code; weapons drawn a little over life size so they read from the game camera
 const QN_HAIR=['#3a2a1e','#8a5a2a','#d8b46a','#1e1e22','#a23a1e','#e8e4da','#5a3a2a','#c88a4a'];
 const QN_MOB={goblin:{k:'m_Puglin',h:84,atk:'slashA',dur:.4},ogre:{k:'m_Imp',h:178,atk:'heavy',dur:.6},wolf:{k:'m_Wolf',h:74}};
 const QN_Z={zombie:{tint:'#86a878',s:1},zrunner:{tint:'#9ab088',s:.96},zbrute:{tint:'#6f8f62',s:1.28,w:'Skeleton_Axe'},zlord:{tint:'#9a86c0',s:1.4,w:'Skeleton_Staff',em:['#3a1a5a',.3]}};
@@ -4056,7 +4056,7 @@ Object.assign(R3,{
   qn:null,qnBusy:false,
   qnLoad(){if(this.qn||this.qnBusy||!window.AR_QN||!window.AR_GLTF)return;this.qnBusy=true;let L;try{L=new AR_GLTF.GLTFLoader()}catch(e){return}
     const bin=s=>{const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u.buffer};
-    const src=Object.assign({},AR_QN);if(window.AR_KK)for(const k in AR_KK)if(k.startsWith('w_'))src[k]=AR_KK[k];
+    const src=Object.assign({},AR_QN);
     const keys=Object.keys(src),got={};let left=keys.length;const fin=()=>{try{this.qnSetup(got)}catch(e){console.warn('qn setup',e)}};
     keys.forEach((k,i)=>setTimeout(()=>{try{L.parse(bin(src[k]),'',g=>{got[k]=g;if(--left===0)fin()},e=>{console.warn('qn',k,e);if(--left===0)fin()})}catch(e){if(--left===0)fin()}},i*12))},
   qnSetup(got){const Q={g:{},clips:{},up:{},items:{},rig:{},h:{}};
@@ -4066,11 +4066,11 @@ Object.assign(R3,{
       else{Q.g[k]=g;if(k.startsWith('m_')||k.startsWith('c_')){g.scene.updateMatrixWorld(true);const bb=new THREE.Box3().setFromObject(g.scene,true);Q.h[k]=(bb.max.y-bb.min.y)||1.7}}}
     if(!Q.g.c_MP||!Q.g.h_M||!Q.clips.Idle_Loop||!Q.clips.Jog_Fwd_Loop)return;
     for(const n in QN_SEG){const c=Q.clips[QN_SEG[n][0]];if(c)Q.up[c.name]=new THREE.AnimationClip(c.name+'_U',c.duration,c.tracks.filter(t=>QN_UP.test(t.name)))}
-    this.qn=Q;this.kk={items:Q.items,chars:{},clips:{},qnOnly:true};   // kkItem / kkArm read the weapon props from here
+    this.qn=Q;this.kk={items:{},chars:{},clips:{},qnOnly:true};   // the older KayKit path stays switched off
     for(const [id,o] of this.objs)if(o.u&&!o.qn&&(o.u.hero||o.u.zombie||QN_MOB[o.u.kind])){this.scene.remove(o.root);this.objs.delete(id)}},
   // clips with only the tracks this rig has (the monsters lack finger tips), cached per rig
   qnClip(rig,bones,name,upper){const key=rig+(upper?'U':'')+name;let c=this.qn.rig[key];if(c!==undefined)return c;const s=upper?this.qn.up[name]:this.qn.clips[name];
-    c=s?new THREE.AnimationClip(s.name,s.duration,s.tracks.filter(t=>bones[t.name.slice(0,t.name.lastIndexOf('.'))])):null;this.qn.rig[key]=c;return c},
+    c=s?new THREE.AnimationClip(s.name,s.duration,s.tracks.filter(t=>bones[t.name.slice(0,t.name.lastIndexOf('.'))]&&!(rig==='hero'&&QN_FING.test(t.name)))):null;this.qn.rig[key]=c;return c},
   qnMat(src,o){o=o||{};const key='qn'+(src.map?src.map.uuid:src.uuid)+(o.tint||'')+(o.k||0)+(o.em?o.em[0]+o.em[1]:'')+(this.hi?'h':'l');
     return this.cached(key,()=>{const p={map:src.map||null,color:o.tint?new THREE.Color('#ffffff').lerp(new THREE.Color(o.tint),o.k===undefined?.5:o.k):new THREE.Color('#ffffff')};if(!src.map&&src.color){p.color=src.color.clone();if(o.tint)p.color.lerp(new THREE.Color(o.tint),o.k===undefined?.5:o.k)}if(src.vertexColors)p.vertexColors=true;
       if(src.emissiveMap){p.emissiveMap=src.emissiveMap;p.emissive=new THREE.Color('#ffffff');p.emissiveIntensity=1.6}else if(o.em){p.emissive=new THREE.Color(o.em[0]);p.emissiveIntensity=o.em[1]}
@@ -4083,10 +4083,36 @@ Object.assign(R3,{
     for(const n of meshes){n.castShadow=!!this.hi;n.receiveShadow=false;n.frustumCulled=false;n.userData.src=n.userData.src||n.material;n.material=paint(n.userData.src,n)}
     return{m,bones,meshes}},
   qnKind(src){const n=src.map&&src.map.name||src.name||'';return /Hair/i.test(n)?'hair':/Eye/i.test(n)?'eye':/Ranger|Peasant/i.test(n)?'cloth':'skin'},
-  qnHold(o){const B=o.bones,s=.46;o.bones.handslotr=o.bones.handslotl=null;
-    for(const [bn,slot] of[['hand_r','handslotr'],['hand_l','handslotl']]){const b=B[bn];if(!b)continue;const h=new THREE.Group();h.scale.setScalar(s);h.rotation.set(1.3,0,0);h.position.set(0,.07,.02);b.add(h);B[slot]=h}},
-  // blades and bows point forward out of the fist; staffs are carried upright
-  qnArm(o,u){const W=u.wk&&WEAPONS[u.wk],b=W&&W.fused?(W.arch==='SS'?'fire':W.base):u.wk,st=b==='fire'||b==='storm';if(o.bones.handslotr)o.bones.handslotr.rotation.x=st?2.75:1.3;this.kkArm(o,u)},
+  // grip frames in each fist (+Y of the frame = out past the thumb), a strap frame on the left forearm, and code-posed fingers
+  qnHold(o){const B=o.bones,mk=(bn,x,y,z,rx,rz)=>{const b=B[bn];if(!b)return null;const h=new THREE.Group();h.scale.setScalar(QN_WS);h.rotation.set(rx,0,rz);h.position.set(x,y,z);b.add(h);return h};
+    B.handslotr=mk('hand_r',-.03,.085,0,Math.PI/2,0);B.handslotl=mk('hand_l',.03,.085,0,Math.PI/2,0);B.armslotl=mk('hand_l',-.05,-.07,0,0,Math.PI/2);o.fing=[];
+    for(const sd of['r','l'])for(const f of['index','middle','ring','pinky'])for(let j=1;j<=3;j++){const b=B[f+'_0'+j+'_'+sd];if(b)o.fing.push([b,b.rotation.z,sd==='r'?1:-1,j,sd])}this.qnGrip(o,0,0)},
+  qnGrip(o,r,l){const C=[[.3,.45,.3],[.9,1.2,.8]];for(const f of o.fing)f[0].rotation.z=f[1]+f[2]*C[(f[4]==='r'?r:l)?1:0][f[3]-1]},
+  qnWM(c,r,m,em){return this.std(c,r,m,em?{emissive:em[0],emissiveIntensity:em[1]}:undefined)},
+  qnW(kind,P,bone){if(!bone)return null;const g=QW.make(kind,(c,r,m,em)=>this.qnWM(c,r,m,em),P);if(this.hi)g.traverse(n=>{if(n.isMesh)n.castShadow=true});bone.add(g);return g},
+  qnArm(o,u){for(const w of[o.wpnR,o.wpnL,o.book,o.shield])if(w&&w.parent)w.parent.remove(w);o.wpnR=o.wpnL=o.book=o.shield=o.wtip=null;
+    const wk=u.wk,t=Math.max(0,u.wt|0),B=o.bones,R=B.handslotr,L=B.handslotl,F=wk&&FUSED[wk];o.wk=wk;o.wt=u.wt;
+    o.wglow=F?F.glow:wk==='fire'?'#ffa040':wk==='frost'?'#9fe8ff':wk==='storm'?'#c8b4ff':t>=2?TIERS[t].c:null;if(!wk||!R||!L){this.qnGrip(o,0,0);return}
+    const em=F?[F.glow,.45+.1*t]:t>=1?[TIERS[t].c,[0,.12,.2,.32,.5][t]]:null,P={t,em,gem:F?F.glow:t>=2?TIERS[t].c:null,glow:F?F.glow:null};
+    const b=F?(F.arch==='SS'?'staff':F.arch):wk,staff=b==='staff'||b==='fire'||b==='storm';R.rotation.x=staff?2.75:Math.PI/2;
+    const book=(open,c)=>{const g=this.qnW('book',{t,open,gemC:c,cover:open?'#2e2a5a':'#4a2440'},o.model);if(g){g.scale.setScalar(.85);g.position.set(.42,1.18,.16);g.rotation.set(.75,-.45,.12);o.bookY=1.18}return g};
+    if(F){const a=F.arch;
+      if(a==='MM'){o.wpnR=this.qnW('sword',P,R);o.wpnL=this.qnW('sword',P,L)}
+      else if(a==='MR')o.wpnR=this.qnW('spear',P,R);
+      else if(a==='MS')o.wpnR=this.qnW('gsword',P,R);
+      else if(a==='RS')o.wpnL=this.qnW('bow',P,L);
+      else if(a==='RR'){o.wpnR=this.qnW('xbow',P,R);o.wpnL=this.qnW('xbow',P,L);if(o.wpnL)o.wpnL.scale.setScalar(.85)}
+      else{o.wpnR=this.qnW('staff',{t,em:null,gemC:ELEM[F.el].c,head:F.el==='storm'?'ring':''},R);o.book=book(true,ELEM[F.el2].c)}}
+    else if(wk==='sword'){o.wpnR=this.qnW('sword',P,R);o.shield=this.qnW('shield',{t,em,face:LOOKS[clamp(u.look|0,0,LOOKS.length-1)].c},B.armslotl)}
+    else if(wk==='axe')o.wpnR=this.qnW('axe',P,R);
+    else if(wk==='dagger'){o.wpnR=this.qnW('dagger',P,R);o.wpnL=this.qnW('dagger',P,L)}
+    else if(wk==='bow')o.wpnL=this.qnW('bow',P,L);
+    else if(wk==='fire')o.wpnR=this.qnW('staff',{t,gemC:'#ff8a30'},R);
+    else if(wk==='frost'){o.wpnR=this.qnW('wand',{t,gemC:'#9fe8ff'},R);o.book=book(true,'#9fe8ff')}
+    else if(wk==='gsword')o.wpnR=this.qnW('gsword',P,R);
+    else if(wk==='xbow')o.wpnR=this.qnW('xbow',P,R);
+    else if(wk==='storm'){o.wpnR=this.qnW('staff',{t,gemC:'#b9a6ff',head:'ring'},R);o.book=book(false,'#b9a6ff')}
+    this.qnGrip(o,o.wpnR?1:0,o.wpnL?1:0);const w=o.wpnR||o.wpnL;o.wtip=w&&w.userData.tip||null},
   qnActs(o,rig,names){o.mixer=new THREE.AnimationMixer(o.model);o.act={};o.up={};for(const n of names){const c=this.qnClip(rig,o.bones,n);if(c)o.act[n]=o.mixer.clipAction(c)}
     for(const n in QN_SEG){const c=this.qnClip(rig,o.bones,QN_SEG[n][0],true);if(c)o.up[n]=o.mixer.clipAction(c)}},
   qnPlay(o,kind,dur,w){const s=QN_SEG[kind],a=o.up[kind];if(!a)return;if(o.ov&&o.ov.a!==a)o.ov.a.stop();
@@ -4115,6 +4141,7 @@ Object.assign(R3,{
     const B=o.bones;let by=0;
     if(u.spinT>0||u.lotusT>0){o.body.rotation.y=(o.body.rotation.y+dt*(u.spinT>0?22:26))%(Math.PI*2);if(B.upperarm_r&&B.upperarm_l){B.upperarm_r.rotation.y-=1;B.upperarm_l.rotation.y+=1}}else o.body.rotation.y=0;
     if(u.leap){if(o.leapT===undefined||o.leapT<0)o.leapT=0;o.leapT+=dt;by+=Math.sin(Math.PI*Math.min(1,o.leapT/.55))*140}else o.leapT=-1;
+    if(o.book){o.book.position.y=o.bookY+Math.sin(T*2.2+u.id)*.035;o.book.rotation.y=-.45+Math.sin(T*1.3+u.id)*.12}
     o.body.rotation.x=u.dash?.38:u.kb?-.3:0;o.body.position.y=by;if(u.stunT>0&&B.Head)B.Head.rotation.z+=Math.sin(T*6)*.3;
     if(o.wtip&&(u.castAnim>0||u.atkAnim>0)&&Math.random()<.5){o.wtip.getWorldPosition(this.v);this.sp(true,{x:this.v.x,y:this.v.y,z:this.v.z,vy:30,l:.35,s:22,s1:4,c:FUSED[u.wk]?FUSED[u.wk].glow:u.wk==='fire'?'#ffb050':u.wk==='storm'?'#d8c8ff':'#bfefff',sp:u.wk==='fire'?3:4})}},
   qnDie(o,dt){const D=o.wolf?1.3:2.3;if(!o.dying){o.dying=true;o.dieT=D;if(o.ov){o.ov.a.stop();o.ov=null}for(const k in o.act)o.act[k].setEffectiveWeight(0);
@@ -4126,7 +4153,7 @@ Object.assign(R3,{
     const A=this.qnAssemble(fem?'c_FP':'c_MP',parts,src=>this.qnMat(src,{tint:this.qnKind(src)==='cloth'?'#5a6650':Z.tint,k:this.qnKind(src)==='cloth'?.55:.72,em:Z.em||['#1a3a10',.1]}));
     const m=A.m;m.scale.setScalar(QN_S*Z.s);o.model=m;o.bones=A.bones;o.parts=A.meshes;o.body.add(m);this.qnHold(o);
     const walk=u.kind==='zrunner'?'Jog_Fwd_Loop':'Zombie_Walk_Fwd_Loop';this.qnActs(o,'hero',['Zombie_Idle_Loop',walk,'Death01','LayToIdle']);o.idleA=o.act.Zombie_Idle_Loop;o.walkA=o.act[walk];o.idleA.play();o.walkA.play();o.walkA.setEffectiveWeight(0);
-    if(Z.w&&o.bones.handslotr){if(Z.w==='Skeleton_Staff')o.bones.handslotr.rotation.x=2.75;const g=this.kkItem(Z.w,0);if(g)o.bones.handslotr.add(g)}
+    if(Z.w&&o.bones.handslotr){const st=Z.w==='Skeleton_Staff';if(st)o.bones.handslotr.rotation.x=2.75;this.qnW(st?'staff':'axe',{rust:1,gemC:'#b46bff',head:'ring'},o.bones.handslotr);this.qnGrip(o,1,0)}
     o.aura=this.mesh(this.G.disc,this.glowM(u.lord?'#ff3a6a':u.big?'#ff6a3a':'#7dff5a',.22),0,1.5,0,u.r+18,1,u.r+18,o.root);return o},
   qnZomAnim(o,u,T,dt,mv){if(o.dying){o.dying=false;for(const k in o.act)o.act[k].stop();o.idleA.play();o.walkA.play()}
     if(u.rise>0&&!o.rose){o.rose=true;const a=o.act.LayToIdle;if(a){for(const k in o.act)if(o.act[k]!==a)o.act[k].setEffectiveWeight(0);a.reset();a.setLoop(THREE.LoopOnce,1);a.clampWhenFinished=true;a.timeScale=1.1;a.setEffectiveWeight(1);a.play();o.riseA=a}}
@@ -4150,6 +4177,68 @@ Object.assign(R3,{
 });
 // the new characters take over from the KayKit ones whenever models2.js is there
 (()=>{const P=R3,_load=P.kkLoad;P.kkLoad=function(){if(window.AR_QN)return this.qnLoad();return _load.call(this)}})();
+
+// ===================== Hand weapons sized for the realistic-proportion heroes =====================
+// Built in code (metres, +Y = out of the fist, origin = grip centre) so blades are slim, steel reads as steel and the grip sits in the hand.
+// QW.make(kind,M,P): M(colour,roughness,metalness,[emissive,intensity]) returns a material; P = palette / options.
+const QW={g:null,bl:{},
+  init(){if(this.g)return;const T=THREE,arc=(R,tube,a)=>new T.TorusGeometry(R,tube,5,14,a).rotateZ(-a/2).translate(-R,0,0);
+    this.g={cyl:new T.CylinderGeometry(1,1,1,10),cylT:new T.CylinderGeometry(.55,1,1,10),box:new T.BoxGeometry(1,1,1),sph:new T.SphereGeometry(1,12,8),oct:new T.OctahedronGeometry(1),cone:new T.ConeGeometry(1,1,8),
+      disc:new T.CylinderGeometry(1,1,1,20),dome:new T.SphereGeometry(1,12,6,0,Math.PI*2,0,Math.PI/2),ring:new T.TorusGeometry(1,.1,6,20),rim:new T.TorusGeometry(1,.045,6,24),
+      bow:arc(.62,.02,1.9),prod:arc(.5,.016,1.1)}},
+  // a flat blade from a counter-clockwise outline: thick along the spine, sharp at the rim
+  blade(key,pts,th,kx,ky){if(this.bl[key])return this.bl[key];let cx=0,cy=0;for(const p of pts){cx+=p[0];cy+=p[1]}cx/=pts.length;cy/=pts.length;
+    const inn=pts.map(p=>[cx+(p[0]-cx)*kx,cy+(p[1]-cy)*ky]),v=[],n=pts.length,h=th/2,tri=(a,b,c)=>v.push(a[0],a[1],a[2],b[0],b[1],b[2],c[0],c[1],c[2]);
+    for(let i=0;i<n;i++){const j=(i+1)%n,o1=[pts[i][0],pts[i][1],0],o2=[pts[j][0],pts[j][1],0];
+      for(const s of[1,-1]){const a=[inn[i][0],inn[i][1],s*h],b=[inn[j][0],inn[j][1],s*h],c=[cx,cy,s*h];
+        if(s>0){tri(c,a,b);tri(a,o1,o2);tri(a,o2,b)}else{tri(c,b,a);tri(a,o2,o1);tri(a,b,o2)}}}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.computeVertexNormals();return this.bl[key]=g},
+  add(p,geo,mat,x,y,z,sx,sy,sz,rx,ry,rz){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.scale.set(sx,sy,sz);if(rx||ry||rz)m.rotation.set(rx||0,ry||0,rz||0);p.add(m);return m},
+  tip(g,y,x){const t=new THREE.Object3D();t.position.set(x||0,y,0);g.add(t);g.userData.tip=t;return g},
+  pal(M,P){P=P||{};const t=P.t|0,rust=P.rust,em=P.em||null;return{
+      steel:M(rust?'#6f665c':P.steel||'#cfd6de',rust?.7:.26,rust?.55:.95,em),dark:M(rust?'#3a3530':'#5a6068',.45,.85),
+      trim:M(rust?'#5a4a3a':P.trim||['#8a9099','#aab4c0','#c79a4a','#e8b838','#ffd060'][Math.min(4,t)],rust?.7:.32,.9),
+      grip:M(rust?'#2e241c':P.grip||'#4a2f1e',.85,0),wood:M(rust?'#3a2e24':P.wood||'#6a4a2e',.8,0),gem:(c,k)=>M(c,.25,.1,[c,k===undefined?1.6:k])}},
+  sword(M,P,L,w,gl,gw){const g=new THREE.Group(),G=this.g,p=this.pal(M,P),y0=gl/2+.012;
+    this.add(g,this.blade('s'+L+w,[[-w,y0],[w,y0],[w*.86,y0+L*.86],[0,y0+L],[-w*.86,y0+L*.86]],w*.42,.1,.985),p.steel,0,0,0,1,1,1);
+    this.add(g,G.box,p.trim,0,y0-.004,0,gw,.022,.034);for(const s of[-1,1])this.add(g,G.sph,p.trim,s*gw/2,y0-.004,0,.017,.017,.02);
+    this.add(g,G.cyl,p.grip,0,0,0,.0155,gl,.0185);this.add(g,G.sph,p.trim,0,-gl/2-.018,0,.026,.024,.026);
+    if(P&&P.gem)this.add(g,G.oct,p.gem(P.gem),0,y0-.004,0,.02,.02,.026);return this.tip(g,y0+L)},
+  make(kind,M,P){this.init();P=P||{};const G=this.g,g=new THREE.Group(),p=this.pal(M,P),A=this.add.bind(this);
+    if(kind==='sword')return this.sword(M,P,.74,.03,.15,.2);
+    if(kind==='gsword')return this.sword(M,P,1.22,.043,.3,.34);
+    if(kind==='dagger')return this.sword(M,P,.3,.021,.11,.09);
+    if(kind==='axe'){A(g,G.cylT,p.wood,0,.27,0,.019,1.22,.019,Math.PI);A(g,G.cyl,p.dark,0,.76,0,.03,.2,.03);A(g,G.cyl,p.trim,0,-.33,0,.024,.05,.024);
+      A(g,this.blade('axe',[[.02,.67],[.09,.685],[.25,.55],[.292,.76],[.25,.97],[.09,.835],[.02,.85]],.036,.8,.62),p.steel,0,0,0,1,1,1);
+      A(g,this.blade('axeb',[[-.02,.71],[-.02,.81],[-.13,.76]],.03,.5,.5),p.steel,0,0,0,1,1,1);A(g,G.cone,p.trim,0,.9,0,.02,.08,.02);return this.tip(g,.76,.26)}
+    if(kind==='spear'){A(g,G.cyl,p.wood,0,.32,0,.016,1.85,.016);A(g,G.cyl,p.trim,0,1.24,0,.024,.07,.024);A(g,G.cyl,p.trim,0,-.6,0,.02,.06,.02);
+      A(g,this.blade('spear',[[-.02,1.27],[.02,1.27],[.052,1.4],[0,1.66],[-.052,1.4]],.02,.12,.97),p.steel,0,0,0,1,1,1);
+      for(const s of[-1,1])A(g,this.blade('spw',[[0,1.2],[.09,1.26],[.02,1.3]],.012,.5,.5),p.trim,0,0,0,s,1,1);if(P.glow)A(g,G.oct,p.gem(P.glow,1.2),0,1.24,0,.03,.045,.03);return this.tip(g,1.6)}
+    if(kind==='bow'){const wd=M(P.rust?'#3a2e24':'#7a4e2a',.7,0,P.em);A(g,G.bow,wd,0,0,0,1,1,1.5);A(g,G.cyl,p.grip,0,0,0,.026,.15,.03);
+      const tx=-.62+.62*Math.cos(.95),ty=.62*Math.sin(.95);for(const s of[-1,1]){A(g,G.sph,p.trim,tx,s*ty,0,.022,.03,.022);A(g,G.cyl,p.trim,-.004,s*.09,0,.027,.012,.031)}
+      A(g,G.cyl,M('#e8e0c8',.9,0),tx,0,0,.0035,ty*2,.0035);return this.tip(g,0,.1)}
+    if(kind==='xbow'){A(g,G.box,p.wood,0,.16,0,.05,.62,.05);A(g,G.box,p.wood,0,-.1,-.04,.045,.16,.07,-.5);A(g,G.box,p.dark,0,.2,.03,.02,.5,.012);
+      const pr=A(g,G.prod,p.steel,0,.44,.02,1,1,1.4,0,0,-Math.PI/2);const tx=.5*Math.sin(.55),ty=.44-(.5-.5*Math.cos(.55));
+      A(g,G.cyl,M('#e8e0c8',.9,0),0,ty,.02,.003,tx*2,.003,0,0,Math.PI/2);A(g,G.ring,p.trim,0,.5,0,.04,.04,.04,Math.PI/2);
+      A(g,G.cyl,p.steel,0,.3,.045,.006,.34,.006);A(g,G.cone,p.steel,0,.49,.045,.012,.05,.012);if(P.glow)A(g,G.oct,p.gem(P.glow,1.3),0,.5,.045,.018,.03,.018);return this.tip(g,.52)}
+    if(kind==='staff'||kind==='zstaff'){const c=P.gemC||'#ff8a30',ring=P.head==='ring';A(g,G.cylT,p.wood,0,.1,0,.021,1.6,.021,Math.PI);
+      for(const y of[.72,.3,-.25])A(g,G.cyl,p.trim,0,y,0,.024,.03,.024);A(g,G.sph,p.trim,0,-.71,0,.026,.03,.026);
+      if(ring){A(g,G.ring,p.trim,0,1.03,0,.1,.1,.1);A(g,G.sph,p.gem(c,1.8),0,1.03,0,.05,.05,.05);A(g,G.cone,p.trim,0,1.16,0,.018,.07,.018)}
+      else{for(let i=0;i<3;i++){const a=i*2.094,pr=A(g,G.box,p.trim,Math.sin(a)*.05,.98,Math.cos(a)*.05,.014,.2,.02);pr.rotation.set(Math.cos(a)*.32,0,-Math.sin(a)*.32)}
+        A(g,G.oct,p.gem(c,1.8),0,1.04,0,.055,.085,.055)}
+      return this.tip(g,1.04)}
+    if(kind==='wand'){const c=P.gemC||'#9fe8ff';A(g,G.cylT,p.wood,0,.13,0,.014,.36,.014);A(g,G.cyl,p.trim,0,-.03,0,.019,.025,.019);A(g,G.sph,p.trim,0,-.06,0,.02,.02,.02);
+      A(g,G.oct,p.gem(c,1.8),0,.36,0,.03,.06,.03);return this.tip(g,.38)}
+    if(kind==='book'){const c=P.gemC||'#9fe8ff',cov=M(P.cover||'#3a2a5a',.7,0),pg=M('#d8cfb4',.9,0);
+      if(P.open){for(const s of[-1,1]){const h=new THREE.Group();h.rotation.z=s*.22;g.add(h);A(h,G.box,cov,s*.085,0,0,.17,.012,.24);A(h,G.box,pg,s*.082,.014,0,.15,.02,.22)}
+        A(g,G.box,p.trim,0,-.004,0,.02,.016,.245);A(g,G.oct,p.gem(c,1.6),0,.1,0,.022,.032,.022)}
+      else{A(g,G.box,cov,0,0,0,.17,.055,.24);A(g,G.box,pg,.008,0,0,.165,.04,.225);A(g,G.box,p.trim,-.082,0,0,.012,.06,.245);A(g,G.oct,p.gem(c,1.4),0,.03,0,.03,.01,.04)}
+      return g}
+    if(kind==='shield'){const face=M(P.face||'#8a2a2a',.7,.05,P.em),R=.3;A(g,G.disc,p.wood,0,-.012,0,R,.02,R);A(g,G.disc,face,0,.004,0,R*.93,.02,R*.93);
+      A(g,G.rim,p.trim,0,.008,0,R,R,R*.9,Math.PI/2);A(g,G.dome,p.trim,0,.012,0,.075,.06,.075);
+      for(let i=0;i<4;i++){const a=i*Math.PI/2+.785;A(g,G.sph,p.trim,Math.cos(a)*R*.72,.014,Math.sin(a)*R*.72,.016,.01,.016)}
+      A(g,G.box,p.trim,0,.012,0,R*1.7,.008,.03);A(g,G.box,p.trim,0,.012,0,.03,.008,R*1.7);return g}
+    return g}};
 
 // ===================== SETTINGS: view + graphics quality =====================
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far';

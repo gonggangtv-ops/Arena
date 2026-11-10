@@ -38,4 +38,3 @@ License texts: CC BY 3.0 https://creativecommons.org/licenses/by/3.0/ · CC BY 4
 | Pack | Author | License |
 |---|---|---|
 | Modular Character Outfits - Fantasy (Standard), Universal Base Characters (Standard), Universal Animation Library 1 & 2 (Standard), Fantasy Bestiary (Imp, Puglin), Wolf — https://quaternius.com | Quaternius | CC0 |
-| KayKit Adventurers 2.0 / Skeletons 1.0 (weapon props) — https://kaylousberg.com | Kay Lousberg | CC0 |
