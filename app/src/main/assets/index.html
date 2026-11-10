@@ -215,11 +215,13 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
-const VER=8;
+const VER=9;
 // ===================== DATA =====================
-const TIERS=[{n:'ธรรมดา',c:'#dcdcdc',m:1,sa:0},{n:'หายาก',c:'#4aa8ff',m:1.17,sa:.08},{n:'มหากาพย์',c:'#b46bff',m:1.36,sa:.16},{n:'ตำนาน',c:'#ffb400',m:1.6,sa:.26},{n:'SSR',c:'#ff3d7f',m:1.9,sa:.38}];
-const HB={hp:610,mp:290,hpR:2.2,mpR:1.5,dmg:45,armor:2,mr:.18,spd:205};
-const HG={hp:62,mp:22,hpR:.18,mpR:.09,dmg:3.1,armor:.28,as:.013};
+const TIERS=[{n:'ธรรมดา',c:'#dcdcdc',m:1,sa:0},{n:'หายาก',c:'#4aa8ff',m:1.22,sa:.1},{n:'มหากาพย์',c:'#b46bff',m:1.5,sa:.2},{n:'ตำนาน',c:'#ffb400',m:1.9,sa:.32},{n:'SSR',c:'#ff3d7f',m:2.4,sa:.46}];
+const HB={hp:700,mp:290,hpR:2.2,mpR:1.5,dmg:45,armor:2,mr:.18,spd:205};
+const HG={hp:100,mp:22,hpR:.18,mpR:.09,dmg:4.6,armor:.28,as:.028};
+// basic attacks: every weapon swings faster, and landing hits back to back builds fury (faster and harder, up to FURY_MAX stacks)
+const AS_K=.78,AS_MIN=.18,FURY_MAX=15,FURY_AS=.04,FURY_DMG=.02,FURY_T=3.2,CRIT_BASE=.08,CRIT_BONUS=.15,PVP_K=.47,SKILL_K=1.45;   // hero-vs-hero damage is damped so duels last; skills hit harder across the board
 const FISTS={n:'มือเปล่า',ic:'✊',melee:1,range:70,atkT:.8,dmg:.55};
 const WEAPONS={
   sword:{n:'ดาบและโล่',ic:'🗡️',melee:1,range:92,atkT:.9,dmg:1,hp:90,armor:3,mr:.05,col:'#cfd8e6',
@@ -337,9 +339,9 @@ const CREEPS={
   goblin:{name:'ก็อบลิน',hp:260,dmg:11,armor:1,spd:165,r:21,atkT:1,range:58,xp:40,col:'#7fb04a'},
   wolf:{name:'หมาป่าเงิน',hp:450,dmg:20,armor:2,spd:182,r:25,atkT:.9,range:60,xp:65,col:'#9aa0aa'},
   ogre:{name:'โทรลล์ภูเขา',hp:950,dmg:36,armor:3,spd:150,r:34,atkT:1.5,range:80,xp:130,col:'#7a8a9a',cleave:true},
-  golem:{name:'โกเลมหินผา',hp:1600,dmg:55,armor:5,spd:120,r:40,atkT:1.6,range:84,xp:240,col:'#8a8478'},
-  guardian:{name:'ผู้พิทักษ์คริสตัล',hp:2000,dmg:62,armor:5,spd:118,r:42,atkT:1.5,range:86,xp:320,col:'#6a7ab0',leash:220},
-  boss:{name:'มังกรเพลิง',hp:7000,dmg:110,armor:7,spd:150,r:66,atkT:1.6,range:122,xp:1100,col:'#a83a1a',leash:360,dragon:true},
+  golem:{name:'โกเลมหินผา',hp:2100,dmg:55,armor:5,spd:120,r:40,atkT:1.6,range:84,xp:240,col:'#8a8478'},
+  guardian:{name:'ผู้พิทักษ์คริสตัล',hp:2700,dmg:62,armor:5,spd:118,r:42,atkT:1.5,range:86,xp:320,col:'#6a7ab0',leash:220},
+  boss:{name:'มังกรเพลิง',hp:9500,dmg:110,armor:7,spd:150,r:66,atkT:1.6,range:122,xp:1100,col:'#a83a1a',leash:360,dragon:true},
   // night only: the dead rise and hunt every hero they can smell
   zombie:{name:'ซอมบี้',hp:420,dmg:24,armor:2,spd:150,r:24,atkT:1.1,range:62,xp:70,col:'#6f8f5a',zombie:1,kk:'Skeleton_Minion'},
   zrunner:{name:'ซอมบี้วิ่งไว',hp:300,dmg:20,armor:1,spd:205,r:22,atkT:.8,range:58,xp:60,col:'#8aa070',zombie:1,kk:'Skeleton_Rogue'},
@@ -1047,7 +1049,7 @@ function recalc(u,full){if(!u.hero)return;const L=u.lvl-1,Wp=wdef(u),A=u.at>=0?A
   u.hpRegen=HB.hpR+HG.hpR*L+(A&&A.regen||0);u.mpRegen=(HB.mpR+HG.mpR*L)*(1+(Wp.mpR||0));
   u.armorV=HB.armor+HG.armor*L+(Wp.armor||0)+(A?A.armor:0)+u.armorB;u.mr=Math.min(.6,HB.mr+(Wp.mr||0)+(A?A.mr:0)+u.mrB);
   u.atkDmg=(HB.dmg+HG.dmg*L)*Wp.dmg*tm*(1+u.dmgB);
-  u.atkCdBase=Wp.atkT/(1+HG.as*L);u.range=Wp.range;u.melee=!!Wp.melee;u.pspd=Wp.pspd||0;u.spdBase=HB.spd*(1+(Wp.spd||0)+(A&&A.spd||0));
+  u.atkCdBase=Wp.atkT*AS_K/(1+HG.as*L);u.range=Wp.range;u.melee=!!Wp.melee;u.pspd=Wp.pspd||0;u.spdBase=HB.spd*(1+(Wp.spd||0)+(A&&A.spd||0));
   if(full){u.hp=u.maxHp;u.mp=u.maxMp}else{u.hp=Math.max(1,u.maxHp*hr);u.mp=u.maxMp*mr}}
 function mkHero(id,name,ctrl,look,team){look=clamp(look|0,0,LOOKS.length-1);const u=mkUnit({id,type:'hero',def:{color:LOOKS[look].c,name},look,name,ctrl:ctrl||null,hero:true,team:team||id,r:26,pts:1});u.bag=[1,1,0,0];recalc(u,true);return u}
 function setMobStats(u,scale){const d=u.def;u.scale=scale;u.maxHp=Math.round(d.hp*scale);u.hp=u.maxHp;u.atkDmg=d.dmg*scale;u.armorV=d.armor;u.mr=.15;u.atkCdBase=d.atkT;u.range=d.range;u.spdBase=d.spd;u.r=d.r}
@@ -1144,9 +1146,10 @@ function gainXp(u,x){
 function heal(u,a){u.hp=Math.min(u.maxHp,u.hp+a)}
 
 // ===================== COMBAT (host) =====================
+function addFury(u){if(!u||!u.hero||u.dead)return;u.fury=Math.min(FURY_MAX,(u.fury||0)+1);u.furyT=FURY_T}
 function dealDamage(t,amt,type,src,quiet,crit){
   if(t.dead||t.reviveT>0||amt<=0)return 0;
-  let k=1;if(type==='p')k=1-armorRed(t.armorV);else if(type==='m')k=1-t.mr;
+  let k=1;if(type==='p')k=1-armorRed(t.armorV);else if(type==='m')k=1-t.mr;if(t.hero&&src&&src.hero&&src!==t)k*=PVP_K;
   let d=amt*k,ab=0;
   if(t.shieldHp>0){ab=Math.min(t.shieldHp,d);t.shieldHp-=ab;d-=ab}
   t.hp-=d;t.hurtT=.12;t.revealT=Math.max(t.revealT,.8);if(src||type!=='pure')t.lastDmgT=gameT;
@@ -1222,7 +1225,7 @@ function basic(u,ft){
   let nx=u.fx,ny=u.fy;if(t){const d=dist(u,t)||1;nx=(t.x-u.x)/d;ny=(t.y-u.y)/d;u.fx=nx;u.fy=ny}
   if(u.invisT>0){u.invisT=0;u.bsReady=true}
   u.revealT=1;u.atkAnim=.28;
-  let dmg=u.atkDmg,crit=false;if(u.critNext||(Wp.crit&&Math.random()<Wp.crit)){dmg*=(Wp.critM||1.6)+.02*u.lvl;crit=true;u.critNext=false}
+  let dmg=u.atkDmg*(1+FURY_DMG*(u.fury||0)),crit=false;if(u.critNext||Math.random()<(Wp.crit||0)+CRIT_BASE){dmg*=(Wp.critM||1.6)+CRIT_BONUS+.02*u.lvl;crit=true;u.critNext=false}
   if(u.bonusNext){dmg+=u.bonusNext;u.bonusNext=0}
   if(u.bsReady&&t){dmg+=u.bsDmg;u.bsReady=false;crit=true;fxE('stab',{x:t.x|0,y:t.y|0})}
   if(!u.melee)u.atkSlowT=.25;
@@ -1233,16 +1236,16 @@ function basic(u,ft){
     for(const o of units){if(o.dead||!isEnemy(u,o))continue;const d=dist(u,o);if(d>u.range+u.r+o.r)continue;
       let da=Math.abs(Math.atan2(o.y-u.y,o.x-u.x)-ang);if(da>Math.PI)da=Math.PI*2-da;if(da>1.1)continue;
       const main=o===t||(!t&&!hitAny);const amt=main?dmg:(Wp.cleave?dmg*Wp.cleave:0);if(amt<=0)continue;
-      dealt+=dealDamage(o,amt,'p',u,false,crit&&main);hitAny=true;if(main)first=o}
-    if(hitAny){sndAt(crit?'crit':first&&first.hero?'hitm':'hit',u.x,u.y);const ls=(Wp.ls||0)+(u.lsT>0?.1:0);if(ls)heal(u,dealt*ls);if(Wp.el&&first)elemHit(u,first,Wp.el,.45)}
+      dealt+=dealDamage(o,amt,'p',u,false,crit&&main);hitAny=true;if(main){first=o;if(crit&&o.mob&&!o.boss&&!o.golem&&!o.dead){o.kb={vx:nx*460,vy:ny*460,t:.13};o.dash=null}}}
+    if(hitAny){addFury(u);sndAt(crit?'crit':first&&first.hero?'hitm':'hit',u.x,u.y);const ls=(Wp.ls||0)+(u.lsT>0?.1:0);if(ls)heal(u,dealt*ls);if(Wp.el&&first)elemHit(u,first,Wp.el,.45)}
   }else{const F=Wp.fused?Wp:null;let k,el=null;
     if(F){if(F.arch==='RS'){k=13;el=F.el}else if(F.arch==='RR')k=7;else{u.altE=!u.altE;el=u.altE&&F.el2?F.el2:F.el;k=BK[el]}}
     else k=u.wk==='fire'?1:u.wk==='frost'?3:u.wk==='xbow'?7:u.wk==='storm'?10:0;
-    const o={spd:u.pspd,r:k===0||k===7||k===13?8:k===1?12:11,dmg,type:Wp.magic?'m':'p',crit,kind:k,slow:Wp.chill?1:0,slowAmt:Wp.chill||0,life:(u.range+80)/u.pspd,el,elP:.45};
+    const o={spd:u.pspd,r:k===0||k===7||k===13?8:k===1?12:11,dmg,type:Wp.magic?'m':'p',crit,kind:k,slow:Wp.chill?1:0,slowAmt:Wp.chill||0,life:(u.range+80)/u.pspd,el,elP:.45,basic:1};
     if(F&&F.arch==='RR'){o.dmg=dmg*.58;for(const s of[-1,1]){const a=Math.atan2(ny,nx)+s*.05;proj(u,Math.cos(a),Math.sin(a),o)}}   // twin crossbows: two bolts a shot
     else proj(u,nx,ny,o);
     sndAt(k===0||k===7||k===13?'shoot':k===1?'orb':k===10?'zap':'ice',u.x,u.y)}
-  u.atkCd=u.atkCdBase*(u.asT>0?1/(1+u.asAmt):1)*(isHuman(u)?1:1.1);return true;
+  u.atkCd=Math.max(AS_MIN,u.atkCdBase*(u.asT>0?1/(1+u.asAmt):1)/(1+FURY_AS*(u.fury||0))*(isHuman(u)?1:1.1));return true;
 }
 // ap = aim point picked by the player (drag the skill button / mouse); without it the skill auto-targets
 function cast(u,i,ap){
@@ -1252,7 +1255,7 @@ function cast(u,i,ap){
   if(u.mp<cost){if(isHuman(u))emit({t:'s',n:'nomana',x:0,y:0,g:1,v:[u.id]});return false}
   if(u.rootT>0&&((u.wk==='sword'&&i!==1)||(u.wk==='dagger'&&i===0)||(u.wk==='bow'&&i===1)||ROOT_NO[u.wk+i]))return false;
   if((u.spinT>0||u.lotusT>0)&&!(i===1))return false;
-  const V=SKV[u.wk][i],A=u.atkDmg,SA=1+spellAmp(u),rngS=s.range[li]||400;
+  const V=SKV[u.wk][i],A=u.atkDmg,SA=(1+spellAmp(u))*SKILL_K,rngS=s.range[li]||400;
   if(ap&&!(Math.hypot(ap.x-u.x,ap.y-u.y)>8))ap=null;
   const ft=!isHuman(u)&&u.ai.tgt&&!u.ai.tgt.dead?u.ai.tgt:null,tg=ft?{x:ft.x,y:ft.y,t:ft}:ap?{x:ap.x,y:ap.y,t:enemyNear(u,ap,rngS)}:aim(u,rngS);
   const dx=tg.x-u.x,dy=tg.y-u.y,d=Math.hypot(dx,dy)||1,nx=dx/d,ny=dy/d;
@@ -1740,7 +1743,7 @@ function hostUpdate(dt){
   for(const u of units){
     if(u.dead){if(u.reviveT>0){u.reviveT-=dt;if(u.reviveT<=0)reviveUnit(u)}continue}
     u.atkCd-=dt;u.atkSlowT-=dt;u.stunT-=dt;u.slowT-=dt;u.buffT-=dt;u.hurtT-=dt;u.revealT-=dt;u.rootT-=dt;u.atkAnim-=dt;u.castAnim-=dt;for(let i=0;i<3;i++)u.cd[i]-=dt;
-    if(u.shieldT>0){u.shieldT-=dt;if(u.shieldT<=0)u.shieldHp=0}if(u.asT>0)u.asT-=dt;if(u.invisT>0)u.invisT-=dt;
+    if(u.shieldT>0){u.shieldT-=dt;if(u.shieldT<=0)u.shieldHp=0}if(u.asT>0)u.asT-=dt;if(u.furyT>0){u.furyT-=dt;if(u.furyT<=0)u.fury=0}if(u.invisT>0)u.invisT-=dt;
     if(u.hero){for(let i=0;i<4;i++)if(u.bcd[i]>0)u.bcd[i]-=dt;if(u.hotT>0){u.hotT-=dt;heal(u,u.hotV*dt)}if(u.motT>0){u.motT-=dt;u.mp=Math.min(u.maxMp,u.mp+u.motV*dt)}if(u.spdPT>0)u.spdPT-=dt}
     if(u.burnT>0){u.burnT-=dt;dealDamage(u,u.burnDps*dt,'m',u.burnSrc&&!u.burnSrc.dead?u.burnSrc:null,true);if(u.dead)continue}
     if(u.hero){
@@ -1791,7 +1794,7 @@ function hostUpdate(dt){
     if(p.ghost&&(p.x<0||p.y<0||p.x>WORLD||p.y>WORLD))p.life=0;
     if(!hitS)for(const u of units){if(u.dead||!isEnemy(p.owner,u)||p.hit.has(u))continue;
       if(Math.abs(p.x-u.x)<u.r+p.r&&dist(p,u)<u.r+p.r){p.hit.add(u);
-        if(!p.boom){dealDamage(u,p.dmg,p.crit?'pure':p.type,p.owner,false,p.crit);sndAt(p.crit?'crit':projHitSnd(p),u.x,u.y);
+        if(p.basic)addFury(p.owner);if(!p.boom){dealDamage(u,p.dmg,p.crit?'pure':p.type,p.owner,false,p.crit);sndAt(p.crit?'crit':projHitSnd(p),u.x,u.y);
           if(!u.dead){if(p.slow){u.slowT=Math.max(u.slowT,p.slow);u.slowAmt=Math.max(u.slowT>p.slow?u.slowAmt:0,p.slowAmt)}if(p.root){u.rootT=Math.max(u.rootT,p.root);fxE('snare',{id:u.id,x:u.x|0,y:u.y|0})}
             if(p.el)elemHit(p.owner,u,p.el,p.elP);if(p.kbF&&!u.boss&&!u.golem){const l=Math.hypot(p.vx,p.vy)||1;u.kb={vx:p.vx/l*p.kbF,vy:p.vy/l*p.kbF,t:.2};u.dash=null}}
           if(p.kind===4)fxE('shatter',{x:u.x|0,y:u.y|0});else if(p.kind>=11)fxE('hit',{x:u.x|0,y:u.y|0,c:p.el?ELEM[p.el].c:p.kind===11?'#7ff0d8':'#ffb46a'})}
@@ -2121,7 +2124,7 @@ function uflags(o){return(o.dead?1:0)|(o.stunT>0?2:0)|(o.slowT>0?4:0)|(o.buffT>0
   |(o.atkAnim>0?1024:0)|(o.castAnim>0?2048:0)|(o.wet?4096:0)|(o.shieldHp>0?8192:0)|(o.spinT>0?16384:0)|(o.lotusT>0?32768:0)|(o.leap?65536:0)|(o.invisT>0?131072:0)|(o.burnT>0?262144:0)|(o.aegis?524288:0)|(o.kb?1048576:0)|(o.rise>0?2097152:0)|(o.spdPT>0?4194304:0)|(o.fuseT>0?8388608:0)}
 function heroRow(o){return[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp,o.lvl,o.wk?AW.indexOf(o.wk):-1,o.wt,o.at,o.kills,o.mp|0,o.maxMp,o.shieldHp|0]}
 function selfRow(o){return[Math.round(o.xp),o.skl[0],o.skl[1],o.skl[2],o.pts,f1(Math.max(0,o.cd[0])),f1(Math.max(0,o.cd[1])),f1(Math.max(0,o.cd[2])),f1(o.armorV),Math.round(o.atkDmg),Math.round(o.spdB*100),Math.round(o.dmgB*100),Math.round(o.mr*100),f1(Math.max(0,o.shieldT)),
-  o.bag[0],o.bag[1],o.bag[2],o.bag[3],f1(Math.max(0,o.bcd[0])),f1(Math.max(0,o.bcd[1])),f1(Math.max(0,o.bcd[2])),f1(Math.max(0,o.bcd[3])),f1(Math.max(0,o.spdPT)),o.wk2?AW.indexOf(o.wk2):-1,o.wt2]}
+  o.bag[0],o.bag[1],o.bag[2],o.bag[3],f1(Math.max(0,o.bcd[0])),f1(Math.max(0,o.bcd[1])),f1(Math.max(0,o.bcd[2])),f1(Math.max(0,o.bcd[3])),f1(Math.max(0,o.spdPT)),o.wk2?AW.indexOf(o.wk2):-1,o.wt2,o.fury|0]}
 function mobRow(o){const r=[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp];if(o.zombie)r.push(ZK.indexOf(o.kind));return r}
 function aoeRow(a){return[a.x|0,a.y|0,a.r|0,f1(a.t),a.delay,a.dot||0,AOE_KINDS.indexOf(a.kind),f1(a.fxT),a.vis,a.ang!==undefined?Math.round(a.ang*100):0,a.shape==='line'?1:a.shape==='cone'?2:0,a.w||a.arc*100|0||0]}
 function snapFor(cid,c,budget){let F=evFocus(cid);F=F||{x:CX,y:CY};const R=1500;
@@ -2166,7 +2169,7 @@ function applySnap(d){
   for(const r of d.f){const u=UMAP.get(r[0]);if(!u)continue;setFlags(u,r[3]);pos(u,r[1],r[2],true);u.far=true}
   if(d.me){const r=d.me,u=UMAP.get(r[0]);if(u){u.xp=r[1];u.skl=[r[2],r[3],r[4]];u.pts=r[5];u.cd=[r[6],r[7],r[8]];u.armorV=r[9];u.atkDmg=r[10];u.spdB=r[11]/100;u.dmgB=r[12]/100;u.mr=r[13]/100;u.shieldT=r[14];
     if(r.length>=24){u.bag=[r[15]|0,r[16]|0,r[17]|0,r[18]|0];u.bcd=[+r[19]||0,+r[20]||0,+r[21]||0,+r[22]||0];u.spdPT=+r[23]||0}
-    if(r.length>=26){u.wk2=r[24]>=0?AW[r[24]]||null:null;u.wt2=r[25]|0}}}
+    if(r.length>=26){u.wk2=r[24]>=0?AW[r[24]]||null:null;u.wt2=r[25]|0}if(r.length>=27)u.fury=r[26]|0}}
   const inSnap=new Set();
   for(const r of d.m){let u=UMAP.get(r[0]);
     if(!u&&r.length>8&&ZK[r[8]]){u=mkZombie(r[0],ZK[r[8]],r[1],r[2],1);addUnit(u)}   // zombies are spawned by the host at night; clients meet them in the snapshot
@@ -2330,6 +2333,11 @@ function drawCombo(s){if(COMBO.n<2||COMBO.t<=0)return;const a=clamp(COMBO.t/.6,0
   ctx.save();ctx.globalAlpha=a;ctx.textAlign='right';ctx.textBaseline='alphabetic';ctx.font=`italic ${sz}px ${DMG_F}`;ctx.lineJoin='round';ctx.lineWidth=5*s;ctx.strokeStyle='rgba(20,8,0,.7)';ctx.strokeText(COMBO.n,x,y);
   const g=ctx.createLinearGradient(0,y-sz*.8,0,y);g.addColorStop(0,'#fff8dc');g.addColorStop(1,COMBO.n>=50?'#ff9a3a':'#f0c060');ctx.fillStyle=g;ctx.fillText(COMBO.n,x,y);
   ctx.textAlign='left';ctx.font=`italic ${16*s}px ${DMG_F}`;ctx.lineWidth=3*s;ctx.strokeText('HITS',x+4*s,y);ctx.fillStyle='#e8d2a0';ctx.fillText('HITS',x+4*s,y);ctx.restore()}
+// fury meter under the combo counter: stacks from back-to-back basic hits (faster + harder swings)
+function drawFury(me,s){const f=me.fury|0;if(f<=0||me.dead)return;const mm=Math.min(W,H)*.26,x=Math.max(SAFE.l+mm+34*s,W*.27),y=H*.43+12*s,mx=f>=FURY_MAX,n=FURY_MAX,pw=5*s,gap=2*s,tw=n*pw+(n-1)*gap,x0=x-tw*.62;
+  ctx.save();for(let i=0;i<n;i++){ctx.fillStyle=i<f?(mx?'#ff7a2a':'#ffc24a'):'rgba(0,0,0,.45)';ctx.fillRect(x0+i*(pw+gap),y,pw,4*s)}
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.font=`italic bold ${11.5*s}px ${DMG_F}`;ctx.lineJoin='round';ctx.lineWidth=3*s;ctx.strokeStyle='rgba(20,8,0,.75)';const t=(mx?'FURY MAX  ':'')+`⚡+${Math.round(f*FURY_AS*100)}%  💥+${Math.round(f*FURY_DMG*100)}%`;
+  if(mx)ctx.globalAlpha=.75+.25*Math.sin(performance.now()/90);ctx.strokeText(t,x0,y+18*s);ctx.fillStyle=mx?'#ff9a3a':'#f0d8a0';ctx.fillText(t,x0,y+18*s);ctx.restore()}
 function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 
 // ===================== HUD (Dota style) =====================
@@ -2343,7 +2351,7 @@ function drawHUD(){
     st(`${MC.ts>1?'🛡️ '+teamsLeft()+' ทีม':'👥 '+alive}   ${isNight()?'🌙':'☀️'} ${fmtT(gameT)}   💀 ${me.kills}`,y,`bold ${12.5*s}px system-ui,sans-serif`,'#e8e4d8');y+=15*s;
     const zt=zone.st==='wait'?`⏳ วงหดใน ${Math.ceil(zone.t)} วิ`:zone.st==='shrink'?'⚠️ วงกำลังหด':'🔥 วงสุดท้าย';st(zt,y,`bold ${11*s}px system-ui,sans-serif`,zone.st==='shrink'?'#ffb0f0':'#d8d8d8');y+=14*s;
     const fl=fuseLine(me);if(fl&&!me.dead){const parts=fl.t.split(' · ');for(const p of parts){st(p,y,`bold ${10*s}px system-ui,sans-serif`,fl.c,fl.p?.65+.35*Math.sin(performance.now()/150):.92);y+=12.5*s}}}
-  drawTarget(me,s,fr);drawCombo(s);
+  drawTarget(me,s,fr);drawCombo(s);drawFury(me,s);
   ctx.fillStyle='rgba(0,0,0,.5)';ctx.beginPath();ctx.arc(UI.mute.x,UI.mute.y,18,0,7);ctx.fill();ctx.font='17px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(['🔊','🔉','🔇'][AU.mode],UI.mute.x,UI.mute.y+1);ctx.textBaseline='alphabetic';
   if(net.mode!=='solo'){ctx.textAlign='right';ctx.font=`${11*s}px system-ui,sans-serif`;ctx.fillStyle='#bfe3ff';ctx.fillText(net.qm?'🌐 จับคู่ด่วน':`🌐 ${net.rname||'ห้อง '+net.code}`,UI.mute.x-26,UI.mute.y+4)}
   ctx.textAlign='right';ctx.font=`${12*s}px system-ui,sans-serif`;
