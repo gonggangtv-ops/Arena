@@ -138,6 +138,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     <button class="go ghost small fz" id="fuseBtn">⚒️ สูตรหลอมอาวุธ</button>
     <button class="go ghost small" id="camBtn">กล้อง: ใกล้</button>
     <button class="go ghost small" id="toneBtn">โทนภาพ: สดใส</button>
+    <button class="go ghost small" id="aoBtn">เงาลึก: เปิด</button>
     <button class="go ghost small" id="sndBtn">เสียง: เปิดทั้งหมด</button>
   </div>
   <div class="msg" id="menuMsg"></div>
@@ -2717,8 +2718,8 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
   resize(){if(!this.ok)return;this.renderer.setSize(W,H);this.cam.aspect=W/H;this.cam.updateProjectionMatrix();if(this.composer){this.composer.setPixelRatio(this.renderer.getPixelRatio());this.composer.setSize(W,H)}},
   setupPost(){if(this.composer){this.composer.dispose();this.composer=null;this.bloom=null}
     if(!this.post)return;const P=AR_POST,r=this.renderer;
-    try{const rt=new THREE.WebGLRenderTarget(W,H,{type:THREE.HalfFloatType,samples:4});const c=new P.EffectComposer(r,rt);
-      this.rpass=new P.RenderPass(new THREE.Scene(),this.cam);c.addPass(this.rpass);
+    try{const rt=new THREE.WebGLRenderTarget(W,H,{type:THREE.HalfFloatType,samples:4});const ao=this.aoPass&&lsGet('ar_ao','1')!=='0';if(ao)rt.depthTexture=new THREE.DepthTexture(W,H);const c=new P.EffectComposer(r,rt);
+      this.rpass=new P.RenderPass(new THREE.Scene(),this.cam);c.addPass(this.rpass);this.ao=null;if(ao){try{this.ao=this.aoPass();c.addPass(this.ao)}catch(e){console.warn('ao',e);this.ao=null}}
       this.bloom=new P.UnrealBloomPass(new THREE.Vector2(W,H),.3,.45,1.15);c.addPass(this.bloom);c.addPass(new P.OutputPass());
       c.setPixelRatio(r.getPixelRatio());c.setSize(W,H);this.composer=c}catch(e){console.warn('post',e);this.post=false;this.composer=null}},
   draw(){if(this.composer){this.rpass.scene=this.scene;this.rpass.camera=this.cam;this.composer.render()}else this.renderer.render(this.scene,this.cam)},
@@ -2947,7 +2948,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const S=this.scene=new THREE.Scene();this.world=WD;this.objs=new Map();this.itemObjs=new Map();this.pool={};this.decals=[];this.trails=[];this.deadObjs=[];const G=this.G;
     S.background=new THREE.Color('#8fb4d8');S.fog=new THREE.FogExp2('#a8c4dc',.000085);if(this.envTex)S.environment=this.envTex;
     this.hemi=new THREE.HemisphereLight('#cfe4ff','#4a4030',1.0);S.add(this.hemi);
-    const d=this.sun=new THREE.DirectionalLight('#fff0d8',2.8);d.castShadow=true;d.shadow.mapSize.set(this.shadowSize,this.shadowSize);const sc=d.shadow.camera;sc.left=-1400;sc.right=1400;sc.top=1400;sc.bottom=-1400;sc.near=100;sc.far=4600;d.shadow.bias=-.0006;d.shadow.normalBias=2.2;d.shadow.intensity=.74;S.add(d);S.add(d.target);
+    const d=this.sun=new THREE.DirectionalLight('#fff0d8',2.8);d.castShadow=true;d.shadow.mapSize.set(this.shadowSize,this.shadowSize);const sc=d.shadow.camera;sc.left=-1400;sc.right=1400;sc.top=1400;sc.bottom=-1400;sc.near=100;sc.far=4600;d.shadow.bias=-.0006;d.shadow.normalBias=2.2;d.shadow.intensity=.8;S.add(d);S.add(d.target);
     this.plight=new THREE.PointLight('#ffd8a8',0,900,1);this.plight.castShadow=false;S.add(this.plight);
     this.buildTerrain();this.buildWater();this.buildVegetation();this.buildRocks();this.buildBuildings();this.buildCastle();this.buildProps();
     // zone
@@ -3648,6 +3649,7 @@ Object.assign(R3,{
     this.scene.fog.color.copy(this.c1.set('#0c1428')).lerp(this.c2.set('#a8c4dc'),dk).lerp(this.c2.set('#e8b890'),du*.5);if(moody){this.sun.intensity*=lerp(.8,.5,dk);this.hemi.intensity*=lerp(.85,.55,dk);this.scene.fog.color.lerp(this.c1.set('#14161a'),lerp(.35,.74,dk));if(!inCave)this.plight.intensity+=dk*170}
     this.scene.fog.density=moody?.00017:.000085;this.scene.background.copy(this.scene.fog.color);
     this.sun.position.set(this.tx-560,this.ly+1300,this.ty+420);this.sun.target.position.set(this.tx,this.ly,this.ty);
+    {const sr=Math.round(Math.min(1500,D/805*820*Math.max(1,W/H/1.78)*1.1+100)/50)*50,sc=this.sun.shadow.camera;if(sc.right!==sr){sc.left=sc.bottom=-sr;sc.right=sc.top=sr;sc.updateProjectionMatrix()}}   // shadow map hugs what the camera sees: sharper shadows
     this.staticGlow.material.uniforms.k.value=lerp(1.25,.45,dk);this.staticGlow.material.uniforms.scale.value=H*this.renderer.getPixelRatio()/2;
     const night=1-dk;this.winMat.emissiveIntensity=night*1.6+du*.6;this.lampMat.emissiveIntensity=.3+night*1.8;
     if(this.bloom)this.bloom.strength=lerp(.62,.22,dk);this.stepBoxes(dt);
@@ -4361,6 +4363,34 @@ const QW={g:null,bl:{},
   P.qnArm=function(o,u){const F=u.wk&&FUSED[u.wk],t=u.wt|0;this._aura=F?F.glow:u.wk&&t>=2?TIERS[Math.min(4,t)].c:null;try{_arm.call(this,o,u)}finally{this._aura=null}this.qnGear(o,u)};
   P.qnAnim=function(o,u,T,dt,mv){_anim.call(this,o,u,T,dt,mv);if(o.cape){const k=u.dash?1.6:mv?1:0;o.capeK=lerp(o.capeK||0,k,1-Math.pow(.004,dt));o.cape.rotation.x=.1+o.capeK*.55+Math.sin(T*(2.6+o.capeK*5)+u.id)*(.035+.05*o.capeK);o.cape.rotation.z=Math.sin(T*1.7+u.id)*.04}};
 })();
+// ===================== Depth pass: ambient occlusion (soft contact shadow in creases and around bases) + gentle sharpening =====================
+// Runs inside the post chain on the scene's own depth buffer: AO at half resolution, then one full-screen composite.
+R3.aoPass=function(){const T=THREE,tri=new T.BufferGeometry();tri.setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3));tri.setAttribute('uv',new T.Float32BufferAttribute([0,0,2,0,0,2],2));
+  const cam2=new T.OrthographicCamera(-1,1,1,-1,0,1),VS='varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}';
+  const DEP='uniform sampler2D tDepth;uniform vec2 uNF,uProj;float vz(vec2 uv){float d=texture2D(tDepth,uv).x;return uNF.x*uNF.y/((uNF.y-uNF.x)*d-uNF.y);}vec3 vp(vec2 uv){float z=vz(uv);return vec3((uv*2.-1.)*uProj*-z,z);}\n';
+  const aoM=new T.ShaderMaterial({uniforms:{tDepth:{value:null},uNF:{value:new T.Vector2(30,14000)},uProj:{value:new T.Vector2(1,1)},uRes:{value:new T.Vector2(1,1)},uR:{value:72},uK:{value:2.7}},vertexShader:VS,depthTest:false,depthWrite:false,
+    fragmentShader:'precision highp float;varying vec2 vUv;uniform vec2 uRes;uniform float uR,uK;\n'+DEP+`void main(){vec3 p=vp(vUv);if(p.z<-6000.){gl_FragColor=vec4(1.);return;}
+      vec2 e=1./uRes;vec3 a1=vp(vUv+vec2(e.x,0.)),a0=vp(vUv-vec2(e.x,0.)),b1=vp(vUv+vec2(0.,e.y)),b0=vp(vUv-vec2(0.,e.y));
+      vec3 dx=abs(a1.z-p.z)<abs(p.z-a0.z)?a1-p:p-a0,dy=abs(b1.z-p.z)<abs(p.z-b0.z)?b1-p:p-b0;vec3 n=normalize(cross(dx,dy));
+      vec2 ruv=uR/(-p.z)*.5/uProj;float ang=6.2832*fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(.06711056,.00583715))));float bias=uR*.045-p.z*.0012,occ=0.;
+      for(int i=0;i<10;i++){float t=(float(i)+.5)/10.,a=ang+float(i)*2.39996;vec3 v=vp(vUv+vec2(cos(a),sin(a))*sqrt(t)*ruv)-p;float d2=dot(v,v);
+        occ+=max(0.,dot(v,n)-bias)/(d2+uR*uR*.02)*uR*clamp(1.-d2/(uR*uR*2.2),0.,1.);}
+      float ao=clamp(1.-uK*occ/10.,0.,1.);ao=mix(ao,1.,smoothstep(2200.,4200.,-p.z));gl_FragColor=vec4(ao,ao,ao,1.);}`});
+  const cmM=new T.ShaderMaterial({uniforms:{tColor:{value:null},tAO:{value:null},tDepth:{value:null},uNF:aoM.uniforms.uNF,uProj:aoM.uniforms.uProj,uRes:aoM.uniforms.uRes,uPx:{value:new T.Vector2(1,1)},uAmt:{value:.95},uSharp:{value:.45},uR:aoM.uniforms.uR},vertexShader:VS,depthTest:false,depthWrite:false,
+    fragmentShader:'precision highp float;varying vec2 vUv;uniform sampler2D tColor,tAO;uniform vec2 uRes,uPx;uniform float uAmt,uSharp,uR;\n'+DEP+`void main(){vec4 c=texture2D(tColor,vUv);float zc=vz(vUv);
+      vec3 nb=(texture2D(tColor,vUv+vec2(uPx.x,0.)).rgb+texture2D(tColor,vUv-vec2(uPx.x,0.)).rgb+texture2D(tColor,vUv+vec2(0.,uPx.y)).rgb+texture2D(tColor,vUv-vec2(0.,uPx.y)).rgb)*.25;
+      vec3 col=max(c.rgb+clamp(c.rgb-nb,-.12,.12)*uSharp,0.);
+      vec2 e=1./uRes;float s=0.,w=0.;for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){vec2 uv=vUv+vec2(float(i),float(j))*e*2.;float dz=(vz(uv)-zc)/(uR*.6);float k=1./(1.+dz*dz*4.);s+=texture2D(tAO,uv).r*k;w+=k;}
+      float ao=s/w;float lum=dot(col,vec3(.3,.59,.11));ao=mix(ao,1.,smoothstep(.9,2.2,lum));
+      col*=mix(vec3(1.),vec3(ao*ao*.55+ao*.45,ao*ao*.5+ao*.5,ao),uAmt);gl_FragColor=vec4(col,c.a);}`});
+  const mesh=new T.Mesh(tri,aoM);mesh.frustumCulled=false;let rtAO=null;const self=this;
+  return{enabled:true,needsSwap:true,clear:false,renderToScreen:false,isPass:true,ao:aoM,cm:cmM,
+    setSize(w,h){if(rtAO)rtAO.dispose();const aw=Math.max(2,w>>1),ah=Math.max(2,h>>1);rtAO=new T.WebGLRenderTarget(aw,ah,{depthBuffer:false});aoM.uniforms.uRes.value.set(aw,ah);cmM.uniforms.uPx.value.set(1/w,1/h)},
+    render(renderer,writeBuffer,readBuffer){const cam=self.cam,dt=readBuffer.depthTexture;if(!dt||!rtAO){mesh.material=cmM;cmM.uniforms.uAmt.value=0}
+      aoM.uniforms.uNF.value.set(cam.near,cam.far);aoM.uniforms.uProj.value.set(1/cam.projectionMatrix.elements[0],1/cam.projectionMatrix.elements[5]);const ac=renderer.autoClear;renderer.autoClear=false;
+      if(dt&&rtAO){aoM.uniforms.tDepth.value=dt;mesh.material=aoM;renderer.setRenderTarget(rtAO);renderer.render(mesh,cam2)}
+      cmM.uniforms.tColor.value=readBuffer.texture;cmM.uniforms.tAO.value=rtAO?rtAO.texture:null;cmM.uniforms.tDepth.value=dt;mesh.material=cmM;renderer.setRenderTarget(this.renderToScreen?null:writeBuffer);renderer.render(mesh,cam2);renderer.autoClear=ac},
+    dispose(){if(rtAO)rtAO.dispose();aoM.dispose();cmM.dispose();tri.dispose()}}};
 
 // ===================== SETTINGS: view + graphics quality =====================
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone2','bright')==='dark';
@@ -4373,6 +4403,8 @@ const syncCam=()=>{$('camBtn').textContent='กล้อง: '+(camNear?'ใก�
 $('camBtn').onclick=()=>{AU.init();AU.play('click');camNear=!camNear;lsSet('ar_cam',camNear?'near':'far');syncCam()};
 const syncTone=()=>{$('toneBtn').textContent='โทนภาพ: '+(moody?'มืดสมจริง':'สดใส');document.body.classList.toggle('moody',moody)};syncTone();
 $('toneBtn').onclick=()=>{AU.init();AU.play('click');moody=!moody;lsSet('ar_tone2',moody?'dark':'bright');syncTone()};
+const syncAo=()=>{$('aoBtn').textContent='เงาลึก: '+(lsGet('ar_ao','1')!=='0'?'เปิด':'ปิด')};syncAo();
+$('aoBtn').onclick=()=>{AU.init();AU.play('click');lsSet('ar_ao',lsGet('ar_ao','1')!=='0'?'0':'1');syncAo();if(has3D()&&R3.ok)R3.setQuality()};
 const syncSnd=()=>{$('sndBtn').textContent=AU.modeName()};syncSnd();
 $('sndBtn').onclick=()=>{AU.init();AU.toggle();syncSnd();AU.play('click')};
 $('qBtn').onclick=()=>{AU.init();AU.play('click');gfxQ=gfxQ==='auto'?'high':gfxQ==='high'?'low':'auto';lsSet('ar_q',gfxQ);if(has3D()&&R3.ok)R3.setQuality();syncViewBtn()};
