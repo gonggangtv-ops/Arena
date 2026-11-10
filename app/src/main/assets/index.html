@@ -110,36 +110,80 @@ select{font-family:inherit;font-size:14px;padding:6px 8px;border-radius:8px;bord
 .spin{width:46px;height:46px;border-radius:50%;border:4px solid rgba(230,194,90,.25);border-top-color:var(--gold);animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 52%,rgba(8,6,14,.34) 82%,rgba(4,3,8,.62) 100%)}
+
+/* ---- lobby: hero on stage, mode panel right, info left ---- */
+.ov.lobbyUI{background:linear-gradient(90deg,rgba(8,6,10,.82),rgba(8,6,10,.18) 30%,rgba(8,6,10,0) 50%,rgba(8,6,10,.2) 70%,rgba(8,6,10,.84)),linear-gradient(180deg,rgba(6,5,10,.75),rgba(6,5,10,0) 20%,rgba(6,5,10,0) 78%,rgba(6,5,10,.8));justify-content:space-between;align-items:stretch;text-align:left;gap:6px}
+.lbTop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{font-family:Georgia,"Times New Roman",serif;font-size:clamp(20px,5.4vh,34px);color:var(--gold);letter-spacing:1.5px;text-shadow:0 3px 0 #4a2a00,0 0 22px rgba(255,170,60,.4);white-space:nowrap}
+.brand small{font-family:system-ui,"Noto Sans Thai",sans-serif;font-size:12px;color:var(--mute);letter-spacing:0;margin-left:10px;text-shadow:none}
+.prof{display:flex;align-items:center;gap:8px;background:rgba(18,14,10,.78);border:1px solid var(--line);border-radius:22px;padding:5px 12px}
+.prof label{font-size:12px;color:var(--mute)}.prof input{width:110px}
+.lbMid{flex:1;display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:0}
+.lbLeft,.lbRight{display:flex;flex-direction:column;gap:7px;width:min(300px,31vw);min-width:0}
+.lbStage{flex:1;align-self:stretch;position:relative;min-width:0;pointer-events:none}
+.heroTag{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);white-space:nowrap;font-size:14px;font-weight:700;color:#ffe9a8;text-shadow:0 2px 6px #000,0 0 12px rgba(0,0,0,.8);background:rgba(10,8,6,.55);border:1px solid rgba(230,194,90,.35);border-radius:16px;padding:4px 14px}
+.card{background:linear-gradient(rgba(34,27,19,.9),rgba(16,12,9,.9));border:1px solid var(--line);border-radius:12px;padding:9px 12px;box-shadow:0 6px 18px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.03)}
+.card .ch{font-weight:700;color:#ffe9a8;font-size:14.5px}.card .ch small{display:block;font-weight:400;color:var(--mute);font-size:11.5px;margin-top:1px}
+.card ul{margin:6px 0 0;padding:0;list-style:none;font-size:12px;line-height:1.6;color:#e2d6ba}
+.navb{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:var(--ink);background:linear-gradient(90deg,rgba(40,32,22,.92),rgba(20,16,12,.8));border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:9px;padding:8px 12px;text-align:left}
+.navb span{font-size:19px}.navb.fz{border-left-color:#ffb040;color:#ffe2a0}.navb:active{transform:scale(.98)}
+.card.mode{text-align:center}.go.start{display:block;width:100%;font-size:clamp(20px,5.6vh,28px);padding:clamp(9px,2.6vh,15px) 10px;margin-top:8px;border-radius:10px;letter-spacing:1px;box-sizing:border-box}
+.go.wide{width:100%;box-sizing:border-box;text-align:left;font-size:15px;padding:9px 14px}.go.wide small{display:block;font-weight:400;font-size:11.5px;opacity:.8}
+.lbBot{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.card.mode .msg{margin-top:4px;min-height:16px;font-size:12px}
+.subOv{z-index:7;justify-content:flex-start;overflow-y:auto;touch-action:pan-y;background:radial-gradient(ellipse at 50% 0%,#241c12,#0c0a08 70%)}
+.helpTxt{max-width:760px;font-size:13px;line-height:1.75;text-align:left;color:#e2d6ba}
+@media (max-height:440px){.card ul{font-size:11px;line-height:1.45}.card{padding:6px 10px}.navb{padding:6px 10px;font-size:13px}.lbLeft,.lbRight{gap:5px}.go.wide{padding:6px 12px;font-size:14px}.lbBot .go{padding:5px 9px;font-size:12px}.brand small{display:none}}
+@media (max-width:640px){.lbLeft .card{display:none}.lbLeft,.lbRight{width:44vw}}
 </style>
 </head>
 <body>
 <div id="safe"></div>
 <canvas id="gl"></canvas><div id="vig"></div>
 <canvas id="c"></canvas>
-<div id="menu" class="ov">
-  <h1>⚔️ Arena Royale</h1>
-  <div class="sub">หุบเขาแห่งเทพนิยาย · ไม่มีอาชีพ — เก็บอาวุธอะไรได้สกิลแบบนั้น · เกราะ 5 ระดับ · 32 คน รอดคนสุดท้าย (หรือทีมสุดท้าย) ชนะ</div>
-  <div class="codex" id="codex"></div>
-  <div class="row">
-    <label for="pname" class="sub" style="margin:0">ชื่อ</label><input id="pname" maxlength="12" autocomplete="off">
-    <span class="sub" style="margin:0">ผ้าคลุม</span><div class="looks" id="looks"></div>
+<div id="menu" class="ov lobbyUI">
+  <div class="lbTop">
+    <div class="brand">⚔️ Arena Royale<small>หุบเขาแห่งเทพนิยาย</small></div>
+    <div class="prof"><label for="pname">ชื่อ</label><input id="pname" maxlength="12" autocomplete="off"><div class="looks" id="looks"></div></div>
   </div>
-  <div class="row">
-    <button class="go qm" id="qmBtn">⚡ จับคู่ด่วน</button>
-    <button class="go ghost" id="soloBtn">เล่นคนเดียว</button>
-    <button class="go alt" id="roomsBtn">🏠 ห้องออนไลน์</button>
+  <div class="lbMid">
+    <div class="lbLeft">
+      <div class="card">
+        <div class="ch">🏆 รอดคนสุดท้าย · 32 คน</div>
+        <ul><li>🗡️ ไม่มีอาชีพ เก็บอาวุธอะไรได้สกิลแบบนั้น</li><li>⚒️ พกอาวุธ 2 ชนิด ครบ 10 นาทีหลอมเป็นอาวุธใหม่</li><li>🌙 กลางคืนซอมบี้ออกล่า ล้มได้ลุ้นของ SSR 1%</li><li>🌿 ซ่อนในพุ่มหญ้า · วงหดเรื่อยๆ</li></ul>
+      </div>
+      <button class="navb" id="codexBtn"><span>🗡️</span>คลังอาวุธ</button>
+      <button class="navb fz" id="fuseBtn"><span>⚒️</span>สูตรหลอมอาวุธ</button>
+      <button class="navb" id="helpBtn"><span>📖</span>วิธีเล่น</button>
+    </div>
+    <div class="lbStage"><div class="heroTag" id="heroTag"></div></div>
+    <div class="lbRight">
+      <div class="card mode">
+        <div class="ch">⚡ จับคู่ด่วน <small>ทุกคนเป็นศัตรู · คนไม่ครบเติมบอท</small></div>
+        <button class="go qm start" id="qmBtn">เริ่มเกม</button>
+        <div class="msg" id="menuMsg"></div>
+      </div>
+      <button class="go alt wide" id="roomsBtn">🏠 ห้องออนไลน์ <small>เล่นกับเพื่อน · โหมดทีม</small></button>
+      <button class="go ghost wide" id="soloBtn">🤖 เล่นคนเดียว <small>ฝึกกับบอท</small></button>
+    </div>
   </div>
-  <div class="row">
+  <div class="lbBot">
     <button class="go ghost small" id="viewBtn">มุมมอง: 3D</button>
     <button class="go ghost small" id="qBtn">กราฟิก: อัตโนมัติ</button>
-    <button class="go ghost small fz" id="fuseBtn">⚒️ สูตรหลอมอาวุธ</button>
     <button class="go ghost small" id="camBtn">กล้อง: ใกล้</button>
     <button class="go ghost small" id="sndBtn">เสียง: เปิดทั้งหมด</button>
+    <button class="go ghost small" id="credBtn">🎵 เครดิตเสียง</button>
   </div>
-  <div class="msg" id="menuMsg"></div>
-  <div class="tip">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
+</div>
+<div id="codexOv" class="ov hidden subOv">
+  <div class="rtop"><button class="go ghost small" id="codexBack">← กลับ</button><div class="rtitle">🗡️ คลังอาวุธ</div><span class="rsp"></span></div>
+  <div class="sub fsub">หุบเขาแห่งเทพนิยาย · ไม่มีอาชีพ — เก็บอาวุธอะไรได้สกิลแบบนั้น · เกราะ 5 ระดับ · 32 คน รอดคนสุดท้าย (หรือทีมสุดท้าย) ชนะ</div>
+  <div class="codex" id="codex"></div>
+</div>
+<div id="helpOv" class="ov hidden subOv">
+  <div class="rtop"><button class="go ghost small" id="helpBack">← กลับ</button><div class="rtitle">📖 วิธีเล่น</div><span class="rsp"></span></div>
+  <div class="tip helpTxt">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
 <br>จอยซ้าย = เดิน · ⚔️ = โจมตี · เดินชนอาวุธเพื่อเก็บ (🔄 รับอาวุธ) · แตะ ＋ อัปสกิล (อัลติเลเวล 6/11/16)</div>
-  <button class="credlink" id="credBtn">🎵 เครดิตเสียงและเพลง</button>
 </div>
 <div id="credOv" class="ov hidden">
   <div class="rtop"><button class="go ghost small" id="credBack">← กลับ</button><div class="rtitle">🎵 เครดิตเสียงและเพลง</div><span class="rsp"></span></div>
@@ -2444,14 +2488,19 @@ function drawPanel(me,s){
   ctx.fillStyle=me.wk?TIERS[me.wt].c:'#9a9080';ctx.fillText(wpn,bx+bw-aw-6*s,py+46*s);
   if(me.pts>0){ctx.textAlign='center';ctx.font=`bold ${11*s}px system-ui,sans-serif`;ctx.globalAlpha=.6+.4*Math.sin(performance.now()/160);ctx.fillStyle='#7dff8a';ctx.fillText(`แต้มสกิล +${me.pts}`,pcx,py-6*s);ctx.globalAlpha=1}
   return{x:px,y:py,w:pw,h:ph}}
+// round HUD button: soft shadow, bevelled metal rim, dark glass face tinted by `tint`, gloss on top
+function btnBase(x,y,r,pr,rim,tint,dim){const R=r*(pr?.94:1),rw=Math.max(3,r*.11);
+  ctx.fillStyle='rgba(0,0,0,.42)';ctx.beginPath();ctx.arc(x,y+r*.07,R+rw*.6,0,7);ctx.fill();
+  const m=ctx.createLinearGradient(x,y-R,x,y+R);m.addColorStop(0,dim?'#8a8474':'#fff3c4');m.addColorStop(.45,rim);m.addColorStop(1,dim?'#2e2a22':'#5a3c10');ctx.fillStyle=m;ctx.beginPath();ctx.arc(x,y,R,0,7);ctx.fill();
+  ctx.fillStyle='rgba(8,6,4,.9)';ctx.beginPath();ctx.arc(x,y,R-rw,0,7);ctx.fill();
+  const g=ctx.createRadialGradient(x,y-R*.35,1,x,y,R-rw);g.addColorStop(0,hexA(tint,pr?.75:.55));g.addColorStop(.75,hexA(tint,.14));g.addColorStop(1,'rgba(6,5,4,.2)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,R-rw-1,0,7);ctx.fill();
+  const gl=ctx.createLinearGradient(x,y-R,x,y);gl.addColorStop(0,'rgba(255,255,255,.22)');gl.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=gl;ctx.beginPath();ctx.ellipse(x,y-R*.42,R*.62,R*.36,0,0,7);ctx.fill()}
 function drawBtnAtk(B,me){const ring=me.wk?TIERS[me.wt].c:'#c9a94a';const pr=press[0]>0||atkHeld;
-  const g=ctx.createRadialGradient(B.x,B.y-B.r*.3,2,B.x,B.y,B.r);g.addColorStop(0,'rgba(70,58,40,.95)');g.addColorStop(1,'rgba(18,14,10,.95)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(B.x,B.y,B.r*(pr?.94:1),0,7);ctx.fill();
-  ctx.strokeStyle=ring;ctx.lineWidth=3.5;ctx.stroke();ctx.strokeStyle='rgba(0,0,0,.6)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(B.x,B.y,B.r-4,0,7);ctx.stroke();
+  btnBase(B.x,B.y,B.r,pr,ring,me.wk&&FUSED[me.wk]?WEAPONS[me.wk].glow:'#3a78c8');ctx.fillStyle='#fff';
   ctx.font=`${B.r*.8}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(me.wk?WEAPONS[me.wk].ic:'✊',B.x,B.y+2);ctx.textBaseline='alphabetic'}
 function drawSkillBtn(B,i,me){
   const sk=me.wk?SK[me.wk][i]:null,L=me.skl[i],cd=Math.max(0,me.cd[i]),li=Math.max(0,L-1),cost=sk?sk.mp[li]:0,max=sk?sk.cd[li]*cdMul(me):1,noMana=sk&&L>0&&me.mp<cost;const pr=press[i+1]>0;
-  const g=ctx.createRadialGradient(B.x,B.y-B.r*.3,2,B.x,B.y,B.r);g.addColorStop(0,'rgba(64,54,40,.95)');g.addColorStop(1,'rgba(16,12,9,.95)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(B.x,B.y,B.r*(pr?.94:1),0,7);ctx.fill();
-  ctx.strokeStyle=L===0||!sk?'rgba(140,130,110,.6)':cd>0?'rgba(150,130,90,.7)':i===2?'#ffcf5a':'#c9a94a';ctx.lineWidth=3;ctx.stroke();
+  {const off=L===0||!sk;btnBase(B.x,B.y,B.r,pr,off?'#6a6456':cd>0?'#8a7440':i===2?'#ffcf5a':'#d8b050',off?'#3a342a':i===2?'#c8641a':me.wk&&WEAPONS[me.wk].col||'#6a5a3a',off||cd>0);ctx.fillStyle='#fff'}
   ctx.globalAlpha=L===0||!sk?.3:cd>0?.45:1;ctx.font=`${B.r*.85}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(sk?sk.ic:['Q','W','R'][i],B.x,B.y+2);ctx.globalAlpha=1;
   if(noMana&&cd<=0){ctx.fillStyle='rgba(30,60,200,.45)';ctx.beginPath();ctx.arc(B.x,B.y,B.r-2,0,7);ctx.fill()}
   if(cd>0&&L>0&&sk){ctx.fillStyle='rgba(0,0,0,.6)';ctx.beginPath();ctx.moveTo(B.x,B.y);ctx.arc(B.x,B.y,B.r-1,-Math.PI/2,-Math.PI/2+Math.PI*2*clamp(cd/max,0,1));ctx.fill();
@@ -2556,6 +2605,7 @@ $('credList').innerHTML=CREDITS.map(([h,L])=>`<h4>${h}</h4>`+L.map(([t,a,l,u])=>
 $('credBtn').onclick=()=>{AU.init();AU.play('click');$('credOv').classList.remove('hidden')};
 $('credBack').onclick=()=>{AU.play('click');$('credOv').classList.add('hidden')};
 $('fuseBack').onclick=()=>{AU.play('click');$('fuseOv').classList.add('hidden')};
+for(const k of['codex','help']){$(k+'Btn').onclick=()=>{AU.init();AU.play('click');$(k+'Ov').classList.remove('hidden')};$(k+'Back').onclick=()=>{AU.play('click');$(k+'Ov').classList.add('hidden')}}
 $('pname').value=lsGet('ar_name','ผู้เล่น'+Math.floor(rand(10,99)));$('pname').addEventListener('change',()=>lsSet('ar_name',$('pname').value.trim()));
 $('soloBtn').onclick=()=>{AU.init();AU.play('click');leaveNet();net.qm=false;hostStartMatch()};
 $('qmBtn').onclick=()=>{AU.init();AU.play('click');lsSet('ar_name',myName());quickMatch()};
@@ -3576,10 +3626,26 @@ Object.assign(R3,{
   toGround(sx,sy){const o=this.cam.position,d=new THREE.Vector3(sx/W*2-1,1-sy/H*2,.5).unproject(this.cam).sub(o).normalize();const h=this.ly||0;if(Math.abs(d.y)<1e-4)return{x:this.tx,y:this.ty};const t=(h-o.y)/d.y;return{x:o.x+d.x*t,y:o.z+d.z*t}},
   menuFrame(dt){this.kkLoad();if(window.__noMenu)return;$('gl').style.visibility='visible';if(!this.menuReady){if(!this.menuQueued){this.menuQueued=1;this.menuSeed=Math.floor(Math.random()*1e9);setTimeout(()=>{if(state!=='menu'&&state!=='lobby')return;try{setupWorld(this.menuSeed);this.buildWorld();this.menuReady=1}catch(e){console.warn(e)}},700)}return}
     if(this.world!==WD){this.menuReady=0;this.menuQueued=0;return}
-    this.t+=dt;const T=this.t;const V=WD.villages.find(v=>v.main)||{x:CX,y:CY};const a=T*.05;const px=V.x+Math.cos(a)*900,py=V.y+Math.sin(a)*500;
+    this.t+=dt;const T=this.t;const V=WD.villages.find(v=>v.main)||{x:CX,y:CY};
+    // lobby stage: the player's hero stands in the village square at dusk, showing off a weapon that changes every few seconds
+    const wide=W/H>1.5,D=wide?300:400;
+    if(this.stageW!==WD){this.stageW=WD;const blocked=(x,y)=>WD.houses.some(h=>x>h.x-70&&x<h.x+h.w+70&&y>h.y-70&&y<h.y+h.h+70)||solidAt(x,y)||forObstacles(x,y,26,o=>o.c===1?((x-o.x)**2+(y-o.y)**2<(o.r+26)**2):circRect(x,y,26,o));
+      // stand somewhere in the square where nothing sits between the hero and the camera
+      let best=null;for(const r0 of[95,130,60,170])for(let k=0;k<12&&!best;k++){const a=Math.PI/2+(k%2?-1:1)*Math.ceil(k/2)*.5,dx=Math.cos(a),dy=Math.sin(a);let ok=true;for(let d=0;d<=440&&ok;d+=18)if(blocked(V.x+dx*(r0+d),V.y+dy*(r0+d)))ok=false;if(ok)best={x:V.x+dx*r0,y:V.y+dy*r0,dx,dy}}
+      this.stageP=best||{x:V.x,y:V.y+110,dx:0,dy:1}}
+    const SP=this.stageP,hx=SP.x,hy=SP.y,gy=this.gY(hx,hy);let u=this.stageU;if(!u){u=this.stageU=mkHero(-77,'',null,chosenLook);u.at=3;this.stageN=-1}u.fx=SP.dx;u.fy=SP.dy;
+    const SHOW=['sword','bow','fire','fMM','axe','storm','fMR','gsword','frost','fRR','dagger','xbow','fSS_blaze','fMS_frost','fRS_storm'],n=Math.floor(T/4.5)%SHOW.length;
+    if(n!==this.stageN){this.stageN=n;u.wk=SHOW[n];u.wt=FUSED[u.wk]?4:3;u.castAnim=.5;const W2=WEAPONS[u.wk],el=$('heroTag');if(el)el.textContent=W2.ic+' '+W2.names[u.wt]+(W2.fused?'  ·  อาวุธหลอม':'')}
+    u.x=hx;u.y=hy;u.castAnim=Math.max(0,u.castAnim-dt);if(u.look!==chosenLook){u.look=chosenLook;u.def.color=LOOKS[chosenLook].c;const o0=this.objs.get(u.id);if(o0)o0.at=-9}
+    let o=this.objs.get(u.id);if(o&&(o.root.parent!==this.scene||this.kk&&o.kind!=='kk')){this.scene.remove(o.root);this.objs.delete(u.id);o=null}if(!o){o=this.objFor(u);for(const k of['ring','fxRing','ice','bubble','stars','aegis','slowM','burnM'])if(o[k])o[k].visible=false}
+    o.gy=gy;o.root.visible=true;o.root.position.set(hx,gy,hy);o.rot=Math.atan2(u.fx,u.fy)+Math.sin(T*.5)*.18;o.root.rotation.y=o.rot;o.mvK=0;
+    if(o.kind==='kk')this.animKK(o,u,T,dt,0);else{if(o.at!==u.at){this.dress(o,u.at,u.look);o.at=u.at}if(o.wk!==u.wk||o.wt!==u.wt){this.arm(o,u);o.wk=u.wk;o.wt=u.wt}this.animHum(o,u,T,dt)}
+    const px=hx,py=hy;
     this.U.fowC.value.set(px,py);this.U.fowR.value=99999;this.U.time.value=T;this.U.zone.value.set(CX,CY,99999);this.U.zoneN.value.z=-1;if(this.zoneWall)this.zoneWall.visible=false;this.U.cloud.value=1;
-    this.cam.position.set(px,700,py+600);this.cam.lookAt(px,0,py);this.sun.position.set(px-600,1300,py+420);this.sun.target.position.set(px,0,py);
-    this.updateGround(px,py);this.stepP(this.PA,dt);this.stepP(this.PB,dt);for(const m of this.mills)m.hub.rotation.z+=dt*m.sp;this.draw()},
+    {const sw=Math.sin(T*.11)*40;this.cam.position.set(hx+SP.dx*D-SP.dy*sw,gy+108,hy+SP.dy*D+SP.dx*sw);this.cam.lookAt(hx,gy+56,hy)}
+    this.sun.color.set('#ffc48a');this.sun.intensity=2.1;this.sun.position.set(px-700,gy+900,py+520);this.sun.target.position.set(px,gy,py);this.hemi.color.set('#8fa6e8');this.hemi.groundColor.set('#3a2c26');this.hemi.intensity=.95;
+    this.plight.intensity=120;this.plight.position.set(hx+SP.dx*170-SP.dy*90,gy+150,hy+SP.dy*170+SP.dx*90);
+    this.updateGround(px,py);this.stepP(this.PA,dt);this.stepP(this.PB,dt);for(const m of this.mills)m.hub.rotation.z+=dt*m.sp;for(const f of this.flags||[])f.rotation.y=Math.sin(T*4+f.userData.ph)*.4;this.draw()},
   frame(dt){
     if(!this.ok)return draw2D();this.sync();this.kkLoad();
     ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,W,H);
