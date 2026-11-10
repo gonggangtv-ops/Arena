@@ -110,6 +110,7 @@ select{font-family:inherit;font-size:14px;padding:6px 8px;border-radius:8px;bord
 .spin{width:46px;height:46px;border-radius:50%;border:4px solid rgba(230,194,90,.25);border-top-color:var(--gold);animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 body.moody #gl{filter:saturate(.66) contrast(1.08)}
+body:not(.moody) #gl{filter:saturate(1.16) contrast(1.03)}
 body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,rgba(4,4,8,.5) 78%,rgba(0,0,0,.82) 100%)}
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 52%,rgba(8,6,14,.34) 82%,rgba(4,3,8,.62) 100%)}
 </style>
@@ -136,7 +137,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     <button class="go ghost small" id="qBtn">กราฟิก: อัตโนมัติ</button>
     <button class="go ghost small fz" id="fuseBtn">⚒️ สูตรหลอมอาวุธ</button>
     <button class="go ghost small" id="camBtn">กล้อง: ใกล้</button>
-    <button class="go ghost small" id="toneBtn">โทนภาพ: มืดสมจริง</button>
+    <button class="go ghost small" id="toneBtn">โทนภาพ: สดใส</button>
     <button class="go ghost small" id="sndBtn">เสียง: เปิดทั้งหมด</button>
   </div>
   <div class="msg" id="menuMsg"></div>
@@ -4295,7 +4296,7 @@ const QW={g:null,bl:{},
     return g}};
 
 // ===================== Visual pass 3: rim-lit units, armour plates, rune circles, light pillars =====================
-(()=>{const P=R3,_fow=P.fow,_qnMat=P.qnMat,_gen=P.genTex,_impact=P.impact,_aoe=P.aoeVis,_fxx=P.fxExtra,_build=P.qnBuild;
+(()=>{const P=R3,_fow=P.fow,_qnMat=P.qnMat,_gen=P.genTex,_impact=P.impact,_aoe=P.aoeVis,_fxx=P.fxExtra;
   // cool rim light on every character model so figures separate from the dark ground
   const RIM=fs=>fs.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\n{float rimK=pow(1.-clamp(dot(normalize(vViewPosition),normal),0.,1.),2.4);totalEmissiveRadiance+=vec3(.5,.6,.85)*rimK*.26;}');
   P.fow=function(m,o){if(this._rim&&o&&o.key==='qn')o=Object.assign({},o,{key:'qnRim',frag:RIM});return _fow.call(this,m,o)};
@@ -4325,17 +4326,44 @@ const QW={g:null,bl:{},
   P.aoeVis=function(a,T,dt,L){_aoe.call(this,a,T,dt,L);const S=this.runeSeen||(this.runeSeen=new Map()),key=a.x+'_'+a.y+'_'+a.kind,now=performance.now()/1000,e=S.get(key);
     if(e===undefined||(a.dot&&now>e)){const pre=a.t<a.delay,life=a.dot?2.4:Math.max(.3,a.delay-a.t)+.25;if(pre&&a.delay-a.t<.2&&!a.dot){S.set(key,now+3);return}
       S.set(key,now+life-.3);this.decal({x:a.x,y:a.y,r:(a.r||160)*.98,c:FX_COL[a.kind]||AOE_COL[a.kind]||'#ffffff',life,tex:'rune',spin:a.dot?.5:-.9,a:a.dot?.5:.7,fade:.3});if(S.size>80){for(const [k2,v] of S)if(now>v+6)S.delete(k2)}}};
-  // armour you can see: plates bolted onto the outfit as the armour tier rises
-  P.qnBuild=function(o,u){_build.call(this,o,u);const at=u.at|0,B=o.bones;if(at<2||!B||typeof QW==='undefined')return;QW.init();const G=QW.g,A=ARMORS[clamp(at,0,4)];
-    const col='#'+new THREE.Color(at>=4?'#d8a23a':at===3?'#8a7ab8':'#9aa6b4').getHexString(),M=this.std(col,.34,.9,at>=4?{emissive:A.c,emissiveIntensity:.35}:undefined),D=this.std('#3a3f48',.5,.8);
-    const add=(bn,geo,mat,x,y,z,sx,sy,sz,rx)=>{const b=B[bn];if(!b)return;const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.scale.set(sx,sy,sz);if(rx)m.rotation.x=rx;if(this.hi)m.castShadow=true;b.add(m)};
-    for(const s of['r','l']){add('upperarm_'+s,G.sph,M,0,.035,0,.105,.1,.115);add('upperarm_'+s,G.sph,D,0,.1,0,.085,.07,.095);
-      if(at>=3){add('lowerarm_'+s,G.cyl,M,0,.13,0,.052,.15,.056);add('calf_'+s,G.cyl,M,0,.2,0,.066,.22,.07);add('thigh_'+s,G.sph,D,0,.42,0,.07,.06,.075)}
-      if(at>=4)add('upperarm_'+s,G.cone,M,0,-.05,0,.03,.12,.03,Math.PI)}};
+  // ---- class look: cape, plate pieces and helm coloured by the weapon line; more pieces as the armour tier rises ----
+  const TH={shadow:{cape:'#2c1a4e',trim:'#b06cff',metal:'#4a4460',glow:'#b060ff'},royal:{cape:'#b81e2e',trim:'#e0b040',metal:'#b98a30',glow:'#ffb030'},
+    nature:{cape:'#2f7d3c',trim:'#e0d86a',metal:'#93a04c',glow:'#9dff5a'},arcane:{cape:'#2a3296',trim:'#e8c860',metal:'#6464c8',glow:'#8a9cff'},frost:{cape:'#3d8fd6',trim:'#eef8ff',metal:'#b6d2e8',glow:'#7fe0ff'}};
+  const WTH={dagger:'shadow',sword:'royal',gsword:'royal',axe:'royal',bow:'nature',xbow:'nature',fire:'arcane',storm:'arcane',frost:'frost',MM:'royal',MS:'royal',MR:'shadow',RS:'nature',RR:'nature',SS:'arcane'};
+  P.capeGeo=function(k){const C=this.capeG||(this.capeG={});if(C[k])return C[k];const T=TH[k],c1=new THREE.Color(T.cape),c2=new THREE.Color(T.trim),c3=c1.clone().multiplyScalar(.6),nx=6,ny=8,p=[],col=[],idx=[];
+    for(let j=0;j<=ny;j++){const t=j/ny,hw=lerp(.2,.42,Math.pow(t,.8));for(let i=0;i<=nx;i++){const s=i/nx*2-1,x=s*hw,ruf=Math.sin(s*7)*.025*t;p.push(x,-t*1.02-(Math.abs(s)>.99?0:Math.cos(s*9)*.02*t),-Math.pow(t,1.5)*.16+s*s*.07*(1-t*.6)+ruf);
+        const edge=Math.abs(s)>.72||t>.9,c=edge?c2:(j%2?c1:c3.clone().lerp(c1,.6));col.push(c.r,c.g,c.b);if(i<nx&&j<ny){const a=j*(nx+1)+i,b=a+1,d=a+nx+1,e=d+1;idx.push(a,d,b,b,d,e)}}}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(p,3));g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));g.setIndex(idx);g.computeVertexNormals();return C[k]=g};
+  P.qnGear=function(o,u){if(o.gear)for(const m of o.gear)if(m.parent)m.parent.remove(m);o.gear=[];o.cape=null;const B=o.bones,F=u.wk&&FUSED[u.wk],key=F?F.arch:u.wk,tn=WTH[key];if(!B||!tn||typeof QW==='undefined')return;
+    QW.init();const G=QW.g,T=TH[tn],at=u.at|0,glow=F?F.glow:T.glow;
+    const mc='#'+new THREE.Color(T.metal).lerp(new THREE.Color('#8d939c'),at>=3?0:at===2?.3:.55).getHexString(),M=this.std(mc,.46,.8),TR=this.std(T.trim,.42,.8),DK=this.std('#2c2f36',.5,.75),GM=this.std(glow,.25,.1,{emissive:glow,emissiveIntensity:1.7});
+    const add=(bn,geo,mat,x,y,z,sx,sy,sz,rx,rz)=>{const b=typeof bn==='string'?B[bn]:bn;if(!b)return null;const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.scale.set(sx,sy,sz);if(rx||rz)m.rotation.set(rx||0,0,rz||0);if(this.hi)m.castShadow=true;b.add(m);o.gear.push(m);return m};
+    // cape off the upper back (spine: +Y up, -Z behind)
+    if(B.spine_03){const cg=new THREE.Group();cg.position.set(0,.13,-.12);B.spine_03.add(cg);o.gear.push(cg);const cm=this.cached('capeM'+(this.hi?1:0),()=>this.fow(this.hi?new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,roughness:.82,metalness:0,envMap:this.envTex,envMapIntensity:.3}):new THREE.MeshLambertMaterial({vertexColors:true,side:THREE.DoubleSide})));
+      const c=new THREE.Mesh(this.capeGeo(tn),cm);if(this.hi)c.castShadow=true;c.frustumCulled=false;cg.add(c);o.cape=cg;o.capeK=0;
+      add('spine_03',G.cyl,TR,0,.15,-.02,.17,.03,.13);for(const s of[-1,1])add('spine_03',G.sph,at>=4?GM:TR,s*.13,.16,.06,.026,.026,.026)}
+    // pauldrons (upper arm: +Y runs down the arm)
+    for(const s of['r','l']){const up='upperarm_'+s,k=at>=3?1.12:1;add(up,G.sph,M,0,.015,0,.082*k,.05*k,.095*k);add(up,G.sph,DK,0,.07,0,.07*k,.04,.08*k);add(up,G.rim,TR,0,.03,0,.078*k,.078*k,.075*k,Math.PI/2);
+      if(at>=4)add(up,G.oct,GM,0,-.045,0,.022,.036,.022);
+      if(at>=2){add('lowerarm_'+s,G.cyl,M,0,.14,0,.046,.15,.05);add('lowerarm_'+s,G.cyl,TR,0,.065,0,.05,.02,.054)}
+      if(at>=3){add('calf_'+s,G.cyl,M,0,.2,0,.06,.22,.064);add('calf_'+s,G.sph,TR,0,.01,0,.052,.05,.06)}}
+    if(at>=2){add('spine_03',G.sph,M,0,.02,.075,.15,.17,.085);add('spine_03',G.box,TR,0,.02,.155,.024,.2,.01);if(at>=4)add('spine_03',G.oct,GM,0,.06,.165,.03,.04,.016)}
+    // helm (from armour tier 4 of 5): dome, brim, crest; the top tier wears a crown of spikes
+    if(at>=3){const hb=B.Head||B.head||B.neck_01,hy=hb===B.neck_01?.21:.11,hz=.02;if(hb){add(hb,G.dome,M,0,hy,hz,.122,.125,.135);add(hb,G.rim,TR,0,hy,hz,.122,.122,.135,Math.PI/2);add(hb,G.box,TR,0,hy+.085,hz-.01,.012,.09,.2);
+        if(at>=4){for(let i=0;i<6;i++){const a=i/6*6.283;add(hb,G.cone,TR,Math.sin(a)*.112,hy+.05,hz+Math.cos(a)*.124,.014,.07,.014)}add(hb,G.oct,GM,0,hy+.05,hz+.135,.022,.032,.016)}}}};
+  const _arm=P.qnArm,_anim=P.qnAnim,_qnW=P.qnW;
+  // soft glow hugging rare and fused weapons
+  const _gen2=P.genTex;P.genTex=function(k){if(k==='wglow'){const c=this.cvs(64),x=c.getContext('2d'),g=x.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,'rgba(255,255,255,.95)');g.addColorStop(.35,'rgba(255,255,255,.4)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,64,64);return{c,rep:false}}return _gen2.call(this,k)};
+  P.qnW=function(kind,Pp,bone){const g=_qnW.call(this,kind,Pp,bone),c=this._aura;if(!g||!c||kind==='book'||kind==='shield')return g;const tip=g.userData.tip,ty=tip?tip.position.y:.5;
+    const m=this.cached('aura'+c+(this.post?1:0),()=>new THREE.MeshBasicMaterial({map:this.tex('wglow'),color:new THREE.Color(c).multiplyScalar(this.post?1.5:1),transparent:true,opacity:.6,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,toneMapped:false}));
+    this.planeG=this.planeG||new THREE.PlaneGeometry(1,1);const B={sword:[0,(ty+.1)/2,.24,ty],gsword:[0,(ty+.16)/2,.3,ty],dagger:[0,(ty+.06)/2,.16,ty*1.1],spear:[0,1.44,.3,.6],axe:[.15,.76,.55,.6],bow:[-.1,0,.6,1.25],xbow:[0,.42,.8,.4],staff:[0,ty,.42,.42],wand:[0,ty,.26,.26]}[kind];if(!B)return g;
+    for(const ry of[0,Math.PI/2]){const q=new THREE.Mesh(this.planeG,m);q.position.set(B[0],B[1],0);q.scale.set(B[2],B[3],1);q.rotation.y=ry;q.renderOrder=7;g.add(q)}return g};
+  P.qnArm=function(o,u){const F=u.wk&&FUSED[u.wk],t=u.wt|0;this._aura=F?F.glow:u.wk&&t>=2?TIERS[Math.min(4,t)].c:null;try{_arm.call(this,o,u)}finally{this._aura=null}this.qnGear(o,u)};
+  P.qnAnim=function(o,u,T,dt,mv){_anim.call(this,o,u,T,dt,mv);if(o.cape){const k=u.dash?1.6:mv?1:0;o.capeK=lerp(o.capeK||0,k,1-Math.pow(.004,dt));o.cape.rotation.x=.1+o.capeK*.55+Math.sin(T*(2.6+o.capeK*5)+u.id)*(.035+.05*o.capeK);o.cape.rotation.z=Math.sin(T*1.7+u.id)*.04}};
 })();
 
 // ===================== SETTINGS: view + graphics quality =====================
-let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone','dark')!=='bright';
+let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone2','bright')==='dark';
 const has3D=()=>typeof R3!=='undefined';
 const QN={auto:'อัตโนมัติ',high:'สูง',low:'ประหยัด'};
 function syncViewBtn(){$('viewBtn').textContent=view3D&&has3D()&&R3.ok?'มุมมอง: 3D':'มุมมอง: 2D';$('qBtn').textContent='กราฟิก: '+QN[gfxQ];$('qBtn').classList.toggle('hidden',!(view3D&&has3D()&&R3.ok))}
@@ -4344,7 +4372,7 @@ $('viewBtn').onclick=()=>{AU.init();AU.play('click');if(!view3D){if(has3D()&&R3.
 const syncCam=()=>{$('camBtn').textContent='กล้อง: '+(camNear?'ใกล้':'ไกล')};syncCam();
 $('camBtn').onclick=()=>{AU.init();AU.play('click');camNear=!camNear;lsSet('ar_cam',camNear?'near':'far');syncCam()};
 const syncTone=()=>{$('toneBtn').textContent='โทนภาพ: '+(moody?'มืดสมจริง':'สดใส');document.body.classList.toggle('moody',moody)};syncTone();
-$('toneBtn').onclick=()=>{AU.init();AU.play('click');moody=!moody;lsSet('ar_tone',moody?'dark':'bright');syncTone()};
+$('toneBtn').onclick=()=>{AU.init();AU.play('click');moody=!moody;lsSet('ar_tone2',moody?'dark':'bright');syncTone()};
 const syncSnd=()=>{$('sndBtn').textContent=AU.modeName()};syncSnd();
 $('sndBtn').onclick=()=>{AU.init();AU.toggle();syncSnd();AU.play('click')};
 $('qBtn').onclick=()=>{AU.init();AU.play('click');gfxQ=gfxQ==='auto'?'high':gfxQ==='high'?'low':'auto';lsSet('ar_q',gfxQ);if(has3D()&&R3.ok)R3.setQuality();syncViewBtn()};
