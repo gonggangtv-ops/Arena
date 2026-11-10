@@ -3033,6 +3033,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const willowM=this.windMat(new THREE.MeshLambertMaterial({map:this.tex('strands'),alphaTest:.5,side:THREE.DoubleSide,transparent:false}),'W',.07);
     const hiF=this.hi;const cardM=hiF&&this.windMat(new THREE.MeshStandardMaterial({map:this.tex('leafc'),alphaTest:.42,roughness:.8,metalness:0,envMap:this.envTex,envMapIntensity:.45,emissive:'#ffffff',emissiveMap:this.tex('leafc'),emissiveIntensity:.14}),'C',.05);
     const needM=hiF&&this.windMat(new THREE.MeshStandardMaterial({map:this.tex('needle'),alphaTest:.42,roughness:.85,metalness:0,envMap:this.envTex,envMapIntensity:.4,emissive:'#ffffff',emissiveMap:this.tex('needle'),emissiveIntensity:.14}),'N',.03);
+    if(this.post)for(const m of[cardM,needM,willowM])if(m)m.alphaToCoverage=true;   // multisampled leaf edges instead of hard cut-outs
     const dimC=(c,k)=>'#'+new THREE.Color(c).multiplyScalar(k).getHexString();
     this.treeMats=[leafM,pineM,magicM].concat(hiF?[cardM,needM]:[]);
     const tr=WD.trees;this.trees=tr;this.treeHidden=new Uint8Array(tr.length);this.treeParts=tr.map(()=>[]);tr.forEach((t,i)=>t._i=i);
@@ -4292,6 +4293,46 @@ const QW={g:null,bl:{},
       for(let i=0;i<4;i++){const a=i*Math.PI/2+.785;A(g,G.sph,p.trim,Math.cos(a)*R*.72,.014,Math.sin(a)*R*.72,.016,.01,.016)}
       A(g,G.box,p.trim,0,.012,0,R*1.7,.008,.03);A(g,G.box,p.trim,0,.012,0,.03,.008,R*1.7);return g}
     return g}};
+
+// ===================== Visual pass 3: rim-lit units, armour plates, rune circles, light pillars =====================
+(()=>{const P=R3,_fow=P.fow,_qnMat=P.qnMat,_gen=P.genTex,_impact=P.impact,_aoe=P.aoeVis,_fxx=P.fxExtra,_build=P.qnBuild;
+  // cool rim light on every character model so figures separate from the dark ground
+  const RIM=fs=>fs.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\n{float rimK=pow(1.-clamp(dot(normalize(vViewPosition),normal),0.,1.),2.4);totalEmissiveRadiance+=vec3(.5,.6,.85)*rimK*.26;}');
+  P.fow=function(m,o){if(this._rim&&o&&o.key==='qn')o=Object.assign({},o,{key:'qnRim',frag:RIM});return _fow.call(this,m,o)};
+  P.qnMat=function(src,o){if(o&&o.em)o=Object.assign({},o,{em:[o.em[0],o.em[1]*.4]});this._rim=1;try{return _qnMat.call(this,src,o)}finally{this._rim=0}};
+  // textures: a rune circle for the ground and a soft vertical beam
+  P.genTex=function(k){
+    if(k==='rune'){const N=512,c=this.cvs(N),x=c.getContext('2d'),R=N/2,rnd=mulberry32(77);x.translate(R,R);x.strokeStyle='#fff';x.fillStyle='#fff';x.lineCap='round';
+      const g=x.createRadialGradient(0,0,R*.2,0,0,R);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.8,'rgba(255,255,255,.1)');g.addColorStop(.97,'rgba(255,255,255,.3)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.beginPath();x.arc(0,0,R,0,7);x.fill();
+      const ring=(r,w)=>{x.lineWidth=w;x.beginPath();x.arc(0,0,r,0,7);x.stroke()};ring(R*.965,5);ring(R*.9,2);ring(R*.74,2.5);ring(R*.7,1.2);ring(R*.36,2);
+      for(let i=0;i<48;i++){const a=i/48*6.2832,l=i%4===0?.05:.025;x.lineWidth=i%4===0?3:1.5;x.beginPath();x.moveTo(Math.cos(a)*R*.9,Math.sin(a)*R*.9);x.lineTo(Math.cos(a)*R*(.9-l),Math.sin(a)*R*(.9-l));x.stroke()}
+      for(const off of[0,Math.PI/3]){x.lineWidth=2.5;x.beginPath();for(let i=0;i<3;i++){const a=off+i*2.0944-1.5708;x[i?'lineTo':'moveTo'](Math.cos(a)*R*.7,Math.sin(a)*R*.7)}x.closePath();x.stroke()}
+      for(let i=0;i<14;i++){const a=i/14*6.2832;x.save();x.rotate(a);x.translate(0,-R*.82);x.lineWidth=2.4;x.beginPath();const n=2+Math.floor(rnd()*3);for(let j=0;j<n;j++){x.moveTo((rnd()-.5)*20,(rnd()-.5)*22);x.lineTo((rnd()-.5)*20,(rnd()-.5)*22)}x.stroke();if(rnd()<.5){x.beginPath();x.arc(0,0,5,0,7);x.stroke()}x.restore()}
+      return{c,rep:false}}
+    if(k==='beam'){const c=this.cvs(8,128),x=c.getContext('2d'),g=x.createLinearGradient(0,128,0,0);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.25,'rgba(255,255,255,.55)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,8,128);return{c,rep:false}}
+    return _gen.call(this,k)};
+  // pillar of light that shoots up from big impacts
+  P.pillar=function(x,y,r,c,life){(this.pillars=this.pillars||[]).length<10&&this.pillars.push({x,y,r,c,t:0,life:life||.6})};
+  P.drawPillars=function(dt){if(!this.pillars||!this.pillars.length)return;this.pillars=this.pillars.filter(p=>(p.t+=dt)<p.life);
+    for(const p of this.pillars){const k=p.t/p.life,gy=this.gY(p.x,p.y);for(let i=0;i<2;i++){const m=this.get('pillar',()=>{const g=new THREE.CylinderGeometry(1,1,1,18,1,true);g.translate(0,.5,0);const mm=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:this.tex('beam'),color:'#ffffff',transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,toneMapped:false}));mm.renderOrder=8;mm.frustumCulled=false;mm.userData.ownMat=1;return mm});
+        const rr=p.r*(i?.07:.2)*(1-k*.6);m.material.color.set(i?'#ffffff':p.c).multiplyScalar((this.post?1.6:1)*(i?1:.8));m.material.opacity=Math.pow(1-k,1.5)*(i?.85:.4);m.position.set(p.x,gy,p.y);m.scale.set(rr,700+k*500,rr);m.rotation.y=k*2+i}}};
+  P.fxExtra=function(T,dt,me,L){_fxx.call(this,T,dt,me,L);this.drawPillars(dt)};
+  P.impact=function(a){_impact.call(this,a);const gy=this.gY(a.x,a.y),c=FX_COL[a.kind]||AOE_COL[a.kind]||'#ffffff',r=a.r||200,big=r>=230||a.kind==='meteor'||a.kind==='judg'||a.kind==='line';
+    this.decal({x:a.x,y:a.y,r:r*1.02,c,life:big?1.3:.9,tex:'rune',spin:1.6,a:.85,fade:.7});
+    if(big){this.pillar(a.x,a.y,r,c,.7);const n=this.hi?6:3;for(let i=0;i<n;i++){const an=Math.random()*6.283,d=rand(r*.15,r*.85),bx=a.x+Math.cos(an)*d,bz=a.y+Math.sin(an)*d;this.bolt(bx+rand(-60,60),gy+820,bz+rand(-60,60),bx,this.gY(bx,bz),bz,c,rand(.16,.34),4)}
+      for(let i=0;i<(this.hi?26:10);i++){const an=Math.random()*6.283,d=rand(0,r*.9);this.sp(true,{x:a.x+Math.cos(an)*d,y:gy+6,z:a.y+Math.sin(an)*d,vx:rand(-20,20),vy:rand(90,300),vz:rand(-20,20),l:rand(.8,1.7),s:rand(7,13),s1:1,c,sp:1,dr:.3})}}};
+  // rune circle under every telegraphed / lingering skill area
+  P.aoeVis=function(a,T,dt,L){_aoe.call(this,a,T,dt,L);const S=this.runeSeen||(this.runeSeen=new Map()),key=a.x+'_'+a.y+'_'+a.kind,now=performance.now()/1000,e=S.get(key);
+    if(e===undefined||(a.dot&&now>e)){const pre=a.t<a.delay,life=a.dot?2.4:Math.max(.3,a.delay-a.t)+.25;if(pre&&a.delay-a.t<.2&&!a.dot){S.set(key,now+3);return}
+      S.set(key,now+life-.3);this.decal({x:a.x,y:a.y,r:(a.r||160)*.98,c:FX_COL[a.kind]||AOE_COL[a.kind]||'#ffffff',life,tex:'rune',spin:a.dot?.5:-.9,a:a.dot?.5:.7,fade:.3});if(S.size>80){for(const [k2,v] of S)if(now>v+6)S.delete(k2)}}};
+  // armour you can see: plates bolted onto the outfit as the armour tier rises
+  P.qnBuild=function(o,u){_build.call(this,o,u);const at=u.at|0,B=o.bones;if(at<2||!B||typeof QW==='undefined')return;QW.init();const G=QW.g,A=ARMORS[clamp(at,0,4)];
+    const col='#'+new THREE.Color(at>=4?'#d8a23a':at===3?'#8a7ab8':'#9aa6b4').getHexString(),M=this.std(col,.34,.9,at>=4?{emissive:A.c,emissiveIntensity:.35}:undefined),D=this.std('#3a3f48',.5,.8);
+    const add=(bn,geo,mat,x,y,z,sx,sy,sz,rx)=>{const b=B[bn];if(!b)return;const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.scale.set(sx,sy,sz);if(rx)m.rotation.x=rx;if(this.hi)m.castShadow=true;b.add(m)};
+    for(const s of['r','l']){add('upperarm_'+s,G.sph,M,0,.035,0,.105,.1,.115);add('upperarm_'+s,G.sph,D,0,.1,0,.085,.07,.095);
+      if(at>=3){add('lowerarm_'+s,G.cyl,M,0,.13,0,.052,.15,.056);add('calf_'+s,G.cyl,M,0,.2,0,.066,.22,.07);add('thigh_'+s,G.sph,D,0,.42,0,.07,.06,.075)}
+      if(at>=4)add('upperarm_'+s,G.cone,M,0,-.05,0,.03,.12,.03,Math.PI)}};
+})();
 
 // ===================== SETTINGS: view + graphics quality =====================
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone','dark')!=='bright';
