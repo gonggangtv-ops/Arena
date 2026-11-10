@@ -33,3 +33,9 @@
 | 15 vocal male strain/hurt/pain/jump sounds | qubodup | CC0 |
 
 License texts: CC BY 3.0 https://creativecommons.org/licenses/by/3.0/ · CC BY 4.0 https://creativecommons.org/licenses/by/4.0/ · CC0 https://creativecommons.org/publicdomain/zero/1.0/
+
+## 3D models (โมเดล)
+| Pack | Author | License |
+|---|---|---|
+| Modular Character Outfits - Fantasy (Standard), Universal Base Characters (Standard), Universal Animation Library 1 & 2 (Standard), Fantasy Bestiary (Imp, Puglin), Wolf — https://quaternius.com | Quaternius | CC0 |
+| KayKit Adventurers 2.0 / Skeletons 1.0 (weapon props) — https://kaylousberg.com | Kay Lousberg | CC0 |
