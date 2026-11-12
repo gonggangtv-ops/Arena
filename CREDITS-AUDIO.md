@@ -38,3 +38,8 @@ License texts: CC BY 3.0 https://creativecommons.org/licenses/by/3.0/ · CC BY 4
 | Pack | Author | License |
 |---|---|---|
 | Modular Character Outfits - Fantasy (Standard), Universal Base Characters (Standard), Universal Animation Library 1 & 2 (Standard), Fantasy Bestiary (Imp, Puglin), Wolf — https://quaternius.com | Quaternius | CC0 |
+
+## Icons (ไอคอนสกิลและอาวุธ)
+| Source | Author | License |
+|---|---|---|
+| Game-icons.net — https://game-icons.net (path data recoloured and shaded in code) | Lorc, Delapouite and contributors | CC BY 3.0 |
