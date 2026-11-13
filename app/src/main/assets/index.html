@@ -3026,6 +3026,16 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     g.computeVertexNormals();return g},
   quads(list){const P=[],N=[],U=[],I=[];for(const q of list){const b=P.length/3;for(let k=0;k<4;k++){P.push(...q.p[k]);N.push(...q.n[k]);U.push(...q.uv[k])}I.push(b,b+1,b+2,b,b+2,b+3,b,b+2,b+1,b,b+3,b+2)}
     const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(N,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));g.setIndex(I);g.computeBoundingSphere();return g},
+  // smooth leafy puff: a sphere with a few soft bulges, flat-ish underside, darker toward the bottom (vertex colour)
+  puffGeo(s){const R=mulberry32(900+s*17),g=new THREE.SphereGeometry(1,this.hi?16:11,this.hi?11:8),p=g.attributes.position,v=new THREE.Vector3(),L=[];
+    for(let i=0;i<6+s;i++)L.push(new THREE.Vector3(R()*2-1,R()*1.4-.3,R()*2-1).normalize());
+    for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);const n=v.clone().normalize();let b=0;for(const d of L)b+=Math.pow(Math.max(0,n.dot(d)),5)*.2;const r=1+b-(n.y<-.25?(-.25-n.y)*.42:0);v.multiplyScalar(r);p.setXYZ(i,v.x,v.y,v.z)}
+    g.computeVertexNormals();this.weldNormals(g);const c=[];for(let i=0;i<p.count;i++){const k=.68+.46*clamp((p.getY(i)+.9)/2.1,0,1);c.push(k,k,k*.96)}g.setAttribute('color',new THREE.Float32BufferAttribute(c,3));return g},
+  // rounded pine tier (lathe): soft skirt edge, origin at the tier's base
+  tierGeo(){const pts=[[0,1],[.22,.8],[.5,.48],[.8,.2],[.98,.06],[1,0],[.9,-.05],[.55,-.08],[0,-.08]].map(q=>new THREE.Vector2(q[0],q[1]));const g=new THREE.LatheGeometry(pts,this.hi?12:9);this.weldNormals(g);
+    const p=g.attributes.position,c=[];for(let i=0;i<p.count;i++){const k=.66+.48*clamp(p.getY(i)+.1,0,1);c.push(k,k,k*.96)}g.setAttribute('color',new THREE.Float32BufferAttribute(c,3));return g},
+  weldNormals(g){const p=g.attributes.position,n=g.attributes.normal,m=new Map();for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e3)+'_'+Math.round(p.getY(i)*1e3)+'_'+Math.round(p.getZ(i)*1e3);let a=m.get(k);if(!a)m.set(k,a=[0,0,0,[]]);a[0]+=n.getX(i);a[1]+=n.getY(i);a[2]+=n.getZ(i);a[3].push(i)}
+    for(const a of m.values()){const l=Math.hypot(a[0],a[1],a[2])||1;for(const i of a[3])n.setXYZ(i,a[0]/l,a[1]/l,a[2]/l)}n.needsUpdate=true},
   leafCluster(s){const R=mulberry32(4100+s*31),V=THREE.Vector3,out=[];
     for(let i=0;i<20;i++){const c=new V();do{c.set(R()*2-1,R()*2-1,R()*2-1)}while(c.lengthSq()>1);c.multiplyScalar(.6);const h=.4+R()*.28;
       const v=new V(R()*2-1,R()*2-1,R()*2-1).normalize();const a=new V(0,1,0);if(Math.abs(v.y)>.9)a.set(1,0,0);a.cross(v).normalize();const b=v.clone().cross(a).normalize();
@@ -3149,15 +3159,20 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       float sw=sin(uTime*1.6+ip.x*.011+ip.z*.013)+.4*sin(uTime*3.7+ip.x*.03);transformed.x+=sw*max(position.y,0.)*${amt};transformed.z+=sw*.6*max(position.y,0.)*${amt};}`)})},
   buildVegetation(){const S=this.scene,G=this.G;
     const bark=this.tstd('bark','#8a6a50',.9,0),birch=this.tstd('birch','#ffffff',.85,0);const lv=this.tex('leaves');
-    const EM={emissive:'#ffffff',emissiveMap:lv,emissiveIntensity:TOON?.42:.16};const leafM=this.windMat(this.hi?new THREE.MeshStandardMaterial(Object.assign({map:lv,roughness:.85,metalness:0,envMap:this.envTex,envMapIntensity:.6},EM)):new THREE.MeshLambertMaterial(Object.assign({map:lv},EM)),'L',.05);
-    const pineM=this.windMat(this.hi?new THREE.MeshStandardMaterial(Object.assign({map:lv,roughness:.9,metalness:0,flatShading:true,envMap:this.envTex,envMapIntensity:.5},EM)):new THREE.MeshLambertMaterial(Object.assign({map:lv,flatShading:true},EM)),'P',.03);
-    const magicM=this.windMat(new THREE.MeshLambertMaterial({map:lv,emissive:'#1a3a48',emissiveIntensity:.8}),'M',.05);
+    let leafM,pineM,magicM;const EM={emissive:'#ffffff',emissiveMap:lv,emissiveIntensity:TOON?.42:.16};leafM=this.windMat(this.hi?new THREE.MeshStandardMaterial(Object.assign({map:lv,roughness:.85,metalness:0,envMap:this.envTex,envMapIntensity:.6},EM)):new THREE.MeshLambertMaterial(Object.assign({map:lv},EM)),'L',.05);
+    pineM=this.windMat(this.hi?new THREE.MeshStandardMaterial(Object.assign({map:lv,roughness:.9,metalness:0,flatShading:true,envMap:this.envTex,envMapIntensity:.5},EM)):new THREE.MeshLambertMaterial(Object.assign({map:lv,flatShading:true},EM)),'P',.03);
+    magicM=this.windMat(new THREE.MeshLambertMaterial({map:lv,emissive:'#1a3a48',emissiveIntensity:.8}),'M',.05);
     const willowM=this.windMat(new THREE.MeshLambertMaterial({map:this.tex('strands'),alphaTest:.5,side:THREE.DoubleSide,transparent:false}),'W',.07);
     const hiF=this.hi;const cardM=hiF&&this.windMat(new THREE.MeshStandardMaterial({map:this.tex('leafc'),alphaTest:.42,roughness:.8,metalness:0,envMap:this.envTex,envMapIntensity:.45,emissive:'#ffffff',emissiveMap:this.tex('leafc'),emissiveIntensity:TOON?.42:.14}),'C',.05);
     const needM=hiF&&this.windMat(new THREE.MeshStandardMaterial({map:this.tex('needle'),alphaTest:.42,roughness:.85,metalness:0,envMap:this.envTex,envMapIntensity:.4,emissive:'#ffffff',emissiveMap:this.tex('needle'),emissiveIntensity:TOON?.4:.14}),'N',.03);
     if(this.post)for(const m of[cardM,needM,willowM])if(m)m.alphaToCoverage=true;   // multisampled leaf edges instead of hard cut-outs
+    // toon look: smooth rounded puffs with a soft top-light gradient instead of textured cards
+    const TF=TOON,puff=TF?[0,1,2].map(s=>this.puffGeo(s)):null,tier=TF?this.tierGeo():null;
+    if(TF){leafM=this.windMat(new THREE.MeshLambertMaterial({vertexColors:true}),'L',.05);pineM=this.windMat(new THREE.MeshLambertMaterial({vertexColors:true}),'P',.03);
+      magicM=this.windMat(new THREE.MeshLambertMaterial({vertexColors:true,emissive:'#1e3450',emissiveIntensity:.3}),'M',.05)}
+    const cards=hiF&&!TF,BLOB=i=>TF?puff[i]:G.blob[i],CONE=TF?tier:G.cone6,SQ=TF?1:.72;
     const dimC=(c,k)=>'#'+new THREE.Color(c).multiplyScalar(k).getHexString();
-    this.treeMats=[leafM,pineM,magicM].concat(hiF?[cardM,needM]:[]);
+    this.treeMats=[leafM,pineM,magicM].concat(cards?[cardM,needM]:[]);
     const tr=WD.trees;this.trees=tr;this.treeHidden=new Uint8Array(tr.length);this.treeParts=tr.map(()=>[]);tr.forEach((t,i)=>t._i=i);
     const reg=(t,im,i)=>{if(t._i!==undefined)this.treeParts[t._i].push([im,i])};const RT=t=>mulberry32(Math.floor(t.x*7+t.y));
     const TH=t=>(t.v===2?70:t.v===5?54:t.v===6?44:t.v===1?40:38)*t.h;
@@ -3165,41 +3180,43 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     this.instC(G.cylT,bark,tr.filter(t=>t.v!==2),(t,add)=>{const R=RT(t),th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,t.v===1||t.v===6?11:t.v===5?7:8,th,t.v===1||t.v===6?11:8,0,R()*6,0,t.v===3?'#8a7aa8':t.v===5?'#5a4048':'#ffffff')},true);
     this.instC(G.cylT,birch,tr.filter(t=>t.v===2),(t,add)=>{const th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,6,th,6,0,t.x,0,'#ffffff')},true);
     // pines (valley + dark) as stacked cones
-    const PINE=['#3a7a3c','#457f40','#356a34','#4a8844'],DPINE=['#2a5a54','#2f6458','#264a48'];
+    const PINE=TF?['#3f9e4c','#4aaa56','#389348','#52b05a']:['#3a7a3c','#457f40','#356a34','#4a8844'],DPINE=TF?['#2f8a80','#36968a','#2a7c76']:['#2a5a54','#2f6458','#264a48'];
     const pines=tr.filter(t=>t.v===0||t.v===4),TIERS_P=[[1,1.05,.4],[.78,.95,.95],[.52,.85,1.45],[.28,.6,1.85]];
-    this.instC(G.cone6,pineM,pines,(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),P=t.v===0?PINE:DPINE,k=hiF?.82:1;for(const q of TIERS_P)add(t.x,b+th+cr*q[2],t.y,cr*q[0]*k,cr*q[1],cr*q[0]*k,0,R()*6,0,hiF?dimC(P[Math.floor(R()*P.length)],.85):P[Math.floor(R()*P.length)])},true,reg);
-    if(hiF)this.instC(G.pineRing,needM,pines,(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),P=t.v===0?PINE:DPINE;for(const q of TIERS_P){R();add(t.x,b+th+cr*q[2]-cr*q[1]*.2,t.y,cr*q[0]*1.28,cr*q[1]*.95,cr*q[0]*1.28,0,R()*6,0,P[Math.floor(R()*P.length)])}},true,reg);
+    this.instC(CONE,pineM,pines,(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),P=t.v===0?PINE:DPINE,k=cards?.82:1;for(const q of TIERS_P)add(t.x,b+th+cr*q[2]-(TF?cr*q[1]*.25:0),t.y,cr*q[0]*k*(TF?1.12:1),cr*q[1]*(TF?.82:1),cr*q[0]*k*(TF?1.12:1),0,R()*6,0,cards?dimC(P[Math.floor(R()*P.length)],.85):P[Math.floor(R()*P.length)])},true,reg);
+    if(cards)this.instC(G.pineRing,needM,pines,(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),P=t.v===0?PINE:DPINE;for(const q of TIERS_P){R();add(t.x,b+th+cr*q[2]-cr*q[1]*.2,t.y,cr*q[0]*1.28,cr*q[1]*.95,cr*q[0]*1.28,0,R()*6,0,P[Math.floor(R()*P.length)])}},true,reg);
     // oak / birch / willow / magic / dead canopies from noisy blobs
-    const OAK=['#5a8a3c','#6a9a44','#4f7f36','#76a24c'],BIR=['#9ac45a','#a8cc64','#8ab84e'],MAG=['#3ac8c0','#9a6ae8','#4aa8f0','#d07ae0'],DEAD=['#6a3a5e','#7a4a4e','#5a3a6a'],WIL=['#7aa84c','#86b056'];
+    const OAK=TF?['#62b83c','#70c446','#58aa36','#7ccc4e']:['#5a8a3c','#6a9a44','#4f7f36','#76a24c'],BIR=TF?['#a6d454','#b4dc60','#98c84c']:['#9ac45a','#a8cc64','#8ab84e'],MAG=TF?['#3aa49c','#7a62c0','#3a86c0','#a466b8']:['#3ac8c0','#9a6ae8','#4aa8f0','#d07ae0'],DEAD=['#6a3a5e','#7a4a4e','#5a3a6a'],WIL=['#7aa84c','#86b056'];
     for(let bi=0;bi<3;bi++){const canL=tr.filter(t=>(t.v===1||t.v===2||t.v===6||t.v===5)&&(Math.floor(t.x+t.y)%3===bi));
       const canP=(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);
         if(t.v===1)for(const q of[[0,.5,0,.86,.68],[-.4,.86,.12,.6,.5],[.42,.8,-.18,.56,.48],[0,1.08,.1,.5,.42]])add(t.x+cr*q[0],b+th+cr*q[1],t.y+cr*q[2],cr*q[3],cr*q[4],cr*q[3],R(),R()*6,0,OAK[Math.floor(R()*OAK.length)]);
         else if(t.v===2)for(const q of[[0,.2,0,.5,.62],[.18,.75,.1,.42,.5],[-.12,1.15,0,.32,.42]])add(t.x+cr*q[0],b+th+cr*q[1]-20,t.y+cr*q[2],cr*q[3],cr*q[4],cr*q[3],R(),R()*6,0,BIR[Math.floor(R()*BIR.length)]);
-        else if(t.v===6)add(t.x,b+th+cr*.32,t.y,cr*.95,cr*.5,cr*.95,0,R()*6,0,WIL[Math.floor(R()*WIL.length)]);
+        else if(t.v===6)add(t.x,b+th+cr*.32,t.y,cr*.95,cr*(TF?.62:.5),cr*.95,0,R()*6,0,WIL[Math.floor(R()*WIL.length)]);
         else for(const s of[-1,1])add(t.x+s*cr*.5,b+th*.85+cr*.32,t.y+R()*10,cr*.34,cr*.26,cr*.34,0,0,0,DEAD[Math.floor(R()*DEAD.length)])};
-      if(hiF){this.instC(G.blob[bi],leafM,canL,(t,add)=>canP(t,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>add(x,y,z,sx*.72,sy*.72,sz*.72,rx,ry,rz,c&&dimC(c,.78))),true,reg);
+      if(TF)this.instC(BLOB(bi),leafM,canL,(t,add)=>canP(t,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>add(x,y,z,sx*1.05,sy*1.05,sz*1.05,0,ry,0,c)),true,reg);
+      else if(hiF){this.instC(G.blob[bi],leafM,canL,(t,add)=>canP(t,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>add(x,y,z,sx*.72,sy*.72,sz*.72,rx,ry,rz,c&&dimC(c,.78))),true,reg);
         this.instC(G.leafc[bi],cardM,canL,(t,add)=>canP(t,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>add(x,y,z,sx*1.14,sy*1.1,sz*1.14,rx,ry,rz,c)),true,reg)}
       else this.instC(G.blob[bi],leafM,canL,canP,true,reg)}
     // boughs reaching from the trunk top into oak canopies
-    if(hiF)this.instC(G.cylT,bark,tr.filter(t=>t.v===1),(t,add)=>{const R=mulberry32(Math.floor(t.x*13+t.y*7)),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);
+    if(cards)this.instC(G.cylT,bark,tr.filter(t=>t.v===1),(t,add)=>{const R=mulberry32(Math.floor(t.x*13+t.y*7)),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);
       for(let k=0;k<3;k++){const a=k/3*6.283+R(),tl=.55+R()*.35,len=cr*(.62+R()*.25),dx=Math.sin(tl)*Math.cos(a),dy=Math.cos(tl),dz=Math.sin(tl)*Math.sin(a);
         add(t.x+dx*len*.5,b+th*.82+dy*len*.5,t.y+dz*len*.5,5,len,5,0,-a,-tl,null)}},true,reg);
     // enchanted trees: a full leafy crown in one glowing hue per tree
     {const mg=tr.filter(t=>t.v===3),magP=(t,add,k)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),c=MAG[Math.floor(R()*MAG.length)];
         for(const q of[[0,.5,0,.8,.64],[-.38,.84,.12,.56,.48],[.4,.78,-.16,.52,.46],[0,1.06,.08,.46,.4]])add(t.x+cr*q[0],b+th+cr*q[1],t.y+cr*q[2],cr*q[3]*k,cr*q[4]*k,cr*q[3]*k,R(),R()*6,0,c)};
-      this.instC(G.blob[1],magicM,mg,(t,add)=>magP(t,add,hiF?.72:1),true,reg);
-      if(hiF){const magC=this.windMat(new THREE.MeshStandardMaterial({map:this.tex('leafc'),alphaTest:.42,roughness:.8,metalness:0,emissive:'#3a6a78',emissiveMap:this.tex('leafc'),emissiveIntensity:.7}),'MC',.05);this.treeMats.push(magC);
+      this.instC(BLOB(1),magicM,mg,(t,add)=>magP(t,add,cards?.72:1),true,reg);
+      if(cards){const magC=this.windMat(new THREE.MeshStandardMaterial({map:this.tex('leafc'),alphaTest:.42,roughness:.8,metalness:0,emissive:'#3a6a78',emissiveMap:this.tex('leafc'),emissiveIntensity:.7}),'MC',.05);this.treeMats.push(magC);
         this.instC(G.leafc[1],magC,mg,(t,add)=>magP(t,add,1.14),true,reg)}}
-    this.instC(G.openCyl,willowM,tr.filter(t=>t.v===6),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);add(t.x,b+th+cr*.32-cr*.42,t.y,cr*.9,cr*.95,cr*.9,0,t.x,0,'#ffffff')},true,reg);
+    if(!TF)this.instC(G.openCyl,willowM,tr.filter(t=>t.v===6),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);add(t.x,b+th+cr*.32-cr*.42,t.y,cr*.9,cr*.95,cr*.9,0,t.x,0,'#ffffff')},true,reg);
     this.instC(this.cylg(.5,1,1,5),bark,tr.filter(t=>t.v===5),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);for(const s of[-1,1])add(t.x+s*cr*.24,b+th*.82,t.y,3,cr*.72,3,0,0,s*.95,'#5a4048')},true);
     // mountain pines (no shadows, bigger chunks)
     this.instC(G.cylT,bark,WD.mtrees,(t,add)=>{add(t.x,t.h+20*t.s,t.y,9*t.s,40*t.s,9*t.s,0,t.x,0,'#ffffff')},false,null,2500);
-    this.instC(G.cone6,pineM,WD.mtrees,(t,add)=>{const R=mulberry32(Math.floor(t.x*3+t.y)),P=t.v===0?PINE:DPINE,cr=62*t.s,th=40*t.s;for(const q of[[1,1.1,.42],[.72,1,1],[.45,.85,1.5]])add(t.x,t.h+th+cr*q[2],t.y,cr*q[0],cr*q[1],cr*q[0],0,R()*6,0,P[Math.floor(R()*P.length)])},true,null,2500);
+    this.instC(CONE,pineM,WD.mtrees,(t,add)=>{const R=mulberry32(Math.floor(t.x*3+t.y)),P=t.v===0?PINE:DPINE,cr=62*t.s,th=40*t.s;for(const q of[[1,1.1,.42],[.72,1,1],[.45,.85,1.5]])add(t.x,t.h+th+cr*q[2],t.y,cr*q[0],cr*q[1],cr*q[0],0,R()*6,0,P[Math.floor(R()*P.length)])},true,null,2500);
     this.treeMeshes=null;
     // bushes (hiding spots)
     const bu=WD.bushes,pf=[[0,0,1],[.45,.2,.74],[-.42,.25,.76],[.1,-.42,.62]];
-    const bushP=(b,add)=>{const dire=isDire(b.x,b.y),y=this.gY(b.x,b.y);pf.forEach((q,k)=>add(b.x+q[0]*b.r,y+b.r*.4*q[2],b.y+q[1]*b.r,b.r*.64*q[2],b.r*.52*q[2],b.r*.64*q[2],0,b.x+k,0,dire?(k?'#3a8a7a':'#2e6e64'):(k?'#5aa04a':'#468a3c')))};
-    if(hiF){this.instC(G.blob[0],leafM,bu,(b,add)=>bushP(b,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>add(x,y,z,sx*.75,sy*.75,sz*.75,rx,ry,rz,c&&dimC(c,.8))),true);
+    const bushP=(b,add)=>{const dire=isDire(b.x,b.y),y=this.gY(b.x,b.y);pf.forEach((q,k)=>add(b.x+q[0]*b.r,y+b.r*.4*q[2],b.y+q[1]*b.r,b.r*.64*q[2],b.r*.52*q[2],b.r*.64*q[2],0,b.x+k,0,dire?(k?'#3a8a7a':'#2e6e64'):TF?(k?'#6cbc48':'#5aa83e'):(k?'#5aa04a':'#468a3c')))};
+    if(TF)this.instC(puff[0],leafM,bu,(b,add)=>bushP(b,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>add(x,y,z,sx*1.05,sy*1.05,sz*1.05,0,ry,0,c)),true);
+    else if(hiF){this.instC(G.blob[0],leafM,bu,(b,add)=>bushP(b,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>add(x,y,z,sx*.75,sy*.75,sz*.75,rx,ry,rz,c&&dimC(c,.8))),true);
       this.instC(G.leafc[2],cardM,bu,(b,add)=>bushP(b,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>add(x,y,z,sx*1.12,sy*1.12,sz*1.12,rx,ry,rz,c)),true);}
     else this.instC(G.blob[0],leafM,bu,bushP,true);
     this.instC(G.sphLo,this.std('#c82a3a',.4,0),bu.filter(b=>!isDire(b.x,b.y)),(b,add)=>{const R=mulberry32(b.x|0),y=this.gY(b.x,b.y);for(let k=0;k<6;k++){const a=R()*6.3,r=b.r*(.3+R()*.5);add(b.x+Math.cos(a)*r,y+b.r*.55+R()*b.r*.2,b.y+Math.sin(a)*r,2.6,2.6,2.6,0,0,0,null)}},false);
