@@ -23,7 +23,7 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p site
-          cp app/src/main/assets/index.html app/src/main/assets/engine.min.js app/src/main/assets/models.js app/src/main/assets/models3.js app/src/main/assets/peerjs.min.js app/src/main/assets/turn.js app/src/main/assets/sfx.js site/
+          cp app/src/main/assets/index.html app/src/main/assets/engine.min.js app/src/main/assets/models2.js app/src/main/assets/peerjs.min.js app/src/main/assets/turn.js app/src/main/assets/sfx.js site/
           cp -r app/src/main/assets/music site/
           touch site/.nojekyll
 
