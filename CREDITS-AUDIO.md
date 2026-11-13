@@ -43,3 +43,8 @@ License texts: CC BY 3.0 https://creativecommons.org/licenses/by/3.0/ · CC BY 4
 | Source | Author | License |
 |---|---|---|
 | Game-icons.net — https://game-icons.net (path data recoloured and shaded in code) | Lorc, Delapouite and contributors | CC BY 3.0 |
+
+## 3D characters (chibi build)
+| Source | Author | License |
+|---|---|---|
+| KayKit Adventurers 2.0 + Character Pack Skeletons 1.0 | Kay Lousberg (kaylousberg.com) | CC0 |
