@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="th">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1120">
+<title>Moonfall · ชุดไอคอนสกิล</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#090f1b;color:#e5e9f1}
+*{box-sizing:border-box}body{margin:0;padding:clamp(20px,4vw,56px);background:radial-gradient(ellipse at top,#26334b55,transparent 60%);min-height:100vh}
+header{max-width:1100px;margin:auto auto 28px}small{font-size:10px;letter-spacing:3px;color:#adc1db}h1{font:clamp(28px,4vw,46px) Georgia,serif;color:#e0c893;margin:12px 0}p{color:#aebbd0;font-size:13px;line-height:1.8;max-width:740px}a{color:#d6c08e;text-underline-offset:4px}
+.states{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}button{font:inherit;color:#c8d3e6;border:1px solid #43516b;background:#111c30;border-radius:4px;padding:10px 16px;min-height:44px;cursor:pointer}button[aria-pressed=true]{background:#d4bc88;color:#101725;border-color:#e8d3a6}button:focus-visible,a:focus-visible{outline:2px solid #b8dbff;outline-offset:4px}
+main{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.weapon{border:1px solid #34405a;border-top-color:#ac9463;border-radius:6px;background:linear-gradient(135deg,#182339df,#0d1628)}h2{font-size:15px;color:#dfd1b3;margin:18px 18px 12px}.skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:0 12px 18px}.skill{text-align:center;min-width:0}.disc{position:relative;max-width:88px;width:100%;aspect-ratio:1;margin:auto;border:2px solid #aebbce;border-radius:50%;background:#0b1120;overflow:hidden}.skill:last-child .disc{border-color:#dcc38c}.art{width:100%;height:100%;background-image:url('assets/ui/moonfall-skills.png');background-size:600% 500%}.name{display:block;font-size:11px;line-height:1.55;margin-top:9px;min-height:34px}.key{font-size:10px;color:#94aaca}.overlay{display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:23px;font-weight:700;text-shadow:0 2px 4px #000;background:#07101c99}
+body[data-state=cooldown] .overlay{display:flex}body[data-state=mana] .overlay{display:flex;font-size:12px;color:#c4e4ff;background:#0a163588}body[data-state=locked] .art{filter:grayscale(.9);opacity:.5}body[data-state=locked] .overlay{display:flex;font-size:11px;background:#07101c44}#status{color:#adc1db}footer{max-width:1100px;margin:28px auto 0;font-size:12px;line-height:1.8;color:#9aa9c2}
+@media(max-width:850px){main{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){main{grid-template-columns:1fr}.disc{max-width:100px}}
+</style>
+<body data-state="ready">
+<header><small>ARENA ROYALE / MOONFALL</small><h1>พลังที่อ่านได้ในพริบตา</h1><p>ชุดไอคอนสกิลพื้นฐาน 27 สกิล · รอบแรกของ HUD ใหม่ ใช้สีช่วยแยกธาตุและรูปทรงช่วยแยกพลัง สถานะสำคัญมีตัวเลขหรือข้อความประกอบ</p><a href="index.html">เข้าเกม →</a><div class="states" aria-label="ตัวอย่างสถานะสกิล"><button data-state="ready" aria-pressed="true">พร้อมใช้</button><button data-state="cooldown" aria-pressed="false">คูลดาวน์</button><button data-state="mana" aria-pressed="false">มานาไม่พอ</button><button data-state="locked" aria-pressed="false">ยังไม่ปลดล็อก</button></div><p id="status" role="status">กำลังโหลดชุดไอคอน…</p></header>
+<main id="gallery"></main>
+<footer>ภาพตัวอย่างสถานะสำหรับตรวจงานออกแบบ เกมจริงยังคำนวณเลเวล คูลดาวน์ มานา และการร่ายด้วยระบบเดิม · สกิลอาวุธหลอมใช้ไอคอนเดิมในรอบนี้</footer>
+<script>
+const textFor={cooldown:'8',mana:'MP ต่ำ',locked:'ยังไม่ปลดล็อก',ready:''};
+for(const button of document.querySelectorAll('button[data-state]'))button.onclick=()=>{
+ document.body.dataset.state=button.dataset.state;
+ for(const item of document.querySelectorAll('button[data-state]'))item.setAttribute('aria-pressed',String(item===button));
+ for(const overlay of document.querySelectorAll('.overlay'))overlay.textContent=textFor[button.dataset.state];
+};
+fetch('assets/ui/skill-atlas.json').then(r=>{if(!r.ok)throw Error();return r.json();}).then(atlas=>{
+ for(const [key,cells] of Object.entries(atlas.skills)){
+  const card=document.createElement('section');card.className='weapon';const title=document.createElement('h2');title.textContent=atlas.weaponNames[key];card.append(title);
+  const skills=document.createElement('div');skills.className='skills';
+  cells.forEach((cell,i)=>{const skill=document.createElement('div');skill.className='skill';const disc=document.createElement('div');disc.className='disc';disc.setAttribute('role','img');disc.setAttribute('aria-label',atlas.skillNames[key][i]);
+   const art=document.createElement('div');art.className='art';art.style.backgroundPosition=(cell%6/5*100)+'% '+(Math.floor(cell/6)/4*100)+'%';
+   const overlay=document.createElement('div');overlay.className='overlay';overlay.setAttribute('aria-hidden','true');disc.append(art,overlay);
+   const name=document.createElement('span');name.className='name';name.textContent=atlas.skillNames[key][i];const hotkey=document.createElement('span');hotkey.className='key';hotkey.textContent=['Q / 1','E / 2','R / 3'][i];skill.append(disc,name,hotkey);skills.append(skill);});card.append(skills);document.getElementById('gallery').append(card);
+ }
+ document.getElementById('status').textContent='27 สกิล · 9 อาวุธ · Q / E / R และ 1 / 2 / 3 ตรงกับปุ่มจริงในเกม';
+}).catch(()=>{document.getElementById('status').textContent='ยังโหลดชุดไอคอนไม่สำเร็จ กรุณารีเฟรชอีกครั้ง';});
+</script>
+</body>
+</html>
