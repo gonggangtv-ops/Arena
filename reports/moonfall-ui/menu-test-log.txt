@@ -1,0 +1,7 @@
+PASS index.html desktop : menu priority, 44px cloak buttons, accordion keyboard, art, original Solo/config, offline lobby roles, no overflow/errors
+PASS index.html landscape : menu priority, 44px cloak buttons, accordion keyboard, art, original Solo/config, offline lobby roles, no overflow/errors
+PASS index.html portrait : menu priority, 44px cloak buttons, accordion keyboard, art, original Solo/config, offline lobby roles, no overflow/errors
+PASS cursed.html desktop : menu priority, 44px cloak buttons, accordion keyboard, art, original Solo/config, offline lobby roles, no overflow/errors
+PASS cursed.html landscape : menu priority, 44px cloak buttons, accordion keyboard, art, original Solo/config, offline lobby roles, no overflow/errors
+PASS cursed.html portrait : menu priority, 44px cloak buttons, accordion keyboard, art, original Solo/config, offline lobby roles, no overflow/errors
+PASS image failure: menu retains original skill symbols

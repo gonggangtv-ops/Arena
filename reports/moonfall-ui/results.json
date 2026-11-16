@@ -1,0 +1,80 @@
+[
+  {
+    "entry": "index.html",
+    "mobileEmulation": false,
+    "named": 27,
+    "states": [
+      "ready",
+      "cooldown",
+      "mana",
+      "locked"
+    ],
+    "fused": true,
+    "unchanged": true,
+    "touchDiameters": [
+      100.352,
+      100.352,
+      100.352
+    ],
+    "hotkeys": [
+      "Q",
+      "E",
+      "R"
+    ],
+    "nativeTouch": false,
+    "keyboardSkill": true,
+    "errors": []
+  },
+  {
+    "entry": "cursed.html",
+    "mobileEmulation": false,
+    "named": 27,
+    "states": [
+      "ready",
+      "cooldown",
+      "mana",
+      "locked"
+    ],
+    "fused": true,
+    "unchanged": true,
+    "touchDiameters": [
+      100.352,
+      100.352,
+      100.352
+    ],
+    "hotkeys": [
+      "Q",
+      "E",
+      "R"
+    ],
+    "nativeTouch": false,
+    "keyboardSkill": true,
+    "errors": []
+  },
+  {
+    "entry": "index.html",
+    "mobileEmulation": true,
+    "named": 27,
+    "states": [
+      "ready",
+      "cooldown",
+      "mana",
+      "locked"
+    ],
+    "fused": true,
+    "unchanged": true,
+    "touchDiameters": [
+      55.9104,
+      55.9104,
+      55.9104
+    ],
+    "hotkeys": [
+      "Q",
+      "E",
+      "R"
+    ],
+    "nativeTouch": true,
+    "keyboardSkill": false,
+    "errors": []
+  }
+]

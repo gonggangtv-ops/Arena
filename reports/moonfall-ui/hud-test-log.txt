@@ -1,0 +1,4 @@
+PASS index.html mobile=False: real 27-icon atlas, states, mappings, fused fallback, hit areas, original skill input and errors
+PASS cursed.html mobile=False: real 27-icon atlas, states, mappings, fused fallback, hit areas, original skill input and errors
+PASS index.html mobile=True: real 27-icon atlas, states, mappings, fused fallback, hit areas, original skill input and errors
+PASS atlas image failure: original glyph icons remain usable; mobile gallery has no horizontal overflow
