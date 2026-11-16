@@ -1,0 +1,7 @@
+PASS index.html: scene, quality, immutable collision, 32 heroes, real loop, damage/attack/skill, snapshot, bounds
+PASS cursed.html: scene, quality, immutable collision, 32 heroes, real loop, damage/attack/skill, snapshot, bounds
+PASS mobile emulation: native touch attack/joystick, menu, landscape, low, DPR 1, scene
+PASS synthetic GLB rigged: loader / rig admission / fallback
+PASS synthetic GLB unrigged: loader / rig admission / fallback
+PASS synthetic GLB corrupt: loader / rig admission / fallback
+Artifacts: /tmp/arena-celestial-0c6cak6a

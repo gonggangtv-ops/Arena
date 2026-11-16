@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "assets": {
+    "moon-arena": {
+      "name": "Moon Arena",
+      "taskId": "01a1e3b2-07b9-74a5-a370-4d8171618ca6",
+      "url": "assets/meshy/moon-arena.glb",
+      "available": false,
+      "rotationY": 0
+    },
+    "modular-floor": {
+      "name": "Modular Floor",
+      "taskId": "01a1e3b2-1966-7224-83c0-2bdbeea548a3",
+      "url": "assets/meshy/modular-floor.glb",
+      "available": false,
+      "rotationY": 0
+    },
+    "modular-wall": {
+      "name": "Modular Wall",
+      "taskId": "01a1e3b2-29fa-7146-aa67-e377d41d78fa",
+      "url": "assets/meshy/modular-wall.glb",
+      "available": false,
+      "rotationY": 0
+    },
+    "ancient-pillar": {
+      "name": "Ancient Pillar",
+      "taskId": "01a1e3b2-a03c-7483-ae7e-4ee77550bd8c",
+      "url": "assets/meshy/ancient-pillar.glb",
+      "available": false,
+      "rotationY": 0
+    },
+    "celestial-warrior": {
+      "name": "Celestial Warrior",
+      "taskId": "01a1e3b2-af58-7625-a8ed-b148d3cfcf1d",
+      "url": "assets/meshy/celestial-warrior.glb",
+      "available": false,
+      "rotationY": 0
+    }
+  },
+  "warrior": {
+    "height": 132,
+    "bones": {
+      "rightHand": "",
+      "leftHand": ""
+    },
+    "clips": {
+      "idle": "",
+      "walk": "",
+      "attack": "",
+      "cast": "",
+      "hit": "",
+      "death": ""
+    }
+  }
+}

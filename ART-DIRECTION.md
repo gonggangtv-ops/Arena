@@ -1,15 +1,21 @@
-# Sakura Frontier
+# Arena Royale Reborn — Moonfall
 
-Both `index.html` and `cursed.html` share a local, offline-first anime fantasy art layer. Start the site with `python3 -m http.server 8010` from this directory. No build or package installation is required to play.
+The active art layer is **Dark Celestial Fantasy**, shared by `index.html` and
+`cursed.html`. The original seeded map, combat, collision, AI, multiplayer
+protocol and compatibility 2D view remain authoritative.
 
-- **World:** painterly ground, layered sakura crowns and branches, curved tiled roofs, ivory walls, torii gates, lanterns and crystal shrine accents. Existing seeded layouts, collisions, roof fading and tree occlusion remain authoritative.
-- **Characters:** painted anime eyes, sculpted hair, eight color palettes, collars and gems. Both the animated glTF characters and procedural fallback use the new heads. Armor keeps faces open; combat rigs and animation clips remain intact.
-- **Rendering:** stepped light bands, cool shadows, thin character outlines, softer contact shading and clean emissive accents. Screen-wide bloom is disabled to keep character details readable. Low graphics uses 28 instanced petals; high uses 80. New materials and geometry are shared where possible.
+Run `python3 -m http.server 8010` here and choose **☽ สำรวจ Moonfall** to enter
+a solo match near the remodeled castle. Ordinary Solo and online games retain
+their spawn rules. Mobile uses the original landscape flow.
 
-The art lives in `anime-world.js`, `anime-characters.js`, `anime-render.js` and `anime-theme.css`. The HTML entry points load those files before the main script and install the three renderer extensions before initialization. Keep this integration identical in both entry points.
+Active files: `celestial-render.js`, `celestial-assets.js`, `celestial-theme.css`.
+The former `anime-*` files are preserved but no longer installed. Their old smoke
+suite targets the previous style; use `python3 scripts/smoke-celestial.py` now.
 
-## Validation
+**None of the five Meshy GLBs is included yet.** The arena uses procedural
+fallback architecture. See [import instructions](assets/meshy/README.md) for
+filenames, task IDs, budgets and rig requirements. Real GLBs replace visual
+proxies only after successful admission. Never store API keys here.
 
-With Python Playwright and Chromium available, run `python3 scripts/smoke-anime.py`. It starts an ephemeral local server, checks both games, switches low → high → low, captures day/night scenes, and exercises the real solo game loop. Screenshots are written outside the checkout to a temporary directory. Set `CHROMIUM_PATH` if the browser is not on PATH.
-
-The game still includes its 2D compatibility view. The new modeled scenery and character heads are rendered in **3D**. These are procedural stylized upgrades; no external production character assets, textures or paid services are required.
+See [the Phase 1 report](PHASE1-REPORT.md) for architecture, changed files,
+validation evidence, limitations and follow-up work.

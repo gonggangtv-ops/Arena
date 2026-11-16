@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0c0a08">
-<title>Arena Royale</title>
+<meta name="theme-color" content="#080b16">
+<title>Arena Royale Reborn</title>
 <style>
 :root{color-scheme:dark;--bg:#0c0a08;--panel:#1c1712;--line:#5a4a2a;--gold:#e6c25a;--ink:#f2ead8;--mute:#b8a888;--bad:#ff7a7a}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-family:system-ui,-apple-system,"Noto Sans Thai","Segoe UI",sans-serif;color:var(--ink)}
@@ -114,16 +114,16 @@ body:not(.moody) #gl{filter:saturate(1.16) contrast(1.03)}
 body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,rgba(4,4,8,.5) 78%,rgba(0,0,0,.82) 100%)}
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 52%,rgba(8,6,14,.34) 82%,rgba(4,3,8,.62) 100%)}
 </style>
-<link rel="stylesheet" href="anime-theme.css">
+<link rel="stylesheet" href="celestial-theme.css">
 </head>
 <body>
 <div id="safe"></div>
 <canvas id="gl"></canvas><div id="vig"></div>
 <canvas id="c"></canvas>
 <div id="menu" class="ov">
-  <div class="anime-kicker">SAKURA FRONTIER · ANIME FANTASY</div>
-  <h1>Arena Royale</h1>
-  <div class="sub">ดินแดนซากุระและมนตรา · เลือกอาวุธ สร้างตำนานของคุณ · 32 ผู้กล้า เหลือเพียงหนึ่งเดียว</div>
+  <div class="anime-kicker">MOONFALL · DARK CELESTIAL FANTASY</div>
+  <h1>Arena Royale <em>Reborn</em></h1>
+  <div class="sub">ใต้เงาจันทราที่แตกสลาย · 32 ผู้กล้า หนึ่งตำนานบทสุดท้าย</div>
   <div class="codex" id="codex"></div>
   <div class="row">
     <label for="pname" class="sub" style="margin:0">ชื่อ</label><input id="pname" maxlength="12" autocomplete="off">
@@ -143,6 +143,8 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     <button class="go ghost small" id="aoBtn">เงาลึก: เปิด</button>
     <button class="go ghost small" id="sndBtn">เสียง: เปิดทั้งหมด</button>
   </div>
+  <div class="row celestial-tools"><button class="go ghost small" id="moonfallBtn">☽ สำรวจ Moonfall</button><button class="go ghost small" id="celestialInfoBtn">สถานะโมเดล / Performance</button></div>
+  <div id="celestialAssetNote" role="status">กำลังตรวจสอบไฟล์โมเดล…</div>
   <div class="msg" id="menuMsg"></div>
   <button class="anime-help-toggle" id="animeHelp" aria-expanded="false" aria-controls="animeGuide">วิธีเล่นและการควบคุม ▾</button>
   <div class="tip anime-help-collapsed" id="animeGuide">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
@@ -204,7 +206,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     </section>
   </div>
 </div>
-<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังสร้างหุบเขาแห่งเทพนิยาย…</div></div>
+<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>
 <div id="end" class="ov hidden">
   <p class="big" id="endTitle"></p>
   <div class="stats" id="endStats"></div>
@@ -216,9 +218,8 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <script src="peerjs.min.js"></script>
 <script src="sfx.js" async></script>
 <script src="turn.js"></script>
-<script src="anime-render.js"></script>
-<script src="anime-world.js"></script>
-<script src="anime-characters.js"></script>
+<script src="celestial-assets.js"></script>
+<script src="celestial-render.js"></script>
 <script>
 const CURSED=false;
 "use strict";
@@ -3818,14 +3819,14 @@ Object.assign(R3,{
     // units
     const seen=new Set();
     for(const u of units){seen.add(u.id);let o=this.objs.get(u.id);const vis=!u.dead&&unitVisibleTo(u,me,L);
-      if(o&&o.dieT>0&&o.qn){this.qnDie(o,dt);continue}if(o&&o.dieT>0&&(o.kind==='kk'||o.kind==='kkz')){this.kkDie(o,dt);continue}
+      if(o&&o.dieT>0&&o.celestial){this.celestialDie(o,dt);continue}if(o&&o.dieT>0&&o.qn){this.qnDie(o,dt);continue}if(o&&o.dieT>0&&(o.kind==='kk'||o.kind==='kkz')){this.kkDie(o,dt);continue}
       if(o&&o.dieT>0){o.dieT-=dt;const kk=1-o.dieT/1.4;o.root.visible=o.dieT>0;o.body.rotation.x=-Math.min(1.45,kk*3);o.root.position.y=o.gy-Math.max(0,kk-.6)*40;continue}
       if(!o){if(!vis)continue;o=this.objFor(u)}o.root.visible=vis;if(!vis){o.lx=u.x;o.ly=u.y;continue}
       const mv=Math.hypot(u.x-o.lx,u.y-o.ly)/Math.max(dt,.001);o.lx=u.x;o.ly=u.y;o.gy=this.gY(u.x,u.y);o.root.position.set(u.x,o.gy,u.y);
       const want=Math.atan2(u.fx,u.fy);let dr=want-o.rot;dr=Math.atan2(Math.sin(dr),Math.cos(dr));o.rot+=dr*Math.min(1,dt*14);o.root.rotation.y=o.rot;
       const moving=mv>25&&!u.dash&&!u.leap;o.walk+=dt*(moving?Math.min(16,mv/15):0);o.mvK=lerp(o.mvK,moving?1:0,Math.min(1,dt*10));
-      if(u.hero&&o.kind!=='kk'&&!o.qn){if(o.at!==u.at){this.dress(o,u.at,u.look);o.at=u.at}if(o.wk!==u.wk||o.wt!==u.wt){this.arm(o,u);o.wk=u.wk;o.wt=u.wt}}
-      o.body.rotation.x=0;if(o.qn)this.qnAnim(o,u,T,dt,mv);else if(o.kind==='kk')this.animKK(o,u,T,dt,mv);else if(o.kind==='kkz')this.animKKZ(o,u,T,dt,mv);else if(o.kind==='hero')this.animHum(o,u,T,dt);else if(o.kind==='wolf')this.animWolf(o,u,T);else if(o.kind==='dragon')this.animDragon(o,u,T,dt);else this.animBig(o,u,T);
+      if(u.hero&&o.kind!=='kk'&&!o.qn&&!o.celestial){if(o.at!==u.at){this.dress(o,u.at,u.look);o.at=u.at}if(o.wk!==u.wk||o.wt!==u.wt){this.arm(o,u);o.wk=u.wk;o.wt=u.wt}}
+      o.body.rotation.x=0;if(o.celestial)this.celestialAnim(o,u,T,dt,mv);else if(o.qn)this.qnAnim(o,u,T,dt,mv);else if(o.kind==='kk')this.animKK(o,u,T,dt,mv);else if(o.kind==='kkz')this.animKKZ(o,u,T,dt,mv);else if(o.kind==='hero')this.animHum(o,u,T,dt);else if(o.kind==='wolf')this.animWolf(o,u,T);else if(o.kind==='dragon')this.animDragon(o,u,T,dt);else this.animBig(o,u,T);
       const sq=u.hurtT>0?.9:1;o.body.scale.set(1+(1-sq)*.5,sq,1+(1-sq)*.5);
       o.ring.visible=u===me||!!u.hero;if(o.ring.visible)o.ring.material=u===me?this.bas('#46e046',{transparent:true,opacity:.85,depthWrite:false}):allyOf(u,me)?this.bas('#3d9cff',{transparent:true,opacity:.8,depthWrite:false}):this.bas('#ff4a3a',{transparent:true,opacity:.5,depthWrite:false});
       if(o.eyes&&u.mob&&!u.zombie){const n=isNight();if(o.nightEye!==n){o.nightEye=n;for(const e of o.eyes){if(!e.userData.dayM)e.userData.dayM=e.material;e.material=n?this.glowM('#ff2a1a',1):e.userData.dayM;e.scale.multiplyScalar(n?1.35:1/1.35)}}}
@@ -4598,7 +4599,7 @@ R3.aoPass=function(){const T=THREE,tri=new T.BufferGeometry();tri.setAttribute('
 })();
 
 // ===================== Toon look: stepped (cel) light, blue-violet shade, ink outlines on characters =====================
-const TOON=true;   // Shared anime art direction: cel light, violet shade and character ink.
+const TOON=false;   // Celestial PBR uses continuous light; keep the legacy toon path available.
 if(TOON&&window.THREE&&THREE.ShaderChunk){const C=THREE.ShaderChunk,L='float dotNL = saturate( dot( geometryNormal, directLight.direction ) );';
   // Three light bands with soft transitions to keep moving silhouettes stable.
   const R='float dotNL = arToon( saturate( dot( geometryNormal, directLight.direction ) ) );';const F='float arToon(float x){return .16+.48*smoothstep(.12,.2,x)+.36*smoothstep(.58,.68,x);}\n';
@@ -4808,9 +4809,7 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
 }
 
 // ===================== SETTINGS: view + graphics quality =====================
-installAnimeRender(R3);
-installAnimeWorld(R3);
-installAnimeCharacters(R3);
+installCelestialRender(R3);
 
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone2','bright')==='dark';
 if(CURSED)moody=true;

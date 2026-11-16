@@ -1,0 +1,108 @@
+[
+  {
+    "entry": "index.html",
+    "render": {
+      "unchanged": true,
+      "counts": {
+        "floors": 208,
+        "walls": 40,
+        "pillars": 6,
+        "columns": 42
+      },
+      "players": 32,
+      "memories": [
+        {
+          "geometries": 86,
+          "textures": 39
+        },
+        {
+          "geometries": 92,
+          "textures": 58
+        },
+        {
+          "geometries": 90,
+          "textures": 42
+        },
+        {
+          "geometries": 92,
+          "textures": 58
+        },
+        {
+          "geometries": 90,
+          "textures": 42
+        }
+      ],
+      "fallback": true
+    },
+    "combat": {
+      "damage": 123,
+      "melee": true,
+      "skill": true,
+      "sync": true,
+      "wall": true,
+      "bounds": true
+    },
+    "metricsSoftwareGPU": {
+      "fps": 1,
+      "renderMs": 23.3,
+      "calls": 290,
+      "triangles": 1128336,
+      "geometries": 107,
+      "textures": 98,
+      "heapMiB": 282
+    }
+  },
+  {
+    "entry": "cursed.html",
+    "render": {
+      "unchanged": true,
+      "counts": {
+        "floors": 208,
+        "walls": 40,
+        "pillars": 6,
+        "columns": 42
+      },
+      "players": 32,
+      "memories": [
+        {
+          "geometries": 85,
+          "textures": 41
+        },
+        {
+          "geometries": 91,
+          "textures": 60
+        },
+        {
+          "geometries": 89,
+          "textures": 44
+        },
+        {
+          "geometries": 91,
+          "textures": 60
+        },
+        {
+          "geometries": 89,
+          "textures": 44
+        }
+      ],
+      "fallback": true
+    },
+    "combat": {
+      "damage": 123,
+      "melee": true,
+      "skill": true,
+      "sync": true,
+      "wall": true,
+      "bounds": true
+    },
+    "metricsSoftwareGPU": {
+      "fps": 1,
+      "renderMs": 9.9,
+      "calls": 407,
+      "triangles": 1161987,
+      "geometries": 106,
+      "textures": 83,
+      "heapMiB": 271
+    }
+  }
+]
