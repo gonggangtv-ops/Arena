@@ -114,14 +114,16 @@ body:not(.moody) #gl{filter:saturate(1.16) contrast(1.03)}
 body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,rgba(4,4,8,.5) 78%,rgba(0,0,0,.82) 100%)}
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 52%,rgba(8,6,14,.34) 82%,rgba(4,3,8,.62) 100%)}
 </style>
+<link rel="stylesheet" href="anime-theme.css">
 </head>
 <body>
 <div id="safe"></div>
 <canvas id="gl"></canvas><div id="vig"></div>
 <canvas id="c"></canvas>
 <div id="menu" class="ov">
-  <h1>⚔️ Arena Royale</h1>
-  <div class="sub">หุบเขาแห่งเทพนิยาย · ไม่มีอาชีพ — เก็บอาวุธอะไรได้สกิลแบบนั้น · เกราะ 5 ระดับ · 32 คน รอดคนสุดท้าย (หรือทีมสุดท้าย) ชนะ</div>
+  <div class="anime-kicker">SAKURA FRONTIER · ANIME FANTASY</div>
+  <h1>Arena Royale</h1>
+  <div class="sub">ดินแดนซากุระและมนตรา · เลือกอาวุธ สร้างตำนานของคุณ · 32 ผู้กล้า เหลือเพียงหนึ่งเดียว</div>
   <div class="codex" id="codex"></div>
   <div class="row">
     <label for="pname" class="sub" style="margin:0">ชื่อ</label><input id="pname" maxlength="12" autocomplete="off">
@@ -142,7 +144,8 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     <button class="go ghost small" id="sndBtn">เสียง: เปิดทั้งหมด</button>
   </div>
   <div class="msg" id="menuMsg"></div>
-  <div class="tip">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
+  <button class="anime-help-toggle" id="animeHelp" aria-expanded="false" aria-controls="animeGuide">วิธีเล่นและการควบคุม ▾</button>
+  <div class="tip anime-help-collapsed" id="animeGuide">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
 <br>จอยซ้าย = เดิน · ⚔️ = โจมตี · เดินชนอาวุธเพื่อเก็บ (🔄 รับอาวุธ) · แตะ ＋ อัปสกิล (อัลติเลเวล 6/11/16)</div>
   <button class="credlink" id="credBtn">🎵 เครดิตเสียงและเพลง</button>
 </div>
@@ -213,6 +216,9 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <script src="peerjs.min.js"></script>
 <script src="sfx.js" async></script>
 <script src="turn.js"></script>
+<script src="anime-render.js"></script>
+<script src="anime-world.js"></script>
+<script src="anime-characters.js"></script>
 <script>
 const CURSED=false;
 "use strict";
@@ -3116,7 +3122,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
           float pv=texture2D(uDetail,w*.0011+.17).r,pv2=texture2D(uDetail,w*.0031+.53).r;float gm_=(1.-k)*(1.-wt)*(1.-sp.g)*(1.-clamp(sp.r*1.25,0.,1.));
           c=mix(c,c*vec3(.62,.74,.6),smoothstep(.42,.7,pv)*.55*gm_);c=mix(c,c*vec3(1.16,1.12,.8),smoothstep(.6,.85,pv2)*.3*gm_);
           float lu=dot(c,vec3(.3,.59,.11));${TOON?`{vec3 hu=c/max(lu,.02);c=hu*mix(lu,.3,.62);float pk=clamp(sp.r*1.25,0.,1.)+sp.b;
-            c=mix(c,vec3(.3,.6,.08)*(.85+lu*.8),gm_*.7);c=mix(c,vec3(.83,.74,.5)*(.82+lu*.5),clamp(pk,0.,1.)*(1.-k)*.65);c=mix(c,vec3(.5,.52,.7)*(.75+lu*.6),k*.65);c=mix(c,vec3(.9,.86,.66),wt*.4);}`:'c=mix(vec3(lu),c,.8)*vec3(.98,.93,.88);'}}
+            c=mix(c,vec3(.2,.43,.17)*(.85+lu*.8),gm_*.7);c=mix(c,vec3(.83,.74,.5)*(.82+lu*.5),clamp(pk,0.,1.)*(1.-k)*.65);c=mix(c,vec3(.5,.52,.7)*(.75+lu*.6),k*.65);c=mix(c,vec3(.9,.86,.66),wt*.4);}`:'c=mix(vec3(lu),c,.8)*vec3(.98,.93,.88);'}}
          ${this.hi?'{float hh=dot(c,vec3(.33,.5,.17));tBump=vec3(-dFdx(hh),0.,dFdy(hh))*'+(TOON?'.6':'2.6')+';}':''}
          diffuseColor.rgb=c;}`).replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\n normal=normalize(normal+(viewMatrix*vec4(tBump,0.)).xyz);'))});
     const t=new THREE.Mesh(g,m);t.receiveShadow=true;t.userData.ownMat=1;this.scene.add(t);this.terrain=t;
@@ -4592,19 +4598,19 @@ R3.aoPass=function(){const T=THREE,tri=new T.BufferGeometry();tri.setAttribute('
 })();
 
 // ===================== Toon look: stepped (cel) light, blue-violet shade, ink outlines on characters =====================
-const TOON=false;   // toon look (v2.3/v2.4) is kept in the code but switched off: the game is back on the v2.2 look
+const TOON=true;   // Shared anime art direction: cel light, violet shade and character ink.
 if(TOON&&window.THREE&&THREE.ShaderChunk){const C=THREE.ShaderChunk,L='float dotNL = saturate( dot( geometryNormal, directLight.direction ) );';
-  // two hard bands: lit and shade, with a thin soft edge so it does not shimmer
-  const R='float dotNL = arToon( saturate( dot( geometryNormal, directLight.direction ) ) );';const F='float arToon(float x){return .18*smoothstep(0.,.06,x)+.82*smoothstep(.2,.3,x);}\n';
+  // Three light bands with soft transitions to keep moving silhouettes stable.
+  const R='float dotNL = arToon( saturate( dot( geometryNormal, directLight.direction ) ) );';const F='float arToon(float x){return .16+.48*smoothstep(.12,.2,x)+.36*smoothstep(.58,.68,x);}\n';
   for(const k in C){const s=C[k];if(typeof s==='string'&&s.indexOf(L)>=0)C[k]=F+s.split(L).join(R)}}
 (()=>{const P=R3,_of=P.objFor,_arm=P.kkArm,_light=P.frame;
-  const olMat=(th)=>{const m=new THREE.MeshBasicMaterial({color:'#24182e',side:THREE.BackSide,toneMapped:false});m.userData.th=th;
+  const olMat=(th)=>{const m=new THREE.MeshBasicMaterial({color:'#29304b',side:THREE.BackSide,toneMapped:false});m.userData.th=th;
     m.onBeforeCompile=s=>{s.uniforms.uTh={value:th};s.vertexShader='uniform float uTh;\n'+s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\ntransformed+=normalize(normal)*uTh;')};m.customProgramCacheKey=()=>'arOutline';return m};
-  // inverted hull: a back-face copy pushed out along the normals, about 1.6 world units thick whatever the mesh scale
+  // Thin inverted hulls; share a bounded palette of quantized outline materials.
   P.outline=function(root){if(!TOON||!root)return;root.updateMatrixWorld(true);const v=new THREE.Vector3(),list=[];
     root.traverse(m=>{if(!m.isMesh||m.userData.olDone||m.userData.isOl||!m.visible)return;const mt=m.material;if(!mt||Array.isArray(mt)||mt.transparent||mt.blending===THREE.AdditiveBlending||m.isSprite)return;list.push(m)});
-    for(const m of list){m.userData.olDone=1;m.getWorldScale(v);const s=Math.max(1e-4,(Math.abs(v.x)+Math.abs(v.y)+Math.abs(v.z))/3),th=Math.min(.12,3.2/s);
-      const mat=olMat(th);let o;if(m.isSkinnedMesh){o=new THREE.SkinnedMesh(m.geometry,mat);o.bind(m.skeleton,m.bindMatrix)}else if(m.isInstancedMesh)continue;else o=new THREE.Mesh(m.geometry,mat);
+    for(const m of list){m.userData.olDone=1;m.getWorldScale(v);const s=Math.max(1e-4,(Math.abs(v.x)+Math.abs(v.y)+Math.abs(v.z))/3),th=Math.min(.035,1.1/s);
+      if(m.geometry){if(!m.geometry.boundingSphere)m.geometry.computeBoundingSphere();if(m.geometry.boundingSphere.radius*s<3.5)continue}const qth=Math.max(.001,Math.round(th*1000)/1000),mat=this.cached('anime-ink-'+qth,()=>olMat(qth));let o;if(m.isSkinnedMesh){o=new THREE.SkinnedMesh(m.geometry,mat);o.bind(m.skeleton,m.bindMatrix)}else if(m.isInstancedMesh)continue;else o=new THREE.Mesh(m.geometry,mat);
       o.userData.isOl=1;o.frustumCulled=false;o.castShadow=false;o.receiveShadow=false;o.renderOrder=m.renderOrder;m.add(o);if(m.isSkinnedMesh){o.position.set(0,0,0);o.quaternion.identity();o.scale.set(1,1,1);m.remove(o);m.parent.add(o);o.position.copy(m.position);o.quaternion.copy(m.quaternion);o.scale.copy(m.scale)}}};
   P.objFor=function(u){const had=this.objs.get(u.id);const o=_of.call(this,u);if(!had&&o&&(u.hero||u.mob||u.zombie))this.outline(o.root);return o};
   const _kb=P.kkBuild;if(_kb)P.kkBuild=function(o,u){const r=_kb.apply(this,arguments);if(o&&o.root&&this.objs.get(u.id)===o)this.outline(o.root);return r};
@@ -4802,6 +4808,10 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
 }
 
 // ===================== SETTINGS: view + graphics quality =====================
+installAnimeRender(R3);
+installAnimeWorld(R3);
+installAnimeCharacters(R3);
+
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone2','bright')==='dark';
 if(CURSED)moody=true;
 const has3D=()=>typeof R3!=='undefined';
@@ -4854,6 +4864,8 @@ const LAB={
     return{t:Math.round(t),winner:w?(w.wk||'none'):'none',wlvl:w?w.lvl:0,ranks:hs.map(u=>[u.wk||'none',u.rank||1,u.lvl,u.kills,u.wt,u.at,u.ai.pref]),avgLvl:+(hs.reduce((a,u)=>a+u.lvl,0)/hs.length).toFixed(1),
       armed:hs.filter(u=>u.wk).length}}
 };
+$('animeHelp').onclick=()=>{const open=$('animeHelp').getAttribute('aria-expanded')!=='true';$('animeHelp').setAttribute('aria-expanded',String(open));$('animeGuide').classList.toggle('anime-help-collapsed',!open);$('animeHelp').textContent=open?'ซ่อนวิธีเล่น ▴':'วิธีเล่นและการควบคุม ▾'};
+
 window.__game={sim:(s)=>{for(let i=0;i<s*30;i++){if(state!=='play')break;hostUpdate(1/30);fxUpdate(1/30)}},feed:()=>feedList.map(f=>f.txt),
   get state(){return state},get me(){return ME()},get alive(){return alive},get net(){return net},get perf(){return perfHost},units:()=>units,items:()=>items,world:()=>WD,
   tp:(x,y)=>{const m=ME();m.x=x;m.y=y},hurt:(id,a)=>{const u=UMAP.get(id);if(u)dealDamage(u,a,'pure',null)},lab:LAB,setT:t=>{gameT=t},klog:()=>KLOG,
