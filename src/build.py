@@ -25,6 +25,7 @@ else:
     st=sh[sh.index('<style>'):sh.index('</style>')+8].replace("html,body{margin:0;height:100%;","html,body{margin:0;height:100%;padding:0!important;")
     body=sh[sh.index('<body>')+6:sh.rindex('</body>')].replace('<!--LIBS-->',libs).replace('<!--TURN-->','').replace('/*GAME*/',js)
     out=('<title>The Cursed Realm</title>\n' if cur else '<title>Arena Royale</title>\n')+st+'\n'+body
+    if cur:out=out.replace(st,st+'\n<style>'+open(os.path.join(D,'celestial-theme.css'),encoding='utf-8').read()+'</style>',1)
     p=os.path.join(os.path.dirname(D),'cursed_artifact.html' if cur else 'artifact.html')
 open(p,'w',encoding='utf-8').write(out)
 print(p,len(out))
