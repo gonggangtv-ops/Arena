@@ -8,14 +8,14 @@ Run `python3 -m http.server 8010` here and choose **☽ สำรวจ Moonfall
 a solo match near the remodeled castle. Ordinary Solo and online games retain
 their spawn rules. Mobile uses the original landscape flow.
 
-Active files: `celestial-render.js`, `celestial-assets.js`, `celestial-theme.css`.
+Active files: `celestial-render.js`, `celestial-assets.js`, `moonfall-environment.js`, `celestial-theme.css`.
 The former `anime-*` files are preserved but no longer installed. Their old smoke
 suite targets the previous style; use `python3 scripts/smoke-celestial.py` now.
 
-**None of the five Meshy GLBs is included yet.** The arena uses procedural
+**None of the 13 requested Meshy GLBs is included yet.** The arena uses procedural
 fallback architecture. See [import instructions](assets/meshy/README.md) for
 filenames, task IDs, budgets and rig requirements. Real GLBs replace visual
 proxies only after successful admission. Never store API keys here.
 
-See [the Phase 1 report](PHASE1-REPORT.md) for architecture, changed files,
+See [the current Phase 1/2 report](PHASE12-REPORT.md) for architecture, changed files,
 validation evidence, limitations and follow-up work.

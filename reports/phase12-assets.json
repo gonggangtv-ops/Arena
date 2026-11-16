@@ -1,0 +1,138 @@
+{
+  "assets": [
+    {
+      "asset": "moon-arena",
+      "taskId": "01a1e3b2-07b9-74a5-a370-4d8171618ca6",
+      "phase": 1,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/moon-arena.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "modular-floor",
+      "taskId": "01a1e3b2-1966-7224-83c0-2bdbeea548a3",
+      "phase": 1,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/modular-floor.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "modular-wall",
+      "taskId": "01a1e3b2-29fa-7146-aa67-e377d41d78fa",
+      "phase": 1,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/modular-wall.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "ancient-pillar",
+      "taskId": "01a1e3b2-a03c-7483-ae7e-4ee77550bd8c",
+      "phase": 1,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/ancient-pillar.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "celestial-warrior",
+      "taskId": "01a1e3b2-af58-7625-a8ed-b148d3cfcf1d",
+      "phase": 1,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/celestial-warrior.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "moon-stairs",
+      "taskId": "01a1e4ef-59c3-75ce-8019-606c53d74925",
+      "phase": 2,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/moon-stairs.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "wall-corner",
+      "taskId": "01a1e4ef-7820-7509-aa6f-85d568e6a53e",
+      "phase": 2,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/wall-corner.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "temple-gate",
+      "taskId": "01a1e4ef-8405-73dc-93d6-004c7f2ca49f",
+      "phase": 2,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/temple-gate.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "ruin-arch",
+      "taskId": "01a1e4ef-8ea6-7073-b3ce-37695394cd7e",
+      "phase": 2,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/ruin-arch.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "guardian-statue",
+      "taskId": "01a1e4ef-9a7d-7191-a43f-e89ab12b0a92",
+      "phase": 2,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/guardian-statue.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "portal-frame",
+      "taskId": "01a1e4ef-b382-71aa-a201-bf72f103dea8",
+      "phase": 2,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/portal-frame.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "rubble",
+      "taskId": "01a1e4ef-bf35-7484-a476-086101d99d22",
+      "phase": 2,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/rubble.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    },
+    {
+      "asset": "brazier",
+      "taskId": "01a1e4ef-c952-7560-b980-300c4359c684",
+      "phase": 2,
+      "taskStatus": "SUCCEEDED",
+      "file": "assets/meshy/brazier.glb",
+      "glbDownloaded": false,
+      "inspected": false,
+      "blocker": "GLB file absent; download/import required"
+    }
+  ],
+  "downloaded": 0,
+  "total": 13,
+  "complete": false,
+  "paidToolCalls": 0
+}

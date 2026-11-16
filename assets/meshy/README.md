@@ -1,9 +1,14 @@
 # Meshy exports required
 
-**None of the five production GLBs is included yet.** The manifest intentionally
+**None of the 13 production GLBs is included yet.** The manifest intentionally
 marks every export `available: false`. Task IDs alone do not grant account access.
-The read-only Meshy API probe on 2026-11-16 returned proxy CONNECT HTTP 403;
-no Meshy account connection or API credential is configured here.
+Meshy MCP authentication now works, and all 13 original tasks have been checked:
+every task returned SUCCEEDED. The actual GLB download is blocked by the runtime
+proxy for `assets.meshy.ai` (HTTP 403). Network access to `api.meshy.ai` alone is
+insufficient. No API key belongs in this repository.
+
+Phase 2 filenames and IDs: [PHASE2-HANDOFF.md](PHASE2-HANDOFF.md). The manifest
+contains all 13 entries; availability remains false until real files are present.
 
 Export GLB with embedded textures from the account that owns these tasks:
 

@@ -88,6 +88,7 @@ def main():
                                               is_mobile=mobile, has_touch=mobile, device_scale_factor=3 if mobile else 1,
                                               **({'user_agent': 'Mozilla/5.0 (Linux; Android 14) Mobile'} if mobile else {}))
                 page = context.new_page()
+                page.set_default_timeout(120000)
                 errors = []
                 page.on('pageerror', lambda e: errors.append(str(e)))
                 page.on('console', lambda m: errors.append(m.text)
@@ -103,8 +104,12 @@ def main():
 
             for entry in ('index.html', 'cursed.html'):
                 page, errors = new_page()
-                page.goto(f'{url}/{entry}')
-                page.wait_for_function('CelestialAssets.snapshot().assets.length===5 && CelestialAssets.snapshot().assets.every(a=>a.state==="missing")', polling=100)
+                fallback_manifest = json.loads((ROOT / 'assets/meshy/manifest.json').read_text())
+                for asset in fallback_manifest['assets'].values():
+                    asset['available'] = False
+                page.route('**/assets/meshy/manifest.json', lambda route: route.fulfill(json=fallback_manifest))
+                page.goto(f'{url}/{entry}', timeout=120000)
+                page.wait_for_function('CelestialAssets.snapshot().assets.length===13 && CelestialAssets.snapshot().assets.every(a=>a.state==="missing")', polling=100)
                 assert page.evaluate('R3.ok && !TOON')
                 assert page.locator('#codex > *').count() == 9
                 page.locator('#celestialInfoBtn').click()
@@ -112,9 +117,25 @@ def main():
                 page.locator('#celestialClose').click()
                 page.screenshot(path=str(artifacts / f'{entry}-menu.png'))
                 page.evaluate('R3.menuSeed=20261116;R3.menuReady=1')
-                page.locator('#moonfallBtn').click()
+                page.locator('#moonfallBtn').click(no_wait_after=True)
                 page.wait_for_function("state==='play'", polling=100, timeout=120000)
                 page.wait_for_timeout(200)
+                # Deterministic Phase 2 collision is generated before original grids/nav.
+                phase2 = page.evaluate("""() => {
+                    const l=WD.moonfall,C=WD.castle;
+                    const opening=blockedAt({x:l.gate.x,y:l.gate.y},26)===false;
+                    const columns=l.colliders.filter(p=>p.r);
+                    const obstacles=columns.every(p=>blockedAt(p,10));
+                    const navigation=columns.every(p=>navBlocked(p.x,p.y));
+                    const r=l.ramps[0];let stairs=false;
+                    if(r){const a=C.loc(r.a,r.b-r.length*.49),b=C.loc(r.a,r.b+r.length*.49);
+                        stairs=R3.gY(b.x,b.y)>R3.gY(a.x,a.y)+35&&!blockedAt(a,20)&&!blockedAt(b,20);}
+                    return {version:l.version,opening,obstacles,navigation,stairs,
+                        props:Object.keys(R3.moonfallPhase2Counts),shader:R3.moonfallEffects.some(e=>e.kind==='portal'),
+                        fire:R3.moonfallEffects.some(e=>e.kind==='flame')};
+                }""")
+                assert phase2['version']==2 and all(phase2[k] for k in ['opening','obstacles','navigation','stairs','shader','fire']), phase2
+                assert len(phase2['props'])>=8, phase2
                 # Rendering must not mutate collision data, units, or map bounds.
                 result = page.evaluate("""() => {
                     const before=JSON.stringify([WD.walls,WD.solids,WD.castle,WORLD]);
@@ -136,6 +157,13 @@ def main():
                 assert result['memories'][4]['textures'] <= result['memories'][2]['textures'], result
                 assert result['memories'][4]['geometries'] <= result['memories'][2]['geometries'], result
                 page.evaluate('announce=null;R3.frame(1/30)')
+                animated = page.evaluate("""() => {
+                    const e=R3.moonfallEffects.find(e=>e.kind==='portal'),before=e.mat.uniforms.uTime.value;
+                    __game.tp(e.x,e.y);R3.tx=R3.ty=undefined;R3.frame(1/30);
+                    return e.mesh.visible&&e.mat.uniforms.uTime.value>before&&!blockedAt(ME(),ME().r);
+                }""")
+                assert animated
+                page.screenshot(path=str(artifacts / f'{entry}-portal.png'))
                 page.screenshot(path=str(artifacts / f'{entry}-low.png'))
                 page.evaluate("gfxQ='high';R3.setQuality();gameT=DAY+20;R3.frame(1/30)")
                 page.screenshot(path=str(artifacts / f'{entry}-high-night.png'))
@@ -168,18 +196,22 @@ def main():
                     WD.walls=[{x:CX-40,y:CY-100,w:40,h:200}];buildCollide(WD);
                     a.x=CX+5;a.y=CY;collideUnit(a);const wall=a.x>=CX+a.r-.01;
                     a.x=-100;collideUnit(a);const bounds=a.x>=a.r;
-                    return {damage,melee,skill,sync,wall,bounds};
+                    a.hp=Math.max(1,a.hp-100);a.bag=[1,1,0,0];a.bcd=[0,0,0,0];
+                    const inventory=usePotion(a,0)&&a.bag[0]===0&&a.hotT>0&&a.bcd[0]>0;
+                    const rejected=[];net.tr.send=(id,data)=>rejected.push(data.t);net.tr.kick=id=>rejected.push('kick');
+                    hostJoin('legacy-client',{v:VER-1});const versionGuard=rejected.join(',')==='ver,kick';
+                    return {damage,melee,skill,sync,wall,bounds,inventory,versionGuard};
                 }""")
-                assert combat == dict(damage=123, melee=True, skill=True, sync=True, wall=True, bounds=True), combat
+                assert combat == dict(damage=123, melee=True, skill=True, sync=True, wall=True, bounds=True, inventory=True, versionGuard=True), combat
                 assert not errors, errors
-                reports.append({'entry': entry, 'render': result, 'combat': combat,
+                reports.append({'entry': entry, 'render': result, 'combat': combat, 'phase2': phase2,
                                 'metricsSoftwareGPU': page.evaluate('R3.celestialMetrics()')})
                 (artifacts / 'report.json').write_text(json.dumps(reports, indent=2))
                 print(f'PASS {entry}: scene, quality, immutable collision, 32 heroes, real loop, damage/attack/skill, snapshot, bounds', flush=True)
                 page.context.close()
 
             page, errors = new_page(mobile=True)
-            page.goto(f'{url}/index.html')
+            page.goto(f'{url}/index.html', timeout=120000)
             page.wait_for_function('R3.ok', polling=100)
             assert page.evaluate('R3.mobile && !R3.hi && R3.renderer.getPixelRatio()===1 && !R3.composer')
             page.locator('#animeHelp').tap()
@@ -217,8 +249,8 @@ def main():
                 page.route('**/assets/meshy/*.glb', lambda route: route.fulfill(
                     content_type='model/gltf-binary', body=(b'corrupt' if variant == 'corrupt'
                         else warrior if route.request.url.endswith('celestial-warrior.glb') else static)))
-                page.goto(f'{url}/index.html')
-                page.wait_for_function('CelestialAssets.snapshot().assets.length===5 && CelestialAssets.snapshot().assets.every(a=>["loaded","error"].includes(a.state))', polling=100)
+                page.goto(f'{url}/index.html', timeout=120000)
+                page.wait_for_function('CelestialAssets.snapshot().assets.length===13 && CelestialAssets.snapshot().assets.every(a=>["loaded","error"].includes(a.state))', polling=100)
                 admission = page.evaluate('R3.inspectCelestialWarrior()')
                 assert admission['ready'] == (variant == 'rigged'), admission
                 if variant == 'rigged':
