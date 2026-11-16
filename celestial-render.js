@@ -384,7 +384,7 @@ window.installCelestialRender = function (P) {
   function updateStatus() {
     const data=A.snapshot(),loaded=data.assets.filter(a=>a.state==='loaded').length;
     const note=document.getElementById('celestialAssetNote');
-    if(note)note.textContent=data.error?'Manifest: '+data.error:`MOONFALL / ${loaded}/5 GLB พร้อมใช้ · ${loaded<5?'ใช้ฉากและตัวละครสำรองระหว่างรอไฟล์':'ตรวจ rig ก่อนสลับตัวละคร'}`;
+    if(note)note.textContent=data.error?'Manifest: '+data.error:`MOONFALL / ${loaded}/${data.assets.length} GLB พร้อมใช้ · ${loaded<data.assets.length?'ใช้ฉากและตัวละครสำรองระหว่างรอไฟล์':'ตรวจ rig ก่อนสลับตัวละคร'}`;
     const list=document.getElementById('celestialAssetList');
     if(list){list.replaceChildren();for(const a of data.assets){const li=document.createElement('li');li.textContent=`${a.name} — ${a.state}${a.error?' · '+a.error:''}${a.inspection?' · '+a.inspection.triangles.toLocaleString()+' tris / '+a.inspection.clips.length+' clips':''}`;list.appendChild(li);}}
     const rig=document.getElementById('celestialRigNote');if(rig)rig.textContent=P.inspectCelestialWarrior().reason || 'Celestial Warrior: rig / clips / hand sockets พร้อมใช้งาน';
@@ -392,13 +392,14 @@ window.installCelestialRender = function (P) {
   let assetSignature='';
   A.subscribe(()=>{
     const signature=A.snapshot().assets.filter(a=>a.state==='loaded').map(a=>a.key).join(',');
-    if(signature!==assetSignature){assetSignature=signature;revision++;}
+    const settled=A.snapshot().assets.every(a=>['loaded','missing','error'].includes(a.state));
+    if(settled&&signature!==assetSignature){assetSignature=signature;revision++;}
     updateStatus();
   });
   // Defer DOM bindings until all original handlers and lexical state are ready.
   setTimeout(()=>{
     const panel=document.createElement('section');panel.id='celestialPanel';panel.className='hidden';panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-labelledby','celestialPanelTitle');
-    panel.innerHTML='<button class="go ghost small" id="celestialClose">ปิด ×</button><h2 id="celestialPanelTitle">Moonfall / Phase 1</h2><p>GLB จะแสดงสถานะ loaded เฉพาะเมื่อมีไฟล์จริงและถอดรหัสสำเร็จ รายการ missing ใช้ฉากสำรองและระบบเดิม</p><ul id="celestialAssetList"></ul><p id="celestialRigNote"></p><div id="celestialMetrics"></div><p>FPS ในเครื่องทดสอบนี้ไม่ใช่ผลรับรองประสิทธิภาพมือถือจริง CPU submit ไม่รวมเวลาทำงาน GPU</p><label class="chk"><input type="checkbox" id="celestialPerfToggle"> แสดง Performance ระหว่างเล่น</label><p>มือถือเล่นแนวนอน · กราฟิกอัตโนมัติใช้โหมดประหยัดบนมือถือ · โหมดสูงเพิ่ม Bloom และเงา</p>';
+    panel.innerHTML='<button class="go ghost small" id="celestialClose">ปิด ×</button><h2 id="celestialPanelTitle">Moonfall / Phase 1 &amp; 2</h2><p>GLB จะแสดงสถานะ loaded เฉพาะเมื่อมีไฟล์จริงและถอดรหัสสำเร็จ รายการ missing ใช้ฉากสำรองและระบบเดิม</p><ul id="celestialAssetList"></ul><p id="celestialRigNote"></p><div id="celestialMetrics"></div><p>FPS ในเครื่องทดสอบนี้ไม่ใช่ผลรับรองประสิทธิภาพมือถือจริง CPU submit ไม่รวมเวลาทำงาน GPU</p><label class="chk"><input type="checkbox" id="celestialPerfToggle"> แสดง Performance ระหว่างเล่น</label><p>มือถือเล่นแนวนอน · กราฟิกอัตโนมัติใช้โหมดประหยัดบนมือถือ · โหมดสูงเพิ่ม Bloom และเงา</p>';
     document.body.appendChild(panel);
     const perf=document.createElement('output');perf.id='celestialPerf';perf.className='hidden';document.body.appendChild(perf);
     const open=document.getElementById('celestialInfoBtn'),close=document.getElementById('celestialClose');

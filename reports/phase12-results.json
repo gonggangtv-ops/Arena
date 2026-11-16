@@ -1,0 +1,152 @@
+[
+  {
+    "entry": "index.html",
+    "render": {
+      "unchanged": true,
+      "counts": {
+        "floors": 208,
+        "walls": 40,
+        "pillars": 6,
+        "columns": 42
+      },
+      "players": 32,
+      "memories": [
+        {
+          "geometries": 87,
+          "textures": 39
+        },
+        {
+          "geometries": 93,
+          "textures": 58
+        },
+        {
+          "geometries": 91,
+          "textures": 42
+        },
+        {
+          "geometries": 93,
+          "textures": 58
+        },
+        {
+          "geometries": 91,
+          "textures": 42
+        }
+      ],
+      "fallback": true
+    },
+    "combat": {
+      "damage": 123,
+      "melee": true,
+      "skill": true,
+      "sync": true,
+      "wall": true,
+      "bounds": true,
+      "inventory": true,
+      "versionGuard": true
+    },
+    "phase2": {
+      "version": 2,
+      "opening": true,
+      "obstacles": true,
+      "navigation": true,
+      "stairs": true,
+      "props": [
+        "temple-gate",
+        "wall-corner",
+        "guardian-statue",
+        "brazier",
+        "rubble",
+        "ruin-arch",
+        "portal-frame",
+        "moon-stairs",
+        "modular-floor"
+      ],
+      "shader": true,
+      "fire": true
+    },
+    "metricsSoftwareGPU": {
+      "fps": 0,
+      "renderMs": 19.3,
+      "calls": 345,
+      "triangles": 1159014,
+      "geometries": 110,
+      "textures": 108,
+      "heapMiB": 166
+    }
+  },
+  {
+    "entry": "cursed.html",
+    "render": {
+      "unchanged": true,
+      "counts": {
+        "floors": 208,
+        "walls": 40,
+        "pillars": 6,
+        "columns": 42
+      },
+      "players": 32,
+      "memories": [
+        {
+          "geometries": 86,
+          "textures": 41
+        },
+        {
+          "geometries": 92,
+          "textures": 60
+        },
+        {
+          "geometries": 90,
+          "textures": 44
+        },
+        {
+          "geometries": 92,
+          "textures": 60
+        },
+        {
+          "geometries": 90,
+          "textures": 44
+        }
+      ],
+      "fallback": true
+    },
+    "combat": {
+      "damage": 123,
+      "melee": true,
+      "skill": true,
+      "sync": true,
+      "wall": true,
+      "bounds": true,
+      "inventory": true,
+      "versionGuard": true
+    },
+    "phase2": {
+      "version": 2,
+      "opening": true,
+      "obstacles": true,
+      "navigation": true,
+      "stairs": true,
+      "props": [
+        "temple-gate",
+        "wall-corner",
+        "guardian-statue",
+        "brazier",
+        "rubble",
+        "ruin-arch",
+        "portal-frame",
+        "moon-stairs",
+        "modular-floor"
+      ],
+      "shader": true,
+      "fire": true
+    },
+    "metricsSoftwareGPU": {
+      "fps": 0,
+      "renderMs": 44.2,
+      "calls": 547,
+      "triangles": 1196250,
+      "geometries": 110,
+      "textures": 107,
+      "heapMiB": 163
+    }
+  }
+]

@@ -1,3 +1,5 @@
+> รายงานประวัติของ Phase 1 ที่ commit 0a72f15 ดูสถานะงานล่าสุดใน [PHASE12-REPORT.md](PHASE12-REPORT.md)
+
 # Arena Royale Reborn — Phase 1
 
 ## สถานะส่งมอบ

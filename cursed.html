@@ -220,11 +220,12 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <script src="turn.js"></script>
 <script src="celestial-assets.js"></script>
 <script src="celestial-render.js"></script>
+<script src="moonfall-environment.js"></script>
 <script>
 const CURSED=true;
 "use strict";
 const $=id=>document.getElementById(id);
-const VER=9;
+const VER=10;
 // ===================== DATA =====================
 const TIERS=[{n:'ธรรมดา',c:'#dcdcdc',m:1,sa:0},{n:'หายาก',c:'#4aa8ff',m:1.22,sa:.1},{n:'มหากาพย์',c:'#b46bff',m:1.5,sa:.2},{n:'ตำนาน',c:'#ffb400',m:1.9,sa:.32},{n:'SSR',c:'#ff3d7f',m:2.4,sa:.46}];
 const HB={hp:700,mp:290,hpR:2.2,mpR:1.5,dmg:45,armor:2,mr:.18,spd:205};
@@ -3271,7 +3272,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
   buildBuildings(){const S=this.scene,G=this.G;this.glows=[];
     const styleTex={tudor:'plaster',lake:'planks',witch:'plaster',cabin:'logs',stone:'bricks'};const styleCol={tudor:'#ffffff',lake:'#a8c0d0',witch:'#9a90a8',cabin:'#ffffff',stone:'#e8e0d0'};
     const walls={},found=[],floors=[];
-    for(const q of WD.walls){if(q.castle)continue;const h=WD.houses[q.house];const st=h.style;(walls[st]=walls[st]||[]).push(this.tg(this.boxUV(q.w,70,q.h,st==='cabin'?110:150),q.x+q.w/2,47,q.y+q.h/2));
+    for(const q of WD.walls){if(q.castle||q.moonfall)continue;const h=WD.houses[q.house];const st=h.style;(walls[st]=walls[st]||[]).push(this.tg(this.boxUV(q.w,70,q.h,st==='cabin'?110:150),q.x+q.w/2,47,q.y+q.h/2));
       found.push(this.tg(this.boxUV(q.w+6,14,q.h+6,90),q.x+q.w/2,5,q.y+q.h/2))}
     for(const st in walls){const m=new THREE.Mesh(this.merge(walls[st]),this.tstd(styleTex[st],styleCol[st],.88,0));m.castShadow=true;m.receiveShadow=true;S.add(m)}
     if(found.length){const m=new THREE.Mesh(this.merge(found),this.tstd('bricks','#b8b0a0',.9,0));m.castShadow=true;m.receiveShadow=true;S.add(m)}
@@ -4810,6 +4811,7 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
 
 // ===================== SETTINGS: view + graphics quality =====================
 installCelestialRender(R3);
+installMoonfallEnvironment(R3);
 
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone2','bright')==='dark';
 if(CURSED)moody=true;
