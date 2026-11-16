@@ -1,0 +1,68 @@
+[
+  {
+    "entry": "index.html",
+    "viewport": "desktop",
+    "soloActionVisible": true,
+    "nativeDetailsKeyboard": true,
+    "originalConfigAndSolo": true,
+    "localLobbyHostGuestSearch": true,
+    "transportDuringLobby": null,
+    "icons": 27,
+    "errors": []
+  },
+  {
+    "entry": "index.html",
+    "viewport": "landscape",
+    "soloActionVisible": true,
+    "nativeDetailsKeyboard": true,
+    "originalConfigAndSolo": true,
+    "localLobbyHostGuestSearch": true,
+    "transportDuringLobby": null,
+    "icons": 27,
+    "errors": []
+  },
+  {
+    "entry": "index.html",
+    "viewport": "portrait",
+    "soloActionVisible": true,
+    "nativeDetailsKeyboard": true,
+    "originalConfigAndSolo": true,
+    "localLobbyHostGuestSearch": true,
+    "transportDuringLobby": null,
+    "icons": 27,
+    "errors": []
+  },
+  {
+    "entry": "cursed.html",
+    "viewport": "desktop",
+    "soloActionVisible": true,
+    "nativeDetailsKeyboard": true,
+    "originalConfigAndSolo": true,
+    "localLobbyHostGuestSearch": true,
+    "transportDuringLobby": null,
+    "icons": 27,
+    "errors": []
+  },
+  {
+    "entry": "cursed.html",
+    "viewport": "landscape",
+    "soloActionVisible": true,
+    "nativeDetailsKeyboard": true,
+    "originalConfigAndSolo": true,
+    "localLobbyHostGuestSearch": true,
+    "transportDuringLobby": null,
+    "icons": 27,
+    "errors": []
+  },
+  {
+    "entry": "cursed.html",
+    "viewport": "portrait",
+    "soloActionVisible": true,
+    "nativeDetailsKeyboard": true,
+    "originalConfigAndSolo": true,
+    "localLobbyHostGuestSearch": true,
+    "transportDuringLobby": null,
+    "icons": 27,
+    "errors": []
+  }
+]

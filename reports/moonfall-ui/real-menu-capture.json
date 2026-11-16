@@ -1,0 +1,14 @@
+[
+  {
+    "mobile": false,
+    "loadedGLBs": 17,
+    "icons": 27,
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "loadedGLBs": 17,
+    "icons": 27,
+    "errors": []
+  }
+]

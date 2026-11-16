@@ -12,7 +12,7 @@ the existing GI glyph renderer and its credits. Artwork is displayed within the
 original circular hit areas; no input event or skill balance is replaced.
 
 The PNG is about 2.4 MB. Runtime cached icons total roughly 4 MiB RGBA plus the
-browser's temporary decoded sheet. This is an estimate, not a VRAM measurement.
+browser's decoded sheet (about 6 MiB) and caches. This is an estimate, not a VRAM measurement.
 No Meshy requests or credits are involved in this UI pass.
 
 Review all skills and example states in `moonfall-ui-preview.html`.

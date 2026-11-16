@@ -116,6 +116,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 </style>
 <link rel="stylesheet" href="celestial-theme.css">
 <link rel="stylesheet" href="moonfall-ui.css">
+<link rel="stylesheet" href="moonfall-menu.css">
 </head>
 <body>
 <div id="safe"></div>
@@ -225,6 +226,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <script src="moonfall-environment.js"></script>
 <script src="moonfall-biome.js"></script>
 <script src="moonfall-ui.js"></script>
+<script src="moonfall-menu.js"></script>
 <script>
 const CURSED=false;
 "use strict";
@@ -4818,6 +4820,7 @@ installCelestialRender(R3);
 installMoonfallEnvironment(R3);
 installMoonfallBiome(R3);
 installMoonfallUI();
+installMoonfallMenuUX();
 
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone2','bright')==='dark';
 if(CURSED)moody=true;

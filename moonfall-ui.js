@@ -78,7 +78,7 @@ window.installMoonfallUI=function(){
         const cell=cells[i],canvas=document.createElement('canvas');canvas.width=canvas.height=192;const paint=canvas.getContext('2d');
         paint.fillStyle='#0b1120';paint.fillRect(0,0,192,192);paint.drawImage(image,cell%6*width+3,Math.floor(cell/6)*height+3,width-6,height-6,5,5,182,182);icons.set(key+':'+i,canvas);
       }
-      loadState='loaded';
+      loadState='loaded';window.dispatchEvent(new Event('moonfallui:ready'));
     }catch(error){loadState='fallback';loadError=String(error.message||error);}
   })();
 };
