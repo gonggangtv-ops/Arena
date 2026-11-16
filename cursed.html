@@ -222,6 +222,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <script src="celestial-render.js"></script>
 <script src="moonfall-collision-data.js"></script>
 <script src="moonfall-environment.js"></script>
+<script src="moonfall-biome.js"></script>
 <script>
 const CURSED=true;
 "use strict";
@@ -4813,6 +4814,7 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
 // ===================== SETTINGS: view + graphics quality =====================
 installCelestialRender(R3);
 installMoonfallEnvironment(R3);
+installMoonfallBiome(R3);
 
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone2','bright')==='dark';
 if(CURSED)moody=true;

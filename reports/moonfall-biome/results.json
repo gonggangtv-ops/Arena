@@ -1,0 +1,884 @@
+[
+  {
+    "entry": "index.html",
+    "mobileEmulation": false,
+    "assets": [
+      {
+        "key": "moon-dead-tree",
+        "name": "Gnarled leafless moon tree",
+        "taskId": "01a1e5de-ff15-723e-8432-05aa2913190b",
+        "url": "assets/meshy/moon-dead-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8570844,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 4162,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.6594559848308563,
+            1,
+            0.6192539930343628
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-silver-tree",
+        "name": "Silver-leaf moon tree",
+        "taskId": "01a1e5df-10c3-7669-a8ad-db3b59a3e26a",
+        "url": "assets/meshy/moon-silver-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 11218484,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5252,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.5918359756469727,
+            1,
+            0.5594030022621155
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-boulder",
+        "name": "Rough dark basalt boulder",
+        "taskId": "01a1e5df-21c4-76b4-98f0-2115d5c09dad",
+        "url": "assets/meshy/moon-boulder.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7189044,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3110,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9307770133018494,
+            0.970784991979599
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-rock-cluster",
+        "name": "Moonstone rock cluster",
+        "taskId": "01a1e5df-5a17-76bf-bdc1-778215cc0611",
+        "url": "assets/meshy/moon-rock-cluster.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6583744,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3504,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9999890029430389,
+            0.6542630195617676
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      }
+    ],
+    "rebuilds": [
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 688,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2143,
+            "moon-silver-tree": 1991,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 78,
+        "textures": 63,
+        "calls": 369,
+        "triangles": 1834740
+      },
+      {
+        "quality": "low",
+        "biome": "classic",
+        "invariant": true,
+        "counts": {
+          "trees": 0,
+          "mountainTrees": 0,
+          "rocks": 0,
+          "byAsset": {}
+        },
+        "natureShader": false,
+        "geometries": 82,
+        "textures": 66,
+        "calls": 455,
+        "triangles": 1453850
+      },
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 688,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2143,
+            "moon-silver-tree": 1991,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 82,
+        "textures": 66,
+        "calls": 370,
+        "triangles": 1834862
+      },
+      {
+        "quality": "high",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 1964,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2830,
+            "moon-silver-tree": 2580,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 84,
+        "textures": 82,
+        "calls": 464,
+        "triangles": 4059322
+      },
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 688,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2143,
+            "moon-silver-tree": 1991,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 82,
+        "textures": 66,
+        "calls": 369,
+        "triangles": 1834860
+      },
+      {
+        "quality": "high",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 1964,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2830,
+            "moon-silver-tree": 2580,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 84,
+        "textures": 82,
+        "calls": 463,
+        "triangles": 4059320
+      },
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 688,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2143,
+            "moon-silver-tree": 1991,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 82,
+        "textures": 66,
+        "calls": 370,
+        "triangles": 1834862
+      }
+    ],
+    "geometry": {
+      "checked": 1500,
+      "maxRatio": 1.000000051895375,
+      "collisions": true,
+      "aiLoop": true,
+      "walk": true,
+      "nav": true
+    },
+    "nativeTouch": false,
+    "forest": {
+      "x": 11728.525831271047,
+      "y": 4035.319555664317,
+      "score": 72,
+      "trees": 24,
+      "rocks": 13
+    },
+    "softwareMetrics": {
+      "fps": 0,
+      "renderMs": 830,
+      "calls": 173,
+      "triangles": 1828358,
+      "geometries": 97,
+      "textures": 111,
+      "heapMiB": 463
+    },
+    "errors": []
+  },
+  {
+    "entry": "cursed.html",
+    "mobileEmulation": false,
+    "assets": [
+      {
+        "key": "moon-dead-tree",
+        "name": "Gnarled leafless moon tree",
+        "taskId": "01a1e5de-ff15-723e-8432-05aa2913190b",
+        "url": "assets/meshy/moon-dead-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8570844,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 4162,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.6594559848308563,
+            1,
+            0.6192539930343628
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-silver-tree",
+        "name": "Silver-leaf moon tree",
+        "taskId": "01a1e5df-10c3-7669-a8ad-db3b59a3e26a",
+        "url": "assets/meshy/moon-silver-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 11218484,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5252,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.5918359756469727,
+            1,
+            0.5594030022621155
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-boulder",
+        "name": "Rough dark basalt boulder",
+        "taskId": "01a1e5df-21c4-76b4-98f0-2115d5c09dad",
+        "url": "assets/meshy/moon-boulder.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7189044,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3110,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9307770133018494,
+            0.970784991979599
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-rock-cluster",
+        "name": "Moonstone rock cluster",
+        "taskId": "01a1e5df-5a17-76bf-bdc1-778215cc0611",
+        "url": "assets/meshy/moon-rock-cluster.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6583744,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3504,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9999890029430389,
+            0.6542630195617676
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      }
+    ],
+    "rebuilds": [
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3012,
+          "mountainTrees": 683,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 1929,
+            "moon-silver-tree": 1766,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3012
+        },
+        "natureShader": true,
+        "geometries": 73,
+        "textures": 59,
+        "calls": 189,
+        "triangles": 1762832
+      },
+      {
+        "quality": "low",
+        "biome": "classic",
+        "invariant": true,
+        "counts": {
+          "trees": 0,
+          "mountainTrees": 0,
+          "rocks": 0,
+          "byAsset": {}
+        },
+        "natureShader": false,
+        "geometries": 77,
+        "textures": 64,
+        "calls": 285,
+        "triangles": 1447700
+      },
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3012,
+          "mountainTrees": 683,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 1929,
+            "moon-silver-tree": 1766,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3012
+        },
+        "natureShader": true,
+        "geometries": 77,
+        "textures": 64,
+        "calls": 189,
+        "triangles": 1762832
+      },
+      {
+        "quality": "high",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3012,
+          "mountainTrees": 1966,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2616,
+            "moon-silver-tree": 2362,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3012
+        },
+        "natureShader": true,
+        "geometries": 79,
+        "textures": 80,
+        "calls": 282,
+        "triangles": 3981126
+      },
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3012,
+          "mountainTrees": 683,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 1929,
+            "moon-silver-tree": 1766,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3012
+        },
+        "natureShader": true,
+        "geometries": 77,
+        "textures": 64,
+        "calls": 188,
+        "triangles": 1762830
+      },
+      {
+        "quality": "high",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3012,
+          "mountainTrees": 1966,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2616,
+            "moon-silver-tree": 2362,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3012
+        },
+        "natureShader": true,
+        "geometries": 79,
+        "textures": 80,
+        "calls": 282,
+        "triangles": 3981126
+      },
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3012,
+          "mountainTrees": 683,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 1929,
+            "moon-silver-tree": 1766,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3012
+        },
+        "natureShader": true,
+        "geometries": 77,
+        "textures": 64,
+        "calls": 188,
+        "triangles": 1762830
+      }
+    ],
+    "geometry": {
+      "checked": 1500,
+      "maxRatio": 1.000000051895375,
+      "collisions": true,
+      "aiLoop": true,
+      "walk": true,
+      "nav": true
+    },
+    "nativeTouch": false,
+    "forest": {
+      "x": 11728.525831271047,
+      "y": 4035.319555664317,
+      "score": 72,
+      "trees": 24,
+      "rocks": 13
+    },
+    "softwareMetrics": {
+      "fps": 0,
+      "renderMs": 479.5,
+      "calls": 156,
+      "triangles": 1764576,
+      "geometries": 87,
+      "textures": 81,
+      "heapMiB": 470
+    },
+    "errors": []
+  },
+  {
+    "entry": "index.html",
+    "mobileEmulation": true,
+    "assets": [
+      {
+        "key": "moon-dead-tree",
+        "name": "Gnarled leafless moon tree",
+        "taskId": "01a1e5de-ff15-723e-8432-05aa2913190b",
+        "url": "assets/meshy/moon-dead-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8570844,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 4162,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.6594559848308563,
+            1,
+            0.6192539930343628
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "moon-silver-tree",
+        "name": "Silver-leaf moon tree",
+        "taskId": "01a1e5df-10c3-7669-a8ad-db3b59a3e26a",
+        "url": "assets/meshy/moon-silver-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 11218484,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5252,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.5918359756469727,
+            1,
+            0.5594030022621155
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "moon-boulder",
+        "name": "Rough dark basalt boulder",
+        "taskId": "01a1e5df-21c4-76b4-98f0-2115d5c09dad",
+        "url": "assets/meshy/moon-boulder.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7189044,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3110,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9307770133018494,
+            0.970784991979599
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "moon-rock-cluster",
+        "name": "Moonstone rock cluster",
+        "taskId": "01a1e5df-5a17-76bf-bdc1-778215cc0611",
+        "url": "assets/meshy/moon-rock-cluster.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6583744,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3504,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9999890029430389,
+            0.6542630195617676
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      }
+    ],
+    "rebuilds": [
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 688,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2143,
+            "moon-silver-tree": 1991,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 75,
+        "textures": 52,
+        "calls": 309,
+        "triangles": 1903676
+      },
+      {
+        "quality": "low",
+        "biome": "classic",
+        "invariant": true,
+        "counts": {
+          "trees": 0,
+          "mountainTrees": 0,
+          "rocks": 0,
+          "byAsset": {}
+        },
+        "natureShader": false,
+        "geometries": 79,
+        "textures": 54,
+        "calls": 397,
+        "triangles": 1460066
+      },
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 688,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2143,
+            "moon-silver-tree": 1991,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 79,
+        "textures": 54,
+        "calls": 308,
+        "triangles": 1903674
+      },
+      {
+        "quality": "high",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 1964,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2830,
+            "moon-silver-tree": 2580,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 84,
+        "textures": 72,
+        "calls": 406,
+        "triangles": 4210976
+      },
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 688,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2143,
+            "moon-silver-tree": 1991,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 82,
+        "textures": 56,
+        "calls": 308,
+        "triangles": 1903674
+      },
+      {
+        "quality": "high",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 1964,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2830,
+            "moon-silver-tree": 2580,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 84,
+        "textures": 72,
+        "calls": 405,
+        "triangles": 4210974
+      },
+      {
+        "quality": "low",
+        "biome": "moonfall",
+        "invariant": true,
+        "counts": {
+          "trees": 3446,
+          "mountainTrees": 688,
+          "rocks": 1500,
+          "byAsset": {
+            "moon-dead-tree": 2143,
+            "moon-silver-tree": 1991,
+            "moon-boulder": 965,
+            "moon-rock-cluster": 535
+          },
+          "treeCollidersRepresented": 3446
+        },
+        "natureShader": true,
+        "geometries": 82,
+        "textures": 56,
+        "calls": 308,
+        "triangles": 1903674
+      }
+    ],
+    "geometry": {
+      "checked": 1500,
+      "maxRatio": 1.000000051895375,
+      "collisions": true,
+      "aiLoop": true,
+      "walk": true,
+      "nav": true
+    },
+    "nativeTouch": true,
+    "forest": {
+      "x": 11728.525831271047,
+      "y": 4035.319555664317,
+      "score": 72,
+      "trees": 24,
+      "rocks": 13
+    },
+    "softwareMetrics": {
+      "fps": 0,
+      "renderMs": 509.6,
+      "calls": 178,
+      "triangles": 1911333,
+      "geometries": 105,
+      "textures": 106,
+      "heapMiB": 501
+    },
+    "errors": []
+  }
+]

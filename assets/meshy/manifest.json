@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "assets": {
     "moon-arena": {
       "name": "Moon Arena",
@@ -128,6 +128,46 @@
       "available": true,
       "rotationY": 0,
       "phase": 2,
+      "taskType": "text-to-3d",
+      "verifiedTaskStatus": "SUCCEEDED"
+    },
+    "moon-dead-tree": {
+      "name": "Gnarled leafless moon tree",
+      "taskId": "01a1e5de-ff15-723e-8432-05aa2913190b",
+      "url": "assets/meshy/moon-dead-tree.glb",
+      "available": true,
+      "rotationY": 0,
+      "biome": "moonfall",
+      "taskType": "text-to-3d",
+      "verifiedTaskStatus": "SUCCEEDED"
+    },
+    "moon-silver-tree": {
+      "name": "Silver-leaf moon tree",
+      "taskId": "01a1e5df-10c3-7669-a8ad-db3b59a3e26a",
+      "url": "assets/meshy/moon-silver-tree.glb",
+      "available": true,
+      "rotationY": 0,
+      "biome": "moonfall",
+      "taskType": "text-to-3d",
+      "verifiedTaskStatus": "SUCCEEDED"
+    },
+    "moon-boulder": {
+      "name": "Rough dark basalt boulder",
+      "taskId": "01a1e5df-21c4-76b4-98f0-2115d5c09dad",
+      "url": "assets/meshy/moon-boulder.glb",
+      "available": true,
+      "rotationY": 0,
+      "biome": "moonfall",
+      "taskType": "text-to-3d",
+      "verifiedTaskStatus": "SUCCEEDED"
+    },
+    "moon-rock-cluster": {
+      "name": "Moonstone rock cluster",
+      "taskId": "01a1e5df-5a17-76bf-bdc1-778215cc0611",
+      "url": "assets/meshy/moon-rock-cluster.glb",
+      "available": true,
+      "rotationY": 0,
+      "biome": "moonfall",
       "taskType": "text-to-3d",
       "verifiedTaskStatus": "SUCCEEDED"
     }

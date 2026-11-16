@@ -1,0 +1,3 @@
+PASS index.html mobile=False: 17 real GLBs, residency, 16 scenery types, openings, surface alignment, quality rebuilds, fallback, errors
+PASS cursed.html mobile=False: 17 real GLBs, residency, 16 scenery types, openings, surface alignment, quality rebuilds, fallback, errors
+PASS index.html mobile=True: 17 real GLBs, residency, 16 scenery types, openings, surface alignment, quality rebuilds, fallback, errors

@@ -109,7 +109,7 @@ def main():
                     asset['available'] = False
                 page.route('**/assets/meshy/manifest.json', lambda route: route.fulfill(json=fallback_manifest))
                 page.goto(f'{url}/{entry}', timeout=120000)
-                page.wait_for_function('CelestialAssets.snapshot().assets.length===13 && CelestialAssets.snapshot().assets.every(a=>a.state==="missing")', polling=100)
+                page.wait_for_function('CelestialAssets.snapshot().ready && CelestialAssets.snapshot().assets.length===Object.keys(CelestialAssets.manifest.assets).length && CelestialAssets.snapshot().assets.every(a=>a.state==="missing")', polling=100)
                 assert page.evaluate('R3.ok && !TOON')
                 assert page.locator('#codex > *').count() == 9
                 page.locator('#celestialInfoBtn').click()
@@ -250,7 +250,7 @@ def main():
                     content_type='model/gltf-binary', body=(b'corrupt' if variant == 'corrupt'
                         else warrior if route.request.url.endswith('celestial-warrior.glb') else static)))
                 page.goto(f'{url}/index.html', timeout=120000)
-                page.wait_for_function('CelestialAssets.snapshot().assets.length===13 && CelestialAssets.snapshot().assets.every(a=>["loaded","error"].includes(a.state))', polling=100)
+                page.wait_for_function('CelestialAssets.snapshot().ready && CelestialAssets.snapshot().assets.length===Object.keys(CelestialAssets.manifest.assets).length && CelestialAssets.snapshot().assets.every(a=>["loaded","error"].includes(a.state))', polling=100)
                 admission = page.evaluate('R3.inspectCelestialWarrior()')
                 assert admission['ready'] == (variant == 'rigged'), admission
                 if variant == 'rigged':

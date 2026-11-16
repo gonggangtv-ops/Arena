@@ -46,7 +46,7 @@ def main():
                 page.add_init_script("""window.__noMenu=true;window.requestAnimationFrame=cb=>1;
                     localStorage.setItem('ar_q','low');localStorage.setItem('ar_sound','off');""")
                 page.goto(f'http://127.0.0.1:{server.server_port}/{entry}', timeout=180000)
-                page.wait_for_function('CelestialAssets.snapshot().assets.length===13 && CelestialAssets.snapshot().assets.every(a=>["loaded","error"].includes(a.state))', polling=100)
+                page.wait_for_function('CelestialAssets.snapshot().ready && CelestialAssets.snapshot().assets.length===Object.keys(CelestialAssets.manifest.assets).length && CelestialAssets.snapshot().assets.every(a=>["loaded","error"].includes(a.state))', polling=100)
                 assets = page.evaluate('CelestialAssets.snapshot().assets')
                 assert all(a['state'] == 'loaded' for a in assets), assets
                 assert all(a['inspection']['residentTextureMax'] <= (512 if mobile else 1024) for a in assets)
@@ -116,7 +116,7 @@ def main():
                 assert not errors and not failed, {'errors': errors, 'failedGLBs': failed}
                 reports.append({'entry': entry, 'mobileEmulation': mobile, 'assets': assets, **result, 'errors': errors})
                 (OUT / 'results.json').write_text(json.dumps(reports, indent=2, ensure_ascii=False)+'\n')
-                print(f'PASS {entry} mobile={mobile}: 13 real GLBs, residency, 12 scenery types, openings, surface alignment, quality rebuilds, fallback, errors', flush=True)
+                print(f'PASS {entry} mobile={mobile}: {len(assets)} real GLBs, residency, {len(assets)-1} scenery types, openings, surface alignment, quality rebuilds, fallback, errors', flush=True)
                 context.close()
             browser.close()
     finally:

@@ -22,7 +22,7 @@ server=ThreadingHTTPServer(('127.0.0.1',0),partial(Handler,directory=str(ROOT)))
 Thread(target=server.serve_forever,daemon=True).start()
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path=shutil.which('chromium'),args=['--no-sandbox','--enable-unsafe-swiftshader']);page=b.new_page();page.add_init_script("localStorage.setItem('ar_view','2d');window.__noMenu=true;window.requestAnimationFrame=cb=>1")
- page.goto(f'http://127.0.0.1:{server.server_port}/',timeout=120000);page.wait_for_function('CelestialAssets.snapshot().assets.length===13&&CelestialAssets.snapshot().assets.every(a=>a.state==="loaded")',polling=100,timeout=180000)
+ page.goto(f'http://127.0.0.1:{server.server_port}/',timeout=120000);page.wait_for_function('CelestialAssets.snapshot().ready && CelestialAssets.snapshot().assets.length===Object.keys(CelestialAssets.manifest.assets).length&&CelestialAssets.snapshot().assets.every(a=>a.state==="loaded")',polling=100,timeout=180000)
  data=page.evaluate('''() => {
   const T=THREE,out={version:1,surfaces:{}};
   const normalized=key=>{const a=CelestialAssets.get(key),s=a.gltf.scene.clone(true);s.rotation.y+=a.config.rotationY||0;s.updateMatrixWorld(true);

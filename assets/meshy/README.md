@@ -1,14 +1,16 @@
 # Meshy originals installed
 
-All **13 real GLB exports** are included in this directory and marked
+All **17 real GLB exports** are included in this directory and marked
 `available: true`. They were downloaded from the existing successful Meshy tasks;
 no generation, remesh, rigging, animation or other paid job was requested.
 Only free task-status, download and balance tools were used. Credentials, signed
 CDN URLs and private MCP responses are kept outside this repository.
 
-The original GLB bytes are unchanged. The offline inspector records SHA-256,
+The original GLB bytes are unchanged. The four Nature exports and their
+validation are documented in [MOONFALL-BIOME-REPORT.md](../../MOONFALL-BIOME-REPORT.md). The offline inspector records SHA-256,
 file size, triangles, skins and clips in
-[phase12-assets.json](../../reports/phase12-assets.json).
+[phase12-assets.json](../../reports/phase12-assets.json) and
+[biome-assets.json](../../reports/biome-assets.json).
 
 | Asset | File | Task ID | Triangles |
 | --- | --- | --- | ---: |
@@ -25,6 +27,10 @@ file size, triangles, skins and clips in
 | Portal Frame | [portal-frame.glb](portal-frame.glb) | `01a1e4ef-b382-71aa-a201-bf72f103dea8` | 5,757 |
 | Rubble | [rubble.glb](rubble.glb) | `01a1e4ef-bf35-7484-a476-086101d99d22` | 2,554 |
 | Brazier | [brazier.glb](brazier.glb) | `01a1e4ef-c952-7560-b980-300c4359c684` | 3,078 |
+| Gnarled leafless moon tree | [moon-dead-tree.glb](moon-dead-tree.glb) | `01a1e5de-ff15-723e-8432-05aa2913190b` | 4,162 |
+| Silver-leaf moon tree | [moon-silver-tree.glb](moon-silver-tree.glb) | `01a1e5df-10c3-7669-a8ad-db3b59a3e26a` | 5,252 |
+| Rough dark basalt boulder | [moon-boulder.glb](moon-boulder.glb) | `01a1e5df-21c4-76b4-98f0-2115d5c09dad` | 3,110 |
+| Moonstone rock cluster | [moon-rock-cluster.glb](moon-rock-cluster.glb) | `01a1e5df-5a17-76bf-bdc1-778215cc0611` | 3,504 |
 
 ## Runtime placement
 
@@ -61,10 +67,10 @@ No combat or transport schema is changed.
 
 Each source export has four embedded 2048px maps. Before GPU upload, decoded maps
 are resized to at most 1024px on desktop or 512px on mobile (including touch iPad).
-Original files remain intact. Across 52 maps, RGBA8 plus mipmaps is approximately
-277 MiB desktop / 69 MiB mobile, **excluding** other game textures, targets,
+Original files remain intact. Across 68 maps, RGBA8 plus mipmaps is approximately
+363 MiB desktop / 91 MiB mobile, **excluding** other game textures, targets,
 geometry, driver overhead and CPU decode buffers; this is a calculated bound,
-not measured VRAM. Cold downloads still total about 97.5 MiB. Compression and
+not measured VRAM. Cold downloads now total about 129.5 MiB (32.0 MiB added by Nature). Compression and
 progressive delivery remain follow-up performance work.
 
 ## Celestial Warrior: verified fallback
@@ -84,6 +90,8 @@ movement, inventory, weapons and multiplayer state.
 
 ```sh
 python3 scripts/check-meshy-assets.py --require-complete
+python3 scripts/check-meshy-assets.py --scope biome --require-complete
+python3 scripts/smoke-moonfall-biome.py
 python3 scripts/check-moonfall-layout.py
 python3 scripts/smoke-real-meshy.py
 python3 scripts/smoke-celestial.py

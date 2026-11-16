@@ -75,7 +75,8 @@ window.CelestialAssets = (() => {
       a.gltf = await new Promise((resolve,reject) => new AR_GLTF.GLTFLoader().parse(buffer,'',resolve,reject));
       a.inspection = inspect(a.gltf);
       // Conservative limits protect both desktop and mobile from unoptimized AI meshes.
-      const budget = {'moon-arena':80000,'modular-floor':2500,'modular-wall':5000,'ancient-pillar':12000,'celestial-warrior':45000}[key] || 45000;
+      const budget = {'moon-arena':80000,'modular-floor':2500,'modular-wall':5000,'ancient-pillar':12000,'celestial-warrior':45000,
+        'moon-dead-tree':8000,'moon-silver-tree':8000,'moon-boulder':6000,'moon-rock-cluster':6000}[key] || 45000;
       if (a.inspection.triangles > budget || a.inspection.textures > 16 || a.inspection.largestTexture > 2048)
         throw Error(`Asset exceeds budget: ${budget} triangles / 16 textures / 2048px. Optimize export.`);
       if (a.inspection.skinned && key !== 'celestial-warrior') throw Error('Scenery must be static for instancing');

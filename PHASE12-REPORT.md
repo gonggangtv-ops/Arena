@@ -1,3 +1,5 @@
+> รายงาน Phase 1/2 ที่ commit 05893b1; ดูงานพื้นและป่ารอบล่าสุดใน [MOONFALL-BIOME-REPORT.md](MOONFALL-BIOME-REPORT.md)
+
 # Arena Royale Reborn — Phase 1 & 2
 
 ## สถานะปัจจุบัน
