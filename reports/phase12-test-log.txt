@@ -4,4 +4,4 @@ PASS mobile emulation: native touch attack/joystick, menu, landscape, low, DPR 1
 PASS synthetic GLB rigged: loader / rig admission / fallback
 PASS synthetic GLB unrigged: loader / rig admission / fallback
 PASS synthetic GLB corrupt: loader / rig admission / fallback
-Artifacts: /tmp/arena-celestial-ap5fuzlk
+Artifacts: /tmp/arena-celestial-q2wecerj

@@ -4,8 +4,8 @@
     "render": {
       "unchanged": true,
       "counts": {
-        "floors": 208,
-        "walls": 40,
+        "floors": 56,
+        "walls": 88,
         "pillars": 6,
         "columns": 42
       },
@@ -45,7 +45,7 @@
       "versionGuard": true
     },
     "phase2": {
-      "version": 2,
+      "version": 3,
       "opening": true,
       "obstacles": true,
       "navigation": true,
@@ -65,13 +65,13 @@
       "fire": true
     },
     "metricsSoftwareGPU": {
-      "fps": 0,
-      "renderMs": 19.3,
-      "calls": 345,
-      "triangles": 1159014,
+      "fps": 1,
+      "renderMs": 13,
+      "calls": 342,
+      "triangles": 1166836,
       "geometries": 110,
       "textures": 108,
-      "heapMiB": 166
+      "heapMiB": 160
     }
   },
   {
@@ -79,8 +79,8 @@
     "render": {
       "unchanged": true,
       "counts": {
-        "floors": 208,
-        "walls": 40,
+        "floors": 56,
+        "walls": 88,
         "pillars": 6,
         "columns": 42
       },
@@ -120,7 +120,7 @@
       "versionGuard": true
     },
     "phase2": {
-      "version": 2,
+      "version": 3,
       "opening": true,
       "obstacles": true,
       "navigation": true,
@@ -140,13 +140,13 @@
       "fire": true
     },
     "metricsSoftwareGPU": {
-      "fps": 0,
-      "renderMs": 44.2,
+      "fps": 1,
+      "renderMs": 17.4,
       "calls": 547,
-      "triangles": 1196250,
+      "triangles": 1194234,
       "geometries": 110,
       "textures": 107,
-      "heapMiB": 163
+      "heapMiB": 216
     }
   }
 ]

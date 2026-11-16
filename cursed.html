@@ -220,12 +220,13 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <script src="turn.js"></script>
 <script src="celestial-assets.js"></script>
 <script src="celestial-render.js"></script>
+<script src="moonfall-collision-data.js"></script>
 <script src="moonfall-environment.js"></script>
 <script>
 const CURSED=true;
 "use strict";
 const $=id=>document.getElementById(id);
-const VER=10;
+const VER=11;
 // ===================== DATA =====================
 const TIERS=[{n:'ธรรมดา',c:'#dcdcdc',m:1,sa:0},{n:'หายาก',c:'#4aa8ff',m:1.22,sa:.1},{n:'มหากาพย์',c:'#b46bff',m:1.5,sa:.2},{n:'ตำนาน',c:'#ffb400',m:1.9,sa:.32},{n:'SSR',c:'#ff3d7f',m:2.4,sa:.46}];
 const HB={hp:700,mp:290,hpR:2.2,mpR:1.5,dmg:45,armor:2,mr:.18,spd:205};

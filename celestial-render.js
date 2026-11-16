@@ -111,7 +111,7 @@ window.installCelestialRender = function (P) {
       this.cachedGeos.add(geo);
       const paint = src => this.cached('moon-asset-'+src.uuid, () => {
         const m = src.clone(); if (m.isMeshStandardMaterial) m.envMapIntensity = .5;
-        for (const v of Object.values(m)) if (v?.isTexture) v.anisotropy = 2;
+        for (const v of Object.values(m)) if (v?.isTexture) v.anisotropy = Math.min(2,v.anisotropy||1);
         return this.fow(m,{key:'moon-asset',uniforms:{uZoneN:this.U.zoneN},frag:fs=>zlines(fs)});
       });
       parts.push({geo, mat:Array.isArray(n.material) ? n.material.map(paint) : paint(n.material)});
@@ -146,13 +146,21 @@ window.installCelestialRender = function (P) {
     const boxKey = 'moon-bottom-box';
     let box = this.geoC.get(boxKey);
     if (!box) { box = new T.BoxGeometry(1,1,1).translate(0,.5,0); this.geoC.set(boxKey,box); this.cachedGeos.add(box); }
-    const walls = WD.walls.filter(q => q.castle);
-    const wp = walls.map(q => [q.x+q.w/2,0,q.y+q.h/2,q.w,q.castle===2?220:q.castle===3?170:150,q.h,0,0,0]);
+    const walls = WD.walls.filter(q => q.castle),wp=[];
+    const keep=walls.filter(q=>q.castle===2);
+    this.celestialBatch(group,'keep-core',keep.map(q=>[q.x+q.w/2,0,q.y+q.h/2,q.w,220,q.h,0,0,0]),box,basalt);
+    const facade=[];
+    for(const q of keep)facade.push({x:q.x,y:q.y,w:q.w,h:35,castle:2},{x:q.x,y:q.y+q.h-35,w:q.w,h:35,castle:2},
+      {x:q.x,y:q.y,w:35,h:q.h,castle:2},{x:q.x+q.w-35,y:q.y,w:35,h:q.h,castle:2});
+    for(const q of [...walls.filter(q=>q.castle!==2),...facade]){
+      const along=q.w>=q.h,L=along?q.w:q.h,depth=along?q.h:q.w,height=q.castle===2?220:q.castle===3?170:150;
+      const count=Math.max(1,Math.ceil(L/(height*2.33))),span=L/count;
+      for(let i=0;i<count;i++)wp.push([along?q.x+(i+.5)*span:q.x+q.w/2,0,along?q.y+q.h/2:q.y+(i+.5)*span,span,height,depth,0,along?0:Math.PI/2,0]);
+    }
     this.celestialBatch(group,'modular-wall',wp,box,basalt);
-    // Cornice and footing use only three instanced material batches.
-    this.celestialBatch(group,'cornice',wp.map(p => [p[0],p[4]-9,p[2],p[3]+3,9,p[5]+3,0,0,0]),box,trim);
-    this.celestialBatch(group,'footing',wp.map(p => [p[0],0,p[2],p[3]+4,12,p[5]+4,0,0,0]),box,dark);
-    const floors = [], nx = 16, nz = 13, dx = (C.w-80)/nx, dz = (C.h-80)/nz;
+    this.celestialBatch(group,'cornice',wp.map(p => [p[0],p[4]-9,p[2],p[3]+3,9,p[5]+3,0,p[7],0]),box,trim);
+    this.celestialBatch(group,'footing',wp.map(p => [p[0],0,p[2],p[3]+4,12,p[5]+4,0,p[7],0]),box,dark);
+    const floors = [], nx = this.hi?16:8, nz = this.hi?13:7, dx = (C.w-80)/nx, dz = (C.h-80)/nz;
     for (let z=0;z<nz;z++) for (let x=0;x<nx;x++) {
       const px = C.x+40+(x+.5)*dx, pz = C.y+40+(z+.5)*dz;
       floors.push([px,this.gY(px,pz)-2,pz,dx-1.2,3,dz-1.2,0,0,0]);
@@ -164,29 +172,23 @@ window.installCelestialRender = function (P) {
     const cylinderKey = 'moon-bottom-cylinder';
     let cyl = this.geoC.get(cylinderKey);
     if (!cyl) { cyl = new T.CylinderGeometry(.42,.5,1,16).translate(0,.5,0); this.geoC.set(cylinderKey,cyl); this.cachedGeos.add(cyl); }
-    this.celestialBatch(group,'ancient-pillar',towers.map(t => [t.x,0,t.y,t.r*2,t.h,t.r*2,0,0,0]),cyl,basalt);
-    this.celestialBatch(group,'pillar-cap',towers.map(t => [t.x,t.h-12,t.y,t.r*1.9,16,t.r*1.9,0,0,0]),cyl,trim);
-    this.celestialBatch(group,'pillar-base',towers.map(t => [t.x,0,t.y,t.r*2,20,t.r*2,0,0,0]),cyl,dark);
-    const bands=[],flutes=[];
-    for(const t of towers){
-      for(const h of [.12,.74,.88])bands.push([t.x,t.h*h,t.y,t.r*1.8,6,t.r*1.8,0,0,0]);
-      if(!this.celestialAsset('ancient-pillar'))for(let i=0;i<12;i++){
-        const a=i/12*Math.PI*2;
-        flutes.push([t.x+Math.cos(a)*t.r*.8,32,t.y+Math.sin(a)*t.r*.8,3,t.h-64,3,0,0,0]);
-      }
+    const realPillar=this.celestialAsset('ancient-pillar');
+    const pillarSize=A.get('ancient-pillar')?.inspection?.size;
+    this.celestialBatch(group,'ancient-pillar',towers.map(t=>{
+      if(realPillar&&pillarSize){const scale=t.r*Math.SQRT2/pillarSize[0];return[t.x,0,t.y,pillarSize[0]*scale,pillarSize[1]*scale,pillarSize[2]*scale,0,0,0];}
+      return[t.x,0,t.y,t.r*2,t.h,t.r*2,0,0,0];
+    }),cyl,basalt);
+    if(!realPillar){
+      this.celestialBatch(group,'pillar-cap',towers.map(t=>[t.x,t.h-12,t.y,t.r*1.9,16,t.r*1.9,0,0,0]),cyl,trim);
+      this.celestialBatch(group,'pillar-base',towers.map(t=>[t.x,0,t.y,t.r*2,20,t.r*2,0,0,0]),cyl,dark);
+      this.celestialBatch(group,'pillar-gem',towers.map(t=>[t.x,t.h+18,t.y,t.r*.45,55,t.r*.45,0,0,0]),this.G.oct,rune);
     }
-    this.celestialBatch(group,'pillar-bands',bands,cyl,trim);
-    this.celestialBatch(group,'pillar-flutes',flutes,box,dark);
-    this.celestialBatch(group,'pillar-gem',towers.map(t => [t.x,t.h+18,t.y,t.r*.45,55,t.r*.45,0,0,0]),this.G.oct,rune);
-    // The Moon Arena export is a temple crown on the existing solid keep. An
-    // arbitrary generated arena must not introduce invisible gameplay walls.
-    const K = C.keep;
-    if (this.celestialAsset('moon-arena')) {
-      this.celestialBatch(group,'moon-arena',[[K.x+K.w/2,220,K.y+K.h/2,K.w,210,K.h,0,0,0]],box,basalt);
-    } else {
-      this.celestialBatch(group,'temple-roof',[[K.x+K.w/2,220,K.y+K.h/2,K.w+8,18,K.h+8,0,0,0]],box,trim);
-      for (let i=0;i<3;i++) this.mesh(this.G.oct,dark,K.x+K.w/2,280+i*48,K.y+K.h/2,80-i*17,72,80-i*17,group,true);
-    }
+    // The real Moon Arena is a walkable dais in the central hall, not a tall
+    // distorted decoration on the keep. Its baked surface drives actor height.
+    const K=C.keep,core=WD.moonfall?.core||{x:C.lair.x,y:C.lair.y,diameter:300,height:24};
+    this.celestialBatch(group,'moon-arena',[[core.x,0,core.y,core.diameter,core.height,core.diameter,0,0,0]],cyl,basalt);
+    this.celestialBatch(group,'temple-roof',[[K.x+K.w/2,220,K.y+K.h/2,K.w+8,18,K.h+8,0,0,0]],box,trim);
+    for(let i=0;i<3;i++)this.mesh(this.G.oct,dark,K.x+K.w/2,280+i*48,K.y+K.h/2,80-i*17,72,80-i*17,group,true);
     // Reuse all registered dungeon pillar colliders as ancient temple columns.
     const columns = WD.solids.filter(s => s.t==='pillar');
     this.celestialBatch(group,'dungeon-column',columns.map(s => [s.x,this.gY(s.x,s.y),s.y,s.r*2,145,s.r*2,0,0,0]),cyl,basalt);

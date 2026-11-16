@@ -31,6 +31,26 @@ window.CelestialAssets = (() => {
       largestTexture:Math.max(0, ...Array.from(textures, t => Math.max(t.image?.width || 0,t.image?.height || 0))),
       clips:gltf.animations.map(c => c.name), size:size.toArray(), meshNames:names};
   }
+  function fitTextures(gltf) {
+    // Keep the original GLBs unchanged. Bound decoded GPU textures per device;
+    // otherwise 13 exports × four 2K maps exceed 1 GiB including mipmaps.
+    const mobile=/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)||
+      (/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
+    const limit=mobile?512:1024, textures=new Set(), images=new Map();
+    gltf.scene.traverse(n=>{if(n.isMesh)for(const m of (Array.isArray(n.material)?n.material:[n.material]))
+      for(const t of Object.values(m))if(t?.isTexture)textures.add(t);});
+    const originals=Array.from(textures,t=>({t,image:t.image}));
+    for(const {image} of originals){
+      if(!image||images.has(image))continue;
+      const scale=Math.min(1,limit/Math.max(image.width,image.height));
+      if(scale===1){images.set(image,image);continue;}
+      const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(image.width*scale));canvas.height=Math.max(1,Math.round(image.height*scale));
+      canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);images.set(image,canvas);
+    }
+    for(const {t,image} of originals){if(images.get(image)!==image){t.image=images.get(image);t.needsUpdate=true;}t.anisotropy=mobile?1:2;}
+    for(const [image,resized] of images)if(image!==resized&&typeof image.close==='function')image.close();
+    return {textureLimit:limit,residentTextureMax:Math.max(0,...Array.from(textures,t=>Math.max(t.image?.width||0,t.image?.height||0)))};
+  }
   async function load(key, a) {
     if (!a.config.available) { a.state = 'missing'; emit(); return; }
     a.state = 'loading'; emit();
@@ -59,6 +79,7 @@ window.CelestialAssets = (() => {
       if (a.inspection.triangles > budget || a.inspection.textures > 16 || a.inspection.largestTexture > 2048)
         throw Error(`Asset exceeds budget: ${budget} triangles / 16 textures / 2048px. Optimize export.`);
       if (a.inspection.skinned && key !== 'celestial-warrior') throw Error('Scenery must be static for instancing');
+      Object.assign(a.inspection,fitTextures(a.gltf));
       a.state = 'loaded';
     } catch (e) {
       if (a.gltf) {
