@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0c0a08">
+<meta name="theme-color" content="#080b16">
 <title>The Cursed Realm</title>
 <style>
 :root{color-scheme:dark;--bg:#0c0a08;--panel:#1c1712;--line:#5a4a2a;--gold:#e6c25a;--ink:#f2ead8;--mute:#b8a888;--bad:#ff7a7a}
@@ -114,14 +114,16 @@ body:not(.moody) #gl{filter:saturate(1.16) contrast(1.03)}
 body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,rgba(4,4,8,.5) 78%,rgba(0,0,0,.82) 100%)}
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 52%,rgba(8,6,14,.34) 82%,rgba(4,3,8,.62) 100%)}
 </style>
+<link rel="stylesheet" href="celestial-theme.css">
 </head>
 <body>
 <div id="safe"></div>
 <canvas id="gl"></canvas><div id="vig"></div>
 <canvas id="c"></canvas>
 <div id="menu" class="ov">
-  <h1>🩸 The Cursed Realm</h1>
-  <div class="sub">หุบเขาแห่งเทพนิยาย · ไม่มีอาชีพ — เก็บอาวุธอะไรได้สกิลแบบนั้น · เกราะ 5 ระดับ · 32 คน รอดคนสุดท้าย (หรือทีมสุดท้าย) ชนะ</div>
+  <div class="anime-kicker">MOONFALL · DARK CELESTIAL FANTASY</div>
+  <h1>The Cursed Realm</h1>
+  <div class="sub">ใต้เงาจันทราที่แตกสลาย · 32 ผู้กล้า หนึ่งตำนานบทสุดท้าย</div>
   <div class="codex" id="codex"></div>
   <div class="row">
     <label for="pname" class="sub" style="margin:0">ชื่อ</label><input id="pname" maxlength="12" autocomplete="off">
@@ -141,8 +143,11 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     <button class="go ghost small" id="aoBtn">เงาลึก: เปิด</button>
     <button class="go ghost small" id="sndBtn">เสียง: เปิดทั้งหมด</button>
   </div>
+  <div class="row celestial-tools"><button class="go ghost small" id="moonfallBtn">☽ สำรวจ Moonfall</button><button class="go ghost small" id="celestialInfoBtn">สถานะโมเดล / Performance</button></div>
+  <div id="celestialAssetNote" role="status">กำลังตรวจสอบไฟล์โมเดล…</div>
   <div class="msg" id="menuMsg"></div>
-  <div class="tip">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
+  <button class="anime-help-toggle" id="animeHelp" aria-expanded="false" aria-controls="animeGuide">วิธีเล่นและการควบคุม ▾</button>
+  <div class="tip anime-help-collapsed" id="animeGuide">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
 <br>จอยซ้าย = เดิน · ⚔️ = โจมตี · เดินชนอาวุธเพื่อเก็บ (🔄 รับอาวุธ) · แตะ ＋ อัปสกิล (อัลติเลเวล 6/11/16)</div>
   <button class="credlink" id="credBtn">🎵 เครดิตเสียงและเพลง</button>
 </div>
@@ -201,7 +206,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     </section>
   </div>
 </div>
-<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังสร้างหุบเขาแห่งเทพนิยาย…</div></div>
+<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>
 <div id="end" class="ov hidden">
   <p class="big" id="endTitle"></p>
   <div class="stats" id="endStats"></div>
@@ -213,6 +218,11 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <script src="peerjs.min.js"></script>
 <script src="sfx.js" async></script>
 <script src="turn.js"></script>
+<script src="celestial-assets.js"></script>
+<script src="celestial-render.js"></script>
+<script src="moonfall-collision-data.js"></script>
+<script src="moonfall-environment.js"></script>
+<script src="moonfall-biome.js"></script>
 <script>
 const CURSED=true;
 "use strict";
@@ -3264,7 +3274,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
   buildBuildings(){const S=this.scene,G=this.G;this.glows=[];
     const styleTex={tudor:'plaster',lake:'planks',witch:'plaster',cabin:'logs',stone:'bricks'};const styleCol={tudor:'#ffffff',lake:'#a8c0d0',witch:'#9a90a8',cabin:'#ffffff',stone:'#e8e0d0'};
     const walls={},found=[],floors=[];
-    for(const q of WD.walls){if(q.castle)continue;const h=WD.houses[q.house];const st=h.style;(walls[st]=walls[st]||[]).push(this.tg(this.boxUV(q.w,70,q.h,st==='cabin'?110:150),q.x+q.w/2,47,q.y+q.h/2));
+    for(const q of WD.walls){if(q.castle||q.moonfall)continue;const h=WD.houses[q.house];const st=h.style;(walls[st]=walls[st]||[]).push(this.tg(this.boxUV(q.w,70,q.h,st==='cabin'?110:150),q.x+q.w/2,47,q.y+q.h/2));
       found.push(this.tg(this.boxUV(q.w+6,14,q.h+6,90),q.x+q.w/2,5,q.y+q.h/2))}
     for(const st in walls){const m=new THREE.Mesh(this.merge(walls[st]),this.tstd(styleTex[st],styleCol[st],.88,0));m.castShadow=true;m.receiveShadow=true;S.add(m)}
     if(found.length){const m=new THREE.Mesh(this.merge(found),this.tstd('bricks','#b8b0a0',.9,0));m.castShadow=true;m.receiveShadow=true;S.add(m)}
@@ -3812,14 +3822,14 @@ Object.assign(R3,{
     // units
     const seen=new Set();
     for(const u of units){seen.add(u.id);let o=this.objs.get(u.id);const vis=!u.dead&&unitVisibleTo(u,me,L);
-      if(o&&o.dieT>0&&o.qn){this.qnDie(o,dt);continue}if(o&&o.dieT>0&&(o.kind==='kk'||o.kind==='kkz')){this.kkDie(o,dt);continue}
+      if(o&&o.dieT>0&&o.celestial){this.celestialDie(o,dt);continue}if(o&&o.dieT>0&&o.qn){this.qnDie(o,dt);continue}if(o&&o.dieT>0&&(o.kind==='kk'||o.kind==='kkz')){this.kkDie(o,dt);continue}
       if(o&&o.dieT>0){o.dieT-=dt;const kk=1-o.dieT/1.4;o.root.visible=o.dieT>0;o.body.rotation.x=-Math.min(1.45,kk*3);o.root.position.y=o.gy-Math.max(0,kk-.6)*40;continue}
       if(!o){if(!vis)continue;o=this.objFor(u)}o.root.visible=vis;if(!vis){o.lx=u.x;o.ly=u.y;continue}
       const mv=Math.hypot(u.x-o.lx,u.y-o.ly)/Math.max(dt,.001);o.lx=u.x;o.ly=u.y;o.gy=this.gY(u.x,u.y);o.root.position.set(u.x,o.gy,u.y);
       const want=Math.atan2(u.fx,u.fy);let dr=want-o.rot;dr=Math.atan2(Math.sin(dr),Math.cos(dr));o.rot+=dr*Math.min(1,dt*14);o.root.rotation.y=o.rot;
       const moving=mv>25&&!u.dash&&!u.leap;o.walk+=dt*(moving?Math.min(16,mv/15):0);o.mvK=lerp(o.mvK,moving?1:0,Math.min(1,dt*10));
-      if(u.hero&&o.kind!=='kk'&&!o.qn){if(o.at!==u.at){this.dress(o,u.at,u.look);o.at=u.at}if(o.wk!==u.wk||o.wt!==u.wt){this.arm(o,u);o.wk=u.wk;o.wt=u.wt}}
-      o.body.rotation.x=0;if(o.qn)this.qnAnim(o,u,T,dt,mv);else if(o.kind==='kk')this.animKK(o,u,T,dt,mv);else if(o.kind==='kkz')this.animKKZ(o,u,T,dt,mv);else if(o.kind==='hero')this.animHum(o,u,T,dt);else if(o.kind==='wolf')this.animWolf(o,u,T);else if(o.kind==='dragon')this.animDragon(o,u,T,dt);else this.animBig(o,u,T);
+      if(u.hero&&o.kind!=='kk'&&!o.qn&&!o.celestial){if(o.at!==u.at){this.dress(o,u.at,u.look);o.at=u.at}if(o.wk!==u.wk||o.wt!==u.wt){this.arm(o,u);o.wk=u.wk;o.wt=u.wt}}
+      o.body.rotation.x=0;if(o.celestial)this.celestialAnim(o,u,T,dt,mv);else if(o.qn)this.qnAnim(o,u,T,dt,mv);else if(o.kind==='kk')this.animKK(o,u,T,dt,mv);else if(o.kind==='kkz')this.animKKZ(o,u,T,dt,mv);else if(o.kind==='hero')this.animHum(o,u,T,dt);else if(o.kind==='wolf')this.animWolf(o,u,T);else if(o.kind==='dragon')this.animDragon(o,u,T,dt);else this.animBig(o,u,T);
       const sq=u.hurtT>0?.9:1;o.body.scale.set(1+(1-sq)*.5,sq,1+(1-sq)*.5);
       o.ring.visible=u===me||!!u.hero;if(o.ring.visible)o.ring.material=u===me?this.bas('#46e046',{transparent:true,opacity:.85,depthWrite:false}):allyOf(u,me)?this.bas('#3d9cff',{transparent:true,opacity:.8,depthWrite:false}):this.bas('#ff4a3a',{transparent:true,opacity:.5,depthWrite:false});
       if(o.eyes&&u.mob&&!u.zombie){const n=isNight();if(o.nightEye!==n){o.nightEye=n;for(const e of o.eyes){if(!e.userData.dayM)e.userData.dayM=e.material;e.material=n?this.glowM('#ff2a1a',1):e.userData.dayM;e.scale.multiplyScalar(n?1.35:1/1.35)}}}
@@ -4655,6 +4665,9 @@ const REG={N:['อาณาจักรล่มสลาย','ป่าต้�
     if(b!==this.cur&&state==='play'){if(this.cur>=0&&gameT>6&&!inDG(L))announce={txt:this.IC[b]+' '+this.N[b]+' — '+this.TIP[b],t:3.2};this.cur=b}
     if(inCave)return;let fr=0,fg=0,fb=0,hr=0,hg=0,hb=0,lm=0;for(let i=0;i<5;i++){const k=a[i],f=this.fc[i],h=this.hc[i];fr+=f.r*k;fg+=f.g*k;fb+=f.b*k;hr+=h.r*k;hg+=h.g*k;hb+=h.b*k;lm+=this.LUM[i]*k}
     const nk=.35+.65*dk;R.scene.fog.color.lerp(R.c1.setRGB(fr*nk,fg*nk,fb*nk),.5);R.c1.setRGB(hr,hg,hb);R.hemi.color.lerp(R.c1,.5);R.sun.color.lerp(R.c1,.25);R.hemi.intensity*=lm;R.sun.intensity*=lm},
+  // Moonfall sets one moonlit look; shift it toward the region the hero is in (weights eased by atmo)
+  blend(R,k){if(!this.aw||!this.fc)return;const a=this.aw;let fr=0,fg=0,fb=0,hr=0,hg=0,hb=0;for(let i=0;i<5;i++){const w=a[i],f=this.fc[i],h=this.hc[i];fr+=f.r*w;fg+=f.g*w;fb+=f.b*w;hr+=h.r*w;hg+=h.g*w;hb+=h.b*w}
+    R.scene.fog.color.lerp(R.c1.setRGB(fr,fg,fb),k);R.scene.background&&R.scene.background.isColor&&R.scene.background.copy(R.scene.fog.color);R.c1.setRGB(hr,hg,hb);R.hemi.color.lerp(R.c1,k);R.sun.color.lerp(R.c1,k*.35)},
   mat(m,g,el){const k=m.uuid+'|'+g+(el?'e':'');let c=this.mats.get(k);if(!c){c=m.clone();c.onBeforeCompile=m.onBeforeCompile;c.customProgramCacheKey=m.customProgramCacheKey;if(!this.mc)this.mc=this.MOB.map(x=>new THREE.Color(x));
       if(g>0)c.color.lerp(this.mc[g],.55);if(el&&c.emissive){c.emissive.copy(this.mc[g]);c.emissiveIntensity=.4}this.mats.set(k,c)}return c},
   tintObj(o,u){const g=u.rg>0?u.rg:0;o.root.traverse(m=>{if(m.isMesh&&m.material&&m.material.color&&!m.material.transparent)m.material=this.mat(m.material,g,u.elite)});if(u.elite)o.root.scale.multiplyScalar(1.2)}};
@@ -4802,6 +4815,7 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
 }
 
 // ===================== SETTINGS: view + graphics quality =====================
+if(typeof installCelestialRender==='function'){installCelestialRender(R3);installMoonfallEnvironment(R3);installMoonfallBiome(R3)}
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone2','bright')==='dark';
 if(CURSED)moody=true;
 const has3D=()=>typeof R3!=='undefined';
@@ -4854,6 +4868,7 @@ const LAB={
     return{t:Math.round(t),winner:w?(w.wk||'none'):'none',wlvl:w?w.lvl:0,ranks:hs.map(u=>[u.wk||'none',u.rank||1,u.lvl,u.kills,u.wt,u.at,u.ai.pref]),avgLvl:+(hs.reduce((a,u)=>a+u.lvl,0)/hs.length).toFixed(1),
       armed:hs.filter(u=>u.wk).length}}
 };
+if($('animeHelp'))$('animeHelp').onclick=()=>{const open=$('animeHelp').getAttribute('aria-expanded')!=='true';$('animeHelp').setAttribute('aria-expanded',String(open));$('animeGuide').classList.toggle('anime-help-collapsed',!open);$('animeHelp').textContent=open?'ซ่อนวิธีเล่น ▴':'วิธีเล่นและการควบคุม ▾'};
 window.__game={sim:(s)=>{for(let i=0;i<s*30;i++){if(state!=='play')break;hostUpdate(1/30);fxUpdate(1/30)}},feed:()=>feedList.map(f=>f.txt),
   get state(){return state},get me(){return ME()},get alive(){return alive},get net(){return net},get perf(){return perfHost},units:()=>units,items:()=>items,world:()=>WD,
   tp:(x,y)=>{const m=ME();m.x=x;m.y=y},hurt:(id,a)=>{const u=UMAP.get(id);if(u)dealDamage(u,a,'pure',null)},lab:LAB,setT:t=>{gameT=t},klog:()=>KLOG,

@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0c0a08">
+<title>Arena Royale</title>
+<style>
+:root{color-scheme:dark;--bg:#0c0a08;--panel:#1c1712;--line:#5a4a2a;--gold:#e6c25a;--ink:#f2ead8;--mute:#b8a888;--bad:#ff7a7a}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-family:system-ui,-apple-system,"Noto Sans Thai","Segoe UI",sans-serif;color:var(--ink)}
+canvas{display:block}
+#gl,#c{position:fixed;left:0;top:0}
+#c{z-index:1}
+#safe{position:fixed;left:0;top:0;width:0;height:0;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none}
+.ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;background:radial-gradient(ellipse at 50% 30%,rgba(40,30,16,.5),rgba(8,6,4,.86) 75%);z-index:5;text-align:center;padding:max(10px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));box-sizing:border-box;overflow:auto;touch-action:auto}
+.hidden{display:none!important}
+h1{margin:0;font-size:clamp(24px,6.5vh,44px);letter-spacing:2px;color:var(--gold);text-shadow:0 3px 0 #4a2a00,0 0 26px rgba(255,170,60,.35);font-family:Georgia,"Times New Roman",serif}
+.sub{color:var(--mute);margin:2px 0 8px;font-size:13px}
+.codex{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:5px;max-width:1120px;width:100%}
+@media (max-width:900px){.codex{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.wcard{padding:6px 6px 7px;border-radius:10px;background:linear-gradient(#251e16,#15110c);border:1px solid var(--line);min-width:0}
+.wcard .ic{font-size:24px;line-height:1.1}
+.wcard b{display:block;margin:1px 0;font-size:14px;color:#ffe9a8}
+.wcard small{color:var(--mute);font-size:11px;line-height:1.35;display:block}
+.wcard .sks{margin-top:3px;font-size:14px;letter-spacing:2px}
+#fuseOv{z-index:7;justify-content:flex-start;overflow-y:auto;touch-action:pan-y;background:radial-gradient(ellipse at 50% 0%,#2a1e10,#0c0a08 70%)}
+.fsub{max-width:900px;line-height:1.5}
+.fgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;max-width:1120px;width:100%;padding-bottom:12px}
+@media (max-width:900px){.fgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fcard{padding:7px 8px 8px;border-radius:10px;background:linear-gradient(#2a2014,#141009);border:1px solid var(--line);text-align:left;min-width:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+.fcard .fh2{display:flex;align-items:center;gap:7px}.fcard .ic{font-size:26px;line-height:1}
+.fcard b{font-size:14px;color:#ffe9a8;display:block}.fcard .rc{font-size:11.5px;color:#d8c8a0;margin-top:1px}
+.fcard small{display:block;color:var(--mute);font-size:11px;line-height:1.4;margin-top:4px}
+.fcard .sks{margin-top:5px;display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:#e8dcc0}
+.go.fz{border-color:#c89a3a;color:#ffe2a0}
+#credOv{z-index:7;justify-content:flex-start;overflow-y:auto;touch-action:pan-y;background:radial-gradient(ellipse at 50% 0%,#1e2418,#0b0c09 70%)}
+.cred{max-width:760px;width:100%;text-align:left;font-size:12.5px;line-height:1.55;color:#e8dcc0;padding-bottom:14px}
+.cred h4{margin:10px 0 4px;color:#ffe9a8;font-size:13.5px}.cred div{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.cred small{color:var(--mute)}.cred a{color:#9fd8ff;word-break:break-all}
+.credlink{background:none;border:0;color:#bfae88;font-size:11.5px;text-decoration:underline;cursor:pointer;margin-top:6px}
+.looks{display:flex;gap:6px;align-items:center}
+.look{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0;box-shadow:inset 0 -4px 6px rgba(0,0,0,.35)}
+.look.sel{border-color:var(--gold);box-shadow:0 0 10px rgba(230,194,90,.6),inset 0 -4px 6px rgba(0,0,0,.35);transform:scale(1.12)}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:9px}
+button{font-family:inherit;cursor:pointer}
+.go{font-size:16px;padding:9px 20px;border-radius:8px;border:1px solid #8a6a2a;background:linear-gradient(#f0cf6a,#c0912a);color:#2a1a00;font-weight:700}
+.go.alt{background:linear-gradient(#a8384a,#6a1a2a);color:#fff;border-color:#c85a6a}
+.go.ghost{background:linear-gradient(#2a221a,#16110c);color:var(--ink);border:1px solid var(--line)}
+.go.small{font-size:13px;padding:7px 12px}
+.go.qm{font-size:17px;padding:10px 22px;background:linear-gradient(#ffe68e,#e9a61f);box-shadow:0 0 14px rgba(255,196,70,.5);animation:qmp 2.2s ease-in-out infinite}
+@keyframes qmp{50%{box-shadow:0 0 26px rgba(255,214,96,.9)}}
+@media (prefers-reduced-motion:reduce){.go.qm{animation:none}}
+@media (max-height:440px){h1{font-size:26px}.sub{margin:0 0 4px;font-size:12px}.wcard small{display:none}.wcard{padding:4px 4px 5px}.row{margin-top:6px}.tip{margin-top:4px;font-size:10.5px}.go{padding:8px 16px}.go.qm{padding:9px 18px}}
+.go:disabled{opacity:.4}
+.go:active{transform:scale(.97)}
+input{font-family:inherit;font-size:16px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:#120e0a;color:var(--ink);width:130px;text-align:center}
+input:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+#inviteLink{width:min(360px,60vw);font-size:12px;text-align:left}
+.tip{margin-top:8px;font-size:11.5px;color:var(--mute);max-width:640px;line-height:1.5}
+.msg{min-height:18px;margin-top:6px;font-size:13px;color:var(--bad)}
+.big{font-size:clamp(28px,8vh,52px);margin:0;color:var(--gold);font-family:Georgia,serif}
+.roomcode{font-size:clamp(34px,10vh,64px);letter-spacing:8px;font-weight:800;color:var(--gold);margin:4px 0}
+.plist{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0;max-width:640px}
+.pl{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:14px;display:flex;align-items:center;gap:6px}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;border:1px solid rgba(255,255,255,.35)}
+.stats{margin:8px 0;font-size:16px;line-height:1.7}
+.rtitle,.ltitle{font-size:clamp(20px,5vh,30px);font-weight:800;color:var(--gold);font-family:Georgia,serif;margin:2px 0 6px}
+.ltitle:empty{display:none}
+.rtop{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:980px;gap:8px}.rtop .rtitle{margin:0 0 6px}.rsp{width:72px}
+.rwrap,.lwrap{display:flex;gap:12px;width:100%;max-width:980px;align-items:stretch;justify-content:center;flex-wrap:wrap}
+.rcol{background:rgba(20,16,12,.82);border:1px solid var(--line);border-radius:12px;padding:10px;box-sizing:border-box;min-width:0}
+.rlistcol{flex:1 1 340px;display:flex;flex-direction:column}
+.rform{flex:0 1 260px;display:flex;flex-direction:column;gap:7px;text-align:left}
+.rform input{width:100%;box-sizing:border-box;text-align:left;font-size:15px}
+.fh{font-size:13px;font-weight:700;color:#ffe9a8}
+.frow{display:flex;gap:6px}.frow input{flex:1 1 0;min-width:0}
+#code{text-transform:uppercase;letter-spacing:3px}#code::placeholder{letter-spacing:0;text-transform:none}
+.chk{font-size:13px;color:var(--mute);display:flex;align-items:center;gap:6px}.chk input{width:auto}
+.rhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.rlist{display:flex;flex-direction:column;gap:6px;overflow:auto;max-height:max(140px,calc(100vh - 230px));text-align:left;flex:1}
+.room{display:flex;align-items:center;gap:10px;background:linear-gradient(#251e16,#17120d);border:1px solid #4a3c22;border-radius:9px;padding:7px 9px;min-width:0}
+.room .ri{flex:1;min-width:0}
+.room b{display:block;color:#ffe9a8;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.room small{color:var(--mute);font-size:11.5px;display:block;line-height:1.4}
+.room .pw{width:96px;font-size:14px;padding:6px 8px}
+.chip{display:inline-block;font-size:11px;padding:1px 7px;border-radius:9px;margin-left:4px;vertical-align:1px;font-weight:600}
+.chip.l{background:#1f4a2a;color:#a8f0b8}.chip.p{background:#5a2a1a;color:#ffc0a0}.chip.f{background:#3a3a3a;color:#ddd}
+.empty{color:var(--mute);font-size:13px;padding:18px 6px;text-align:center;line-height:1.6}
+.lcol{flex:1 1 330px;min-width:0;display:flex;flex-direction:column;align-items:center}
+.cfg{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:4px 0}
+.cfg label{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--mute);text-align:left}
+select{font-family:inherit;font-size:14px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:#120e0a;color:var(--ink)}
+.pl .kick{background:none;border:0;color:#ff9a9a;font-size:13px;padding:0 0 0 4px;cursor:pointer}
+#lobbyList{max-height:max(110px,calc(100vh - 300px));overflow:auto}
+.teams{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:560px}
+.team{background:rgba(20,16,12,.8);border:1px solid #4a3c22;border-radius:9px;padding:5px 7px;min-width:118px;text-align:left}
+.team.me{border-color:#4aa8ff;box-shadow:0 0 0 1px #4aa8ff inset}
+.team h4{margin:0 0 3px;font-size:12px;color:#ffe9a8;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.team .pl{margin:2px 0;font-size:13px}.team .slot{color:#6a6050;font-size:12px;margin:2px 0}
+.team button{font-size:11px;padding:2px 7px;border-radius:7px;border:1px solid #6a5a3a;background:#2a2116;color:#ffe9a8;cursor:pointer}
+.chat{flex:0 1 280px;min-width:0;display:flex;flex-direction:column;background:rgba(20,16,12,.82);border:1px solid var(--line);border-radius:12px;padding:8px;box-sizing:border-box;max-height:max(150px,calc(100vh - 150px));min-height:150px}
+.clog{flex:1;overflow:auto;text-align:left;font-size:13px;line-height:1.45;display:flex;flex-direction:column;gap:2px;padding-right:4px;user-select:text;-webkit-user-select:text}
+.clog .sy{color:#9fb6b8;font-style:italic;font-size:12px}
+.clog .nm{font-weight:700;margin-right:4px}
+.clog .tx{overflow-wrap:anywhere}
+.cin{display:flex;gap:6px;margin-top:6px}.cin input{flex:1;min-width:0;text-align:left;font-size:15px;width:auto}
+@media (max-height:440px){.rtitle,.ltitle{font-size:20px;margin:0 0 4px}.roomcode{font-size:30px;letter-spacing:6px;margin:0}.rform{gap:5px}.rform input{padding:6px 10px}.chat{max-height:calc(100vh - 110px)}}
+#loading{z-index:9;background:rgba(8,6,4,.92)}
+.spin{width:46px;height:46px;border-radius:50%;border:4px solid rgba(230,194,90,.25);border-top-color:var(--gold);animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+body.moody #gl{filter:saturate(.66) contrast(1.08)}
+body:not(.moody) #gl{filter:saturate(1.16) contrast(1.03)}
+body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,rgba(4,4,8,.5) 78%,rgba(0,0,0,.82) 100%)}
+#vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 52%,rgba(8,6,14,.34) 82%,rgba(4,3,8,.62) 100%)}
+</style>
+</head>
+<body>
+<div id="safe"></div>
+<canvas id="gl"></canvas><div id="vig"></div>
+<canvas id="c"></canvas>
+<div id="menu" class="ov">
+  <h1>⚔️ Arena Royale</h1>
+  <div class="sub">หุบเขาแห่งเทพนิยาย · ไม่มีอาชีพ — เก็บอาวุธอะไรได้สกิลแบบนั้น · เกราะ 5 ระดับ · 32 คน รอดคนสุดท้าย (หรือทีมสุดท้าย) ชนะ</div>
+  <div class="codex" id="codex"></div>
+  <div class="row">
+    <label for="pname" class="sub" style="margin:0">ชื่อ</label><input id="pname" maxlength="12" autocomplete="off">
+    <span class="sub" style="margin:0">ผ้าคลุม</span><div class="looks" id="looks"></div>
+  </div>
+  <div class="row">
+    <button class="go qm" id="qmBtn">⚡ จับคู่ด่วน</button>
+    <button class="go ghost" id="soloBtn">เล่นคนเดียว</button>
+    <button class="go alt" id="roomsBtn">🏠 ห้องออนไลน์</button>
+  </div>
+  <div class="row">
+    <button class="go ghost small" id="viewBtn">มุมมอง: 3D</button>
+    <button class="go ghost small" id="qBtn">กราฟิก: อัตโนมัติ</button>
+    <button class="go ghost small fz" id="fuseBtn">⚒️ สูตรหลอมอาวุธ</button>
+    <button class="go ghost small" id="camBtn">กล้อง: ใกล้</button>
+    <button class="go ghost small" id="toneBtn">โทนภาพ: สดใส</button>
+    <button class="go ghost small" id="aoBtn">เงาลึก: เปิด</button>
+    <button class="go ghost small" id="sndBtn">เสียง: เปิดทั้งหมด</button>
+  </div>
+  <div class="msg" id="menuMsg"></div>
+  <div class="tip">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: ร่ายไปทางเมาส์)<br>🎒 กระเป๋า: เก็บ 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า)<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>📦 กล่องในบ้าน: กด "เปิดกล่อง" (คีย์ F) มีโอกาสได้ของ 20% · ศาลภูต ✨ ฟื้นเลือด · ถ้ำลับในภูเขา · ปราบมังกรในปราสาท 🏰<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
+<br>จอยซ้าย = เดิน · ⚔️ = โจมตี · เดินชนอาวุธเพื่อเก็บ (🔄 รับอาวุธ) · แตะ ＋ อัปสกิล (อัลติเลเวล 6/11/16)</div>
+  <button class="credlink" id="credBtn">🎵 เครดิตเสียงและเพลง</button>
+</div>
+<div id="credOv" class="ov hidden">
+  <div class="rtop"><button class="go ghost small" id="credBack">← กลับ</button><div class="rtitle">🎵 เครดิตเสียงและเพลง</div><span class="rsp"></span></div>
+  <div class="sub fsub">เสียงทั้งหมดเป็นผลงานเปิด (CC0 / CC BY) ตัดต่อ ปรับระดับเสียง และแปลงเป็น MP3 สำหรับเกมนี้</div>
+  <div class="cred" id="credList"></div>
+</div>
+<div id="fuseOv" class="ov hidden">
+  <div class="rtop"><button class="go ghost small" id="fuseBack">← กลับ</button><div class="rtitle">⚒️ สูตรหลอมอาวุธ</div><span class="rsp"></span></div>
+  <div class="sub fsub">พกอาวุธ 2 ชนิด (ในมือ + สำรอง) · ครบ <b>10:00</b> จะหลอมรวมเป็นอาวุธใหม่ พร้อมสกิลใหม่ 3 อย่าง · ได้ระดับของชิ้นที่ดีกว่า ถ้าระดับเท่ากันตั้งแต่มหากาพย์ขึ้นไปจะได้สูงขึ้น 1 ขั้น · ธาตุ 🔥 เผาไหม้ ❄️ ทำช้า ⚡ สายฟ้ากระโดด</div>
+  <div class="fgrid" id="fuseGrid"></div>
+</div>
+<div id="rooms" class="ov hidden">
+  <div class="rtop"><button class="go ghost small" id="roomsBack">← เมนู</button><div class="rtitle">🏠 ห้องออนไลน์</div><span class="rsp"></span></div>
+  <div class="msg" id="roomsMsg" style="margin:0 0 4px;min-height:0"></div>
+  <div class="rwrap">
+    <section class="rcol rlistcol">
+      <div class="rhead"><span id="roomsNote" class="sub" style="margin:0">กำลังโหลดรายการห้อง…</span><button class="go ghost small" id="roomsRefresh">↻ รีเฟรช</button></div>
+      <div class="rlist" id="roomList"></div>
+    </section>
+    <section class="rcol rform">
+      <div class="fh">＋ สร้างห้องใหม่</div>
+      <input id="rname" maxlength="20" placeholder="ชื่อห้อง" autocomplete="off" aria-label="ชื่อห้อง">
+      <input id="rpw" maxlength="12" placeholder="รหัสผ่าน (เว้นว่าง = ไม่ล็อก)" autocomplete="off" aria-label="รหัสผ่านห้อง">
+      <label class="chk"><input type="checkbox" id="rpub" checked> แสดงในรายการห้อง</label>
+      <button class="go alt" id="hostBtn">สร้างห้อง</button>
+      <div class="fh" style="margin-top:6px">🔑 เข้าด้วยรหัสห้อง</div>
+      <div class="frow"><input id="code" maxlength="5" placeholder="รหัส 5 ตัว" autocomplete="off" aria-label="รหัสห้อง"><input id="codePw" maxlength="12" placeholder="รหัสผ่าน" autocomplete="off" aria-label="รหัสผ่าน"></div>
+      <button class="go ghost" id="joinBtn">เข้าห้อง</button>
+    </section>
+  </div>
+</div>
+<div id="lobby" class="ov hidden">
+  <div class="sub" style="margin:0" id="lobbyHow">ส่งรหัสห้องให้เพื่อน</div>
+  <div class="ltitle" id="lobbyTitle"></div>
+  <div class="spin hidden" id="lobbySpin" style="margin:14px auto 6px"></div>
+  <div class="roomcode" id="lobbyCode">-----</div>
+  <div class="row hidden" id="inviteRow"><input id="inviteLink" readonly aria-label="ลิงก์เชิญ"><button class="go ghost small" id="copyLink">คัดลอกลิงก์</button></div>
+  <div class="lwrap">
+    <section class="lcol">
+      <div class="plist" id="lobbyList"></div>
+      <div class="cfg hidden" id="cfgBox">
+        <label>โหมด<select id="cfgMode"><option value="1">ทุกคนเป็นศัตรู</option><option value="2">ทีมละ 2 คน</option><option value="4">ทีมละ 4 คน</option></select></label>
+        <label>คนจริงสูงสุด<select id="cfgMax"><option value="2">2 คน</option><option value="4">4 คน</option><option value="8">8 คน</option><option value="16">16 คน</option><option value="32">32 คน</option></select></label>
+        <label>บอทเติมให้ครบ<select id="cfgFill"><option value="0">ไม่มีบอท</option><option value="8">8 คน</option><option value="16">16 คน</option><option value="24">24 คน</option><option value="32">32 คน</option></select></label>
+        <label>ขนาดแมพ<select id="cfgSize"><option value="A">อัตโนมัติ</option><option value="S">เล็ก</option><option value="M">กลาง</option><option value="L">ใหญ่</option></select></label>
+      </div>
+      <div class="sub" id="lobbyNote"></div>
+      <div class="row"><button class="go" id="lobbyStart">เริ่มเกม</button><button class="go ghost" id="lobbyLeave">ออกจากห้อง</button></div>
+      <div class="msg" id="lobbyMsg"></div>
+    </section>
+    <section class="chat hidden" id="chatBox" aria-label="แชทในห้อง">
+      <div class="clog" id="chatLog" aria-live="polite"></div>
+      <form class="cin" id="chatForm"><input id="chatIn" maxlength="80" placeholder="พิมพ์ข้อความ…" autocomplete="off" aria-label="ข้อความแชท"><button class="go small" type="submit">ส่ง</button></form>
+    </section>
+  </div>
+</div>
+<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังสร้างหุบเขาแห่งเทพนิยาย…</div></div>
+<div id="end" class="ov hidden">
+  <p class="big" id="endTitle"></p>
+  <div class="stats" id="endStats"></div>
+  <div class="row"><button class="go ghost" id="watchBtn">ดูต่อ</button><button class="go" id="againBtn">กลับเมนู</button><button class="go ghost hidden" id="endMenu">เมนู</button></div>
+</div>
+<!--LIBS-->
+<!--TURN-->
+<script>
+/*GAME*/
+</script>
+</body>
+</html>
