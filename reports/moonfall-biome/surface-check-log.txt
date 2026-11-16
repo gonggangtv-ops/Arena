@@ -1,0 +1,1 @@
+PASS: all three floor grids and source hashes match actual GLBs

@@ -1,115 +1,130 @@
+> รายงาน Phase 1/2 ที่ commit 05893b1; ดูงานพื้นและป่ารอบล่าสุดใน [MOONFALL-BIOME-REPORT.md](MOONFALL-BIOME-REPORT.md)
+
 # Arena Royale Reborn — Phase 1 & 2
 
-## สถานะ: ยังไม่ครบตามเงื่อนไขส่งมอบ
+## สถานะปัจจุบัน
 
-แก้ซอร์สจริงบน branch `feat/moonfall-phase-1-2` แล้ว แต่ **ยังไม่มี GLB จริงทั้ง
-13 ชิ้นใน checkout** จึงยังไม่ผ่านการรับรอง Phase 1/2 และไม่ควร merge งานนี้
-เป็นการส่งมอบโมเดลสมบูรณ์
+นำ **GLB จริงจาก Meshy ครบ 13/13 ชิ้น** เข้า repository และโหลดผ่าน GLTFLoader
+สำเร็จแล้ว รวม 102,253,232 bytes (97.52 MiB) ไฟล์ต้นฉบับไม่ถูกแก้ไข
+ใช้ 12 ชิ้นประกอบฉาก Moonfall ที่เปิดเล่นได้ ส่วน Celestial Warrior โหลดและตรวจแล้ว
+พบ **0 skins / 0 bones / 0 animation clips** จึงคงตัวละครเดิมที่มี animation
+ในการต่อสู้ตามเงื่อนไขผู้ใช้ ไม่อ้างว่า Warrior แบบ static เล่นท่าต่อสู้ได้
 
-Meshy MCP เชื่อมบัญชีและอ่านข้อมูลได้ ตรวจ Task IDs ทั้ง 13 แล้วได้ `SUCCEEDED`
-ทั้งหมด แต่ `meshy_download_model` ดาวน์โหลดจาก `assets.meshy.ai` ไม่ได้ HTTP 403
-ผลตอบกลับเป็น URL fallback ไม่ใช่ไฟล์ GLB จึงคง `available: false` ทุกชิ้น
-ดูสถานะที่ตรวจจริงใน [reports/phase12-assets.json](reports/phase12-assets.json)
+งานนี้อยู่บน branch `feat/moonfall-real-glbs` จาก `gh-pages` ล่าสุดหลัง PR #1
+ไม่มีการสร้างโมเดลใหม่หรือเรียกงาน Meshy ที่ใช้เครดิต ตรวจการเชื่อมต่อและเครดิตได้สำเร็จ
+ไม่มี API key, signed URL หรือ private MCP metadata ในเว็บหรือ Git
+ไม่เริ่ม Phase 3 และไม่เพิ่ม/แก้ระบบบอส มอนสเตอร์ หรืออาวุธ
 
-สิทธิ์เครือข่ายในสภาพแวดล้อมที่กำลังรันอนุญาต `api.meshy.ai` แต่ยังไม่อนุญาต
-`assets.meshy.ai` และ `api.github.com` การตรวจ GitHub API สำหรับ PR ก็ถูกบล็อก 403
-เตรียมสองโดเมนนี้ในฉบับร่างการตั้งค่าแล้ว ต้องให้ผู้ใช้บันทึก/เผยแพร่เพื่อมีผล
-ไม่มีการสร้าง แก้ rig หรือสั่งงาน Meshy ที่ใช้เครดิตในรอบนี้
-
-## โค้ดที่เพิ่มแล้ว
-
-- `moonfall-environment.js`: ฉาก Phase 2 จากตำแหน่งที่กำหนดโดย seed เดียวกัน
-  ทั้ง host/client เพิ่มข้อมูลก่อน grid collision และ A* ของระบบเดิมสร้างเสร็จ
-- กำแพงมุมใช้ volume ของเสาปราสาทเดิม ประตูใช้เสาประตูเดิม ซุ้มและพอร์ทัล
-  มี collider แยกเสาสองข้างโดยเว้นทางเดินตรงกลาง
-- รูปปั้น เศษหิน และกระถางไฟมี collider; ตำแหน่งหลบกำแพง เสา และของ/มอนสเตอร์
-  ที่เกิดอยู่แล้ว พร้อมสงวนพื้นที่บันไดก่อนจัดวางวัตถุอื่น
-- บันไดมีพื้นลาดต่อเนื่องเชื่อม landing ยกสูงและราวกั้นที่มองเห็นได้ พื้นลาน
-  เดิมยังราบอยู่ใต้บันได ไม่ยก tile พื้นลานตามความสูงของผู้เล่น
-- Portal Shader แบบโปร่งใส/additive หมุนตามเวลา พร้อมขอบวงเรืองแสงและการซ่อน
-  ตามระยะ fog of war; ไม่เพิ่มความสามารถ teleport ใหม่
-- เปลวไฟกระถางใช้ shader บน quad ไขว้ ไม่เพิ่ม texture หรือ dynamic light
-  ใหม่ ใช้ Bloom เดิมเมื่อเลือก High
-- ใช้ InstancedMesh สำหรับวัตถุซ้ำ; material/geometry caches และ resource cleanup
-  ของ Phase 1 ยังทำงาน ลดการ rebuild ระหว่างโหลด GLB หลายชิ้นให้รอชุดโหลดจบ
-- `manifest.json` เวอร์ชัน 2 รวม Task ID ทั้ง 13 พร้อมเฟสและสถานะจาก API
-  ชื่อไฟล์ GLB จะใช้งานจริงต่อเมื่อ import สำเร็จ ไม่สร้างไฟล์ปลอมแทน Meshy
-- Inventory, HP, damage, skills, AI และรูปแบบ snapshot เดิมคงไว้ การเปลี่ยนแปลง
-  ใน core ก่อน R3 มีเพียง `VER=10` เพื่อใช้ version handshake เดิมป้องกัน client
-  แผนที่เก่าเข้าห้องใหม่ที่มี collider เพิ่ม ไม่มีการเปลี่ยนกติกาการต่อสู้
-- เพิ่ม guard ในตัวเรนเดอร์อาคารให้ข้ามราวบันไดที่ไม่มี house ID ป้องกัน JS error
-  จากการตีความ collider ใหม่ว่าเป็นผนังบ้าน
-- ไม่แก้ assets/ระบบบอส มอนสเตอร์ หรืออาวุธ และไม่เริ่ม Phase 3
-
-## ตัวละคร
-
-ยังตรวจ skeleton/animation ของ **Celestial Warrior จริงไม่ได้เพราะไม่มี GLB**
-จึงยังสรุปว่าไม่มี rig ไม่ได้ ตัว adapter และ original hero fallback ยังคงอยู่
-เมื่อได้รับไฟล์ต้องตรวจ skin, bones, idle/walk/attack/cast/hit/death และ hand sockets
-ถ้าไม่มี rig/animation ให้รายงานและคง fallback ตามที่ผู้ใช้กำหนด ห้ามสั่ง paid rigging
-
-## เปิดทดสอบใน workspace
+## เปิดเล่นและดูภาพ
 
 ```sh
 cd /workspace/Arena
 python3 -m http.server 8010
 ```
 
-เปิดหน้า `/` หรือ `/cursed.html` แล้วกด **☽ สำรวจ Moonfall**
-สิ่งที่เห็นขณะนี้ยังเป็น procedural proxies เนื่องจาก GLB จริงถูกบล็อก
-Shader และการเดินสามารถทดสอบได้ แต่รูปทรง/ช่องเปิดของ GLB จริงยังไม่ผ่าน visual acceptance
+เปิด `http://localhost:8010/` หรือ `/cursed.html` แล้วกด **☽ สำรวจ Moonfall**
+เพื่อเริ่ม solo ใกล้สนามใหม่ ปุ่ม Solo/Multiplayer ปกติยังใช้กติกาและจุดเกิดเดิม
+แผง **สถานะโมเดล / Performance** แสดงสถานะโหลดจริงและข้อมูล rig
+รอโหลดครบ 13/13 สำหรับตรวจฉากทั้งหมด; ระหว่างโหลดมี fallback และ rebuild
+ครั้งเดียวเมื่อชุดโมเดลพร้อม การ merge PR เป็นขั้นตอนแยกจากการเปิดทดสอบนี้
 
-## การทดสอบ
+- [ภาพโมเดลจริงทั้ง 13 ชิ้น](reports/real-meshy/asset-catalog.png)
+- [พอร์ทัลและลานจริง](reports/real-meshy/index-portal-frame.png)
+- [บันไดและราวกั้น](reports/real-meshy/index-moon-stairs.png)
+- [เกมบนมือถือจำลอง](reports/real-meshy/mobile-moon-stairs.png)
 
-- `python3 scripts/check-moonfall-layout.py`: layout สร้างซ้ำตรงกัน ทดสอบทั้งสอง
-  entry points ใน seed 20261116, 42, 1900 รวม 6 กรณี แต่ละกรณีมีวัตถุ Phase 2
-  ครบ 8 ชนิด บันไดมีความสูงต่อเนื่อง และทางผ่านพอร์ทัลเดิน/หาเส้นทางผ่านได้
-- `python3 scripts/smoke-celestial.py`: ใช้ manifest ที่บังคับ missing สำหรับ
-  fallback tests และ GLB สังเคราะห์ที่ส่งผ่าน test route สำหรับ loader/rig tests
-  แยกจากการตรวจไฟล์จริง ไม่บันทึก fixtures เป็นโมเดล production
-- `python3 scripts/check-meshy-assets.py --require-complete`: ต้องผ่าน 13/13
-  จึงจะอ้างว่า import ครบ ปัจจุบัน **ไม่ผ่านเพราะขาดไฟล์ทั้ง 13 ชิ้น**
-- ตรวจ JavaScript/Python syntax และ diff whitespace; เปรียบเทียบ core กับ
-  `origin/gh-pages` แล้วตรงกันทั้งหมดเมื่อยกเว้น version constant ของ handshake
-ผลรอบสุดท้ายผ่านทั้งสองหน้าเกม:
+## สิ่งที่เปลี่ยนในเกม
 
-| กรณี | ผล |
-| --- | --- |
-| Desktop 3D Low/High และ shader ที่มองเห็นจริง | ผ่าน ไม่มี page/GLSL error ที่ชุดทดสอบตรวจพบ |
-| Damage 123 / basic attack / skill shield, MP, cooldown | ผ่าน |
-| Inventory potion count, regeneration, cooldown | ผ่าน |
-| Snapshot serialize/apply และ version guard ปฏิเสธ client เก่า | ผ่าน |
-| ทางเข้าประตู / collider / nav / บันได | ผ่าน |
-| Mobile emulation 844×390: native touch attack/joystick | ผ่าน Auto Low / DPR 1 |
-| Synthetic GLB rigged, unrigged, corrupt | ผ่าน loader/adapter/fallback checks |
-| Real GLB acceptance | ไม่ผ่านเงื่อนไขไฟล์: 0/13 ยังดาวน์โหลดไม่ได้ |
+- Moon Arena เป็นแท่นวงกลมเตี้ยที่เดินบนได้ในโถงกลาง ใช้ตำแหน่งเดิมของลาน
+  ไม่ยืดโมเดลแบนให้กลายเป็นยอดอาคารสูง
+- Modular Floor ปรับเป็นแผ่นปูพื้นบาง ใช้ 56 instances ใน Low / 208 ใน High;
+  Modular Wall แบ่งชิ้นตามความยาวกำแพงและหมุนแกนให้ตรงรูปทรงจริง
+- Ancient Pillar รักษาสัดส่วนจริงให้ฐานอยู่ในวง collision เสาเดิม ตัดเครื่องประดับ
+  สำรองที่ซ้อนกับ gem ของ GLB เมื่อโหลดโมเดลจริงแล้ว
+- Temple Gate ขยายความกว้างให้ช่องประตูจริงตรงกับทางเข้าเดิม; Wall Corner
+  อยู่ใน envelope ของเสามุมเดิม Ruin Arch ใช้ collider สี่เสาตาม GLB
+- Portal Frame ฝังฐานทึบลงใต้พื้นเพื่อเว้นช่องเดิน พร้อม Portal Shader ที่เคลื่อนไหว
+  ตามเวลา เป็นเอฟเฟกต์ภาพ ไม่เพิ่มความสามารถ teleport ใหม่
+- Guardian Statue, Rubble และ Brazier หลบตำแหน่งกำแพง/เสา/ของ/มอนสเตอร์เดิม
+  เปลวไฟใช้ shader บน quad ไขว้ ไม่เพิ่ม texture หรือ dynamic light
+- Moon Stairs เชื่อม landing และราวกั้น ระดับพื้นของบันได/แท่น/ธรณีประตูใช้
+  height grid 33×33 ที่ bake จากสาม GLB จริง พร้อม SHA-256 อ้างอิงต้นฉบับ
+- ข้อมูล layout/collider/height สร้างก่อนระบบ collision และ nav เดิม ทำซ้ำได้
+  ด้วย seed เดียวกันทั้ง host/client ไม่ขึ้นกับความเร็วในการโหลดโมเดล
+- Layout revision 3 และ network version 11 ใช้ handshake เดิมป้องกันแผนที่ต่างรุ่น
+  ไม่มีการเปลี่ยน payload หรือกติกาการต่อสู้
+- PBR, Moonlight, Fog, Shadows, AO และ Bloom ใช้ระบบ renderer/quality เดิม
+  Low ปิดเงาและ postprocessing; High เปิดตามคุณภาพที่เลือก
 
-GPU resource counts ใน fallback scene หลังอุ่น cache:
+## Performance และข้อจำกัด
 
-| หน้า | Low รอบ 2 → Low รอบ 3 | High รอบ 1 → High รอบ 2 |
-| --- | --- | --- |
-| index.html | 91 geometry / 42 texture → 91 geometry / 42 texture | 93 geometry / 58 texture → 93 geometry / 58 texture |
-| cursed.html | 90 geometry / 44 texture → 90 geometry / 44 texture | 92 geometry / 60 texture → 92 geometry / 60 texture |
+วัตถุซ้ำใช้ InstancedMesh และ cache geometry/material เดิม แผนที่ embedded 2K
+ถูก resize ก่อน upload เป็น desktop ≤1024px / mobile ≤512px พร้อมจำกัด DPR
+Low 1 / High 1.5 การ resize ไม่เปลี่ยน bytes ของต้นฉบับ GLB
 
-ชุดทดสอบมี assertion กัน resource counts เพิ่มซ้ำใน quality rebuild ชุดนี้
-ไม่ได้ยืนยันว่า JS heap/VRAM คงที่ระยะยาว และยังไม่ผ่านการทดสอบด้วย GLB จริง
+52 maps รวม mipmaps แบบ RGBA8 คำนวณได้ราว 277 MiB desktop / 69 MiB mobile
+เฉพาะ maps ชุดนี้ ไม่ใช่ VRAM ที่วัดจริงและยังไม่รวม targets/geometry/เกมเดิม
+Cold download ยังประมาณ 97.5 MiB และ actor/draw calls ของโลกเดิมยังสูง
+จึงยังไม่รับรอง 60 FPS หรือ AAA บนมือถือจริง การทดสอบใช้ Chromium/SwiftShader
+และ mobile emulation เท่านั้น
 
-ผลดิบ: [phase12-results.json](reports/phase12-results.json),
-[smoke log](reports/phase12-test-log.txt), [layout log](reports/phase12-layout-log.txt)
-ภาพจากรอบนี้: `/tmp/arena-celestial-ap5fuzlk`; ภาพ portal ถูกเปิดดูยืนยัน shader/บันได/ทางเดินแล้ว
-ภาพทั้งหมดเป็นฉาก proxies ไม่ใช่ผลตรวจโมเดล Meshy จริง
+ผล resource count ที่ตำแหน่งทดสอบ หลัง cache อุ่นและสลับ quality ห้ารอบ:
 
-ทดสอบบน Chromium/SwiftShader software GPU ไม่ใช่ผลรับรอง FPS หรือ VRAM ของ PC
-หรือมือถือจริง การทดสอบ snapshot เป็น local roundtrip ไม่ใช่ multiplayer ข้ามเครื่อง
+| ฉาก | Low รอบ 2 → 3 (geometry / texture) | High รอบ 1 → 2 | Draw calls Low / High |
+| --- | --- | --- | ---: |
+| index.html | 103/84 → 103/84 | 105/100 → 105/100 | 1204 / 1317 |
+| cursed.html | 102/85 → 102/85 | 104/101 → 104/101 | 1286 / 1392 |
+| Mobile emulation | 103/83 → 103/83 | 105/99 → 105/99 | 1208 / 1323 |
 
-## งานค้างที่ขวางการจบ Phase 1/2
+ไม่พบการเพิ่มต่อเนื่องของจำนวน resource ในการทดสอบนี้; ยังไม่ใช่ผลทดสอบ
+heap/VRAM ระยะยาว Draw calls เป็นทั้ง scene รวมตัวละครและโลกเดิม
 
-1. ใช้สิทธิ์เครือข่ายใหม่ให้มีผล แล้วดาวน์โหลด GLB เดิมทั้ง 13 ผ่าน Meshy MCP
-   ขั้นตอนและ Task IDs: [assets/meshy/PHASE2-HANDOFF.md](assets/meshy/PHASE2-HANDOFF.md)
-2. Import และตรวจไฟล์จริงด้วย importer/inspector; ถ้าจำเป็นให้ optimize แบบ local
-   โดยไม่ใช้เครดิต API จากนั้นปรับ scale/facing/PBR/collider masks ให้ตรงรูปทรงจริง
-3. ตรวจ Warrior rig/animations จริงและท่าจับอาวุธเดิม; คง fallback หากไม่พร้อม
-4. ทดสอบ collision/nav/touch/JavaScript errors/resource leaks ซ้ำด้วย GLB จริง
-   ทดสอบ hardware PC/Mobile และ multiplayer สองเครื่องก่อนรับรอง production
-5. เปิด PR ไป `gh-pages` ผ่าน GitHub API เมื่อสิทธิ์เครือข่ายพร้อม ปัจจุบัน API ถูกบล็อก
-   ห้ามอ้างว่าลิงก์ compare/create เป็น PR ที่เปิดสำเร็จแล้ว
+## การทดสอบและหลักฐาน
+
+- `python3 scripts/check-meshy-assets.py --require-complete`: ผ่าน 13/13 GLB จริง
+  ตรวจ header, embedded resources, bytes, triangles, skin/clip และ SHA-256
+- `python3 scripts/bake-moonfall-surfaces.py --check`: ผ่าน height grids ทั้งสาม
+  ตรงกับ GLB ต้นฉบับและ rotation ที่ใช้จริง
+- `python3 scripts/check-moonfall-layout.py`: ผ่านทั้งสองหน้า × สาม seed
+  (20261116, 42, 1900) รวม 6 กรณี layout เหมือนกัน มี Phase 2 ครบแปดชนิด
+  พร้อมบันไดและทางเดิน/นำทางผ่านพอร์ทัล
+- `python3 scripts/smoke-real-meshy.py`: ผ่าน desktop สองหน้าและมือถือจำลอง
+  โหลด 13/13, ใช้ฉาก 12 ชนิด, raycast ช่องประตู/ซุ้ม/พอร์ทัลที่ระดับตัวละคร
+  ผ่านทั้ง collision และ nav; เทียบระดับพื้นกับ triangle จริงคลาดเคลื่อน <1.5
+  world units; ตรวจ texture limits, 32 heroes, hero fallback, quality rebuilds,
+  native touch attack/joystick และไม่พบ page/GLSL error
+- `python3 scripts/smoke-celestial.py`: รายงาน regression แยกใน
+  [phase12-test-log.txt](reports/phase12-test-log.txt) และ
+  [phase12-results.json](reports/phase12-results.json) ครอบคลุม damage/basic attack,
+  skills/MP/cooldown, inventory, AI ผ่าน real loop, snapshot roundtrip,
+  version guard, bounds/collision, mobile input และ missing/corrupt/rig fixtures
+  fixtures เป็นข้อมูลสังเคราะห์ใน test routes ไม่ใช่ไฟล์ production
+- ตรวจ JS/Python syntax และ diff whitespace; core ใน HTML ก่อน `const R3=`
+  เหมือน `origin/gh-pages` เมื่อยกเว้นค่า network version 10 → 11
+
+ข้อมูลจริง: [asset inspection](reports/phase12-assets.json),
+[runtime results](reports/real-meshy/results.json),
+[real test log](reports/real-meshy/test-log.txt),
+[layout log](reports/phase12-layout-log.txt)
+
+## ไฟล์ที่เพิ่มหรือแก้ไข
+
+- เพิ่ม `assets/meshy/*.glb` 13 ไฟล์; เปิด availability ใน `manifest.json`
+- แก้ `celestial-assets.js`: จำกัดขนาด decoded maps ตามอุปกรณ์
+- แก้ `celestial-render.js`: calibration ของพื้น กำแพง เสา และแท่น Moon Arena
+- แก้ `moonfall-environment.js`: สัดส่วน/ตำแหน่ง/เสาซุ้มและพื้นตามโมเดลจริง
+- เพิ่ม `moonfall-collision-data.js` และ `scripts/bake-moonfall-surfaces.py`
+- แก้ `index.html`, `cursed.html`: โหลด collider data ก่อน world และปรับ handshake
+- เพิ่ม `scripts/smoke-real-meshy.py`; ปรับ regression expectations ตาม layout
+- อัปเดต `ART-DIRECTION.md`, asset README/handoff และรายงานพร้อมภาพจริง
+- เพิ่ม `.gitignore` สำหรับ Python cache ของ scripts
+
+## งานค้าง
+
+1. รับ Warrior ที่มี rig และหก animation clips พร้อม hand sockets แล้วตรวจ grips,
+   animation transitions และ root motion กับเกมเดิม ปัจจุบัน fallback ทำงานตามที่ขอ
+2. ทดสอบมือถือ/PC จริง, FPS/thermal/VRAM ระยะยาว, เพิ่ม LOD/texture compression
+   และลด cold download/draw calls ของ scene โดยไม่เปลี่ยนกติกา
+3. ทดสอบ multiplayer สองเครื่องผ่าน network จริง การทดสอบรอบนี้ครอบคลุม
+   deterministic layout, snapshot local roundtrip และ version mismatch เท่านั้น
+4. ตรวจ PR และ merge ไป `gh-pages` เมื่อพร้อมเผยแพร่ งานนี้ยังไม่ merge/deploy

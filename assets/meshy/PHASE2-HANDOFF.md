@@ -3,8 +3,9 @@
 These exact Task IDs were supplied by the owner and verified through the Meshy
 MCP read-only task-status tool. All eight returned `SUCCEEDED`. They are included
 in the version 2 manifest together with the original five Phase 1 tasks.
-**Task success is not file import:** the CDN download currently returns HTTP 403.
-No actual GLB has been received or inspected in this checkout yet.
+All eight originals are now downloaded, inspected and assembled in the game.
+Together with Phase 1, the local manifest has 13/13 admitted real GLBs.
+Checksums and geometry inspection: [phase12-assets.json](../../reports/phase12-assets.json).
 
 | Asset | Filename | Task ID |
 | --- | --- | --- |
@@ -17,43 +18,34 @@ No actual GLB has been received or inspected in this checkout yet.
 | Rubble | rubble.glb | 01a1e4ef-bf35-7484-a476-086101d99d22 |
 | Brazier | brazier.glb | 01a1e4ef-c952-7560-b980-300c4359c684 |
 
-## Finish importing after network access is applied
-
-1. Require an authenticated `meshy_check_balance` result. Use only free status,
-   list and GLB download tools. Do not generate/refine/remesh/rig/animate/convert.
-2. Fetch the original task's GLB via `meshy_download_model`, saving into a staging
-   directory outside Git first. A tool response containing `download_error` or a
-   URL fallback is not a downloaded file. Check that the real file exists and has
-   a valid GLB header. Do not commit signed URLs, API keys or private MCP metadata.
-3. `python3 scripts/import-meshy.py --source /workspace/meshy-mcp/arena-staging`
-4. `python3 scripts/check-meshy-assets.py --require-complete` must pass for 13/13.
-5. Load the actual assets in Chromium; inspect bounds, material slots, texture
-   sizes, skeleton and clips. Calibrate facing and collider/opening dimensions.
-   Do local offline optimization if necessary; never purchase a remesh/rig job.
-6. Run `python3 scripts/check-moonfall-layout.py` and
-   `python3 scripts/smoke-celestial.py`. The smoke suite deliberately tests
-   missing-asset fallbacks and synthetic GLBs separately from real-asset checks.
-7. Real-asset visual acceptance, physical mobile GPU checks and remote multiplayer
-   testing remain required. Do not mark the phases complete on fallback results.
-
-## Implemented assembly
+## Current assembly and validation
 
 `moonfall-environment.js` extends seeded world data before the original collision
-and navigation grids are built. Host and client use the same layout version.
-The original version handshake is bumped to 10 so older map clients are rejected.
+and navigation grids are built. Layout revision 3 is shared by host/client;
+network version 11 uses the existing handshake to reject older maps.
 
-- Hollow gate/arches/portal frames use posts and a clear center, avoiding an
-  invisible bounding box over the opening. Temple Gate uses original gate-tower
-  envelopes. Wall corners fit original corner-tower collider volumes.
-- Statue, rubble and brazier placements avoid existing walls/solids and initial
-  loot/mob positions. A reserved stair zone prevents props covering the approach.
-- Stairs use a continuous ground-height ramp into a raised landing; side rails
-  are visible and collide. The base courtyard stays flat underneath the stairs.
-- Portal energy is an animated, transparent additive shader with fog-of-war
-  distance visibility. It is visual scenery, without adding teleport abilities.
-- Brazier flame quads animate with time, use no textures or new dynamic lights,
-  and benefit from the existing high-quality bloom. Repeated static parts use
-  the existing material/geometry cache and InstancedMesh batches.
-- Meshy files are loaded only after a successful local import. Missing files use
-  explicit procedural proxies. An unrigged/unanimated Warrior retains the
-  original hero; its real rig is currently unknown until the GLB is downloaded.
+- Temple Gate aligns its actual narrow opening to the existing entrance; its
+  doorstep height is baked from the mesh. Corner walls fit tower envelopes.
+- Ruin Arch has four post colliders matching the actual GLB columns. Portal Frame
+  has two side colliders; its solid pedestal is buried to open the walkable ring.
+- Statues, rubble and braziers avoid walls, solids and initial loot/mob positions.
+  A reserved stair approach keeps the raised landing accessible.
+- Moon Stairs and Moon Arena use deterministic 33×33 sampled surface heights.
+  The base courtyard remains flat. Stair rails are visible colliders.
+- Animated portal/flame shaders retain fog-of-war visibility, do not add game
+  abilities, and use the existing High bloom. No new lights/textures for flames.
+- Static primitives use shared geometry/materials and InstancedMesh batches.
+  Runtime map limits are 1024px desktop / 512px mobile; source GLBs remain 2K.
+- Celestial Warrior is now inspected: no skins, bones or clips. The original
+  animated hero remains active. No rigging/animation credit was spent.
+
+Run the four validation commands in [README.md](README.md), including the
+real-GLB suite. The suite checks actual mesh openings and floor heights, device
+texture limits, native touch events, quality rebuild resources and JS errors.
+Hardware mobile/PC FPS, long-duration heap/VRAM and remote two-machine multiplayer
+still need physical acceptance. See [PHASE12-REPORT.md](../../PHASE12-REPORT.md).
+
+Only repeat downloads if replacing an export intentionally. Use authenticated,
+free task-status/download tools; stage outside Git, validate the real GLB header,
+then run `scripts/import-meshy.py`. Do not commit API keys, signed URLs or private
+MCP metadata, and do not generate/refine/remesh/rig/animate/convert models.

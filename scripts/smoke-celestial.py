@@ -109,7 +109,7 @@ def main():
                     asset['available'] = False
                 page.route('**/assets/meshy/manifest.json', lambda route: route.fulfill(json=fallback_manifest))
                 page.goto(f'{url}/{entry}', timeout=120000)
-                page.wait_for_function('CelestialAssets.snapshot().assets.length===13 && CelestialAssets.snapshot().assets.every(a=>a.state==="missing")', polling=100)
+                page.wait_for_function('CelestialAssets.snapshot().ready && CelestialAssets.snapshot().assets.length===Object.keys(CelestialAssets.manifest.assets).length && CelestialAssets.snapshot().assets.every(a=>a.state==="missing")', polling=100)
                 assert page.evaluate('R3.ok && !TOON')
                 assert page.locator('#codex > *').count() == 9
                 page.locator('#celestialInfoBtn').click()
@@ -129,12 +129,12 @@ def main():
                     const navigation=columns.every(p=>navBlocked(p.x,p.y));
                     const r=l.ramps[0];let stairs=false;
                     if(r){const a=C.loc(r.a,r.b-r.length*.49),b=C.loc(r.a,r.b+r.length*.49);
-                        stairs=R3.gY(b.x,b.y)>R3.gY(a.x,a.y)+35&&!blockedAt(a,20)&&!blockedAt(b,20);}
+                        stairs=R3.gY(b.x,b.y)>R3.gY(a.x,a.y)+30&&!blockedAt(a,20)&&!blockedAt(b,20);}
                     return {version:l.version,opening,obstacles,navigation,stairs,
                         props:Object.keys(R3.moonfallPhase2Counts),shader:R3.moonfallEffects.some(e=>e.kind==='portal'),
                         fire:R3.moonfallEffects.some(e=>e.kind==='flame')};
                 }""")
-                assert phase2['version']==2 and all(phase2[k] for k in ['opening','obstacles','navigation','stairs','shader','fire']), phase2
+                assert phase2['version']==3 and all(phase2[k] for k in ['opening','obstacles','navigation','stairs','shader','fire']), phase2
                 assert len(phase2['props'])>=8, phase2
                 # Rendering must not mutate collision data, units, or map bounds.
                 result = page.evaluate("""() => {
@@ -151,7 +151,7 @@ def main():
                         fallback:!R3.inspectCelestialWarrior().ready};
                 }""")
                 assert result['unchanged'] and result['players'] == 32 and result['fallback'], result
-                assert result['counts']['floors'] == 208 and result['counts']['pillars'] == 6
+                assert result['counts']['floors'] == 56 and result['counts']['pillars'] == 6
                 # Compare equal quality after caches have warmed; no linear growth
                 # may remain in scene geometry or textures across rebuilds.
                 assert result['memories'][4]['textures'] <= result['memories'][2]['textures'], result
@@ -250,7 +250,7 @@ def main():
                     content_type='model/gltf-binary', body=(b'corrupt' if variant == 'corrupt'
                         else warrior if route.request.url.endswith('celestial-warrior.glb') else static)))
                 page.goto(f'{url}/index.html', timeout=120000)
-                page.wait_for_function('CelestialAssets.snapshot().assets.length===13 && CelestialAssets.snapshot().assets.every(a=>["loaded","error"].includes(a.state))', polling=100)
+                page.wait_for_function('CelestialAssets.snapshot().ready && CelestialAssets.snapshot().assets.length===Object.keys(CelestialAssets.manifest.assets).length && CelestialAssets.snapshot().assets.every(a=>["loaded","error"].includes(a.state))', polling=100)
                 admission = page.evaluate('R3.inspectCelestialWarrior()')
                 assert admission['ready'] == (variant == 'rigged'), admission
                 if variant == 'rigged':

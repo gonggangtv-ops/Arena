@@ -1,0 +1,4 @@
+PASS index.html mobile=False: 13 real GLBs, residency, 12 scenery types, openings, surface alignment, quality rebuilds, fallback, errors
+PASS cursed.html mobile=False: 13 real GLBs, residency, 12 scenery types, openings, surface alignment, quality rebuilds, fallback, errors
+PASS index.html mobile=True: 13 real GLBs, residency, 12 scenery types, openings, surface alignment, quality rebuilds, fallback, errors
+PASS: all three floor grids and source hashes match actual GLBs

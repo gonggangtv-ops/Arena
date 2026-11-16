@@ -1,0 +1,1755 @@
+[
+  {
+    "entry": "index.html",
+    "mobileEmulation": false,
+    "assets": [
+      {
+        "key": "moon-arena",
+        "name": "Moon Arena",
+        "taskId": "01a1e3b2-07b9-74a5-a370-4d8171618ca6",
+        "url": "assets/meshy/moon-arena.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 10397408,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 9859,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.07895100116729736,
+            0.9722599983215332
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "modular-floor",
+        "name": "Modular Floor",
+        "taskId": "01a1e3b2-1966-7224-83c0-2bdbeea548a3",
+        "url": "assets/meshy/modular-floor.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7621628,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 1693,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9994460046291351,
+            0.9989689886569977
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "modular-wall",
+        "name": "Modular Wall",
+        "taskId": "01a1e3b2-29fa-7146-aa67-e377d41d78fa",
+        "url": "assets/meshy/modular-wall.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 5698124,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2992,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.42810800671577454,
+            0.09964199736714363
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "ancient-pillar",
+        "name": "Ancient Pillar",
+        "taskId": "01a1e3b2-a03c-7483-ae7e-4ee77550bd8c",
+        "url": "assets/meshy/ancient-pillar.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6234484,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3324,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.3499569892883301,
+            1,
+            0.34031499922275543
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "celestial-warrior",
+        "name": "Celestial Warrior",
+        "taskId": "01a1e3b2-af58-7625-a8ed-b148d3cfcf1d",
+        "url": "assets/meshy/celestial-warrior.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 10154028,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 20060,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.3662109971046448,
+            0.9516599774360657,
+            0.22509700059890747
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-stairs",
+        "name": "Moon Stairs",
+        "taskId": "01a1e4ef-59c3-75ce-8019-606c53d74925",
+        "url": "assets/meshy/moon-stairs.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7825336,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2479,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.8621810078620911,
+            0.5762670040130615,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "wall-corner",
+        "name": "Wall Corner",
+        "taskId": "01a1e4ef-7820-7509-aa6f-85d568e6a53e",
+        "url": "assets/meshy/wall-corner.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6907268,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2299,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.6805559992790222,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "temple-gate",
+        "name": "Temple Gate",
+        "taskId": "01a1e4ef-8405-73dc-93d6-004c7f2ca49f",
+        "url": "assets/meshy/temple-gate.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7903692,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5903,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.7856070101261139,
+            0.524757981300354
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "ruin-arch",
+        "name": "Ruin Arch",
+        "taskId": "01a1e4ef-8ea6-7073-b3ce-37695394cd7e",
+        "url": "assets/meshy/ruin-arch.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8952880,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3955,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9330650269985199,
+            0.30213600397109985
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "guardian-statue",
+        "name": "Guardian Statue",
+        "taskId": "01a1e4ef-9a7d-7191-a43f-e89ab12b0a92",
+        "url": "assets/meshy/guardian-statue.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7724108,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 7033,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.42588600516319275,
+            1,
+            0.42221400141716003
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "portal-frame",
+        "name": "Portal Frame",
+        "taskId": "01a1e4ef-b382-71aa-a201-bf72f103dea8",
+        "url": "assets/meshy/portal-frame.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6307560,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5757,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.7677900195121765,
+            1,
+            0.3904550075531006
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "rubble",
+        "name": "Rubble",
+        "taskId": "01a1e4ef-bf35-7484-a476-086101d99d22",
+        "url": "assets/meshy/rubble.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8266348,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2554,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.23187100142240524,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "brazier",
+        "name": "Brazier",
+        "taskId": "01a1e4ef-c952-7560-b980-300c4359c684",
+        "url": "assets/meshy/brazier.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8260368,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3078,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.826792985200882,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-dead-tree",
+        "name": "Gnarled leafless moon tree",
+        "taskId": "01a1e5de-ff15-723e-8432-05aa2913190b",
+        "url": "assets/meshy/moon-dead-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8570844,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 4162,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.6594559848308563,
+            1,
+            0.6192539930343628
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-silver-tree",
+        "name": "Silver-leaf moon tree",
+        "taskId": "01a1e5df-10c3-7669-a8ad-db3b59a3e26a",
+        "url": "assets/meshy/moon-silver-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 11218484,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5252,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.5918359756469727,
+            1,
+            0.5594030022621155
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-boulder",
+        "name": "Rough dark basalt boulder",
+        "taskId": "01a1e5df-21c4-76b4-98f0-2115d5c09dad",
+        "url": "assets/meshy/moon-boulder.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7189044,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3110,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9307770133018494,
+            0.970784991979599
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-rock-cluster",
+        "name": "Moonstone rock cluster",
+        "taskId": "01a1e5df-5a17-76bf-bdc1-778215cc0611",
+        "url": "assets/meshy/moon-rock-cluster.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6583744,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3504,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9999890029430389,
+            0.6542630195617676
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      }
+    ],
+    "present": true,
+    "passage": [
+      {
+        "key": "temple-gate",
+        "clear": true,
+        "walk": true,
+        "nav": true
+      },
+      {
+        "key": "ruin-arch",
+        "clear": true,
+        "walk": true,
+        "nav": true
+      },
+      {
+        "key": "portal-frame",
+        "clear": true,
+        "walk": true,
+        "nav": true
+      }
+    ],
+    "heights": [
+      {
+        "key": "moon-stairs",
+        "expected": 10.647000000000002,
+        "actual": 10.645843310519513
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 15.7248,
+        "actual": 15.726864183145846
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 24.477600000000162,
+        "actual": 24.478935966656902
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 35.784,
+        "actual": 35.78238606243157
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 39.61440000000006,
+        "actual": 39.615282272740586
+      },
+      {
+        "key": "moon-arena",
+        "expected": 20.64,
+        "actual": 20.638841747440864
+      },
+      {
+        "key": "temple-gate",
+        "expected": 13.328000000000001,
+        "actual": 13.33108629516712
+      }
+    ],
+    "memories": [
+      {
+        "quality": "low",
+        "geometries": 97,
+        "textures": 92,
+        "calls": 1125,
+        "triangles": 1672272
+      },
+      {
+        "quality": "high",
+        "geometries": 102,
+        "textures": 110,
+        "calls": 1224,
+        "triangles": 3608353
+      },
+      {
+        "quality": "low",
+        "geometries": 100,
+        "textures": 94,
+        "calls": 1125,
+        "triangles": 1672258
+      },
+      {
+        "quality": "high",
+        "geometries": 102,
+        "textures": 110,
+        "calls": 1224,
+        "triangles": 3608349
+      },
+      {
+        "quality": "low",
+        "geometries": 100,
+        "textures": 94,
+        "calls": 1125,
+        "triangles": 1672264
+      }
+    ],
+    "collisionUnchanged": true,
+    "heroes": 32,
+    "warriorFallback": true,
+    "mobile": false,
+    "pixelRatio": 1,
+    "shader": true,
+    "errors": []
+  },
+  {
+    "entry": "cursed.html",
+    "mobileEmulation": false,
+    "assets": [
+      {
+        "key": "moon-arena",
+        "name": "Moon Arena",
+        "taskId": "01a1e3b2-07b9-74a5-a370-4d8171618ca6",
+        "url": "assets/meshy/moon-arena.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 10397408,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 9859,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.07895100116729736,
+            0.9722599983215332
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "modular-floor",
+        "name": "Modular Floor",
+        "taskId": "01a1e3b2-1966-7224-83c0-2bdbeea548a3",
+        "url": "assets/meshy/modular-floor.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7621628,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 1693,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9994460046291351,
+            0.9989689886569977
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "modular-wall",
+        "name": "Modular Wall",
+        "taskId": "01a1e3b2-29fa-7146-aa67-e377d41d78fa",
+        "url": "assets/meshy/modular-wall.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 5698124,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2992,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.42810800671577454,
+            0.09964199736714363
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "ancient-pillar",
+        "name": "Ancient Pillar",
+        "taskId": "01a1e3b2-a03c-7483-ae7e-4ee77550bd8c",
+        "url": "assets/meshy/ancient-pillar.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6234484,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3324,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.3499569892883301,
+            1,
+            0.34031499922275543
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "celestial-warrior",
+        "name": "Celestial Warrior",
+        "taskId": "01a1e3b2-af58-7625-a8ed-b148d3cfcf1d",
+        "url": "assets/meshy/celestial-warrior.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 10154028,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 20060,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.3662109971046448,
+            0.9516599774360657,
+            0.22509700059890747
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-stairs",
+        "name": "Moon Stairs",
+        "taskId": "01a1e4ef-59c3-75ce-8019-606c53d74925",
+        "url": "assets/meshy/moon-stairs.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7825336,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2479,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.8621810078620911,
+            0.5762670040130615,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "wall-corner",
+        "name": "Wall Corner",
+        "taskId": "01a1e4ef-7820-7509-aa6f-85d568e6a53e",
+        "url": "assets/meshy/wall-corner.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6907268,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2299,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.6805559992790222,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "temple-gate",
+        "name": "Temple Gate",
+        "taskId": "01a1e4ef-8405-73dc-93d6-004c7f2ca49f",
+        "url": "assets/meshy/temple-gate.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7903692,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5903,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.7856070101261139,
+            0.524757981300354
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "ruin-arch",
+        "name": "Ruin Arch",
+        "taskId": "01a1e4ef-8ea6-7073-b3ce-37695394cd7e",
+        "url": "assets/meshy/ruin-arch.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8952880,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3955,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9330650269985199,
+            0.30213600397109985
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "guardian-statue",
+        "name": "Guardian Statue",
+        "taskId": "01a1e4ef-9a7d-7191-a43f-e89ab12b0a92",
+        "url": "assets/meshy/guardian-statue.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7724108,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 7033,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.42588600516319275,
+            1,
+            0.42221400141716003
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "portal-frame",
+        "name": "Portal Frame",
+        "taskId": "01a1e4ef-b382-71aa-a201-bf72f103dea8",
+        "url": "assets/meshy/portal-frame.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6307560,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5757,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.7677900195121765,
+            1,
+            0.3904550075531006
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "rubble",
+        "name": "Rubble",
+        "taskId": "01a1e4ef-bf35-7484-a476-086101d99d22",
+        "url": "assets/meshy/rubble.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8266348,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2554,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.23187100142240524,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "brazier",
+        "name": "Brazier",
+        "taskId": "01a1e4ef-c952-7560-b980-300c4359c684",
+        "url": "assets/meshy/brazier.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8260368,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3078,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.826792985200882,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-dead-tree",
+        "name": "Gnarled leafless moon tree",
+        "taskId": "01a1e5de-ff15-723e-8432-05aa2913190b",
+        "url": "assets/meshy/moon-dead-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8570844,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 4162,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.6594559848308563,
+            1,
+            0.6192539930343628
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-silver-tree",
+        "name": "Silver-leaf moon tree",
+        "taskId": "01a1e5df-10c3-7669-a8ad-db3b59a3e26a",
+        "url": "assets/meshy/moon-silver-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 11218484,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5252,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.5918359756469727,
+            1,
+            0.5594030022621155
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-boulder",
+        "name": "Rough dark basalt boulder",
+        "taskId": "01a1e5df-21c4-76b4-98f0-2115d5c09dad",
+        "url": "assets/meshy/moon-boulder.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7189044,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3110,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9307770133018494,
+            0.970784991979599
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      },
+      {
+        "key": "moon-rock-cluster",
+        "name": "Moonstone rock cluster",
+        "taskId": "01a1e5df-5a17-76bf-bdc1-778215cc0611",
+        "url": "assets/meshy/moon-rock-cluster.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6583744,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3504,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9999890029430389,
+            0.6542630195617676
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 1024,
+          "residentTextureMax": 1024
+        }
+      }
+    ],
+    "present": true,
+    "passage": [
+      {
+        "key": "temple-gate",
+        "clear": true,
+        "walk": true,
+        "nav": true
+      },
+      {
+        "key": "ruin-arch",
+        "clear": true,
+        "walk": true,
+        "nav": true
+      },
+      {
+        "key": "portal-frame",
+        "clear": true,
+        "walk": true,
+        "nav": true
+      }
+    ],
+    "heights": [
+      {
+        "key": "moon-stairs",
+        "expected": 10.647000000000002,
+        "actual": 10.645843310519513
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 15.7248,
+        "actual": 15.726864183145846
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 24.477600000000162,
+        "actual": 24.478935966656902
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 35.784,
+        "actual": 35.78238606243157
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 39.61440000000006,
+        "actual": 39.615282272740586
+      },
+      {
+        "key": "moon-arena",
+        "expected": 20.64,
+        "actual": 20.638841747440864
+      },
+      {
+        "key": "temple-gate",
+        "expected": 13.328000000000001,
+        "actual": 13.33108629516712
+      }
+    ],
+    "memories": [
+      {
+        "quality": "low",
+        "geometries": 96,
+        "textures": 92,
+        "calls": 1187,
+        "triangles": 1616596
+      },
+      {
+        "quality": "high",
+        "geometries": 101,
+        "textures": 110,
+        "calls": 1283,
+        "triangles": 3397649
+      },
+      {
+        "quality": "low",
+        "geometries": 99,
+        "textures": 94,
+        "calls": 1188,
+        "triangles": 1616624
+      },
+      {
+        "quality": "high",
+        "geometries": 101,
+        "textures": 110,
+        "calls": 1283,
+        "triangles": 3397645
+      },
+      {
+        "quality": "low",
+        "geometries": 99,
+        "textures": 94,
+        "calls": 1188,
+        "triangles": 1616622
+      }
+    ],
+    "collisionUnchanged": true,
+    "heroes": 32,
+    "warriorFallback": true,
+    "mobile": false,
+    "pixelRatio": 1,
+    "shader": true,
+    "errors": []
+  },
+  {
+    "entry": "index.html",
+    "mobileEmulation": true,
+    "assets": [
+      {
+        "key": "moon-arena",
+        "name": "Moon Arena",
+        "taskId": "01a1e3b2-07b9-74a5-a370-4d8171618ca6",
+        "url": "assets/meshy/moon-arena.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 10397408,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 9859,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.07895100116729736,
+            0.9722599983215332
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "modular-floor",
+        "name": "Modular Floor",
+        "taskId": "01a1e3b2-1966-7224-83c0-2bdbeea548a3",
+        "url": "assets/meshy/modular-floor.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7621628,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 1693,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9994460046291351,
+            0.9989689886569977
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "modular-wall",
+        "name": "Modular Wall",
+        "taskId": "01a1e3b2-29fa-7146-aa67-e377d41d78fa",
+        "url": "assets/meshy/modular-wall.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 5698124,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2992,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.42810800671577454,
+            0.09964199736714363
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "ancient-pillar",
+        "name": "Ancient Pillar",
+        "taskId": "01a1e3b2-a03c-7483-ae7e-4ee77550bd8c",
+        "url": "assets/meshy/ancient-pillar.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6234484,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3324,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.3499569892883301,
+            1,
+            0.34031499922275543
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "celestial-warrior",
+        "name": "Celestial Warrior",
+        "taskId": "01a1e3b2-af58-7625-a8ed-b148d3cfcf1d",
+        "url": "assets/meshy/celestial-warrior.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 10154028,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 20060,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.3662109971046448,
+            0.9516599774360657,
+            0.22509700059890747
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "moon-stairs",
+        "name": "Moon Stairs",
+        "taskId": "01a1e4ef-59c3-75ce-8019-606c53d74925",
+        "url": "assets/meshy/moon-stairs.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7825336,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2479,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.8621810078620911,
+            0.5762670040130615,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "wall-corner",
+        "name": "Wall Corner",
+        "taskId": "01a1e4ef-7820-7509-aa6f-85d568e6a53e",
+        "url": "assets/meshy/wall-corner.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6907268,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2299,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.6805559992790222,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "temple-gate",
+        "name": "Temple Gate",
+        "taskId": "01a1e4ef-8405-73dc-93d6-004c7f2ca49f",
+        "url": "assets/meshy/temple-gate.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7903692,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5903,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.7856070101261139,
+            0.524757981300354
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "ruin-arch",
+        "name": "Ruin Arch",
+        "taskId": "01a1e4ef-8ea6-7073-b3ce-37695394cd7e",
+        "url": "assets/meshy/ruin-arch.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8952880,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3955,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9330650269985199,
+            0.30213600397109985
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "guardian-statue",
+        "name": "Guardian Statue",
+        "taskId": "01a1e4ef-9a7d-7191-a43f-e89ab12b0a92",
+        "url": "assets/meshy/guardian-statue.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7724108,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 7033,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.42588600516319275,
+            1,
+            0.42221400141716003
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "portal-frame",
+        "name": "Portal Frame",
+        "taskId": "01a1e4ef-b382-71aa-a201-bf72f103dea8",
+        "url": "assets/meshy/portal-frame.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6307560,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5757,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.7677900195121765,
+            1,
+            0.3904550075531006
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "rubble",
+        "name": "Rubble",
+        "taskId": "01a1e4ef-bf35-7484-a476-086101d99d22",
+        "url": "assets/meshy/rubble.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8266348,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 2554,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.23187100142240524,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "brazier",
+        "name": "Brazier",
+        "taskId": "01a1e4ef-c952-7560-b980-300c4359c684",
+        "url": "assets/meshy/brazier.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8260368,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3078,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.826792985200882,
+            1
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "moon-dead-tree",
+        "name": "Gnarled leafless moon tree",
+        "taskId": "01a1e5de-ff15-723e-8432-05aa2913190b",
+        "url": "assets/meshy/moon-dead-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 8570844,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 4162,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.6594559848308563,
+            1,
+            0.6192539930343628
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "moon-silver-tree",
+        "name": "Silver-leaf moon tree",
+        "taskId": "01a1e5df-10c3-7669-a8ad-db3b59a3e26a",
+        "url": "assets/meshy/moon-silver-tree.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 11218484,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 5252,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            0.5918359756469727,
+            1,
+            0.5594030022621155
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "moon-boulder",
+        "name": "Rough dark basalt boulder",
+        "taskId": "01a1e5df-21c4-76b4-98f0-2115d5c09dad",
+        "url": "assets/meshy/moon-boulder.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 7189044,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3110,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9307770133018494,
+            0.970784991979599
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      },
+      {
+        "key": "moon-rock-cluster",
+        "name": "Moonstone rock cluster",
+        "taskId": "01a1e5df-5a17-76bf-bdc1-778215cc0611",
+        "url": "assets/meshy/moon-rock-cluster.glb",
+        "state": "loaded",
+        "error": null,
+        "bytes": 6583744,
+        "inspection": {
+          "bones": [],
+          "meshes": 1,
+          "skinned": 0,
+          "triangles": 3504,
+          "textures": 4,
+          "largestTexture": 2048,
+          "clips": [],
+          "size": [
+            1,
+            0.9999890029430389,
+            0.6542630195617676
+          ],
+          "meshNames": [
+            "mesh_0"
+          ],
+          "textureLimit": 512,
+          "residentTextureMax": 512
+        }
+      }
+    ],
+    "present": true,
+    "passage": [
+      {
+        "key": "temple-gate",
+        "clear": true,
+        "walk": true,
+        "nav": true
+      },
+      {
+        "key": "ruin-arch",
+        "clear": true,
+        "walk": true,
+        "nav": true
+      },
+      {
+        "key": "portal-frame",
+        "clear": true,
+        "walk": true,
+        "nav": true
+      }
+    ],
+    "heights": [
+      {
+        "key": "moon-stairs",
+        "expected": 10.647000000000002,
+        "actual": 10.645843310519513
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 15.7248,
+        "actual": 15.726864183145846
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 24.477600000000162,
+        "actual": 24.478935966656902
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 35.784,
+        "actual": 35.78238606243157
+      },
+      {
+        "key": "moon-stairs",
+        "expected": 39.61440000000006,
+        "actual": 39.615282272740586
+      },
+      {
+        "key": "moon-arena",
+        "expected": 20.64,
+        "actual": 20.638841747440864
+      },
+      {
+        "key": "temple-gate",
+        "expected": 13.328000000000001,
+        "actual": 13.33108629516712
+      }
+    ],
+    "memories": [
+      {
+        "quality": "low",
+        "geometries": 97,
+        "textures": 91,
+        "calls": 1124,
+        "triangles": 1805508
+      },
+      {
+        "quality": "high",
+        "geometries": 102,
+        "textures": 109,
+        "calls": 1225,
+        "triangles": 3784331
+      },
+      {
+        "quality": "low",
+        "geometries": 100,
+        "textures": 93,
+        "calls": 1124,
+        "triangles": 1805490
+      },
+      {
+        "quality": "high",
+        "geometries": 102,
+        "textures": 109,
+        "calls": 1225,
+        "triangles": 3784331
+      },
+      {
+        "quality": "low",
+        "geometries": 100,
+        "textures": 93,
+        "calls": 1125,
+        "triangles": 1805496
+      }
+    ],
+    "collisionUnchanged": true,
+    "heroes": 32,
+    "warriorFallback": true,
+    "mobile": true,
+    "pixelRatio": 1,
+    "shader": true,
+    "nativeTouch": true,
+    "errors": []
+  }
+]

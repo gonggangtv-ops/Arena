@@ -1,77 +1,103 @@
-# Meshy exports required
+# Meshy originals installed
 
-**None of the 13 production GLBs is included yet.** The manifest intentionally
-marks every export `available: false`. Task IDs alone do not grant account access.
-Meshy MCP authentication now works, and all 13 original tasks have been checked:
-every task returned SUCCEEDED. The actual GLB download is blocked by the runtime
-proxy for `assets.meshy.ai` (HTTP 403). Network access to `api.meshy.ai` alone is
-insufficient. No API key belongs in this repository.
+All **17 real GLB exports** are included in this directory and marked
+`available: true`. They were downloaded from the existing successful Meshy tasks;
+no generation, remesh, rigging, animation or other paid job was requested.
+Only free task-status, download and balance tools were used. Credentials, signed
+CDN URLs and private MCP responses are kept outside this repository.
 
-Phase 2 filenames and IDs: [PHASE2-HANDOFF.md](PHASE2-HANDOFF.md). The manifest
-contains all 13 entries; availability remains false until real files are present.
+The original GLB bytes are unchanged. The four Nature exports and their
+validation are documented in [MOONFALL-BIOME-REPORT.md](../../MOONFALL-BIOME-REPORT.md). The offline inspector records SHA-256,
+file size, triangles, skins and clips in
+[phase12-assets.json](../../reports/phase12-assets.json) and
+[biome-assets.json](../../reports/biome-assets.json).
 
-Export GLB with embedded textures from the account that owns these tasks:
+| Asset | File | Task ID | Triangles |
+| --- | --- | --- | ---: |
+| Moon Arena | [moon-arena.glb](moon-arena.glb) | `01a1e3b2-07b9-74a5-a370-4d8171618ca6` | 9,859 |
+| Modular Floor | [modular-floor.glb](modular-floor.glb) | `01a1e3b2-1966-7224-83c0-2bdbeea548a3` | 1,693 |
+| Modular Wall | [modular-wall.glb](modular-wall.glb) | `01a1e3b2-29fa-7146-aa67-e377d41d78fa` | 2,992 |
+| Ancient Pillar | [ancient-pillar.glb](ancient-pillar.glb) | `01a1e3b2-a03c-7483-ae7e-4ee77550bd8c` | 3,324 |
+| Celestial Warrior | [celestial-warrior.glb](celestial-warrior.glb) | `01a1e3b2-af58-7625-a8ed-b148d3cfcf1d` | 20,060 |
+| Moon Stairs | [moon-stairs.glb](moon-stairs.glb) | `01a1e4ef-59c3-75ce-8019-606c53d74925` | 2,479 |
+| Wall Corner | [wall-corner.glb](wall-corner.glb) | `01a1e4ef-7820-7509-aa6f-85d568e6a53e` | 2,299 |
+| Temple Gate | [temple-gate.glb](temple-gate.glb) | `01a1e4ef-8405-73dc-93d6-004c7f2ca49f` | 5,903 |
+| Ruin Arch | [ruin-arch.glb](ruin-arch.glb) | `01a1e4ef-8ea6-7073-b3ce-37695394cd7e` | 3,955 |
+| Guardian Statue | [guardian-statue.glb](guardian-statue.glb) | `01a1e4ef-9a7d-7191-a43f-e89ab12b0a92` | 7,033 |
+| Portal Frame | [portal-frame.glb](portal-frame.glb) | `01a1e4ef-b382-71aa-a201-bf72f103dea8` | 5,757 |
+| Rubble | [rubble.glb](rubble.glb) | `01a1e4ef-bf35-7484-a476-086101d99d22` | 2,554 |
+| Brazier | [brazier.glb](brazier.glb) | `01a1e4ef-c952-7560-b980-300c4359c684` | 3,078 |
+| Gnarled leafless moon tree | [moon-dead-tree.glb](moon-dead-tree.glb) | `01a1e5de-ff15-723e-8432-05aa2913190b` | 4,162 |
+| Silver-leaf moon tree | [moon-silver-tree.glb](moon-silver-tree.glb) | `01a1e5df-10c3-7669-a8ad-db3b59a3e26a` | 5,252 |
+| Rough dark basalt boulder | [moon-boulder.glb](moon-boulder.glb) | `01a1e5df-21c4-76b4-98f0-2115d5c09dad` | 3,110 |
+| Moonstone rock cluster | [moon-rock-cluster.glb](moon-rock-cluster.glb) | `01a1e5df-5a17-76bf-bdc1-778215cc0611` | 3,504 |
 
-| Filename | Task ID | Triangle budget |
-| --- | --- | ---: |
-| `moon-arena.glb` | `01a1e3b2-07b9-74a5-a370-4d8171618ca6` | 80,000 |
-| `modular-floor.glb` | `01a1e3b2-1966-7224-83c0-2bdbeea548a3` | 2,500 |
-| `modular-wall.glb` | `01a1e3b2-29fa-7146-aa67-e377d41d78fa` | 5,000 |
-| `ancient-pillar.glb` | `01a1e3b2-a03c-7483-ae7e-4ee77550bd8c` | 12,000 |
-| `celestial-warrior.glb` | `01a1e3b2-af58-7625-a8ed-b148d3cfcf1d` | 45,000 |
+## Runtime placement
 
-Each file has limits of 64 MiB, 16 textures, and maximum texture edge 2048px.
-These admission limits do not guarantee mobile FPS. Reduce material slots and
-keep repeated modules much smaller. The bundled loader has no configured
-Draco/KTX2/Meshopt decoders; export ordinary uncompressed GLB.
+`celestial-render.js` bakes each authored hierarchy/rotation into shared,
+bottom-centered unit bounds once. Repeated scenery uses InstancedMesh, shared
+PBR materials and embedded maps. High has shadows/AO/Bloom; Low uses direct
+rendering and no shadows/postprocessing. Courtyard tiles use 56 Low / 208 High
+instances. The generated floor is a cube-like module: flattening it into a thin
+paving tile is intentional. Long wall modules are tiled along their authored X
+axis instead of stretching one mesh along the wrong axis. Pillars preserve
+native proportions while fitting the six original tower collision circles.
+
+Moon Arena is a low, walkable central dais at the original hall, not a stretched
+keep crown. `moonfall-collision-data.js` contains 33×33 height fields sampled from
+Moon Arena, Moon Stairs and the Temple Gate doorway floor, with source hashes.
+The heights exist before host/client world generation, independently of load
+speed. Rebuild/check them with:
 
 ```sh
-python3 scripts/import-meshy.py --source /path/to/export-directory
-# Or copy the named GLBs into assets/meshy, then:
-python3 scripts/import-meshy.py --scan
+python3 scripts/bake-moonfall-surfaces.py --check
+# After intentionally changing GLB bytes or manifest rotation:
+python3 scripts/bake-moonfall-surfaces.py
 ```
 
-The importer validates headers, JSON and embedded resources before copying and
-updating the manifest. The browser then decodes and checks geometry/texture
-budgets. Reload and open **สถานะโมเดล / Performance** for loaded/missing/error.
-Partial imports are supported. Never store an API key in the static website.
+Phase 2 assembly remains deterministic. Ruin Arch uses its four actual column
+positions, with an open central passage. Temple Gate is widened to align its
+narrow native doorway with the existing gate. The portal's solid pedestal is
+buried; its opening and shader remain above walkable ground. Side rails, statues,
+rubble and braziers have visible matching collision envelopes. The layout
+revision is 3; the existing network handshake version is 11 to reject older maps.
+No combat or transport schema is changed.
 
-## Placement and collision
+## Texture and download budgets
 
-Scenery hierarchies and rotations are baked once to shared bottom-centered unit
-bounds. `rotationY` in the manifest is radians, applied before normalization.
-Floor instances fit 208 courtyard tiles. Wall instances fit the exact original
-`WD.walls` collider envelopes, preserving doors and corridors. Pillars replace
-the six original tower volumes. Procedural dungeon columns use existing solids.
+Each source export has four embedded 2048px maps. Before GPU upload, decoded maps
+are resized to at most 1024px on desktop or 512px on mobile (including touch iPad).
+Original files remain intact. Across 68 maps, RGBA8 plus mipmaps is approximately
+363 MiB desktop / 91 MiB mobile, **excluding** other game textures, targets,
+geometry, driver overhead and CPU decode buffers; this is a calculated bound,
+not measured VRAM. Cold downloads now total about 129.5 MiB (32.0 MiB added by Nature). Compression and
+progressive delivery remain follow-up performance work.
 
-Moon Arena is fitted onto the existing solid keep as a temple crown. It is
-**not** treated as an arbitrary new walkable collision mesh. A generated arena
-can contain stairs/walls that disagree with the original world. To replace the
-whole playable map, author a dedicated collider/nav layout and a network map
-version first. Inspect geometry gaps/protrusions before enabling production
-assets: bounds normalization cannot verify their semantic shape.
+## Celestial Warrior: verified fallback
 
-## Warrior admission and calibration
+The actual Warrior has **0 skins, 0 bones and 0 animation clips**, 20,060 triangles.
+It is downloaded, decoded and inspected, but the original animated hero remains
+the playable character. The adapter requires a real skin, two hand sockets and
+six distinct idle/walk/attack/cast/hit/death clips. A static export must not replace
+the working combat character. No automatic paid rigging is performed.
 
-Inspection reports mesh/triangle/texture counts, bone names, skin count, bounds
-and clip names. The adapter requires a real skinned rig, both hand bones and
-distinct idle/walk/attack/cast/hit/death clips. Unrigged/incomplete exports keep the original
-animated hero. No retargeting from the unrelated shipped skeleton is attempted.
+If a compatible export is supplied later, calibrate `warrior.bones`,
+`warrior.clips`, height (default 132), forward +Z and grips in the manifest.
+Use in-place clips; the original unit continues to own HP, damage, skills,
+movement, inventory, weapons and multiplayer state.
 
-Set exact names under `warrior.bones` and `warrior.clips` in the manifest if auto
-matching fails. Height defaults to 132 world units. Set `rotationY` to face +Z.
-Common RightHand/LeftHand, hand_r/hand_l and Mixamo names are recognized.
+## Validation
 
-Use in-place clips; authored root motion must be removed before production use so
-the visible character stays aligned with the authoritative unit hitbox.
+```sh
+python3 scripts/check-meshy-assets.py --require-complete
+python3 scripts/check-meshy-assets.py --scope biome --require-complete
+python3 scripts/smoke-moonfall-biome.py
+python3 scripts/check-moonfall-layout.py
+python3 scripts/smoke-real-meshy.py
+python3 scripts/smoke-celestial.py
+```
 
-An admitted hero gets a skeleton-safe clone, independent AnimationMixer and the
-original unit reference. HP, damage, skill timers, status effects, death/revive
-and weapon selection remain authoritative. A separate pivot parent preserves
-animation track transforms. Existing weapon factories supply equipment.
-Hand orientation, two-handed grips, shields/bows and skill poses require visual
-calibration against the actual export. Automatic visual armor replacement on an
-arbitrary Meshy rig is not implemented; armor stats stay unchanged.
-
-Smoke tests use explicitly synthetic GLB buffers delivered only by test routes.
-They are not installed here or counted as Meshy artwork.
+The real-asset suite uses the shipped GLBs. The regression suite separately
+routes missing manifests and explicitly synthetic loader/rig fixtures; those
+fixtures are never installed as production artwork. See the
+[current report](../../PHASE12-REPORT.md) for evidence and remaining limits.

@@ -1,4 +1,4 @@
-"""Inspect actual GLB files only. --require-complete fails unless all 13 exist.
+"""Inspect actual GLB files only. --require-complete requires every scoped asset.
 No API requests, generated fixtures, or credentials are involved.
 """
 import argparse
@@ -34,12 +34,16 @@ def inspect(path):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--require-complete',action='store_true')
+    parser.add_argument('--scope',choices=['phase12','biome','all'],default='phase12')
     args=parser.parse_args()
     manifest=json.loads((ROOT/'assets/meshy/manifest.json').read_text())
     reports=[]
     for key,asset in manifest['assets'].items():
+        biome=asset.get('biome')=='moonfall'
+        if args.scope=='phase12' and biome or args.scope=='biome' and not biome:
+            continue
         path=ROOT/asset['url']
-        r={'asset':key,'taskId':asset['taskId'],'phase':asset.get('phase',1),
+        r={'asset':key,'taskId':asset['taskId'],'phase':'biome' if biome else asset.get('phase',1),
            'taskStatus':asset.get('verifiedTaskStatus','unknown'),'file':asset['url'],'glbDownloaded':path.is_file()}
         if path.is_file():
             r.update(inspect(path));r['inspected']=True
@@ -49,7 +53,8 @@ def main():
         print(json.dumps(r,ensure_ascii=False))
     report={'assets':reports,'downloaded':sum(r['glbDownloaded'] for r in reports),'total':len(reports),
             'complete':all(r.get('inspected') for r in reports),'paidToolCalls':0}
-    (ROOT/'reports/phase12-assets.json').write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
+    target={'phase12':'phase12-assets.json','biome':'biome-assets.json','all':'all-assets.json'}[args.scope]
+    (ROOT/'reports'/target).write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
     if args.require_complete and not report['complete']:
         raise SystemExit('INCOMPLETE: actual GLB files missing; task success is not a downloaded asset')
 

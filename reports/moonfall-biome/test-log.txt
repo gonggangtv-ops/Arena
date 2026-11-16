@@ -1,0 +1,9 @@
+LOADED index.html mobile=False: four real biome GLBs and forest
+CHECKED index.html mobile=False: seven quality/biome rebuilds preserve world, terrain and resources
+PASS index.html mobile=False: terrain/collision invariants, four variants, density, resources, rocks, AI, selector, touch and errors
+LOADED cursed.html mobile=False: four real biome GLBs and forest
+CHECKED cursed.html mobile=False: seven quality/biome rebuilds preserve world, terrain and resources
+PASS cursed.html mobile=False: terrain/collision invariants, four variants, density, resources, rocks, AI, selector, touch and errors
+LOADED index.html mobile=True: four real biome GLBs and forest
+CHECKED index.html mobile=True: seven quality/biome rebuilds preserve world, terrain and resources
+PASS index.html mobile=True: terrain/collision invariants, four variants, density, resources, rocks, AI, selector, touch and errors
