@@ -73,7 +73,10 @@ function eclThink(u,dt){
   // detect: these hunt on sight (the old camps only woke up when hit)
   if(!u.aggro||u.aggro.dead){u.aggro=null;const h=eclHeroNear(u,u.ecl==='overlord'?560:u.ecl==='sentinel'?400:300);
     if(h&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L){u.aggro=h;if(u.ecl==='overlord'){sndAt('roar',u.x,u.y);emit({t:'f',s:'☾ Celestial Overlord ตื่นจากแท่นสุริยคราส!'});emit({t:'k',a:10,x:u.x|0,y:u.y|0})}}}
-  const t=u.aggro;let mx=0,my=0;
+  // a target that ran off: switch to whoever is still fighting inside the arena before giving up
+  const ok=h=>h&&!h.dead&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L+140&&(!h.hidden||Math.hypot(h.x-u.x,h.y-u.y)<170);
+  if(u.aggro&&!ok(u.aggro)){let nb=null,bd=1e9;for(const h of units){if(!h.hero||h.reviveT>0||!ok(h))continue;const d=Math.hypot(h.x-u.x,h.y-u.y);if(d<bd&&d<L){bd=d;nb=h}}if(nb)u.aggro=nb}
+  const t=u.aggro;let mx=0,my=0;if(t)u.idleT=0;else u.idleT=(u.idleT||0)+dt;
   if(t&&!t.dead&&dh<L&&Math.hypot(t.x-u.home.x,t.y-u.home.y)<L+140&&(!t.hidden||Math.hypot(t.x-u.x,t.y-u.y)<170)){
     const d=Math.hypot(t.x-u.x,t.y-u.y)||1;u.fx=(t.x-u.x)/d;u.fy=(t.y-u.y)/d;const R=u.range+t.r;
     if(d>R-8&&u.busyT<=0&&!u.combo){mx=u.fx;my=u.fy}
@@ -84,7 +87,7 @@ function eclThink(u,dt){
     if(dh>30){mx=(u.home.x-u.x)/dh;my=(u.home.y-u.y)/dh}else if(u.ecl==='sentinel'){ // patrol a loop around the camp
       if(!u.patrol||Math.hypot(u.x-u.patrol.x,u.y-u.patrol.y)<24||(u.patrol.t-=dt)<0){const a=Math.random()*6.283,rr=60+Math.random()*130;u.patrol={x:u.home.x+Math.cos(a)*rr,y:u.home.y+Math.sin(a)*rr,t:6}}}
     if(u.patrol&&u.ecl==='sentinel'&&dh<=220){const px=u.patrol.x-u.x,py=u.patrol.y-u.y,pl=Math.hypot(px,py)||1;mx=px/pl*.42;my=py/pl*.42;u.fx=px/pl;u.fy=py/pl}
-    u.hp=Math.min(u.maxHp,u.hp+u.maxHp*(u.ecl==='overlord'?.08:.25)*dt);if(u.ecl==='overlord'&&u.hp>=u.maxHp)u.ph=0}
+    if(u.ecl!=='overlord'||u.idleT>4)u.hp=Math.min(u.maxHp,u.hp+u.maxHp*(u.ecl==='overlord'?.05:.25)*dt);if(u.ecl==='overlord'&&u.hp>=u.maxHp)u.ph=0}
   if(u.busyT>0){mx*=.15;my*=.15}if(u.blockT>0){mx*=.35;my*=.35}
   return{mx,my}}
 {const _mt=mobThink;mobThink=function(u,dt){return u.ecl?eclThink(u,dt):_mt(u,dt)}}
