@@ -536,7 +536,7 @@ function genWorld(seed){
     {key:'hunt',name:'ค่ายนักล่า',side:1,r:380,n:4,style:'cabin',a:sr(-.9,-.4),d:sr(5200,6400)},
     {key:'bloom',name:'หมู่บ้านทุ่งดอกไม้',side:-1,r:420,n:5,style:'tudor',a:-Math.PI*.95+sr(-.3,.3),d:sr(3800,5400)},
     {key:'grave',name:'หมู่บ้านร้าง',side:0,r:400,n:4,style:'stone',a:Math.PI*.28+sr(-.3,.3),d:sr(5000,6400)}];
-  for(const s of specs){let V=null;
+  for(const s of specs){let V=null;if(CURSED){s.r=Math.round(s.r*1.5);s.n=Math.round(s.n*1.8)}
     for(let t=0;t<1500&&!V;t++){let p;const j=Math.min(1,t/300);if(t===900&&s.r>400){s.r=Math.round(s.r*.82);s.n=Math.max(4,s.n-1)}
       if(s.near==='lake'&&t<700){const a=Math.PI*sr(.55,1.35);const d=Lk.R+s.r+sr(200,420)+j*300;p={x:Lk.x+Math.cos(a)*d,y:Lk.y+Math.sin(a)*d}}
       else if(t<600){const a=s.a+sr(-.5,.5)*j,d=s.d*(1+sr(-.25,.25)*j);p={x:CX+Math.cos(a)*d,y:CY+Math.sin(a)*d}}
@@ -552,14 +552,15 @@ function genWorld(seed){
     if(V.plaza){w.fountains.push({x:V.x,y:V.y,r:62});w.solids.push({x:V.x,y:V.y,r:62,t:'fountain'})}
     else{w.wells.push({x:V.x,y:V.y,r:34});w.solids.push({x:V.x,y:V.y,r:34,t:'well'})}
     for(let k=0;k<(V.plaza?8:5);k++){const a=k/(V.plaza?8:5)*Math.PI*2+.3;const rr=V.plaza?178:118;w.lanterns.push({x:V.x+Math.cos(a)*rr,y:V.y+Math.sin(a)*rr,dire:V.dire})}
+    if(CURSED){w.stalls=w.stalls||[];for(let k=0;k<(V.plaza?3:2);k++){const a=k/(V.plaza?3:2)*Math.PI*2+1.3+vi,rr=V.plaza?232:186,x=V.x+Math.cos(a)*rr,y=V.y+Math.sin(a)*rr;w.stalls.push({x,y,a});w.rocks.push({x,y,r:44,prop:1})}}
     let placed=0;
-    for(let tries=0;tries<700&&placed<V.n;tries++){
-      const a=placed/V.n*Math.PI*2+sr(-.25,.25)+(tries>120?sr(0,6):0),d=sr(V.r*.5,V.r*(tries>300?.98:.9));
+    for(let tries=0;tries<(CURSED?1600:700)&&placed<V.n;tries++){
+      const a=placed/V.n*Math.PI*2+sr(-.25,.25)+(tries>120?sr(0,6):0),d=sr(V.r*(CURSED?.36:.5),V.r*(tries>300?.98:.9));
       const hw=sr(230,320),hh=sr(190,250);const cx=V.x+Math.cos(a)*d,cy=V.y+Math.sin(a)*d;const h={x:cx-hw/2,y:cy-hh/2,w:hw,h:hh};
       const cs=[[h.x,h.y],[h.x+h.w,h.y],[h.x,h.y+h.h],[h.x+h.w,h.y+h.h],[cx,cy]];
       if(cs.some(q=>outsideD(q[0],q[1])>-140||Math.abs(riverD(q[0],q[1]))<riverHW(q[1])+80||lakeD(q[0],q[1])<70||poolD(q[0],q[1])<80))continue;
       if(w.houses.some(o=>!(h.x>o.x+o.w+70||h.x+h.w<o.x-70||h.y>o.y+o.h+70||h.y+h.h<o.y-70)))continue;
-      if(Math.hypot(cx-V.x,cy-V.y)<(V.plaza?210:170)+Math.max(hw,hh)/2)continue;
+      if(Math.hypot(cx-V.x,cy-V.y)<(V.plaza?210:170)+(CURSED?70:0)+Math.max(hw,hh)/2)continue;
       const dx=V.x-cx,dy=V.y-cy;const side=Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'b':'t');
       h.side=side;h.dire=V.dire;h.v=vi;h.style=V.style;const pal=ROOF[V.style];h.roof=pal[Math.floor(SR()*pal.length)];h.roofA=1;h.id=w.houses.length;h.seed=Math.floor(SR()*1e6);
       const T=16,G=86;const sides={t:[h.x,h.y,h.w,T],b:[h.x,h.y+h.h-T,h.w,T],l:[h.x,h.y,T,h.h],r:[h.x+h.w-T,h.y,T,h.h]};
