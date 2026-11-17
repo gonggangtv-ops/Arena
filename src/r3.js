@@ -489,7 +489,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     this.roofs=WD.houses.map(h=>{const g=new THREE.Group();const along=h.w>=h.h,L=(along?h.w:h.h)+40,Wd=(along?h.h:h.w)+44,rh=h.style==='witch'?120:h.style==='cabin'?70:95;
       const tk=h.style==='cabin'||h.style==='tudor'&&(h.seed%3===0)?'thatch':'tiles';const T=this.tex(tk);
       const mk=(c)=>{const m=this.hi?new THREE.MeshStandardMaterial({color:c,map:T,roughness:.85,metalness:0,transparent:true,envMap:this.envTex,envMapIntensity:.6}):new THREE.MeshLambertMaterial({color:c,map:T,transparent:true});if(this.hi&&this.texN(tk)){m.normalMap=this.texN(tk)}return this.fow(m)};
-      const rm=mk(tk==='thatch'?'#e0c890':h.roof),gm=mk('#ffffff');gm.map=this.tex(h.style==='cabin'?'logs':h.style==='stone'?'bricks':'plaster');
+      const rm=mk(tk==='thatch'?(CURSED?'#77727f':'#e0c890'):h.roof),gm=mk('#ffffff');gm.map=this.tex(h.style==='cabin'?'logs':h.style==='stone'?'bricks':'plaster');
       const pos=[],uv=[];const hw=Wd/2,hl=L/2;const P=(a,b,c)=>pos.push(a,b,c);
       // two slopes
       P(-hl,0,-hw);P(hl,rh,0);P(hl,0,-hw);P(-hl,0,-hw);P(-hl,rh,0);P(hl,rh,0);P(-hl,0,hw);P(hl,0,hw);P(hl,rh,0);P(-hl,0,hw);P(hl,rh,0);P(-hl,rh,0);

@@ -23,7 +23,7 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p site
-          cp app/src/main/assets/index.html app/src/main/assets/cursed.html app/src/main/assets/engine.min.js app/src/main/assets/models2.js app/src/main/assets/models4.js app/src/main/assets/peerjs.min.js app/src/main/assets/turn.js app/src/main/assets/sfx.js app/src/main/assets/celestial-assets.js app/src/main/assets/celestial-render.js app/src/main/assets/celestial-theme.css app/src/main/assets/moonfall-collision-data.js app/src/main/assets/moonfall-environment.js app/src/main/assets/moonfall-biome.js app/src/main/assets/moonfall-ui.js app/src/main/assets/moonfall-menu.js app/src/main/assets/moonfall-ui.css app/src/main/assets/moonfall-menu.css site/
+          cp app/src/main/assets/index.html app/src/main/assets/cursed.html app/src/main/assets/engine.min.js app/src/main/assets/models2.js app/src/main/assets/models4.js app/src/main/assets/peerjs.min.js app/src/main/assets/turn.js app/src/main/assets/sfx.js app/src/main/assets/celestial-assets.js app/src/main/assets/celestial-render.js app/src/main/assets/celestial-theme.css app/src/main/assets/moonfall-collision-data.js app/src/main/assets/moonfall-environment.js app/src/main/assets/moonfall-biome.js app/src/main/assets/moonfall-village.js app/src/main/assets/moonfall-ui.js app/src/main/assets/moonfall-menu.js app/src/main/assets/moonfall-ui.css app/src/main/assets/moonfall-menu.css site/
           cp -r app/src/main/assets/assets site/
           cp -r app/src/main/assets/music site/
           touch site/.nojekyll

@@ -5,7 +5,7 @@ cur='cursed' in sys.argv
 sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['a.js','gi.js','b.js','c.js','r3.js','r4.js','r5.js','r6.js','r7.js','r8.js','r9.js','r10.js','r11.js','r12.js','t1.js','d.js'])
 js='const CURSED='+('true' if cur else 'false')+';\n'+js
-MOON=['celestial-assets.js','celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js','moonfall-ui.js','moonfall-menu.js']
+MOON=['celestial-assets.js','celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js','moonfall-village.js','moonfall-ui.js','moonfall-menu.js']
 MOONCSS=['celestial-theme.css','moonfall-ui.css','moonfall-menu.css']
 if cur:
     import re

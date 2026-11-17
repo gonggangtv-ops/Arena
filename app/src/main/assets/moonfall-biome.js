@@ -55,8 +55,10 @@ window.installMoonfallBiome=function(P){
           vec3 lunar=mix(soil,basalt,fracture);
           float dust=smoothstep(.58,.8,texture2D(uDetail,w*.00075+.23).r)*(1.-k)*.55;
           lunar=mix(lunar,texture2D(tMoonDust,w*.0062).rgb,dust);
+          // raised ground (cliff tops, hills): fractured rock with soil in the cracks instead of a flat pale cap
+          {float up=smoothstep(26.,80.,vWY);vec3 cap=mix(basalt*.78,soil*.9,smoothstep(.45,.7,texture2D(uDetail,w*.0021+.37).r)*.6);lunar=mix(lunar,cap,up*.85);}
           float nature=(1.-sp.g)*(1.-wt)*(1.-temple)*(1.-dungeon);
-          ${typeof CURSED!=='undefined'&&CURSED?'{float ll=dot(lunar,vec3(.3,.59,.11));lunar=mix(lunar,vec3(ll)*vReg.rgb*1.15,vReg.a*.85);}':''}
+          ${typeof CURSED!=='undefined'&&CURSED?'{float ll=dot(lunar,vec3(.3,.59,.11));lunar=mix(lunar,vec3(ll)*vReg.rgb*1.15,vReg.a*.85);float gp=smoothstep(.4,.58,texture2D(uDetail,w*.0009+.61).r);nature*=1.-gp*mix(.9,.14,smoothstep(.5,.9,vReg.a));}':''}
           diffuseColor.rgb=mix(c,lunar,nature);`);
       }};
       material.userData.moonfallNature=true;
@@ -89,18 +91,20 @@ window.installMoonfallBiome=function(P){
     const RG=typeof REG!=='undefined'&&typeof CURSED!=='undefined'&&CURSED?REG:null,TS=[.55,.5,0,1,.9];
     const keyFor=t=>random(t)()<(RG?TS[RG.at(t.x,t.y)]:.52)?'moon-dead-tree':'moon-silver-tree';
     const tint=p=>RG?'#ffffff':null;
-    const replacements=new Set(WD.trees.filter(t=>!protectedArea(t)&&this.celestialAsset(keyFor(t))));
+    // Cursed Realm mixes the original trees back in: most in the forest and kingdom, none on the ash
+    const KEEP=[.5,.65,.3,0,.25],classic=t=>{if(!RG)return false;const R=random(t);R();R();return R()<KEEP[RG.at(t.x,t.y)]};
+    const replacements=new Set(WD.trees.filter(t=>!protectedArea(t)&&!classic(t)&&this.celestialAsset(keyFor(t))));
     const mountain=new Set(WD.mtrees.filter(t=>!protectedArea(t)&&this.celestialAsset(keyFor(t))));
     const inst=this.instC,tex=this.tex;
-    this.tex=function(key){return tex.call(this,key==='blades'?'moon-blades':key==='leaves'?'moon-leaves':key);};
+    this.tex=function(key){return tex.call(this,key==='blades'?'moon-blades':key==='leaves'&&!RG?'moon-leaves':key);};
     this.instC=function(geo,mat,items,...args){
       const meshes=inst.call(this,geo,mat,items.filter(p=>!replacements.has(p)&&!mountain.has(p)),...args);
-      if(this.treeMats?.includes(mat)||mat.map===this.texC.get('moon-blades'))for(const m of meshes)coolColors(m);
+      if(!RG&&this.treeMats?.includes(mat)||mat.map===this.texC.get('moon-blades'))for(const m of meshes)coolColors(m);
       return meshes;
     };
     try{base.vegetation.call(this);}finally{this.instC=inst;this.tex=tex;}
     // Preserve gameplay hiding vegetation; only its color changes in this biome.
-    for(const m of this.treeMats||[])m.color.set('#8b9aab');
+    for(const m of this.treeMats||[])m.color.set(RG?'#c4ccd6':'#8b9aab');
     const register=(t,m,i)=>this.treeParts[t._i].push([m,i]);
     for(const key of ['moon-dead-tree','moon-silver-tree']){
       const items=[...replacements].filter(t=>keyFor(t)===key),size=A.get(key)?.inspection?.size;
