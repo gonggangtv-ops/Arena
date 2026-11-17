@@ -1,190 +1,234 @@
 {
-  "version": 3,
-  "assets": {
-    "moon-arena": {
-      "name": "Moon Arena",
-      "taskId": "01a1e3b2-07b9-74a5-a370-4d8171618ca6",
-      "url": "assets/meshy/moon-arena.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 1,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "modular-floor": {
-      "name": "Modular Floor",
-      "taskId": "01a1e3b2-1966-7224-83c0-2bdbeea548a3",
-      "url": "assets/meshy/modular-floor.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 1,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "modular-wall": {
-      "name": "Modular Wall",
-      "taskId": "01a1e3b2-29fa-7146-aa67-e377d41d78fa",
-      "url": "assets/meshy/modular-wall.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 1,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "ancient-pillar": {
-      "name": "Ancient Pillar",
-      "taskId": "01a1e3b2-a03c-7483-ae7e-4ee77550bd8c",
-      "url": "assets/meshy/ancient-pillar.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 1,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "celestial-warrior": {
-      "name": "Celestial Warrior",
-      "taskId": "01a1e3b2-af58-7625-a8ed-b148d3cfcf1d",
-      "url": "assets/meshy/celestial-warrior.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 1,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "moon-stairs": {
-      "name": "Moon Stairs",
-      "taskId": "01a1e4ef-59c3-75ce-8019-606c53d74925",
-      "url": "assets/meshy/moon-stairs.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 2,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "wall-corner": {
-      "name": "Wall Corner",
-      "taskId": "01a1e4ef-7820-7509-aa6f-85d568e6a53e",
-      "url": "assets/meshy/wall-corner.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 2,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "temple-gate": {
-      "name": "Temple Gate",
-      "taskId": "01a1e4ef-8405-73dc-93d6-004c7f2ca49f",
-      "url": "assets/meshy/temple-gate.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 2,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "ruin-arch": {
-      "name": "Ruin Arch",
-      "taskId": "01a1e4ef-8ea6-7073-b3ce-37695394cd7e",
-      "url": "assets/meshy/ruin-arch.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 2,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "guardian-statue": {
-      "name": "Guardian Statue",
-      "taskId": "01a1e4ef-9a7d-7191-a43f-e89ab12b0a92",
-      "url": "assets/meshy/guardian-statue.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 2,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "portal-frame": {
-      "name": "Portal Frame",
-      "taskId": "01a1e4ef-b382-71aa-a201-bf72f103dea8",
-      "url": "assets/meshy/portal-frame.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 2,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "rubble": {
-      "name": "Rubble",
-      "taskId": "01a1e4ef-bf35-7484-a476-086101d99d22",
-      "url": "assets/meshy/rubble.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 2,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "brazier": {
-      "name": "Brazier",
-      "taskId": "01a1e4ef-c952-7560-b980-300c4359c684",
-      "url": "assets/meshy/brazier.glb",
-      "available": true,
-      "rotationY": 0,
-      "phase": 2,
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "moon-dead-tree": {
-      "name": "Gnarled leafless moon tree",
-      "taskId": "01a1e5de-ff15-723e-8432-05aa2913190b",
-      "url": "assets/meshy/moon-dead-tree.glb",
-      "available": true,
-      "rotationY": 0,
-      "biome": "moonfall",
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "moon-silver-tree": {
-      "name": "Silver-leaf moon tree",
-      "taskId": "01a1e5df-10c3-7669-a8ad-db3b59a3e26a",
-      "url": "assets/meshy/moon-silver-tree.glb",
-      "available": true,
-      "rotationY": 0,
-      "biome": "moonfall",
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "moon-boulder": {
-      "name": "Rough dark basalt boulder",
-      "taskId": "01a1e5df-21c4-76b4-98f0-2115d5c09dad",
-      "url": "assets/meshy/moon-boulder.glb",
-      "available": true,
-      "rotationY": 0,
-      "biome": "moonfall",
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    },
-    "moon-rock-cluster": {
-      "name": "Moonstone rock cluster",
-      "taskId": "01a1e5df-5a17-76bf-bdc1-778215cc0611",
-      "url": "assets/meshy/moon-rock-cluster.glb",
-      "available": true,
-      "rotationY": 0,
-      "biome": "moonfall",
-      "taskType": "text-to-3d",
-      "verifiedTaskStatus": "SUCCEEDED"
-    }
+ "version": 3,
+ "assets": {
+  "moon-arena": {
+   "name": "Moon Arena",
+   "taskId": "01a1e3b2-07b9-74a5-a370-4d8171618ca6",
+   "url": "assets/meshy/moon-arena.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 1,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
   },
-  "warrior": {
-    "height": 132,
-    "bones": {
-      "rightHand": "",
-      "leftHand": ""
-    },
-    "clips": {
-      "idle": "",
-      "walk": "",
-      "attack": "",
-      "cast": "",
-      "hit": "",
-      "death": ""
-    }
+  "modular-floor": {
+   "name": "Modular Floor",
+   "taskId": "01a1e3b2-1966-7224-83c0-2bdbeea548a3",
+   "url": "assets/meshy/modular-floor.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 1,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "modular-wall": {
+   "name": "Modular Wall",
+   "taskId": "01a1e3b2-29fa-7146-aa67-e377d41d78fa",
+   "url": "assets/meshy/modular-wall.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 1,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "ancient-pillar": {
+   "name": "Ancient Pillar",
+   "taskId": "01a1e3b2-a03c-7483-ae7e-4ee77550bd8c",
+   "url": "assets/meshy/ancient-pillar.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 1,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "celestial-warrior": {
+   "name": "Celestial Warrior",
+   "taskId": "01a1e3b2-af58-7625-a8ed-b148d3cfcf1d",
+   "url": "assets/meshy/celestial-warrior.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 1,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "moon-stairs": {
+   "name": "Moon Stairs",
+   "taskId": "01a1e4ef-59c3-75ce-8019-606c53d74925",
+   "url": "assets/meshy/moon-stairs.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "wall-corner": {
+   "name": "Wall Corner",
+   "taskId": "01a1e4ef-7820-7509-aa6f-85d568e6a53e",
+   "url": "assets/meshy/wall-corner.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "temple-gate": {
+   "name": "Temple Gate",
+   "taskId": "01a1e4ef-8405-73dc-93d6-004c7f2ca49f",
+   "url": "assets/meshy/temple-gate.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "ruin-arch": {
+   "name": "Ruin Arch",
+   "taskId": "01a1e4ef-8ea6-7073-b3ce-37695394cd7e",
+   "url": "assets/meshy/ruin-arch.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "guardian-statue": {
+   "name": "Guardian Statue",
+   "taskId": "01a1e4ef-9a7d-7191-a43f-e89ab12b0a92",
+   "url": "assets/meshy/guardian-statue.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "portal-frame": {
+   "name": "Portal Frame",
+   "taskId": "01a1e4ef-b382-71aa-a201-bf72f103dea8",
+   "url": "assets/meshy/portal-frame.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "rubble": {
+   "name": "Rubble",
+   "taskId": "01a1e4ef-bf35-7484-a476-086101d99d22",
+   "url": "assets/meshy/rubble.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "brazier": {
+   "name": "Brazier",
+   "taskId": "01a1e4ef-c952-7560-b980-300c4359c684",
+   "url": "assets/meshy/brazier.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "moon-dead-tree": {
+   "name": "Gnarled leafless moon tree",
+   "taskId": "01a1e5de-ff15-723e-8432-05aa2913190b",
+   "url": "assets/meshy/moon-dead-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "moon-silver-tree": {
+   "name": "Silver-leaf moon tree",
+   "taskId": "01a1e5df-10c3-7669-a8ad-db3b59a3e26a",
+   "url": "assets/meshy/moon-silver-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "moon-boulder": {
+   "name": "Rough dark basalt boulder",
+   "taskId": "01a1e5df-21c4-76b4-98f0-2115d5c09dad",
+   "url": "assets/meshy/moon-boulder.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "moon-rock-cluster": {
+   "name": "Moonstone rock cluster",
+   "taskId": "01a1e5df-5a17-76bf-bdc1-778215cc0611",
+   "url": "assets/meshy/moon-rock-cluster.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "house-cottage": {
+   "name": "Stone village cottage",
+   "taskId": "01a1e779-1e73-7377-a6ea-c80cf949ad44",
+   "url": "assets/meshy/house-cottage.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "house-long": {
+   "name": "Timber longhouse",
+   "taskId": "01a1e779-7668-7374-b5ba-96204013dbf1",
+   "url": "assets/meshy/house-long.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "house-witch": {
+   "name": "Crooked witch hut",
+   "taskId": "01a1e779-ff83-7121-925d-1f69a8ada07a",
+   "url": "assets/meshy/house-witch.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "market-stall": {
+   "name": "Market stall",
+   "taskId": "01a1e77b-1119-75f5-a5a3-4410effc1b5f",
+   "url": "assets/meshy/market-stall.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
   }
+ },
+ "warrior": {
+  "height": 132,
+  "bones": {
+   "rightHand": "",
+   "leftHand": ""
+  },
+  "clips": {
+   "idle": "",
+   "walk": "",
+   "attack": "",
+   "cast": "",
+   "hit": "",
+   "death": ""
+  }
+ }
 }

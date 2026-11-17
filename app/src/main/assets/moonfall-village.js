@@ -27,6 +27,6 @@ window.installMoonfallVillage=function(P){
     // until the stall model is available, draw a plain cart so the obstacle is never invisible
     if(!ss)for(const s of WD.stalls||[]){const g=new T.Group(),w=this.tstd('planks','#8a7460',.9,0),c=this.std('#5d6f8c',.9,0);g.position.set(s.x,this.gY(s.x,s.y),s.y);g.rotation.y=-s.a+Math.PI/2;
       this.mesh(this.G.box,w,0,20,0,92,36,46,g,true);this.mesh(this.G.box,c,0,84,0,104,5,62,g,true);for(const x of[-44,44])for(const z of[-24,24])this.mesh(this.G.box,w,x,44,z,5,84,5,g,true);this.scene.add(g)}
-    if(ss)for(const s of WD.stalls||[]){const g=shell(this,'market-stall');if(!g)break;const k=118/Math.max(ss[0],ss[2]);g.scale.set(ss[0]*k,ss[1]*k,ss[2]*k);g.rotation.y=-s.a+Math.PI/2;g.position.set(s.x,this.gY(s.x,s.y)-1,s.y);this.scene.add(g)}
+    if(ss)for(const s of WD.stalls||[]){const g=shell(this,'market-stall');if(!g)break;const k=118/Math.max(ss[0],ss[2]);g.scale.set(ss[0]*k,ss[1]*k,ss[2]*k);g.rotation.y=-s.a-Math.PI/2;g.position.set(s.x,this.gY(s.x,s.y)-1,s.y);this.scene.add(g)}
   };
 };
