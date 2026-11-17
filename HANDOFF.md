@@ -7,6 +7,24 @@
 
 ---
 
+## 2026-11-17 · Codex · สกิลหลอม ขวดยา/ร้านค้า และ strict loading (`codex/ui-ux`)
+- ทำอะไร: ภาพสกิลหลอมครบ 36 สกิล + item/UI 18 ภาพ; รวมกับ base 27 เป็น 81 ภาพ
+  ใช้ใน HUD/กระเป๋า/สูตรหลอม/ร้านค้า เปลี่ยน atlas เป็น WebP รวม ~1.1 MB
+- หน้าโหลดจันทราใหม่ ล็อกปุ่มและ start APIs จนฉาก 17/QN pack 18/atlas 3/เพลง 7/
+  font/render พร้อม (47 งาน) ไฟล์เสียหรือขาดแสดง error + โหลดใหม่ ไม่ใช้ภาพ/ฉากสำรอง
+  client ที่มาถึงก่อน ready รอและรักษา pending snapshots ก่อนเข้าเกม
+- แก้คำแนะนำ Shift อัปสกิลเป็นปุ่ม + เพราะ Shift ใช้หลบ; ลิงก์แกลเลอรีเก่าเปลี่ยนเป็นเปิดสูตรหลอม
+- ไฟล์: src/moonfall-ui.js, moonfall-menu.js/css, moonfall-inventory.*, moonfall-loading.*,
+  build.py, src/tests/smoke-ui-ux.py; assets/ui/* และสำเนา deploy ใน app/src/main/assets;
+  เพิ่มชื่อไฟล์ใน .github/workflows/pages.yml; รายงาน moonfall-docs/UI-UX-STRICT-LOADING.md
+- ทดสอบ: node --check; build index/cursed; index byte-identical กับ main; Chrome desktop/mobile
+  เล่นด้วย GLB จริงทั้งหมด, ซื้อ/ใช้ยา/ร่ายสกิล, delayed file/start guards, local client snapshot queue,
+  model/art/music/character/manifest/script/CSS/WebGL failure + retry ผ่าน; Solo bots จนจบ 630 วิจำลอง
+- รวม main ล่าสุด 31c85ab (Claude #5) แล้ว build/test ซ้ำ รักษา r4.js/t1.js/biome ของ Claude ทุก byte
+- ไม่แตะ GLB/QN models และ balance/ราคา/transport schema; ไม่มี Meshy calls/credits
+- ค้าง: hardware PC/mobile, Android WebView และ PeerJS สองเครื่องจริง ยังไม่ได้รับรอง FPS/VRAM
+- commit แล้ว push branch codex/ui-ux และเปิด PR เข้า main (ไม่ merge/deploy)
+
 ## 2026-11-17 · Claude · หญ้ากระพริบ + บรรยากาศ (branch claude/atmosphere-grass)
 - **หญ้ากระพริบตอนเดิน:** สาเหตุคือ `moonfall-biome.js` ลดจำนวนหญ้าด้วยการเก็บทุกอันที่ 2/3 ตามลำดับ index ทุกครั้งที่ฮีโร่ข้ามช่อง ลำดับเลื่อน → หญ้าคนละชุดโผล่/หาย
   แก้: ย้ายการลดจำนวนและการย้อมสีไปทำต่อกอใน `r4.js updateGround` (ใช้ `this.gThin` / `this.gCool`, ตัดสินจากตำแหน่งกอ) — ทดสอบเดิน 6 ช่อง หญ้าในจอหาย 0 กอ
@@ -14,6 +32,7 @@
 - เพิ่มละอองลอยรอบตัวตามภูมิภาค (`REG.motes` ใน `t1.js`): ฝุ่นทอง / สปอร์เขียว / หิมะตก / สะเก็ดไฟ / ประกายม่วง (hi 300 จุด, low 140)
 - ไฟล์: `src/r4.js`, `src/t1.js`, `src/moonfall-biome.js` · ทดสอบ: smoke 2 เกม, แมตช์บอท 1 รอบ, สกรีนช็อต 3 ภูมิภาค
 - ค้าง: ต้นสนในโมเดลเดิม/บ้านหลังคาฟางยังเป็นโทนอุ่น ไม่เข้ากับโทนจันทรา · ยังไม่มีพื้นผิวเฉพาะภูมิภาค (ใช้การย้อมสี)
+
 
 ## 2026-11-17 · Claude · รวม PR #4 (Moonfall HUD/เมนู) เข้า main + ตั้งกติกาทำงานร่วมกัน
 - ย้ายงานจาก `feat/moonfall-ui-skill-icons` (PR #4 ของ Codex ที่ base = gh-pages) เข้า `main`:

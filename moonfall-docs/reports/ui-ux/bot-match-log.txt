@@ -1,0 +1,4 @@
+SIM 0 {'gameOver': False, 'alive': 32, 'gameT': 30.00000000000065, 'state': 'play', 'meDead': False, 'winner': ''}
+SIM 10 {'gameOver': False, 'alive': 7, 'gameT': 330.0000000000469, 'state': 'play', 'meDead': True, 'winner': '💀 ตกรอบ'}
+SIM 20 {'gameOver': True, 'alive': 1, 'gameT': 630.0000000000844, 'state': 'play', 'meDead': True, 'winner': '💀 ตกรอบ'}
+PASS complete bot match {'gameOver': True, 'alive': 1, 'gameT': 630.0000000000844, 'state': 'play', 'meDead': True, 'winner': '💀 ตกรอบ', 'errors': [], 'method': 'Unmodified Solo match, normal AI/combat/storm; simulation advanced in 30-second batches, rendering paused.'}

@@ -1,5 +1,5 @@
-/* Round 1: Moonfall HUD art. All hit areas, skill rules, costs and timers remain
- * owned by the original game. Unsupported/fused icons keep their glyph fallback. */
+/* Moonfall HUD artwork. Original costs, hit areas, cooldowns and rules remain.
+ * All base/fusion/item art is required by the strict boot gate. */
 window.installMoonfallUI=function(){
   'use strict';
   if(window.MoonfallUI)return;
@@ -9,7 +9,7 @@ window.installMoonfallUI=function(){
   let atlas=null,loadState='loading',loadError=null,hover=-1,lastHint=0;
   const hint=document.createElement('aside');hint.id='moonfallSkillHint';hint.hidden=true;hint.setAttribute('role','tooltip');document.body.appendChild(hint);
   const instructions=document.createElement('p');instructions.id='moonfallHUDHelp';instructions.className='moonfall-sr-only';
-  instructions.textContent='เดินด้วย W A S D หรือจอยซ้าย สกิล Q E R หรือ 1 2 3 กด Shift พร้อมปุ่มสกิลเพื่ออัปสกิล มือถือกดค้างแล้วลากเพื่อเล็ง ปล่อยเพื่อร่าย';
+  instructions.textContent='เดินด้วย W A S D หรือจอยซ้าย สกิล Q E R หรือ 1 2 3 กดปุ่ม + บนจอเพื่ออัปสกิล Shift เพื่อหลบ มือถือกดค้างแล้วลากเพื่อเล็ง ปล่อยเพื่อร่าย';
   document.body.appendChild(instructions);cv.setAttribute('aria-describedby',instructions.id);
   function skillState(me,i){
     const skill=me?.wk&&SK[me.wk]?.[i],level=me?.skl?.[i]||0,index=Math.max(0,level-1);
@@ -24,7 +24,7 @@ window.installMoonfallUI=function(){
     const i=hover,info=skillState(ME(),i),B=UI.sk[i];
     hint.replaceChildren();const title=document.createElement('strong');title.textContent=hotkeys[i]+' / '+(i+1)+' · '+(info.skill?.n||'ช่องสกิล');hint.appendChild(title);
     const detail=document.createElement('span');detail.textContent=info.label+(info.skill?' · MP '+info.cost+' · '+(info.kind==='cooldown'?Math.ceil(info.cooldown):Number(info.maxCooldown.toFixed(1)))+' วิ':'');hint.appendChild(detail);
-    if(info.kind==='locked'&&canLearn(ME(),i)){const learn=document.createElement('span');learn.textContent='Shift + '+hotkeys[i]+' เพื่ออัปสกิล';hint.appendChild(learn);}
+    if(info.kind==='locked'&&canLearn(ME(),i)){const learn=document.createElement('span');learn.textContent='กดปุ่ม + ข้างสกิลเพื่ออัปสกิล';hint.appendChild(learn);}
     hint.style.left=Math.max(8,Math.min(W-248,B.x-120))+'px';hint.style.top=Math.max(8,B.y-B.r-88)+'px';hint.hidden=false;
   }
   cv.addEventListener('pointermove',event=>{
@@ -32,7 +32,7 @@ window.installMoonfallUI=function(){
     hover=state==='play'?UI.sk.findIndex(B=>Math.hypot(event.clientX-B.x,event.clientY-B.y)<B.r):-1;updateHint(true);
   },{passive:true});
   cv.addEventListener('pointerleave',()=>{hover=-1;hint.hidden=true;},{passive:true});
-  skIco=function(key,i){return icons.get(key+':'+i)||original.icon(key,i);};
+  skIco=function(key,i){return icons.get(key+':'+i)||null;};
   btnBase=function(x,y,r,pressed,rim,tint,dim){
     const R=r*(pressed?.94:1);ctx.save();
     ctx.fillStyle='rgba(2,5,12,.78)';ctx.beginPath();ctx.arc(x,y+2,R+2,0,Math.PI*2);ctx.fill();
@@ -65,20 +65,27 @@ window.installMoonfallUI=function(){
   };
   drawHUD=function(){if(state!=='play'||ME()?.dead)hint.hidden=true;return original.hud();};
   window.MoonfallUI={state:skillState,snapshot:()=>({state:loadState,error:loadError,loadedIcons:icons.size,atlas,hotkeys:[...hotkeys]}),
-    icon:(key,i)=>icons.get(key+':'+i)||null};
+    icon:(key,i)=>icons.get(key+':'+i)||null,item:key=>icons.get('item:'+key)||null};
   (async()=>{
     try{
       const response=await fetch('assets/ui/skill-atlas.json',{signal:AbortSignal.timeout(10000)});if(!response.ok)throw Error('Atlas manifest HTTP '+response.status);
       atlas=await response.json();if(atlas.columns!==6||atlas.rows!==5)throw Error('Unsupported atlas layout');
-      const url=new URL(atlas.image,document.baseURI);if(url.origin!==location.origin)throw Error('Use a local atlas');
-      const image=new Image();image.decoding='async';await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(Error('Atlas image unavailable'));image.src=url.href;});
-      if(image.naturalWidth!==atlas.width||image.naturalHeight!==atlas.height)throw Error('Atlas dimensions differ from manifest');
-      const width=atlas.width/atlas.columns,height=atlas.height/atlas.rows;
-      for(const [key,cells] of Object.entries(atlas.skills))for(let i=0;i<cells.length;i++){
-        const cell=cells[i],canvas=document.createElement('canvas');canvas.width=canvas.height=192;const paint=canvas.getContext('2d');
-        paint.fillStyle='#0b1120';paint.fillRect(0,0,192,192);paint.drawImage(image,cell%6*width+3,Math.floor(cell/6)*height+3,width-6,height-6,5,5,182,182);icons.set(key+':'+i,canvas);
+      const images={};
+      for(const [key,sheet] of Object.entries(atlas.sheets)){
+        const url=new URL(sheet.image,document.baseURI);if(url.origin!==location.origin)throw Error('Use a local atlas');
+        const image=new Image();image.decoding='async';let timer;try{await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(Error('Atlas image unavailable: '+key));timer=setTimeout(()=>reject(Error('Atlas image timeout: '+key)),60000);image.src=url.href;});}finally{clearTimeout(timer);}
+        if(image.naturalWidth!==sheet.width||image.naturalHeight!==sheet.height)throw Error('Atlas dimensions differ: '+key);images[key]=image;
       }
+      const extract=(key,ref)=>{const sheet=atlas.sheets[ref.sheet],image=images[ref.sheet],width=sheet.width/sheet.columns,height=sheet.gridHeight/sheet.rows;
+        const canvas=document.createElement('canvas');canvas.width=canvas.height=144;const paint=canvas.getContext('2d');paint.fillStyle='#0b1120';paint.fillRect(0,0,144,144);
+        paint.drawImage(image,ref.cell%6*width+3,Math.floor(ref.cell/6)*height+3,width-6,height-6,3,3,138,138);icons.set(key,canvas);};
+      for(const [key,cells] of Object.entries(atlas.skills))cells.forEach((cell,i)=>extract(key+':'+i,{sheet:'base',cell}));
+      for(const [key,refs] of Object.entries(atlas.fusionSkills))refs.forEach((ref,i)=>extract(key+':'+i,ref));
+      for(const [key,ref] of Object.entries(atlas.utilities))extract('item:'+key,ref);
+      if(AW.some(key=>SK[key].some((_,i)=>!icons.has(key+':'+i))))throw Error('Missing skill artwork');
+      const requiredItems=[...BAG.map(p=>p.k),'lv','rf','coin','bag','shop','block','dodge','special',...SPX.map((s,i)=>s?'x'+i:null).filter(Boolean)];
+      if(requiredItems.some(key=>!icons.has('item:'+key)))throw Error('Missing item artwork');
       loadState='loaded';window.dispatchEvent(new Event('moonfallui:ready'));
-    }catch(error){loadState='fallback';loadError=String(error.message||error);}
+    }catch(error){icons.clear();loadState='error';loadError=String(error.message||error);}
   })();
 };
