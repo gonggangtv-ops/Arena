@@ -6,7 +6,7 @@
         s.traverse(m=>{if(m.isMesh){m.castShadow=this.hi;m.receiveShadow=false;const mt=m.material;if(mt&&mt.isMeshStandardMaterial){mt.envMap=this.envTex||null;mt.envMapIntensity=.5;if(mt.emissiveMap){mt.emissive.set('#ffffff');mt.emissiveIntensity=.6}m.material=this.fow(mt)}}});
         this.bossG={s,k,cx:(bb.min.x+bb.max.x)/2,cz:(bb.min.z+bb.max.z)/2,y0:bb.min.y};
         for(const [id,o] of this.objs)if(o.u&&o.u.boss){this.scene.remove(o.root);this.objs.delete(id)}},e=>{console.warn('boss model',e)})}catch(e){console.warn('boss model',e)}};
-  P.dragon=function(u){if(CURSED)return _drag.call(this,u);if(!this.bossG){this.bossLoad();return _drag.call(this,u)}const B=this.bossG;
+  P.dragon=function(u){if(MOON)return _drag.call(this,u);if(!this.bossG){this.bossLoad();return _drag.call(this,u)}const B=this.bossG;
     const root=new THREE.Group(),body=new THREE.Group();root.add(body);const m=B.s.clone(true);m.scale.setScalar(B.k);m.position.set(-B.cx*B.k,-B.y0*B.k,-B.cz*B.k);m.rotation.x=-.2;body.add(m);
     const head=new THREE.Group();head.position.set(0,BOSS_H*.78,30);body.add(head);const jaw=new THREE.Group();head.add(jaw);
     return{root,body,kind:'dragon',mshy:1,model:m,legs:[],tsegs:[],nsegs:[],wings:[],eyes:[],head,jaw}};

@@ -1,7 +1,8 @@
 // ===================== SETTINGS: view + graphics quality =====================
-if(typeof installCelestialRender==='function'){installCelestialRender(R3);installMoonfallEnvironment(R3);installMoonfallBiome(R3);if(typeof installMoonfallVillage==='function')installMoonfallVillage(R3);if(typeof installMoonfallUI==='function')installMoonfallUI();if(typeof installMoonfallMenuUX==='function')installMoonfallMenuUX()}
+if(typeof installCelestialRender==='function'){installCelestialRender(R3);installMoonfallEnvironment(R3);installMoonfallBiome(R3)}
+if(typeof installMoonfallVillage==='function')installMoonfallVillage(R3);if(typeof installMoonfallUI==='function')installMoonfallUI();if(typeof installMoonfallMenuUX==='function')installMoonfallMenuUX();
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone2','bright')==='dark';
-if(CURSED)moody=true;
+if(MOON)moody=true;
 const has3D=()=>typeof R3!=='undefined';
 const QN={auto:'อัตโนมัติ',high:'สูง',low:'ประหยัด'};
 function syncViewBtn(){$('viewBtn').textContent=view3D&&has3D()&&R3.ok?'มุมมอง: 3D':'มุมมอง: 2D';$('qBtn').textContent='กราฟิก: '+QN[gfxQ];$('qBtn').classList.toggle('hidden',!(view3D&&has3D()&&R3.ok))}

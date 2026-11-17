@@ -1,6 +1,6 @@
 // ===================== NETWORK =====================
 // Two transports share one protocol: PeerJS/WebRTC (APK + hosted web) and the artifact "room" capability (claude.ai page).
-const NET_PREFIX=CURSED?'cursedrealm1-':'arenaroyale5-';
+const NET_PREFIX=MOON?'cursedrealm1-':CURSED?'arenaroyale6-':'arenaroyale5-';
 // quick match: lobbies sit on a few well-known slot ids; seekers probe them all, join the fullest, or claim a free one
 const QM_SLOTS=6,QM_WAIT=30,QM_SCAN=4000,QM_TOTAL=32;
 // public room list: every listed room runs a tiny 'beacon' peer on one of these well-known ids that answers who/what it is

@@ -658,7 +658,7 @@ function genWorld(seed){
     if(!free(p,42)||pathNear(p,45)||rockNear(p,44)||w.houses.some(h=>inRect(p,h,52))||!tFree(p,104))continue;
     const roll=SR();let v;
     if(rdist>0&&rdist<170&&!foot)v=6;else if(foot)v=dire?(roll<.6?4:0):(roll<.75?0:2);else if(dire)v=roll<.32?3:roll<.62?4:roll<.8?5:1;else v=roll<.42?1:roll<.62?2:roll<.9?0:6;
-    if(CURSED){v=REG.tree(p.x,p.y,v,roll);if(v<0)continue}
+    if(MOON){v=REG.tree(p.x,p.y,v,roll);if(v<0)continue}
     const t={x:p.x,y:p.y,r:18,cr:sr(52,76)*(v===6?1.15:1),v,ph:sr(0,6),h:sr(.85,1.2)};w.trees.push(t);tgrid[gy*gw+gx].push(t)}
   // decorative pines on the mountain slopes (no collision)
   for(let k=0;k<33000&&w.mtrees.length<5200;k++){const a=sr(0,6.283),d=bndR(a)+sr(20,1000);const x=CX+Math.cos(a)*d,y=CY+Math.sin(a)*d;const o=d-bndR(a);
@@ -674,9 +674,9 @@ function genWorld(seed){
     if(!free(p,40)||!ring(p,p.r*.85)||pathNear(p,p.r*.55)||w.houses.some(h=>inRect(p,h,p.r+30))||rockNear(p,p.r*.6)||!tFree(p,p.r*.5))continue;
     if(w.bushes.some(b=>dist(b,p)<b.r+p.r+20)||w.tgrass.some(b=>dist(b,p)<b.r+p.r+160))continue;p.s=SR();w.tgrass.push(p)}}
   // glowing mushrooms, crystals, grass, flowers, reeds, lilies
-  for(let k=0;k<5600&&w.mush.length<880;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300)};if(!free(p,0))continue;const rg=CURSED?REG.at(p.x,p.y):-1,dire=CURSED?rg===1||rg===4:isDire(p.x,p.y);if(!dire&&SR()<.85)continue;
+  for(let k=0;k<5600&&w.mush.length<880;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300)};if(!free(p,0))continue;const rg=MOON?REG.at(p.x,p.y):-1,dire=MOON?rg===1||rg===4:isDire(p.x,p.y);if(!dire&&SR()<.85)continue;
     const near=w.trees.length?tFree(p,20):true;if(!near)continue;w.mush.push({x:p.x,y:p.y,c:rg===1?(SR()<.55?'#8dff7a':'#e8ff7a'):SR()<.55?'#6ff7ff':'#ff7ae6',s:sr(5,9)})}
-  for(let k=0;k<3600&&w.crystals.length<20+180;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300)};const rg=CURSED?REG.at(p.x,p.y):-1;if(!free(p,40)||(CURSED?rg<2:!isDire(p.x,p.y)))continue;w.crystals.push({x:p.x,y:p.y,c:rg===3?(SR()<.5?'#ff7a2a':'#ffb347'):rg===2?(SR()<.5?'#9fe8ff':'#dff6ff'):rg===4?(SR()<.5?'#c58aff':'#8a5aff'):SR()<.5?'#7ff3ff':'#c58aff',s:sr(9,14)})}
+  for(let k=0;k<3600&&w.crystals.length<20+180;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300)};const rg=MOON?REG.at(p.x,p.y):-1;if(!free(p,40)||(MOON?rg<2:!isDire(p.x,p.y)))continue;w.crystals.push({x:p.x,y:p.y,c:rg===3?(SR()<.5?'#ff7a2a':'#ffb347'):rg===2?(SR()<.5?'#9fe8ff':'#dff6ff'):rg===4?(SR()<.5?'#c58aff':'#8a5aff'):SR()<.5?'#7ff3ff':'#c58aff',s:sr(9,14)})}
   for(let k=0;k<64000&&w.grass.length<20800;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,8)||inWater(p.x,p.y)||heightAt(p.x,p.y)<-3)continue;
     if(w.villages.some(v=>v.plaza&&dist(p,v)<220))continue;if(w.houses.some(h=>inRect(p,h,4)))continue;if(inCastle(p,-30))continue;if(pathNear(p,-6))continue;
     w.grass.push({x:p.x,y:p.y,s:sr(.7,1.35),c:SR(),d:isDire(p.x,p.y)?1:0})}
@@ -862,7 +862,7 @@ function buildGround(S){
       if(mb>0){r=lerp(r,150,mb*.55);gg=lerp(gg,128,mb*.55);b=lerp(b,60,mb*.55)}
       if(mr>0){const t=Math.min(1,mr*1.3);r=lerp(r,142+k*20,t);gg=lerp(gg,118+k*16,t);b=lerp(b,82+k*12,t)}
       if(mg>0){const t=Math.min(1,mg);r=lerp(r,150+k*30,t);gg=lerp(gg,146+k*28,t);b=lerp(b,138+k*24,t)}
-      if(CURSED){const q=REG.mix(x,y),L=(r*.3+gg*.59+b*.11)*q[3];r=r*(1-q[3])+L*q[0];gg=gg*(1-q[3])+L*q[1];b=b*(1-q[3])+L*q[2]}
+      if(MOON){const q=REG.mix(x,y),L=(r*.3+gg*.59+b*.11)*q[3];r=r*(1-q[3])+L*q[0];gg=gg*(1-q[3])+L*q[1];b=b*(1-q[3])+L*q[2]}
       if(h<-1){const wd=clamp((-h-1)/18,0,1);r=lerp(150,26,wd);gg=lerp(140,86,wd);b=lerp(96,122,wd)}}
     D[i]=r;D[i+1]=gg;D[i+2]=b;D[i+3]=255}}
   c.putImageData(img,0,0);
