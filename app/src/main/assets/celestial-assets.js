@@ -79,7 +79,7 @@ window.CelestialAssets = (() => {
         'moon-dead-tree':8000,'moon-silver-tree':8000,'moon-boulder':6000,'moon-rock-cluster':6000}[key] || 45000;
       if (a.inspection.triangles > budget || a.inspection.textures > 16 || a.inspection.largestTexture > 2048)
         throw Error(`Asset exceeds budget: ${budget} triangles / 16 textures / 2048px. Optimize export.`);
-      if (a.inspection.skinned && !['celestial-warrior','celestial-overlord','dark-sentinel','lunar-construct'].includes(key)) throw Error('Scenery must be static for instancing');   // rigged Eclipse creatures are animated characters, not scenery
+      if (a.inspection.skinned && !['celestial-warrior','celestial-overlord','dark-sentinel','lunar-construct','p5-warrior','p5-assassin','p5-archer','p5-mage','p5-summoner'].includes(key)) throw Error('Scenery must be static for instancing');   // rigged Eclipse creatures are animated characters, not scenery
       Object.assign(a.inspection,fitTextures(a.gltf));
       a.state = 'loaded';
     } catch (e) {

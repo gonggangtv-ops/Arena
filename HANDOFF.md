@@ -7,6 +7,13 @@
 
 ---
 
+## 2026-11-18 · Claude · Phase 5 Celestial Armory: ฮีโร่ 5 อาชีพ rig แล้ว เปลี่ยนตามอาวุธ (index เท่านั้น)
+- รายงาน: `moonfall-docs/PHASE5-CELESTIAL-ARMORY-REPORT.md` · เจ้าของอนุมัติ 115 เครดิต (rig 5 อาชีพ + 6 ท่า/อาชีพ)
+- `src/p5-heroes.js` (ใหม่, render): ห่อ `R3.objFor/qnAnim/qnDie/effects` · ฮีโร่เป็นวัตถุ `qn:1,p5:1` · อาชีพจาก `u.wk` · อาวุธเกมติดกระดูก RightHand/LeftHand
+- `build.py`: key `p5-*` เข้า CELESTIAL_KEYS ของ index และ `CELESTIAL_SKIP` ของ cursed · `celestial-assets.js` ยอม skinned สำหรับ p5-*
+- แก้ร่วม: `eclipse-fx.js` ล็อกสะโพกที่ตำแหน่งท่า idle (เดิมใช้เฟรมแรกของแต่ละ clip ทำให้ตัวเลื่อนตอนโจมตี)
+- ทดสอบ: 5 อาชีพ × อาวุธ, ท่าครบ, ตาย, พุ่ง, บอท/ออนไลน์ regression
+
 ## 2026-11-17 · Claude · ศัตรู Eclipse ถืออาวุธ
 - เจ้าของชี้ว่ามีไฟล์อาวุธอยู่แล้ว: Overlord ถือ Lunar Greatsword · Sentinel ถือ Eclipse Scythe · Construct ถือ Moon Staff ที่กระดูก RightHand (`ECW`/`eclArm` ใน `src/eclipse-fx.js`) + ประกายที่ปลายอาวุธ · ตัด halo วงแหวนที่ลอยแยกออกเมื่อเป็นโมเดล rig (โมเดลมี halo ของตัวเอง)
 - ทดสอบ: ภาพ idle/โจมตีทั้ง 3 ตัว, แมตช์บอท index 1 รอบ, 0 error

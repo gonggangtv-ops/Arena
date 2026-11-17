@@ -28,7 +28,10 @@ const ECLIP={
 R.eclSkReady=function(ecl){const A=CA(),a=A&&A.get(ECM[ecl].key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations&&a.gltf.animations.length>=2&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 // in-place clips: the game moves the unit, so the hip bone keeps only its height
 const eclClips=(a,ecl)=>{if(a._eclClips)return a._eclClips;const C=ECLIP[ecl],list=a.gltf.animations,used=new Set(),out={};
-  const inPlace=c=>{const k=c.clone();for(const t of k.tracks){if(!/\.position$/.test(t.name)||!/hips|pelvis|root/i.test(t.name))continue;const v=t.values,x0=v[0],z0=v[2];for(let i=0;i<v.length;i+=3){v[i]=x0;v[i+2]=z0}}return k};
+  // in place: every clip's hips keep the IDLE clip's ground position (a clip's own first frame can already be a metre off)
+  const hipT=c=>c&&c.tracks.find(t=>/\.position$/.test(t.name)&&/hips|pelvis|root/i.test(t.name)),ref=hipT(list.find(c=>/Combat_Stance|idle/i.test(c.name))||list[0]);
+  const rx=ref?ref.values[0]:0,rz=ref?ref.values[2]:0;
+  const inPlace=c=>{const k=c.clone();const t=hipT(k);if(t){const v=t.values;for(let i=0;i<v.length;i+=3){v[i]=rx;v[i+2]=rz}}return k};
   for(const key of C.order){let c=list.find(c=>!used.has(c)&&C[key].test(c.name));if(c)used.add(c);out[key]=c}
   C.order.forEach((key,i)=>{if(!out[key]&&list[i]&&!used.has(list[i])){out[key]=list[i];used.add(list[i])}});
   for(const k in out)if(out[k])out[k]=inPlace(out[k]);return a._eclClips=out};

@@ -119,7 +119,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <link rel="stylesheet" href="moonfall-menu.css" onerror="window.__moonfallCodeFailure='moonfall-menu.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-menu.css')">
 <link rel="stylesheet" href="moonfall-inventory.css" onerror="window.__moonfallCodeFailure='moonfall-inventory.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-inventory.css')">
 <link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
-<script>window.CELESTIAL_SKIP=["mossy-boulder", "lupine-clump", "flower-cushion", "tall-grass", "river-stones"]</script>
+<script>window.CELESTIAL_SKIP=["mossy-boulder", "lupine-clump", "flower-cushion", "tall-grass", "river-stones", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5-summoner"]</script>
 </head>
 <body>
 <div id="safe"></div>
@@ -5066,7 +5066,10 @@ const ECLIP={
 R.eclSkReady=function(ecl){const A=CA(),a=A&&A.get(ECM[ecl].key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations&&a.gltf.animations.length>=2&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 // in-place clips: the game moves the unit, so the hip bone keeps only its height
 const eclClips=(a,ecl)=>{if(a._eclClips)return a._eclClips;const C=ECLIP[ecl],list=a.gltf.animations,used=new Set(),out={};
-  const inPlace=c=>{const k=c.clone();for(const t of k.tracks){if(!/\.position$/.test(t.name)||!/hips|pelvis|root/i.test(t.name))continue;const v=t.values,x0=v[0],z0=v[2];for(let i=0;i<v.length;i+=3){v[i]=x0;v[i+2]=z0}}return k};
+  // in place: every clip's hips keep the IDLE clip's ground position (a clip's own first frame can already be a metre off)
+  const hipT=c=>c&&c.tracks.find(t=>/\.position$/.test(t.name)&&/hips|pelvis|root/i.test(t.name)),ref=hipT(list.find(c=>/Combat_Stance|idle/i.test(c.name))||list[0]);
+  const rx=ref?ref.values[0]:0,rz=ref?ref.values[2]:0;
+  const inPlace=c=>{const k=c.clone();const t=hipT(k);if(t){const v=t.values;for(let i=0;i<v.length;i+=3){v[i]=rx;v[i+2]=rz}}return k};
   for(const key of C.order){let c=list.find(c=>!used.has(c)&&C[key].test(c.name));if(c)used.add(c);out[key]=c}
   C.order.forEach((key,i)=>{if(!out[key]&&list[i]&&!used.has(list[i])){out[key]=list[i];used.add(list[i])}});
   for(const k in out)if(out[k])out[k]=inPlace(out[k]);return a._eclClips=out};
@@ -5248,6 +5251,87 @@ R.eclVis=function(a,Tm,dt,L){const gy=this.gY(a.x,a.y),pre=a.t<a.delay,k=pre?Mat
   case 'lscythe':{if(a.fxT>0){P({tex:'slash',c:'#c08aff',a:Math.min(1,a.fxT*2.5),x:a.x,y:a.y,sx:a.r*2.1,rot:Tm*18});P({tex:'slash',c:'#7a3aff',a:Math.min(.7,a.fxT*2),x:a.x,y:a.y,sx:a.r*1.6,rot:-Tm*14+1.5})}
     if(!pre&&this.eclOnce(a))for(let i=0;i<N(40);i++){const aa=i/N(40)*6.283;this.sp(true,{x:a.x+Math.cos(aa)*a.r*.7,y:gy+rnd(30,70),z:a.y+Math.sin(aa)*a.r*.7,vx:-Math.sin(aa)*420,vz:Math.cos(aa)*420,vy:rnd(0,50),l:.4,s:20,s1:3,c:'#e0c8ff',c2:'#5a1aa8',sp:1,dr:2})}return}
   }};
+})();
+
+// ===================== PHASE 5 · CELESTIAL ARMORY: rigged class heroes (render only) =====================
+// Five Meshy class characters (auto-rig + 6 clips each) replace the hero model by WEAPON FAMILY — combat, skills,
+// hitboxes and snapshots are untouched (owner chose "change with weapon" 2026-11-17):
+//   sword / axe / greatsword -> Warrior · dagger -> Assassin · bow / crossbow -> Archer · fire / frost / storm -> Mage · fused -> Summoner
+// The heroes ride on the Quaternius hero hooks (o.qn) so the frame loop, death and outline code keep working;
+// whenever a class GLB is missing the old hero model is used.
+(function(){if(typeof R3==='undefined'||typeof CURSED==='undefined'||!CURSED)return;const T=THREE,R=R3;
+const P5={warrior:'p5-warrior',assassin:'p5-assassin',archer:'p5-archer',mage:'p5-mage',summoner:'p5-summoner'};
+const P5C={order:['idle','run','attack','cast','dodge','death'],idle:/Combat_Stance|idle/i,run:/Run/i,attack:/Slash|Combo|Shot|Soell|mage_|Attack/i,cast:/Charged|Spin|Spell_Cast/i,dodge:/Roll|Dodge/i,death:/Dead|Death/i};
+const P5H=138;   // hero height in world units (Quaternius heroes are ~140)
+const CA=()=>window.CelestialAssets;
+const p5Class=u=>{const k=u&&u.wk;if(!k)return'warrior';if(typeof FUSED!=='undefined'&&FUSED[k])return'summoner';
+  return k==='dagger'?'assassin':k==='bow'||k==='xbow'?'archer':k==='fire'||k==='frost'||k==='storm'?'mage':'warrior'};
+R.p5Ready=function(cls){const A=CA(),a=A&&A.get(P5[cls]);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations.length>=4&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
+const p5Clips=a=>{if(a._p5)return a._p5;const list=a.gltf.animations,used=new Set(),out={};
+  // in place: every clip's hips keep the IDLE clip's ground position (a clip's own first frame can already be a metre off)
+  const hipT=c=>c&&c.tracks.find(t=>/\.position$/.test(t.name)&&/hips|pelvis|root/i.test(t.name)),ref=hipT(list.find(c=>/Combat_Stance|idle/i.test(c.name))||list[0]);
+  const rx=ref?ref.values[0]:0,rz=ref?ref.values[2]:0;
+  const inPlace=c=>{const k=c.clone();const t=hipT(k);if(t){const v=t.values;for(let i=0;i<v.length;i+=3){v[i]=rx;v[i+2]=rz}}return k};
+  // clips arrive in the order they were ordered from Meshy; names confirm the slot when they can
+  P5C.order.forEach((key,i)=>{let c=list[i];if(!c||!P5C[key].test(c.name)){const m=list.find(x=>!used.has(x)&&P5C[key].test(x.name));if(m)c=m}if(c&&!used.has(c)){used.add(c);out[key]=inPlace(c)}});
+  return a._p5=out};
+// ---- object ----
+R.p5Hero=function(u){const cls=p5Class(u);if(!this.p5Ready(cls))return null;const a=CA().get(P5[cls]);
+  const model=AR_GLTF.SkeletonUtils.clone(a.gltf.scene);model.rotation.y+=a.config.rotationY||0;model.updateMatrixWorld(true);
+  const bb=new T.Box3().setFromObject(model,true),sz=bb.getSize(new T.Vector3()),sc=P5H/Math.max(1e-4,sz.y),pivot=new T.Group();pivot.scale.setScalar(sc);pivot.add(model);
+  pivot.position.set(-(bb.min.x+bb.max.x)*sc/2,-bb.min.y*sc,-(bb.min.z+bb.max.z)*sc/2);
+  const o={kind:'qn',qn:1,p5:1,cls,u,at:u.at,wk:'?',wt:-9,model,pivot,ov:null,lastAtk:0,lastCast:0,lastHurt:0,act:{},bones:{},
+    lx:u.x,ly:u.y,rot:Math.atan2(u.fx,u.fy),walk:0,mvK:0,atkPh:0};   // the fields the base objFor fills in for every unit
+  o.root=new T.Group();o.body=new T.Group();o.root.add(o.body);o.body.add(pivot);
+  model.traverse(n=>{if(n.isBone)o.bones[n.name]=n;if(n.isMesh){n.castShadow=!!this.hi;n.receiveShadow=true;n.frustumCulled=false;
+    if(this.fow){const paint=src=>this.cached('p5-'+src.uuid,()=>{const m=src.clone();if(m.isMeshStandardMaterial){m.envMap=this.envTex||null;m.envMapIntensity=.55}return this.fow(m,{key:'p5'})});n.material=Array.isArray(n.material)?n.material.map(paint):paint(n.material)}}});
+  // stand on the ring: centre the hips (not the bounding box, which arms and capes pull sideways)
+  o.handR=o.bones.RightHand||null;o.handL=o.bones.LeftHand||null;
+  o.mixer=new T.AnimationMixer(model);const clips=p5Clips(a);for(const k in clips)o.act[k]=o.mixer.clipAction(clips[k]);
+  if(o.act.idle)o.act.idle.play();if(o.act.run){o.act.run.play();o.act.run.setEffectiveWeight(0)}
+  if(o.bones.Hips){o.mixer.update(0);pivot.updateMatrixWorld(true);const h=new T.Vector3();o.bones.Hips.getWorldPosition(h);pivot.position.x-=h.x;pivot.position.z-=h.z}   // centre the idle pose's hips on the ring
+  try{this.p5Arm(o,u)}catch(e){}this.addStatus(o,u);this.scene.add(o.root);this.objs.set(u.id,o);return o};
+// the game's own weapon model goes into the rigged hand: its long side is turned onto the hand's +Z (checked on the Eclipse rigs)
+R.p5Arm=function(o,u){for(const w of[o.wpnR,o.wpnL])if(w&&w.parent)w.parent.remove(w);o.wpnR=o.wpnL=o.wtip=null;o.wk=u.wk;o.wt=u.wt;o.lgK=null;
+  if(!u.wk||!o.handR||!this.weapon)return;const t=Math.min(4,Math.max(0,u.wt|0)),bow=u.wk==='bow',dual=u.wk==='dagger';
+  const W=WEAPONS[u.wk],mk=W&&W.fused?(W.base||'fire'):u.wk;   // fused weapons show their base family
+  const make=hand=>{const w=this.weapon(mk,t);w.updateMatrixWorld(true);const bb=new T.Box3().setFromObject(w);if(bb.isEmpty())return null;
+    const ext=[[bb.min.x,bb.max.x],[bb.min.y,bb.max.y],[bb.min.z,bb.max.z]];let ax=0,len=0;ext.forEach((e,i)=>{if(e[1]-e[0]>len){len=e[1]-e[0];ax=i}});
+    const e=ext[ax],dir=new T.Vector3();dir.setComponent(ax,Math.abs(e[1])>=Math.abs(e[0])?1:-1);
+    const g=new T.Group(),al=new T.Group();al.quaternion.setFromUnitVectors(dir,bow?new T.Vector3(0,1,0):new T.Vector3(0,0,1));al.add(w);g.add(al);
+    o.pivot.updateMatrixWorld(true);const ws=new T.Vector3();hand.getWorldScale(ws);g.scale.setScalar(1/Math.max(1e-6,ws.x));hand.add(g);
+    if(w.userData.tip&&!o.wtip)o.wtip=w.userData.tip;o.wglow=w.userData.glow||null;return g};
+  if(bow&&o.handL)o.wpnL=make(o.handL);else o.wpnR=make(o.handR);
+  if(dual&&o.handL)o.wpnL=make(o.handL)};
+// ---- hooks ----
+const _of=R.objFor;R.objFor=function(u){if(u.hero&&!this.objs.get(u.id)){try{const o=this.p5Hero(u);if(o)return o}catch(e){if(!this._p5Err){this._p5Err=1;console.warn('p5 hero',e)}}}return _of.call(this,u)};
+const _qa=R.qnAnim;R.qnAnim=function(o,u,Tm,dt,mv){
+  // a hero still on the old model swaps as soon as its class model is in; a class change (new weapon family) rebuilds
+  if(u.hero&&!o.mob&&!o.zom&&(o.p5?p5Class(u)!==o.cls:this.p5Ready(p5Class(u)))&&!o.swap){o.swap=1;this.scene.remove(o.root);this.objs.delete(u.id);return}
+  if(!o.p5)return _qa.call(this,o,u,Tm,dt,mv);
+  if(o.dying){o.dying=false;o.mixer.stopAllAction();o.ov=null;if(o.act.idle)o.act.idle.reset().play();if(o.act.run)o.act.run.reset().play()}
+  if(o.wk!==u.wk||o.wt!==u.wt)try{this.p5Arm(o,u)}catch(e){o.wk=u.wk;o.wt=u.wt}
+  const play=(k,ts)=>{const a=o.act[k];if(!a)return;if(o.ov&&o.ov!==a)o.ov.fadeOut(.08);a.reset().setLoop(T.LoopOnce,1);a.clampWhenFinished=true;a.timeScale=ts;a.setEffectiveWeight(1).fadeIn(.06).play();o.ov=a;o.ovT=a.getClip().duration/ts};
+  if(u.dash&&!o.dashOn){o.dashOn=1;play('dodge',2.6)}else if(!u.dash)o.dashOn=0;
+  if(u.atkAnim>o.lastAtk+.05&&!(u.spinT>0))play('attack',o.cls==='warrior'?1.9:o.cls==='assassin'?2.2:1.7);
+  else if(u.castAnim>o.lastCast+.05)play('cast',1.5);
+  o.lastAtk=u.atkAnim||0;o.lastCast=u.castAnim||0;
+  let ow=0;if(o.ov){o.ovT-=dt;ow=clamp(o.ovT/.12,0,1);if(o.ovT<=0){o.ov.fadeOut(.12);o.ov=null;ow=0}}
+  const k=o.mvK;if(o.act.idle)o.act.idle.setEffectiveWeight((1-k)*(1-ow));if(o.act.run){o.act.run.setEffectiveWeight(k*(1-ow));o.act.run.timeScale=clamp((mv||0)/260,.7,1.5)}
+  o.mixer.update(dt);
+  let by=0;if(u.spinT>0||u.lotusT>0)o.body.rotation.y=(o.body.rotation.y+dt*(u.spinT>0?22:26))%(Math.PI*2);else o.body.rotation.y=0;
+  if(u.leap){if(o.leapT===undefined||o.leapT<0)o.leapT=0;o.leapT+=dt;by+=Math.sin(Math.PI*Math.min(1,o.leapT/.55))*140}else o.leapT=-1;
+  o.body.rotation.x=u.kb?-.25:0;o.body.position.y=by;
+  if(o.wtip&&(u.castAnim>0||u.atkAnim>0)&&Math.random()<.5){o.wtip.getWorldPosition(this.v);this.sp(true,{x:this.v.x,y:this.v.y,z:this.v.z,vy:30,l:.35,s:22,s1:4,c:FUSED[u.wk]?FUSED[u.wk].glow:u.wk==='fire'?'#ffb050':u.wk==='storm'?'#d8c8ff':'#bfefff',sp:u.wk==='fire'?3:4})}};
+const _qd=R.qnDie;R.qnDie=function(o,dt){if(!o.p5)return _qd.call(this,o,dt);
+  if(!o.dying){o.dying=true;o.ov=null;o.mixer.stopAllAction();const d=o.act.death;if(d){d.reset().setLoop(T.LoopOnce,1);d.clampWhenFinished=true;d.play();o.dieT=d.getClip().duration+.6}else o.dieT=1.4}
+  o.dieT-=dt;o.mixer.update(dt);o.root.visible=o.dieT>0};
+// the frame loop hides a hero the frame it dies, before the 'die' event: start the death clip while it was just on screen
+const _fx=R.effects;R.effects=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);
+  try{for(const u of units){if(!u.hero||!u.dead)continue;const o=this.objs.get(u.id);if(o&&o.p5&&!o.dying&&!(o.dieT>0)&&o.seen&&performance.now()-o.seen<400){o.root.visible=true;this.qnDie(o,0)}}
+    for(const u of units){if(!u.hero||u.dead)continue;const o=this.objs.get(u.id);if(o&&o.p5&&o.root.visible)o.seen=performance.now()}}catch(e){}
+  return r};
+window.P5_CLASS=p5Class;
 })();
 
 // ===================== SETTINGS: view + graphics quality =====================
