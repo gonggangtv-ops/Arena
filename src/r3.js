@@ -80,7 +80,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const out=[];
     for(const arr of groups.values()){const tmp=[];for(const it of arr)place(it,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>tmp.push([x,y,z,sx,sy,sz,rx,ry,rz,c,it]));if(!tmp.length)continue;
       const im=new THREE.InstancedMesh(geo,mat,tmp.length);im.castShadow=!!shadow;im.receiveShadow=true;
-      tmp.forEach((q,i)=>{this.setI(im,i,q[0],q[1],q[2],q[3],q[4],q[5],q[6],q[7],q[8],CURSED&&q[9]!=null?REG.objCol(q[9],q[0],q[2]):q[9]);if(onInst)onInst(q[10],im,i)});
+      tmp.forEach((q,i)=>{this.setI(im,i,q[0],q[1],q[2],q[3],q[4],q[5],q[6],q[7],q[8],MOON&&q[9]!=null?REG.objCol(q[9],q[0],q[2]):q[9]);if(onInst)onInst(q[10],im,i)});
       im.instanceMatrix.needsUpdate=true;if(im.instanceColor)im.instanceColor.needsUpdate=true;im.computeBoundingSphere();im.userData.base=im.instanceMatrix.array.slice();this.scene.add(im);out.push(im)}
     return out},
   inst(geo,mat,n,shadow){const im=new THREE.InstancedMesh(geo,mat,Math.max(1,n));im.count=n;im.castShadow=!!shadow;im.receiveShadow=true;im.frustumCulled=false;this.scene.add(im);return im},
@@ -298,13 +298,13 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
   buildTerrain(){const St=50,x0=-1700,x1=WORLD+1700,n=Math.round((x1-x0)/St)+1;const N=n*n;const pos=new Float32Array(N*3),col=new Float32Array(N*3),reg=new Float32Array(N*4),rq=[0,0,0,0];const C=this.col;
     const W1=new THREE.Color('#e8f0c8'),E1=new THREE.Color('#9fd0d8'),F1=new THREE.Color('#9aa880'),M1=new THREE.Color('#c0c8a0');const nz=WD.noise,mN=makeNoise(mulberry32(5),900);
     for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=x0+i*St,y=x0+j*St,k=j*n+i;const h=this.hAt(x,y);pos[k*3]=x;pos[k*3+1]=h;pos[k*3+2]=y;
-      const dk=direK(x,y),fo=clamp((nz(x,y)-.46)/.12,0,1),m=mN(x,y);C.copy(W1).lerp(E1,dk);C.lerp(F1,fo*.6);C.multiplyScalar(.92+m*.16);if(h>40)C.lerp(M1,clamp((h-40)/300,0,1));col[k*3]=C.r;col[k*3+1]=C.g;col[k*3+2]=C.b;if(CURSED){REG.mix(x,y,rq);reg[k*4]=rq[0];reg[k*4+1]=rq[1];reg[k*4+2]=rq[2];reg[k*4+3]=rq[3]}}
+      const dk=direK(x,y),fo=clamp((nz(x,y)-.46)/.12,0,1),m=mN(x,y);C.copy(W1).lerp(E1,dk);C.lerp(F1,fo*.6);C.multiplyScalar(.92+m*.16);if(h>40)C.lerp(M1,clamp((h-40)/300,0,1));col[k*3]=C.r;col[k*3+1]=C.g;col[k*3+2]=C.b;if(MOON){REG.mix(x,y,rq);reg[k*4]=rq[0];reg[k*4+1]=rq[1];reg[k*4+2]=rq[2];reg[k*4+3]=rq[3]}}
     const idx=new Uint32Array((n-1)*(n-1)*6);let o=0;for(let j=0;j<n-1;j++)for(let i=0;i<n-1;i++){const a=j*n+i,b=a+1,c=a+n,d=c+1;if(Math.abs(pos[a*3+1]-pos[d*3+1])<Math.abs(pos[b*3+1]-pos[c*3+1])){idx[o++]=a;idx[o++]=c;idx[o++]=d;idx[o++]=a;idx[o++]=d;idx[o++]=b}else{idx[o++]=a;idx[o++]=c;idx[o++]=b;idx[o++]=b;idx[o++]=c;idx[o++]=d}}
     const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));g.setAttribute('aReg',new THREE.BufferAttribute(reg,4));g.setIndex(new THREE.BufferAttribute(idx,1));g.computeVertexNormals();
     const spl=this.ctex(paintMasks(.1024),false,false);spl.flipY=false;spl.minFilter=THREE.LinearFilter;spl.generateMipmaps=false;
     const tu={tGrass:{value:this.tex('grass')},tDirt:{value:this.tex('dirt')},tCob:{value:this.tex('cobble')},tRock:{value:this.tex('rock')},tSand:{value:this.tex('sand')},uSplat:{value:spl},uZoneN:this.U.zoneN};
     const m=new THREE.MeshLambertMaterial({vertexColors:true});
-    this.fow(m,{key:'terr'+(this.hi?'h':'l')+(CURSED?'c':''),cut:true,uniforms:tu,
+    this.fow(m,{key:'terr'+(this.hi?'h':'l')+(MOON?'c':''),cut:true,uniforms:tu,
       vert:vs=>'varying vec3 vWN;attribute vec4 aReg;varying vec4 vReg;\n'+vs.replace('#include <beginnormal_vertex>','#include <beginnormal_vertex>\nvWN=normalize(objectNormal);vReg=aReg;'),
       frag:fs=>zlines('uniform sampler2D tGrass,tDirt,tCob,tRock,tSand,uSplat;varying vec3 vWN;varying vec4 vReg;\n'+fs.replace('#include <color_fragment>',`vec3 tBump=vec3(0.);
         {vec2 w=vFowW;vec4 sp=texture2D(uSplat,w/${WORLD.toFixed(1)});
@@ -541,7 +541,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     for(const l of la){const tall=l.torch?34:l.small?40:56;this.glows.push([l.x,this.gY(l.x,l.y)+tall+8,l.y,l.torch?'#ff8a2a':l.dire?'#c08aff':'#ffbf66',l.torch?330:250])}
     this.torches=la.filter(l=>l.torch).map(l=>({x:l.x,y:this.gY(l.x,l.y)+40,z:l.y}));
     for(const m of WD.mush)this.glows.push([m.x,m.s*1.8,m.y,m.c,m.s*13]);for(const c of WD.crystals)this.glows.push([c.x,c.s*1.6,c.y,c.c,c.s*13]);
-    for(const t of WD.trees)if(t.v===3)this.glows.push([t.x,t.cr*.6+40*t.h,t.y,'#7ff3ff',t.cr*3]);if(CURSED)REG.glows(this)},
+    for(const t of WD.trees)if(t.v===3)this.glows.push([t.x,t.cr*.6+40*t.h,t.y,'#7ff3ff',t.cr*3]);if(MOON)REG.glows(this)},
   buildCastle(){const C=WD.castle,G=this.G,S=this.scene;if(!C||C.x<-1e4)return;const st=this.tstd('bricks','#d8d2c4',.9,0,{},'cut'),stD=this.tstd('bricks','#a8a294',.92,0);
     this.castleParts=[];const add=(m,x,y)=>{m.castShadow=true;m.receiveShadow=true;S.add(m);this.castleParts.push({m,x,y})};
     const cren=[];

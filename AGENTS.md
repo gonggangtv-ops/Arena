@@ -7,7 +7,10 @@
 - `src/` — **ซอร์สจริง** แก้ที่นี่เท่านั้น
   - `a.js` ข้อมูล/แผนที่ · `b.js` ระบบเกม (host) · `c.js` ออนไลน์+HUD · `r3`–`r12.js` ภาพ 3D · `t1.js` ระบบ Cursed Realm · `d.js` เมนู/ตั้งค่า
   - `celestial-*`, `moonfall-*` = ชั้น Moonfall (โหลดเฉพาะ `cursed.html`)
-  - `build.py` รวมไฟล์: `python3 build.py` → `index.html` (Arena Royale v2.5) · `python3 build.py cursed` → `cursed.html` (The Cursed Realm)
+  - `build.py` รวมไฟล์ (ตัวแปร `CURSED` = ระบบเกมใหม่, `MOON` = ฉาก Moonfall):
+    - `python3 build.py` → `index.html` **Arena Royale**: ระบบทั้งหมดของ Cursed Realm (เหรียญ ร้านค้า อาวุธสุ่มลักษณะ/รูน สกิลพิเศษ หลบ/ป้องกัน 5 ภูมิภาค UI/เมนู/หน้าโหลด) + ฉากเดิม + บ้าน Meshy (CURSED=true, MOON=false)
+    - `python3 build.py cursed` → `cursed.html` **The Cursed Realm**: ระบบเดียวกัน + ฉาก Moonfall (CURSED=true, MOON=true)
+    - `python3 build.py classic` → `classic.html` เกมเดิม v2.5 ไว้อ้างอิง (ไม่ deploy)
 - `app/src/main/assets/` — ไฟล์ที่ deploy (HTML ที่ build แล้ว, lib, `assets/meshy/*.glb`, `assets/ui/*`, เพลง)
 - `moonfall-docs/` — รายงาน สคริปต์ทดสอบ และวิธีย่อโมเดล
 - `.github/workflows/pages.yml` — push ขึ้น `main` แล้ว deploy ไป branch `gh-pages` อัตโนมัติ (ก๊อปไฟล์ทีละชื่อ: เพิ่มไฟล์ใหม่ต้องเพิ่มในนี้ด้วย)
@@ -15,7 +18,7 @@
 ## กติกาสำคัญ
 1. **ห้ามแก้หรือเปิด PR เข้า `gh-pages`** มันถูกเขียนทับทุกครั้งที่ deploy — PR ต้อง base = `main`
 2. **ห้ามแก้ `index.html` / `cursed.html` ที่ build แล้วตรงๆ** แก้ใน `src/` แล้ว build ใหม่ และก๊อปไป `app/src/main/assets/`
-3. `index.html` = เกมเดิม v2.5 — **ห้ามใส่ Moonfall** (เจ้าของสั่งให้แยก) ของใหม่ใส่ใน `cursed.html`
+3. ระบบเกม/UI ใหม่ต้องใช้ได้ทั้ง `index.html` และ `cursed.html` (ใช้เงื่อนไข `CURSED`) · อะไรที่เป็น**ฉาก** (พื้น ต้นไม้ หิน แสง หมอก ของตกแต่ง) ใช้เงื่อนไข `MOON` — index ใช้ฉากเดิม, cursed ใช้ฉาก Moonfall (เจ้าของสั่ง 2026-11-17) · โมเดลบ้าน/แผงตลาดใช้ทั้งสองเกม
 4. ทำงานใน branch ของตัวเอง: `codex/<เรื่อง>` หรือ `claude/<เรื่อง>` แล้วเปิด PR เข้า `main` · branch สั้น merge บ่อย
 5. ก่อนเริ่ม: `git pull` main และดูว่าอีกตัวกำลังแก้ไฟล์ไหน (ดู `HANDOFF.md` ส่วน "กำลังทำ") — อย่าแก้ไฟล์เดียวกันพร้อมกัน
 6. จบงาน: เขียนบันทึกใน `HANDOFF.md` (ทำอะไร, ไฟล์ที่แตะ, ทดสอบอะไร, อะไรค้าง) ในคอมมิตเดียวกัน

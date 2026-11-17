@@ -6,6 +6,19 @@ window.installMoonfallVillage=function(P){
   if(P.moonfallVillage)return;P.moonfallVillage=true;
   const T=THREE,A=window.CelestialAssets,build=P.buildWorld;
   const WANT={r:0,b:Math.PI/2,l:Math.PI,t:-Math.PI/2};
+  // Without the Moonfall renderer (Arena Royale) this file brings its own model preparation.
+  if(!P.celestialAsset){const prepared=new Map();
+    P.celestialAsset=function(key){const a=A&&A.get(key);if(!a||a.state!=='loaded')return null;if(prepared.has(key))return prepared.get(key);
+      const root=a.gltf.scene.clone(true);root.rotation.y+=a.config.rotationY||0;root.updateMatrixWorld(true);
+      const bb=new T.Box3().setFromObject(root,true),size=bb.getSize(new T.Vector3());
+      const norm=new T.Matrix4().makeScale(1/Math.max(size.x,1e-5),1/Math.max(size.y,1e-5),1/Math.max(size.z,1e-5)).multiply(new T.Matrix4().makeTranslation(-(bb.min.x+bb.max.x)/2,-bb.min.y,-(bb.min.z+bb.max.z)/2));
+      const parts=[];root.traverse(n=>{if(!n.isMesh)return;const geo=n.geometry.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(norm,n.matrixWorld));this.cachedGeos.add(geo);
+        const paint=src=>this.cached('moon-asset-'+src.uuid,()=>{const m=src.clone();if(m.isMeshStandardMaterial){m.envMap=this.envTex||null;m.envMapIntensity=.5}return this.fow(m,{key:'moon-asset',uniforms:{uZoneN:this.U.zoneN},frag:fs=>zlines(fs)})});
+        parts.push({geo,mat:Array.isArray(n.material)?n.material.map(paint):paint(n.material)})});
+      prepared.set(key,parts);return parts};
+    if(A)A.start();
+    // the models arrive after the first world build: rebuild the village once they are in
+    if(A)A.subscribe(()=>{if(R3.ok&&WD&&R3.world===WD&&!P._villageDone&&['house-cottage','house-long','house-witch','market-stall'].every(k=>A.get(k)&&A.get(k).state==='loaded')){P._villageDone=1;R3.world=null}})}
   const keyFor=h=>h.style==='witch'?'house-witch':(Math.max(h.w,h.h)/Math.min(h.w,h.h)>1.28||h.seed%3===0?'house-long':'house-cottage');
   function shell(R,key,mats){
     const parts=R.celestialAsset(key);if(!parts)return null;const g=new T.Group();

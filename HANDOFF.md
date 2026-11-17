@@ -7,6 +7,16 @@
 
 ---
 
+## 2026-11-17 · Claude · รวมระบบ Cursed Realm เข้า index.html (branch claude/index-systems)
+- เจ้าของสั่ง: index.html ใช้ระบบทุกอย่างของ cursed.html ยกเว้นฉาก (ใช้ฉากเดิมของ index) แต่บ้านใช้โมเดล Meshy
+- เพิ่มตัวแปร `MOON` คู่กับ `CURSED`: index = CURSED true / MOON false, cursed = ทั้งคู่ true · จุดที่เปลี่ยนจาก CURSED เป็น MOON (ฉาก): ต้นไม้/เห็ด/คริสตัลตามภูมิภาค, สีพื้นและมินิแมปตามภูมิภาค, ย้อมสีวัตถุ, แสงหมอกละอองตามภูมิภาค (`REG.atmo` ใน index แค่ประกาศชื่อภูมิภาค), หญ้าย้อมสี, บอสมังกร (index ใช้บอส Meshy จิบิเดิม), โทนมืดบังคับ
+- index โหลดเฉพาะ `celestial-assets.js` + `moonfall-village.js` + UI/เมนู/คลังของ/หน้าโหลด · ไม่โหลด celestial-render / moonfall-environment / biome / collision-data
+  - `window.CELESTIAL_KEYS` (ตั้งใน index) จำกัด CelestialAssets ให้โหลดแค่บ้าน 3 แบบ + แผงตลาด และหน้าโหลดรอเฉพาะชุดนี้
+  - `moonfall-village.js` มี `celestialAsset()` สำรองเมื่อไม่มี celestial-render
+- ห้องออนไลน์ index เปลี่ยน prefix เป็น `arenaroyale6-` (โปรโตคอลไม่เข้ากับ v2.5 แล้ว)
+- ทดสอบ (http): index เข้าเกมได้ ภาพหมู่บ้าน/ป่า ฉากเดิม+บ้าน Meshy, แมตช์บอท 2 รอบจบ, ออนไลน์ 2 เครื่อง ซื้อของ/สกิลพิเศษ/หลบ ตรงกัน · cursed แมตช์บอท 1 รอบ
+- ค้าง: การ์ดเกมใน claude.ai (artifact.html / cursed_artifact.html) ยังเป็นเวอร์ชันเก่า
+
 ## 2026-11-17 · Codex · ภาพหน้าโหลดและเมนู Moonfall (`codex/moonfall-cinematic-ui`)
 - ทำอะไร: ภาพอัศวินเงินทอง/จันทราใหม่เข้าชุดกับไอคอนสกิล ใช้ร่วมกันทั้งหน้าโหลด
   เตรียมแมตช์ และเมนูพร้อมเล่น; จัด Solo เป็นปุ่มหลัก เก็บชื่อ/ผ้าคลุม/ตั้งค่า/คู่มือเดิมครบ

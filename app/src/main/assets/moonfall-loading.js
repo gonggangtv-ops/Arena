@@ -8,7 +8,7 @@ window.installMoonfallLoading=function(){
   let ready=false,failed=false,launchBusy=false,phase='loading',packDone=0,musicDone=0,artDone=0,renderDone=0,fontsDone=0,total=0,clientToken=0;
   let resolveReady;const whenReady=new Promise(resolve=>{resolveReady=resolve;});
   const music=['menu','day','night','battle','final','cave','wind'];
-  const requiredModels=['moon-arena','modular-floor','modular-wall','ancient-pillar','celestial-warrior','moon-stairs','wall-corner','temple-gate','ruin-arch','guardian-statue','portal-frame','rubble','brazier','moon-dead-tree','moon-silver-tree','moon-boulder','moon-rock-cluster'];
+  const requiredModels=window.CELESTIAL_KEYS||['moon-arena','modular-floor','modular-wall','ancient-pillar','celestial-warrior','moon-stairs','wall-corner','temple-gate','ruin-arch','guardian-statue','portal-frame','rubble','brazier','moon-dead-tree','moon-silver-tree','moon-boulder','moon-rock-cluster'];
   function lock(value){
     for(const id of ids){const button=$(id);if(button)button.disabled=value;}
     for(const id of [...OV,'c']){const element=$(id);if(element)element.inert=value;}
