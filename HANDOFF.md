@@ -7,6 +7,17 @@
 
 ---
 
+## 2026-11-17 · Claude · แก้จอดำเมื่อปิดเงาลึก + ลดต้นไม้ + ของตกแต่งหมู่บ้านจาก Meshy (branch claude/aaa-village)
+- **จอดำเมื่อปิด "เงาลึก" (เกิดใน cursed.html):** พิกเซล NaN/ค่าติดลบจาก shader บางตัวหลุดเข้า UnrealBloomPass แล้วลามทั้งจอ — ตอนเปิด AO มันถูกกรองโดยบังเอิญ
+  แก้: `R3.cleanPass()` ใน `r10.js` (กรอง NaN/Inf + clamp) ใส่ใน composer เสมอ หลัง AO ก่อน bloom · pass เดียวกันทำ color grade อ่อนๆ (saturation, เงาเย็น/แสงอุ่น, vignette) ปรับด้วย `R3.grade.value` (0–1)
+- ต้นไม้ลดลง: `a.js` ทิ้ง 50% (เดิม 22%) เมื่อ CURSED
+- ลายพื้นหิน (`tex('cobble')` ใน r3.js) วาดใหม่เป็นก้อนหินเหลี่ยมมนมีร่อง แทนวงรีลายจุด — ใช้กับลานหมู่บ้าน/ถนนทุกเกม
+- index.html: ละอองลอยรอบตัว (เกสรกลางวัน หิ่งห้อยกลางคืน) ผ่าน `REG.motes(R,L,ov)`
+- Meshy ใหม่ (ย่อ+simplify แล้ว, ใน manifest + `VILLAGE` ใน build.py): `village-well` (สร้างรอบ 2 — รอบแรกหลังคาเป็นรู), `street-lantern`, `stone-bridge`, `plaza-fountain`
+  - `moonfall-village.js`: บ่อน้ำ/น้ำพุเป็นโมเดลเดี่ยว · โคมไฟถนน (ไม่รวม torch/small) เป็น instanced · สะพานข้ามแม่น้ำ = บล็อกโค้ง Meshy ต่อกันหลายช่วง แล้วดัดตามความโค้งของ `bridgeY` (ต้องแปลง position เป็น Float32 เพราะไฟล์ quantized)
+  - `r3.js` ถาม `this.mfProp(key)` ก่อนวาดของเดิม (well/fountain/lantern/bridge/stall) จะได้ไม่ซ้อน · แก้ warning สีของแผงตลาด (`a.js` ใส่ `c`)
+- เครดิต Meshy รอบนี้: ~75 · ดึงไฟล์จากเครื่องเจ้าของผ่าน bridge ยังพัง ต้องให้เจ้าของแนบไฟล์ในแชต
+
 ## 2026-11-17 · Claude · รวมระบบ Cursed Realm เข้า index.html (branch claude/index-systems)
 - เจ้าของสั่ง: index.html ใช้ระบบทุกอย่างของ cursed.html ยกเว้นฉาก (ใช้ฉากเดิมของ index) แต่บ้านใช้โมเดล Meshy
 - เพิ่มตัวแปร `MOON` คู่กับ `CURSED`: index = CURSED true / MOON false, cursed = ทั้งคู่ true · จุดที่เปลี่ยนจาก CURSED เป็น MOON (ฉาก): ต้นไม้/เห็ด/คริสตัลตามภูมิภาค, สีพื้นและมินิแมปตามภูมิภาค, ย้อมสีวัตถุ, แสงหมอกละอองตามภูมิภาค (`REG.atmo` ใน index แค่ประกาศชื่อภูมิภาค), หญ้าย้อมสี, บอสมังกร (index ใช้บอส Meshy จิบิเดิม), โทนมืดบังคับ

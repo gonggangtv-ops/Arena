@@ -817,7 +817,7 @@ function genWorld(seed){
     if(V.plaza){w.fountains.push({x:V.x,y:V.y,r:62});w.solids.push({x:V.x,y:V.y,r:62,t:'fountain'})}
     else{w.wells.push({x:V.x,y:V.y,r:34});w.solids.push({x:V.x,y:V.y,r:34,t:'well'})}
     for(let k=0;k<(V.plaza?8:5);k++){const a=k/(V.plaza?8:5)*Math.PI*2+.3;const rr=V.plaza?178:118;w.lanterns.push({x:V.x+Math.cos(a)*rr,y:V.y+Math.sin(a)*rr,dire:V.dire})}
-    if(CURSED){w.stalls=w.stalls||[];for(let k=0;k<(V.plaza?3:2);k++){const a=k/(V.plaza?3:2)*Math.PI*2+1.3+vi,rr=V.plaza?232:186,x=V.x+Math.cos(a)*rr,y=V.y+Math.sin(a)*rr;w.stalls.push({x,y,a});w.rocks.push({x,y,r:44,prop:1})}}
+    if(CURSED){w.stalls=w.stalls||[];for(let k=0;k<(V.plaza?3:2);k++){const a=k/(V.plaza?3:2)*Math.PI*2+1.3+vi,rr=V.plaza?232:186,x=V.x+Math.cos(a)*rr,y=V.y+Math.sin(a)*rr;w.stalls.push({x,y,a,c:['#5a6f8c','#8c5a5a','#6f8c5a'][k%3]});w.rocks.push({x,y,r:44,prop:1})}}
     let placed=0;
     for(let tries=0;tries<(CURSED?1600:700)&&placed<V.n;tries++){
       const a=placed/V.n*Math.PI*2+sr(-.25,.25)+(tries>120?sr(0,6):0),d=sr(V.r*(CURSED?.36:.5),V.r*(tries>300?.98:.9));
@@ -919,7 +919,7 @@ function genWorld(seed){
   for(let gy=0;gy<gw;gy++)for(let gx=0;gx<gw;gx++){
     const p={x:gx*TS+sr(10,TS-10),y:gy*TS+sr(10,TS-10)};const o=outsideD(p.x,p.y);if(o>-30)continue;
     const nz=w.noise(p.x,p.y),foot=o>-420;const dire=isDire(p.x,p.y);const rdist=Math.abs(riverD(p.x,p.y))-riverHW(p.y);
-    let want=nz>.53||(foot&&nz>.43)||(dire&&nz>.5);if(!want&&rdist>0&&rdist<170&&SR()<.12)want=true;if(!want)continue;if(SR()<.22)continue;
+    let want=nz>.53||(foot&&nz>.43)||(dire&&nz>.5);if(!want&&rdist>0&&rdist<170&&SR()<.12)want=true;if(!want)continue;if(SR()<(CURSED?.5:.22))continue;
     if(!free(p,42)||pathNear(p,45)||rockNear(p,44)||w.houses.some(h=>inRect(p,h,52))||!tFree(p,104))continue;
     const roll=SR();let v;
     if(rdist>0&&rdist<170&&!foot)v=6;else if(foot)v=dire?(roll<.6?4:0):(roll<.75?0:2);else if(dire)v=roll<.32?3:roll<.62?4:roll<.8?5:1;else v=roll<.42?1:roll<.62?2:roll<.9?0:6;
@@ -2892,7 +2892,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
   setupPost(){if(this.composer){this.composer.dispose();this.composer=null;this.bloom=null}
     if(!this.post)return;const P=AR_POST,r=this.renderer;
     try{const rt=new THREE.WebGLRenderTarget(W,H,{type:THREE.HalfFloatType,samples:4});const ao=this.aoPass&&lsGet('ar_ao','1')!=='0';if(ao)rt.depthTexture=new THREE.DepthTexture(W,H);const c=new P.EffectComposer(r,rt);
-      this.rpass=new P.RenderPass(new THREE.Scene(),this.cam);c.addPass(this.rpass);this.ao=null;if(ao){try{this.ao=this.aoPass();c.addPass(this.ao)}catch(e){console.warn('ao',e);this.ao=null}}
+      this.rpass=new P.RenderPass(new THREE.Scene(),this.cam);c.addPass(this.rpass);this.ao=null;if(ao){try{this.ao=this.aoPass();c.addPass(this.ao)}catch(e){console.warn('ao',e);this.ao=null}}if(this.cleanPass){this.grade=this.cleanPass();c.addPass(this.grade)}
       this.bloom=new P.UnrealBloomPass(new THREE.Vector2(W,H),.3,.45,1.15);c.addPass(this.bloom);c.addPass(new P.OutputPass());
       c.setPixelRatio(r.getPixelRatio());c.setSize(W,H);this.composer=c}catch(e){console.warn('post',e);this.post=false;this.composer=null}},
   draw(){if(this.composer){this.rpass.scene=this.scene;this.rpass.camera=this.cam;this.composer.render()}else this.renderer.render(this.scene,this.cam)},
@@ -2975,10 +2975,12 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       x.lineCap='round';for(let i=0;i<70;i++){let px=rnd(0,512),py=rnd(0,512);x.strokeStyle=`rgba(30,28,26,${rnd(.3,.6)})`;x.lineWidth=rnd(.6,2);x.beginPath();x.moveTo(px,py);for(let s=0;s<8;s++){px+=rnd(-14,14);py+=rnd(-6,14);x.lineTo(px,py)}x.stroke()}
       for(let i=0;i<120;i++){const px=rnd(0,512),py=rnd(0,512);x.fillStyle=R()<.6?`rgba(150,160,80,${rnd(.15,.35)})`:`rgba(200,200,180,.25)`;x.beginPath();x.arc(px,py,rnd(2,7),0,7);x.fill()}
       return{c,norm:3.2}}
-    case 'cobble':{const c=this.cvs(256),x=c.getContext('2d');x.fillStyle='#4a4640';x.fillRect(0,0,256,256);const n=6,s=256/n;
-      for(let j=0;j<n;j++)for(let i=0;i<n;i++){const cx=(i+.5+(j%2)*.5)*s+rnd(-4,4),cy=(j+.5)*s+rnd(-3,3),w=s*rnd(.78,.9),h=s*rnd(.72,.86),g=rnd(115,165);
-        this.wrapDraw(x,256,256,()=>{const gr=x.createLinearGradient(cx-w/2,cy-h/2,cx+w/2,cy+h/2);gr.addColorStop(0,`rgb(${g+30},${g+28},${g+22})`);gr.addColorStop(1,`rgb(${g-28},${g-30},${g-34})`);x.fillStyle=gr;x.beginPath();x.ellipse(cx,cy,w/2,h/2,rnd(-.2,.2),0,7);x.fill()},cx,cy,s*.6)}
-      const f=this.fbm(41,16,3);const img=x.getImageData(0,0,256,256);for(let i=0;i<img.data.length;i+=4){const q=(f((i/4%256)/256,Math.floor(i/4/256)/256)-.5)*30;img.data[i]+=q;img.data[i+1]+=q;img.data[i+2]+=q}x.putImageData(img,0,0);return{c,norm:3}}
+    case 'cobble':{const c=this.cvs(256),x=c.getContext('2d');x.fillStyle='#38332c';x.fillRect(0,0,256,256);const n=8,s=256/n;
+      // worn setts: rounded irregular blocks with thin dark joints, warm grey with some brown and blue-grey stones
+      const rr=(cx,cy,w,h,r,a)=>{x.save();x.translate(cx,cy);x.rotate(a);x.beginPath();x.moveTo(-w/2+r,-h/2);x.lineTo(w/2-r,-h/2);x.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);x.lineTo(w/2,h/2-r);x.quadraticCurveTo(w/2,h/2,w/2-r,h/2);x.lineTo(-w/2+r,h/2);x.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);x.lineTo(-w/2,-h/2+r);x.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);x.fill();x.restore()};
+      for(let j=0;j<n;j++)for(let i=0;i<n;i++){const cx=(i+.5+(j%2)*.5)*s+rnd(-1.5,1.5),cy=(j+.5)*s+rnd(-1.5,1.5),w=s*rnd(.86,.95),h=s*rnd(.84,.93),g=rnd(112,150),t=Math.random(),cr=t<.2?[10,2,-8]:t<.35?[-6,0,8]:[4,2,-2];
+        this.wrapDraw(x,256,256,()=>{const gr=x.createLinearGradient(cx-w/2,cy-h/2,cx+w/2,cy+h/2);gr.addColorStop(0,`rgb(${g+18+cr[0]},${g+15+cr[1]},${g+10+cr[2]})`);gr.addColorStop(1,`rgb(${g-22+cr[0]},${g-24+cr[1]},${g-28+cr[2]})`);x.fillStyle=gr;rr(cx,cy,w,h,s*.22,rnd(-.06,.06))},cx,cy,s*.6)}
+      const f=this.fbm(41,16,3);const img=x.getImageData(0,0,256,256);for(let i=0;i<img.data.length;i+=4){const q=(f((i/4%256)/256,Math.floor(i/4/256)/256)-.5)*26;img.data[i]+=q;img.data[i+1]+=q;img.data[i+2]+=q}x.putImageData(img,0,0);return{c,norm:3}}
     case 'sand':{const c=this.cvs(256),f=this.fbm(51,16,4);const x=this.pix(c,(u,v)=>{const n=f(u,v);const r=.5+.5*Math.sin((v*22+n*3)*Math.PI*2);return[170+n*40-r*10,152+n*36-r*10,112+n*28-r*8]});
       for(let i=0;i<220;i++){x.fillStyle=`rgba(${rnd(90,150)},${rnd(80,130)},${rnd(60,100)},.6)`;x.beginPath();x.arc(rnd(0,256),rnd(0,256),rnd(.6,1.8),0,7);x.fill()}return{c,norm:1.5}}
     case 'plaster':{const c=this.cvs(256),f=this.fbm(61,16,4);const x=this.pix(c,(u,v)=>{const n=f(u,v);return[214+n*34,202+n*32,176+n*30]});
@@ -3346,15 +3348,16 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       const cm=mk('#9a8a7a');cm.map=this.tex('bricks');const ch=new THREE.Mesh(this.boxUV(20,60,20,40),cm);ch.position.set((along?h.w*.22:0)*((h.seed%2)?1:-1),82+rh*.55,(along?0:h.h*.22));ch.castShadow=true;ch.userData.ownMat=1;g.add(ch);
       g.position.set(h.x+h.w/2,0,h.y+h.h/2);S.add(g);return{g,mats:[rm,gm,cm],h,smoke:{x:g.position.x+ch.position.x,y:82+rh*.55+32,z:g.position.z+ch.position.z}}});
     // wells & fountain plazas
-    for(const w of WD.wells){const g=new THREE.Group();g.position.set(w.x,0,w.y);
+    const mfp=k=>CURSED&&this.mfProp&&this.mfProp(k);
+    for(const w of WD.wells){if(mfp('village-well'))break;const g=new THREE.Group();g.position.set(w.x,0,w.y);
       this.mesh(this.cylg(w.r,w.r+3,26,18),this.tstd('bricks','#c8c0b0',.9,0),0,13,0,1,1,1,g,true);this.mesh(G.disc,this.std('#244a6a',.15,0),0,22,0,w.r*.8,1,w.r*.8,g);
       for(const s of[-1,1])this.mesh(G.box,this.tstd('bark','#6a4a32',.9,0),s*w.r*.85,48,0,5,48,5,g,true);const rf=this.mesh(G.cone4,this.tstd('tiles','#a04a32',.8,0),0,82,0,w.r*1.35,28,w.r*1.35,g,true);rf.rotation.y=Math.PI/4;
       this.mesh(G.cyl,this.tstd('planks','#9a7050',.8,0),0,40,0,6,10,6,g,true);this.scene.add(g)}
-    this.fountains=WD.fountains.map(f=>{const g=new THREE.Group();g.position.set(f.x,0,f.y);const st=this.tstd('bricks','#d8d0c0',.85,0);
+    this.fountains=WD.fountains.map(f=>{if(mfp('plaza-fountain'))return{x:f.x,y:f.y};const g=new THREE.Group();g.position.set(f.x,0,f.y);const st=this.tstd('bricks','#d8d0c0',.85,0);
       this.mesh(this.cylg(f.r,f.r+4,22,28),st,0,11,0,1,1,1,g,true);this.mesh(G.disc,this.std('#3a7ab0',.08,.1,{transparent:true,opacity:.85}),0,19,0,f.r*.86,1,f.r*.86,g);
       this.mesh(this.cylg(9,13,60,12),st,0,40,0,1,1,1,g,true);this.mesh(this.cylg(28,10,10,20),st,0,70,0,1,1,1,g,true);this.mesh(G.disc,this.std('#3a7ab0',.08,.1),0,75.5,0,24,1,24,g);this.mesh(G.sph,st,0,84,0,7,9,7,g,true);
       this.scene.add(g);return{x:f.x,y:f.y}});
-    for(const s of WD.stalls){const g=new THREE.Group();g.position.set(s.x,0,s.y);g.rotation.y=-s.a;const wood=this.tstd('bark','#6a4a32',.9,0);
+    for(const s of WD.stalls){if(mfp('market-stall'))break;const g=new THREE.Group();g.position.set(s.x,0,s.y);g.rotation.y=-s.a;const wood=this.tstd('bark','#6a4a32',.9,0);
       for(const q of[[-30,-18],[30,-18],[-30,18],[30,18]])this.mesh(G.box,wood,q[0],32,q[1],4,64,4,g,true);this.mesh(this.boxUV(68,10,40,60),this.tstd('planks','#b08860',.8,0),0,30,0,1,1,1,g,true);
       const aw=this.mesh(G.box,this.std(s.c,.8,0),0,66,0,74,4,48,g,true);aw.rotation.x=.18;for(let k=0;k<4;k++)this.mesh(G.sph,this.std(['#e04a3a','#f0c040','#7ac84a','#e88a3a'][k],.6,0),-22+k*14,38,-6+(k%2)*10,6,6,6,g,true);this.scene.add(g)}
     // banners on poles around the plaza
@@ -3378,10 +3381,10 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       for(let k=0;k<4;k++)this.glows.push([c.x+Math.cos(k*1.6)*c.R*.5,30,c.y+Math.sin(k*1.6)*c.R*.5,k%2?'#7ff3ff':'#ff8ae0',220]);
       return{c,dm,mt:[]}});
     // lanterns / torches
-    const la=WD.lanterns;const iron=this.std('#2a2624',.5,.7);
-    this.instC(G.cyl,iron,la,(l,add)=>{const tall=l.torch?34:l.small?40:56,y=this.gY(l.x,l.y);add(l.x,y+tall/2,l.y,l.torch?5:2.4,tall,l.torch?5:2.4,0,0,0,null)},true);
+    const la=WD.lanterns;const iron=this.std('#2a2624',.5,.7);const mfL=CURSED&&this.mfProp&&this.mfProp('street-lantern'),laP=mfL?la.filter(l=>l.torch||l.small):la;
+    this.instC(G.cyl,iron,laP,(l,add)=>{const tall=l.torch?34:l.small?40:56,y=this.gY(l.x,l.y);add(l.x,y+tall/2,l.y,l.torch?5:2.4,tall,l.torch?5:2.4,0,0,0,null)},true);
     this.lampMat=this.std('#fff0c0',.3,0,{emissive:'#ffb040',emissiveIntensity:1.2});
-    this.instC(G.box,this.lampMat,la.filter(l=>!l.torch),(l,add)=>{const tall=l.small?40:56,y=this.gY(l.x,l.y);add(l.x,y+tall+6,l.y,9,12,9,0,.6,0,null)},false);
+    this.instC(G.box,this.lampMat,laP.filter(l=>!l.torch),(l,add)=>{const tall=l.small?40:56,y=this.gY(l.x,l.y);add(l.x,y+tall+6,l.y,9,12,9,0,.6,0,null)},false);
     for(const l of la){const tall=l.torch?34:l.small?40:56;this.glows.push([l.x,this.gY(l.x,l.y)+tall+8,l.y,l.torch?'#ff8a2a':l.dire?'#c08aff':'#ffbf66',l.torch?330:250])}
     this.torches=la.filter(l=>l.torch).map(l=>({x:l.x,y:this.gY(l.x,l.y)+40,z:l.y}));
     for(const m of WD.mush)this.glows.push([m.x,m.s*1.8,m.y,m.c,m.s*13]);for(const c of WD.crystals)this.glows.push([c.x,c.s*1.6,c.y,c.c,c.s*13]);
@@ -3425,7 +3428,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
         for(let k=0;k<5;k++){const b=this.mesh(this.cylg(1.2,3,46),bark,0,62+k*7,0,1,1,1,tr,true);b.rotation.z=(k%2?1:-1)*(.7+k*.1);b.rotation.y=k*1.3;b.position.x=Math.sin(k*1.3)*8}
         this.glows.push([g.x,y+40,g.y,'#7dff8a',360]);this.graveFx=(this.graveFx||[]).concat([g])}}
     // bridges: stone arches; docks: wooden planks
-    this.bridges=WD.bridges.map(b=>{const g=new THREE.Group();g.position.set(b.x,0,b.y);g.rotation.y=Math.atan2(-b.ay,b.ax);
+    this.bridges=WD.bridges.map(b=>{if(!b.dock&&CURSED&&this.mfProp&&this.mfProp('stone-bridge'))return null;const g=new THREE.Group();g.position.set(b.x,0,b.y);g.rotation.y=Math.atan2(-b.ay,b.ax);
       if(b.dock){const pl=this.tstd('planks','#a88660',.85,0);this.mesh(this.boxUV(b.len,6,b.wid,80),pl,0,3,0,1,1,1,g,true);for(let x=-b.len/2+20;x<b.len/2;x+=60)for(const z of[-b.wid/2+4,b.wid/2-4])this.mesh(G.cyl,this.tstd('bark','#6a4a32',.9,0),x,-6,z,4,28,4,g,true);S.add(g);return g}
       const st=this.tstd('bricks','#d0c8b8',.88,0);const n=16,pos=[];const hy=(t)=>7+(b.big?30:24)*(1-t*t);
       const deck=new THREE.BoxGeometry(b.len,10,b.wid,n,1,1);const p=deck.attributes.position;for(let i=0;i<p.count;i++){const t=p.getX(i)/(b.len/2);p.setY(i,p.getY(i)+hy(t)-5)}deck.computeVertexNormals();
@@ -4561,6 +4564,15 @@ const QW={g:null,bl:{},
 })();
 // ===================== Depth pass: ambient occlusion (soft contact shadow in creases and around bases) + gentle sharpening =====================
 // Runs inside the post chain on the scene's own depth buffer: AO at half resolution, then one full-screen composite.
+// With the depth-shade pass switched off nothing removes invalid (NaN / negative) HDR pixels before bloom, and one such pixel
+// spreads through the blur chain until the whole frame is black. This tiny pass does only that clean-up.
+R3.cleanPass=function(){const T=THREE,tri=new T.BufferGeometry();tri.setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3));tri.setAttribute('uv',new T.Float32BufferAttribute([0,0,2,0,0,2],2));
+  const cam2=new T.OrthographicCamera(-1,1,1,-1,0,1),m=new T.ShaderMaterial({uniforms:{tColor:{value:null},uGrade:{value:1}},depthTest:false,depthWrite:false,vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
+    fragmentShader:'precision highp float;varying vec2 vUv;uniform sampler2D tColor;uniform float uGrade;void main(){vec4 c=texture2D(tColor,vUv);vec3 v=c.rgb;if(any(isnan(v))||any(isinf(v)))v=vec3(0.);v=clamp(v,0.,48.);'+
+      'float l=dot(v,vec3(.2126,.7152,.0722));vec3 g=mix(vec3(l),v,1.14);g*=mix(vec3(.93,.98,1.07),vec3(1.06,1.,.92),smoothstep(.02,.9,l));vec2 d=vUv-.5;g*=1.-dot(d,d)*.62;v=mix(v,g,uGrade);gl_FragColor=vec4(v,1.);}'});
+  const mesh=new T.Mesh(tri,m);mesh.frustumCulled=false;
+  return{enabled:true,needsSwap:true,clear:false,renderToScreen:false,isPass:true,grade:m.uniforms.uGrade,setSize(){},dispose(){m.dispose();tri.dispose()},
+    render(renderer,writeBuffer,readBuffer){m.uniforms.tColor.value=readBuffer.texture;const ac=renderer.autoClear;renderer.autoClear=false;renderer.setRenderTarget(writeBuffer);renderer.render(mesh,cam2);renderer.autoClear=ac}}};
 R3.aoPass=function(){const T=THREE,tri=new T.BufferGeometry();tri.setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3));tri.setAttribute('uv',new T.Float32BufferAttribute([0,0,2,0,0,2],2));
   const cam2=new T.OrthographicCamera(-1,1,1,-1,0,1),VS='varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}';
   const DEP='uniform sampler2D tDepth;uniform vec2 uNF,uProj;float vz(vec2 uv){float d=texture2D(tDepth,uv).x;return uNF.x*uNF.y/((uNF.y-uNF.x)*d-uNF.y);}vec3 vp(vec2 uv){float z=vz(uv);return vec3((uv*2.-1.)*uProj*-z,z);}\n';
@@ -4699,21 +4711,21 @@ const REG={N:['อาณาจักรล่มสลาย','ป่าต้�
   glows(R){const rn=mulberry32(4242);for(let k=0;k<1700;k++){const x=1200+rn()*(WORLD-2400),y=1200+rn()*(WORLD-2400),s=rn();if(outsideD(x,y)>-80||inWater(x,y))continue;const g=this.GLOW[this.at(x,y)];if(!g)continue;
       R.glows.push([x,R.gY(x,y)+8+s*30,y,g[0],g[1]*(.6+s*.8)])}},
   // light and haze follow the region the hero is standing in
-  atmo(R,L,dk,inCave){if(!MOON){if(L){const b=inDG(L)?this.cur:this.at(L.x,L.y);if(b!==this.cur&&state==='play'){if(this.cur>=0&&gameT>6)announce={txt:this.IC[b]+' '+this.N[b]+' — '+this.TIP[b],t:3.2};this.cur=b}}return}if(!this.fc){this.fc=this.FOG.map(c=>new THREE.Color(c));this.hc=this.HEMI.map(c=>new THREE.Color(c));this.aw=[1,0,0,0,0]}if(!L)return;
+  atmo(R,L,dk,inCave){if(!MOON){if(L){const b=inDG(L)?this.cur:this.at(L.x,L.y);if(b!==this.cur&&state==='play'){if(this.cur>=0&&gameT>6)announce={txt:this.IC[b]+' '+this.N[b]+' — '+this.TIP[b],t:3.2};this.cur=b}}if(L){const n=clamp((.55-dk)/.35,0,1);this.motes(R,L,[lerp(5,9,n),lerp(3,5,n),lerp(.32,.95,n),lerp(1,.75,n),lerp(.93,1,n),lerp(.72,.35,n)]);if(this.mp){this.mp.material.size=lerp(10,15,n);this.mp.visible=this.mp.visible&&!inCave}}return}if(!this.fc){this.fc=this.FOG.map(c=>new THREE.Color(c));this.hc=this.HEMI.map(c=>new THREE.Color(c));this.aw=[1,0,0,0,0]}if(!L)return;
     const o=this.w(L.x,L.y,this.tw),a=this.aw;let b=0;for(let i=0;i<5;i++){a[i]+=(o[i]-a[i])*.04;if(a[i]>a[b])b=i}
     if(b!==this.cur&&state==='play'){if(this.cur>=0&&gameT>6&&!inDG(L))announce={txt:this.IC[b]+' '+this.N[b]+' — '+this.TIP[b],t:3.2};this.cur=b}
     this.motes(R,L);if(inCave)return;let fr=0,fg=0,fb=0,hr=0,hg=0,hb=0,lm=0;for(let i=0;i<5;i++){const k=a[i],f=this.fc[i],h=this.hc[i];fr+=f.r*k;fg+=f.g*k;fb+=f.b*k;hr+=h.r*k;hg+=h.g*k;hb+=h.b*k;lm+=this.LUM[i]*k}
     const nk=.35+.65*dk;R.scene.fog.color.lerp(R.c1.setRGB(fr*nk,fg*nk,fb*nk),.5);R.c1.setRGB(hr,hg,hb);R.hemi.color.lerp(R.c1,.5);R.sun.color.lerp(R.c1,.25);R.hemi.intensity*=lm;R.sun.intensity*=lm},
   // drifting motes around the hero: dust in the kingdom, spores in the forest, snow on the ice, embers over the ash, void sparks in the abyss
   MC:['#ffe2a0','#9dffb0','#ffffff','#ff8a3a','#c48aff'],MV:[[6,4,.5],[10,7,.6],[26,-70,1],[14,46,.8],[5,22,.7]],  // [sideways drift, vertical speed, opacity]
-  motes(R,L){const N=R.hi?300:140,W=1900,D=1500,H=460;
+  motes(R,L,ov){const N=R.hi?300:140,W=1900,D=1500,H=460;
     if(!this.mp){const g=new THREE.BufferGeometry(),p=new Float32Array(N*3),s=new Float32Array(N);for(let i=0;i<N;i++){p[i*3]=L.x+(Math.random()-.5)*W;p[i*3+1]=Math.random()*H;p[i*3+2]=L.y+(Math.random()-.5)*D;s[i]=Math.random()*6.283}
       g.setAttribute('position',new THREE.BufferAttribute(p,3));const c=document.createElement('canvas');c.width=c.height=32;const x=c.getContext('2d'),gr=x.createRadialGradient(16,16,0,16,16,16);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.35,'rgba(255,255,255,.55)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,32,32);
       const m=new THREE.PointsMaterial({size:13,map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true,fog:false});
       this.mp=new THREE.Points(g,m);this.mp.frustumCulled=false;this.mp.renderOrder=5;this.ms=s;this.mcol=this.MC.map(c=>new THREE.Color(c));this.mt=performance.now();this.mscene=null}
     if(this.mscene!==R.scene){R.scene.add(this.mp);this.mscene=R.scene}
     const now=performance.now(),dt=Math.min(.05,(now-this.mt)/1000);this.mt=now;const a=this.aw,p=this.mp.geometry.attributes.position.array,s=this.ms,T=now/1000;let vx=0,vy=0,op=0,r=0,g=0,b=0;
-    for(let i=0;i<5;i++){const k=a[i],v=this.MV[i],c=this.mcol[i];vx+=v[0]*k;vy+=v[1]*k;op+=v[2]*k;r+=c.r*k;g+=c.g*k;b+=c.b*k}
+    if(ov){vx=ov[0];vy=ov[1];op=ov[2];r=ov[3];g=ov[4];b=ov[5]}else for(let i=0;i<5;i++){const k=a[i],v=this.MV[i],c=this.mcol[i];vx+=v[0]*k;vy+=v[1]*k;op+=v[2]*k;r+=c.r*k;g+=c.g*k;b+=c.b*k}
     this.mp.material.color.setRGB(r,g,b);this.mp.material.opacity=op;this.mp.visible=!inDG(L);
     for(let i=0;i<N;i++){const j=i*3,ph=s[i];p[j]+=(Math.sin(T*.7+ph)*vx+vx*.6)*dt;p[j+1]+=(vy*(.6+.4*Math.sin(ph*3))+Math.sin(T*1.3+ph)*6)*dt;p[j+2]+=Math.cos(T*.5+ph*2)*vx*dt;
       if(p[j+1]<0)p[j+1]+=H;else if(p[j+1]>H)p[j+1]-=H;let dx=p[j]-L.x,dz=p[j+2]-L.y;if(dx>W/2)p[j]-=W;else if(dx<-W/2)p[j]+=W;if(dz>D/2)p[j+2]-=D;else if(dz<-D/2)p[j+2]+=D}

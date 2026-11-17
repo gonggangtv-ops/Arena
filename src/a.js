@@ -552,7 +552,7 @@ function genWorld(seed){
     if(V.plaza){w.fountains.push({x:V.x,y:V.y,r:62});w.solids.push({x:V.x,y:V.y,r:62,t:'fountain'})}
     else{w.wells.push({x:V.x,y:V.y,r:34});w.solids.push({x:V.x,y:V.y,r:34,t:'well'})}
     for(let k=0;k<(V.plaza?8:5);k++){const a=k/(V.plaza?8:5)*Math.PI*2+.3;const rr=V.plaza?178:118;w.lanterns.push({x:V.x+Math.cos(a)*rr,y:V.y+Math.sin(a)*rr,dire:V.dire})}
-    if(CURSED){w.stalls=w.stalls||[];for(let k=0;k<(V.plaza?3:2);k++){const a=k/(V.plaza?3:2)*Math.PI*2+1.3+vi,rr=V.plaza?232:186,x=V.x+Math.cos(a)*rr,y=V.y+Math.sin(a)*rr;w.stalls.push({x,y,a});w.rocks.push({x,y,r:44,prop:1})}}
+    if(CURSED){w.stalls=w.stalls||[];for(let k=0;k<(V.plaza?3:2);k++){const a=k/(V.plaza?3:2)*Math.PI*2+1.3+vi,rr=V.plaza?232:186,x=V.x+Math.cos(a)*rr,y=V.y+Math.sin(a)*rr;w.stalls.push({x,y,a,c:['#5a6f8c','#8c5a5a','#6f8c5a'][k%3]});w.rocks.push({x,y,r:44,prop:1})}}
     let placed=0;
     for(let tries=0;tries<(CURSED?1600:700)&&placed<V.n;tries++){
       const a=placed/V.n*Math.PI*2+sr(-.25,.25)+(tries>120?sr(0,6):0),d=sr(V.r*(CURSED?.36:.5),V.r*(tries>300?.98:.9));
@@ -654,7 +654,7 @@ function genWorld(seed){
   for(let gy=0;gy<gw;gy++)for(let gx=0;gx<gw;gx++){
     const p={x:gx*TS+sr(10,TS-10),y:gy*TS+sr(10,TS-10)};const o=outsideD(p.x,p.y);if(o>-30)continue;
     const nz=w.noise(p.x,p.y),foot=o>-420;const dire=isDire(p.x,p.y);const rdist=Math.abs(riverD(p.x,p.y))-riverHW(p.y);
-    let want=nz>.53||(foot&&nz>.43)||(dire&&nz>.5);if(!want&&rdist>0&&rdist<170&&SR()<.12)want=true;if(!want)continue;if(SR()<.22)continue;
+    let want=nz>.53||(foot&&nz>.43)||(dire&&nz>.5);if(!want&&rdist>0&&rdist<170&&SR()<.12)want=true;if(!want)continue;if(SR()<(CURSED?.5:.22))continue;
     if(!free(p,42)||pathNear(p,45)||rockNear(p,44)||w.houses.some(h=>inRect(p,h,52))||!tFree(p,104))continue;
     const roll=SR();let v;
     if(rdist>0&&rdist<170&&!foot)v=6;else if(foot)v=dire?(roll<.6?4:0):(roll<.75?0:2);else if(dire)v=roll<.32?3:roll<.62?4:roll<.8?5:1;else v=roll<.42?1:roll<.62?2:roll<.9?0:6;

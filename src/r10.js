@@ -66,6 +66,15 @@
 })();
 // ===================== Depth pass: ambient occlusion (soft contact shadow in creases and around bases) + gentle sharpening =====================
 // Runs inside the post chain on the scene's own depth buffer: AO at half resolution, then one full-screen composite.
+// With the depth-shade pass switched off nothing removes invalid (NaN / negative) HDR pixels before bloom, and one such pixel
+// spreads through the blur chain until the whole frame is black. This tiny pass does only that clean-up.
+R3.cleanPass=function(){const T=THREE,tri=new T.BufferGeometry();tri.setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3));tri.setAttribute('uv',new T.Float32BufferAttribute([0,0,2,0,0,2],2));
+  const cam2=new T.OrthographicCamera(-1,1,1,-1,0,1),m=new T.ShaderMaterial({uniforms:{tColor:{value:null},uGrade:{value:1}},depthTest:false,depthWrite:false,vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
+    fragmentShader:'precision highp float;varying vec2 vUv;uniform sampler2D tColor;uniform float uGrade;void main(){vec4 c=texture2D(tColor,vUv);vec3 v=c.rgb;if(any(isnan(v))||any(isinf(v)))v=vec3(0.);v=clamp(v,0.,48.);'+
+      'float l=dot(v,vec3(.2126,.7152,.0722));vec3 g=mix(vec3(l),v,1.14);g*=mix(vec3(.93,.98,1.07),vec3(1.06,1.,.92),smoothstep(.02,.9,l));vec2 d=vUv-.5;g*=1.-dot(d,d)*.62;v=mix(v,g,uGrade);gl_FragColor=vec4(v,1.);}'});
+  const mesh=new T.Mesh(tri,m);mesh.frustumCulled=false;
+  return{enabled:true,needsSwap:true,clear:false,renderToScreen:false,isPass:true,grade:m.uniforms.uGrade,setSize(){},dispose(){m.dispose();tri.dispose()},
+    render(renderer,writeBuffer,readBuffer){m.uniforms.tColor.value=readBuffer.texture;const ac=renderer.autoClear;renderer.autoClear=false;renderer.setRenderTarget(writeBuffer);renderer.render(mesh,cam2);renderer.autoClear=ac}}};
 R3.aoPass=function(){const T=THREE,tri=new T.BufferGeometry();tri.setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3));tri.setAttribute('uv',new T.Float32BufferAttribute([0,0,2,0,0,2],2));
   const cam2=new T.OrthographicCamera(-1,1,1,-1,0,1),VS='varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}';
   const DEP='uniform sampler2D tDepth;uniform vec2 uNF,uProj;float vz(vec2 uv){float d=texture2D(tDepth,uv).x;return uNF.x*uNF.y/((uNF.y-uNF.x)*d-uNF.y);}vec3 vp(vec2 uv){float z=vz(uv);return vec3((uv*2.-1.)*uProj*-z,z);}\n';

@@ -5,7 +5,7 @@ cur='cursed' in sys.argv
 classic='classic' in sys.argv          # the old v2.5 game, kept for reference (classic.html, not deployed)
 arena=not cur and not classic          # index.html: every Cursed Realm system, original scenery, Meshy village houses
 sys_on=cur or arena
-VILLAGE=['house-cottage','house-long','house-witch','market-stall']
+VILLAGE=['house-cottage','house-long','house-witch','market-stall','village-well','street-lantern','stone-bridge','plaza-fountain']
 sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['a.js','gi.js','b.js','c.js','r3.js','r4.js','r5.js','r6.js','r7.js','r8.js','r9.js','r10.js','r11.js','r12.js','t1.js','d.js'])
 js='const CURSED='+('true' if sys_on else 'false')+';const MOON='+('true' if cur else 'false')+';\n'+js

@@ -18,7 +18,9 @@ window.installMoonfallVillage=function(P){
       prepared.set(key,parts);return parts};
     if(A)A.start();
     // the models arrive after the first world build: rebuild the village once they are in
-    if(A)A.subscribe(()=>{if(R3.ok&&WD&&R3.world===WD&&!P._villageDone&&['house-cottage','house-long','house-witch','market-stall'].every(k=>A.get(k)&&A.get(k).state==='loaded')){P._villageDone=1;R3.world=null}})}
+    if(A)A.subscribe(()=>{if(R3.ok&&WD&&R3.world===WD&&!P._villageDone&&['house-cottage','house-long','house-witch','market-stall','village-well','street-lantern','stone-bridge','plaza-fountain'].every(k=>A.get(k)&&A.get(k).state==='loaded')){P._villageDone=1;R3.world=null}})}
+  // r3 asks this before drawing its own well / fountain / lantern / bridge / stall, so nothing is drawn twice
+  P.mfProp=function(key){if(typeof CURSED==='undefined'||!CURSED||!A)return false;const a=A.get(key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.size)};
   const keyFor=h=>h.style==='witch'?'house-witch':(Math.max(h.w,h.h)/Math.min(h.w,h.h)>1.28||h.seed%3===0?'house-long':'house-cottage');
   function shell(R,key,mats){
     const parts=R.celestialAsset(key);if(!parts)return null;const g=new T.Group();
@@ -37,9 +39,25 @@ window.installMoonfallVillage=function(P){
       const g=new T.Group();g.add(inner);g.position.set(h.x+h.w/2,this.gY(h.x+h.w/2,h.y+h.h/2)-2,h.y+h.h/2);
       this.scene.remove(r.g);this.scene.add(g);r.g=g;r.mats=mats;r.smoke={x:g.position.x,y:H*.9,z:g.position.z}}
     const sa=A.get('market-stall'),ss=sa&&sa.inspection&&sa.inspection.size;
-    // until the stall model is available, draw a plain cart so the obstacle is never invisible
-    if(!ss)for(const s of WD.stalls||[]){const g=new T.Group(),w=this.tstd('planks','#8a7460',.9,0),c=this.std('#5d6f8c',.9,0);g.position.set(s.x,this.gY(s.x,s.y),s.y);g.rotation.y=-s.a+Math.PI/2;
-      this.mesh(this.G.box,w,0,20,0,92,36,46,g,true);this.mesh(this.G.box,c,0,84,0,104,5,62,g,true);for(const x of[-44,44])for(const z of[-24,24])this.mesh(this.G.box,w,x,44,z,5,84,5,g,true);this.scene.add(g)}
     if(ss)for(const s of WD.stalls||[]){const g=shell(this,'market-stall');if(!g)break;const k=118/Math.max(ss[0],ss[2]);g.scale.set(ss[0]*k,ss[1]*k,ss[2]*k);g.rotation.y=-s.a-Math.PI/2;g.position.set(s.x,this.gY(s.x,s.y)-1,s.y);this.scene.add(g)}
+    // ---- village dressing: wells, plaza fountains, street lanterns, river bridges ----
+    const sz=k=>{const a=A.get(k);return a&&a.inspection&&a.inspection.size},prop=(key,x,y,z,w,h,d,ry)=>{const parts=this.celestialAsset(key);if(!parts)return null;const g=new T.Group();
+      for(const p of parts){const m=new T.Mesh(p.geo,p.mat);m.castShadow=this.hi;m.receiveShadow=true;g.add(m)}g.scale.set(w,h,d);g.rotation.y=ry;g.position.set(x,y,z);this.scene.add(g);return g};
+    const hash=(x,y)=>{const s=Math.sin(x*12.9898+y*78.233)*43758.5453;return s-Math.floor(s)};
+    if(this.mfProp('village-well')){const s=sz('village-well');for(const w of WD.wells){const W=w.r*2.6;prop('village-well',w.x,this.gY(w.x,w.y)-1,w.y,W,W*s[1]/Math.max(s[0],s[2]),W,hash(w.x,w.y)*6.283)}}
+    if(this.mfProp('plaza-fountain')){const s=sz('plaza-fountain');for(const f of WD.fountains){const W=f.r*2.5;prop('plaza-fountain',f.x,this.gY(f.x,f.y)-1,f.y,W,W*s[1]/Math.max(s[0],s[2])*1.15,W,hash(f.x,f.y)*6.283)}}
+    if(this.mfProp('street-lantern')){const s=sz('street-lantern'),parts=this.celestialAsset('street-lantern'),H=78,k=H/s[1],items=WD.lanterns.filter(l=>!l.torch&&!l.small);
+      for(const p of parts)this.instC(p.geo,p.mat,items,(l,add)=>add(l.x,this.gY(l.x,l.y)-1,l.y,s[0]*k,H,s[2]*k,0,hash(l.x,l.y)*6.283,0,null),true)}
+    // river bridges: a row of arch blocks bent along the bridge's hump, so the stone deck matches where people walk
+    if(this.mfProp('stone-bridge')){const parts=this.celestialAsset('stone-bridge');
+      for(const b of WD.bridges){if(b.dock)continue;const n=Math.max(2,Math.round(b.len/(b.wid*1.05))),seg=b.len/n,H=b.big?92:80,hump=b.big?30:24;
+        const g=new T.Group();g.position.set(b.x,0,b.y);g.rotation.y=Math.atan2(-b.ay,b.ax);
+        for(const p of parts){const src=p.geo,pos=src.attributes.position,geos=[];
+          for(let i=0;i<n;i++){const q=src.clone(),a=src.attributes.position,f=new Float32Array(a.count*3);  // float copy: the packed (quantized) positions cannot hold world-size values
+            for(let v=0;v<a.count;v++){const x=-b.len/2+seg*(i+.5)+a.getX(v)*seg*1.02,t=x/(b.len/2);f[v*3]=x;f[v*3+1]=(a.getY(v)-1)*H+7+hump*(1-t*t)+2;f[v*3+2]=a.getZ(v)*b.wid*1.04}
+            q.setAttribute('position',new T.BufferAttribute(f,3));q.deleteAttribute('normal');q.computeVertexNormals();q.computeBoundingSphere();geos.push(q)}
+          const geo=T.BufferGeometryUtils?T.BufferGeometryUtils.mergeGeometries(geos):null;
+          if(geo){const m=new T.Mesh(geo,p.mat);m.castShadow=this.hi;m.receiveShadow=true;m.userData.ownGeo=1;g.add(m)}else for(const q of geos){const m=new T.Mesh(q,p.mat);m.castShadow=this.hi;m.receiveShadow=true;g.add(m)}}
+        this.scene.add(g)}}
   };
 };
