@@ -1,0 +1,15 @@
+<section id="loading" class="ov moonfall-load" role="dialog" aria-modal="true" aria-labelledby="moonfallLoadTitle" tabindex="-1">
+  <div class="moonfall-load-card"><div class="moonfall-load-moon" aria-hidden="true">☾</div><p class="moonfall-load-eyebrow">THE CURSED REALM · MOONFALL</p><h2 id="moonfallLoadTitle">กำลังเปิดประตูจันทรา</h2><p id="moonfallLoadStatus" role="status" aria-live="polite">กำลังตรวจสอบไฟล์เกม…</p><div id="moonfallLoadProgress" role="progressbar" aria-label="ความคืบหน้าโหลดเกม" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="moonfallLoadFill"></div></div><p id="moonfallLoadCount">กำลังเตรียมข้อมูล</p><p class="moonfall-load-note">จะเข้าเกมได้เมื่อฉาก ตัวละคร และภาพไอคอนพร้อมครบแล้ว</p><div id="moonfallLoadError" role="alert" hidden></div><button id="moonfallLoadRetry" type="button" onclick="location.reload()" hidden>โหลดใหม่อีกครั้ง</button></div>
+</section>
+<script>
+window.moonfallCodeFailure=function(name){
+ window.__moonfallCodeFailure=name;
+ document.getElementById('loading').classList.remove('hidden');
+ document.getElementById('moonfallLoadStatus').textContent='โหลดไฟล์เกมไม่สำเร็จ';
+ const error=document.getElementById('moonfallLoadError');error.hidden=false;error.textContent=name+' · ยังเข้าเกมไม่ได้ กรุณาโหลดใหม่';
+ document.getElementById('moonfallLoadRetry').hidden=false;
+ for(const id of ['menu','rooms','lobby','c']){const el=document.getElementById(id);if(el)el.inert=true;}
+ for(const id of ['soloBtn','qmBtn','hostBtn','joinBtn','lobbyStart','moonfallBtn']){const el=document.getElementById(id);if(el)el.disabled=true;}
+};
+if(window.__moonfallCodeFailure)moonfallCodeFailure(window.__moonfallCodeFailure);
+</script>

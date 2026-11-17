@@ -1,0 +1,150 @@
+[
+  {
+    "case": "real-game",
+    "mobile": false,
+    "boot": {
+      "phase": "ready",
+      "ready": true,
+      "failed": false,
+      "total": 47,
+      "packDone": 18,
+      "musicDone": 7,
+      "error": null
+    },
+    "coverage": {
+      "skills": 63,
+      "items": 18,
+      "icons": 81,
+      "models": true,
+      "qn": true
+    },
+    "entryBlockedUntilLoaded": true,
+    "purchasePrice": 25,
+    "potionAndSkillInput": true,
+    "realRig": true,
+    "errors": []
+  },
+  {
+    "case": "real-game",
+    "mobile": true,
+    "boot": {
+      "phase": "ready",
+      "ready": true,
+      "failed": false,
+      "total": 47,
+      "packDone": 18,
+      "musicDone": 7,
+      "error": null
+    },
+    "coverage": {
+      "skills": 63,
+      "items": 18,
+      "icons": 81,
+      "models": true,
+      "qn": true
+    },
+    "entryBlockedUntilLoaded": true,
+    "purchasePrice": 25,
+    "potionAndSkillInput": true,
+    "realRig": true,
+    "errors": []
+  },
+  {
+    "case": "queued-client",
+    "pendingSnapshotPreserved": true,
+    "hp": 1527,
+    "errors": []
+  },
+  {
+    "case": "blocked-model",
+    "snapshot": {
+      "phase": "error",
+      "ready": false,
+      "failed": true,
+      "total": 47,
+      "packDone": 18,
+      "musicDone": 7,
+      "error": "Rough dark basalt boulder: HTTP 503 · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
+    },
+    "noEntry": true
+  },
+  {
+    "case": "blocked-art",
+    "snapshot": {
+      "phase": "error",
+      "ready": false,
+      "failed": true,
+      "total": 47,
+      "packDone": 0,
+      "musicDone": 7,
+      "error": "ภาพไอคอน: Atlas image unavailable: items · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
+    },
+    "noEntry": true
+  },
+  {
+    "case": "retry-art",
+    "ready": true
+  },
+  {
+    "case": "blocked-music",
+    "snapshot": {
+      "phase": "error",
+      "ready": false,
+      "failed": true,
+      "total": 47,
+      "packDone": 0,
+      "musicDone": 6,
+      "error": "เสียง menu: HTTP 503 · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
+    },
+    "noEntry": true
+  },
+  {
+    "case": "blocked-character",
+    "snapshot": {
+      "phase": "error",
+      "ready": false,
+      "failed": true,
+      "total": 0,
+      "packDone": 0,
+      "musicDone": 0,
+      "error": "รายการตัวละครไม่ครบ · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
+    },
+    "noEntry": true
+  },
+  {
+    "case": "blocked-manifest",
+    "snapshot": {
+      "phase": "error",
+      "ready": false,
+      "failed": true,
+      "total": 46,
+      "packDone": 0,
+      "musicDone": 6,
+      "error": "ไม่มีโมเดลในรายการ: moon-boulder · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
+    },
+    "noEntry": true
+  },
+  {
+    "case": "blocked-code",
+    "file": "moonfall-ui.js",
+    "noEntry": true
+  },
+  {
+    "case": "blocked-webgl",
+    "snapshot": {
+      "phase": "error",
+      "ready": false,
+      "failed": true,
+      "total": 0,
+      "packDone": 0,
+      "musicDone": 0,
+      "error": "อุปกรณ์ไม่พร้อมสำหรับกราฟิก 3D · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
+    },
+    "no2DFallback": true
+  },
+  {
+    "case": "blocked-stylesheet",
+    "noEntry": true,
+    "error": "ไฟล์เกม: moonfall-loading.css · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
+  }
+]

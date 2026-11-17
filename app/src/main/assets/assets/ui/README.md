@@ -1,18 +1,26 @@
-# Moonfall UI art — round 1
+# Moonfall UI art v2
 
-`moonfall-skills.png` is newly generated artwork for the requested Arena Royale
-UI pass. It is a 1374×1145 sheet with six columns and five rows, 229px per cell.
-`skill-atlas.json` maps the 27 base skills to the first 27 cells in the exact
-existing `SK` order, with Thai names verified against game data. The final three
-cells (attack/health/mana) are reserved artwork, not connected to gameplay yet.
+Three local WebP sheets supply 63 skill icons (27 base + 36 fusion) and 18 item/UI
+icons. `skill-atlas.json` maps every actual weapon key and shop item key to a
+sheet/cell. All 12 fusion weapons have their own three images, including the
+three dual-element staffs. The sheets are newly generated artwork, encoded as
+WebP quality 88 for game delivery; no Meshy job or credit was used.
 
-The runtime extracts and caches 192px canvases once, retaining original cooldown,
-level, mana and aim overlays. Missing/corrupt images and all fusion skills retain
-the existing GI glyph renderer and its credits. Artwork is displayed within the
-original circular hit areas; no input event or skill balance is replaced.
+- `moonfall-skills.webp`: existing base art, 6×5, first 27 cells used.
+- `moonfall-fusion.webp`: 24 new fusion cells, 6×4.
+- `moonfall-items.webp`: 12 fusion cells + 18 potion/shop/UI cells, 6×5.
+  Its authored grid is 1088px high within the 1145px image; `gridHeight` records
+  that actual boundary to avoid sampling the blank bottom margin.
 
-The PNG is about 2.4 MB. Runtime cached icons total roughly 4 MiB RGBA plus the
-browser's decoded sheet (about 6 MiB) and caches. This is an estimate, not a VRAM measurement.
-No Meshy requests or credits are involved in this UI pass.
+The three files total 1,106,012 bytes, below the previous single 2.4MB PNG. Raw
+new PNGs stay outside Git. The original base PNG is preserved in Git history.
+The runtime caches 81 canvases at 144×144, about 6.4 MiB of RGBA pixels plus
+browser-decoded sheets, encoded DOM icon URLs and graphics overhead.
 
-Review all skills and example states in `moonfall-ui-preview.html`.
+Cursed Realm now requires every image before unlocking play. Image/manifest
+errors are explicit boot errors; it does not use old glyphs or generic pictures
+as a replacement. Retry reloads the actual files. Vanilla index.html is unchanged.
+
+Source: `src/moonfall-ui.js`, `src/moonfall-inventory.js` and
+`src/moonfall-loading.js`. Original prices, potion limits/effects, skill damage,
+costs, cooldowns, aim and network payloads remain authoritative.

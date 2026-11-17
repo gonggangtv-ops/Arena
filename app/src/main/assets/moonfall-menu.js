@@ -15,7 +15,7 @@ window.installMoonfallMenuUX=function(){
     const reference=document.createElement('details');reference.className='moonfall-menu-section';reference.id='moonfallWeaponGuide';
     const referenceTitle=document.createElement('summary');referenceTitle.textContent='รู้จักอาวุธและสกิล · 9 แบบ';reference.appendChild(referenceTitle);
     const codex=document.getElementById('codex');codex.before(reference);reference.appendChild(codex);
-    const gallery=document.createElement('a');gallery.href='moonfall-ui-preview.html';gallery.target='_blank';gallery.rel='noopener';gallery.className='moonfall-gallery-link';gallery.textContent='ดูภาพสกิลทั้ง 27 สกิล ↗';reference.appendChild(gallery);
+    const gallery=document.createElement('button');gallery.type='button';gallery.className='moonfall-gallery-link';gallery.textContent='ดูสูตรหลอมและสกิลหลอมทั้ง 36 สกิล';gallery.onclick=()=>document.getElementById('fuseBtn').click();reference.appendChild(gallery);
     // Place secondary reference after the play/identity actions, retaining nodes.
     const tools=menu.querySelector('.celestial-tools');tools.after(settings);settings.after(reference);
     const updateLooks=()=>looks.querySelectorAll('.look').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===chosenLook)));

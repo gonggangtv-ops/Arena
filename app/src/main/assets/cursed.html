@@ -114,9 +114,11 @@ body:not(.moody) #gl{filter:saturate(1.16) contrast(1.03)}
 body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,rgba(4,4,8,.5) 78%,rgba(0,0,0,.82) 100%)}
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 52%,rgba(8,6,14,.34) 82%,rgba(4,3,8,.62) 100%)}
 </style>
-<link rel="stylesheet" href="celestial-theme.css">
-<link rel="stylesheet" href="moonfall-ui.css">
-<link rel="stylesheet" href="moonfall-menu.css">
+<link rel="stylesheet" href="celestial-theme.css" onerror="window.__moonfallCodeFailure='celestial-theme.css';if(window.moonfallCodeFailure)moonfallCodeFailure('celestial-theme.css')">
+<link rel="stylesheet" href="moonfall-ui.css" onerror="window.__moonfallCodeFailure='moonfall-ui.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-ui.css')">
+<link rel="stylesheet" href="moonfall-menu.css" onerror="window.__moonfallCodeFailure='moonfall-menu.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-menu.css')">
+<link rel="stylesheet" href="moonfall-inventory.css" onerror="window.__moonfallCodeFailure='moonfall-inventory.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-inventory.css')">
+<link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
 </head>
 <body>
 <div id="safe"></div>
@@ -132,8 +134,8 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     <span class="sub" style="margin:0">ผ้าคลุม</span><div class="looks" id="looks"></div>
   </div>
   <div class="row">
-    <button class="go qm" id="qmBtn">⚡ จับคู่ด่วน</button>
-    <button class="go ghost" id="soloBtn">เล่นคนเดียว</button>
+    <button class="go qm" id="qmBtn" disabled>⚡ จับคู่ด่วน</button>
+    <button class="go ghost" id="soloBtn" disabled>เล่นคนเดียว</button>
     <button class="go alt" id="roomsBtn">🏠 ห้องออนไลน์</button>
   </div>
   <div class="row">
@@ -145,7 +147,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     <button class="go ghost small" id="aoBtn">เงาลึก: เปิด</button>
     <button class="go ghost small" id="sndBtn">เสียง: เปิดทั้งหมด</button>
   </div>
-  <div class="row celestial-tools"><button class="go ghost small" id="moonfallBtn">☽ สำรวจ Moonfall</button><button class="go ghost small" id="celestialInfoBtn">สถานะโมเดล / Performance</button></div>
+  <div class="row celestial-tools"><button class="go ghost small" id="moonfallBtn" disabled>☽ สำรวจ Moonfall</button><button class="go ghost small" id="celestialInfoBtn">สถานะโมเดล / Performance</button></div>
   <div id="celestialAssetNote" role="status">กำลังตรวจสอบไฟล์โมเดล…</div>
   <div class="msg" id="menuMsg"></div>
   <button class="anime-help-toggle" id="animeHelp" aria-expanded="false" aria-controls="animeGuide">วิธีเล่นและการควบคุม ▾</button>
@@ -176,10 +178,10 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
       <input id="rname" maxlength="20" placeholder="ชื่อห้อง" autocomplete="off" aria-label="ชื่อห้อง">
       <input id="rpw" maxlength="12" placeholder="รหัสผ่าน (เว้นว่าง = ไม่ล็อก)" autocomplete="off" aria-label="รหัสผ่านห้อง">
       <label class="chk"><input type="checkbox" id="rpub" checked> แสดงในรายการห้อง</label>
-      <button class="go alt" id="hostBtn">สร้างห้อง</button>
+      <button class="go alt" id="hostBtn" disabled>สร้างห้อง</button>
       <div class="fh" style="margin-top:6px">🔑 เข้าด้วยรหัสห้อง</div>
       <div class="frow"><input id="code" maxlength="5" placeholder="รหัส 5 ตัว" autocomplete="off" aria-label="รหัสห้อง"><input id="codePw" maxlength="12" placeholder="รหัสผ่าน" autocomplete="off" aria-label="รหัสผ่าน"></div>
-      <button class="go ghost" id="joinBtn">เข้าห้อง</button>
+      <button class="go ghost" id="joinBtn" disabled>เข้าห้อง</button>
     </section>
   </div>
 </div>
@@ -199,7 +201,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
         <label>ขนาดแมพ<select id="cfgSize"><option value="A">อัตโนมัติ</option><option value="S">เล็ก</option><option value="M">กลาง</option><option value="L">ใหญ่</option></select></label>
       </div>
       <div class="sub" id="lobbyNote"></div>
-      <div class="row"><button class="go" id="lobbyStart">เริ่มเกม</button><button class="go ghost" id="lobbyLeave">ออกจากห้อง</button></div>
+      <div class="row"><button class="go" id="lobbyStart" disabled>เริ่มเกม</button><button class="go ghost" id="lobbyLeave">ออกจากห้อง</button></div>
       <div class="msg" id="lobbyMsg"></div>
     </section>
     <section class="chat hidden" id="chatBox" aria-label="แชทในห้อง">
@@ -208,26 +210,42 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     </section>
   </div>
 </div>
-<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>
+<section id="loading" class="ov moonfall-load" role="dialog" aria-modal="true" aria-labelledby="moonfallLoadTitle" tabindex="-1">
+  <div class="moonfall-load-card"><div class="moonfall-load-moon" aria-hidden="true">☾</div><p class="moonfall-load-eyebrow">THE CURSED REALM · MOONFALL</p><h2 id="moonfallLoadTitle">กำลังเปิดประตูจันทรา</h2><p id="moonfallLoadStatus" role="status" aria-live="polite">กำลังตรวจสอบไฟล์เกม…</p><div id="moonfallLoadProgress" role="progressbar" aria-label="ความคืบหน้าโหลดเกม" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="moonfallLoadFill"></div></div><p id="moonfallLoadCount">กำลังเตรียมข้อมูล</p><p class="moonfall-load-note">จะเข้าเกมได้เมื่อฉาก ตัวละคร และภาพไอคอนพร้อมครบแล้ว</p><div id="moonfallLoadError" role="alert" hidden></div><button id="moonfallLoadRetry" type="button" onclick="location.reload()" hidden>โหลดใหม่อีกครั้ง</button></div>
+</section>
+<script>
+window.moonfallCodeFailure=function(name){
+ window.__moonfallCodeFailure=name;
+ document.getElementById('loading').classList.remove('hidden');
+ document.getElementById('moonfallLoadStatus').textContent='โหลดไฟล์เกมไม่สำเร็จ';
+ const error=document.getElementById('moonfallLoadError');error.hidden=false;error.textContent=name+' · ยังเข้าเกมไม่ได้ กรุณาโหลดใหม่';
+ document.getElementById('moonfallLoadRetry').hidden=false;
+ for(const id of ['menu','rooms','lobby','c']){const el=document.getElementById(id);if(el)el.inert=true;}
+ for(const id of ['soloBtn','qmBtn','hostBtn','joinBtn','lobbyStart','moonfallBtn']){const el=document.getElementById(id);if(el)el.disabled=true;}
+};
+if(window.__moonfallCodeFailure)moonfallCodeFailure(window.__moonfallCodeFailure);
+</script>
 <div id="end" class="ov hidden">
   <p class="big" id="endTitle"></p>
   <div class="stats" id="endStats"></div>
   <div class="row"><button class="go ghost" id="watchBtn">ดูต่อ</button><button class="go" id="againBtn">กลับเมนู</button><button class="go ghost hidden" id="endMenu">เมนู</button></div>
 </div>
-<script src="engine.min.js"></script>
-<script src="models2.js" async></script>
+<script src="engine.min.js" onerror="moonfallCodeFailure('engine.min.js')"></script>
+<script src="models2.js" onerror="moonfallCodeFailure('models2.js')" async></script>
 <script src="models4.js" async></script>
 <script src="peerjs.min.js"></script>
-<script src="sfx.js" async></script>
+<script src="sfx.js" onerror="moonfallCodeFailure('sfx.js')" async></script>
 <script src="turn.js"></script>
-<script src="celestial-assets.js"></script>
-<script src="celestial-render.js"></script>
-<script src="moonfall-collision-data.js"></script>
-<script src="moonfall-environment.js"></script>
-<script src="moonfall-biome.js"></script>
-<script src="moonfall-village.js"></script>
-<script src="moonfall-ui.js"></script>
-<script src="moonfall-menu.js"></script>
+<script src="celestial-assets.js" onerror="moonfallCodeFailure('celestial-assets.js')"></script>
+<script src="celestial-render.js" onerror="moonfallCodeFailure('celestial-render.js')"></script>
+<script src="moonfall-collision-data.js" onerror="moonfallCodeFailure('moonfall-collision-data.js')"></script>
+<script src="moonfall-environment.js" onerror="moonfallCodeFailure('moonfall-environment.js')"></script>
+<script src="moonfall-biome.js" onerror="moonfallCodeFailure('moonfall-biome.js')"></script>
+<script src="moonfall-village.js" onerror="moonfallCodeFailure('moonfall-village.js')"></script>
+<script src="moonfall-ui.js" onerror="moonfallCodeFailure('moonfall-ui.js')"></script>
+<script src="moonfall-menu.js" onerror="moonfallCodeFailure('moonfall-menu.js')"></script>
+<script src="moonfall-inventory.js" onerror="moonfallCodeFailure('moonfall-inventory.js')"></script>
+<script src="moonfall-loading.js" onerror="moonfallCodeFailure('moonfall-loading.js')"></script>
 <script>
 const CURSED=true;
 "use strict";
@@ -4893,6 +4911,8 @@ window.__game={sim:(s)=>{for(let i=0;i<s*30;i++){if(state!=='play')break;hostUpd
   get state(){return state},get me(){return ME()},get alive(){return alive},get net(){return net},get perf(){return perfHost},units:()=>units,items:()=>items,world:()=>WD,
   tp:(x,y)=>{const m=ME();m.x=x;m.y=y},hurt:(id,a)=>{const u=UMAP.get(id);if(u)dealDamage(u,a,'pure',null)},lab:LAB,setT:t=>{gameT=t},klog:()=>KLOG,
   give:(wk,t,at)=>{const m=ME();if(!m)return;m.wk=wk;m.wt=t;if(at!==undefined)m.at=at;recalc(m,true)},lvl:n=>{const m=ME();if(!m)return;m.lvl=n;m.pts=n;recalc(m,true)},R3:()=>typeof R3!=='undefined'?R3:null};
+
+installMoonfallInventory();installMoonfallLoading();
 
 </script>
 </body>

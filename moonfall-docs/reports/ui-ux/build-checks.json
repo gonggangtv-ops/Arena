@@ -1,0 +1,9 @@
+{
+  "base": "31c85abaa700a337d92f57a9cfaf98579d362da2",
+  "vanillaIndexSha256": "6301852d154daae97eaf7dc1681f86d2b5ad6568b661f3263a57e19215a619aa",
+  "vanillaUnchanged": true,
+  "preservesClaudeGrassAndMotes": true,
+  "sourceDeployCopiesMatch": true,
+  "linkedModulesPresent": true,
+  "screenshotFilesCommitted": false
+}
