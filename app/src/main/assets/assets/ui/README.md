@@ -30,5 +30,6 @@ costs, cooldowns, aim and network payloads remain authoritative.
 `moonfall-key-art.webp` is a separate generated celestial-knight illustration,
 1672×941, encoded as WebP quality 86 (197,706 bytes). Both screens use the same
 cached URL; it does not add another icon atlas or playable model. The strict boot
-gate requires a successful image decode before entry, for 48 required tasks in
-total. Original generation PNG and browser screenshots remain outside Git.
+gate requires a successful image decode before entry. The task count includes
+every model in the manifest (currently 52 tasks with 21 models). Original
+generation PNG and browser screenshots remain outside Git.

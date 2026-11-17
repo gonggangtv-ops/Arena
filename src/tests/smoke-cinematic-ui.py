@@ -16,6 +16,9 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
 SITE = ROOT / 'app/src/main/assets'
+MODEL_COUNT = len(json.loads((SITE / 'assets/meshy/manifest.json').read_text())['assets'])
+# Real manifest models + original QN18 / atlases3 / audio7 / font1 / render1 / art1.
+BOOT_TASKS = MODEL_COUNT + 31
 OUT = ROOT / 'moonfall-docs/reports/cinematic-ui'
 SHOTS = Path(tempfile.mkdtemp(prefix='arena-cinematic-ui-'))
 ART = '**/moonfall-key-art.webp'
@@ -69,7 +72,7 @@ def ready(page):
     snapshot = page.evaluate('MoonfallLoading.snapshot()')
     assert page.evaluate('MoonfallLoading.isReady()'), snapshot
     assert snapshot['artDone'] == 1, snapshot
-    assert snapshot['total'] == 48, snapshot
+    assert snapshot['total'] == BOOT_TASKS, snapshot
     assert page.locator('#loading').is_hidden()
     page.wait_for_function(
         'document.getElementById("menu").dataset.moonfallMenu', polling=100)
@@ -229,13 +232,13 @@ try:
             go(page)
             # Every other downloadable resource is real and ready. A held image
             # must still prevent admission even when no model/audio work remains.
-            page.wait_for_function("""() => {
+            page.wait_for_function("""modelCount => {
               const boot=MoonfallLoading.snapshot();
               return boot.packDone===18&&boot.musicDone===7&&
-                CelestialAssets.snapshot().assets.length===17&&
+                CelestialAssets.snapshot().assets.length===modelCount&&
                 CelestialAssets.snapshot().assets.every(asset=>asset.state==='loaded')&&
                 MoonfallUI.snapshot().state==='loaded'&&document.fonts.status==='loaded';
-            }""", polling=100)
+            }""", arg=MODEL_COUNT, polling=100)
             assert held, 'The required key-art URL was never requested'
             pending = page.evaluate('MoonfallLoading.snapshot()')
             assert pending['artDone'] == 0 and not pending['failed'], pending

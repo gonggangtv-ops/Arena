@@ -2,7 +2,7 @@
   "sourceDeployCopiesMatch": true,
   "cursedBuildMatches": true,
   "vanillaByteIdenticalToOriginMain": true,
-  "vanillaSHA256": "6301852d154daae97eaf7dc1681f86d2b5ad6568b661f3263a57e19215a619aa",
+  "vanillaSHA256": "ef03c1151012b517a657fd8e9619e6a972a3882cf31f0c956f1e00c5dbf816fa",
   "illustration": {
     "path": "app/src/main/assets/assets/ui/moonfall-key-art.webp",
     "dimensions": [
@@ -17,6 +17,14 @@
     "python3 src/build.py",
     "python3 src/build.py cursed",
     "python3 src/build.py cursed web",
-    "git diff --check"
-  ]
+    "git diff --check",
+    "node --check src/moonfall-village.js",
+    "node --check src/a.js",
+    "node --check src/d.js",
+    "node --check src/r3.js",
+    "node --check src/moonfall-biome.js"
+  ],
+  "testedBase": "a4a3cecd7e806a76117150d1d74b18acf148a608",
+  "manifestModels": 21,
+  "expectedBootTasks": 52
 }

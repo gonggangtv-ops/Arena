@@ -11,18 +11,22 @@
 - ทำอะไร: ภาพอัศวินเงินทอง/จันทราใหม่เข้าชุดกับไอคอนสกิล ใช้ร่วมกันทั้งหน้าโหลด
   เตรียมแมตช์ และเมนูพร้อมเล่น; จัด Solo เป็นปุ่มหลัก เก็บชื่อ/ผ้าคลุม/ตั้งค่า/คู่มือเดิมครบ
 - ภาพ WebP 1672×941 ขนาด 197,706 bytes; ต้อง load + decode สำเร็จก่อนปลดล็อก
-  รวม strict boot 48 งาน ภาพเสีย/ขาด/หมดเวลายังล็อกเกมและโหลดใหม่ ไม่มีการใช้โมเดลสำรอง
+  รวม strict boot 52 งานหลังรวมโมเดลหมู่บ้าน ภาพเสีย/ขาด/หมดเวลายังล็อกเกมและโหลดใหม่ ไม่มีการใช้โมเดลสำรอง
 - ไฟล์: src/moonfall-loading.html/css/js, src/moonfall-menu.js/css,
   src/tests/smoke-cinematic-ui.py; ภาพและสำเนา deploy ใน app/src/main/assets;
   cursed_artifact.html, moonfall-docs/CINEMATIC-LOADING-UI.md และผลทดสอบ JSON
 - ทดสอบ: node --check, build index/cursed/web; index byte-identical กับ origin/main;
   Chrome desktop/มือถือจำลองแนวตั้ง+แนวนอน, reduced motion, key-art delayed/invalid/retry;
-  ชุด UI เดิมผ่านจริง: 17 GLB, QN rig, 81 icons, ซื้อของ/ยา/สกิลด้วยคีย์บอร์ดและทัช,
+  ชุด UI เดิมผ่านจริง: 21 GLB, QN rig, 81 icons, ซื้อของ/ยา/สกิลด้วยคีย์บอร์ดและทัช,
   queued client snapshot, model/art/music/character/manifest/code/CSS/WebGL failure guards
 - ไม่แตะ HP/Damage/Skills/AI/Inventory/Collision/Multiplayer transport หรือไฟล์โลกของ Claude;
   ไม่เรียก Meshy/ไม่ใช้เครดิต; ภาพประกอบเมนูไม่ได้เปลี่ยนโมเดลตัวละครในเกม
-- ค้าง: hardware PC/mobile, Android WebView และ PeerJS สองเครื่องจริง;
-  เปิด PR เข้า main ให้ตรวจสอบก่อน merge/นำขึ้นเว็บ
+- ก่อน merge PR #8 ตามคำสั่งเจ้าของ: รวม main ล่าสุด `a4a3cec` (#7/#9 ของ Claude)
+  รักษาโค้ดหมู่บ้าน/โมเดลบ้านและตลาดทั้ง 4 ชิ้น; build cursed และ web artifact ใหม่
+  ระบบนับ manifest อัตโนมัติเป็น 21 GLB / 52 งาน; ปรับ test ให้ตามจำนวน manifest
+  แทน 17/48 เดิม และตรวจ vanilla เท่ากับ main ล่าสุดทุก byte
+- เจ้าของอนุมัติ merge PR #8 เข้า main; ค้างตรวจ hardware PC/mobile, Android WebView
+  และ PeerJS สองเครื่องจริง
 
 ## 2026-11-17 · Codex · สกิลหลอม ขวดยา/ร้านค้า และ strict loading (`codex/ui-ux`)
 - ทำอะไร: ภาพสกิลหลอมครบ 36 สกิล + item/UI 18 ภาพ; รวมกับ base 27 เป็น 81 ภาพ
@@ -41,6 +45,13 @@
 - ไม่แตะ GLB/QN models และ balance/ราคา/transport schema; ไม่มี Meshy calls/credits
 - ค้าง: hardware PC/mobile, Android WebView และ PeerJS สองเครื่องจริง ยังไม่ได้รับรอง FPS/VRAM
 - commit แล้ว push branch codex/ui-ux และเปิด PR เข้า main (ไม่ merge/deploy)
+## 2026-11-17 · Claude · ผสมธรรมชาติเกมเดิม + หมู่บ้านใหญ่ขึ้น + บ้าน Meshy (branch claude/village-nature)
+- `moonfall-biome.js`: ใน Cursed Realm เก็บต้นไม้เดิมไว้บางส่วนตามภูมิภาค (KEEP=[.5,.65,.3,0,.25]) ไม่ย้อมเทา · พื้นหญ้าเดิมโผล่เป็นหย่อมบนพื้นจันทรา · ยอดเนิน/หน้าผา (vWY>26) ใช้หินแตกแทนสีเทาเรียบ (**ยังไม่ได้ดูภาพยืนยัน**)
+- `a.js` (เฉพาะ CURSED): หมู่บ้าน r×1.5, จำนวนบ้าน×1.8 (รวม ~125 หลัง), เพิ่ม `WD.stalls` (แผงตลาด มี collision)
+- `moonfall-village.js` (ใหม่): เปลี่ยนหลังคา/ตัวบ้านเป็นโมเดล Meshy (`house-cottage`, `house-long`, `house-witch`) และ `market-stall` — ถ้าไม่มี asset จะใช้บ้านเดิม + แผงตลาดกล่องไม้
+- **บ้าน Meshy ใส่แล้ว (claude/meshy-houses):** `house-cottage/long/witch.glb`, `market-stall.glb` ย่อเหลือ ~0.3–0.4 MB ต่อไฟล์ เพิ่มใน `manifest.json` (doorAngle=π/2 = ประตูหัน +z) · ดูภาพหมู่บ้านแล้ว บ้านและแผงตลาดขึ้นครบ
+  - ข้อสังเกต: ผนังปูนของบ้านเดิมยังโผล่ใต้ชายคาบางหลัง · การ์ดเกมใน claude.ai (cursed_artifact) ยังไม่ได้อัปเดตตาม PR #6 และบ้านใหม่
+- ทดสอบ: smoke 2 เกม, แมตช์บอท 2 รอบ, ออนไลน์ 2 เครื่อง (โลกตรงกัน)
 
 ## 2026-11-17 · Claude · หญ้ากระพริบ + บรรยากาศ (branch claude/atmosphere-grass)
 - **หญ้ากระพริบตอนเดิน:** สาเหตุคือ `moonfall-biome.js` ลดจำนวนหญ้าด้วยการเก็บทุกอันที่ 2/3 ตามลำดับ index ทุกครั้งที่ฮีโร่ข้ามช่อง ลำดับเลื่อน → หญ้าคนละชุดโผล่/หาย
