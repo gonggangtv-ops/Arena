@@ -1,8 +1,8 @@
 {
-  "testedBase": "ce270155a2afadf7a20b2a7de93b9f7c499346c8",
+  "testedBase": "ddfb11319cbf62412cf950faad15143b0a108eaf",
   "target": "index.html",
   "cursedByteIdenticalToMain": true,
-  "cursedSHA256": "787c3421852ce75afb6e89a4109c66f7c7441b9089b10fd681c7fbbb8e0f8f01",
+  "cursedSHA256": "cbb95aeda5a11e9a31284290a07b2b8fe3be99e346fa3c93fd3c71bdd736f9b4",
   "indexSourceDeployMatch": true,
   "protectedGameAndRendererSourcesIdentical": [
     "a.js",

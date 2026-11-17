@@ -19,21 +19,21 @@ const REG={N:['อาณาจักรล่มสลาย','ป่าต้�
   glows(R){const rn=mulberry32(4242);for(let k=0;k<1700;k++){const x=1200+rn()*(WORLD-2400),y=1200+rn()*(WORLD-2400),s=rn();if(outsideD(x,y)>-80||inWater(x,y))continue;const g=this.GLOW[this.at(x,y)];if(!g)continue;
       R.glows.push([x,R.gY(x,y)+8+s*30,y,g[0],g[1]*(.6+s*.8)])}},
   // light and haze follow the region the hero is standing in
-  atmo(R,L,dk,inCave){if(!MOON){if(L){const b=inDG(L)?this.cur:this.at(L.x,L.y);if(b!==this.cur&&state==='play'){if(this.cur>=0&&gameT>6)announce={txt:this.IC[b]+' '+this.N[b]+' — '+this.TIP[b],t:3.2};this.cur=b}}return}if(!this.fc){this.fc=this.FOG.map(c=>new THREE.Color(c));this.hc=this.HEMI.map(c=>new THREE.Color(c));this.aw=[1,0,0,0,0]}if(!L)return;
+  atmo(R,L,dk,inCave){if(!MOON){if(L){const b=inDG(L)?this.cur:this.at(L.x,L.y);if(b!==this.cur&&state==='play'){if(this.cur>=0&&gameT>6)announce={txt:this.IC[b]+' '+this.N[b]+' — '+this.TIP[b],t:3.2};this.cur=b}}if(L){const n=clamp((.55-dk)/.35,0,1);this.motes(R,L,[lerp(5,9,n),lerp(3,5,n),lerp(.32,.95,n),lerp(1,.75,n),lerp(.93,1,n),lerp(.72,.35,n)]);if(this.mp){this.mp.material.size=lerp(10,15,n);this.mp.visible=this.mp.visible&&!inCave}}return}if(!this.fc){this.fc=this.FOG.map(c=>new THREE.Color(c));this.hc=this.HEMI.map(c=>new THREE.Color(c));this.aw=[1,0,0,0,0]}if(!L)return;
     const o=this.w(L.x,L.y,this.tw),a=this.aw;let b=0;for(let i=0;i<5;i++){a[i]+=(o[i]-a[i])*.04;if(a[i]>a[b])b=i}
     if(b!==this.cur&&state==='play'){if(this.cur>=0&&gameT>6&&!inDG(L))announce={txt:this.IC[b]+' '+this.N[b]+' — '+this.TIP[b],t:3.2};this.cur=b}
     this.motes(R,L);if(inCave)return;let fr=0,fg=0,fb=0,hr=0,hg=0,hb=0,lm=0;for(let i=0;i<5;i++){const k=a[i],f=this.fc[i],h=this.hc[i];fr+=f.r*k;fg+=f.g*k;fb+=f.b*k;hr+=h.r*k;hg+=h.g*k;hb+=h.b*k;lm+=this.LUM[i]*k}
     const nk=.35+.65*dk;R.scene.fog.color.lerp(R.c1.setRGB(fr*nk,fg*nk,fb*nk),.5);R.c1.setRGB(hr,hg,hb);R.hemi.color.lerp(R.c1,.5);R.sun.color.lerp(R.c1,.25);R.hemi.intensity*=lm;R.sun.intensity*=lm},
   // drifting motes around the hero: dust in the kingdom, spores in the forest, snow on the ice, embers over the ash, void sparks in the abyss
   MC:['#ffe2a0','#9dffb0','#ffffff','#ff8a3a','#c48aff'],MV:[[6,4,.5],[10,7,.6],[26,-70,1],[14,46,.8],[5,22,.7]],  // [sideways drift, vertical speed, opacity]
-  motes(R,L){const N=R.hi?300:140,W=1900,D=1500,H=460;
+  motes(R,L,ov){const N=R.hi?300:140,W=1900,D=1500,H=460;
     if(!this.mp){const g=new THREE.BufferGeometry(),p=new Float32Array(N*3),s=new Float32Array(N);for(let i=0;i<N;i++){p[i*3]=L.x+(Math.random()-.5)*W;p[i*3+1]=Math.random()*H;p[i*3+2]=L.y+(Math.random()-.5)*D;s[i]=Math.random()*6.283}
       g.setAttribute('position',new THREE.BufferAttribute(p,3));const c=document.createElement('canvas');c.width=c.height=32;const x=c.getContext('2d'),gr=x.createRadialGradient(16,16,0,16,16,16);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.35,'rgba(255,255,255,.55)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,32,32);
       const m=new THREE.PointsMaterial({size:13,map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true,fog:false});
       this.mp=new THREE.Points(g,m);this.mp.frustumCulled=false;this.mp.renderOrder=5;this.ms=s;this.mcol=this.MC.map(c=>new THREE.Color(c));this.mt=performance.now();this.mscene=null}
     if(this.mscene!==R.scene){R.scene.add(this.mp);this.mscene=R.scene}
     const now=performance.now(),dt=Math.min(.05,(now-this.mt)/1000);this.mt=now;const a=this.aw,p=this.mp.geometry.attributes.position.array,s=this.ms,T=now/1000;let vx=0,vy=0,op=0,r=0,g=0,b=0;
-    for(let i=0;i<5;i++){const k=a[i],v=this.MV[i],c=this.mcol[i];vx+=v[0]*k;vy+=v[1]*k;op+=v[2]*k;r+=c.r*k;g+=c.g*k;b+=c.b*k}
+    if(ov){vx=ov[0];vy=ov[1];op=ov[2];r=ov[3];g=ov[4];b=ov[5]}else for(let i=0;i<5;i++){const k=a[i],v=this.MV[i],c=this.mcol[i];vx+=v[0]*k;vy+=v[1]*k;op+=v[2]*k;r+=c.r*k;g+=c.g*k;b+=c.b*k}
     this.mp.material.color.setRGB(r,g,b);this.mp.material.opacity=op;this.mp.visible=!inDG(L);
     for(let i=0;i<N;i++){const j=i*3,ph=s[i];p[j]+=(Math.sin(T*.7+ph)*vx+vx*.6)*dt;p[j+1]+=(vy*(.6+.4*Math.sin(ph*3))+Math.sin(T*1.3+ph)*6)*dt;p[j+2]+=Math.cos(T*.5+ph*2)*vx*dt;
       if(p[j+1]<0)p[j+1]+=H;else if(p[j+1]>H)p[j+1]-=H;let dx=p[j]-L.x,dz=p[j+2]-L.y;if(dx>W/2)p[j]-=W;else if(dx<-W/2)p[j]+=W;if(dz>D/2)p[j+2]-=D;else if(dz<-D/2)p[j+2]+=D}
@@ -121,10 +121,12 @@ function curTick(dt){for(let k=ERUPT.length-1;k>=0;k--){const e=ERUPT[k];e.t-=dt
       if(k==='heal'||k==='ward'){if(hurt)castSpecial(u)}else if(k==='blink'){if(hurt&&t&&u.hp<u.maxHp*.3)castSpecial(u,{x:u.x+(u.x-t.x)/(d||1)*500,y:u.y+(u.y-t.y)/(d||1)*500})}
       else if(t&&d<(k==='nova'?250:k==='rage'?320:620))castSpecial(u,{x:t.x,y:t.y})}}}
 // ---- dodge / block / stamina (host) ----
-function tpsHost(u,inp,dt){if(u.sta===undefined){u.sta=100;u.blkT=0;u.rollT=0}const b=!!inp.blk&&u.sta>1&&!u.dash&&!(u.stunT>0);if(b&&!u.blk)u.blkT=0;u.blk=b;if(b)u.blkT+=dt;
-  if(u.rollT>0)u.rollT-=dt;else if(!b)u.sta=Math.min(100,u.sta+dt*(u.atkAnim>0?9:22))}
-function tpsDodge(u,dx,dy){if(!u||u.dead||u.stunT>0||u.dash||u.leap||u.kb||u.fuseT>0||u.rootT>0)return;if(u.sta===undefined)u.sta=100;if(u.sta<28)return;u.sta-=28;
-  let l=Math.hypot(dx,dy);if(l<.2){dx=-u.fx;dy=-u.fy;l=Math.hypot(dx,dy)||1}dx/=l;dy/=l;u.dash={vx:dx*1050,vy:dy*1050,t:.25,hit:null};u.rollT=.36;u.pdg=0;u.blk=false;
+const DASH_CD=45;
+function tpsHost(u,inp,dt){if(u.sta===undefined){u.sta=100;u.blkT=0;u.rollT=0}u.blk=false;if(u.rollT>0)u.rollT-=dt;if(u.dgcd>0)u.dgcd-=dt}
+function dashCd(me){return me&&me.dgcd>0?me.dgcd:0}
+// พุ่ง: a long burst forward (or where you are moving), untouchable while it lasts, 45 s cooldown
+function tpsDodge(u,dx,dy){if(!u||u.dead||u.stunT>0||u.dash||u.leap||u.kb||u.fuseT>0||u.rootT>0)return;if(u.dgcd>0)return;u.dgcd=DASH_CD;
+  let l=Math.hypot(dx,dy);if(l<.2){dx=u.fx;dy=u.fy;l=Math.hypot(dx,dy)||1}dx/=l;dy/=l;u.dash={vx:dx*1700,vy:dy*1700,t:.3,hit:null};u.rollT=.42;u.pdg=0;u.blk=false;u.fx=dx;u.fy=dy;
   sndAt('dash',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(dy,dx).toFixed(2)})}
 // rolling ignores a hit (a perfect dodge makes the next strike a critical); blocking from the front cuts damage, a just-in-time block parries
 function tpsGuard(t,amt,src){if(!t.hero||!src||src===t)return amt;
@@ -135,9 +137,9 @@ function tpsGuard(t,amt,src){if(!t.hero||!src||src===t)return amt;
   return amt}
 // ---- local player: input, HUD chips, shop window ----
 const CUR={blk:false,rmb:false,busy:0,open:false,sig:'',hintT:14,
-  input(mx,my){return{mx,my,atk:atkHeld||!!keys.Space||!!keys.KeyJ,blk:this.blk||this.rmb||!!keys.ControlLeft}},
+  input(mx,my){return{mx,my,atk:atkHeld||!!keys.Space||!!keys.KeyJ,blk:false}},
   sta(me){return me&&me.sta!==undefined?me.sta:100},
-  dodge(){const me=ME();if(!me||me.dead||state!=='play')return;const i=localInput();if(this.sta(me)<28)return;if(net.mode==='client')netSend({t:'dg',x:+i.mx.toFixed(2),y:+i.my.toFixed(2)});else tpsDodge(me,i.mx,i.my)},
+  dodge(){const me=ME();if(!me||me.dead||state!=='play')return;const i=localInput();if(dashCd(me)>0)return;if(net.mode==='client')netSend({t:'dg',x:+i.mx.toFixed(2),y:+i.my.toFixed(2)});else tpsDodge(me,i.mx,i.my)},
   special(){const me=ME();if(!me||me.dead||state!=='play'||!me.xs)return;const S=SPX[me.xs],p=(S.k==='blink'||S.k==='meteor')&&UI.mouse&&!this.touch?screenToWorld(UI.mouse.x,UI.mouse.y):null;
     if(net.mode==='client')netSend(p?{t:'xs',x:Math.round(p.x),y:Math.round(p.y)}:{t:'xs'});else castSpecial(me,p)},
   buy(k){const me=ME();if(!me||me.dead||state!=='play')return;if(net.mode==='client')netSend({t:'buy',k});else shopBuy(me,k);this.sig=''},
@@ -153,7 +155,9 @@ const CUR={blk:false,rmb:false,busy:0,open:false,sig:'',hintT:14,
     const B=(t,x,dn,up)=>{const b=document.createElement('div');b.style.cssText='position:absolute;top:0;left:'+x+'px;width:56px;height:56px;border-radius:50%;background:rgba(14,10,20,.74);border:2px solid '+G+';color:#e6dcc6;font:25px/54px sans-serif;text-align:center;touch-action:none;cursor:pointer';
       b.innerHTML=t+'<span style="position:absolute;left:0;right:0;bottom:-15px;font:10px sans-serif;color:#b8ad94;line-height:12px"></span>';b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();dn()});if(up)for(const k of['pointerup','pointercancel','pointerleave'])b.addEventListener(k,up);pad.appendChild(b);return b};
     const b1=B('🛡',0,()=>{this.blk=true},()=>{this.blk=false}),b2=B('💨',66,()=>this.dodge()),b3=B('✦',132,()=>{const me=ME();if(me&&me.xs)this.special();else this.toggle(true)});
-    b1.lastChild.textContent='คลิกขวา';b2.lastChild.textContent='Shift';b3.lastChild.textContent='V';
+    b1.lastChild.textContent='';b2.lastChild.textContent='พุ่ง · Shift';b3.lastChild.textContent='V';
+    // the block button is gone; the dash and special buttons close up
+    b1.style.display='none';b2.style.left='22px';b3.style.left='88px';bar.style.visibility='hidden';
     const tags=[0,1,2,3].map(()=>this.mk('position:fixed;z-index:5;display:none;pointer-events:none;font:15px sans-serif;text-shadow:0 0 4px #000,0 0 4px #000;transform:translate(-50%,-50%)'));
     const shop=this.mk('position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);max-height:88vh;overflow:auto;background:rgba(14,10,20,.96);border:1px solid '+G+';border-radius:12px;color:#e6dcc6;font:13px sans-serif;z-index:20;display:none;padding:12px 14px;box-sizing:border-box;touch-action:pan-y');
     stop(shop);shop.addEventListener('click',e=>{const t=e.target.closest('[data-k]');if(!t)return;const k=t.getAttribute('data-k');if(k==='close')this.toggle(false);else this.buy(k)});
@@ -171,7 +175,7 @@ const CUR={blk:false,rmb:false,busy:0,open:false,sig:'',hintT:14,
     this.el.shop.innerHTML=h},
   step(dt){const me=ME(),E=this.el;if(!E)return;const on=state==='play'&&me&&!me.dead;for(const k of['bar','coin','pad','reg'])E[k].style.display=on?'block':'none';
     if(!on){if(this.open)this.toggle(false);E.hint.style.display='none';for(const t of E.tags)t.style.display='none';return}
-    E.fill.style.width=clamp(this.sta(me),0,100)+'%';const g=me.gold|0;if(g!==this.g0){this.g0=g;E.coin.textContent='🪙 '+g+'  🛒'}
+    {const d=Math.ceil(dashCd(me)),k=d+'';if(k!==this.d0){this.d0=k;const b=E.pad.children[1];let t=b.querySelector('.dcd');if(!t){t=document.createElement('div');t.className='dcd';t.style.cssText='position:absolute;inset:0;border-radius:50%;display:flex;align-items:center;justify-content:center;font:bold 20px sans-serif;color:#fff;text-shadow:0 0 4px #000;background:rgba(4,10,21,.62);pointer-events:none';b.appendChild(t)}t.style.display=d>0?'flex':'none';t.textContent=d;b.style.opacity=d>0?.75:1}}const g=me.gold|0;if(g!==this.g0){this.g0=g;E.coin.textContent='🪙 '+g+'  🛒'}
     const r=inDG(me)?-1:REG.at(me.x,me.y);if(r!==this.r0){this.r0=r;E.reg.textContent=r<0?'⛓️ คุกใต้ดิน':REG.IC[r]+' '+REG.N[r]}
     if(this.hintT>0){this.hintT-=dt;E.hint.style.display=this.hintT>0?'block':'none'}
     if(UI.atk&&UI.atk.r){const a=UI.atk;E.pad.style.left=(a.x-a.r*2.25)+'px';E.pad.style.top=(a.y-a.r*4.55)+'px'}
@@ -179,7 +183,7 @@ const CUR={blk:false,rmb:false,busy:0,open:false,sig:'',hintT:14,
     const v=me.wv|0;for(let i=0;i<4;i++){const t=E.tags[i],b=i<3?UI.sk[i]:UI.atk,ic=i<3?(RUNES[wvR(v,i)]||{}).ic:(TRAITS[wvT(v)]||{}).ic;if(!ic||!b||!b.r||!me.wk){t.style.display='none';continue}
       t.style.display='block';t.textContent=ic;t.style.left=(b.x+b.r*.72)+'px';t.style.top=(b.y-b.r*.72)+'px'}
     if(this.open){const sig=g+'|'+me.lvl+'|'+v+'|'+me.xs+'|'+me.xl+'|'+me.bag.join()+'|'+me.wk+me.wt;if(sig!==this.sig){this.sig=sig;this.render(me)}}}};
-if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร์เก็บ 🪙 แล้วกด 🛒 (P) ซื้อยา สมุดเลเวล สกิลพิเศษ · Shift หลบ · คลิกขวา ป้องกัน · V สกิลพิเศษ';
+if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร์เก็บ 🪙 แล้วกด 🛒 (P) ซื้อยา สมุดเลเวล สกิลพิเศษ · Shift พุ่ง (คูลดาวน์ 45 วิ) · V สกิลพิเศษ';
   const _of=R3.objFor;R3.objFor=function(u){const o=_of.call(this,u);if(o&&u.mob&&!o._rg){o._rg=1;if(u.rg>0||u.elite)REG.tintObj(o,u)}return o};
   const _fr=R3.frame;R3.frame=function(dt){const r=_fr.call(this,dt);CUR.step(dt||.016);CUR.f3=performance.now();return r};setInterval(()=>{if(performance.now()-(CUR.f3||0)>500)CUR.step(.2)},200);
   addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')CUR.touch=true;if(e.pointerType==='mouse'&&e.button===2&&e.target===cv&&state==='play'){CUR.rmb=true;e.stopPropagation();e.preventDefault()}},true);

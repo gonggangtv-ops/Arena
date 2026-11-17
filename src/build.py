@@ -5,7 +5,12 @@ cur='cursed' in sys.argv
 classic='classic' in sys.argv          # the old v2.5 game, kept for reference (classic.html, not deployed)
 arena=not cur and not classic          # index.html: every Cursed Realm system, original scenery, Meshy village houses
 sys_on=cur or arena
-VILLAGE=['house-cottage','house-long','house-witch','market-stall']
+VILLAGE=['house-cottage','house-long','house-witch','market-stall','village-well','street-lantern','stone-bridge','plaza-fountain']
+# nature dressing joins the required set once its models are in the manifest
+NATURE=['mossy-boulder','lupine-clump','flower-cushion','tall-grass','river-stones']
+import json as _j
+_man=_j.load(open(os.path.join(D,'..','app','src','main','assets','assets','meshy','manifest.json'),encoding='utf-8'))['assets']
+VILLAGE+=[k for k in NATURE if k in _man]
 sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()
 game_files=['a.js','gi.js','b.js','c.js','r3.js','r4.js','r5.js','r6.js','r7.js','r8.js','r9.js','r10.js','r11.js','r12.js','t1.js','d.js']
 # Arena's visual layer must install before d.js initializes the renderer.
@@ -30,6 +35,7 @@ if sys_on:
     sh=sh.replace('<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>',(lambda t:t if cur else t.replace('THE CURSED REALM','ARENA ROYALE'))(open(os.path.join(D,'moonfall-loading.html'),encoding='utf-8').read().strip()))
     sh=re.sub(r'(<button[^>]*id="(?:soloBtn|qmBtn|hostBtn|joinBtn|lobbyStart|moonfallBtn)"[^>]*)(>)',r'\1 disabled\2',sh)
     if arena:sh=sh.replace('</head>','<script>window.CELESTIAL_KEYS='+repr(VILLAGE).replace("'",'"')+'</script>\n</head>',1)
+    else:sh=sh.replace('</head>','<script>window.CELESTIAL_SKIP='+repr(NATURE).replace("'",'"')+'</script>\n</head>',1)  # Moonfall has no meadow dressing
     sh=sh.replace('<!--TURN-->','<!--TURN-->\n'+'\n'.join("<script src=\"%s\" onerror=\"moonfallCodeFailure('%s')\"></script>"%(f,f) for f in MOON),1)
 def critical_libs(text):
     if sys_on:

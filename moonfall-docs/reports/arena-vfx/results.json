@@ -1,5 +1,5 @@
 {
-  "baselineSHA256": "b0e428088e8e2b46193267bee4243ac5b98241b782bfe4e046c6894edc683174",
+  "baselineSHA256": "4548e67f60c821b2af3836bbc08bbe29b3709224f63c50b41f819c28606681fc",
   "cases": [
     {
       "case": "desktop-high",
@@ -7,7 +7,7 @@
         "phase": "ready",
         "ready": true,
         "failed": false,
-        "total": 35,
+        "total": 44,
         "packDone": 18,
         "musicDone": 7,
         "artDone": 1,
@@ -272,7 +272,7 @@
           "cursed": true,
           "moon": false
         },
-        "models": 4
+        "models": 13
       },
       "actualCasts": [
         {
@@ -795,17 +795,17 @@
       },
       "stress": {
         "before": {
-          "geometries": 91,
-          "textures": 132,
-          "programs": 86
+          "geometries": 96,
+          "textures": 155,
+          "programs": 98
         },
         "after": {
-          "geometries": 91,
-          "textures": 132,
-          "programs": 86
+          "geometries": 96,
+          "textures": 155,
+          "programs": 98
         },
-        "emptyCalls": 143,
-        "calls": 151,
+        "emptyCalls": 179,
+        "calls": 187,
         "extraDrawCalls": 8,
         "peak": 774,
         "during": {
@@ -1017,9 +1017,9 @@
               }
             },
             "memory": {
-              "geometries": 91,
-              "textures": 132,
-              "programs": 86
+              "geometries": 96,
+              "textures": 155,
+              "programs": 98
             }
           },
           {
@@ -1083,9 +1083,9 @@
               }
             },
             "memory": {
-              "geometries": 91,
-              "textures": 132,
-              "programs": 86
+              "geometries": 96,
+              "textures": 155,
+              "programs": 98
             }
           },
           {
@@ -1149,9 +1149,9 @@
               }
             },
             "memory": {
-              "geometries": 91,
-              "textures": 132,
-              "programs": 86
+              "geometries": 96,
+              "textures": 155,
+              "programs": 98
             }
           }
         ]
@@ -1159,11 +1159,11 @@
       "errors": [],
       "shaderErrors": [],
       "screenshots": [
-        "/tmp/arena-vfx-xs__acd1/desktop-high-fire-2.png",
-        "/tmp/arena-vfx-xs__acd1/desktop-high-frost-2.png",
-        "/tmp/arena-vfx-xs__acd1/desktop-high-storm-2.png",
-        "/tmp/arena-vfx-xs__acd1/desktop-high-gsword-0.png",
-        "/tmp/arena-vfx-xs__acd1/desktop-high-fSS_tempest-2.png"
+        "/tmp/arena-vfx-6qr_z3hr/desktop-high-fire-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/desktop-high-frost-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/desktop-high-storm-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/desktop-high-gsword-0.png",
+        "/tmp/arena-vfx-6qr_z3hr/desktop-high-fSS_tempest-2.png"
       ]
     },
     {
@@ -1172,7 +1172,7 @@
         "phase": "ready",
         "ready": true,
         "failed": false,
-        "total": 35,
+        "total": 44,
         "packDone": 18,
         "musicDone": 7,
         "artDone": 1,
@@ -1437,7 +1437,7 @@
           "cursed": true,
           "moon": false
         },
-        "models": 4
+        "models": 13
       },
       "actualCasts": [
         {
@@ -1960,17 +1960,17 @@
       },
       "stress": {
         "before": {
-          "geometries": 86,
-          "textures": 118,
-          "programs": 49
+          "geometries": 90,
+          "textures": 148,
+          "programs": 53
         },
         "after": {
-          "geometries": 86,
-          "textures": 118,
-          "programs": 49
+          "geometries": 90,
+          "textures": 148,
+          "programs": 53
         },
-        "emptyCalls": 72,
-        "calls": 80,
+        "emptyCalls": 114,
+        "calls": 122,
         "extraDrawCalls": 8,
         "peak": 310,
         "during": {
@@ -2182,9 +2182,9 @@
               }
             },
             "memory": {
-              "geometries": 86,
-              "textures": 118,
-              "programs": 49
+              "geometries": 90,
+              "textures": 148,
+              "programs": 53
             }
           },
           {
@@ -2248,9 +2248,9 @@
               }
             },
             "memory": {
-              "geometries": 86,
-              "textures": 118,
-              "programs": 49
+              "geometries": 90,
+              "textures": 148,
+              "programs": 53
             }
           },
           {
@@ -2314,9 +2314,9 @@
               }
             },
             "memory": {
-              "geometries": 86,
-              "textures": 118,
-              "programs": 49
+              "geometries": 90,
+              "textures": 148,
+              "programs": 53
             }
           }
         ]
@@ -2324,11 +2324,11 @@
       "errors": [],
       "shaderErrors": [],
       "screenshots": [
-        "/tmp/arena-vfx-xs__acd1/mobile-low-fire-2.png",
-        "/tmp/arena-vfx-xs__acd1/mobile-low-frost-2.png",
-        "/tmp/arena-vfx-xs__acd1/mobile-low-storm-2.png",
-        "/tmp/arena-vfx-xs__acd1/mobile-low-gsword-0.png",
-        "/tmp/arena-vfx-xs__acd1/mobile-low-fSS_tempest-2.png"
+        "/tmp/arena-vfx-6qr_z3hr/mobile-low-fire-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/mobile-low-frost-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/mobile-low-storm-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/mobile-low-gsword-0.png",
+        "/tmp/arena-vfx-6qr_z3hr/mobile-low-fSS_tempest-2.png"
       ]
     },
     {
@@ -2337,7 +2337,7 @@
         "phase": "ready",
         "ready": true,
         "failed": false,
-        "total": 35,
+        "total": 44,
         "packDone": 18,
         "musicDone": 7,
         "artDone": 1,
@@ -2602,7 +2602,7 @@
           "cursed": true,
           "moon": false
         },
-        "models": 4
+        "models": 13
       },
       "actualCasts": [
         {
@@ -3125,17 +3125,17 @@
       },
       "stress": {
         "before": {
-          "geometries": 86,
-          "textures": 117,
-          "programs": 50
+          "geometries": 90,
+          "textures": 102,
+          "programs": 51
         },
         "after": {
-          "geometries": 86,
-          "textures": 117,
-          "programs": 50
+          "geometries": 90,
+          "textures": 102,
+          "programs": 51
         },
-        "emptyCalls": 72,
-        "calls": 80,
+        "emptyCalls": 114,
+        "calls": 122,
         "extraDrawCalls": 8,
         "peak": 166,
         "during": {
@@ -3347,9 +3347,9 @@
               }
             },
             "memory": {
-              "geometries": 86,
-              "textures": 117,
-              "programs": 50
+              "geometries": 90,
+              "textures": 102,
+              "programs": 51
             }
           },
           {
@@ -3413,9 +3413,9 @@
               }
             },
             "memory": {
-              "geometries": 86,
-              "textures": 117,
-              "programs": 50
+              "geometries": 90,
+              "textures": 102,
+              "programs": 51
             }
           },
           {
@@ -3479,9 +3479,9 @@
               }
             },
             "memory": {
-              "geometries": 86,
-              "textures": 117,
-              "programs": 50
+              "geometries": 90,
+              "textures": 102,
+              "programs": 51
             }
           }
         ]
@@ -3496,7 +3496,7 @@
       "phase": "ready",
       "ready": true,
       "failed": false,
-      "total": 52,
+      "total": 56,
       "packDone": 18,
       "musicDone": 7,
       "artDone": 1,

@@ -13,7 +13,7 @@
   และสีธาตุคู่ เชื่อม events/projectiles/AOE/status จริงโดยไม่แก้กติกาต่อสู้
 - ใหม่: `src/arena-vfx-runtime.js`, `src/arena-vfx-skills.js`; `src/build.py` ใส่โมดูล
   ก่อน d.js เฉพาะ Arena; build/copy `app/src/main/assets/index.html` แล้ว
-  Cursed HTML และ src/a,b,c,t1,r3-r12,d เท่ากับ main `ce27015` ทุก byte
+  Cursed HTML และ src/a,b,c,t1,r3-r12,d เท่ากับ main `ddfb113` ทุก byte
 - 8 InstancedMesh batches / shader program ร่วมกัน; High 774, Low/Mobile 310 instances,
   reduced motion ลดลงอีก; สูงสุด 8 draw calls เพิ่มใน pass วาดฉาก ไม่มีภาพ/โมเดลใหม่
   ใช้ PRNG ของภาพแยก รวมช่วง Three.js สร้าง UUID; dispose/reset ตาม scene/quality/rebind
@@ -21,15 +21,47 @@
 - ทดสอบผ่าน: node syntax; build index/cursed/web; 63 cast จริงเทียบ baseline ทั้ง desktop-high,
   mobile-low และ reduced motion — Damage/HP/MP/CD/status/position/network rows ตรงกัน
   พร้อม keyboard/touch, shader errors 0, RNG purity และ memory เท่ากันหลัง stress/3 dispose cycles
-  HTTP Cursed โหลด 52 งานและเริ่มเกมจริงได้ ไม่มีโมดูลใหม่/JS error
+  HTTP Cursed โหลดครบตาม manifest และเริ่มเกมจริงได้ ไม่มีโมดูลใหม่/JS error
 - Host/Client สอง browser contexts ผ่าน production start/snapshot, VFX remote, AOE object
   ถูกแทน 72 snapshots ไม่เล่นปะทะซ้ำ, hidden follow, budgets และ payload/state immutability
 - รายงาน: `moonfall-docs/ARENA-SKILL-VFX.md`, `moonfall-docs/reports/arena-vfx/*.json`;
   tests `src/tests/smoke-arena-vfx*.py`; screenshots อยู่ /tmp ไม่ commit
+- ก่อนส่งรวม main ล่าสุด `ddfb113` (#11–13): เก็บพุ่ง 45 วิ, ตัวกรองภาพก่อน bloom,
+  น้ำ/พื้นหมู่บ้าน/ธรรมชาติ Meshy ของ Claude ทั้งหมด แล้ว build และทดสอบเทียบ baseline ใหม่
 - ข้อจำกัด: payload client ไม่ส่ง AOE owner/element จึงใช้ kind palette เมื่อไม่ทราบเจ้าของ;
   purchased special skills ใช้ตระกูล VFX เดิม ไม่รวมใน 63 profiles; ต้องตรวจ hardware FPS/VRAM,
   Android WebView และ live PeerJS เพิ่ม ไม่ใช้ Meshy/เครดิต และไม่เริ่ม Phase 3
+- พบงานเดิมค้าง: baseline main ที่ยังไม่มี VFX ใหม่มี texture count เพิ่ม 109→148→202→245
+  เมื่อสลับคุณภาพ/สร้างโลกใหม่ ต้องตรวจ renderer lifecycle แยก; VFX ใหม่ไม่สร้าง texture
+  และ pool ของชั้นใหม่นิ่งทุก stress/dispose cycle (ดู baseline-quality.json)
 - Commit/push branch และเปิด PR เข้า main ให้ตรวจสอบก่อน merge/เผยแพร่
+## 2026-11-17 · Claude · ของตกแต่งธรรมชาติจาก Meshy + ลายหินปูหมู่บ้านจาก Meshy (branch claude/meshy-nature)
+- เพิ่ม GLB 5 ชิ้นใน `assets/meshy/` + manifest: `mossy-boulder` `lupine-clump` `flower-cushion` `tall-grass` `river-stones` (Meshy text-to-3d, ย่อด้วย mfpack: เท็กซ์เจอร์ 1024, ~0.2 MB/ชิ้น)
+  - index โหลดผ่าน `CELESTIAL_KEYS` (build.py รวม `NATURE` อัตโนมัติเมื่ออยู่ใน manifest) → `moonfall-village.js buildNature()` วางตามริมน้ำ/ทุ่งหญ้า/ท้องน้ำ และหินมอสแทนหินเรียบเดิม
+  - cursed ไม่ใช้ของพวกนี้: build.py ใส่ `window.CELESTIAL_SKIP=NATURE` และ `celestial-assets.js` ข้าม key ใน SKIP (ไม่ต้องดาวน์โหลด ไม่บล็อกหน้าโหลด)
+- ลายหินปูหมู่บ้าน: `assets/tex/cobble-meshy.jpg` อบจากโมเดล cobblestone-ground ของ Meshy (1.2 ล้านสามเหลี่ยม ไม่มีเท็กซ์เจอร์ → แปลงเป็น heightmap → ต่อลายไร้รอยต่อทีละก้อนหิน → ใส่สี/เงา) · `r3.js tex('cobble')` ใช้ลายวาดเดิมก่อนแล้วสลับเป็นรูปนี้เมื่อโหลดเสร็จ (เฉพาะ CURSED)
+
+## 2026-11-17 · Claude · พุ่ง 45 วิ แทนป้องกัน + หมู่บ้านปูหินทั้งโซน + น้ำใส + โครงของตกแต่งธรรมชาติ (branch claude/dash-water)
+- **พุ่ง (เจ้าของสั่ง):** `t1.js` Shift = `tpsDodge` พุ่ง 1700×0.3 วิ อมตะระหว่างพุ่ง คูลดาวน์ `DASH_CD=45` เก็บใน `u.dgcd` · เอาระบบป้องกัน (คลิกขวา/ปุ่ม 🛡) และสตามิน่าออก (`CUR.input` ส่ง `blk:false` เสมอ, ปุ่ม b1 ซ่อน, แถบสตามิน่าซ่อน) · ปุ่มพุ่งมีตัวเลขนับถอยหลัง `.dcd`
+  - `c.js` ช่อง 33 ของแถวผู้เล่นตัวเอง (เดิม sta) ตอนนี้ส่ง `dgcd` · ข้อความสอนเล่นใน `moonfall-ui.js` แก้แล้ว
+- **หมู่บ้านปูหินทั้งโซน:** `a.js paintMasks` เมื่อ CURSED ใช้รัศมีหมู่บ้าน `v.r*.97` ทึบถึง 86% แล้วค่อยจาง → พื้นหิน + ไม่มีหญ้าในหมู่บ้าน
+- **น้ำใส (index/cursed ที่ไม่ใช่ TOON):** `r3.js` พื้นใต้น้ำผสมลายหิน (`tRock`) + แสงระยิบ caustics จาก `uDetail` สองชั้นเลื่อนสวนกัน · น้ำตื้นใสขึ้น (alpha .34→.92 ตามความลึก) สะท้อนฟ้าน้อยลง (`envMapIntensity` .34)
+- ต้นหลิว (v===6) ม่านใบย้อม `#8f9c80` (เดิมขาว = เขียวมะนาวจ้ามากเมื่อมองจากบน)
+- **ของตกแต่งธรรมชาติจาก Meshy (โค้ดพร้อม รอไฟล์):** `moonfall-village.js buildNature()` (เฉพาะ index) วางหินมอส ดอกลูพิน กอดอกไม้ หญ้าสูง หินท้องน้ำ ตามริมน้ำ/ทุ่งหญ้า ไม่มี collision · `plainRock()` ให้ r3 ข้ามหินเรียบเมื่อมีหินมอส
+  - `build.py` มีรายการ `NATURE` — key จะถูกเพิ่มเข้า `CELESTIAL_KEYS` อัตโนมัติเมื่ออยู่ใน manifest แล้วเท่านั้น (หน้าโหลดเข้ม: ห้ามใส่ manifest ก่อนมีไฟล์ GLB)
+  - สร้างใน Meshy แล้ว 5 ชิ้น (mossy-boulder, lupine-clump, flower-cushion, tall-grass, river-stones) รอเจ้าของแนบไฟล์
+- ทดสอบ (http): พุ่งได้ระยะ ~350 กดซ้ำระหว่างคูลดาวน์ไม่พุ่ง ครบ 45 วิพุ่งได้อีก ตัวเลขบนปุ่มขึ้น · ออนไลน์ 2 เครื่อง client กดพุ่ง host ได้ dgcd≈44 client เห็นตรงกัน กดซ้ำไม่รีเซ็ต · แมตช์บอท index 2 รอบ / cursed 2 รอบ จบไม่มี error · ภาพแม่น้ำ/หมู่บ้าน
+
+## 2026-11-17 · Claude · แก้จอดำเมื่อปิดเงาลึก + ลดต้นไม้ + ของตกแต่งหมู่บ้านจาก Meshy (branch claude/aaa-village)
+- **จอดำเมื่อปิด "เงาลึก" (เกิดใน cursed.html):** พิกเซล NaN/ค่าติดลบจาก shader บางตัวหลุดเข้า UnrealBloomPass แล้วลามทั้งจอ — ตอนเปิด AO มันถูกกรองโดยบังเอิญ
+  แก้: `R3.cleanPass()` ใน `r10.js` (กรอง NaN/Inf + clamp) ใส่ใน composer เสมอ หลัง AO ก่อน bloom · pass เดียวกันทำ color grade อ่อนๆ (saturation, เงาเย็น/แสงอุ่น, vignette) ปรับด้วย `R3.grade.value` (0–1)
+- ต้นไม้ลดลง: `a.js` ทิ้ง 50% (เดิม 22%) เมื่อ CURSED
+- ลายพื้นหิน (`tex('cobble')` ใน r3.js) วาดใหม่เป็นก้อนหินเหลี่ยมมนมีร่อง แทนวงรีลายจุด — ใช้กับลานหมู่บ้าน/ถนนทุกเกม
+- index.html: ละอองลอยรอบตัว (เกสรกลางวัน หิ่งห้อยกลางคืน) ผ่าน `REG.motes(R,L,ov)`
+- Meshy ใหม่ (ย่อ+simplify แล้ว, ใน manifest + `VILLAGE` ใน build.py): `village-well` (สร้างรอบ 2 — รอบแรกหลังคาเป็นรู), `street-lantern`, `stone-bridge`, `plaza-fountain`
+  - `moonfall-village.js`: บ่อน้ำ/น้ำพุเป็นโมเดลเดี่ยว · โคมไฟถนน (ไม่รวม torch/small) เป็น instanced · สะพานข้ามแม่น้ำ = บล็อกโค้ง Meshy ต่อกันหลายช่วง แล้วดัดตามความโค้งของ `bridgeY` (ต้องแปลง position เป็น Float32 เพราะไฟล์ quantized)
+  - `r3.js` ถาม `this.mfProp(key)` ก่อนวาดของเดิม (well/fountain/lantern/bridge/stall) จะได้ไม่ซ้อน · แก้ warning สีของแผงตลาด (`a.js` ใส่ `c`)
+- เครดิต Meshy รอบนี้: ~75 · ดึงไฟล์จากเครื่องเจ้าของผ่าน bridge ยังพัง ต้องให้เจ้าของแนบไฟล์ในแชต
 
 ## 2026-11-17 · Claude · รวมระบบ Cursed Realm เข้า index.html (branch claude/index-systems)
 - เจ้าของสั่ง: index.html ใช้ระบบทุกอย่างของ cursed.html ยกเว้นฉาก (ใช้ฉากเดิมของ index) แต่บ้านใช้โมเดล Meshy

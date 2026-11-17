@@ -1,0 +1,38 @@
+{
+  "baselineOnly": true,
+  "rows": [
+    {
+      "label": "initial",
+      "quality": "high",
+      "geometries": 113,
+      "textures": 109,
+      "programs": 110
+    },
+    {
+      "label": "qBtn 0",
+      "quality": "low",
+      "geometries": 102,
+      "textures": 148,
+      "programs": 123
+    },
+    {
+      "label": "qBtn 1",
+      "quality": "auto",
+      "geometries": 104,
+      "textures": 202,
+      "programs": 127
+    },
+    {
+      "label": "world rebuild",
+      "quality": "auto",
+      "geometries": 104,
+      "textures": 245,
+      "programs": 127
+    }
+  ],
+  "errors": [],
+  "shaderErrors": [],
+  "scope": "Whole existing renderer quality/rebuild audit; new VFX layer absent.",
+  "testedBase": "ddfb11319cbf62412cf950faad15143b0a108eaf",
+  "finding": "The pre-upgrade renderer texture count increases across quality changes and world rebuilds; the new VFX layer is absent from this baseline run. Investigate separately from the fixed VFX pools."
+}

@@ -77,5 +77,11 @@ palette instead of guessing a hidden caster or extending the network protocol.
 The host can show the full two-element fusion treatment. Purchased special skills
 reuse existing effect families; the 63-profile count describes weapon skills.
 
+An additional baseline audit found existing whole-renderer texture growth when
+switching quality and rebuilding the world: 109 → 148 → 202 → 245 textures,
+with the new VFX module absent. This requires a separate renderer lifecycle fix;
+the new layer creates no textures and its eight GPU pools remain stable through
+repeated casts and disposal/recreation. See `reports/arena-vfx/baseline-quality.json`.
+
 Physical device FPS, VRAM, Android WebView and a live PeerJS connection remain
 hardware/network checks. Software rendering measurements do not establish them.
