@@ -7,6 +7,8 @@
 
 ---
 
+## 2026-11-17 · Claude · เปลี่ยนโฟกัส
+- เจ้าของสั่ง: หยุดพัฒนา `cursed.html` ก่อน เน้น `index.html` (เพิ่มเป็นกติกาข้อ 0 ใน AGENTS.md)
 ## 2026-11-17 · Claude · Phase 3 Eclipse Reign: Celestial Overlord + Dark Sentinel + Lunar Construct + อาวุธในตำนาน + VFX (branch claude/eclipse-reign-p3, PR รออนุมัติ)
 - รายงานเต็ม: `moonfall-docs/PHASE3-ECLIPSE-REIGN-REPORT.md`
 - `src/eclipse.js` (host logic, CURSED): ห่อ `genWorld` (แท่น + เปลี่ยนชนิดค่าย ไม่เปลี่ยน id/ตำแหน่ง), `mkMob`, `setMobStats`, `mobThink`, `dealDamage` (block/weak point/poise), `hitArea` (`a.safe`), `kill` (ดรอป), `basic` (proc), `equipWeapon`, `applyEvent` (event `{t:'ec'}`) · aoe kind ใหม่ต่อท้าย `AOE_KINDS` (ห้ามแทรกกลาง — index ใช้ในแพ็กเก็ต)
