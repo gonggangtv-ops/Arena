@@ -7,6 +7,30 @@
 
 ---
 
+## 2026-11-17 · Codex · Arena skill VFX (`codex/arena-skill-vfx`)
+- เป้าหมายตามคำสั่งล่าสุดของเจ้าของ: พัฒนา `index.html` ก่อน เพิ่ม VFX อาวุธ 63 สกิล
+  (base 27 + fusion 36) ด้วยวงร่าย คมพลัง ผลึกน้ำแข็ง สายฟ้าแตกแขนง เสาพลัง/โดม
+  และสีธาตุคู่ เชื่อม events/projectiles/AOE/status จริงโดยไม่แก้กติกาต่อสู้
+- ใหม่: `src/arena-vfx-runtime.js`, `src/arena-vfx-skills.js`; `src/build.py` ใส่โมดูล
+  ก่อน d.js เฉพาะ Arena; build/copy `app/src/main/assets/index.html` แล้ว
+  Cursed HTML และ src/a,b,c,t1,r3-r12,d เท่ากับ main `ce27015` ทุก byte
+- 8 InstancedMesh batches / shader program ร่วมกัน; High 774, Low/Mobile 310 instances,
+  reduced motion ลดลงอีก; สูงสุด 8 draw calls เพิ่มใน pass วาดฉาก ไม่มีภาพ/โมเดลใหม่
+  ใช้ PRNG ของภาพแยก รวมช่วง Three.js สร้าง UUID; dispose/reset ตาม scene/quality/rebind
+  พร้อม fog fade และหยุด follow เมื่อยูนิตซ่อน
+- ทดสอบผ่าน: node syntax; build index/cursed/web; 63 cast จริงเทียบ baseline ทั้ง desktop-high,
+  mobile-low และ reduced motion — Damage/HP/MP/CD/status/position/network rows ตรงกัน
+  พร้อม keyboard/touch, shader errors 0, RNG purity และ memory เท่ากันหลัง stress/3 dispose cycles
+  HTTP Cursed โหลด 52 งานและเริ่มเกมจริงได้ ไม่มีโมดูลใหม่/JS error
+- Host/Client สอง browser contexts ผ่าน production start/snapshot, VFX remote, AOE object
+  ถูกแทน 72 snapshots ไม่เล่นปะทะซ้ำ, hidden follow, budgets และ payload/state immutability
+- รายงาน: `moonfall-docs/ARENA-SKILL-VFX.md`, `moonfall-docs/reports/arena-vfx/*.json`;
+  tests `src/tests/smoke-arena-vfx*.py`; screenshots อยู่ /tmp ไม่ commit
+- ข้อจำกัด: payload client ไม่ส่ง AOE owner/element จึงใช้ kind palette เมื่อไม่ทราบเจ้าของ;
+  purchased special skills ใช้ตระกูล VFX เดิม ไม่รวมใน 63 profiles; ต้องตรวจ hardware FPS/VRAM,
+  Android WebView และ live PeerJS เพิ่ม ไม่ใช้ Meshy/เครดิต และไม่เริ่ม Phase 3
+- Commit/push branch และเปิด PR เข้า main ให้ตรวจสอบก่อน merge/เผยแพร่
+
 ## 2026-11-17 · Claude · รวมระบบ Cursed Realm เข้า index.html (branch claude/index-systems)
 - เจ้าของสั่ง: index.html ใช้ระบบทุกอย่างของ cursed.html ยกเว้นฉาก (ใช้ฉากเดิมของ index) แต่บ้านใช้โมเดล Meshy
 - เพิ่มตัวแปร `MOON` คู่กับ `CURSED`: index = CURSED true / MOON false, cursed = ทั้งคู่ true · จุดที่เปลี่ยนจาก CURSED เป็น MOON (ฉาก): ต้นไม้/เห็ด/คริสตัลตามภูมิภาค, สีพื้นและมินิแมปตามภูมิภาค, ย้อมสีวัตถุ, แสงหมอกละอองตามภูมิภาค (`REG.atmo` ใน index แค่ประกาศชื่อภูมิภาค), หญ้าย้อมสี, บอสมังกร (index ใช้บอส Meshy จิบิเดิม), โทนมืดบังคับ
