@@ -325,6 +325,9 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
           float lu=dot(c,vec3(.3,.59,.11));${TOON?`{vec3 hu=c/max(lu,.02);c=hu*mix(lu,.3,.62);float pk=clamp(sp.r*1.25,0.,1.)+sp.b;
             c=mix(c,vec3(.3,.6,.08)*(.85+lu*.8),gm_*.7);c=mix(c,vec3(.83,.74,.5)*(.82+lu*.5),clamp(pk,0.,1.)*(1.-k)*.65);c=mix(c,vec3(.5,.52,.7)*(.75+lu*.6),k*.65);c=mix(c,vec3(.9,.86,.66),wt*.4);}`:'c=mix(vec3(lu),c,.8)*vec3(.98,.93,.88);'}}
          ${this.hi?'{float hh=dot(c,vec3(.33,.5,.17));tBump=vec3(-dFdx(hh),0.,dFdy(hh))*'+(TOON?'.6':'2.6')+';}':''}
+         ${TOON?'':`{float uw=clamp((${WL.toFixed(1)}-vWY)/2.5,0.,1.);if(uw>0.){float dp=clamp((${WL.toFixed(1)}-vWY)/34.,0.,1.);vec2 q=w*.011;
+           float a1=texture2D(uDetail,q+vec2(uTime*.021,uTime*.014)).r,a2=texture2D(uDetail,q*1.37+vec2(-uTime*.018,uTime*.023)).r;float ca=pow(clamp(1.-abs(a1-a2)*3.2,0.,1.),6.);
+           vec3 bed=texture2D(tRock,w*.014).rgb*vec3(.62,.66,.58);c=mix(c,bed,uw*.55);c=mix(c,c*vec3(.42,.58,.54),uw*(.55+dp*.35));c+=vec3(.42,.62,.56)*ca*uw*(1.-dp*.8)*.22;}}`}
          diffuseColor.rgb=c;}`).replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\n normal=normalize(normal+(viewMatrix*vec4(tBump,0.)).xyz);'))});
     const t=new THREE.Mesh(g,m);t.receiveShadow=true;t.userData.ownMat=1;this.scene.add(t);this.terrain=t;
     // grass density map for the dynamic ground cover (0 = none)
@@ -341,11 +344,11 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const c=this.cvs(512),x=c.getContext('2d'),img=x.createImageData(512,512);for(let j=0;j<512;j++)for(let i=0;i<512;i++){const wx=(i+.5)/512*WORLD,wy=(j+.5)/512*WORLD;const h=heightAt(wx,wy);const d=clamp((WL-h)/26,0,1);const k=(j*512+i)*4;img.data[k]=d*255;img.data[k+1]=d*255;img.data[k+2]=d*255;img.data[k+3]=255}
     x.putImageData(img,0,0);const dt=this.ctex(c,false,false);dt.flipY=false;
     const wn=this.ctex(this.normFrom(this.genTex('water').c,6),false);wn.repeat.set(70,70);this.waterN=wn;
-    const m=this.hi?new THREE.MeshStandardMaterial({color:TOON?'#2aa8c0':'#2a6a80',roughness:.16,metalness:0,transparent:true,envMap:this.envTex,envMapIntensity:.55,normalMap:wn,normalScale:new THREE.Vector2(.45,.45),depthWrite:false})
+    const m=this.hi?new THREE.MeshStandardMaterial({color:TOON?'#2aa8c0':'#2a6a80',roughness:.16,metalness:0,transparent:true,envMap:this.envTex,envMapIntensity:TOON?.55:.34,normalMap:wn,normalScale:new THREE.Vector2(.45,.45),depthWrite:false})
       :new THREE.MeshPhongMaterial({color:TOON?'#2aa8c0':'#2a6a80',shininess:90,specular:'#a0c8d8',transparent:true,normalMap:wn,normalScale:new THREE.Vector2(.5,.5),depthWrite:false});
     this.fow(m,{key:'water',uniforms:{uWD:{value:dt},uZoneN:this.U.zoneN},frag:fs=>zlines('uniform sampler2D uWD;\n'+fs.replace('#include <map_fragment>',`#include <map_fragment>
-      {float dp=texture2D(uWD,vFowW/${WORLD.toFixed(1)}).r;vec3 sh=vec3(.09,.3,.3),dc=vec3(.012,.06,.11);diffuseColor.rgb=mix(sh,dc,smoothstep(.0,.6,dp));
-       float fm=(1.-smoothstep(.0,.07,dp))*(.55+.45*sin(uTime*2.2+vFowW.x*.045+vFowW.y*.03));diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.82,.9,.92),fm*.6);diffuseColor.a=mix(.55,.95,smoothstep(.0,.3,dp));}`))});
+      {float dp=texture2D(uWD,vFowW/${WORLD.toFixed(1)}).r;vec3 sh=${TOON?'vec3(.09,.3,.3)':'vec3(.07,.27,.26)'},dc=vec3(.012,.06,.11);diffuseColor.rgb=mix(sh,dc,smoothstep(.0,${TOON?'.6':'.85'},dp));
+       float fm=(1.-smoothstep(.0,.07,dp))*(.55+.45*sin(uTime*2.2+vFowW.x*.045+vFowW.y*.03));diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.82,.9,.92),fm*.6);diffuseColor.a=${TOON?'mix(.55,.95,smoothstep(.0,.3,dp))':'mix(.34,.92,smoothstep(.03,.6,dp))'};}`))});
     const wq=[],Cq=100,nq=WORLD/Cq;for(let j=0;j<nq;j++)for(let i=0;i<nq;i++){let wet=false;for(let b=0;b<=4&&!wet;b++)for(let a2=0;a2<=4&&!wet;a2++)if(heightAt(i*Cq+a2*25,j*Cq+b*25)<WL+1.5)wet=true;if(!wet)continue;
       const x0=i*Cq,y0=j*Cq;wq.push(x0,0,y0,x0,0,y0+Cq,x0+Cq,0,y0+Cq,x0,0,y0,x0+Cq,0,y0+Cq,x0+Cq,0,y0)}
     const wgeo=new THREE.BufferGeometry();wgeo.setAttribute('position',new THREE.Float32BufferAttribute(wq,3));const wuv=[];for(let i=0;i<wq.length;i+=3)wuv.push(wq[i]/WORLD,wq[i+2]/WORLD);wgeo.setAttribute('uv',new THREE.Float32BufferAttribute(wuv,2));wgeo.computeVertexNormals();
@@ -421,7 +424,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       this.instC(BLOB(1),magicM,mg,(t,add)=>magP(t,add,cards?.72:1),true,reg);
       if(cards){const magC=this.windMat(new THREE.MeshStandardMaterial({map:this.tex('leafc'),alphaTest:.42,roughness:.8,metalness:0,emissive:'#3a6a78',emissiveMap:this.tex('leafc'),emissiveIntensity:.7}),'MC',.05);this.treeMats.push(magC);
         this.instC(G.leafc[1],magC,mg,(t,add)=>magP(t,add,1.14),true,reg)}}
-    if(!TF)this.instC(G.openCyl,willowM,tr.filter(t=>t.v===6),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);add(t.x,b+th+cr*.32-cr*.42,t.y,cr*.9,cr*.95,cr*.9,0,t.x,0,'#ffffff')},true,reg);
+    if(!TF)this.instC(G.openCyl,willowM,tr.filter(t=>t.v===6),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);add(t.x,b+th+cr*.32-cr*.42,t.y,cr*.9,cr*.95,cr*.9,0,t.x,0,'#8f9c80')},true,reg);
     this.instC(this.cylg(.5,1,1,5),bark,tr.filter(t=>t.v===5),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);for(const s of[-1,1])add(t.x+s*cr*.24,b+th*.82,t.y,3,cr*.72,3,0,0,s*.95,'#5a4048')},true);
     // mountain pines (no shadows, bigger chunks)
     this.instC(G.cylT,bark,WD.mtrees,(t,add)=>{add(t.x,t.h+20*t.s,t.y,9*t.s,40*t.s,9*t.s,0,t.x,0,'#ffffff')},false,null,2500);
@@ -454,7 +457,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       else this.instC(G.blob[2],this.std('#7aaa4a',.7,0),pts,(p,add)=>add(p.x,this.gY(p.x,p.y)+6,p.y,10,8,10,0,p.x,0,null),true)}
     this.ground=[];
   },
-  buildRocks(){const G=this.G;const rk=WD.rocks.filter(r=>!r.prop);const rm=this.tstd('rock','#ffffff',.92,0,{},'cut');if(TOON)rm.color.setRGB(1.9,1.9,2.25);
+  buildRocks(){const G=this.G;const rk=WD.rocks.filter(r=>!r.prop&&!(this.plainRock&&this.plainRock(r)));const rm=this.tstd('rock','#ffffff',.92,0,{},'cut');if(TOON)rm.color.setRGB(1.9,1.9,2.25);
     for(let v=0;v<4;v++)this.instC(G.rock[v],rm,rk.filter((r,i)=>i%4===v),(r,add)=>{const R=mulberry32(Math.floor(r.x*3+r.y));const y=this.gY(r.x,r.y);const hy=r.edge?1.2:r.cliff?1:.75;
       add(r.x,y+r.r*hy*.3,r.y,r.r*1.08,r.r*hy,r.r,R()*.4,R()*6,R()*.3,r.cave!==undefined?'#9a94a8':r.edge?'#a8a49a':'#b8b4aa')},true);
     // decor boulders lining cave passages and the waterfall

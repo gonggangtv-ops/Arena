@@ -839,7 +839,7 @@ function findPath(sx,sy,tx,ty){
 function paintMasks(S){const n=Math.round(WORLD*S),m=document.createElement('canvas');m.width=m.height=n;const c=m.getContext('2d',{willReadFrequently:true});c.fillStyle='#000';c.fillRect(0,0,n,n);
   c.globalCompositeOperation='lighter';c.lineCap='round';c.lineJoin='round';
   for(const p of WD.paths){const w=p[4]||64;c.strokeStyle='rgba(255,0,0,.45)';c.lineWidth=w*1.45*S;c.beginPath();c.moveTo(p[0]*S,p[1]*S);c.lineTo(p[2]*S,p[3]*S);c.stroke();c.strokeStyle='rgba(255,0,0,.6)';c.lineWidth=w*.9*S;c.stroke()}
-  for(const v of WD.villages){const R=(v.plaza?235:140)*S;const g=c.createRadialGradient(v.x*S,v.y*S,R*.6,v.x*S,v.y*S,R);g.addColorStop(0,'rgba(0,255,0,1)');g.addColorStop(1,'rgba(0,255,0,0)');c.fillStyle=g;c.fillRect((v.x*S-R),(v.y*S-R),R*2,R*2)}
+  for(const v of WD.villages){const R=(CURSED&&v.r?v.r*.97:v.plaza?235:140)*S;const g=c.createRadialGradient(v.x*S,v.y*S,R*.6,v.x*S,v.y*S,R);g.addColorStop(0,'rgba(0,255,0,1)');if(CURSED)g.addColorStop(.86,'rgba(0,255,0,1)');g.addColorStop(1,'rgba(0,255,0,0)');c.fillStyle=g;c.fillRect((v.x*S-R),(v.y*S-R),R*2,R*2)}
   if(WD.dg){const D=WD.dg;c.fillStyle='rgb(0,255,0)';c.fillRect(D.x*S,D.y*S,D.w*S,D.h*S)}
   {const C=WD.castle;c.fillStyle='rgb(0,255,0)';c.fillRect(C.x*S,C.y*S,C.w*S,C.h*S);c.strokeStyle='rgba(0,255,0,.9)';c.lineWidth=150*S;c.beginPath();c.moveTo(C.gate.x*S,C.gate.y*S);c.lineTo(C.out.x*S,C.out.y*S);c.stroke()}
   for(const s of WD.shrines){c.fillStyle='rgba(0,255,0,.85)';c.beginPath();c.arc(s.x*S,s.y*S,92*S,0,7);c.fill()}

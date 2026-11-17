@@ -274,7 +274,7 @@ function uflags(o){return(o.dead?1:0)|(o.stunT>0?2:0)|(o.slowT>0?4:0)|(o.buffT>0
   |(o.atkAnim>0?1024:0)|(o.castAnim>0?2048:0)|(o.wet?4096:0)|(o.shieldHp>0?8192:0)|(o.spinT>0?16384:0)|(o.lotusT>0?32768:0)|(o.leap?65536:0)|(o.invisT>0?131072:0)|(o.burnT>0?262144:0)|(o.aegis?524288:0)|(o.kb?1048576:0)|(o.rise>0?2097152:0)|(o.spdPT>0?4194304:0)|(o.fuseT>0?8388608:0)}
 function heroRow(o){return[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp,o.lvl,o.wk?AW.indexOf(o.wk):-1,o.wt,o.at,o.kills,o.mp|0,o.maxMp,o.shieldHp|0]}
 function selfRow(o){return[Math.round(o.xp),o.skl[0],o.skl[1],o.skl[2],o.pts,f1(Math.max(0,o.cd[0])),f1(Math.max(0,o.cd[1])),f1(Math.max(0,o.cd[2])),f1(o.armorV),Math.round(o.atkDmg),Math.round(o.spdB*100),Math.round(o.dmgB*100),Math.round(o.mr*100),f1(Math.max(0,o.shieldT)),
-  o.bag[0],o.bag[1],o.bag[2],o.bag[3],f1(Math.max(0,o.bcd[0])),f1(Math.max(0,o.bcd[1])),f1(Math.max(0,o.bcd[2])),f1(Math.max(0,o.bcd[3])),f1(Math.max(0,o.spdPT)),o.wk2?AW.indexOf(o.wk2):-1,o.wt2,o.fury|0,o.gold|0,o.wv|0,o.wv2|0,o.xs|0,o.xl|0,f1(Math.max(0,o.xcd||0)),Math.round(o.sta===undefined?100:o.sta)]}
+  o.bag[0],o.bag[1],o.bag[2],o.bag[3],f1(Math.max(0,o.bcd[0])),f1(Math.max(0,o.bcd[1])),f1(Math.max(0,o.bcd[2])),f1(Math.max(0,o.bcd[3])),f1(Math.max(0,o.spdPT)),o.wk2?AW.indexOf(o.wk2):-1,o.wt2,o.fury|0,o.gold|0,o.wv|0,o.wv2|0,o.xs|0,o.xl|0,f1(Math.max(0,o.xcd||0)),f1(Math.max(0,o.dgcd||0))]}
 function mobRow(o){const r=[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp];if(o.zombie)r.push(ZK.indexOf(o.kind));return r}
 function aoeRow(a){return[a.x|0,a.y|0,a.r|0,f1(a.t),a.delay,a.dot||0,AOE_KINDS.indexOf(a.kind),f1(a.fxT),a.vis,a.ang!==undefined?Math.round(a.ang*100):0,a.shape==='line'?1:a.shape==='cone'?2:0,a.w||a.arc*100|0||0]}
 function snapFor(cid,c,budget){let F=evFocus(cid);F=F||{x:CX,y:CY};const R=1500;
@@ -319,7 +319,7 @@ function applySnap(d){
   for(const r of d.f){const u=UMAP.get(r[0]);if(!u)continue;setFlags(u,r[3]);pos(u,r[1],r[2],true);u.far=true}
   if(d.me){const r=d.me,u=UMAP.get(r[0]);if(u){u.xp=r[1];u.skl=[r[2],r[3],r[4]];u.pts=r[5];u.cd=[r[6],r[7],r[8]];u.armorV=r[9];u.atkDmg=r[10];u.spdB=r[11]/100;u.dmgB=r[12]/100;u.mr=r[13]/100;u.shieldT=r[14];
     if(r.length>=24){u.bag=[r[15]|0,r[16]|0,r[17]|0,r[18]|0];u.bcd=[+r[19]||0,+r[20]||0,+r[21]||0,+r[22]||0];u.spdPT=+r[23]||0}
-    if(r.length>=26){u.wk2=r[24]>=0?AW[r[24]]||null:null;u.wt2=r[25]|0}if(r.length>=27)u.fury=r[26]|0;if(r.length>=34){u.gold=r[27]|0;u.wv=r[28]|0;u.wv2=r[29]|0;u.xs=r[30]|0;u.xl=r[31]|0;u.xcd=+r[32]||0;u.sta=+r[33]||0}}}
+    if(r.length>=26){u.wk2=r[24]>=0?AW[r[24]]||null:null;u.wt2=r[25]|0}if(r.length>=27)u.fury=r[26]|0;if(r.length>=34){u.gold=r[27]|0;u.wv=r[28]|0;u.wv2=r[29]|0;u.xs=r[30]|0;u.xl=r[31]|0;u.xcd=+r[32]||0;u.dgcd=+r[33]||0}}}
   const inSnap=new Set();
   for(const r of d.m){let u=UMAP.get(r[0]);
     if(!u&&r.length>8&&ZK[r[8]]){u=mkZombie(r[0],ZK[r[8]],r[1],r[2],1);addUnit(u)}   // zombies are spawned by the host at night; clients meet them in the snapshot

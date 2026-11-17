@@ -9,7 +9,7 @@ window.installMoonfallUI=function(){
   let atlas=null,loadState='loading',loadError=null,hover=-1,lastHint=0;
   const hint=document.createElement('aside');hint.id='moonfallSkillHint';hint.hidden=true;hint.setAttribute('role','tooltip');document.body.appendChild(hint);
   const instructions=document.createElement('p');instructions.id='moonfallHUDHelp';instructions.className='moonfall-sr-only';
-  instructions.textContent='เดินด้วย W A S D หรือจอยซ้าย สกิล Q E R หรือ 1 2 3 กดปุ่ม + บนจอเพื่ออัปสกิล Shift เพื่อหลบ มือถือกดค้างแล้วลากเพื่อเล็ง ปล่อยเพื่อร่าย';
+  instructions.textContent='เดินด้วย W A S D หรือจอยซ้าย สกิล Q E R หรือ 1 2 3 กดปุ่ม + บนจอเพื่ออัปสกิล Shift เพื่อพุ่ง (คูลดาวน์ 45 วิ) มือถือกดค้างแล้วลากเพื่อเล็ง ปล่อยเพื่อร่าย';
   document.body.appendChild(instructions);cv.setAttribute('aria-describedby',instructions.id);
   function skillState(me,i){
     const skill=me?.wk&&SK[me.wk]?.[i],level=me?.skl?.[i]||0,index=Math.max(0,level-1);
