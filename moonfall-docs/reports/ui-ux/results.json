@@ -6,9 +6,10 @@
       "phase": "ready",
       "ready": true,
       "failed": false,
-      "total": 47,
+      "total": 52,
       "packDone": 18,
       "musicDone": 7,
+      "artDone": 1,
       "error": null
     },
     "coverage": {
@@ -31,9 +32,10 @@
       "phase": "ready",
       "ready": true,
       "failed": false,
-      "total": 47,
+      "total": 52,
       "packDone": 18,
       "musicDone": 7,
+      "artDone": 1,
       "error": null
     },
     "coverage": {
@@ -61,9 +63,10 @@
       "phase": "error",
       "ready": false,
       "failed": true,
-      "total": 47,
+      "total": 52,
       "packDone": 18,
       "musicDone": 7,
+      "artDone": 1,
       "error": "Rough dark basalt boulder: HTTP 503 · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
     },
     "noEntry": true
@@ -74,9 +77,10 @@
       "phase": "error",
       "ready": false,
       "failed": true,
-      "total": 47,
+      "total": 52,
       "packDone": 0,
       "musicDone": 7,
+      "artDone": 1,
       "error": "ภาพไอคอน: Atlas image unavailable: items · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
     },
     "noEntry": true
@@ -91,9 +95,10 @@
       "phase": "error",
       "ready": false,
       "failed": true,
-      "total": 47,
+      "total": 52,
       "packDone": 0,
       "musicDone": 6,
+      "artDone": 1,
       "error": "เสียง menu: HTTP 503 · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
     },
     "noEntry": true
@@ -107,6 +112,7 @@
       "total": 0,
       "packDone": 0,
       "musicDone": 0,
+      "artDone": 0,
       "error": "รายการตัวละครไม่ครบ · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
     },
     "noEntry": true
@@ -117,9 +123,10 @@
       "phase": "error",
       "ready": false,
       "failed": true,
-      "total": 46,
-      "packDone": 0,
-      "musicDone": 6,
+      "total": 51,
+      "packDone": 18,
+      "musicDone": 7,
+      "artDone": 1,
       "error": "ไม่มีโมเดลในรายการ: moon-boulder · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
     },
     "noEntry": true
@@ -138,6 +145,7 @@
       "total": 0,
       "packDone": 0,
       "musicDone": 0,
+      "artDone": 0,
       "error": "อุปกรณ์ไม่พร้อมสำหรับกราฟิก 3D · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
     },
     "no2DFallback": true

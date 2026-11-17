@@ -155,22 +155,70 @@ input,select{background:#0c1222dd;color:#e6e9f5;border-color:#485675;border-radi
 .moonfall-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(pointer:coarse){#moonfallSkillHint{display:none}}
 </style>
-<style>/* Round 2: play first, reference/settings on demand, original controls retained. */
-#menu[data-moonfall-menu]{justify-content:flex-start;padding:clamp(16px,4vh,42px) max(16px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));gap:8px;overflow-y:auto;touch-action:pan-y}
-#menu[data-moonfall-menu]>*{box-sizing:border-box;min-width:0;max-width:100%}
-.moonfall-menu-title{margin-bottom:5px}.moonfall-menu-title .sub{font-size:12px;line-height:1.7;margin:8px 0 0;color:#aebed5}.moonfall-menu-title h1{font-size:clamp(30px,6vh,52px)}
-#menu .moonfall-identity{max-width:800px;width:100%;margin:0;gap:12px;padding:14px 16px;background:#101a2ccf;border:1px solid #39475f;border-radius:6px}
-#pname{min-height:44px;max-width:220px;box-sizing:border-box}.moonfall-cloak{display:flex;align-items:center;justify-content:center;gap:10px;max-width:100%;flex-wrap:wrap}.moonfall-cloak .looks{gap:7px;flex-wrap:wrap;justify-content:center;max-width:100%}#menu .look{width:44px;height:44px;transform:none;border-width:2px}#menu .look.sel{border-color:#f3dca6;box-shadow:0 0 0 2px #ad956380,inset 0 0 0 5px #07101a99}
-#menu .moonfall-play-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:800px;width:100%;margin-top:6px}#menu .moonfall-play-actions .go{min-height:50px;padding:12px 14px;font-size:15px}
-.moonfall-start-hint{font-size:11px;line-height:1.7;color:#a8b9d0;margin:0 0 2px}
-.moonfall-menu-section{max-width:1060px;width:100%;text-align:left;background:#0b1426db;border:1px solid #35435b;border-radius:5px;flex-shrink:0}.moonfall-menu-section summary{min-height:46px;display:list-item;list-style-position:inside;cursor:pointer;padding:13px 16px;box-sizing:border-box;color:#d7c8a7;font-size:12px}.moonfall-menu-section[open] summary{border-bottom:1px solid #35435b}.moonfall-menu-section>.row{padding:10px 14px;margin:0}.moonfall-menu-section .go{min-height:44px}.moonfall-menu-section .codex{padding:12px;box-sizing:border-box;max-width:none}.moonfall-menu-section .wcard{text-align:center}.moonfall-menu-section .wcard .sks{display:flex;gap:4px;justify-content:center;margin-top:8px}
-.moonfall-menu-skill{display:inline-block;width:clamp(22px,2.4vw,32px);aspect-ratio:1;border-radius:4px;border:1px solid #746346;background-image:url('assets/ui/moonfall-skills.webp');background-size:600% 500%}.moonfall-gallery-link{display:block;margin:0 14px 14px;color:#b9d3f2;font-size:12px;text-underline-offset:4px;min-height:32px;padding:7px}
-#menu .celestial-tools{margin:0;gap:8px}#menu .celestial-tools .go{min-height:44px}#menu>.msg{min-height:0;margin:0}#menu #celestialAssetNote{margin:0;font-size:10px}
+<style>/* Cinematic lobby: illustration remains decorative; every original control is retained. */
+#menu[data-moonfall-menu]{display:block;border:0;padding:max(42px,env(safe-area-inset-top)) max(26px,env(safe-area-inset-right)) max(26px,env(safe-area-inset-bottom)) max(38px,calc((100vw - 1280px)/2),env(safe-area-inset-left));background:#050a14;overflow-x:hidden;overflow-y:auto;touch-action:pan-y;text-align:left;isolation:isolate}
+#menu[data-moonfall-menu]::after{content:'';position:fixed;inset:14px;border:1px solid #b9a37326;pointer-events:none;z-index:2}
+.moonfall-menu-scenery{position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#050a14 0%,#050a14f0 19%,#050a14b8 35%,#050a1430 57%,transparent 77%),linear-gradient(0deg,#050a14 0%,#050a142b 29%,transparent 70%,#050a144d),url('assets/ui/moonfall-key-art.webp') 68% center/cover no-repeat}
+.moonfall-menu-content{position:relative;width:min(510px,46vw);display:flex;flex-direction:column;gap:10px;min-width:0;z-index:1}
+.moonfall-menu-content>*{box-sizing:border-box;min-width:0;max-width:100%;flex-shrink:0}
+.moonfall-menu-title{position:relative;margin:0 0 10px;padding-top:3px}
+.moonfall-menu-crest{position:absolute;top:5px;left:0;width:25px;height:25px;border:1px solid #b59a6288;transform:rotate(45deg);box-shadow:0 0 28px #b3ceff1c}
+.moonfall-menu-crest::before{content:'☽';position:absolute;inset:-5px;display:grid;place-items:center;font:29px Georgia,serif;color:#d2c097;transform:rotate(-45deg);text-shadow:0 0 18px #b7d9fc66}
+.moonfall-menu-title .anime-kicker{min-height:27px;margin:0 0 17px;padding-left:43px;display:flex;align-items:center;font:500 9px/1.6 system-ui,sans-serif;letter-spacing:.23em;color:#a9bdd2}
+.moonfall-menu-title h1{margin:0;color:#edece8;font:400 clamp(42px,5.1vw,73px)/.98 Georgia,serif;letter-spacing:-.025em;text-shadow:0 3px 28px #0008}
+.moonfall-menu-title h1 span{display:block}.moonfall-menu-title h1 span:last-child{color:#e4d3af}
+.moonfall-menu-chapter{display:flex;align-items:center;gap:13px;margin:17px 0 0;font:500 11px/1.4 system-ui,sans-serif;letter-spacing:.48em;color:#c8b589}
+.moonfall-menu-chapter::before{content:'';width:42px;height:1px;background:linear-gradient(90deg,#bfa57433,#d3ba82)}
+.moonfall-menu-title .sub{max-width:365px;font-size:11px;line-height:1.8;margin:12px 0 0;color:#acbace}
+#menu .moonfall-play-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;margin:0}
+#menu .moonfall-play-actions .go{position:relative;min-width:0;min-height:45px;padding:11px 10px;font:500 12px/1.4 system-ui,sans-serif;letter-spacing:.015em;border-radius:1px;background:linear-gradient(105deg,#17263bd9,#0b1426da);border:1px solid #8197b34d;color:#dce7f3;box-shadow:none;transition:background .18s,border-color .18s,box-shadow .18s}
+#menu .moonfall-play-actions #soloBtn{grid-column:1/-1;min-height:57px;padding:15px 40px;font-size:16px;font-weight:700;letter-spacing:.035em;color:#171a22;border-color:#dbc493;background:linear-gradient(110deg,#c4a572,#f1dfb3 52%,#bba06d);box-shadow:0 3px 28px #cba76220,inset 0 1px #fff6;text-shadow:0 1px #fff2}
+#menu .moonfall-play-actions #soloBtn::before,#menu .moonfall-play-actions #soloBtn::after{content:'✧';position:absolute;top:50%;transform:translateY(-50%);font-size:21px;font-weight:400;color:#5b4f36}
+#menu .moonfall-play-actions #soloBtn::before{left:20px}#menu .moonfall-play-actions #soloBtn::after{right:20px}
+#menu .moonfall-play-actions .go:not(:disabled):hover{border-color:#d0c19b;background:linear-gradient(105deg,#263b55ed,#111e33ed);box-shadow:0 0 24px #a6ceff12}
+#menu .moonfall-play-actions #soloBtn:not(:disabled):hover{color:#111721;background:linear-gradient(110deg,#debe88,#fff0c8 52%,#c8ac75);box-shadow:0 0 32px #cba7623b}
+#menu .moonfall-play-actions .go:disabled{cursor:wait;opacity:.5;box-shadow:none}
+.moonfall-start-hint{font-size:10px;line-height:1.7;color:#8fabc3;margin:0 0 3px;text-align:center}
+#menu .moonfall-identity{justify-content:space-between;gap:10px;width:100%;margin:0 0 4px;padding:8px 0 13px;border:0;border-bottom:1px solid #92a9c12b;background:none}
+.moonfall-player-name{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.moonfall-player-name>label{font-size:10px;color:#9eacc0}
+#menu #pname{min-height:44px;width:100%;min-width:0;max-width:230px;box-sizing:border-box;border:1px solid #6d82993d;border-radius:1px;background:#081321b8;font-size:12px;padding:9px 12px;color:#dbe5f0}
+.moonfall-cloak{position:relative;flex:none}
+.moonfall-cloak>summary{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 11px;border:1px solid #6d82993d;color:#b9c6d7;background:#081321b8;cursor:pointer;list-style:none;font-size:11px}
+.moonfall-cloak>summary::-webkit-details-marker{display:none}.moonfall-cloak>summary::after{content:'⌄';font-size:13px;color:#a99570}
+.moonfall-cloak[open]>summary::after{content:'⌃'}
+.moonfall-cloak-swatch{display:block;width:10px;height:15px;clip-path:polygon(0 0,100% 0,100% 100%,50% 75%,0 100%);background:#a9c7e4;box-shadow:0 0 8px #fff3}
+.moonfall-cloak .looks{position:absolute;right:0;top:calc(100% + 7px);z-index:5;width:224px;max-width:calc(100vw - 56px);padding:9px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;box-sizing:border-box;background:#081320f7;border:1px solid #8b7957;box-shadow:0 14px 36px #0008}
+#menu .look{width:44px;height:44px;transform:none;border-width:1px;border-radius:1px;touch-action:manipulation}
+#menu .look.sel{border-color:#f3dca6;box-shadow:0 0 0 2px #ad956380,inset 0 0 0 5px #07101a99}
+.moonfall-menu-section{width:100%;text-align:left;background:linear-gradient(90deg,#0a16248c,#07111b33);border:0;border-bottom:1px solid #71869c30;border-radius:0}
+.moonfall-menu-section>summary{position:relative;min-height:44px;display:block;list-style:none;cursor:pointer;padding:13px 28px 12px 0;box-sizing:border-box;color:#a9bbcf;font-size:11px;line-height:1.5}
+.moonfall-menu-section>summary::-webkit-details-marker{display:none}.moonfall-menu-section>summary::after{content:'+';position:absolute;right:7px;top:9px;color:#c9b58e;font:23px/1 Georgia,serif}
+.moonfall-menu-section[open]>summary::after{content:'−'}.moonfall-menu-section[open]>summary{color:#e0cfa7}
+.moonfall-menu-section>.row{justify-content:flex-start;padding:4px 0 12px;margin:0;gap:7px}
+.moonfall-menu-section .go{min-height:44px;font-size:11px;padding:9px 10px;border-color:#6c819b55;border-radius:1px;box-shadow:none}
+.moonfall-menu-section .codex{padding:4px 0 12px;box-sizing:border-box;max-width:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.moonfall-menu-section .wcard{text-align:center;padding:8px 5px;background:#0a1625b8;border:1px solid #6c819b3d;border-radius:1px;box-shadow:none}
+.moonfall-menu-section .wcard .sks{display:flex;gap:4px;justify-content:center;margin-top:8px}
+.moonfall-menu-skill{display:inline-block;width:clamp(22px,2.4vw,32px);aspect-ratio:1;border-radius:4px;border:1px solid #746346;background-image:url('assets/ui/moonfall-skills.webp');background-size:600% 500%}
+.moonfall-gallery-link{display:block;margin:0 0 12px;color:#b9d3f2;background:transparent;border:0;border-bottom:1px solid #7b97b14d;font-size:11px;min-height:44px;padding:7px 0;text-align:left;cursor:pointer}
+#menu .celestial-tools{margin:0;gap:7px}#menu .celestial-tools .go{min-height:44px}
+#menu .moonfall-menu-content>.msg{min-height:0;margin:0;font-size:11px;line-height:1.7}
+#menu #celestialAssetNote{margin:0 0 10px;font-size:10px;line-height:1.7;color:#7f98b1}
+#menu .anime-help-toggle{align-self:flex-start;min-height:44px;padding:7px 0;border:0;font-size:10px;color:#9cafc3}
+#menu .moonfall-menu-content>.tip{font-size:10px;line-height:1.8;color:#a5b0c8}#menu .moonfall-menu-content>.tip.anime-help-collapsed{display:none}
+#menu .credlink{align-self:flex-start;font-size:9px;min-height:44px;padding:5px 0;color:#71869f}
+.moonfall-menu-legend{position:absolute;right:max(52px,6vw);bottom:max(44px,6vh);display:flex;align-items:center;gap:16px;color:#c9bc9f;text-shadow:0 2px 10px #000b;font:10px/1.8 system-ui,sans-serif;letter-spacing:.3em}
+.moonfall-menu-legend-index{display:grid;place-items:center;width:38px;height:38px;border:1px solid #b3a17b66;transform:rotate(45deg);font:22px Georgia,serif;letter-spacing:0}
+.moonfall-menu-legend>span:last-child>span{display:block;color:#8fa4bd;font-size:10px;letter-spacing:.02em}
 #rooms,#lobby{background:radial-gradient(ellipse at top,#263650bb,#080e1bf5 78%);gap:10px;justify-content:flex-start;padding-top:max(24px,env(safe-area-inset-top));overflow-y:auto;touch-action:pan-y}#rooms .rwrap,#lobby .lwrap{max-width:1060px;gap:16px}#rooms .rcol,#lobby .lcol,#lobby .chat{border:1px solid #3e4d66;border-radius:6px;padding:16px;background:#101a2deb}#lobby .roomcode{font:600 clamp(32px,6vw,56px)/1.3 ui-monospace,monospace;color:#eed7a2;letter-spacing:.16em;padding:10px 20px;background:#0c1525;border:1px solid #796948;border-radius:5px}#lobby .cfg{width:100%;gap:10px;align-items:stretch}#lobby .cfg label{flex:1 1 130px;font-size:12px;color:#b9c8db}#lobby .cfg select,#rooms input,#lobby .cin input,#lobby .go,#rooms .go{min-height:44px;box-sizing:border-box}#lobby .pl{min-height:44px;box-sizing:border-box;padding:8px 12px}#lobby .kick{min-width:36px;min-height:36px}#lobby .lcol>.row{width:100%;margin-top:16px}#lobbyStart{min-width:160px}#lobbyNote,#lobbyHow{line-height:1.7}#lobby .chat{max-height:360px}#lobby .cin{gap:8px}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #b8d9ff;outline-offset:3px}
 #lobby .lcol>.moonfall-lobby-actions{margin-top:0;padding-bottom:12px;border-bottom:1px solid #3b4962}
-@media(max-width:600px){#menu .moonfall-play-actions{grid-template-columns:1fr}#menu .moonfall-identity{padding:12px}.moonfall-menu-section .codex{grid-template-columns:repeat(3,minmax(0,1fr))}.moonfall-menu-skill{width:24px}#rooms .rwrap,#lobby .lwrap{flex-direction:column}#rooms .rform{flex-basis:auto}#lobby .chat{min-height:220px}#lobby .cfg label{flex-basis:42%}}
-@media(max-height:480px) and (min-width:601px){#menu[data-moonfall-menu]{padding-top:12px;gap:6px}.moonfall-menu-title h1{font-size:29px}.moonfall-menu-title .anime-kicker{margin-bottom:3px}.moonfall-menu-title .sub{margin-top:3px;font-size:10px}#menu .moonfall-identity{padding:7px 10px}.moonfall-start-hint{font-size:10px}#menu .moonfall-play-actions .go{min-height:44px;padding:9px}.moonfall-menu-section summary{min-height:44px;padding:12px}}
+@media(min-width:1500px) and (min-height:850px){#menu[data-moonfall-menu]{padding-top:max(70px,8vh)}.moonfall-menu-content{gap:12px}.moonfall-menu-title{margin-bottom:14px}.moonfall-menu-title .sub{margin-top:17px}.moonfall-menu-title h1{font-size:79px}}
+@media(max-width:900px) and (min-width:601px){.moonfall-menu-content{width:min(440px,55vw)}#menu[data-moonfall-menu]{padding-left:max(28px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right))}.moonfall-menu-title h1{font-size:54px}.moonfall-menu-title .anime-kicker{font-size:8px;letter-spacing:.16em}.moonfall-menu-legend{right:32px;bottom:35px}.moonfall-menu-legend>span:last-child>span{display:none}}
+@media(max-width:600px){#menu[data-moonfall-menu]{padding:clamp(106px,17vh,150px) max(23px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(23px,env(safe-area-inset-left))}#menu[data-moonfall-menu]::after{inset:10px}.moonfall-menu-content{width:100%;gap:8px}.moonfall-menu-scenery{background-image:linear-gradient(0deg,#050a14 16%,#050a14e6 37%,#050a144d 74%,#050a1455),linear-gradient(90deg,#050a14a6,transparent 90%),url('assets/ui/moonfall-key-art.webp');background-size:cover,cover,auto 70vh;background-position:center,center,75% top}.moonfall-menu-title{margin-bottom:8px}.moonfall-menu-title h1{font-size:clamp(43px,12.8vw,65px)}.moonfall-menu-title .anime-kicker{font-size:8px;letter-spacing:.13em;margin-bottom:14px;padding-left:39px}.moonfall-menu-crest{width:23px;height:23px}.moonfall-menu-chapter{font-size:10px;margin-top:14px}.moonfall-menu-title .sub{margin-top:9px;font-size:10px;max-width:300px}.moonfall-menu-legend{display:none}#menu .moonfall-play-actions .go{min-height:46px;font-size:11px}#menu .moonfall-play-actions #soloBtn{min-height:54px;font-size:15px}.moonfall-start-hint{font-size:9px}.moonfall-player-name{gap:8px}#menu #pname{max-width:none}.moonfall-cloak>summary{padding:0 9px}.moonfall-menu-section .codex{grid-template-columns:repeat(3,minmax(0,1fr))}.moonfall-menu-skill{width:24px}#rooms .rwrap,#lobby .lwrap{flex-direction:column}#rooms .rform{flex-basis:auto}#lobby .chat{min-height:220px}#lobby .cfg label{flex-basis:42%}}
+@media(max-height:480px) and (min-width:601px){#menu[data-moonfall-menu]{padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom))}.moonfall-menu-content{width:min(440px,56vw);gap:6px}.moonfall-menu-title{margin-bottom:3px}.moonfall-menu-title .anime-kicker{min-height:22px;margin-bottom:7px;font-size:7px;letter-spacing:.15em;padding-left:34px}.moonfall-menu-crest{top:3px;width:19px;height:19px}.moonfall-menu-crest::before{font-size:23px}.moonfall-menu-title h1{font-size:40px;line-height:.94}.moonfall-menu-chapter{font-size:8px;margin-top:8px;gap:10px;letter-spacing:.4em}.moonfall-menu-chapter::before{width:28px}.moonfall-menu-title .sub{margin-top:6px;max-width:none;font-size:9px;line-height:1.5}#menu .moonfall-play-actions .go{min-height:44px;padding:9px 7px;font-size:11px}#menu .moonfall-play-actions #soloBtn{min-height:46px;padding:10px 36px;font-size:14px}.moonfall-start-hint{font-size:9px;margin-bottom:0}#menu .moonfall-identity{padding:4px 0 8px;margin-bottom:0}.moonfall-menu-section>summary{min-height:44px;padding:11px 28px 10px 0}.moonfall-menu-legend{bottom:25px;right:25px;font-size:8px;gap:13px}.moonfall-menu-legend-index{width:28px;height:28px;font-size:17px}}
+@media(prefers-reduced-motion:reduce){#menu .moonfall-play-actions .go{transition:none}}
 </style>
 <style>#moonfallShop{background:linear-gradient(145deg,#18243a,#080f1e)!important;border-color:#a99467!important;border-radius:8px!important;box-shadow:0 20px 90px #000a!important;padding:16px!important;color:#e0e6f1!important}
 .moonfall-shop-head{gap:10px;position:sticky;top:-16px;z-index:1;background:#101b2cf5;padding:10px 0;border-bottom:1px solid #61708855}
@@ -181,11 +229,54 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,su
 #fuseGrid .sks>span{display:flex;align-items:center;gap:8px;min-height:46px}#fuseGrid .sks img{border:1px solid #a48d5f66;border-radius:5px}
 @media(max-width:440px){.moonfall-shop-head>b:first-child{font-size:13px!important}.moonfall-shop-head>b:first-child img{display:none}.moonfall-shop-row{gap:7px}.moonfall-shop-copy>b{font-size:12px}.moonfall-shop-row button{min-width:65px}.moonfall-shop-copy>div{font-size:11px}}
 </style>
-<style>#loading.moonfall-load{z-index:1000;background:radial-gradient(ellipse at 50% 20%,#263a5b,#090f1c 65%,#050a13);padding:24px;overflow:auto;touch-action:pan-y}
-.moonfall-load-card{max-width:520px;width:100%;box-sizing:border-box;text-align:center;padding:clamp(20px,4vw,42px);border:1px solid #71684e;border-top-color:#d2bd89;border-radius:10px;background:linear-gradient(150deg,#1b2c4588,#0a1428dd);box-shadow:0 20px 70px #0006}
-.moonfall-load-moon{font:80px/1 Georgia,serif;color:#e2cc97;text-shadow:0 0 45px #b5d4ff55}.moonfall-load-eyebrow{font:10px system-ui;letter-spacing:3px;color:#aabfd9}.moonfall-load-card h2{font:400 clamp(22px,4vw,30px)/1.5 Georgia,serif;color:#f0e2bf;margin:18px 0 12px}#moonfallLoadStatus{font-size:14px;line-height:1.7;color:#c3d2e8;margin:10px 0 20px}
-#moonfallLoadProgress{height:8px;background:#070e1c;border:1px solid #4f6079;border-radius:5px;overflow:hidden}#moonfallLoadFill{height:100%;width:0;background:linear-gradient(90deg,#8eaaca,#e1c58e);transition:width .18s linear}#moonfallLoadCount{font:12px ui-monospace,monospace;color:#c5d6ed}.moonfall-load-note{font-size:11px;line-height:1.8;color:#94a8c4}#moonfallLoadError{padding:12px;background:#381e2b;border:1px solid #a66a77;border-radius:5px;color:#f5ced4;font-size:12px;line-height:1.7;overflow-wrap:anywhere;text-align:left}#moonfallLoadRetry{margin-top:16px;min-height:44px;padding:10px 22px;border:1px solid #d7be87;border-radius:5px;background:#d9c18d;color:#101a2b;font-weight:700;cursor:pointer}
-@media(max-height:480px){.moonfall-load-card{padding:15px 24px;max-width:580px}.moonfall-load-moon{font-size:40px}.moonfall-load-card h2{font-size:21px;margin:8px 0}#moonfallLoadStatus{margin:6px 0 10px}.moonfall-load-eyebrow{margin:5px}.moonfall-load-note{margin:6px}}
+<style>/* The illustrated shell stays legible before its required key art arrives. */
+#loading.moonfall-load{z-index:1000;isolation:isolate;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;box-sizing:border-box;min-height:100%;padding:40px clamp(28px,7vw,110px);overflow:auto;touch-action:pan-y;background:#060c19;color:#dce8f8;outline:0}
+#loading.moonfall-load.hidden{display:none}
+.moonfall-load-art{position:fixed;inset:0;z-index:-2;background:#0a1222 url('assets/ui/moonfall-key-art.webp') 72% center/cover no-repeat;pointer-events:none}
+.moonfall-load-art::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#030a16f5,#060e20c9 30%,#060c1824 70%),linear-gradient(0deg,#040914e6,transparent 35%,#04091420 75%,#04091466)}
+.moonfall-load-card{position:relative;width:min(430px,100%);box-sizing:border-box;text-align:left;padding:20px 0;flex-shrink:0;text-shadow:0 2px 14px #0008}
+.moonfall-load-crest{position:relative;display:grid;place-items:center;width:66px;height:66px;margin:0 0 28px 7px;border:1px solid #b8a57596;border-radius:50%;color:#ecd59e;box-shadow:0 0 24px #71bdff12,inset 0 0 16px #71bdff12}
+.moonfall-load-crest::before{content:'';position:absolute;inset:7px;border:1px solid #99c4f44d;transform:rotate(45deg)}
+.moonfall-load-crest::after{content:'✦';position:absolute;right:-5px;top:24px;font-size:13px;color:#e9d197}
+.moonfall-load-crest span{font:42px/1 Georgia,serif;filter:drop-shadow(0 0 12px #8fcfff66)}
+.moonfall-load-eyebrow{font:10px/1.5 system-ui,sans-serif;letter-spacing:5px;color:#cdbb90;margin:0 0 10px}
+.moonfall-load-wordmark{font:400 clamp(40px,5.2vw,68px)/1.05 Georgia,serif;letter-spacing:5px;color:#f2e7ce;margin:0 0 16px;text-shadow:0 2px 30px #030a19}
+.moonfall-load-chapter{font-size:12px;line-height:1.8;letter-spacing:.5px;color:#adc1dc;margin:0 0 25px}
+.moonfall-load-rule{position:relative;height:14px;display:flex;align-items:center;color:#ddc591;font-size:13px;gap:12px;margin:0 0 24px}
+.moonfall-load-rule::before{content:'';width:55px;height:1px;background:#b6a37c}
+.moonfall-load-rule::after{content:'';height:1px;flex:1;background:linear-gradient(90deg,#b6a37c77,transparent)}
+.moonfall-load-card h2{font:400 clamp(20px,2.6vw,25px)/1.5 Georgia,serif;color:#e3ebf6;margin:0 0 7px}
+#moonfallLoadStatus{font-size:13px;line-height:1.8;color:#b7cbe6;margin:0 0 20px;overflow-wrap:anywhere}
+#moonfallLoadProgress{height:5px;box-sizing:border-box;background:#020813;border:1px solid #657d9b80;border-radius:2px;overflow:hidden;box-shadow:0 0 20px #2589cd1f}
+#moonfallLoadFill{height:100%;width:0;background:linear-gradient(90deg,#5382ad,#b3e8ff 75%,#f2d49d);box-shadow:0 0 12px #8edcffe0;transition:width .18s linear}
+#moonfallLoadCount{font:11px/1.7 ui-monospace,monospace;letter-spacing:1px;color:#c3d6ed;margin:12px 0 18px}
+.moonfall-load-note{font-size:11px;line-height:1.9;letter-spacing:1px;color:#819bbb;margin:0}
+#moonfallLoadError{margin-top:14px;padding:12px 14px;background:#281522ed;border:1px solid #a66a77;border-left:3px solid #d39aa8;border-radius:3px;color:#f5ced4;font-size:12px;line-height:1.7;overflow-wrap:anywhere;text-align:left;text-shadow:none}
+#moonfallLoadRetry{margin-top:14px;min-height:44px;padding:10px 24px;border:1px solid #d7be87;border-radius:3px;background:linear-gradient(120deg,#f1dba8,#bca16a);color:#101a2b;font-weight:700;cursor:pointer;box-shadow:0 4px 22px #0006}
+#moonfallLoadRetry:focus-visible{outline:2px solid #b3e8ff;outline-offset:4px}
+.moonfall-load-edition{position:fixed;bottom:22px;left:clamp(28px,7vw,110px);font:9px/1.5 system-ui,sans-serif;letter-spacing:2px;color:#7993b1;pointer-events:none}
+.moonfall-load-edition span{color:#b6a17a;padding:0 10px}
+@media(max-width:600px) and (min-height:481px){
+ #loading.moonfall-load{align-items:flex-end;padding:25px 26px 45px}
+ .moonfall-load-art{background-position:82% top}
+ .moonfall-load-art::after{background:linear-gradient(0deg,#040a16 5%,#040a16ed 28%,#040a1688 58%,#040a1622 82%)}
+ .moonfall-load-card{padding:0;width:100%}
+ .moonfall-load-crest{width:44px;height:44px;margin:0 0 20px 4px}.moonfall-load-crest span{font-size:28px}.moonfall-load-crest::after{top:13px}
+ .moonfall-load-wordmark{font-size:43px;letter-spacing:4px;margin-bottom:10px}.moonfall-load-eyebrow{letter-spacing:4px;font-size:9px}
+ .moonfall-load-chapter{font-size:11px;margin-bottom:15px}.moonfall-load-rule{margin-bottom:15px}
+ .moonfall-load-note{font-size:10px;line-height:1.7}.moonfall-load-edition{bottom:14px;left:26px;font-size:7px;letter-spacing:1.5px}
+}
+@media(max-height:480px){
+ #loading.moonfall-load{align-items:flex-start;padding:18px 5vw 34px}
+ .moonfall-load-card{width:min(410px,60%);padding:0}
+ .moonfall-load-crest,.moonfall-load-chapter,.moonfall-load-rule,.moonfall-load-note{display:none}
+ .moonfall-load-eyebrow{font-size:8px;letter-spacing:4px;margin:0 0 6px}
+ .moonfall-load-wordmark{font-size:35px;letter-spacing:4px;margin-bottom:14px}
+ .moonfall-load-card h2{font-size:19px;margin-bottom:4px}#moonfallLoadStatus{font-size:11px;margin-bottom:12px}
+ #moonfallLoadCount{margin:9px 0;font-size:10px}#moonfallLoadError{margin-top:9px;padding:8px 10px;font-size:11px}#moonfallLoadRetry{margin-top:10px}
+ .moonfall-load-edition{bottom:10px;left:5vw;font-size:7px;letter-spacing:1.3px}
+}
+@media(max-width:420px) and (max-height:480px){.moonfall-load-card{width:100%}.moonfall-load-wordmark{font-size:31px}.moonfall-load-art::after{background:#040a16b8}}
 @media(prefers-reduced-motion:reduce){#moonfallLoadFill{transition:none}}
 </style>
 
@@ -279,7 +370,22 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,su
   </div>
 </div>
 <section id="loading" class="ov moonfall-load" role="dialog" aria-modal="true" aria-labelledby="moonfallLoadTitle" tabindex="-1">
-  <div class="moonfall-load-card"><div class="moonfall-load-moon" aria-hidden="true">☾</div><p class="moonfall-load-eyebrow">THE CURSED REALM · MOONFALL</p><h2 id="moonfallLoadTitle">กำลังเปิดประตูจันทรา</h2><p id="moonfallLoadStatus" role="status" aria-live="polite">กำลังตรวจสอบไฟล์เกม…</p><div id="moonfallLoadProgress" role="progressbar" aria-label="ความคืบหน้าโหลดเกม" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="moonfallLoadFill"></div></div><p id="moonfallLoadCount">กำลังเตรียมข้อมูล</p><p class="moonfall-load-note">จะเข้าเกมได้เมื่อฉาก ตัวละคร และภาพไอคอนพร้อมครบแล้ว</p><div id="moonfallLoadError" role="alert" hidden></div><button id="moonfallLoadRetry" type="button" onclick="location.reload()" hidden>โหลดใหม่อีกครั้ง</button></div>
+  <div class="moonfall-load-art" aria-hidden="true"></div>
+  <div class="moonfall-load-card">
+    <div class="moonfall-load-crest" aria-hidden="true"><span>☾</span></div>
+    <p class="moonfall-load-eyebrow">THE CURSED REALM</p>
+    <p class="moonfall-load-wordmark" aria-hidden="true">MOONFALL</p>
+    <p class="moonfall-load-chapter">เมื่อจันทราร่วงหล่น ตำนานบทใหม่จึงเริ่มต้น</p>
+    <div class="moonfall-load-rule" aria-hidden="true"><span>✦</span></div>
+    <h2 id="moonfallLoadTitle">กำลังเปิดประตูจันทรา</h2>
+    <p id="moonfallLoadStatus" role="status" aria-live="polite">กำลังตรวจสอบไฟล์เกม…</p>
+    <div id="moonfallLoadProgress" role="progressbar" aria-label="ความคืบหน้าโหลดเกม" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="moonfallLoadFill"></div></div>
+    <p id="moonfallLoadCount">กำลังเตรียมข้อมูล</p>
+    <p class="moonfall-load-note">ฉาก · ผู้กล้า · พลังจันทรา<br>ประตูจะเปิดเมื่อทุกอย่างพร้อม</p>
+    <div id="moonfallLoadError" role="alert" hidden></div>
+    <button id="moonfallLoadRetry" type="button" onclick="location.reload()" hidden>โหลดใหม่อีกครั้ง</button>
+  </div>
+  <div class="moonfall-load-edition" aria-hidden="true">DARK CELESTIAL FANTASY <span>✦</span> ARENA ROYALE</div>
 </section>
 <script>
 window.moonfallCodeFailure=function(name){
@@ -308,6 +414,7 @@ if(window.__moonfallCodeFailure)moonfallCodeFailure(window.__moonfallCodeFailure
 <script src="moonfall-collision-data.js" onerror="moonfallCodeFailure('moonfall-collision-data.js')"></script>
 <script src="moonfall-environment.js" onerror="moonfallCodeFailure('moonfall-environment.js')"></script>
 <script src="moonfall-biome.js" onerror="moonfallCodeFailure('moonfall-biome.js')"></script>
+<script src="moonfall-village.js" onerror="moonfallCodeFailure('moonfall-village.js')"></script>
 <script src="moonfall-ui.js" onerror="moonfallCodeFailure('moonfall-ui.js')"></script>
 <script src="moonfall-menu.js" onerror="moonfallCodeFailure('moonfall-menu.js')"></script>
 <script src="moonfall-inventory.js" onerror="moonfallCodeFailure('moonfall-inventory.js')"></script>
@@ -852,7 +959,7 @@ function genWorld(seed){
     {key:'hunt',name:'ค่ายนักล่า',side:1,r:380,n:4,style:'cabin',a:sr(-.9,-.4),d:sr(5200,6400)},
     {key:'bloom',name:'หมู่บ้านทุ่งดอกไม้',side:-1,r:420,n:5,style:'tudor',a:-Math.PI*.95+sr(-.3,.3),d:sr(3800,5400)},
     {key:'grave',name:'หมู่บ้านร้าง',side:0,r:400,n:4,style:'stone',a:Math.PI*.28+sr(-.3,.3),d:sr(5000,6400)}];
-  for(const s of specs){let V=null;
+  for(const s of specs){let V=null;if(CURSED){s.r=Math.round(s.r*1.5);s.n=Math.round(s.n*1.8)}
     for(let t=0;t<1500&&!V;t++){let p;const j=Math.min(1,t/300);if(t===900&&s.r>400){s.r=Math.round(s.r*.82);s.n=Math.max(4,s.n-1)}
       if(s.near==='lake'&&t<700){const a=Math.PI*sr(.55,1.35);const d=Lk.R+s.r+sr(200,420)+j*300;p={x:Lk.x+Math.cos(a)*d,y:Lk.y+Math.sin(a)*d}}
       else if(t<600){const a=s.a+sr(-.5,.5)*j,d=s.d*(1+sr(-.25,.25)*j);p={x:CX+Math.cos(a)*d,y:CY+Math.sin(a)*d}}
@@ -868,14 +975,15 @@ function genWorld(seed){
     if(V.plaza){w.fountains.push({x:V.x,y:V.y,r:62});w.solids.push({x:V.x,y:V.y,r:62,t:'fountain'})}
     else{w.wells.push({x:V.x,y:V.y,r:34});w.solids.push({x:V.x,y:V.y,r:34,t:'well'})}
     for(let k=0;k<(V.plaza?8:5);k++){const a=k/(V.plaza?8:5)*Math.PI*2+.3;const rr=V.plaza?178:118;w.lanterns.push({x:V.x+Math.cos(a)*rr,y:V.y+Math.sin(a)*rr,dire:V.dire})}
+    if(CURSED){w.stalls=w.stalls||[];for(let k=0;k<(V.plaza?3:2);k++){const a=k/(V.plaza?3:2)*Math.PI*2+1.3+vi,rr=V.plaza?232:186,x=V.x+Math.cos(a)*rr,y=V.y+Math.sin(a)*rr;w.stalls.push({x,y,a});w.rocks.push({x,y,r:44,prop:1})}}
     let placed=0;
-    for(let tries=0;tries<700&&placed<V.n;tries++){
-      const a=placed/V.n*Math.PI*2+sr(-.25,.25)+(tries>120?sr(0,6):0),d=sr(V.r*.5,V.r*(tries>300?.98:.9));
+    for(let tries=0;tries<(CURSED?1600:700)&&placed<V.n;tries++){
+      const a=placed/V.n*Math.PI*2+sr(-.25,.25)+(tries>120?sr(0,6):0),d=sr(V.r*(CURSED?.36:.5),V.r*(tries>300?.98:.9));
       const hw=sr(230,320),hh=sr(190,250);const cx=V.x+Math.cos(a)*d,cy=V.y+Math.sin(a)*d;const h={x:cx-hw/2,y:cy-hh/2,w:hw,h:hh};
       const cs=[[h.x,h.y],[h.x+h.w,h.y],[h.x,h.y+h.h],[h.x+h.w,h.y+h.h],[cx,cy]];
       if(cs.some(q=>outsideD(q[0],q[1])>-140||Math.abs(riverD(q[0],q[1]))<riverHW(q[1])+80||lakeD(q[0],q[1])<70||poolD(q[0],q[1])<80))continue;
       if(w.houses.some(o=>!(h.x>o.x+o.w+70||h.x+h.w<o.x-70||h.y>o.y+o.h+70||h.y+h.h<o.y-70)))continue;
-      if(Math.hypot(cx-V.x,cy-V.y)<(V.plaza?210:170)+Math.max(hw,hh)/2)continue;
+      if(Math.hypot(cx-V.x,cy-V.y)<(V.plaza?210:170)+(CURSED?70:0)+Math.max(hw,hh)/2)continue;
       const dx=V.x-cx,dy=V.y-cy;const side=Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'b':'t');
       h.side=side;h.dire=V.dire;h.v=vi;h.style=V.style;const pal=ROOF[V.style];h.roof=pal[Math.floor(SR()*pal.length)];h.roofA=1;h.id=w.houses.length;h.seed=Math.floor(SR()*1e6);
       const T=16,G=86;const sides={t:[h.x,h.y,h.w,T],b:[h.x,h.y+h.h-T,h.w,T],l:[h.x,h.y,T,h.h],r:[h.x+h.w-T,h.y,T,h.h]};
@@ -3383,7 +3491,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     this.roofs=WD.houses.map(h=>{const g=new THREE.Group();const along=h.w>=h.h,L=(along?h.w:h.h)+40,Wd=(along?h.h:h.w)+44,rh=h.style==='witch'?120:h.style==='cabin'?70:95;
       const tk=h.style==='cabin'||h.style==='tudor'&&(h.seed%3===0)?'thatch':'tiles';const T=this.tex(tk);
       const mk=(c)=>{const m=this.hi?new THREE.MeshStandardMaterial({color:c,map:T,roughness:.85,metalness:0,transparent:true,envMap:this.envTex,envMapIntensity:.6}):new THREE.MeshLambertMaterial({color:c,map:T,transparent:true});if(this.hi&&this.texN(tk)){m.normalMap=this.texN(tk)}return this.fow(m)};
-      const rm=mk(tk==='thatch'?'#e0c890':h.roof),gm=mk('#ffffff');gm.map=this.tex(h.style==='cabin'?'logs':h.style==='stone'?'bricks':'plaster');
+      const rm=mk(tk==='thatch'?(CURSED?'#77727f':'#e0c890'):h.roof),gm=mk('#ffffff');gm.map=this.tex(h.style==='cabin'?'logs':h.style==='stone'?'bricks':'plaster');
       const pos=[],uv=[];const hw=Wd/2,hl=L/2;const P=(a,b,c)=>pos.push(a,b,c);
       // two slopes
       P(-hl,0,-hw);P(hl,rh,0);P(hl,0,-hw);P(-hl,0,-hw);P(-hl,rh,0);P(hl,rh,0);P(-hl,0,hw);P(hl,0,hw);P(hl,rh,0);P(-hl,0,hw);P(hl,rh,0);P(-hl,rh,0);
@@ -4918,7 +5026,7 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
 }
 
 // ===================== SETTINGS: view + graphics quality =====================
-if(typeof installCelestialRender==='function'){installCelestialRender(R3);installMoonfallEnvironment(R3);installMoonfallBiome(R3);if(typeof installMoonfallUI==='function')installMoonfallUI();if(typeof installMoonfallMenuUX==='function')installMoonfallMenuUX()}
+if(typeof installCelestialRender==='function'){installCelestialRender(R3);installMoonfallEnvironment(R3);installMoonfallBiome(R3);if(typeof installMoonfallVillage==='function')installMoonfallVillage(R3);if(typeof installMoonfallUI==='function')installMoonfallUI();if(typeof installMoonfallMenuUX==='function')installMoonfallMenuUX()}
 let view3D=lsGet('ar_view','3d')!=='2d',gfxQ=lsGet('ar_q','auto'),camNear=lsGet('ar_cam','near')!=='far',moody=lsGet('ar_tone2','bright')==='dark';
 if(CURSED)moody=true;
 const has3D=()=>typeof R3!=='undefined';
