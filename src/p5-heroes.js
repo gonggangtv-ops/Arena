@@ -30,9 +30,11 @@ R.p5Hero=function(u){const cls=p5Class(u);if(!this.p5Ready(cls))return null;cons
   o.root=new T.Group();o.body=new T.Group();o.root.add(o.body);o.body.add(pivot);
   model.traverse(n=>{if(n.isBone)o.bones[n.name]=n;if(n.isMesh){n.castShadow=!!this.hi;n.receiveShadow=true;n.frustumCulled=false;
     if(this.fow){const paint=src=>this.cached('p5-'+src.uuid,()=>{const m=src.clone();if(m.isMeshStandardMaterial){m.envMap=this.envTex||null;m.envMapIntensity=.55}return this.fow(m,{key:'p5'})});n.material=Array.isArray(n.material)?n.material.map(paint):paint(n.material)}}});
+  // stand on the ring: centre the hips (not the bounding box, which arms and capes pull sideways)
   o.handR=o.bones.RightHand||null;o.handL=o.bones.LeftHand||null;
   o.mixer=new T.AnimationMixer(model);const clips=p5Clips(a);for(const k in clips)o.act[k]=o.mixer.clipAction(clips[k]);
   if(o.act.idle)o.act.idle.play();if(o.act.run){o.act.run.play();o.act.run.setEffectiveWeight(0)}
+  if(o.bones.Hips){o.mixer.update(0);pivot.updateMatrixWorld(true);const h=new T.Vector3();o.bones.Hips.getWorldPosition(h);pivot.position.x-=h.x;pivot.position.z-=h.z}   // centre the idle pose's hips on the ring
   try{this.p5Arm(o,u)}catch(e){}this.addStatus(o,u);this.scene.add(o.root);this.objs.set(u.id,o);return o};
 // the game's own weapon model goes into the rigged hand: its long side is turned onto the hand's +Z (checked on the Eclipse rigs)
 R.p5Arm=function(o,u){for(const w of[o.wpnR,o.wpnL])if(w&&w.parent)w.parent.remove(w);o.wpnR=o.wpnL=o.wtip=null;o.wk=u.wk;o.wt=u.wt;o.lgK=null;
