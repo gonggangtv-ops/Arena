@@ -1,0 +1,470 @@
+{
+  "transport": "local messages through production start/snapFor/clientOnData/applySnap",
+  "externalPeerJSMessages": false,
+  "hardwareFPSBenchmark": false,
+  "realCast": {
+    "cast": {
+      "projectile": true,
+      "area": true,
+      "projectiles": 1,
+      "areas": 1
+    },
+    "positions": {
+      "hostId": 1,
+      "clientId": 2,
+      "distance": 260
+    },
+    "wireProjectileRows": 1,
+    "wireAreaRows": 1,
+    "ownership": {
+      "mode": "client",
+      "projectileOwnerOmitted": true,
+      "areaOwnerElementOmitted": true
+    },
+    "host": {
+      "enabled": true,
+      "quality": "low",
+      "reducedMotion": false,
+      "totalActive": 18,
+      "totalCapacity": 310,
+      "batchCount": 8,
+      "allocatedGeometries": 8,
+      "allocatedMaterials": 8,
+      "accepted": 18,
+      "dropped": 0,
+      "culled": 0,
+      "frameBudget": 130,
+      "marks": {
+        "fire#2": 1,
+        "fire#0": 1
+      },
+      "batches": {
+        "ring": {
+          "active": 2,
+          "capacity": 30
+        },
+        "rune": {
+          "active": 2,
+          "capacity": 14
+        },
+        "pillar": {
+          "active": 5,
+          "capacity": 10
+        },
+        "dome": {
+          "active": 0,
+          "capacity": 8
+        },
+        "arc": {
+          "active": 0,
+          "capacity": 32
+        },
+        "shard": {
+          "active": 0,
+          "capacity": 72
+        },
+        "streak": {
+          "active": 1,
+          "capacity": 56
+        },
+        "ember": {
+          "active": 8,
+          "capacity": 88
+        }
+      }
+    },
+    "client": {
+      "enabled": true,
+      "quality": "low",
+      "reducedMotion": false,
+      "totalActive": 4,
+      "totalCapacity": 310,
+      "batchCount": 8,
+      "allocatedGeometries": 8,
+      "allocatedMaterials": 8,
+      "accepted": 4,
+      "dropped": 0,
+      "culled": 0,
+      "frameBudget": 130,
+      "marks": {},
+      "batches": {
+        "ring": {
+          "active": 1,
+          "capacity": 30
+        },
+        "rune": {
+          "active": 1,
+          "capacity": 14
+        },
+        "pillar": {
+          "active": 0,
+          "capacity": 10
+        },
+        "dome": {
+          "active": 0,
+          "capacity": 8
+        },
+        "arc": {
+          "active": 0,
+          "capacity": 32
+        },
+        "shard": {
+          "active": 0,
+          "capacity": 72
+        },
+        "streak": {
+          "active": 1,
+          "capacity": 56
+        },
+        "ember": {
+          "active": 1,
+          "capacity": 88
+        }
+      }
+    }
+  },
+  "snapshotDedupe": {
+    "snapshots": 72,
+    "objectsActuallyRecreated": 72,
+    "authoritativeTimeAdvanced": 0.2,
+    "renderTimeSeconds": 2.4,
+    "wallSeconds": 3.784,
+    "initial": {
+      "enabled": true,
+      "quality": "low",
+      "reducedMotion": false,
+      "totalActive": 14,
+      "totalCapacity": 310,
+      "batchCount": 8,
+      "allocatedGeometries": 8,
+      "allocatedMaterials": 8,
+      "accepted": 14,
+      "dropped": 0,
+      "culled": 0,
+      "frameBudget": 130,
+      "marks": {},
+      "batches": {
+        "ring": {
+          "active": 1,
+          "capacity": 30
+        },
+        "rune": {
+          "active": 1,
+          "capacity": 14
+        },
+        "pillar": {
+          "active": 5,
+          "capacity": 10
+        },
+        "dome": {
+          "active": 0,
+          "capacity": 8
+        },
+        "arc": {
+          "active": 0,
+          "capacity": 32
+        },
+        "shard": {
+          "active": 0,
+          "capacity": 72
+        },
+        "streak": {
+          "active": 0,
+          "capacity": 56
+        },
+        "ember": {
+          "active": 7,
+          "capacity": 88
+        }
+      }
+    },
+    "final": {
+      "enabled": true,
+      "quality": "low",
+      "reducedMotion": false,
+      "totalActive": 0,
+      "totalCapacity": 310,
+      "batchCount": 8,
+      "allocatedGeometries": 8,
+      "allocatedMaterials": 8,
+      "accepted": 14,
+      "dropped": 0,
+      "culled": 0,
+      "frameBudget": 130,
+      "marks": {},
+      "batches": {
+        "ring": {
+          "active": 0,
+          "capacity": 30
+        },
+        "rune": {
+          "active": 0,
+          "capacity": 14
+        },
+        "pillar": {
+          "active": 0,
+          "capacity": 10
+        },
+        "dome": {
+          "active": 0,
+          "capacity": 8
+        },
+        "arc": {
+          "active": 0,
+          "capacity": 32
+        },
+        "shard": {
+          "active": 0,
+          "capacity": 72
+        },
+        "streak": {
+          "active": 0,
+          "capacity": 56
+        },
+        "ember": {
+          "active": 0,
+          "capacity": 88
+        }
+      }
+    },
+    "noRepeatedOneShotOrInventedIdentity": true
+  },
+  "hiddenFollow": {
+    "before": {
+      "count": 1,
+      "visible": true,
+      "distance": 260
+    },
+    "hidden": {
+      "visible": false,
+      "admitted": false,
+      "activeTracked": 0,
+      "unchanged": true
+    },
+    "expiredSlotsStayReleased": true
+  },
+  "directEvent": {
+    "eventUnchanged": true,
+    "gameplayUnchanged": true,
+    "fx": {
+      "enabled": true,
+      "quality": "low",
+      "reducedMotion": false,
+      "totalActive": 8,
+      "totalCapacity": 310,
+      "batchCount": 8,
+      "allocatedGeometries": 8,
+      "allocatedMaterials": 8,
+      "accepted": 8,
+      "dropped": 0,
+      "culled": 0,
+      "frameBudget": 130,
+      "marks": {
+        "sword#1": 1
+      },
+      "batches": {
+        "ring": {
+          "active": 1,
+          "capacity": 30
+        },
+        "rune": {
+          "active": 1,
+          "capacity": 14
+        },
+        "pillar": {
+          "active": 0,
+          "capacity": 10
+        },
+        "dome": {
+          "active": 1,
+          "capacity": 8
+        },
+        "arc": {
+          "active": 0,
+          "capacity": 32
+        },
+        "shard": {
+          "active": 5,
+          "capacity": 72
+        },
+        "streak": {
+          "active": 0,
+          "capacity": 56
+        },
+        "ember": {
+          "active": 0,
+          "capacity": 88
+        }
+      }
+    }
+  },
+  "boundedResources": {
+    "capped": {
+      "enabled": true,
+      "quality": "low",
+      "reducedMotion": false,
+      "totalActive": 130,
+      "totalCapacity": 310,
+      "batchCount": 8,
+      "allocatedGeometries": 8,
+      "allocatedMaterials": 8,
+      "accepted": 130,
+      "dropped": 1870,
+      "culled": 0,
+      "frameBudget": 130,
+      "marks": {},
+      "batches": {
+        "ring": {
+          "active": 20,
+          "capacity": 30
+        },
+        "rune": {
+          "active": 14,
+          "capacity": 14
+        },
+        "pillar": {
+          "active": 10,
+          "capacity": 10
+        },
+        "dome": {
+          "active": 8,
+          "capacity": 8
+        },
+        "arc": {
+          "active": 20,
+          "capacity": 32
+        },
+        "shard": {
+          "active": 20,
+          "capacity": 72
+        },
+        "streak": {
+          "active": 19,
+          "capacity": 56
+        },
+        "ember": {
+          "active": 19,
+          "capacity": 88
+        }
+      }
+    },
+    "settled": {
+      "enabled": true,
+      "quality": "low",
+      "reducedMotion": false,
+      "totalActive": 0,
+      "totalCapacity": 310,
+      "batchCount": 8,
+      "allocatedGeometries": 8,
+      "allocatedMaterials": 8,
+      "accepted": 1216,
+      "dropped": 2884,
+      "culled": 0,
+      "frameBudget": 130,
+      "marks": {},
+      "batches": {
+        "ring": {
+          "active": 0,
+          "capacity": 30
+        },
+        "rune": {
+          "active": 0,
+          "capacity": 14
+        },
+        "pillar": {
+          "active": 0,
+          "capacity": 10
+        },
+        "dome": {
+          "active": 0,
+          "capacity": 8
+        },
+        "arc": {
+          "active": 0,
+          "capacity": 32
+        },
+        "shard": {
+          "active": 0,
+          "capacity": 72
+        },
+        "streak": {
+          "active": 0,
+          "capacity": 56
+        },
+        "ember": {
+          "active": 0,
+          "capacity": 88
+        }
+      }
+    },
+    "sameResources": true,
+    "geometryDisposals": 8,
+    "materialDisposals": 8,
+    "disposed": {
+      "enabled": false,
+      "totalActive": 0,
+      "totalCapacity": 0,
+      "batchCount": 0,
+      "allocatedGeometries": 0,
+      "allocatedMaterials": 0,
+      "marks": {},
+      "batches": {}
+    },
+    "remainingMeshes": 0,
+    "recreated": {
+      "enabled": true,
+      "quality": "low",
+      "reducedMotion": false,
+      "totalActive": 0,
+      "totalCapacity": 310,
+      "batchCount": 8,
+      "allocatedGeometries": 8,
+      "allocatedMaterials": 8,
+      "accepted": 0,
+      "dropped": 0,
+      "culled": 0,
+      "frameBudget": 130,
+      "marks": {},
+      "batches": {
+        "ring": {
+          "active": 0,
+          "capacity": 30
+        },
+        "rune": {
+          "active": 0,
+          "capacity": 14
+        },
+        "pillar": {
+          "active": 0,
+          "capacity": 10
+        },
+        "dome": {
+          "active": 0,
+          "capacity": 8
+        },
+        "arc": {
+          "active": 0,
+          "capacity": 32
+        },
+        "shard": {
+          "active": 0,
+          "capacity": 72
+        },
+        "streak": {
+          "active": 0,
+          "capacity": 56
+        },
+        "ember": {
+          "active": 0,
+          "capacity": 88
+        }
+      }
+    },
+    "gameplayUnchanged": true
+  },
+  "errors": {
+    "host": [],
+    "client": []
+  },
+  "passed": true
+}

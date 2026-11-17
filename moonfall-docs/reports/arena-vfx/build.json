@@ -1,0 +1,38 @@
+{
+  "testedBase": "ddfb11319cbf62412cf950faad15143b0a108eaf",
+  "target": "index.html",
+  "cursedByteIdenticalToMain": true,
+  "cursedSHA256": "cbb95aeda5a11e9a31284290a07b2b8fe3be99e346fa3c93fd3c71bdd736f9b4",
+  "indexSourceDeployMatch": true,
+  "protectedGameAndRendererSourcesIdentical": [
+    "a.js",
+    "b.js",
+    "c.js",
+    "t1.js",
+    "r3.js",
+    "r4.js",
+    "r5.js",
+    "r6.js",
+    "r7.js",
+    "r8.js",
+    "r9.js",
+    "r10.js",
+    "r11.js",
+    "r12.js",
+    "d.js"
+  ],
+  "newVfxBytes": {
+    "arena-vfx-runtime.js": 15424,
+    "arena-vfx-skills.js": 17885
+  },
+  "syntaxChecks": [
+    "node --check src/arena-vfx-runtime.js",
+    "node --check src/arena-vfx-skills.js"
+  ],
+  "builds": [
+    "python3 src/build.py",
+    "python3 src/build.py cursed",
+    "python3 src/build.py web"
+  ],
+  "newImageOrModelDownloads": 0
+}

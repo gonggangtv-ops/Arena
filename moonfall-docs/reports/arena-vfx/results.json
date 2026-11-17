@@ -1,0 +1,3510 @@
+{
+  "baselineSHA256": "4548e67f60c821b2af3836bbc08bbe29b3709224f63c50b41f819c28606681fc",
+  "cases": [
+    {
+      "case": "desktop-high",
+      "boot": {
+        "phase": "ready",
+        "ready": true,
+        "failed": false,
+        "total": 44,
+        "packDone": 18,
+        "musicDone": 7,
+        "artDone": 1,
+        "error": null
+      },
+      "fixture": {
+        "skills": [
+          {
+            "key": "sword",
+            "slot": 0
+          },
+          {
+            "key": "sword",
+            "slot": 1
+          },
+          {
+            "key": "sword",
+            "slot": 2
+          },
+          {
+            "key": "axe",
+            "slot": 0
+          },
+          {
+            "key": "axe",
+            "slot": 1
+          },
+          {
+            "key": "axe",
+            "slot": 2
+          },
+          {
+            "key": "dagger",
+            "slot": 0
+          },
+          {
+            "key": "dagger",
+            "slot": 1
+          },
+          {
+            "key": "dagger",
+            "slot": 2
+          },
+          {
+            "key": "bow",
+            "slot": 0
+          },
+          {
+            "key": "bow",
+            "slot": 1
+          },
+          {
+            "key": "bow",
+            "slot": 2
+          },
+          {
+            "key": "fire",
+            "slot": 0
+          },
+          {
+            "key": "fire",
+            "slot": 1
+          },
+          {
+            "key": "fire",
+            "slot": 2
+          },
+          {
+            "key": "frost",
+            "slot": 0
+          },
+          {
+            "key": "frost",
+            "slot": 1
+          },
+          {
+            "key": "frost",
+            "slot": 2
+          },
+          {
+            "key": "gsword",
+            "slot": 0
+          },
+          {
+            "key": "gsword",
+            "slot": 1
+          },
+          {
+            "key": "gsword",
+            "slot": 2
+          },
+          {
+            "key": "xbow",
+            "slot": 0
+          },
+          {
+            "key": "xbow",
+            "slot": 1
+          },
+          {
+            "key": "xbow",
+            "slot": 2
+          },
+          {
+            "key": "storm",
+            "slot": 0
+          },
+          {
+            "key": "storm",
+            "slot": 1
+          },
+          {
+            "key": "storm",
+            "slot": 2
+          },
+          {
+            "key": "fMM",
+            "slot": 0
+          },
+          {
+            "key": "fMM",
+            "slot": 1
+          },
+          {
+            "key": "fMM",
+            "slot": 2
+          },
+          {
+            "key": "fMR",
+            "slot": 0
+          },
+          {
+            "key": "fMR",
+            "slot": 1
+          },
+          {
+            "key": "fMR",
+            "slot": 2
+          },
+          {
+            "key": "fMS_fire",
+            "slot": 0
+          },
+          {
+            "key": "fMS_fire",
+            "slot": 1
+          },
+          {
+            "key": "fMS_fire",
+            "slot": 2
+          },
+          {
+            "key": "fRS_fire",
+            "slot": 0
+          },
+          {
+            "key": "fRS_fire",
+            "slot": 1
+          },
+          {
+            "key": "fRS_fire",
+            "slot": 2
+          },
+          {
+            "key": "fMS_frost",
+            "slot": 0
+          },
+          {
+            "key": "fMS_frost",
+            "slot": 1
+          },
+          {
+            "key": "fMS_frost",
+            "slot": 2
+          },
+          {
+            "key": "fRS_frost",
+            "slot": 0
+          },
+          {
+            "key": "fRS_frost",
+            "slot": 1
+          },
+          {
+            "key": "fRS_frost",
+            "slot": 2
+          },
+          {
+            "key": "fMS_storm",
+            "slot": 0
+          },
+          {
+            "key": "fMS_storm",
+            "slot": 1
+          },
+          {
+            "key": "fMS_storm",
+            "slot": 2
+          },
+          {
+            "key": "fRS_storm",
+            "slot": 0
+          },
+          {
+            "key": "fRS_storm",
+            "slot": 1
+          },
+          {
+            "key": "fRS_storm",
+            "slot": 2
+          },
+          {
+            "key": "fRR",
+            "slot": 0
+          },
+          {
+            "key": "fRR",
+            "slot": 1
+          },
+          {
+            "key": "fRR",
+            "slot": 2
+          },
+          {
+            "key": "fSS_steam",
+            "slot": 0
+          },
+          {
+            "key": "fSS_steam",
+            "slot": 1
+          },
+          {
+            "key": "fSS_steam",
+            "slot": 2
+          },
+          {
+            "key": "fSS_blaze",
+            "slot": 0
+          },
+          {
+            "key": "fSS_blaze",
+            "slot": 1
+          },
+          {
+            "key": "fSS_blaze",
+            "slot": 2
+          },
+          {
+            "key": "fSS_tempest",
+            "slot": 0
+          },
+          {
+            "key": "fSS_tempest",
+            "slot": 1
+          },
+          {
+            "key": "fSS_tempest",
+            "slot": 2
+          }
+        ],
+        "flags": {
+          "cursed": true,
+          "moon": false
+        },
+        "models": 13
+      },
+      "actualCasts": [
+        {
+          "key": "sword",
+          "slot": 0,
+          "manaCost": 70,
+          "cooldown": 9,
+          "peakActive": 8,
+          "semanticEvents": 1
+        },
+        {
+          "key": "sword",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 13,
+          "peakActive": 13,
+          "semanticEvents": 1
+        },
+        {
+          "key": "sword",
+          "slot": 2,
+          "manaCost": 230,
+          "cooldown": 50,
+          "peakActive": 39,
+          "semanticEvents": 2
+        },
+        {
+          "key": "axe",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 9,
+          "peakActive": 42,
+          "semanticEvents": 1
+        },
+        {
+          "key": "axe",
+          "slot": 1,
+          "manaCost": 65,
+          "cooldown": 13,
+          "peakActive": 19,
+          "semanticEvents": 1
+        },
+        {
+          "key": "axe",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 45,
+          "peakActive": 22,
+          "semanticEvents": 2
+        },
+        {
+          "key": "dagger",
+          "slot": 0,
+          "manaCost": 65,
+          "cooldown": 7,
+          "peakActive": 52,
+          "semanticEvents": 1
+        },
+        {
+          "key": "dagger",
+          "slot": 1,
+          "manaCost": 60,
+          "cooldown": 12,
+          "peakActive": 26,
+          "semanticEvents": 1
+        },
+        {
+          "key": "dagger",
+          "slot": 2,
+          "manaCost": 200,
+          "cooldown": 40,
+          "peakActive": 35,
+          "semanticEvents": 1
+        },
+        {
+          "key": "bow",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5,
+          "peakActive": 43,
+          "semanticEvents": 1
+        },
+        {
+          "key": "bow",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 11,
+          "peakActive": 17,
+          "semanticEvents": 1
+        },
+        {
+          "key": "bow",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 40,
+          "peakActive": 27,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fire",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5.5,
+          "peakActive": 58,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fire",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 10,
+          "peakActive": 27,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fire",
+          "slot": 2,
+          "manaCost": 280,
+          "cooldown": 44,
+          "peakActive": 74,
+          "semanticEvents": 2
+        },
+        {
+          "key": "frost",
+          "slot": 0,
+          "manaCost": 95,
+          "cooldown": 6.5,
+          "peakActive": 19,
+          "semanticEvents": 1
+        },
+        {
+          "key": "frost",
+          "slot": 1,
+          "manaCost": 120,
+          "cooldown": 10,
+          "peakActive": 31,
+          "semanticEvents": 1
+        },
+        {
+          "key": "frost",
+          "slot": 2,
+          "manaCost": 290,
+          "cooldown": 50,
+          "peakActive": 37,
+          "semanticEvents": 1
+        },
+        {
+          "key": "gsword",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 7.5,
+          "peakActive": 16,
+          "semanticEvents": 1
+        },
+        {
+          "key": "gsword",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 11,
+          "peakActive": 20,
+          "semanticEvents": 1
+        },
+        {
+          "key": "gsword",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 45,
+          "peakActive": 15,
+          "semanticEvents": 1
+        },
+        {
+          "key": "xbow",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 55,
+          "semanticEvents": 1
+        },
+        {
+          "key": "xbow",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 11,
+          "peakActive": 17,
+          "semanticEvents": 1
+        },
+        {
+          "key": "xbow",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 44,
+          "peakActive": 15,
+          "semanticEvents": 2
+        },
+        {
+          "key": "storm",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5.5,
+          "peakActive": 112,
+          "semanticEvents": 1
+        },
+        {
+          "key": "storm",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 11,
+          "peakActive": 103,
+          "semanticEvents": 1
+        },
+        {
+          "key": "storm",
+          "slot": 2,
+          "manaCost": 290,
+          "cooldown": 45,
+          "peakActive": 104,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fMM",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 7.5,
+          "peakActive": 8,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMM",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 13,
+          "peakActive": 13,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMM",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 45,
+          "peakActive": 78,
+          "semanticEvents": 3
+        },
+        {
+          "key": "fMR",
+          "slot": 0,
+          "manaCost": 70,
+          "cooldown": 6.5,
+          "peakActive": 15,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMR",
+          "slot": 1,
+          "manaCost": 65,
+          "cooldown": 9,
+          "peakActive": 16,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fMR",
+          "slot": 2,
+          "manaCost": 240,
+          "cooldown": 44,
+          "peakActive": 30,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 15,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 11,
+          "peakActive": 23,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 2,
+          "manaCost": 260,
+          "cooldown": 45,
+          "peakActive": 53,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5.5,
+          "peakActive": 25,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 1,
+          "manaCost": 100,
+          "cooldown": 10,
+          "peakActive": 23,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 2,
+          "manaCost": 270,
+          "cooldown": 44,
+          "peakActive": 52,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 19,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 11,
+          "peakActive": 30,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 2,
+          "manaCost": 260,
+          "cooldown": 45,
+          "peakActive": 39,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5.5,
+          "peakActive": 25,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 1,
+          "manaCost": 100,
+          "cooldown": 10,
+          "peakActive": 30,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 2,
+          "manaCost": 270,
+          "cooldown": 44,
+          "peakActive": 64,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 110,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 11,
+          "peakActive": 167,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 2,
+          "manaCost": 260,
+          "cooldown": 45,
+          "peakActive": 296,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5.5,
+          "peakActive": 120,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 1,
+          "manaCost": 100,
+          "cooldown": 10,
+          "peakActive": 190,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 2,
+          "manaCost": 270,
+          "cooldown": 44,
+          "peakActive": 235,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRR",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 43,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRR",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 9,
+          "peakActive": 10,
+          "semanticEvents": 3
+        },
+        {
+          "key": "fRR",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 44,
+          "peakActive": 34,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5,
+          "peakActive": 100,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 9,
+          "peakActive": 52,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 2,
+          "manaCost": 300,
+          "cooldown": 45,
+          "peakActive": 69,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5,
+          "peakActive": 216,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 9,
+          "peakActive": 211,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 2,
+          "manaCost": 300,
+          "cooldown": 45,
+          "peakActive": 215,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5,
+          "peakActive": 271,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 9,
+          "peakActive": 154,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 2,
+          "manaCost": 300,
+          "cooldown": 45,
+          "peakActive": 259,
+          "semanticEvents": 2
+        }
+      ],
+      "combatIdenticalToBaseline": true,
+      "nativeInput": {
+        "input": "keyboard-e",
+        "manaCost": 90,
+        "cooldownStarted": true,
+        "shieldApplied": true
+      },
+      "visualRngPurity": {
+        "previews": 63,
+        "allocatorRestored": true,
+        "combatUnchanged": true,
+        "previewDoesNotClaimGameplayRoutes": true
+      },
+      "stress": {
+        "before": {
+          "geometries": 96,
+          "textures": 155,
+          "programs": 98
+        },
+        "after": {
+          "geometries": 96,
+          "textures": 155,
+          "programs": 98
+        },
+        "emptyCalls": 179,
+        "calls": 187,
+        "extraDrawCalls": 8,
+        "peak": 774,
+        "during": {
+          "enabled": true,
+          "quality": "high",
+          "reducedMotion": false,
+          "totalActive": 774,
+          "totalCapacity": 774,
+          "batchCount": 8,
+          "allocatedGeometries": 8,
+          "allocatedMaterials": 8,
+          "accepted": 774,
+          "dropped": 3546,
+          "culled": 0,
+          "frameBudget": 300,
+          "marks": {},
+          "batches": {
+            "ring": {
+              "active": 72,
+              "capacity": 72
+            },
+            "rune": {
+              "active": 36,
+              "capacity": 36
+            },
+            "pillar": {
+              "active": 24,
+              "capacity": 24
+            },
+            "dome": {
+              "active": 18,
+              "capacity": 18
+            },
+            "arc": {
+              "active": 80,
+              "capacity": 80
+            },
+            "shard": {
+              "active": 176,
+              "capacity": 176
+            },
+            "streak": {
+              "active": 144,
+              "capacity": 144
+            },
+            "ember": {
+              "active": 224,
+              "capacity": 224
+            }
+          }
+        },
+        "expired": {
+          "enabled": true,
+          "quality": "high",
+          "reducedMotion": false,
+          "totalActive": 0,
+          "totalCapacity": 774,
+          "batchCount": 8,
+          "allocatedGeometries": 8,
+          "allocatedMaterials": 8,
+          "accepted": 774,
+          "dropped": 3546,
+          "culled": 0,
+          "frameBudget": 300,
+          "marks": {},
+          "batches": {
+            "ring": {
+              "active": 0,
+              "capacity": 72
+            },
+            "rune": {
+              "active": 0,
+              "capacity": 36
+            },
+            "pillar": {
+              "active": 0,
+              "capacity": 24
+            },
+            "dome": {
+              "active": 0,
+              "capacity": 18
+            },
+            "arc": {
+              "active": 0,
+              "capacity": 80
+            },
+            "shard": {
+              "active": 0,
+              "capacity": 176
+            },
+            "streak": {
+              "active": 0,
+              "capacity": 144
+            },
+            "ember": {
+              "active": 0,
+              "capacity": 224
+            }
+          }
+        },
+        "reset": {
+          "enabled": true,
+          "quality": "high",
+          "reducedMotion": false,
+          "totalActive": 0,
+          "totalCapacity": 774,
+          "batchCount": 8,
+          "allocatedGeometries": 8,
+          "allocatedMaterials": 8,
+          "accepted": 0,
+          "dropped": 0,
+          "culled": 0,
+          "frameBudget": 300,
+          "marks": {},
+          "batches": {
+            "ring": {
+              "active": 0,
+              "capacity": 72
+            },
+            "rune": {
+              "active": 0,
+              "capacity": 36
+            },
+            "pillar": {
+              "active": 0,
+              "capacity": 24
+            },
+            "dome": {
+              "active": 0,
+              "capacity": 18
+            },
+            "arc": {
+              "active": 0,
+              "capacity": 80
+            },
+            "shard": {
+              "active": 0,
+              "capacity": 176
+            },
+            "streak": {
+              "active": 0,
+              "capacity": 144
+            },
+            "ember": {
+              "active": 0,
+              "capacity": 224
+            }
+          }
+        },
+        "cycles": [
+          {
+            "disposed": {
+              "enabled": false,
+              "totalActive": 0,
+              "totalCapacity": 0,
+              "batchCount": 0,
+              "allocatedGeometries": 0,
+              "allocatedMaterials": 0,
+              "marks": {},
+              "batches": {}
+            },
+            "recreated": {
+              "enabled": true,
+              "quality": "high",
+              "reducedMotion": false,
+              "totalActive": 8,
+              "totalCapacity": 774,
+              "batchCount": 8,
+              "allocatedGeometries": 8,
+              "allocatedMaterials": 8,
+              "accepted": 8,
+              "dropped": 0,
+              "culled": 0,
+              "frameBudget": 300,
+              "marks": {},
+              "batches": {
+                "ring": {
+                  "active": 1,
+                  "capacity": 72
+                },
+                "rune": {
+                  "active": 1,
+                  "capacity": 36
+                },
+                "pillar": {
+                  "active": 1,
+                  "capacity": 24
+                },
+                "dome": {
+                  "active": 1,
+                  "capacity": 18
+                },
+                "arc": {
+                  "active": 1,
+                  "capacity": 80
+                },
+                "shard": {
+                  "active": 1,
+                  "capacity": 176
+                },
+                "streak": {
+                  "active": 1,
+                  "capacity": 144
+                },
+                "ember": {
+                  "active": 1,
+                  "capacity": 224
+                }
+              }
+            },
+            "memory": {
+              "geometries": 96,
+              "textures": 155,
+              "programs": 98
+            }
+          },
+          {
+            "disposed": {
+              "enabled": false,
+              "totalActive": 0,
+              "totalCapacity": 0,
+              "batchCount": 0,
+              "allocatedGeometries": 0,
+              "allocatedMaterials": 0,
+              "marks": {},
+              "batches": {}
+            },
+            "recreated": {
+              "enabled": true,
+              "quality": "high",
+              "reducedMotion": false,
+              "totalActive": 8,
+              "totalCapacity": 774,
+              "batchCount": 8,
+              "allocatedGeometries": 8,
+              "allocatedMaterials": 8,
+              "accepted": 8,
+              "dropped": 0,
+              "culled": 0,
+              "frameBudget": 300,
+              "marks": {},
+              "batches": {
+                "ring": {
+                  "active": 1,
+                  "capacity": 72
+                },
+                "rune": {
+                  "active": 1,
+                  "capacity": 36
+                },
+                "pillar": {
+                  "active": 1,
+                  "capacity": 24
+                },
+                "dome": {
+                  "active": 1,
+                  "capacity": 18
+                },
+                "arc": {
+                  "active": 1,
+                  "capacity": 80
+                },
+                "shard": {
+                  "active": 1,
+                  "capacity": 176
+                },
+                "streak": {
+                  "active": 1,
+                  "capacity": 144
+                },
+                "ember": {
+                  "active": 1,
+                  "capacity": 224
+                }
+              }
+            },
+            "memory": {
+              "geometries": 96,
+              "textures": 155,
+              "programs": 98
+            }
+          },
+          {
+            "disposed": {
+              "enabled": false,
+              "totalActive": 0,
+              "totalCapacity": 0,
+              "batchCount": 0,
+              "allocatedGeometries": 0,
+              "allocatedMaterials": 0,
+              "marks": {},
+              "batches": {}
+            },
+            "recreated": {
+              "enabled": true,
+              "quality": "high",
+              "reducedMotion": false,
+              "totalActive": 8,
+              "totalCapacity": 774,
+              "batchCount": 8,
+              "allocatedGeometries": 8,
+              "allocatedMaterials": 8,
+              "accepted": 8,
+              "dropped": 0,
+              "culled": 0,
+              "frameBudget": 300,
+              "marks": {},
+              "batches": {
+                "ring": {
+                  "active": 1,
+                  "capacity": 72
+                },
+                "rune": {
+                  "active": 1,
+                  "capacity": 36
+                },
+                "pillar": {
+                  "active": 1,
+                  "capacity": 24
+                },
+                "dome": {
+                  "active": 1,
+                  "capacity": 18
+                },
+                "arc": {
+                  "active": 1,
+                  "capacity": 80
+                },
+                "shard": {
+                  "active": 1,
+                  "capacity": 176
+                },
+                "streak": {
+                  "active": 1,
+                  "capacity": 144
+                },
+                "ember": {
+                  "active": 1,
+                  "capacity": 224
+                }
+              }
+            },
+            "memory": {
+              "geometries": 96,
+              "textures": 155,
+              "programs": 98
+            }
+          }
+        ]
+      },
+      "errors": [],
+      "shaderErrors": [],
+      "screenshots": [
+        "/tmp/arena-vfx-6qr_z3hr/desktop-high-fire-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/desktop-high-frost-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/desktop-high-storm-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/desktop-high-gsword-0.png",
+        "/tmp/arena-vfx-6qr_z3hr/desktop-high-fSS_tempest-2.png"
+      ]
+    },
+    {
+      "case": "mobile-low",
+      "boot": {
+        "phase": "ready",
+        "ready": true,
+        "failed": false,
+        "total": 44,
+        "packDone": 18,
+        "musicDone": 7,
+        "artDone": 1,
+        "error": null
+      },
+      "fixture": {
+        "skills": [
+          {
+            "key": "sword",
+            "slot": 0
+          },
+          {
+            "key": "sword",
+            "slot": 1
+          },
+          {
+            "key": "sword",
+            "slot": 2
+          },
+          {
+            "key": "axe",
+            "slot": 0
+          },
+          {
+            "key": "axe",
+            "slot": 1
+          },
+          {
+            "key": "axe",
+            "slot": 2
+          },
+          {
+            "key": "dagger",
+            "slot": 0
+          },
+          {
+            "key": "dagger",
+            "slot": 1
+          },
+          {
+            "key": "dagger",
+            "slot": 2
+          },
+          {
+            "key": "bow",
+            "slot": 0
+          },
+          {
+            "key": "bow",
+            "slot": 1
+          },
+          {
+            "key": "bow",
+            "slot": 2
+          },
+          {
+            "key": "fire",
+            "slot": 0
+          },
+          {
+            "key": "fire",
+            "slot": 1
+          },
+          {
+            "key": "fire",
+            "slot": 2
+          },
+          {
+            "key": "frost",
+            "slot": 0
+          },
+          {
+            "key": "frost",
+            "slot": 1
+          },
+          {
+            "key": "frost",
+            "slot": 2
+          },
+          {
+            "key": "gsword",
+            "slot": 0
+          },
+          {
+            "key": "gsword",
+            "slot": 1
+          },
+          {
+            "key": "gsword",
+            "slot": 2
+          },
+          {
+            "key": "xbow",
+            "slot": 0
+          },
+          {
+            "key": "xbow",
+            "slot": 1
+          },
+          {
+            "key": "xbow",
+            "slot": 2
+          },
+          {
+            "key": "storm",
+            "slot": 0
+          },
+          {
+            "key": "storm",
+            "slot": 1
+          },
+          {
+            "key": "storm",
+            "slot": 2
+          },
+          {
+            "key": "fMM",
+            "slot": 0
+          },
+          {
+            "key": "fMM",
+            "slot": 1
+          },
+          {
+            "key": "fMM",
+            "slot": 2
+          },
+          {
+            "key": "fMR",
+            "slot": 0
+          },
+          {
+            "key": "fMR",
+            "slot": 1
+          },
+          {
+            "key": "fMR",
+            "slot": 2
+          },
+          {
+            "key": "fMS_fire",
+            "slot": 0
+          },
+          {
+            "key": "fMS_fire",
+            "slot": 1
+          },
+          {
+            "key": "fMS_fire",
+            "slot": 2
+          },
+          {
+            "key": "fRS_fire",
+            "slot": 0
+          },
+          {
+            "key": "fRS_fire",
+            "slot": 1
+          },
+          {
+            "key": "fRS_fire",
+            "slot": 2
+          },
+          {
+            "key": "fMS_frost",
+            "slot": 0
+          },
+          {
+            "key": "fMS_frost",
+            "slot": 1
+          },
+          {
+            "key": "fMS_frost",
+            "slot": 2
+          },
+          {
+            "key": "fRS_frost",
+            "slot": 0
+          },
+          {
+            "key": "fRS_frost",
+            "slot": 1
+          },
+          {
+            "key": "fRS_frost",
+            "slot": 2
+          },
+          {
+            "key": "fMS_storm",
+            "slot": 0
+          },
+          {
+            "key": "fMS_storm",
+            "slot": 1
+          },
+          {
+            "key": "fMS_storm",
+            "slot": 2
+          },
+          {
+            "key": "fRS_storm",
+            "slot": 0
+          },
+          {
+            "key": "fRS_storm",
+            "slot": 1
+          },
+          {
+            "key": "fRS_storm",
+            "slot": 2
+          },
+          {
+            "key": "fRR",
+            "slot": 0
+          },
+          {
+            "key": "fRR",
+            "slot": 1
+          },
+          {
+            "key": "fRR",
+            "slot": 2
+          },
+          {
+            "key": "fSS_steam",
+            "slot": 0
+          },
+          {
+            "key": "fSS_steam",
+            "slot": 1
+          },
+          {
+            "key": "fSS_steam",
+            "slot": 2
+          },
+          {
+            "key": "fSS_blaze",
+            "slot": 0
+          },
+          {
+            "key": "fSS_blaze",
+            "slot": 1
+          },
+          {
+            "key": "fSS_blaze",
+            "slot": 2
+          },
+          {
+            "key": "fSS_tempest",
+            "slot": 0
+          },
+          {
+            "key": "fSS_tempest",
+            "slot": 1
+          },
+          {
+            "key": "fSS_tempest",
+            "slot": 2
+          }
+        ],
+        "flags": {
+          "cursed": true,
+          "moon": false
+        },
+        "models": 13
+      },
+      "actualCasts": [
+        {
+          "key": "sword",
+          "slot": 0,
+          "manaCost": 70,
+          "cooldown": 9,
+          "peakActive": 5,
+          "semanticEvents": 1
+        },
+        {
+          "key": "sword",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 13,
+          "peakActive": 10,
+          "semanticEvents": 1
+        },
+        {
+          "key": "sword",
+          "slot": 2,
+          "manaCost": 230,
+          "cooldown": 50,
+          "peakActive": 23,
+          "semanticEvents": 2
+        },
+        {
+          "key": "axe",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 9,
+          "peakActive": 24,
+          "semanticEvents": 1
+        },
+        {
+          "key": "axe",
+          "slot": 1,
+          "manaCost": 65,
+          "cooldown": 13,
+          "peakActive": 12,
+          "semanticEvents": 1
+        },
+        {
+          "key": "axe",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 45,
+          "peakActive": 14,
+          "semanticEvents": 2
+        },
+        {
+          "key": "dagger",
+          "slot": 0,
+          "manaCost": 65,
+          "cooldown": 7,
+          "peakActive": 28,
+          "semanticEvents": 1
+        },
+        {
+          "key": "dagger",
+          "slot": 1,
+          "manaCost": 60,
+          "cooldown": 12,
+          "peakActive": 14,
+          "semanticEvents": 1
+        },
+        {
+          "key": "dagger",
+          "slot": 2,
+          "manaCost": 200,
+          "cooldown": 40,
+          "peakActive": 22,
+          "semanticEvents": 1
+        },
+        {
+          "key": "bow",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5,
+          "peakActive": 43,
+          "semanticEvents": 1
+        },
+        {
+          "key": "bow",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 11,
+          "peakActive": 17,
+          "semanticEvents": 1
+        },
+        {
+          "key": "bow",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 40,
+          "peakActive": 15,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fire",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5.5,
+          "peakActive": 32,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fire",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 10,
+          "peakActive": 14,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fire",
+          "slot": 2,
+          "manaCost": 280,
+          "cooldown": 44,
+          "peakActive": 36,
+          "semanticEvents": 2
+        },
+        {
+          "key": "frost",
+          "slot": 0,
+          "manaCost": 95,
+          "cooldown": 6.5,
+          "peakActive": 16,
+          "semanticEvents": 1
+        },
+        {
+          "key": "frost",
+          "slot": 1,
+          "manaCost": 120,
+          "cooldown": 10,
+          "peakActive": 17,
+          "semanticEvents": 1
+        },
+        {
+          "key": "frost",
+          "slot": 2,
+          "manaCost": 290,
+          "cooldown": 50,
+          "peakActive": 20,
+          "semanticEvents": 1
+        },
+        {
+          "key": "gsword",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 7.5,
+          "peakActive": 9,
+          "semanticEvents": 1
+        },
+        {
+          "key": "gsword",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 11,
+          "peakActive": 11,
+          "semanticEvents": 1
+        },
+        {
+          "key": "gsword",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 45,
+          "peakActive": 12,
+          "semanticEvents": 1
+        },
+        {
+          "key": "xbow",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 29,
+          "semanticEvents": 1
+        },
+        {
+          "key": "xbow",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 11,
+          "peakActive": 17,
+          "semanticEvents": 1
+        },
+        {
+          "key": "xbow",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 44,
+          "peakActive": 10,
+          "semanticEvents": 2
+        },
+        {
+          "key": "storm",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5.5,
+          "peakActive": 49,
+          "semanticEvents": 1
+        },
+        {
+          "key": "storm",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 11,
+          "peakActive": 40,
+          "semanticEvents": 1
+        },
+        {
+          "key": "storm",
+          "slot": 2,
+          "manaCost": 290,
+          "cooldown": 45,
+          "peakActive": 42,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fMM",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 7.5,
+          "peakActive": 5,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMM",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 13,
+          "peakActive": 10,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMM",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 45,
+          "peakActive": 46,
+          "semanticEvents": 3
+        },
+        {
+          "key": "fMR",
+          "slot": 0,
+          "manaCost": 70,
+          "cooldown": 6.5,
+          "peakActive": 12,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMR",
+          "slot": 1,
+          "manaCost": 65,
+          "cooldown": 9,
+          "peakActive": 10,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fMR",
+          "slot": 2,
+          "manaCost": 240,
+          "cooldown": 44,
+          "peakActive": 19,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 12,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 11,
+          "peakActive": 13,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 2,
+          "manaCost": 260,
+          "cooldown": 45,
+          "peakActive": 27,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5.5,
+          "peakActive": 25,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 1,
+          "manaCost": 100,
+          "cooldown": 10,
+          "peakActive": 13,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 2,
+          "manaCost": 270,
+          "cooldown": 44,
+          "peakActive": 28,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 16,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 11,
+          "peakActive": 19,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 2,
+          "manaCost": 260,
+          "cooldown": 45,
+          "peakActive": 22,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5.5,
+          "peakActive": 25,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 1,
+          "manaCost": 100,
+          "cooldown": 10,
+          "peakActive": 19,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 2,
+          "manaCost": 270,
+          "cooldown": 44,
+          "peakActive": 36,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 54,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 11,
+          "peakActive": 78,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 2,
+          "manaCost": 260,
+          "cooldown": 45,
+          "peakActive": 135,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5.5,
+          "peakActive": 67,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 1,
+          "manaCost": 100,
+          "cooldown": 10,
+          "peakActive": 90,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 2,
+          "manaCost": 270,
+          "cooldown": 44,
+          "peakActive": 103,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRR",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 43,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRR",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 9,
+          "peakActive": 10,
+          "semanticEvents": 3
+        },
+        {
+          "key": "fRR",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 44,
+          "peakActive": 22,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5,
+          "peakActive": 66,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 9,
+          "peakActive": 34,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 2,
+          "manaCost": 300,
+          "cooldown": 45,
+          "peakActive": 40,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5,
+          "peakActive": 102,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 9,
+          "peakActive": 96,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 2,
+          "manaCost": 300,
+          "cooldown": 45,
+          "peakActive": 95,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5,
+          "peakActive": 138,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 9,
+          "peakActive": 76,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 2,
+          "manaCost": 300,
+          "cooldown": 45,
+          "peakActive": 121,
+          "semanticEvents": 2
+        }
+      ],
+      "combatIdenticalToBaseline": true,
+      "nativeInput": {
+        "input": "native-touch",
+        "manaCost": 90,
+        "cooldownStarted": true,
+        "shieldApplied": true
+      },
+      "visualRngPurity": {
+        "previews": 63,
+        "allocatorRestored": true,
+        "combatUnchanged": true,
+        "previewDoesNotClaimGameplayRoutes": true
+      },
+      "stress": {
+        "before": {
+          "geometries": 90,
+          "textures": 148,
+          "programs": 53
+        },
+        "after": {
+          "geometries": 90,
+          "textures": 148,
+          "programs": 53
+        },
+        "emptyCalls": 114,
+        "calls": 122,
+        "extraDrawCalls": 8,
+        "peak": 310,
+        "during": {
+          "enabled": true,
+          "quality": "low",
+          "reducedMotion": false,
+          "totalActive": 310,
+          "totalCapacity": 310,
+          "batchCount": 8,
+          "allocatedGeometries": 8,
+          "allocatedMaterials": 8,
+          "accepted": 310,
+          "dropped": 4010,
+          "culled": 0,
+          "frameBudget": 130,
+          "marks": {},
+          "batches": {
+            "ring": {
+              "active": 30,
+              "capacity": 30
+            },
+            "rune": {
+              "active": 14,
+              "capacity": 14
+            },
+            "pillar": {
+              "active": 10,
+              "capacity": 10
+            },
+            "dome": {
+              "active": 8,
+              "capacity": 8
+            },
+            "arc": {
+              "active": 32,
+              "capacity": 32
+            },
+            "shard": {
+              "active": 72,
+              "capacity": 72
+            },
+            "streak": {
+              "active": 56,
+              "capacity": 56
+            },
+            "ember": {
+              "active": 88,
+              "capacity": 88
+            }
+          }
+        },
+        "expired": {
+          "enabled": true,
+          "quality": "low",
+          "reducedMotion": false,
+          "totalActive": 0,
+          "totalCapacity": 310,
+          "batchCount": 8,
+          "allocatedGeometries": 8,
+          "allocatedMaterials": 8,
+          "accepted": 310,
+          "dropped": 4010,
+          "culled": 0,
+          "frameBudget": 130,
+          "marks": {},
+          "batches": {
+            "ring": {
+              "active": 0,
+              "capacity": 30
+            },
+            "rune": {
+              "active": 0,
+              "capacity": 14
+            },
+            "pillar": {
+              "active": 0,
+              "capacity": 10
+            },
+            "dome": {
+              "active": 0,
+              "capacity": 8
+            },
+            "arc": {
+              "active": 0,
+              "capacity": 32
+            },
+            "shard": {
+              "active": 0,
+              "capacity": 72
+            },
+            "streak": {
+              "active": 0,
+              "capacity": 56
+            },
+            "ember": {
+              "active": 0,
+              "capacity": 88
+            }
+          }
+        },
+        "reset": {
+          "enabled": true,
+          "quality": "low",
+          "reducedMotion": false,
+          "totalActive": 0,
+          "totalCapacity": 310,
+          "batchCount": 8,
+          "allocatedGeometries": 8,
+          "allocatedMaterials": 8,
+          "accepted": 0,
+          "dropped": 0,
+          "culled": 0,
+          "frameBudget": 130,
+          "marks": {},
+          "batches": {
+            "ring": {
+              "active": 0,
+              "capacity": 30
+            },
+            "rune": {
+              "active": 0,
+              "capacity": 14
+            },
+            "pillar": {
+              "active": 0,
+              "capacity": 10
+            },
+            "dome": {
+              "active": 0,
+              "capacity": 8
+            },
+            "arc": {
+              "active": 0,
+              "capacity": 32
+            },
+            "shard": {
+              "active": 0,
+              "capacity": 72
+            },
+            "streak": {
+              "active": 0,
+              "capacity": 56
+            },
+            "ember": {
+              "active": 0,
+              "capacity": 88
+            }
+          }
+        },
+        "cycles": [
+          {
+            "disposed": {
+              "enabled": false,
+              "totalActive": 0,
+              "totalCapacity": 0,
+              "batchCount": 0,
+              "allocatedGeometries": 0,
+              "allocatedMaterials": 0,
+              "marks": {},
+              "batches": {}
+            },
+            "recreated": {
+              "enabled": true,
+              "quality": "low",
+              "reducedMotion": false,
+              "totalActive": 8,
+              "totalCapacity": 310,
+              "batchCount": 8,
+              "allocatedGeometries": 8,
+              "allocatedMaterials": 8,
+              "accepted": 8,
+              "dropped": 0,
+              "culled": 0,
+              "frameBudget": 130,
+              "marks": {},
+              "batches": {
+                "ring": {
+                  "active": 1,
+                  "capacity": 30
+                },
+                "rune": {
+                  "active": 1,
+                  "capacity": 14
+                },
+                "pillar": {
+                  "active": 1,
+                  "capacity": 10
+                },
+                "dome": {
+                  "active": 1,
+                  "capacity": 8
+                },
+                "arc": {
+                  "active": 1,
+                  "capacity": 32
+                },
+                "shard": {
+                  "active": 1,
+                  "capacity": 72
+                },
+                "streak": {
+                  "active": 1,
+                  "capacity": 56
+                },
+                "ember": {
+                  "active": 1,
+                  "capacity": 88
+                }
+              }
+            },
+            "memory": {
+              "geometries": 90,
+              "textures": 148,
+              "programs": 53
+            }
+          },
+          {
+            "disposed": {
+              "enabled": false,
+              "totalActive": 0,
+              "totalCapacity": 0,
+              "batchCount": 0,
+              "allocatedGeometries": 0,
+              "allocatedMaterials": 0,
+              "marks": {},
+              "batches": {}
+            },
+            "recreated": {
+              "enabled": true,
+              "quality": "low",
+              "reducedMotion": false,
+              "totalActive": 8,
+              "totalCapacity": 310,
+              "batchCount": 8,
+              "allocatedGeometries": 8,
+              "allocatedMaterials": 8,
+              "accepted": 8,
+              "dropped": 0,
+              "culled": 0,
+              "frameBudget": 130,
+              "marks": {},
+              "batches": {
+                "ring": {
+                  "active": 1,
+                  "capacity": 30
+                },
+                "rune": {
+                  "active": 1,
+                  "capacity": 14
+                },
+                "pillar": {
+                  "active": 1,
+                  "capacity": 10
+                },
+                "dome": {
+                  "active": 1,
+                  "capacity": 8
+                },
+                "arc": {
+                  "active": 1,
+                  "capacity": 32
+                },
+                "shard": {
+                  "active": 1,
+                  "capacity": 72
+                },
+                "streak": {
+                  "active": 1,
+                  "capacity": 56
+                },
+                "ember": {
+                  "active": 1,
+                  "capacity": 88
+                }
+              }
+            },
+            "memory": {
+              "geometries": 90,
+              "textures": 148,
+              "programs": 53
+            }
+          },
+          {
+            "disposed": {
+              "enabled": false,
+              "totalActive": 0,
+              "totalCapacity": 0,
+              "batchCount": 0,
+              "allocatedGeometries": 0,
+              "allocatedMaterials": 0,
+              "marks": {},
+              "batches": {}
+            },
+            "recreated": {
+              "enabled": true,
+              "quality": "low",
+              "reducedMotion": false,
+              "totalActive": 8,
+              "totalCapacity": 310,
+              "batchCount": 8,
+              "allocatedGeometries": 8,
+              "allocatedMaterials": 8,
+              "accepted": 8,
+              "dropped": 0,
+              "culled": 0,
+              "frameBudget": 130,
+              "marks": {},
+              "batches": {
+                "ring": {
+                  "active": 1,
+                  "capacity": 30
+                },
+                "rune": {
+                  "active": 1,
+                  "capacity": 14
+                },
+                "pillar": {
+                  "active": 1,
+                  "capacity": 10
+                },
+                "dome": {
+                  "active": 1,
+                  "capacity": 8
+                },
+                "arc": {
+                  "active": 1,
+                  "capacity": 32
+                },
+                "shard": {
+                  "active": 1,
+                  "capacity": 72
+                },
+                "streak": {
+                  "active": 1,
+                  "capacity": 56
+                },
+                "ember": {
+                  "active": 1,
+                  "capacity": 88
+                }
+              }
+            },
+            "memory": {
+              "geometries": 90,
+              "textures": 148,
+              "programs": 53
+            }
+          }
+        ]
+      },
+      "errors": [],
+      "shaderErrors": [],
+      "screenshots": [
+        "/tmp/arena-vfx-6qr_z3hr/mobile-low-fire-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/mobile-low-frost-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/mobile-low-storm-2.png",
+        "/tmp/arena-vfx-6qr_z3hr/mobile-low-gsword-0.png",
+        "/tmp/arena-vfx-6qr_z3hr/mobile-low-fSS_tempest-2.png"
+      ]
+    },
+    {
+      "case": "reduced-motion",
+      "boot": {
+        "phase": "ready",
+        "ready": true,
+        "failed": false,
+        "total": 44,
+        "packDone": 18,
+        "musicDone": 7,
+        "artDone": 1,
+        "error": null
+      },
+      "fixture": {
+        "skills": [
+          {
+            "key": "sword",
+            "slot": 0
+          },
+          {
+            "key": "sword",
+            "slot": 1
+          },
+          {
+            "key": "sword",
+            "slot": 2
+          },
+          {
+            "key": "axe",
+            "slot": 0
+          },
+          {
+            "key": "axe",
+            "slot": 1
+          },
+          {
+            "key": "axe",
+            "slot": 2
+          },
+          {
+            "key": "dagger",
+            "slot": 0
+          },
+          {
+            "key": "dagger",
+            "slot": 1
+          },
+          {
+            "key": "dagger",
+            "slot": 2
+          },
+          {
+            "key": "bow",
+            "slot": 0
+          },
+          {
+            "key": "bow",
+            "slot": 1
+          },
+          {
+            "key": "bow",
+            "slot": 2
+          },
+          {
+            "key": "fire",
+            "slot": 0
+          },
+          {
+            "key": "fire",
+            "slot": 1
+          },
+          {
+            "key": "fire",
+            "slot": 2
+          },
+          {
+            "key": "frost",
+            "slot": 0
+          },
+          {
+            "key": "frost",
+            "slot": 1
+          },
+          {
+            "key": "frost",
+            "slot": 2
+          },
+          {
+            "key": "gsword",
+            "slot": 0
+          },
+          {
+            "key": "gsword",
+            "slot": 1
+          },
+          {
+            "key": "gsword",
+            "slot": 2
+          },
+          {
+            "key": "xbow",
+            "slot": 0
+          },
+          {
+            "key": "xbow",
+            "slot": 1
+          },
+          {
+            "key": "xbow",
+            "slot": 2
+          },
+          {
+            "key": "storm",
+            "slot": 0
+          },
+          {
+            "key": "storm",
+            "slot": 1
+          },
+          {
+            "key": "storm",
+            "slot": 2
+          },
+          {
+            "key": "fMM",
+            "slot": 0
+          },
+          {
+            "key": "fMM",
+            "slot": 1
+          },
+          {
+            "key": "fMM",
+            "slot": 2
+          },
+          {
+            "key": "fMR",
+            "slot": 0
+          },
+          {
+            "key": "fMR",
+            "slot": 1
+          },
+          {
+            "key": "fMR",
+            "slot": 2
+          },
+          {
+            "key": "fMS_fire",
+            "slot": 0
+          },
+          {
+            "key": "fMS_fire",
+            "slot": 1
+          },
+          {
+            "key": "fMS_fire",
+            "slot": 2
+          },
+          {
+            "key": "fRS_fire",
+            "slot": 0
+          },
+          {
+            "key": "fRS_fire",
+            "slot": 1
+          },
+          {
+            "key": "fRS_fire",
+            "slot": 2
+          },
+          {
+            "key": "fMS_frost",
+            "slot": 0
+          },
+          {
+            "key": "fMS_frost",
+            "slot": 1
+          },
+          {
+            "key": "fMS_frost",
+            "slot": 2
+          },
+          {
+            "key": "fRS_frost",
+            "slot": 0
+          },
+          {
+            "key": "fRS_frost",
+            "slot": 1
+          },
+          {
+            "key": "fRS_frost",
+            "slot": 2
+          },
+          {
+            "key": "fMS_storm",
+            "slot": 0
+          },
+          {
+            "key": "fMS_storm",
+            "slot": 1
+          },
+          {
+            "key": "fMS_storm",
+            "slot": 2
+          },
+          {
+            "key": "fRS_storm",
+            "slot": 0
+          },
+          {
+            "key": "fRS_storm",
+            "slot": 1
+          },
+          {
+            "key": "fRS_storm",
+            "slot": 2
+          },
+          {
+            "key": "fRR",
+            "slot": 0
+          },
+          {
+            "key": "fRR",
+            "slot": 1
+          },
+          {
+            "key": "fRR",
+            "slot": 2
+          },
+          {
+            "key": "fSS_steam",
+            "slot": 0
+          },
+          {
+            "key": "fSS_steam",
+            "slot": 1
+          },
+          {
+            "key": "fSS_steam",
+            "slot": 2
+          },
+          {
+            "key": "fSS_blaze",
+            "slot": 0
+          },
+          {
+            "key": "fSS_blaze",
+            "slot": 1
+          },
+          {
+            "key": "fSS_blaze",
+            "slot": 2
+          },
+          {
+            "key": "fSS_tempest",
+            "slot": 0
+          },
+          {
+            "key": "fSS_tempest",
+            "slot": 1
+          },
+          {
+            "key": "fSS_tempest",
+            "slot": 2
+          }
+        ],
+        "flags": {
+          "cursed": true,
+          "moon": false
+        },
+        "models": 13
+      },
+      "actualCasts": [
+        {
+          "key": "sword",
+          "slot": 0,
+          "manaCost": 70,
+          "cooldown": 9,
+          "peakActive": 4,
+          "semanticEvents": 1
+        },
+        {
+          "key": "sword",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 13,
+          "peakActive": 8,
+          "semanticEvents": 1
+        },
+        {
+          "key": "sword",
+          "slot": 2,
+          "manaCost": 230,
+          "cooldown": 50,
+          "peakActive": 16,
+          "semanticEvents": 2
+        },
+        {
+          "key": "axe",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 9,
+          "peakActive": 18,
+          "semanticEvents": 1
+        },
+        {
+          "key": "axe",
+          "slot": 1,
+          "manaCost": 65,
+          "cooldown": 13,
+          "peakActive": 9,
+          "semanticEvents": 1
+        },
+        {
+          "key": "axe",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 45,
+          "peakActive": 8,
+          "semanticEvents": 2
+        },
+        {
+          "key": "dagger",
+          "slot": 0,
+          "manaCost": 65,
+          "cooldown": 7,
+          "peakActive": 18,
+          "semanticEvents": 1
+        },
+        {
+          "key": "dagger",
+          "slot": 1,
+          "manaCost": 60,
+          "cooldown": 12,
+          "peakActive": 9,
+          "semanticEvents": 1
+        },
+        {
+          "key": "dagger",
+          "slot": 2,
+          "manaCost": 200,
+          "cooldown": 40,
+          "peakActive": 15,
+          "semanticEvents": 1
+        },
+        {
+          "key": "bow",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5,
+          "peakActive": 35,
+          "semanticEvents": 1
+        },
+        {
+          "key": "bow",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 11,
+          "peakActive": 17,
+          "semanticEvents": 1
+        },
+        {
+          "key": "bow",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 40,
+          "peakActive": 9,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fire",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5.5,
+          "peakActive": 19,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fire",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 10,
+          "peakActive": 9,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fire",
+          "slot": 2,
+          "manaCost": 280,
+          "cooldown": 44,
+          "peakActive": 23,
+          "semanticEvents": 2
+        },
+        {
+          "key": "frost",
+          "slot": 0,
+          "manaCost": 95,
+          "cooldown": 6.5,
+          "peakActive": 11,
+          "semanticEvents": 1
+        },
+        {
+          "key": "frost",
+          "slot": 1,
+          "manaCost": 120,
+          "cooldown": 10,
+          "peakActive": 11,
+          "semanticEvents": 1
+        },
+        {
+          "key": "frost",
+          "slot": 2,
+          "manaCost": 290,
+          "cooldown": 50,
+          "peakActive": 14,
+          "semanticEvents": 1
+        },
+        {
+          "key": "gsword",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 7.5,
+          "peakActive": 6,
+          "semanticEvents": 1
+        },
+        {
+          "key": "gsword",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 11,
+          "peakActive": 8,
+          "semanticEvents": 1
+        },
+        {
+          "key": "gsword",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 45,
+          "peakActive": 8,
+          "semanticEvents": 1
+        },
+        {
+          "key": "xbow",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 18,
+          "semanticEvents": 1
+        },
+        {
+          "key": "xbow",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 11,
+          "peakActive": 17,
+          "semanticEvents": 1
+        },
+        {
+          "key": "xbow",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 44,
+          "peakActive": 10,
+          "semanticEvents": 2
+        },
+        {
+          "key": "storm",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5.5,
+          "peakActive": 42,
+          "semanticEvents": 1
+        },
+        {
+          "key": "storm",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 11,
+          "peakActive": 30,
+          "semanticEvents": 1
+        },
+        {
+          "key": "storm",
+          "slot": 2,
+          "manaCost": 290,
+          "cooldown": 45,
+          "peakActive": 30,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fMM",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 7.5,
+          "peakActive": 4,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMM",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 13,
+          "peakActive": 8,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMM",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 45,
+          "peakActive": 32,
+          "semanticEvents": 3
+        },
+        {
+          "key": "fMR",
+          "slot": 0,
+          "manaCost": 70,
+          "cooldown": 6.5,
+          "peakActive": 8,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMR",
+          "slot": 1,
+          "manaCost": 65,
+          "cooldown": 9,
+          "peakActive": 8,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fMR",
+          "slot": 2,
+          "manaCost": 240,
+          "cooldown": 44,
+          "peakActive": 13,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 8,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 11,
+          "peakActive": 9,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 2,
+          "manaCost": 260,
+          "cooldown": 45,
+          "peakActive": 18,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5.5,
+          "peakActive": 23,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 1,
+          "manaCost": 100,
+          "cooldown": 10,
+          "peakActive": 9,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 2,
+          "manaCost": 270,
+          "cooldown": 44,
+          "peakActive": 20,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 11,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 11,
+          "peakActive": 13,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 2,
+          "manaCost": 260,
+          "cooldown": 45,
+          "peakActive": 15,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5.5,
+          "peakActive": 23,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 1,
+          "manaCost": 100,
+          "cooldown": 10,
+          "peakActive": 13,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 2,
+          "manaCost": 270,
+          "cooldown": 44,
+          "peakActive": 24,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 38,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 1,
+          "manaCost": 90,
+          "cooldown": 11,
+          "peakActive": 49,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 2,
+          "manaCost": 260,
+          "cooldown": 45,
+          "peakActive": 78,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 5.5,
+          "peakActive": 45,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 1,
+          "manaCost": 100,
+          "cooldown": 10,
+          "peakActive": 61,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 2,
+          "manaCost": 270,
+          "cooldown": 44,
+          "peakActive": 64,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fRR",
+          "slot": 0,
+          "manaCost": 75,
+          "cooldown": 6.5,
+          "peakActive": 36,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fRR",
+          "slot": 1,
+          "manaCost": 75,
+          "cooldown": 9,
+          "peakActive": 10,
+          "semanticEvents": 3
+        },
+        {
+          "key": "fRR",
+          "slot": 2,
+          "manaCost": 250,
+          "cooldown": 44,
+          "peakActive": 14,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5,
+          "peakActive": 40,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 9,
+          "peakActive": 23,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 2,
+          "manaCost": 300,
+          "cooldown": 45,
+          "peakActive": 26,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5,
+          "peakActive": 64,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 9,
+          "peakActive": 61,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 2,
+          "manaCost": 300,
+          "cooldown": 45,
+          "peakActive": 59,
+          "semanticEvents": 2
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 0,
+          "manaCost": 100,
+          "cooldown": 5,
+          "peakActive": 79,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 1,
+          "manaCost": 110,
+          "cooldown": 9,
+          "peakActive": 42,
+          "semanticEvents": 1
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 2,
+          "manaCost": 300,
+          "cooldown": 45,
+          "peakActive": 75,
+          "semanticEvents": 2
+        }
+      ],
+      "combatIdenticalToBaseline": true,
+      "nativeInput": {
+        "input": "native-touch",
+        "manaCost": 90,
+        "cooldownStarted": true,
+        "shieldApplied": true
+      },
+      "visualRngPurity": {
+        "previews": 63,
+        "allocatorRestored": true,
+        "combatUnchanged": true,
+        "previewDoesNotClaimGameplayRoutes": true
+      },
+      "stress": {
+        "before": {
+          "geometries": 90,
+          "textures": 102,
+          "programs": 51
+        },
+        "after": {
+          "geometries": 90,
+          "textures": 102,
+          "programs": 51
+        },
+        "emptyCalls": 114,
+        "calls": 122,
+        "extraDrawCalls": 8,
+        "peak": 166,
+        "during": {
+          "enabled": true,
+          "quality": "low",
+          "reducedMotion": true,
+          "totalActive": 166,
+          "totalCapacity": 166,
+          "batchCount": 8,
+          "allocatedGeometries": 8,
+          "allocatedMaterials": 8,
+          "accepted": 166,
+          "dropped": 4154,
+          "culled": 0,
+          "frameBudget": 70,
+          "marks": {},
+          "batches": {
+            "ring": {
+              "active": 16,
+              "capacity": 16
+            },
+            "rune": {
+              "active": 7,
+              "capacity": 7
+            },
+            "pillar": {
+              "active": 5,
+              "capacity": 5
+            },
+            "dome": {
+              "active": 4,
+              "capacity": 4
+            },
+            "arc": {
+              "active": 17,
+              "capacity": 17
+            },
+            "shard": {
+              "active": 39,
+              "capacity": 39
+            },
+            "streak": {
+              "active": 30,
+              "capacity": 30
+            },
+            "ember": {
+              "active": 48,
+              "capacity": 48
+            }
+          }
+        },
+        "expired": {
+          "enabled": true,
+          "quality": "low",
+          "reducedMotion": true,
+          "totalActive": 0,
+          "totalCapacity": 166,
+          "batchCount": 8,
+          "allocatedGeometries": 8,
+          "allocatedMaterials": 8,
+          "accepted": 166,
+          "dropped": 4154,
+          "culled": 0,
+          "frameBudget": 70,
+          "marks": {},
+          "batches": {
+            "ring": {
+              "active": 0,
+              "capacity": 16
+            },
+            "rune": {
+              "active": 0,
+              "capacity": 7
+            },
+            "pillar": {
+              "active": 0,
+              "capacity": 5
+            },
+            "dome": {
+              "active": 0,
+              "capacity": 4
+            },
+            "arc": {
+              "active": 0,
+              "capacity": 17
+            },
+            "shard": {
+              "active": 0,
+              "capacity": 39
+            },
+            "streak": {
+              "active": 0,
+              "capacity": 30
+            },
+            "ember": {
+              "active": 0,
+              "capacity": 48
+            }
+          }
+        },
+        "reset": {
+          "enabled": true,
+          "quality": "low",
+          "reducedMotion": true,
+          "totalActive": 0,
+          "totalCapacity": 166,
+          "batchCount": 8,
+          "allocatedGeometries": 8,
+          "allocatedMaterials": 8,
+          "accepted": 0,
+          "dropped": 0,
+          "culled": 0,
+          "frameBudget": 70,
+          "marks": {},
+          "batches": {
+            "ring": {
+              "active": 0,
+              "capacity": 16
+            },
+            "rune": {
+              "active": 0,
+              "capacity": 7
+            },
+            "pillar": {
+              "active": 0,
+              "capacity": 5
+            },
+            "dome": {
+              "active": 0,
+              "capacity": 4
+            },
+            "arc": {
+              "active": 0,
+              "capacity": 17
+            },
+            "shard": {
+              "active": 0,
+              "capacity": 39
+            },
+            "streak": {
+              "active": 0,
+              "capacity": 30
+            },
+            "ember": {
+              "active": 0,
+              "capacity": 48
+            }
+          }
+        },
+        "cycles": [
+          {
+            "disposed": {
+              "enabled": false,
+              "totalActive": 0,
+              "totalCapacity": 0,
+              "batchCount": 0,
+              "allocatedGeometries": 0,
+              "allocatedMaterials": 0,
+              "marks": {},
+              "batches": {}
+            },
+            "recreated": {
+              "enabled": true,
+              "quality": "low",
+              "reducedMotion": true,
+              "totalActive": 8,
+              "totalCapacity": 166,
+              "batchCount": 8,
+              "allocatedGeometries": 8,
+              "allocatedMaterials": 8,
+              "accepted": 8,
+              "dropped": 0,
+              "culled": 0,
+              "frameBudget": 70,
+              "marks": {},
+              "batches": {
+                "ring": {
+                  "active": 1,
+                  "capacity": 16
+                },
+                "rune": {
+                  "active": 1,
+                  "capacity": 7
+                },
+                "pillar": {
+                  "active": 1,
+                  "capacity": 5
+                },
+                "dome": {
+                  "active": 1,
+                  "capacity": 4
+                },
+                "arc": {
+                  "active": 1,
+                  "capacity": 17
+                },
+                "shard": {
+                  "active": 1,
+                  "capacity": 39
+                },
+                "streak": {
+                  "active": 1,
+                  "capacity": 30
+                },
+                "ember": {
+                  "active": 1,
+                  "capacity": 48
+                }
+              }
+            },
+            "memory": {
+              "geometries": 90,
+              "textures": 102,
+              "programs": 51
+            }
+          },
+          {
+            "disposed": {
+              "enabled": false,
+              "totalActive": 0,
+              "totalCapacity": 0,
+              "batchCount": 0,
+              "allocatedGeometries": 0,
+              "allocatedMaterials": 0,
+              "marks": {},
+              "batches": {}
+            },
+            "recreated": {
+              "enabled": true,
+              "quality": "low",
+              "reducedMotion": true,
+              "totalActive": 8,
+              "totalCapacity": 166,
+              "batchCount": 8,
+              "allocatedGeometries": 8,
+              "allocatedMaterials": 8,
+              "accepted": 8,
+              "dropped": 0,
+              "culled": 0,
+              "frameBudget": 70,
+              "marks": {},
+              "batches": {
+                "ring": {
+                  "active": 1,
+                  "capacity": 16
+                },
+                "rune": {
+                  "active": 1,
+                  "capacity": 7
+                },
+                "pillar": {
+                  "active": 1,
+                  "capacity": 5
+                },
+                "dome": {
+                  "active": 1,
+                  "capacity": 4
+                },
+                "arc": {
+                  "active": 1,
+                  "capacity": 17
+                },
+                "shard": {
+                  "active": 1,
+                  "capacity": 39
+                },
+                "streak": {
+                  "active": 1,
+                  "capacity": 30
+                },
+                "ember": {
+                  "active": 1,
+                  "capacity": 48
+                }
+              }
+            },
+            "memory": {
+              "geometries": 90,
+              "textures": 102,
+              "programs": 51
+            }
+          },
+          {
+            "disposed": {
+              "enabled": false,
+              "totalActive": 0,
+              "totalCapacity": 0,
+              "batchCount": 0,
+              "allocatedGeometries": 0,
+              "allocatedMaterials": 0,
+              "marks": {},
+              "batches": {}
+            },
+            "recreated": {
+              "enabled": true,
+              "quality": "low",
+              "reducedMotion": true,
+              "totalActive": 8,
+              "totalCapacity": 166,
+              "batchCount": 8,
+              "allocatedGeometries": 8,
+              "allocatedMaterials": 8,
+              "accepted": 8,
+              "dropped": 0,
+              "culled": 0,
+              "frameBudget": 70,
+              "marks": {},
+              "batches": {
+                "ring": {
+                  "active": 1,
+                  "capacity": 16
+                },
+                "rune": {
+                  "active": 1,
+                  "capacity": 7
+                },
+                "pillar": {
+                  "active": 1,
+                  "capacity": 5
+                },
+                "dome": {
+                  "active": 1,
+                  "capacity": 4
+                },
+                "arc": {
+                  "active": 1,
+                  "capacity": 17
+                },
+                "shard": {
+                  "active": 1,
+                  "capacity": 39
+                },
+                "streak": {
+                  "active": 1,
+                  "capacity": 30
+                },
+                "ember": {
+                  "active": 1,
+                  "capacity": 48
+                }
+              }
+            },
+            "memory": {
+              "geometries": 90,
+              "textures": 102,
+              "programs": 51
+            }
+          }
+        ]
+      },
+      "errors": [],
+      "shaderErrors": [],
+      "screenshots": []
+    }
+  ],
+  "cursedCompatibility": {
+    "boot": {
+      "phase": "ready",
+      "ready": true,
+      "failed": false,
+      "total": 56,
+      "packDone": 18,
+      "musicDone": 7,
+      "artDone": 1,
+      "error": null
+    },
+    "realStart": true,
+    "vfxModuleAbsent": true,
+    "errors": [],
+    "shaderErrors": []
+  }
+}
