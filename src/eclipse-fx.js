@@ -60,7 +60,7 @@ R.eclEvent=function(e,u){if(!this.ok)return;const gy=this.gY?this.gY(e.x||(u&&u.
   else if(e.k==='stg'&&u){for(let i=0;i<16*q;i++)this.sp(true,{x:u.x+rnd(-20,20),y:gy+rnd(40,120),z:u.y+rnd(-20,20),vx:rnd(-160,160),vy:rnd(60,200),vz:rnd(-160,160),l:.45,s:12,s1:2,c:'#ffe8a0',sp:1,g:400})}};
 
 // ---- DOM: boss bar + eclipse darkening (pointer-events none: never blocks touch controls) ----
-const css=`#eclBoss{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 62px);transform:translateX(-50%);width:min(560px,72vw);z-index:30;pointer-events:none;font:600 13px/1.2 system-ui,sans-serif;color:#e8eeff;text-align:center;text-shadow:0 1px 3px #000;transition:opacity .4s;opacity:0}
+const css=`#eclBoss{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);transform:translateX(-50%);width:min(560px,72vw);z-index:30;pointer-events:none;font:600 13px/1.2 system-ui,sans-serif;color:#e8eeff;text-align:center;text-shadow:0 1px 3px #000;transition:opacity .4s;opacity:0}
 #eclBoss .n{letter-spacing:.06em;margin-bottom:5px}#eclBoss .n b{color:#b9a6ff;font-weight:700}
 #eclBoss .bar{position:relative;height:12px;border-radius:7px;background:#0b0d1acc;border:1px solid #8a9ad866;overflow:hidden;box-shadow:0 0 14px #6a5aff55}
 #eclBoss .f{position:absolute;inset:0;width:100%;background:linear-gradient(90deg,#5a3ad8,#9fb8ff);transition:width .25s}#eclBoss .lag{position:absolute;inset:0;background:#ffffff55;transition:width 1.1s .3s}
@@ -73,13 +73,15 @@ let D=null;const dom=()=>{if(D)return D;const st=document.createElement('style')
   D={b,n:b.querySelector('.n'),f:b.querySelector('.f'),lag:b.querySelector('.lag'),dk,fl};return D};
 R.eclFlash=function(c,a){if(typeof document==='undefined')return;const d=dom();d.fl.style.transition='none';d.fl.style.background=c;d.fl.style.opacity=a;requestAnimationFrame(()=>{d.fl.style.transition='opacity .9s';d.fl.style.opacity=0})};
 R.eclHud=function(me,L,dt){const F=me||L;if(!F||typeof document==='undefined')return;let b=null,bd=1e9;for(const u of units){if(u.ecl!=='overlord'||u.dead)continue;const d=Math.hypot(u.x-F.x,u.y-F.y);if(d<bd){bd=d;b=u}}
-  const show=!!b&&bd<1600&&(b.hp<b.maxHp-1||bd<720);if(!show&&!D)return;const d=dom();d.b.style.opacity=show?1:0;
+  const show=!!b&&bd<1600&&(b.hp<b.maxHp-1||bd<720);this._eclBossShown=show;if(!show&&!D)return;const d=dom();d.b.style.opacity=show?1:0;
   if(show){const r=Math.max(0,b.hp/b.maxHp),ph=r>.7?0:r>.35?1:2,w=(r*100).toFixed(1)+'%';d.f.style.width=w;d.lag.style.width=w;
     const t='☾ CELESTIAL OVERLORD <b>· '+['PHASE I','PHASE II · ECLIPSE','PHASE III · TOTALITY'][ph]+'</b> · '+fmtN(b.hp)+' / '+fmtN(b.maxHp);if(d.n._t!==t){d.n._t=t;d.n.innerHTML=t}}
   // Ultimate Eclipse darkens the sky while it charges
   let dark=0;for(const a of aoes)if(a.kind==='ueclipse'&&Math.hypot(a.x-F.x,a.y-F.y)<a.r+600)dark=Math.max(dark,a.t<a.delay?Math.min(1,a.t/a.delay)*.85:Math.max(0,a.fxT||0));
   this._eclDk=lerp(this._eclDk||0,dark,Math.min(1,dt*6));d.dk.style.opacity=this._eclDk.toFixed(3)};
 
+// the boss bar replaces the generic top-centre enemy frame while it is up (no stacked bars)
+if(typeof drawTarget==='function'){const _dt=drawTarget;drawTarget=function(me,s,fr){const u=UMAP.get(TGT.id);if(u&&u.ecl==='overlord'&&R._eclBossShown)return;return _dt.apply(this,arguments)}}
 // ---- the altar (decor only: rune disc, eclipse ring, orbiting obsidian shards) ----
 R.eclAltar=function(Tm){const A=WD&&WD.eclAltar;if(!A){return}
   if(this._eclW!==WD){this._eclW=WD;if(this._eclAlt)this.scene.remove(this._eclAlt);const g=new T.Group(),gy=this.gY(A.x,A.y);g.position.set(A.x,gy,A.y);

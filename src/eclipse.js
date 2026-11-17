@@ -29,8 +29,9 @@ function eclWorld(w){if(!CURSED)return;
   bm.kind='overlord';bm.x=alt.x;bm.y=alt.y;alt.mem=[keep];alt.tier='eclipse';alt.maxRespawn=0;
   w.mobs=w.mobs.filter(m=>!gone.has(m.id));
   w.eclAltar={x:alt.x,y:alt.y,r:520,camp:alt.id};
-  anc.filter(c=>c!==alt).forEach((c,i)=>{if(i%3)return;const m=byId.get(c.mem[0]);if(m&&m.kind==='golem'){m.kind='construct';c.tier='construct'}});
-  lar.forEach((c,i)=>{if(i%3)return;let n=0;for(const id of c.mem){const m=byId.get(id);if(m&&n<2&&(m.kind==='ogre'||m.kind==='wolf')){m.kind='sentinel';n++}}c.tier='sentinel'});
+  const farA=c=>Math.hypot(c.x-alt.x,c.y-alt.y)>1600;   // keep the boss fight a one-on-one encounter
+  anc.filter(c=>c!==alt).forEach((c,i)=>{if(i%3||!farA(c))return;const m=byId.get(c.mem[0]);if(m&&m.kind==='golem'){m.kind='construct';c.tier='construct'}});
+  lar.forEach((c,i)=>{if(i%3||!farA(c))return;let n=0;for(const id of c.mem){const m=byId.get(id);if(m&&n<2&&(m.kind==='ogre'||m.kind==='wolf')){m.kind='sentinel';n++}}c.tier='sentinel'});
 }
 {const _gw=genWorld;genWorld=function(seed){const w=_gw(seed);eclWorld(w);return w}}
 
