@@ -335,14 +335,14 @@ Object.assign(R3,{
     const tg=WD.tg,n=tg.n,d=this.dummy,im=this.gGrass,max=im.instanceMatrix.count;let c=0;const C1=new THREE.Color('#e0f0c0'),C2=new THREE.Color('#a8e0d8'),C=this.col;
     const ix0=gx-Math.round(1400/cs),ix1=gx+Math.round(1400/cs),iy0=gy-Math.round(1000/cs),iy1=gy+Math.round(760/cs);
     for(let j=iy0;j<=iy1&&c<max;j++)for(let i=ix0;i<=ix1&&c<max;i++){const h1=Math.sin(i*127.1+j*311.7)*43758.5453,h2=Math.sin(i*269.5+j*183.3)*43758.5453;const r1=h1-Math.floor(h1),r2=h2-Math.floor(h2);
-      const x=(i+r1)*cs,y=(j+r2)*cs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(!dn||r1*r2*255*(TOON?4.2:1.7)>dn)continue;let gi=-1;if(CURSED){gi=REG.at(x,y);if((gi===2||gi===3)&&r2>.22)continue}
-      const s=.7+r2*.8;d.position.set(x,tg.hg[tj*n+ti]-1,y);d.rotation.set(0,r1*6.28,0);d.scale.set(30*s,(20+r1*20)*s,30*s);d.updateMatrix();im.setMatrixAt(c,d.matrix);C.copy(C1).lerp(C2,direK(x,y)).multiplyScalar(TOON?.95+r1*.3:.6+r1*.42);if(gi>=0)C.multiply(REG.gc(gi));im.setColorAt(c,C);c++}
+      const x=(i+r1)*cs,y=(j+r2)*cs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(!dn||r1*r2*255*(TOON?4.2:1.7)*(this.gThin||1)>dn)continue;let gi=-1;if(CURSED){gi=REG.at(x,y);if((gi===2||gi===3)&&r2>.22)continue}
+      const s=.7+r2*.8;d.position.set(x,tg.hg[tj*n+ti]-1,y);d.rotation.set(0,r1*6.28,0);d.scale.set(30*s,(20+r1*20)*s,30*s);d.updateMatrix();im.setMatrixAt(c,d.matrix);C.copy(C1).lerp(C2,direK(x,y)).multiplyScalar(TOON?.95+r1*.3:.6+r1*.42);if(this.gCool){const l=C.r*.3+C.g*.59+C.b*.11;C.setRGB(l*.78,l*.88,l)}if(gi>=0)C.multiply(REG.gc(gi));im.setColorAt(c,C);c++}
     im.count=c;im.instanceMatrix.needsUpdate=true;if(im.instanceColor)im.instanceColor.needsUpdate=true;
     const fm=this.gFlow,fmax=fm.instanceMatrix.count,fs=90;let f=0;const PAL=['#ffe36e','#ff9ac2','#ffffff','#c8a0ff','#ff7a5a','#8ac8ff'];
     for(let j=Math.floor((cy-1000)/fs);j<=Math.floor((cy+760)/fs)&&f<fmax;j++)for(let i=Math.floor((cx-1400)/fs);i<=Math.floor((cx+1400)/fs)&&f<fmax;i++){const h1=Math.sin(i*91.7+j*47.3)*43758.5453;const r=h1-Math.floor(h1);
-      const x=(i+r)*fs,y=(j+(r*7.13)%1)*fs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(dn<200)continue;const meadow=WD.noise(x,y)<.44;if(!meadow&&r>.25)continue;
+      const x=(i+r)*fs,y=(j+(r*7.13)%1)*fs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(dn<200)continue;const meadow=WD.noise(x,y)<.44;if(!meadow&&r>.25)continue;if(this.gThin&&(r*37.7)%1>1/this.gThin)continue;
       for(let k=0;k<3&&f<fmax;k++){const xx=x+Math.cos(k*2.1+r*9)*16,yy=y+Math.sin(k*2.1+r*9)*16;d.position.set(xx,tg.hg[tj*n+ti]+2+k*2,yy);d.rotation.set(0,r*6+k,0);d.scale.set(10,12,10);d.updateMatrix();fm.setMatrixAt(f,d.matrix);
-        this.col.set(direK(x,y)>.5?(k%2?'#7ef9ff':'#e08aff'):PAL[Math.floor((r*13+k)%PAL.length)]);fm.setColorAt(f,this.col);f++}}
+        this.col.set(direK(x,y)>.5?(k%2?'#7ef9ff':'#e08aff'):PAL[Math.floor((r*13+k)%PAL.length)]);if(this.gCool){const q=this.col,l=q.r*.3+q.g*.59+q.b*.11;q.setRGB(l*.78,l*.88,l)}fm.setColorAt(f,this.col);f++}}
     fm.count=f;fm.instanceMatrix.needsUpdate=true;if(fm.instanceColor)fm.instanceColor.needsUpdate=true},
   updateTrees(L){const tr=this.trees,hid=this.treeHidden;const ch=new Set();
     for(let i=0;i<tr.length;i++){const t=tr[i];const dx=Math.abs(t.x-L.x),dy=t.y-L.y;

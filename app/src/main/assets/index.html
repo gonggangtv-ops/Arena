@@ -3756,14 +3756,14 @@ Object.assign(R3,{
     const tg=WD.tg,n=tg.n,d=this.dummy,im=this.gGrass,max=im.instanceMatrix.count;let c=0;const C1=new THREE.Color('#e0f0c0'),C2=new THREE.Color('#a8e0d8'),C=this.col;
     const ix0=gx-Math.round(1400/cs),ix1=gx+Math.round(1400/cs),iy0=gy-Math.round(1000/cs),iy1=gy+Math.round(760/cs);
     for(let j=iy0;j<=iy1&&c<max;j++)for(let i=ix0;i<=ix1&&c<max;i++){const h1=Math.sin(i*127.1+j*311.7)*43758.5453,h2=Math.sin(i*269.5+j*183.3)*43758.5453;const r1=h1-Math.floor(h1),r2=h2-Math.floor(h2);
-      const x=(i+r1)*cs,y=(j+r2)*cs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(!dn||r1*r2*255*(TOON?4.2:1.7)>dn)continue;let gi=-1;if(CURSED){gi=REG.at(x,y);if((gi===2||gi===3)&&r2>.22)continue}
-      const s=.7+r2*.8;d.position.set(x,tg.hg[tj*n+ti]-1,y);d.rotation.set(0,r1*6.28,0);d.scale.set(30*s,(20+r1*20)*s,30*s);d.updateMatrix();im.setMatrixAt(c,d.matrix);C.copy(C1).lerp(C2,direK(x,y)).multiplyScalar(TOON?.95+r1*.3:.6+r1*.42);if(gi>=0)C.multiply(REG.gc(gi));im.setColorAt(c,C);c++}
+      const x=(i+r1)*cs,y=(j+r2)*cs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(!dn||r1*r2*255*(TOON?4.2:1.7)*(this.gThin||1)>dn)continue;let gi=-1;if(CURSED){gi=REG.at(x,y);if((gi===2||gi===3)&&r2>.22)continue}
+      const s=.7+r2*.8;d.position.set(x,tg.hg[tj*n+ti]-1,y);d.rotation.set(0,r1*6.28,0);d.scale.set(30*s,(20+r1*20)*s,30*s);d.updateMatrix();im.setMatrixAt(c,d.matrix);C.copy(C1).lerp(C2,direK(x,y)).multiplyScalar(TOON?.95+r1*.3:.6+r1*.42);if(this.gCool){const l=C.r*.3+C.g*.59+C.b*.11;C.setRGB(l*.78,l*.88,l)}if(gi>=0)C.multiply(REG.gc(gi));im.setColorAt(c,C);c++}
     im.count=c;im.instanceMatrix.needsUpdate=true;if(im.instanceColor)im.instanceColor.needsUpdate=true;
     const fm=this.gFlow,fmax=fm.instanceMatrix.count,fs=90;let f=0;const PAL=['#ffe36e','#ff9ac2','#ffffff','#c8a0ff','#ff7a5a','#8ac8ff'];
     for(let j=Math.floor((cy-1000)/fs);j<=Math.floor((cy+760)/fs)&&f<fmax;j++)for(let i=Math.floor((cx-1400)/fs);i<=Math.floor((cx+1400)/fs)&&f<fmax;i++){const h1=Math.sin(i*91.7+j*47.3)*43758.5453;const r=h1-Math.floor(h1);
-      const x=(i+r)*fs,y=(j+(r*7.13)%1)*fs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(dn<200)continue;const meadow=WD.noise(x,y)<.44;if(!meadow&&r>.25)continue;
+      const x=(i+r)*fs,y=(j+(r*7.13)%1)*fs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(dn<200)continue;const meadow=WD.noise(x,y)<.44;if(!meadow&&r>.25)continue;if(this.gThin&&(r*37.7)%1>1/this.gThin)continue;
       for(let k=0;k<3&&f<fmax;k++){const xx=x+Math.cos(k*2.1+r*9)*16,yy=y+Math.sin(k*2.1+r*9)*16;d.position.set(xx,tg.hg[tj*n+ti]+2+k*2,yy);d.rotation.set(0,r*6+k,0);d.scale.set(10,12,10);d.updateMatrix();fm.setMatrixAt(f,d.matrix);
-        this.col.set(direK(x,y)>.5?(k%2?'#7ef9ff':'#e08aff'):PAL[Math.floor((r*13+k)%PAL.length)]);fm.setColorAt(f,this.col);f++}}
+        this.col.set(direK(x,y)>.5?(k%2?'#7ef9ff':'#e08aff'):PAL[Math.floor((r*13+k)%PAL.length)]);if(this.gCool){const q=this.col,l=q.r*.3+q.g*.59+q.b*.11;q.setRGB(l*.78,l*.88,l)}fm.setColorAt(f,this.col);f++}}
     fm.count=f;fm.instanceMatrix.needsUpdate=true;if(fm.instanceColor)fm.instanceColor.needsUpdate=true},
   updateTrees(L){const tr=this.trees,hid=this.treeHidden;const ch=new Set();
     for(let i=0;i<tr.length;i++){const t=tr[i];const dx=Math.abs(t.x-L.x),dy=t.y-L.y;
@@ -4653,8 +4653,22 @@ const REG={N:['อาณาจักรล่มสลาย','ป่าต้�
   atmo(R,L,dk,inCave){if(!this.fc){this.fc=this.FOG.map(c=>new THREE.Color(c));this.hc=this.HEMI.map(c=>new THREE.Color(c));this.aw=[1,0,0,0,0]}if(!L)return;
     const o=this.w(L.x,L.y,this.tw),a=this.aw;let b=0;for(let i=0;i<5;i++){a[i]+=(o[i]-a[i])*.04;if(a[i]>a[b])b=i}
     if(b!==this.cur&&state==='play'){if(this.cur>=0&&gameT>6&&!inDG(L))announce={txt:this.IC[b]+' '+this.N[b]+' — '+this.TIP[b],t:3.2};this.cur=b}
-    if(inCave)return;let fr=0,fg=0,fb=0,hr=0,hg=0,hb=0,lm=0;for(let i=0;i<5;i++){const k=a[i],f=this.fc[i],h=this.hc[i];fr+=f.r*k;fg+=f.g*k;fb+=f.b*k;hr+=h.r*k;hg+=h.g*k;hb+=h.b*k;lm+=this.LUM[i]*k}
+    this.motes(R,L);if(inCave)return;let fr=0,fg=0,fb=0,hr=0,hg=0,hb=0,lm=0;for(let i=0;i<5;i++){const k=a[i],f=this.fc[i],h=this.hc[i];fr+=f.r*k;fg+=f.g*k;fb+=f.b*k;hr+=h.r*k;hg+=h.g*k;hb+=h.b*k;lm+=this.LUM[i]*k}
     const nk=.35+.65*dk;R.scene.fog.color.lerp(R.c1.setRGB(fr*nk,fg*nk,fb*nk),.5);R.c1.setRGB(hr,hg,hb);R.hemi.color.lerp(R.c1,.5);R.sun.color.lerp(R.c1,.25);R.hemi.intensity*=lm;R.sun.intensity*=lm},
+  // drifting motes around the hero: dust in the kingdom, spores in the forest, snow on the ice, embers over the ash, void sparks in the abyss
+  MC:['#ffe2a0','#9dffb0','#ffffff','#ff8a3a','#c48aff'],MV:[[6,4,.5],[10,7,.6],[26,-70,1],[14,46,.8],[5,22,.7]],  // [sideways drift, vertical speed, opacity]
+  motes(R,L){const N=R.hi?300:140,W=1900,D=1500,H=460;
+    if(!this.mp){const g=new THREE.BufferGeometry(),p=new Float32Array(N*3),s=new Float32Array(N);for(let i=0;i<N;i++){p[i*3]=L.x+(Math.random()-.5)*W;p[i*3+1]=Math.random()*H;p[i*3+2]=L.y+(Math.random()-.5)*D;s[i]=Math.random()*6.283}
+      g.setAttribute('position',new THREE.BufferAttribute(p,3));const c=document.createElement('canvas');c.width=c.height=32;const x=c.getContext('2d'),gr=x.createRadialGradient(16,16,0,16,16,16);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.35,'rgba(255,255,255,.55)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,32,32);
+      const m=new THREE.PointsMaterial({size:13,map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true,fog:false});
+      this.mp=new THREE.Points(g,m);this.mp.frustumCulled=false;this.mp.renderOrder=5;this.ms=s;this.mcol=this.MC.map(c=>new THREE.Color(c));this.mt=performance.now();this.mscene=null}
+    if(this.mscene!==R.scene){R.scene.add(this.mp);this.mscene=R.scene}
+    const now=performance.now(),dt=Math.min(.05,(now-this.mt)/1000);this.mt=now;const a=this.aw,p=this.mp.geometry.attributes.position.array,s=this.ms,T=now/1000;let vx=0,vy=0,op=0,r=0,g=0,b=0;
+    for(let i=0;i<5;i++){const k=a[i],v=this.MV[i],c=this.mcol[i];vx+=v[0]*k;vy+=v[1]*k;op+=v[2]*k;r+=c.r*k;g+=c.g*k;b+=c.b*k}
+    this.mp.material.color.setRGB(r,g,b);this.mp.material.opacity=op;this.mp.visible=!inDG(L);
+    for(let i=0;i<N;i++){const j=i*3,ph=s[i];p[j]+=(Math.sin(T*.7+ph)*vx+vx*.6)*dt;p[j+1]+=(vy*(.6+.4*Math.sin(ph*3))+Math.sin(T*1.3+ph)*6)*dt;p[j+2]+=Math.cos(T*.5+ph*2)*vx*dt;
+      if(p[j+1]<0)p[j+1]+=H;else if(p[j+1]>H)p[j+1]-=H;let dx=p[j]-L.x,dz=p[j+2]-L.y;if(dx>W/2)p[j]-=W;else if(dx<-W/2)p[j]+=W;if(dz>D/2)p[j+2]-=D;else if(dz<-D/2)p[j+2]+=D}
+    this.mp.geometry.attributes.position.needsUpdate=true},
   // Moonfall sets one moonlit look; shift it toward the region the hero is in (weights eased by atmo)
   blend(R,k){if(!this.aw||!this.fc)return;const a=this.aw;let fr=0,fg=0,fb=0,hr=0,hg=0,hb=0;for(let i=0;i<5;i++){const w=a[i],f=this.fc[i],h=this.hc[i];fr+=f.r*w;fg+=f.g*w;fb+=f.b*w;hr+=h.r*w;hg+=h.g*w;hb+=h.b*w}
     R.scene.fog.color.lerp(R.c1.setRGB(fr,fg,fb),k);R.scene.background&&R.scene.background.isColor&&R.scene.background.copy(R.scene.fog.color);R.c1.setRGB(hr,hg,hb);R.hemi.color.lerp(R.c1,k);R.sun.color.lerp(R.c1,k*.35)},
