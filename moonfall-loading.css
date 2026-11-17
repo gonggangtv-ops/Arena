@@ -1,0 +1,49 @@
+/* The illustrated shell stays legible before its required key art arrives. */
+#loading.moonfall-load{z-index:1000;isolation:isolate;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;box-sizing:border-box;min-height:100%;padding:40px clamp(28px,7vw,110px);overflow:auto;touch-action:pan-y;background:#060c19;color:#dce8f8;outline:0}
+#loading.moonfall-load.hidden{display:none}
+.moonfall-load-art{position:fixed;inset:0;z-index:-2;background:#0a1222 url('assets/ui/moonfall-key-art.webp') 72% center/cover no-repeat;pointer-events:none}
+.moonfall-load-art::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#030a16f5,#060e20c9 30%,#060c1824 70%),linear-gradient(0deg,#040914e6,transparent 35%,#04091420 75%,#04091466)}
+.moonfall-load-card{position:relative;width:min(430px,100%);box-sizing:border-box;text-align:left;padding:20px 0;flex-shrink:0;text-shadow:0 2px 14px #0008}
+.moonfall-load-crest{position:relative;display:grid;place-items:center;width:66px;height:66px;margin:0 0 28px 7px;border:1px solid #b8a57596;border-radius:50%;color:#ecd59e;box-shadow:0 0 24px #71bdff12,inset 0 0 16px #71bdff12}
+.moonfall-load-crest::before{content:'';position:absolute;inset:7px;border:1px solid #99c4f44d;transform:rotate(45deg)}
+.moonfall-load-crest::after{content:'✦';position:absolute;right:-5px;top:24px;font-size:13px;color:#e9d197}
+.moonfall-load-crest span{font:42px/1 Georgia,serif;filter:drop-shadow(0 0 12px #8fcfff66)}
+.moonfall-load-eyebrow{font:10px/1.5 system-ui,sans-serif;letter-spacing:5px;color:#cdbb90;margin:0 0 10px}
+.moonfall-load-wordmark{font:400 clamp(40px,5.2vw,68px)/1.05 Georgia,serif;letter-spacing:5px;color:#f2e7ce;margin:0 0 16px;text-shadow:0 2px 30px #030a19}
+.moonfall-load-chapter{font-size:12px;line-height:1.8;letter-spacing:.5px;color:#adc1dc;margin:0 0 25px}
+.moonfall-load-rule{position:relative;height:14px;display:flex;align-items:center;color:#ddc591;font-size:13px;gap:12px;margin:0 0 24px}
+.moonfall-load-rule::before{content:'';width:55px;height:1px;background:#b6a37c}
+.moonfall-load-rule::after{content:'';height:1px;flex:1;background:linear-gradient(90deg,#b6a37c77,transparent)}
+.moonfall-load-card h2{font:400 clamp(20px,2.6vw,25px)/1.5 Georgia,serif;color:#e3ebf6;margin:0 0 7px}
+#moonfallLoadStatus{font-size:13px;line-height:1.8;color:#b7cbe6;margin:0 0 20px;overflow-wrap:anywhere}
+#moonfallLoadProgress{height:5px;box-sizing:border-box;background:#020813;border:1px solid #657d9b80;border-radius:2px;overflow:hidden;box-shadow:0 0 20px #2589cd1f}
+#moonfallLoadFill{height:100%;width:0;background:linear-gradient(90deg,#5382ad,#b3e8ff 75%,#f2d49d);box-shadow:0 0 12px #8edcffe0;transition:width .18s linear}
+#moonfallLoadCount{font:11px/1.7 ui-monospace,monospace;letter-spacing:1px;color:#c3d6ed;margin:12px 0 18px}
+.moonfall-load-note{font-size:11px;line-height:1.9;letter-spacing:1px;color:#819bbb;margin:0}
+#moonfallLoadError{margin-top:14px;padding:12px 14px;background:#281522ed;border:1px solid #a66a77;border-left:3px solid #d39aa8;border-radius:3px;color:#f5ced4;font-size:12px;line-height:1.7;overflow-wrap:anywhere;text-align:left;text-shadow:none}
+#moonfallLoadRetry{margin-top:14px;min-height:44px;padding:10px 24px;border:1px solid #d7be87;border-radius:3px;background:linear-gradient(120deg,#f1dba8,#bca16a);color:#101a2b;font-weight:700;cursor:pointer;box-shadow:0 4px 22px #0006}
+#moonfallLoadRetry:focus-visible{outline:2px solid #b3e8ff;outline-offset:4px}
+.moonfall-load-edition{position:fixed;bottom:22px;left:clamp(28px,7vw,110px);font:9px/1.5 system-ui,sans-serif;letter-spacing:2px;color:#7993b1;pointer-events:none}
+.moonfall-load-edition span{color:#b6a17a;padding:0 10px}
+@media(max-width:600px) and (min-height:481px){
+ #loading.moonfall-load{align-items:flex-end;padding:25px 26px 45px}
+ .moonfall-load-art{background-position:82% top}
+ .moonfall-load-art::after{background:linear-gradient(0deg,#040a16 5%,#040a16ed 28%,#040a1688 58%,#040a1622 82%)}
+ .moonfall-load-card{padding:0;width:100%}
+ .moonfall-load-crest{width:44px;height:44px;margin:0 0 20px 4px}.moonfall-load-crest span{font-size:28px}.moonfall-load-crest::after{top:13px}
+ .moonfall-load-wordmark{font-size:43px;letter-spacing:4px;margin-bottom:10px}.moonfall-load-eyebrow{letter-spacing:4px;font-size:9px}
+ .moonfall-load-chapter{font-size:11px;margin-bottom:15px}.moonfall-load-rule{margin-bottom:15px}
+ .moonfall-load-note{font-size:10px;line-height:1.7}.moonfall-load-edition{bottom:14px;left:26px;font-size:7px;letter-spacing:1.5px}
+}
+@media(max-height:480px){
+ #loading.moonfall-load{align-items:flex-start;padding:18px 5vw 34px}
+ .moonfall-load-card{width:min(410px,60%);padding:0}
+ .moonfall-load-crest,.moonfall-load-chapter,.moonfall-load-rule,.moonfall-load-note{display:none}
+ .moonfall-load-eyebrow{font-size:8px;letter-spacing:4px;margin:0 0 6px}
+ .moonfall-load-wordmark{font-size:35px;letter-spacing:4px;margin-bottom:14px}
+ .moonfall-load-card h2{font-size:19px;margin-bottom:4px}#moonfallLoadStatus{font-size:11px;margin-bottom:12px}
+ #moonfallLoadCount{margin:9px 0;font-size:10px}#moonfallLoadError{margin-top:9px;padding:8px 10px;font-size:11px}#moonfallLoadRetry{margin-top:10px}
+ .moonfall-load-edition{bottom:10px;left:5vw;font-size:7px;letter-spacing:1.3px}
+}
+@media(max-width:420px) and (max-height:480px){.moonfall-load-card{width:100%}.moonfall-load-wordmark{font-size:31px}.moonfall-load-art::after{background:#040a16b8}}
+@media(prefers-reduced-motion:reduce){#moonfallLoadFill{transition:none}}
