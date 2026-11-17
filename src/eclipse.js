@@ -51,7 +51,8 @@ function eclEv(e){const u=UMAP.get(e.id);
   else if(e.k==='blk'&&u){u.blockT=e.d;u.ecA={n:'block',t:e.d,d:e.d}}
   else if(e.k==='stg'&&u){u.ecA={n:'stagger',t:.9,d:.9}}
   else if(e.k==='ph'&&u){u.ph=e.p;u.ecA={n:'phase',t:1.6,d:1.6}}
-  if(typeof R3!=='undefined'&&R3.eclEvent)R3.eclEvent(e,u)}
+  else if(e.k==='die'&&u){u.dead=true;u.hp=0}   // clients stop receiving dead mobs; this makes the boss bar and AI views agree
+  if(typeof R3!=='undefined'&&R3.eclEvent)try{R3.eclEvent(e,u)}catch(err){}}   // visuals never break host logic
 {const _ae=applyEvent;applyEvent=function(e){if(e&&e.t==='ec'){eclEv(e);return}return _ae.apply(this,arguments)}}
 
 // safe zones (Ultimate Eclipse) carve a hole into an otherwise unavoidable area

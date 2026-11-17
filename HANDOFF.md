@@ -3,9 +3,17 @@
 เขียนรายการใหม่ไว้บนสุด รูปแบบ: `## YYYY-MM-DD · ใคร · เรื่อง` แล้วตามด้วย ทำอะไร / ไฟล์ / ทดสอบ / ค้าง
 
 ## กำลังทำ (อัปเดตเมื่อเริ่ม/จบงาน)
-- Claude · `claude/eclipse-reign-p3` (PR รออนุมัติ ไม่ merge เอง): `src/eclipse.js` `src/eclipse-fx.js` (ไฟล์ใหม่) + แตะเล็กน้อย `src/c.js` (แถว hero/mob) `src/r4.js` (ความสูงแถบเลือด) `src/build.py` · manifest + GLB 6 ชิ้น — Codex โปรดเลี่ยงไฟล์ใหม่ 2 ไฟล์นี้จนกว่า PR จะปิด
+- Claude · PR `claude/eclipse-reign-p3` รอเจ้าของอนุมัติ (ยังไม่ merge) — `src/eclipse.js` `src/eclipse-fx.js` ใหม่ · แตะ `src/c.js` `src/r4.js` `src/build.py` เล็กน้อย
 
 ---
+
+## 2026-11-17 · Claude · Phase 3 Eclipse Reign: Celestial Overlord + Dark Sentinel + Lunar Construct + อาวุธในตำนาน + VFX (branch claude/eclipse-reign-p3, PR รออนุมัติ)
+- รายงานเต็ม: `moonfall-docs/PHASE3-ECLIPSE-REIGN-REPORT.md`
+- `src/eclipse.js` (host logic, CURSED): ห่อ `genWorld` (แท่น + เปลี่ยนชนิดค่าย ไม่เปลี่ยน id/ตำแหน่ง), `mkMob`, `setMobStats`, `mobThink`, `dealDamage` (block/weak point/poise), `hitArea` (`a.safe`), `kill` (ดรอป), `basic` (proc), `equipWeapon`, `applyEvent` (event `{t:'ec'}`) · aoe kind ใหม่ต่อท้าย `AOE_KINDS` (ห้ามแทรกกลาง — index ใช้ในแพ็กเก็ต)
+- `src/eclipse-fx.js` (render): ห่อ `R3.objFor/animBig/aoeVis/effects`, `drawTarget` (แถบบอสแทนกรอบศัตรูเดิมเมื่อเป็น Overlord)
+- อาวุธในตำนาน = `wv` bit 15–16 (1 greatsword/gsword, 2 scythe/axe, 3 staff/frost) · `heroRow` ช่อง 16 ส่ง id นี้ · `mobRow` ของบริวารต่อท้าย `-1, EK index`
+- โมเดล 6 ตัว static (ไม่มี rig) — การเคลื่อนไหวเป็น procedural · rig ต้องใช้เครดิต Meshy (ยังไม่ขอ)
+- ทดสอบ (emulation): ครบทุกเฟส/ท่า/วงปลอดภัย/ดรอป/ติดอาวุธ/proc/ศัตรู ทั้ง index (low) และ cursed (high) · บอท 4 แมตช์ · ออนไลน์ 2 เครื่อง · ยังไม่ทดสอบเครื่องจริง
 
 ## 2026-11-17 · Claude · ของตกแต่งธรรมชาติจาก Meshy + ลายหินปูหมู่บ้านจาก Meshy (branch claude/meshy-nature)
 - เพิ่ม GLB 5 ชิ้นใน `assets/meshy/` + manifest: `mossy-boulder` `lupine-clump` `flower-cushion` `tall-grass` `river-stones` (Meshy text-to-3d, ย่อด้วย mfpack: เท็กซ์เจอร์ 1024, ~0.2 MB/ชิ้น)

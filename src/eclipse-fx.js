@@ -53,7 +53,7 @@ R.eclAnim=function(o,u,Tm){const dt=Math.min(.1,Math.max(0,Tm-(o.lt||Tm)));o.lt=
 R.eclTop=u=>u.ecl==='overlord'?345:u.ecl==='construct'?225:172;
 
 // ---- events from the host ----
-R.eclEvent=function(e,u){if(!this.ok)return;const gy=this.gY?this.gY(e.x||(u&&u.x)||0,e.y||(u&&u.y)||0):0,q=QK[fxQ(this)];
+R.eclEvent=function(e,u){if(!this.ok||!this.PA||!this.scene)return;const gy=this.gY?this.gY(e.x||(u&&u.x)||0,e.y||(u&&u.y)||0):0,q=QK[fxQ(this)];
   if(e.k==='sum'){this.ring(e.x,e.y,20,190,'#a070ff',.8);for(let i=0;i<40*q;i++){const a=Math.random()*6.283;this.sp(true,{x:e.x+Math.cos(a)*60,y:gy+10,z:e.y+Math.sin(a)*60,vy:rnd(120,360),l:.8,s:22,s1:4,c:'#c8a8ff',c2:'#4a2aa8',sp:1})}}
   else if(e.k==='ph'&&u){this.ring(u.x,u.y,30,520,'#b08aff',1);this.ring(u.x,u.y,20,300,'#ffffff',.5);this.eclFlash(e.p===2?'#3a1a6a':'#1a2a5a',.5)}
   else if(e.k==='die'){this.ring(e.x,e.y,40,900,'#cfe0ff',1.4);this.ring(e.x,e.y,30,520,'#a070ff',1);for(let i=0;i<120*q;i++){const a=Math.random()*6.283,v=rnd(150,700);this.sp(true,{x:e.x,y:gy+80,z:e.y,vx:Math.cos(a)*v,vy:rnd(100,600),vz:Math.sin(a)*v,l:rnd(.8,1.6),s:30,s1:4,c:'#e0ecff',c2:'#6a4aff',sp:1,g:300,dr:.8})}this.eclFlash('#cfe0ff',.45)}
@@ -72,7 +72,7 @@ let D=null;const dom=()=>{if(D)return D;const st=document.createElement('style')
   const dk=document.createElement('div');dk.id='eclDark';const fl=document.createElement('div');fl.id='eclFlash';document.body.append(dk,fl,b);
   D={b,n:b.querySelector('.n'),f:b.querySelector('.f'),lag:b.querySelector('.lag'),dk,fl};return D};
 R.eclFlash=function(c,a){if(typeof document==='undefined')return;const d=dom();d.fl.style.transition='none';d.fl.style.background=c;d.fl.style.opacity=a;requestAnimationFrame(()=>{d.fl.style.transition='opacity .9s';d.fl.style.opacity=0})};
-R.eclHud=function(me,L,dt){const F=me||L;if(!F||typeof document==='undefined')return;let b=null,bd=1e9;for(const u of units){if(u.ecl!=='overlord'||u.dead)continue;const d=Math.hypot(u.x-F.x,u.y-F.y);if(d<bd){bd=d;b=u}}
+R.eclHud=function(me,L,dt){const F=me||L;if(!F||typeof document==='undefined')return;let b=null,bd=1e9;const cl=typeof net!=='undefined'&&net.mode==='client';for(const u of units){if(u.ecl!=='overlord'||u.dead||(cl&&!u.inSnap))continue;const d=Math.hypot(u.x-F.x,u.y-F.y);if(d<bd){bd=d;b=u}}
   const show=!!b&&bd<1600&&(b.hp<b.maxHp-1||bd<720);this._eclBossShown=show;if(!show&&!D)return;const d=dom();d.b.style.opacity=show?1:0;
   if(show){const r=Math.max(0,b.hp/b.maxHp),ph=r>.7?0:r>.35?1:2,w=(r*100).toFixed(1)+'%';d.f.style.width=w;d.lag.style.width=w;
     const t='☾ CELESTIAL OVERLORD <b>· '+['PHASE I','PHASE II · ECLIPSE','PHASE III · TOTALITY'][ph]+'</b> · '+fmtN(b.hp)+' / '+fmtN(b.maxHp);if(d.n._t!==t){d.n._t=t;d.n.innerHTML=t}}
@@ -81,7 +81,7 @@ R.eclHud=function(me,L,dt){const F=me||L;if(!F||typeof document==='undefined')re
   this._eclDk=lerp(this._eclDk||0,dark,Math.min(1,dt*6));d.dk.style.opacity=this._eclDk.toFixed(3)};
 
 // the boss bar replaces the generic top-centre enemy frame while it is up (no stacked bars)
-if(typeof drawTarget==='function'){const _dt=drawTarget;drawTarget=function(me,s,fr){const u=UMAP.get(TGT.id);if(u&&u.ecl==='overlord'&&R._eclBossShown)return;return _dt.apply(this,arguments)}}
+if(typeof drawTarget==='function'){const _dt=drawTarget;let _t0=0;drawTarget=function(me,s,fr){const now=performance.now(),dt=Math.min(.1,(now-(_t0||now))/1000);_t0=now;try{R.eclHud(me,(typeof listener==='function'&&listener())||me,dt)}catch(e){}const u=UMAP.get(TGT.id);if(u&&u.ecl==='overlord'&&R._eclBossShown)return;return _dt.apply(this,arguments)}}
 // ---- the altar (decor only: rune disc, eclipse ring, orbiting obsidian shards) ----
 R.eclAltar=function(Tm){const A=WD&&WD.eclAltar;if(!A){return}
   if(this._eclW!==WD){this._eclW=WD;if(this._eclAlt)this.scene.remove(this._eclAlt);const g=new T.Group(),gy=this.gY(A.x,A.y);g.position.set(A.x,gy,A.y);
@@ -105,7 +105,7 @@ R.lgAttach=function(o,u){if(o.lgM){if(o.lgM.parent)o.lgM.parent.remove(o.lgM);o.
 
 // ---- per-frame: altar, HUD, legendary sockets + trails, bloom guard ----
 const _fx=R.effects;R.effects=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);if(!CURSED)return r;
-  try{this.eclAltar(Tm);this.eclHud(me,L,dt);const q=fxQ(this);
+  try{this.eclAltar(Tm);const q=fxQ(this);
     for(const u of units){if(!u.hero||u.dead)continue;const o=this.objs.get(u.id);if(!o||!o.root.visible)continue;const lg=lgOf(u),h=o.wpnR||o.wpnL;
       if((lg||o.lgM)&&(o.lgK!==lg+'|'+u.wk+'|'+u.wt||o.lgH!==h))this.lgAttach(o,u);
       if(o.lgTip&&Math.random()<dt*((u.atkAnim>0?40:5)*QK[q])){o.lgTip.getWorldPosition(this.v);this.sp(true,{x:this.v.x+rnd(-5,5),y:this.v.y+rnd(-5,5),z:this.v.z+rnd(-5,5),vy:rnd(10,40),l:u.atkAnim>0?.5:.8,s:u.atkAnim>0?16:9,s1:2,c:o.lgC,sp:1})}}
