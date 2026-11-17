@@ -5,7 +5,7 @@ window.installMoonfallLoading=function(){
   const screen=$('loading'),status=$('moonfallLoadStatus'),count=$('moonfallLoadCount'),progress=$('moonfallLoadProgress'),fill=$('moonfallLoadFill'),error=$('moonfallLoadError'),retry=$('moonfallLoadRetry');
   const ids=['soloBtn','qmBtn','hostBtn','joinBtn','lobbyStart','moonfallBtn'];
   const original={host:hostStartMatch,host2:hostStartMatch2,client:clientStart,enter:enterPlay,menu:R3.menuFrame,qnSetup:R3.qnSetup,quick:quickMatch,room:hostRoom,join:joinRoom};
-  let ready=false,failed=false,launchBusy=false,phase='loading',packDone=0,musicDone=0,renderDone=0,fontsDone=0,total=0,clientToken=0;
+  let ready=false,failed=false,launchBusy=false,phase='loading',packDone=0,musicDone=0,artDone=0,renderDone=0,fontsDone=0,total=0,clientToken=0;
   let resolveReady;const whenReady=new Promise(resolve=>{resolveReady=resolve;});
   const music=['menu','day','night','battle','final','cave','wind'];
   const requiredModels=['moon-arena','modular-floor','modular-wall','ancient-pillar','celestial-warrior','moon-stairs','wall-corner','temple-gate','ruin-arch','guardian-statue','portal-frame','rubble','brazier','moon-dead-tree','moon-silver-tree','moon-boulder','moon-rock-cluster'];
@@ -29,7 +29,7 @@ window.installMoonfallLoading=function(){
     const broken=assets.assets.find(a=>a.state==='missing'||a.state==='error');if(broken)return fail(broken.name+': '+(broken.error||'ไม่มีไฟล์ที่จำเป็น'));
     if(ui.state==='error')return fail('ภาพไอคอน: '+ui.error);
     if(!total)return;
-    const loaded=assets.assets.filter(a=>a.state==='loaded').length+packDone+musicDone+renderDone+fontsDone+(ui.state==='loaded'?Object.keys(ui.atlas.sheets).length:0);
+    const loaded=assets.assets.filter(a=>a.state==='loaded').length+packDone+musicDone+artDone+renderDone+fontsDone+(ui.state==='loaded'?Object.keys(ui.atlas.sheets).length:0);
     const percent=Math.min(99,Math.floor(loaded/total*100));fill.style.width=percent+'%';progress.setAttribute('aria-valuenow',percent);
     count.textContent=loaded+' / '+total+' รายการ · '+percent+'%';
   }
@@ -41,7 +41,7 @@ window.installMoonfallLoading=function(){
       await delay(80);
     }
   }
-  window.MoonfallLoading={isReady:()=>ready&&!failed,whenReady,snapshot:()=>({phase,ready,failed,total,packDone,musicDone,error:failed?error.textContent:null})};
+  window.MoonfallLoading={isReady:()=>ready&&!failed,whenReady,snapshot:()=>({phase,ready,failed,total,packDone,musicDone,artDone,error:failed?error.textContent:null})};
   lock(true);screen.focus({preventScroll:true});
   // Capture clicks as well as programmatic .click(); network services can update
   // disabled flags independently, so the entry functions are guarded too.
@@ -85,11 +85,22 @@ window.installMoonfallLoading=function(){
       show('กำลังอ่านฉากและภาพไอคอน…');
       await until(()=>CelestialAssets.snapshot().ready&&window.AR_QN&&window.SFX_PACK&&MoonfallUI.snapshot().atlas,'รายการไฟล์เกม');
       if(!AR_QN.c_MP||!AR_QN.h_M||!AR_QN.a_UAL1)throw Error('รายการตัวละครไม่ครบ');
-      total=CelestialAssets.snapshot().assets.length+Object.keys(AR_QN).length+Object.keys(MoonfallUI.snapshot().atlas.sheets).length+music.length+2;update();
+      total=CelestialAssets.snapshot().assets.length+Object.keys(AR_QN).length+Object.keys(MoonfallUI.snapshot().atlas.sheets).length+music.length+3;update();
       R3.qnLoad();
+      // CSS alone cannot prove the illustration decoded. Require the same real
+      // URL used by both screens, then let the browser reuse its cached pixels.
+      const art=new Promise((resolve,reject)=>{
+        const image=new Image(),timer=setTimeout(()=>reject(Error('หมดเวลารอภาพประตูจันทรา')),60000);
+        image.onload=async()=>{
+          try{await image.decode();if(!image.naturalWidth||!image.naturalHeight)throw Error('empty image');clearTimeout(timer);artDone=1;update();resolve();}
+          catch(e){clearTimeout(timer);reject(Error('ภาพประตูจันทราไม่ถูกต้อง'));}
+        };
+        image.onerror=()=>{clearTimeout(timer);reject(Error('โหลดภาพประตูจันทราไม่สำเร็จ'));};
+        image.src='assets/ui/moonfall-key-art.webp';
+      });
       const audio=Promise.all(music.map(async name=>{const response=await fetch('music/'+name+'.mp3',{cache:'force-cache',signal:AbortSignal.timeout(60000)});if(!response.ok)throw Error('เสียง '+name+': HTTP '+response.status);const bytes=new Uint8Array(await response.arrayBuffer());if(bytes.length<4||!(String.fromCharCode(...bytes.slice(0,3))==='ID3'||(bytes[0]===255&&(bytes[1]&224)===224)))throw Error('ไฟล์เสียงไม่ถูกต้อง: '+name);musicDone++;update();}));
       const fonts=document.fonts.ready.then(()=>{fontsDone=1;update();});
-      await Promise.all([audio,fonts,until(()=>packDone>0,'ตัวละคร'),until(()=>MoonfallUI.snapshot().state==='loaded','ภาพไอคอน'),until(()=>CelestialAssets.snapshot().assets.every(a=>a.state==='loaded'),'ฉาก Moonfall')]);
+      await Promise.all([art,audio,fonts,until(()=>packDone>0,'ตัวละคร'),until(()=>MoonfallUI.snapshot().state==='loaded','ภาพไอคอน'),until(()=>CelestialAssets.snapshot().assets.every(a=>a.state==='loaded'),'ฉาก Moonfall')]);
       if(failed)return;
       show('กำลังเตรียมภาพและแสงจันทร์…');
       R3.menuSeed=Math.floor(Math.random()*1e9);setupWorld(R3.menuSeed);R3.buildWorld();R3.menuReady=1;

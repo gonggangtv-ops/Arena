@@ -3,9 +3,26 @@
 เขียนรายการใหม่ไว้บนสุด รูปแบบ: `## YYYY-MM-DD · ใคร · เรื่อง` แล้วตามด้วย ทำอะไร / ไฟล์ / ทดสอบ / ค้าง
 
 ## กำลังทำ (อัปเดตเมื่อเริ่ม/จบงาน)
-- (ว่าง)
+- ไม่มี
 
 ---
+
+## 2026-11-17 · Codex · ภาพหน้าโหลดและเมนู Moonfall (`codex/moonfall-cinematic-ui`)
+- ทำอะไร: ภาพอัศวินเงินทอง/จันทราใหม่เข้าชุดกับไอคอนสกิล ใช้ร่วมกันทั้งหน้าโหลด
+  เตรียมแมตช์ และเมนูพร้อมเล่น; จัด Solo เป็นปุ่มหลัก เก็บชื่อ/ผ้าคลุม/ตั้งค่า/คู่มือเดิมครบ
+- ภาพ WebP 1672×941 ขนาด 197,706 bytes; ต้อง load + decode สำเร็จก่อนปลดล็อก
+  รวม strict boot 48 งาน ภาพเสีย/ขาด/หมดเวลายังล็อกเกมและโหลดใหม่ ไม่มีการใช้โมเดลสำรอง
+- ไฟล์: src/moonfall-loading.html/css/js, src/moonfall-menu.js/css,
+  src/tests/smoke-cinematic-ui.py; ภาพและสำเนา deploy ใน app/src/main/assets;
+  cursed_artifact.html, moonfall-docs/CINEMATIC-LOADING-UI.md และผลทดสอบ JSON
+- ทดสอบ: node --check, build index/cursed/web; index byte-identical กับ origin/main;
+  Chrome desktop/มือถือจำลองแนวตั้ง+แนวนอน, reduced motion, key-art delayed/invalid/retry;
+  ชุด UI เดิมผ่านจริง: 17 GLB, QN rig, 81 icons, ซื้อของ/ยา/สกิลด้วยคีย์บอร์ดและทัช,
+  queued client snapshot, model/art/music/character/manifest/code/CSS/WebGL failure guards
+- ไม่แตะ HP/Damage/Skills/AI/Inventory/Collision/Multiplayer transport หรือไฟล์โลกของ Claude;
+  ไม่เรียก Meshy/ไม่ใช้เครดิต; ภาพประกอบเมนูไม่ได้เปลี่ยนโมเดลตัวละครในเกม
+- ค้าง: hardware PC/mobile, Android WebView และ PeerJS สองเครื่องจริง;
+  เปิด PR เข้า main ให้ตรวจสอบก่อน merge/นำขึ้นเว็บ
 
 ## 2026-11-17 · Codex · สกิลหลอม ขวดยา/ร้านค้า และ strict loading (`codex/ui-ux`)
 - ทำอะไร: ภาพสกิลหลอมครบ 36 สกิล + item/UI 18 ภาพ; รวมกับ base 27 เป็น 81 ภาพ

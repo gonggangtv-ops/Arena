@@ -1,0 +1,621 @@
+[
+  {
+    "case": "desktop",
+    "viewport": {
+      "width": 1100,
+      "height": 700
+    },
+    "otherResourcesLoadedBeforeArt": true,
+    "entryBlockedUntilArtDecoded": true,
+    "boot": {
+      "phase": "ready",
+      "ready": true,
+      "failed": false,
+      "total": 48,
+      "packDone": 18,
+      "musicDone": 7,
+      "artDone": 1,
+      "error": null
+    },
+    "primaryAboveFold": {
+      "left": 38,
+      "top": 283.125,
+      "right": 544,
+      "bottom": 340.125,
+      "width": 506,
+      "height": 57,
+      "viewportWidth": 1100,
+      "viewportHeight": 700,
+      "reachable": true
+    },
+    "overflow": {
+      "viewport": 1100,
+      "document": 1100,
+      "body": 1100,
+      "local": 1100,
+      "localWidth": 1100
+    },
+    "controls": {
+      "nameEditableAndSaved": true,
+      "nativeDetailsKeyboardAndTouch": true,
+      "cloakSelection": {
+        "chosen": 1,
+        "stored": "1",
+        "selected": [
+          {
+            "index": 0,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 1,
+            "pressed": "true",
+            "selected": true
+          },
+          {
+            "index": 2,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 3,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 4,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 5,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 6,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 7,
+            "pressed": "false",
+            "selected": false
+          }
+        ]
+      },
+      "settings": [
+        {
+          "id": "viewBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "qBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "fuseBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "camBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "toneBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "aoBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "sndBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        }
+      ],
+      "cameraHandlerRetained": true,
+      "weaponCards": 9,
+      "skillIcons": 27
+    },
+    "reducedMotion": null,
+    "errors": []
+  },
+  {
+    "case": "landscape",
+    "viewport": {
+      "width": 844,
+      "height": 390
+    },
+    "otherResourcesLoadedBeforeArt": true,
+    "entryBlockedUntilArtDecoded": true,
+    "boot": {
+      "phase": "ready",
+      "ready": true,
+      "failed": false,
+      "total": 48,
+      "packDone": 18,
+      "musicDone": 7,
+      "artDone": 1,
+      "error": null
+    },
+    "primaryAboveFold": {
+      "left": 28,
+      "top": 170.875,
+      "right": 468,
+      "bottom": 216.875,
+      "width": 440,
+      "height": 46,
+      "viewportWidth": 844,
+      "viewportHeight": 390,
+      "reachable": true
+    },
+    "overflow": {
+      "viewport": 844,
+      "document": 844,
+      "body": 844,
+      "local": 844,
+      "localWidth": 844
+    },
+    "controls": {
+      "nameEditableAndSaved": true,
+      "nativeDetailsKeyboardAndTouch": true,
+      "cloakSelection": {
+        "chosen": 1,
+        "stored": "1",
+        "selected": [
+          {
+            "index": 0,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 1,
+            "pressed": "true",
+            "selected": true
+          },
+          {
+            "index": 2,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 3,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 4,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 5,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 6,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 7,
+            "pressed": "false",
+            "selected": false
+          }
+        ]
+      },
+      "settings": [
+        {
+          "id": "viewBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "qBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "fuseBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "camBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "toneBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "aoBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "sndBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        }
+      ],
+      "cameraHandlerRetained": true,
+      "weaponCards": 9,
+      "skillIcons": 27
+    },
+    "reducedMotion": null,
+    "errors": []
+  },
+  {
+    "case": "portrait",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "otherResourcesLoadedBeforeArt": true,
+    "entryBlockedUntilArtDecoded": true,
+    "boot": {
+      "phase": "ready",
+      "ready": true,
+      "failed": false,
+      "total": 48,
+      "packDone": 18,
+      "musicDone": 7,
+      "artDone": 1,
+      "error": null
+    },
+    "primaryAboveFold": {
+      "left": 23,
+      "top": 356.3125,
+      "right": 367,
+      "bottom": 410.3125,
+      "width": 344,
+      "height": 54,
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "reachable": true
+    },
+    "overflow": {
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "local": 390,
+      "localWidth": 390
+    },
+    "controls": {
+      "nameEditableAndSaved": true,
+      "nativeDetailsKeyboardAndTouch": true,
+      "cloakSelection": {
+        "chosen": 1,
+        "stored": "1",
+        "selected": [
+          {
+            "index": 0,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 1,
+            "pressed": "true",
+            "selected": true
+          },
+          {
+            "index": 2,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 3,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 4,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 5,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 6,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 7,
+            "pressed": "false",
+            "selected": false
+          }
+        ]
+      },
+      "settings": [
+        {
+          "id": "viewBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "qBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "fuseBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "camBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "toneBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "aoBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "sndBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        }
+      ],
+      "cameraHandlerRetained": true,
+      "weaponCards": 9,
+      "skillIcons": 27
+    },
+    "reducedMotion": null,
+    "errors": []
+  },
+  {
+    "case": "reduced-motion",
+    "viewport": {
+      "width": 844,
+      "height": 390
+    },
+    "otherResourcesLoadedBeforeArt": true,
+    "entryBlockedUntilArtDecoded": true,
+    "boot": {
+      "phase": "ready",
+      "ready": true,
+      "failed": false,
+      "total": 48,
+      "packDone": 18,
+      "musicDone": 7,
+      "artDone": 1,
+      "error": null
+    },
+    "primaryAboveFold": {
+      "left": 28,
+      "top": 170.875,
+      "right": 468,
+      "bottom": 216.875,
+      "width": 440,
+      "height": 46,
+      "viewportWidth": 844,
+      "viewportHeight": 390,
+      "reachable": true
+    },
+    "overflow": {
+      "viewport": 844,
+      "document": 844,
+      "body": 844,
+      "local": 844,
+      "localWidth": 844
+    },
+    "controls": {
+      "nameEditableAndSaved": true,
+      "nativeDetailsKeyboardAndTouch": true,
+      "cloakSelection": {
+        "chosen": 1,
+        "stored": "1",
+        "selected": [
+          {
+            "index": 0,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 1,
+            "pressed": "true",
+            "selected": true
+          },
+          {
+            "index": 2,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 3,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 4,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 5,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 6,
+            "pressed": "false",
+            "selected": false
+          },
+          {
+            "index": 7,
+            "pressed": "false",
+            "selected": false
+          }
+        ]
+      },
+      "settings": [
+        {
+          "id": "viewBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "qBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "fuseBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "camBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "toneBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "aoBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        },
+        {
+          "id": "sndBtn",
+          "unique": true,
+          "insideSettings": true,
+          "enabled": true,
+          "originalHandler": true
+        }
+      ],
+      "cameraHandlerRetained": true,
+      "weaponCards": 9,
+      "skillIcons": 27
+    },
+    "reducedMotion": {
+      "requested": true,
+      "activeLoops": []
+    },
+    "errors": []
+  },
+  {
+    "case": "invalid-key-art-and-real-retry",
+    "failed": {
+      "phase": "error",
+      "ready": false,
+      "failed": true,
+      "total": 48,
+      "packDone": 0,
+      "musicDone": 7,
+      "artDone": 0,
+      "error": "โหลดภาพประตูจันทราไม่สำเร็จ · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง"
+    },
+    "noEntry": true,
+    "errorVisible": true,
+    "retryReachable": {
+      "left": 42.1875,
+      "top": 237.734375,
+      "right": 182.3125,
+      "bottom": 281.734375,
+      "width": 140.125,
+      "height": 44,
+      "viewportWidth": 844,
+      "viewportHeight": 390,
+      "reachable": true
+    },
+    "overflow": {
+      "viewport": 844,
+      "document": 844,
+      "body": 844,
+      "local": 844,
+      "localWidth": 844
+    },
+    "recovered": {
+      "phase": "ready",
+      "ready": true,
+      "failed": false,
+      "total": 48,
+      "packDone": 18,
+      "musicDone": 7,
+      "artDone": 1,
+      "error": null
+    },
+    "errors": []
+  }
+]

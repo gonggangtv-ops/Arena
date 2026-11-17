@@ -1,0 +1,22 @@
+{
+  "sourceDeployCopiesMatch": true,
+  "cursedBuildMatches": true,
+  "vanillaByteIdenticalToOriginMain": true,
+  "vanillaSHA256": "6301852d154daae97eaf7dc1681f86d2b5ad6568b661f3263a57e19215a619aa",
+  "illustration": {
+    "path": "app/src/main/assets/assets/ui/moonfall-key-art.webp",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "bytes": 197706
+  },
+  "checks": [
+    "node --check src/moonfall-loading.js",
+    "node --check src/moonfall-menu.js",
+    "python3 src/build.py",
+    "python3 src/build.py cursed",
+    "python3 src/build.py cursed web",
+    "git diff --check"
+  ]
+}

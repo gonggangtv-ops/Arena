@@ -24,3 +24,11 @@ as a replacement. Retry reloads the actual files. Vanilla index.html is unchange
 Source: `src/moonfall-ui.js`, `src/moonfall-inventory.js` and
 `src/moonfall-loading.js`. Original prices, potion limits/effects, skill damage,
 costs, cooldowns, aim and network payloads remain authoritative.
+
+## Illustrated loading and ready menu
+
+`moonfall-key-art.webp` is a separate generated celestial-knight illustration,
+1672×941, encoded as WebP quality 86 (197,706 bytes). Both screens use the same
+cached URL; it does not add another icon atlas or playable model. The strict boot
+gate requires a successful image decode before entry, for 48 required tasks in
+total. Original generation PNG and browser screenshots remain outside Git.
