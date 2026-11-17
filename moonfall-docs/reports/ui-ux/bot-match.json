@@ -1,0 +1,10 @@
+{
+  "gameOver": true,
+  "alive": 1,
+  "gameT": 630.0000000000844,
+  "state": "play",
+  "meDead": true,
+  "winner": "💀 ตกรอบ",
+  "errors": [],
+  "method": "Unmodified Solo match, normal AI/combat/storm; simulation advanced in 30-second batches, rendering paused."
+}

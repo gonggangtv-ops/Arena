@@ -1,0 +1,12 @@
+PASS real game mobile=False: strict gate, all art/models, real rig, shop price, potion and fusion input
+PASS real game mobile=True: strict gate, all art/models, real rig, shop price, potion and fusion input
+PASS queued client start and production pending snapshot
+PASS blocks model failure
+PASS blocks art failure and real reload retry
+PASS blocks music failure
+PASS blocks character failure
+PASS blocks manifest failure
+PASS failed code resource is fail-closed with reload action
+PASS WebGL failure cannot start a 2D fallback
+PASS missing stylesheet stays blocked
+Screenshots (not committed): /tmp/arena-ui-ux-a407g3_6
