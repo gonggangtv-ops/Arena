@@ -75,10 +75,10 @@ window.installMoonfallVillage=function(P){
       if(h<WL+3){if(r<.32)stones.push({x,y,w:55+hash(i,j,5)*70,a:hash(i,j,6)*6.283});continue}
       if(!dens[k]||dens[k]<160)continue;const nearW=h<WL+28&&wet(i,j,5);
       const p=nearW?.34:WD.noise(x,y)<.44?.035:.012;if(r>p)continue;const t=hash(i,j,7);const it={x,y,a:hash(i,j,8)*6.283,s:.75+hash(i,j,9)*.6};
-      (t<.34?lupine:t<.68?cushion:tall).push(it)}
+      (t<.42?lupine:t<.62?cushion:tall).push(it)}
     inst('river-stones',stones,(q,s)=>{const k=q.w/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
     inst('lupine-clump',lupine,(q,s)=>{const H=58*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
-    inst('flower-cushion',cushion,(q,s)=>{const W=58*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
+    inst('flower-cushion',cushion,(q,s)=>{const W=42*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
     inst('tall-grass',tall,(q,s)=>{const H=50*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
     this.natureCounts={stones:stones.length,lupine:lupine.length,cushion:cushion.length,tall:tall.length}};
   P.plainRock=function(r){return !r.prop&&!r.edge&&!r.cliff&&r.cave===undefined&&(typeof MOON==='undefined'||!MOON)&&this.mfProp('mossy-boulder')};

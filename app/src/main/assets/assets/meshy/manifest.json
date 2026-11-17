@@ -254,6 +254,56 @@
    "biome": "moonfall",
    "taskType": "text-to-3d",
    "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "mossy-boulder": {
+   "name": "Mossy granite boulder",
+   "taskId": "01a1e8e7-85b9-7756-b0fc-f58446cda204",
+   "url": "assets/meshy/mossy-boulder.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "lupine-clump": {
+   "name": "Purple lupine clump",
+   "taskId": "01a1e8e7-9193-732e-b609-e27864634241",
+   "url": "assets/meshy/lupine-clump.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "flower-cushion": {
+   "name": "Pink and white wildflower cushion",
+   "taskId": "01a1e8e7-9cc9-72db-96b2-1ef5f7bb03bc",
+   "url": "assets/meshy/flower-cushion.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "tall-grass": {
+   "name": "Tall meadow grass clump",
+   "taskId": "01a1e8e7-a91c-7789-acd3-67e4a39ebe40",
+   "url": "assets/meshy/tall-grass.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "river-stones": {
+   "name": "River stones cluster",
+   "taskId": "01a1e8e7-b726-7436-a68d-38338f3ab0b0",
+   "url": "assets/meshy/river-stones.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
   }
  },
  "warrior": {
