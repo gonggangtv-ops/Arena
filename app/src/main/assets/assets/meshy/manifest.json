@@ -403,6 +403,111 @@
    "verifiedTaskStatus": "SUCCEEDED",
    "rigged": false,
    "animations": []
+  },
+  "p5-warrior": {
+   "name": "Celestial Armory Warrior (Phase 5 class hero, Meshy auto-rig + 6 clips)",
+   "taskId": "01a1ea26-0d4d-74da-8fa6-20180724290f",
+   "rigTaskId": "01a1ea5f-67e7-73ae-b164-c05751c90298",
+   "animationTaskId": "01a1ea60-6c4e-7669-a817-c8743cd8d7ad",
+   "url": "assets/meshy/p5-warrior.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "image-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Run_02",
+    "Left_Slash",
+    "Charged_Ground_Slam",
+    "Roll_Dodge",
+    "Dead"
+   ]
+  },
+  "p5-assassin": {
+   "name": "Celestial Armory Assassin (Phase 5 class hero, Meshy auto-rig + 6 clips)",
+   "taskId": "01a1ea29-8ca6-7010-812c-6e3cc7d9889e",
+   "rigTaskId": "01a1ea5f-7993-77ee-826c-ad25558fdcde",
+   "animationTaskId": "01a1ea60-70a0-7558-9461-75e99810a682",
+   "url": "assets/meshy/p5-assassin.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "image-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Run_02",
+    "Double_Combo_Attack",
+    "Double_Blade_Spin",
+    "Roll_Dodge",
+    "Dead"
+   ]
+  },
+  "p5-archer": {
+   "name": "Celestial Armory Archer (Phase 5 class hero, Meshy auto-rig + 6 clips)",
+   "taskId": "01a1ea29-f264-7103-b4f9-07ea36446163",
+   "rigTaskId": "01a1ea5f-8a32-741d-97c5-20cf8bf6c0df",
+   "animationTaskId": "01a1ea60-7583-74fd-9996-19ddea969cf4",
+   "url": "assets/meshy/p5-archer.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "image-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Run_02",
+    "Side_Shot",
+    "Charged_Spell_Cast",
+    "Roll_Dodge",
+    "Dead"
+   ]
+  },
+  "p5-mage": {
+   "name": "Celestial Armory Mage (Phase 5 class hero, Meshy auto-rig + 6 clips)",
+   "taskId": "01a1ea2a-0241-7761-8195-5f7a3dfa8178",
+   "rigTaskId": "01a1ea5f-9c69-74c4-b2d3-e5131b4e0058",
+   "animationTaskId": "01a1ea60-79f4-76ca-873c-3d4d70f1e9fc",
+   "url": "assets/meshy/p5-mage.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "image-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Run_02",
+    "mage_soell_cast",
+    "Charged_Spell_Cast",
+    "Roll_Dodge",
+    "Dead"
+   ]
+  },
+  "p5-summoner": {
+   "name": "Celestial Armory Summoner (Phase 5 class hero, Meshy auto-rig + 6 clips)",
+   "taskId": "01a1ea2a-111b-728b-944d-985f0250481a",
+   "rigTaskId": "01a1ea5f-aebb-7272-8407-aa80112d5aed",
+   "animationTaskId": "01a1ea60-7e3c-73f2-aee7-6f0237b9ba4a",
+   "url": "assets/meshy/p5-summoner.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "image-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Run_02",
+    "mage_soell_cast_2",
+    "Charged_Spell_Cast_1",
+    "Roll_Dodge",
+    "Dead"
+   ]
   }
  },
  "warrior": {

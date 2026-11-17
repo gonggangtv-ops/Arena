@@ -13,7 +13,10 @@ const p5Class=u=>{const k=u&&u.wk;if(!k)return'warrior';if(typeof FUSED!=='undef
   return k==='dagger'?'assassin':k==='bow'||k==='xbow'?'archer':k==='fire'||k==='frost'||k==='storm'?'mage':'warrior'};
 R.p5Ready=function(cls){const A=CA(),a=A&&A.get(P5[cls]);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations.length>=4&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 const p5Clips=a=>{if(a._p5)return a._p5;const list=a.gltf.animations,used=new Set(),out={};
-  const inPlace=c=>{const k=c.clone();for(const t of k.tracks){if(!/\.position$/.test(t.name)||!/hips|pelvis|root/i.test(t.name))continue;const v=t.values,x0=v[0],z0=v[2];for(let i=0;i<v.length;i+=3){v[i]=x0;v[i+2]=z0}}return k};
+  // in place: every clip's hips keep the IDLE clip's ground position (a clip's own first frame can already be a metre off)
+  const hipT=c=>c&&c.tracks.find(t=>/\.position$/.test(t.name)&&/hips|pelvis|root/i.test(t.name)),ref=hipT(list.find(c=>/Combat_Stance|idle/i.test(c.name))||list[0]);
+  const rx=ref?ref.values[0]:0,rz=ref?ref.values[2]:0;
+  const inPlace=c=>{const k=c.clone();const t=hipT(k);if(t){const v=t.values;for(let i=0;i<v.length;i+=3){v[i]=rx;v[i+2]=rz}}return k};
   // clips arrive in the order they were ordered from Meshy; names confirm the slot when they can
   P5C.order.forEach((key,i)=>{let c=list[i];if(!c||!P5C[key].test(c.name)){const m=list.find(x=>!used.has(x)&&P5C[key].test(x.name));if(m)c=m}if(c&&!used.has(c)){used.add(c);out[key]=inPlace(c)}});
   return a._p5=out};
@@ -22,7 +25,8 @@ R.p5Hero=function(u){const cls=p5Class(u);if(!this.p5Ready(cls))return null;cons
   const model=AR_GLTF.SkeletonUtils.clone(a.gltf.scene);model.rotation.y+=a.config.rotationY||0;model.updateMatrixWorld(true);
   const bb=new T.Box3().setFromObject(model,true),sz=bb.getSize(new T.Vector3()),sc=P5H/Math.max(1e-4,sz.y),pivot=new T.Group();pivot.scale.setScalar(sc);pivot.add(model);
   pivot.position.set(-(bb.min.x+bb.max.x)*sc/2,-bb.min.y*sc,-(bb.min.z+bb.max.z)*sc/2);
-  const o={kind:'qn',qn:1,p5:1,cls,u,at:u.at,wk:'?',wt:-9,model,pivot,ov:null,lastAtk:0,lastCast:0,lastHurt:0,act:{},bones:{}};
+  const o={kind:'qn',qn:1,p5:1,cls,u,at:u.at,wk:'?',wt:-9,model,pivot,ov:null,lastAtk:0,lastCast:0,lastHurt:0,act:{},bones:{},
+    lx:u.x,ly:u.y,rot:Math.atan2(u.fx,u.fy),walk:0,mvK:0,atkPh:0};   // the fields the base objFor fills in for every unit
   o.root=new T.Group();o.body=new T.Group();o.root.add(o.body);o.body.add(pivot);
   model.traverse(n=>{if(n.isBone)o.bones[n.name]=n;if(n.isMesh){n.castShadow=!!this.hi;n.receiveShadow=true;n.frustumCulled=false;
     if(this.fow){const paint=src=>this.cached('p5-'+src.uuid,()=>{const m=src.clone();if(m.isMeshStandardMaterial){m.envMap=this.envTex||null;m.envMapIntensity=.55}return this.fow(m,{key:'p5'})});n.material=Array.isArray(n.material)?n.material.map(paint):paint(n.material)}}});
@@ -56,7 +60,7 @@ const _qa=R.qnAnim;R.qnAnim=function(o,u,Tm,dt,mv){
   else if(u.castAnim>o.lastCast+.05)play('cast',1.5);
   o.lastAtk=u.atkAnim||0;o.lastCast=u.castAnim||0;
   let ow=0;if(o.ov){o.ovT-=dt;ow=clamp(o.ovT/.12,0,1);if(o.ovT<=0){o.ov.fadeOut(.12);o.ov=null;ow=0}}
-  const k=o.mvK;if(o.act.idle)o.act.idle.setEffectiveWeight((1-k)*(1-ow));if(o.act.run){o.act.run.setEffectiveWeight(k*(1-ow));o.act.run.timeScale=clamp(mv/260,.7,1.5)}
+  const k=o.mvK;if(o.act.idle)o.act.idle.setEffectiveWeight((1-k)*(1-ow));if(o.act.run){o.act.run.setEffectiveWeight(k*(1-ow));o.act.run.timeScale=clamp((mv||0)/260,.7,1.5)}
   o.mixer.update(dt);
   let by=0;if(u.spinT>0||u.lotusT>0)o.body.rotation.y=(o.body.rotation.y+dt*(u.spinT>0?22:26))%(Math.PI*2);else o.body.rotation.y=0;
   if(u.leap){if(o.leapT===undefined||o.leapT<0)o.leapT=0;o.leapT+=dt;by+=Math.sin(Math.PI*Math.min(1,o.leapT/.55))*140}else o.leapT=-1;
