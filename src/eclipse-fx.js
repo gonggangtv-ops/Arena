@@ -141,7 +141,7 @@ R.lgAttach=function(o,u){if(o.lgM){if(o.lgM.parent)o.lgM.parent.remove(o.lgM);o.
   h.traverse(n=>{if(n.isMesh&&n.visible&&n.geometry){const g=n.geometry;if(!g.boundingBox)g.computeBoundingBox();tb.copy(g.boundingBox).applyMatrix4(mm.multiplyMatrices(inv,n.matrixWorld));bb.union(tb);hid.push(n)}});
   if(bb.isEmpty())return;const ext=[[bb.min.x,bb.max.x],[bb.min.y,bb.max.y],[bb.min.z,bb.max.z]];let ax=0,len=0;ext.forEach((e,i)=>{if(e[1]-e[0]>len){len=e[1]-e[0];ax=i}});
   const e=ext[ax],dir=new T.Vector3();dir.setComponent(ax,Math.abs(e[1])>=Math.abs(e[0])?1:-1);
-  const al=new T.Group();al.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),dir);mod.g.scale.setScalar(len*LGW[lg].len/mod.L);al.add(mod.g);h.add(al);
+  const al=new T.Group();al.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),dir);mod.g.scale.setScalar(len*(o.p5w?1.05:LGW[lg].len)/mod.L);al.add(mod.g);h.add(al);
   for(const n of hid)n.visible=false;o.lgM=al;o.lgHid=hid;o.lgTip=mod.tip;o.lgC=L.c};
 
 // ---- per-frame: altar, HUD, legendary sockets + trails, bloom guard ----

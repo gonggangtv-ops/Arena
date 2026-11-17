@@ -55,6 +55,7 @@
     const p=profiles[key]?.[slot];if(!p||!near(at.x,at.y))return;
     const style=p.style,r=Math.max(20,o.r||90),c=o.c||p.c,c2=o.c2||p.c2,a=o.angle||0,life=o.life||.8;
     if(o.mark!==false)claim(key,slot,o.u);
+    if(P.v3Pulse)try{P.v3Pulse(style,at,o,{r,c,c2,a,len:o.len,el:p.element,el2:p.element2,u:o.u});}catch(e){}   // 3D layer (arena-vfx-3d.js)
     if(o.phase==='windup'){rune(at,r,c,c2,Math.max(.2,o.delay||.5),-.45);send('ring',at,{r:r*.94,r1:r,height:4,c,c2,life:o.delay||.5,width:.015,a:.38});return;}
     if(style==='dash'||style==='spear'||style==='bladewave'||style==='icelance'){
       for(let j=0;j<count(7,4);j++){const side=(j%2?1:-1)*(15+Math.floor(j/2)*13);send('streak',at,{x:at.x-Math.sin(a)*side,y:at.y+Math.cos(a)*side,height:35+j*4,r:r*between(.65,1.2),width:j<2?9:4,angle:a,tilt:.04,c,c2,life:.4,a:.8});}

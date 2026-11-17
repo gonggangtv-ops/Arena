@@ -119,7 +119,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <link rel="stylesheet" href="moonfall-menu.css" onerror="window.__moonfallCodeFailure='moonfall-menu.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-menu.css')">
 <link rel="stylesheet" href="moonfall-inventory.css" onerror="window.__moonfallCodeFailure='moonfall-inventory.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-inventory.css')">
 <link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
-<script>window.CELESTIAL_SKIP=["mossy-boulder", "lupine-clump", "flower-cushion", "tall-grass", "river-stones", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5-summoner"]</script>
+<script>window.CELESTIAL_SKIP=["mossy-boulder", "lupine-clump", "flower-cushion", "tall-grass", "river-stones", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5-summoner", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire"]</script>
 </head>
 <body>
 <div id="safe"></div>
@@ -5179,7 +5179,7 @@ R.lgAttach=function(o,u){if(o.lgM){if(o.lgM.parent)o.lgM.parent.remove(o.lgM);o.
   h.traverse(n=>{if(n.isMesh&&n.visible&&n.geometry){const g=n.geometry;if(!g.boundingBox)g.computeBoundingBox();tb.copy(g.boundingBox).applyMatrix4(mm.multiplyMatrices(inv,n.matrixWorld));bb.union(tb);hid.push(n)}});
   if(bb.isEmpty())return;const ext=[[bb.min.x,bb.max.x],[bb.min.y,bb.max.y],[bb.min.z,bb.max.z]];let ax=0,len=0;ext.forEach((e,i)=>{if(e[1]-e[0]>len){len=e[1]-e[0];ax=i}});
   const e=ext[ax],dir=new T.Vector3();dir.setComponent(ax,Math.abs(e[1])>=Math.abs(e[0])?1:-1);
-  const al=new T.Group();al.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),dir);mod.g.scale.setScalar(len*LGW[lg].len/mod.L);al.add(mod.g);h.add(al);
+  const al=new T.Group();al.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),dir);mod.g.scale.setScalar(len*(o.p5w?1.05:LGW[lg].len)/mod.L);al.add(mod.g);h.add(al);
   for(const n of hid)n.visible=false;o.lgM=al;o.lgHid=hid;o.lgTip=mod.tip;o.lgC=L.c};
 
 // ---- per-frame: altar, HUD, legendary sockets + trails, bloom guard ----
@@ -5292,8 +5292,38 @@ R.p5Hero=function(u){const cls=p5Class(u);if(!this.p5Ready(cls))return null;cons
   if(o.bones.Hips){o.mixer.update(0);pivot.updateMatrixWorld(true);const h=new T.Vector3();o.bones.Hips.getWorldPosition(h);pivot.position.x-=h.x;pivot.position.z-=h.z}   // centre the idle pose's hips on the ring
   try{this.p5Arm(o,u)}catch(e){}this.addStatus(o,u);this.scene.add(o.root);this.objs.set(u.id,o);return o};
 // the game's own weapon model goes into the rigged hand: its long side is turned onto the hand's +Z (checked on the Eclipse rigs)
-R.p5Arm=function(o,u){for(const w of[o.wpnR,o.wpnL])if(w&&w.parent)w.parent.remove(w);o.wpnR=o.wpnL=o.wtip=null;o.wk=u.wk;o.wt=u.wt;o.lgK=null;
-  if(!u.wk||!o.handR||!this.weapon)return;const t=Math.min(4,Math.max(0,u.wt|0)),bow=u.wk==='bow',dual=u.wk==='dagger';
+// ---- Celestial Armory weapons (Meshy, 2026-11-18): one model per class and rarity band ----
+// tiers 0–1 (ธรรมดา/หายาก) -> normal · 2 (มหากาพย์) -> epic · 3–4 (ตำนาน/SSR) -> legendary
+// up = grip->tip axis in the GLB, g = grip point along it (0 = pommel end), len = world length (hero is 138 tall)
+const P5W={warrior:['w0-ironblade','w1-bloodcrest','w2-solar-justice'],assassin:['a0-shadow-fang','a1-night-veil','a2-eclipse-twin'],
+  archer:['b0-hunter-bow','b1-windleaf','b2-lunar-longbow'],mage:['m0-apprentice-staff','m1-arcane-staff','m2-astral-nexus'],summoner:['s0-spirit-orb','s1-soul-tome','s2-genesis-grimoire']};
+const P5WS={'w0-ironblade':{up:[0,-1,0],g:.1,len:96},'w1-bloodcrest':{up:[-1,0,0],g:.1,len:100},'w2-solar-justice':{up:[-1,0,0],g:.1,len:106},
+  'a0-shadow-fang':{up:[-1,0,0],g:.15,len:40},'a1-night-veil':{up:[0,1,0],g:.15,len:42},'a2-eclipse-twin':{up:[-1,0,0],g:.15,len:46},
+  'b0-hunter-bow':{up:[1,0,0],g:.5,len:92},'b1-windleaf':{up:[1,0,0],g:.5,len:96},'b2-lunar-longbow':{up:[0,1,0],g:.5,gx:.12,len:100},
+  'm0-apprentice-staff':{up:[0,1,0],g:.36,len:128},'m1-arcane-staff':{up:[0,1,0],g:.36,len:134},'m2-astral-nexus':{up:[0,1,0],g:.36,len:140},
+  's0-spirit-orb':{up:[0,1,0],g:.5,len:22,orb:1},'s1-soul-tome':{up:[0,1,0],g:.5,len:24,orb:1},'s2-genesis-grimoire':{up:[0,1,0],g:.5,len:27,orb:1}};
+const P5WG={warrior:['#cfe0ff','#ff4a5a','#ffd890'],assassin:['#c8c8ff','#b46bff','#d878ff'],archer:['#e8c890','#7dff9a','#bfe4ff'],mage:['#9fe0ff','#c080ff','#7ab0ff'],summoner:['#7fe8ff','#b46bff','#d8b0ff']};
+const p5WBand=t=>t>=3?2:t===2?1:0;
+R.p5WKey=function(cls,t){const L=P5W[cls];return L?L[p5WBand(t)]:null};
+R.p5WReady=function(k){const A=CA(),a=k&&A&&A.get('p5w-'+k);return !!(a&&a.state==='loaded'&&a.gltf)};
+// grip at the origin, tip along +Y, scaled to its world length
+R.p5WModel=function(k){if(!this.p5WReady(k))return null;const S=P5WS[k],a=CA().get('p5w-'+k),m=a.gltf.scene.clone(true);
+  m.traverse(n=>{if(!n.isMesh)return;n.castShadow=!!this.hi;n.frustumCulled=false;
+    if(this.fow){const paint=src=>this.cached('p5w-'+src.uuid,()=>{const c=src.clone();if(c.isMeshStandardMaterial){c.envMap=this.envTex||null;c.envMapIntensity=.9}return this.fow(c,{key:'p5'})});n.material=Array.isArray(n.material)?n.material.map(paint):paint(n.material)}});
+  const al=new T.Group();al.quaternion.setFromUnitVectors(new T.Vector3().fromArray(S.up),new T.Vector3(0,1,0));al.add(m);al.updateMatrixWorld(true);
+  const bb=new T.Box3().setFromObject(al),L=bb.max.y-bb.min.y,gy=bb.min.y+L*S.g,gx=S.gx!==undefined?bb.min.x+(bb.max.x-bb.min.x)*S.gx:(bb.min.x+bb.max.x)/2;
+  al.position.set(-gx,-gy,-(bb.min.z+bb.max.z)/2);const w=new T.Group();w.add(al);w.scale.setScalar(S.len/Math.max(1e-6,L));
+  const tip=new T.Object3D();tip.position.y=(bb.max.y-gy)*.9;w.add(tip);w.userData.tip=tip;return w};
+R.p5Arm=function(o,u){for(const w of[o.wpnR,o.wpnL,o.focus])if(w&&w.parent)w.parent.remove(w);o.wpnR=o.wpnL=o.wtip=o.focus=null;o.wk=u.wk;o.wt=u.wt;o.lgK=null;o.p5wWait=null;o.p5w=0;
+  if(!u.wk||!o.handR)return;const t=Math.min(4,Math.max(0,u.wt|0)),bow=u.wk==='bow'||u.wk==='xbow',dual=u.wk==='dagger';
+  const wk=this.p5WKey(o.cls,t);
+  if(wk&&this.p5WReady(wk)){const S=P5WS[wk];o.p5w=1;o.wglowC=P5WG[o.cls][p5WBand(t)];
+    if(S.orb){const f=this.p5WModel(wk);o.focus=f;o.wtip=f.userData.tip;o.root.add(f);return}   // the summoner's focus floats above the off hand
+    const mount=hand=>{const w=this.p5WModel(wk),g=new T.Group();g.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3(0,0,1));if(bow)g.rotateY(Math.PI/2);g.add(w);   // a bow grip sits in the fist like a hilt; its string faces the archer
+      o.pivot.updateMatrixWorld(true);const ws=new T.Vector3();hand.getWorldScale(ws);g.scale.setScalar(1/Math.max(1e-6,ws.x));hand.add(g);if(!o.wtip)o.wtip=w.userData.tip;return g};
+    if(bow&&o.handL)o.wpnL=mount(o.handL);else o.wpnR=mount(o.handR);if(dual&&o.handL)o.wpnL=mount(o.handL);return}
+  if(wk)o.p5wWait=wk;   // the Meshy weapon is still loading: show the game's own model until it is in
+  if(!this.weapon)return;
   const W=WEAPONS[u.wk],mk=W&&W.fused?(W.base||'fire'):u.wk;   // fused weapons show their base family
   const make=hand=>{const w=this.weapon(mk,t);w.updateMatrixWorld(true);const bb=new T.Box3().setFromObject(w);if(bb.isEmpty())return null;
     const ext=[[bb.min.x,bb.max.x],[bb.min.y,bb.max.y],[bb.min.z,bb.max.z]];let ax=0,len=0;ext.forEach((e,i)=>{if(e[1]-e[0]>len){len=e[1]-e[0];ax=i}});
@@ -5310,7 +5340,7 @@ const _qa=R.qnAnim;R.qnAnim=function(o,u,Tm,dt,mv){
   if(u.hero&&!o.mob&&!o.zom&&(o.p5?p5Class(u)!==o.cls:this.p5Ready(p5Class(u)))&&!o.swap){o.swap=1;this.scene.remove(o.root);this.objs.delete(u.id);return}
   if(!o.p5)return _qa.call(this,o,u,Tm,dt,mv);
   if(o.dying){o.dying=false;o.mixer.stopAllAction();o.ov=null;if(o.act.idle)o.act.idle.reset().play();if(o.act.run)o.act.run.reset().play()}
-  if(o.wk!==u.wk||o.wt!==u.wt)try{this.p5Arm(o,u)}catch(e){o.wk=u.wk;o.wt=u.wt}
+  if(o.wk!==u.wk||o.wt!==u.wt||o.p5wWait&&this.p5WReady(o.p5wWait))try{this.p5Arm(o,u)}catch(e){o.wk=u.wk;o.wt=u.wt;o.p5wWait=null}
   const play=(k,ts)=>{const a=o.act[k];if(!a)return;if(o.ov&&o.ov!==a)o.ov.fadeOut(.08);a.reset().setLoop(T.LoopOnce,1);a.clampWhenFinished=true;a.timeScale=ts;a.setEffectiveWeight(1).fadeIn(.06).play();o.ov=a;o.ovT=a.getClip().duration/ts};
   if(u.dash&&!o.dashOn){o.dashOn=1;play('dodge',2.6)}else if(!u.dash)o.dashOn=0;
   if(u.atkAnim>o.lastAtk+.05&&!(u.spinT>0))play('attack',o.cls==='warrior'?1.9:o.cls==='assassin'?2.2:1.7);
@@ -5319,10 +5349,12 @@ const _qa=R.qnAnim;R.qnAnim=function(o,u,Tm,dt,mv){
   let ow=0;if(o.ov){o.ovT-=dt;ow=clamp(o.ovT/.12,0,1);if(o.ovT<=0){o.ov.fadeOut(.12);o.ov=null;ow=0}}
   const k=o.mvK;if(o.act.idle)o.act.idle.setEffectiveWeight((1-k)*(1-ow));if(o.act.run){o.act.run.setEffectiveWeight(k*(1-ow));o.act.run.timeScale=clamp((mv||0)/260,.7,1.5)}
   o.mixer.update(dt);
+  if(o.focus&&o.handL){o.root.updateMatrixWorld(true);o.handL.getWorldPosition(this.v);o.root.worldToLocal(this.v);const f=o.focus,c=u.castAnim>0?1:0;
+    f.position.set(this.v.x*1.35,this.v.y+8+c*18+Math.sin(Tm*2.2)*4,this.v.z+14);f.rotation.y+=dt*(c?4:1.1)}
   let by=0;if(u.spinT>0||u.lotusT>0)o.body.rotation.y=(o.body.rotation.y+dt*(u.spinT>0?22:26))%(Math.PI*2);else o.body.rotation.y=0;
   if(u.leap){if(o.leapT===undefined||o.leapT<0)o.leapT=0;o.leapT+=dt;by+=Math.sin(Math.PI*Math.min(1,o.leapT/.55))*140}else o.leapT=-1;
   o.body.rotation.x=u.kb?-.25:0;o.body.position.y=by;
-  if(o.wtip&&(u.castAnim>0||u.atkAnim>0)&&Math.random()<.5){o.wtip.getWorldPosition(this.v);this.sp(true,{x:this.v.x,y:this.v.y,z:this.v.z,vy:30,l:.35,s:22,s1:4,c:FUSED[u.wk]?FUSED[u.wk].glow:u.wk==='fire'?'#ffb050':u.wk==='storm'?'#d8c8ff':'#bfefff',sp:u.wk==='fire'?3:4})}};
+  if(o.wtip&&(u.castAnim>0||u.atkAnim>0)&&Math.random()<.5){o.wtip.getWorldPosition(this.v);this.sp(true,{x:this.v.x,y:this.v.y,z:this.v.z,vy:30,l:.35,s:22,s1:4,c:o.wglowC&&o.p5w?o.wglowC:FUSED[u.wk]?FUSED[u.wk].glow:u.wk==='fire'?'#ffb050':u.wk==='storm'?'#d8c8ff':'#bfefff',sp:u.wk==='fire'?3:4})}};
 const _qd=R.qnDie;R.qnDie=function(o,dt){if(!o.p5)return _qd.call(this,o,dt);
   if(!o.dying){o.dying=true;o.ov=null;o.mixer.stopAllAction();const d=o.act.death;if(d){d.reset().setLoop(T.LoopOnce,1);d.clampWhenFinished=true;d.play();o.dieT=d.getClip().duration+.6}else o.dieT=1.4}
   o.dieT-=dt;o.mixer.update(dt);o.root.visible=o.dieT>0};

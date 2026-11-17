@@ -17,11 +17,14 @@ VILLAGE+=[k for k in ECLIPSE if k in _man]
 # Phase 5 Celestial Armory: five rigged class heroes (Arena Royale only; The Cursed Realm keeps its heroes)
 P5=['p5-warrior','p5-assassin','p5-archer','p5-mage','p5-summoner']
 VILLAGE+=[k for k in P5 if k in _man]
+# Phase 5 class weapons: normal / epic / legendary per class (Arena Royale only)
+P5W=[k for k in _man if k.startswith('p5w-')]
+VILLAGE+=P5W
 sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()
 game_files=['a.js','gi.js','b.js','c.js','r3.js','r4.js','r5.js','r6.js','r7.js','r8.js','r9.js','r10.js','r11.js','r12.js','t1.js','d.js']
 # Arena's visual layer must install before d.js initializes the renderer.
 # Keep Cursed Realm and classic builds on their original rendering path.
-if arena:game_files[-1:-1]=['arena-vfx-runtime.js','arena-vfx-skills.js']
+if arena:game_files[-1:-1]=['arena-vfx-runtime.js','arena-vfx-skills.js','arena-vfx-3d.js']
 # Eclipse Reign (boss, enemies, legendary weapons) runs in both CURSED builds; it installs after the arena VFX
 # so its own aoe kinds are drawn by eclipse-fx.js and everything else still reaches the arena layer.
 if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js','p5-heroes.js']
@@ -44,7 +47,7 @@ if sys_on:
     sh=sh.replace('<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>',(lambda t:t if cur else t.replace('THE CURSED REALM','ARENA ROYALE'))(open(os.path.join(D,'moonfall-loading.html'),encoding='utf-8').read().strip()))
     sh=re.sub(r'(<button[^>]*id="(?:soloBtn|qmBtn|hostBtn|joinBtn|lobbyStart|moonfallBtn)"[^>]*)(>)',r'\1 disabled\2',sh)
     if arena:sh=sh.replace('</head>','<script>window.CELESTIAL_KEYS='+repr(VILLAGE).replace("'",'"')+'</script>\n</head>',1)
-    else:sh=sh.replace('</head>','<script>window.CELESTIAL_SKIP='+repr(NATURE+P5).replace("'",'"')+'</script>\n</head>',1)  # Moonfall has no meadow dressing
+    else:sh=sh.replace('</head>','<script>window.CELESTIAL_SKIP='+repr(NATURE+P5+P5W).replace("'",'"')+'</script>\n</head>',1)  # Moonfall has no meadow dressing
     sh=sh.replace('<!--TURN-->','<!--TURN-->\n'+'\n'.join("<script src=\"%s\" onerror=\"moonfallCodeFailure('%s')\"></script>"%(f,f) for f in MOON),1)
 def critical_libs(text):
     if sys_on:

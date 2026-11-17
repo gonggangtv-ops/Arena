@@ -7,6 +7,17 @@
 
 ---
 
+## 2026-11-18 · Claude · อาวุธ Celestial Armory 15 ชิ้น + VFX สกิล 3D (index เท่านั้น)
+- **อาวุธ:** เจ้าของสร้างใน Meshy เอง (text-to-3d refine, ไม่ใช้เครดิตเพิ่มในงานนี้) → ย่อเหลือ 0.12–0.28 MB/ชิ้น (`p5w-*.glb`, manifest + `build.py` `P5W` → CELESTIAL_KEYS ของ index, CELESTIAL_SKIP ของ cursed)
+  - แก้โมเดล: Lunar Longbow ตัดลูกธนูที่ลอยแยก + หมุน −29° · Spirit Orb/Genesis Grimoire ตัดแท่นวาง · Hunter Bow ไม่มีสาย (ปล่อยไว้)
+  - `src/p5-heroes.js`: `P5W/P5WS` (แกนด้าม→ปลาย, จุดจับ, ความยาว) · ระดับ 0–1 → ธรรมดา, 2 → มหากาพย์, 3–4 → ตำนาน · ธนูถือแบบด้าม (แกน +Z ของมือ) · Summoner = ของลอยข้างมือซ้าย · ยังไม่โหลด = ใช้อาวุธเดิมแล้วสลับเมื่อโหลดเสร็จ
+  - `eclipse-fx.js`: อาวุธในตำนาน Eclipse บนฮีโร่ p5 ใช้ขนาด ×1.05 ของอาวุธ Meshy
+- **VFX 3D:** `src/arena-vfx-3d.js` (ใหม่, index เท่านั้น, ต่อจาก `arena-vfx-skills.js` ของ Codex) — 8 instanced batch (vortex/shock/blade/orb/beam/spike/crack/flare) + เศษหินมีแสงเงา + ใช้ `R3.flash` (เฉพาะ high) และ `R3.shakeNear`
+  - แตะไฟล์ Codex 1 บรรทัด: `arena-vfx-skills.js` `pulse()` เรียก `P.v3Pulse(style,...)` หลัง `claim` — ใช้ style ที่ choreography ตัดสินแล้ว ไม่ wrap ระบบเกม
+  - คุณภาพ: high ~360 instance + debris 140 / low ราวครึ่ง / reduced-motion ลดอีก · มีงบต่อเฟรม · ซ่อนนอกระยะมองเห็น (fow)
+- ทดสอบ (emulation): อาวุธ 5 อาชีพ × 3 ระดับในมือ (ภาพ), 18 สกิลพรีวิว high, เล่นบอทเรนเดอร์ high/low, แมตช์บอท, 0 error
+- ค้าง: FPS มือถือจริง · Hunter Bow ไม่มีสาย · ท่ายิงธนูจริง
+
 ## 2026-11-18 · Claude · Phase 5 Celestial Armory: ฮีโร่ 5 อาชีพ rig แล้ว เปลี่ยนตามอาวุธ (index เท่านั้น)
 - รายงาน: `moonfall-docs/PHASE5-CELESTIAL-ARMORY-REPORT.md` · เจ้าของอนุมัติ 115 เครดิต (rig 5 อาชีพ + 6 ท่า/อาชีพ)
 - `src/p5-heroes.js` (ใหม่, render): ห่อ `R3.objFor/qnAnim/qnDie/effects` · ฮีโร่เป็นวัตถุ `qn:1,p5:1` · อาชีพจาก `u.wk` · อาวุธเกมติดกระดูก RightHand/LeftHand
