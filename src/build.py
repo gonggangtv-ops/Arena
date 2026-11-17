@@ -5,11 +5,12 @@ cur='cursed' in sys.argv
 sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['a.js','gi.js','b.js','c.js','r3.js','r4.js','r5.js','r6.js','r7.js','r8.js','r9.js','r10.js','r11.js','r12.js','t1.js','d.js'])
 js='const CURSED='+('true' if cur else 'false')+';\n'+js
-MOON=['celestial-assets.js','celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js']
+MOON=['celestial-assets.js','celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js','moonfall-ui.js','moonfall-menu.js']
+MOONCSS=['celestial-theme.css','moonfall-ui.css','moonfall-menu.css']
 if cur:
     import re
     sh=sh.replace('<title>Arena Royale</title>','<title>The Cursed Realm</title>').replace('<meta name="theme-color" content="#0c0a08">','<meta name="theme-color" content="#080b16">')
-    sh=sh.replace('</style>','</style>\n<link rel="stylesheet" href="celestial-theme.css">',1)
+    sh=sh.replace('</style>','</style>\n'+'\n'.join('<link rel="stylesheet" href="%s">'%f for f in MOONCSS),1)
     sh=re.sub(r'  <h1>⚔️ Arena Royale</h1>\n  <div class="sub">[^\n]*</div>','  <div class="anime-kicker">MOONFALL · DARK CELESTIAL FANTASY</div>\n  <h1>The Cursed Realm</h1>\n  <div class="sub">ใต้เงาจันทราที่แตกสลาย · 32 ผู้กล้า หนึ่งตำนานบทสุดท้าย</div>',sh,count=1)
     sh=sh.replace('  <div class="msg" id="menuMsg"></div>','  <div class="row celestial-tools"><button class="go ghost small" id="moonfallBtn">☽ สำรวจ Moonfall</button><button class="go ghost small" id="celestialInfoBtn">สถานะโมเดล / Performance</button></div>\n  <div id="celestialAssetNote" role="status">กำลังตรวจสอบไฟล์โมเดล…</div>\n  <div class="msg" id="menuMsg"></div>',1)
     sh=sh.replace('  <div class="tip">','  <button class="anime-help-toggle" id="animeHelp" aria-expanded="false" aria-controls="animeGuide">วิธีเล่นและการควบคุม ▾</button>\n  <div class="tip anime-help-collapsed" id="animeGuide">',1)
@@ -25,7 +26,7 @@ else:
     st=sh[sh.index('<style>'):sh.index('</style>')+8].replace("html,body{margin:0;height:100%;","html,body{margin:0;height:100%;padding:0!important;")
     body=sh[sh.index('<body>')+6:sh.rindex('</body>')].replace('<!--LIBS-->',libs).replace('<!--TURN-->','').replace('/*GAME*/',js)
     out=('<title>The Cursed Realm</title>\n' if cur else '<title>Arena Royale</title>\n')+st+'\n'+body
-    if cur:out=out.replace(st,st+'\n<style>'+open(os.path.join(D,'celestial-theme.css'),encoding='utf-8').read()+'</style>',1)
+    if cur:out=out.replace(st,st+''.join('\n<style>'+open(os.path.join(D,f),encoding='utf-8').read()+'</style>' for f in MOONCSS),1)
     p=os.path.join(os.path.dirname(D),'cursed_artifact.html' if cur else 'artifact.html')
 open(p,'w',encoding='utf-8').write(out)
 print(p,len(out))
