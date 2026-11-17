@@ -37,10 +37,17 @@ R.eclSkModel=function(o,u,M){const a=CA().get(M.key),model=AR_GLTF.SkeletonUtils
   pivot.position.set(-(bb.min.x+bb.max.x)*sc/2,-bb.min.y*sc,-(bb.min.z+bb.max.z)*sc/2);
   model.traverse(n=>{if(n.isMesh){n.castShadow=!!this.hi;n.receiveShadow=true;n.frustumCulled=false;if(this.fow){const paint=src=>this.cached('ecl-sk-'+src.uuid,()=>{const m=src.clone();if(m.isMeshStandardMaterial){m.envMap=this.envTex||null;m.envMapIntensity=.5}return this.fow(m,{key:'ecl-sk'})});n.material=Array.isArray(n.material)?n.material.map(paint):paint(n.material)}}});
   o.sk=1;o.mixer=new T.AnimationMixer(model);o.act={};const clips=eclClips(a,u.ecl);for(const k in clips)if(clips[k])o.act[k]=o.mixer.clipAction(clips[k]);
+  o.hand=null;model.traverse(n=>{if(n.isBone&&/^(mixamorig[:_]?)?RightHand$/i.test(n.name))o.hand=n});o.pivot=pivot;try{this.eclArm(o)}catch(e){o.wpnPending=0}
   if(o.act.idle)o.act.idle.play();if(o.act.walk){o.act.walk.play();o.act.walk.setEffectiveWeight(0)}(this._eclSk||(this._eclSk=new Set())).add(o);return pivot};
+// the creatures were generated empty-handed: they carry the legendary weapon models in the rigged right hand
+const ECW={overlord:{lg:1,len:.62},sentinel:{lg:2,len:.72},construct:{lg:3,len:.62}};
+R.eclArm=function(o){const W=ECW[o.ecl];o.wpnPending=0;if(!W||!o.hand)return;const mod=this.lgModel(W.lg);if(!mod){o.wpnPending=1;return}
+  o.pivot.updateMatrixWorld(true);const ws=new T.Vector3();o.hand.getWorldScale(ws);const h=new T.Group();h.add(mod.g);
+  h.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3(0,0,1));h.scale.setScalar(o.H*W.len/(mod.L*Math.max(1e-6,ws.x)));
+  o.hand.add(h);o.wpn=h;o.wpnTip=mod.tip;o.wpnC=LEG[W.lg].c};
 R.eclPlay=function(o,key,dur){const act=o.act[key];if(!act)return;if(o.overlay&&o.overlay!==act)o.overlay.fadeOut(.12);const c=act.getClip().duration;
   act.reset().setLoop(T.LoopOnce,1);act.clampWhenFinished=true;act.timeScale=dur?clamp(c/Math.max(.3,dur),.7,2.4):1;act.setEffectiveWeight(1).fadeIn(.1).play();o.overlay=act;o.overlayT=c/act.timeScale};
-R.eclAnimSk=function(o,u,Tm,dt){if(o.dying){o.dying=0;o.mixer.stopAllAction();o.overlay=null;if(o.act.idle)o.act.idle.reset().play();if(o.act.walk)o.act.walk.reset().play()}
+R.eclAnimSk=function(o,u,Tm,dt){if(o.wpnPending&&this.eclReady(LEG[ECW[o.ecl].lg].key))try{this.eclArm(o)}catch(e){o.wpnPending=0}if(o.dying){o.dying=0;o.mixer.stopAllAction();o.overlay=null;if(o.act.idle)o.act.idle.reset().play();if(o.act.walk)o.act.walk.reset().play()}
   const A=u.ecA;if(A&&A!==o.lastA){o.lastA=A;const n=A.n,C=o.act;
     const k=n==='basic'||n==='combo'||n==='heavy'||n==='slash'?'attack':n==='slam'||n==='burst'||n==='phase'||n==='summon'?(C.slam?'slam':C.cast?'cast':'attack'):n==='ultimate'||n==='cage'||n==='rain'?(C.cast?'cast':C.slam?'slam':'attack'):n==='block'?'block':n==='stagger'?'hit':null;
     if(k&&C[k])this.eclPlay(o,k,k==='hit'||k==='block'?0:A.d)}
@@ -55,7 +62,7 @@ R.eclObj=function(u){const M=ECM[u.ecl],root=new T.Group(),body=new T.Group();ro
   if(this.eclSkReady(u.ecl)){pose.add(this.eclSkModel(o,u,M));o.body=new T.Group()}   // the generic death tilt acts on a detached body; the clip does the falling
   else{body.add(pose);const m=this.eclModel(M.key,M.H);
   if(m)pose.add(m);else{o.fallback=1;const f=this.golem(u,u.ecl!=='construct');f.root.scale.setScalar(u.ecl==='overlord'?2.4:u.ecl==='construct'?1.7:1.2);pose.add(f.root)}}
-  if(u.ecl==='overlord'){o.halo=this.mesh(this.G.torus,this.glowM('#9fc4ff',.5),0,M.H*.87,-22,40,40,40,pose);o.halo2=this.mesh(this.G.torus,this.glowM('#7a5aff',.35),0,M.H*.87,-26,52,52,52,pose)}
+  if(u.ecl==='overlord'&&!o.sk){o.halo=this.mesh(this.G.torus,this.glowM('#9fc4ff',.5),0,M.H*.87,-22,40,40,40,pose);o.halo2=this.mesh(this.G.torus,this.glowM('#7a5aff',.35),0,M.H*.87,-26,52,52,52,pose)}
   if(u.ecl==='sentinel'){o.shield=this.mesh(this.G.disc,this.glowM('#8fb0ff',.0),0,M.H*.5,34,34,34,34,pose);o.shield.visible=false}
   if(u.ecl==='construct'){o.core=this.mesh(this.G.sph,this.glowM('#9fe8ff',.8),0,M.H*.62,-30,9,9,9,pose)}   // weak point glow on the back
   this.addStatus(o,u);this.scene.add(root);this.objs.set(u.id,o);(this._eclSet||(this._eclSet=new Set())).add(o);return o};
@@ -141,7 +148,8 @@ const _fx=R.effects;R.effects=function(Tm,dt,me,L){const r=_fx.apply(this,argume
       if(u.dead&&!o.dying&&!(o.dieT>0)&&o.seenT&&now-o.seenT<400){o.dying=1;o.root.visible=true;
         if(o.sk){o.overlay=null;o.mixer.stopAllAction();const d=o.act.death;if(d){d.reset().setLoop(T.LoopOnce,1);d.clampWhenFinished=true;d.play();o.dieT=d.getClip().duration+.9}else o.dieT=1.4}else o.dieT=1.4}
       if(!u.dead&&o.dying&&!o.sk)o.dying=0;
-      if(o.sk&&o.dieT>0)o.mixer.update(dt)}}
+      if(o.sk&&o.dieT>0)o.mixer.update(dt);
+      if(o.wpnTip&&!u.dead&&o.root.visible&&Math.random()<dt*((o.overlay?24:4)*QK[fxQ(this)])){o.wpnTip.getWorldPosition(this.v);this.sp(true,{x:this.v.x+rnd(-6,6),y:this.v.y+rnd(-6,6),z:this.v.z+rnd(-6,6),vy:rnd(10,40),l:.7,s:o.overlay?18:10,s1:2,c:o.wpnC,sp:1})}}}
     this.eclAltar(Tm);const q=fxQ(this);
     for(const u of units){if(!u.hero||u.dead)continue;const o=this.objs.get(u.id);if(!o||!o.root.visible)continue;const lg=lgOf(u),h=o.wpnR||o.wpnL;
       if((lg||o.lgM)&&(o.lgK!==lg+'|'+u.wk+'|'+u.wt||o.lgH!==h))this.lgAttach(o,u);

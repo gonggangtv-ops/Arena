@@ -7,6 +7,10 @@
 
 ---
 
+## 2026-11-17 · Claude · ศัตรู Eclipse ถืออาวุธ
+- เจ้าของชี้ว่ามีไฟล์อาวุธอยู่แล้ว: Overlord ถือ Lunar Greatsword · Sentinel ถือ Eclipse Scythe · Construct ถือ Moon Staff ที่กระดูก RightHand (`ECW`/`eclArm` ใน `src/eclipse-fx.js`) + ประกายที่ปลายอาวุธ · ตัด halo วงแหวนที่ลอยแยกออกเมื่อเป็นโมเดล rig (โมเดลมี halo ของตัวเอง)
+- ทดสอบ: ภาพ idle/โจมตีทั้ง 3 ตัว, แมตช์บอท index 1 รอบ, 0 error
+
 ## 2026-11-17 · Claude · เปลี่ยนโฟกัส
 - เจ้าของสั่ง: หยุดพัฒนา `cursed.html` ก่อน เน้น `index.html` (เพิ่มเป็นกติกาข้อ 0 ใน AGENTS.md)
 ## 2026-11-17 · Claude · Phase 3 Eclipse Reign: Celestial Overlord + Dark Sentinel + Lunar Construct + อาวุธในตำนาน + VFX (PR #15, merge ตามที่เจ้าของสั่ง)

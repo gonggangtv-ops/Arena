@@ -27,6 +27,7 @@ Branch `claude/eclipse-reign-p3` → PR #15 เข้า `main` (เจ้าข
 - โครง 24 กระดูก (Meshy humanoid) · ย่อด้วย `skpack2.mjs`: เท็กซ์เจอร์ 1024, resample animation, quantize เฉพาะ normal/uv/weights (ไม่แตะ position เพื่อไม่ให้ skin เพี้ยน)
 - `celestial-assets.js` ยอม skinned สำหรับ 3 key นี้ · `eclipse-fx.js`: SkeletonUtils.clone + AnimationMixer, จับคู่ clip ตามชื่อ (fallback ตามลำดับ), สะโพกล็อก x/z (in-place), idle↔walk blend, ท่าโจมตี/ร่าย/ทุบเล่นตาม event `ec cast` ปรับความเร็วให้จบตรงจังหวะ telegraph, Sentinel ยกโล่/เซ, ท่าตายเล่นจนจบก่อนหาย
 - โมเดล static เดิมยังเป็น fallback ถ้าไฟล์ rig โหลดไม่ได้
+- ศัตรูถืออาวุธในตำนานที่กระดูก RightHand (`ECW` ใน eclipse-fx.js): Overlord = Lunar Greatsword, Sentinel = Eclipse Scythe, Construct = Moon Staff · แกนใบมีด = +Z ของกระดูกมือ (ตรวจด้วยภาพ preview 5 ทิศ)
 
 ## 2. สิ่งที่ทำ (ไฟล์)
 - `src/eclipse.js` (ใหม่, ตรรกะ host): CREEPS 3 ตัว · แท่นบูชา 1 จุด (ancient camp ที่ใกล้กลางแผนที่สุด) · ค่าย Sentinel/Construct (ห่างแท่น ≥1600) · AI · ท่าบอส 3 เฟส · block/weak point/stagger ผ่าน `dealDamage` · ดรอปอาวุธในตำนาน · proc อาวุธ
@@ -69,7 +70,7 @@ Branch `claude/eclipse-reign-p3` → PR #15 เข้า `main` (เจ้าข
 - **ยังไม่ได้ทดสอบ**: อุปกรณ์จริง (PC GPU, Android, iOS), FPS จริง, การแตะจริงบนมือถือ, memory profiling ระยะยาว — ตัวเลข FPS จาก SwiftShader ไม่มีความหมาย
 
 ## 5. งานค้าง / ข้อจำกัด
-1. ~~ไม่มี rig~~ → rig แล้วทั้ง 3 ตัว (ดูหัวข้อ Rig) · ข้อจำกัด: ปีกของ Overlord ไม่มีกระดูกแยก (ขยับตามลำตัว) · ไม่มีอาวุธในมือของศัตรู (โมเดลสร้างแบบมือเปล่า) · ท่าตีของ Overlord ใช้ Sword Judgment (มือเปล่า)
+1. ~~ไม่มี rig~~ → rig แล้วทั้ง 3 ตัว (ดูหัวข้อ Rig) · ข้อจำกัด: ปีกของ Overlord ไม่มีกระดูกแยก (ขยับตามลำตัว) · ท่าตีของ Overlord ใช้ Sword Judgment (มือเปล่า)
 2. hitbox เป็นวงกลม (r 64/28/50) ตามระบบเดิม ไม่ใช่ตามรูปปีก
 3. 2D mode ใช้ telegraph สีของ aoe เดิม (ไม่มี VFX 3D) แต่มีแถบบอส
 4. Medium quality ไม่มีตัวเลือกแยกในเมนู (= high ที่ไม่มี post)
