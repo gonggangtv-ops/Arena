@@ -15,7 +15,14 @@ VILLAGE+=[k for k in NATURE if k in _man]
 ECLIPSE=['celestial-overlord','dark-sentinel','lunar-construct','lunar-greatsword','eclipse-scythe','moon-staff']
 VILLAGE+=[k for k in ECLIPSE if k in _man]
 sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()
-js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['a.js','gi.js','b.js','c.js','r3.js','r4.js','r5.js','r6.js','r7.js','r8.js','r9.js','r10.js','r11.js','r12.js','t1.js']+(['eclipse.js','eclipse-fx.js'] if sys_on else [])+['d.js'])
+game_files=['a.js','gi.js','b.js','c.js','r3.js','r4.js','r5.js','r6.js','r7.js','r8.js','r9.js','r10.js','r11.js','r12.js','t1.js','d.js']
+# Arena's visual layer must install before d.js initializes the renderer.
+# Keep Cursed Realm and classic builds on their original rendering path.
+if arena:game_files[-1:-1]=['arena-vfx-runtime.js','arena-vfx-skills.js']
+# Eclipse Reign (boss, enemies, legendary weapons) runs in both CURSED builds; it installs after the arena VFX
+# so its own aoe kinds are drawn by eclipse-fx.js and everything else still reaches the arena layer.
+if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js']
+js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in game_files)
 js='const CURSED='+('true' if sys_on else 'false')+';const MOON='+('true' if cur else 'false')+';\n'+js
 MOON=['celestial-assets.js','celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js','moonfall-village.js','moonfall-ui.js','moonfall-menu.js','moonfall-inventory.js','moonfall-loading.js']
 MOONCSS=['celestial-theme.css','moonfall-ui.css','moonfall-menu.css','moonfall-inventory.css','moonfall-loading.css']
