@@ -119,6 +119,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <link rel="stylesheet" href="moonfall-menu.css" onerror="window.__moonfallCodeFailure='moonfall-menu.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-menu.css')">
 <link rel="stylesheet" href="moonfall-inventory.css" onerror="window.__moonfallCodeFailure='moonfall-inventory.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-inventory.css')">
 <link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
+<script>window.CELESTIAL_SKIP=["mossy-boulder", "lupine-clump", "flower-cushion", "tall-grass", "river-stones"]</script>
 </head>
 <body>
 <div id="safe"></div>
@@ -2954,7 +2955,9 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const L=(i,j)=>{i=(i+w)%w;j=(j+h)%h;const k=(j*w+i)*4;return(sd[k]*.3+sd[k+1]*.59+sd[k+2]*.11)/255};
     for(let j=0;j<h;j++)for(let i=0;i<w;i++){const dx=(L(i+1,j)-L(i-1,j))*str,dy=(L(i,j+1)-L(i,j-1))*str;const l=Math.hypot(dx,dy,1);const k=(j*w+i)*4;d[k]=(-dx/l*.5+.5)*255;d[k+1]=(dy/l*.5+.5)*255;d[k+2]=(1/l*.5+.5)*255;d[k+3]=255}
     x.putImageData(img,0,0);return c},
-  tex(k){let t=this.texC.get(k);if(t)return t;const c=this.genTex(k);t=c.cut?this.cutTex(c.c,c.cut,c.rep):this.ctex(c.c||c,c.srgb,c.rep);if(c.norm){(this.normCanvas=this.normCanvas||{})[k]={c:c.c||c,s:c.norm}}this.texC.set(k,t);return t},
+  tex(k){let t=this.texC.get(k);if(t)return t;const c=this.genTex(k);t=c.cut?this.cutTex(c.c,c.cut,c.rep):this.ctex(c.c||c,c.srgb,c.rep);if(c.norm){(this.normCanvas=this.normCanvas||{})[k]={c:c.c||c,s:c.norm}}this.texC.set(k,t);if(k==='cobble'&&typeof CURSED!=='undefined'&&CURSED)this.cobImg(t);return t},
+  // village paving baked from the Meshy cobblestone sculpt (assets/tex); the canvas setts stay until it loads
+  cobImg(t){if(typeof Image==='undefined')return;const im=new Image();im.onload=()=>{t.image=im;t.needsUpdate=true};im.src='assets/tex/cobble-meshy.jpg'},
   genTex(k){const R=mulberry32(k.length*977+k.charCodeAt(0)*13);const rnd=(a,b)=>a+R()*(b-a);
     switch(k){
     case 'grass':{const N=this.hi?1024:512,q=N/512,c=this.cvs(N),f=this.fbm(11,6,5),g=this.fbm(12,24,3),dry=this.fbm(14,3,3),sp=this.fbm(15,96,2);

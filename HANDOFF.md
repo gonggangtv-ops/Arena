@@ -7,6 +7,12 @@
 
 ---
 
+## 2026-11-17 · Claude · ของตกแต่งธรรมชาติจาก Meshy + ลายหินปูหมู่บ้านจาก Meshy (branch claude/meshy-nature)
+- เพิ่ม GLB 5 ชิ้นใน `assets/meshy/` + manifest: `mossy-boulder` `lupine-clump` `flower-cushion` `tall-grass` `river-stones` (Meshy text-to-3d, ย่อด้วย mfpack: เท็กซ์เจอร์ 1024, ~0.2 MB/ชิ้น)
+  - index โหลดผ่าน `CELESTIAL_KEYS` (build.py รวม `NATURE` อัตโนมัติเมื่ออยู่ใน manifest) → `moonfall-village.js buildNature()` วางตามริมน้ำ/ทุ่งหญ้า/ท้องน้ำ และหินมอสแทนหินเรียบเดิม
+  - cursed ไม่ใช้ของพวกนี้: build.py ใส่ `window.CELESTIAL_SKIP=NATURE` และ `celestial-assets.js` ข้าม key ใน SKIP (ไม่ต้องดาวน์โหลด ไม่บล็อกหน้าโหลด)
+- ลายหินปูหมู่บ้าน: `assets/tex/cobble-meshy.jpg` อบจากโมเดล cobblestone-ground ของ Meshy (1.2 ล้านสามเหลี่ยม ไม่มีเท็กซ์เจอร์ → แปลงเป็น heightmap → ต่อลายไร้รอยต่อทีละก้อนหิน → ใส่สี/เงา) · `r3.js tex('cobble')` ใช้ลายวาดเดิมก่อนแล้วสลับเป็นรูปนี้เมื่อโหลดเสร็จ (เฉพาะ CURSED)
+
 ## 2026-11-17 · Claude · พุ่ง 45 วิ แทนป้องกัน + หมู่บ้านปูหินทั้งโซน + น้ำใส + โครงของตกแต่งธรรมชาติ (branch claude/dash-water)
 - **พุ่ง (เจ้าของสั่ง):** `t1.js` Shift = `tpsDodge` พุ่ง 1700×0.3 วิ อมตะระหว่างพุ่ง คูลดาวน์ `DASH_CD=45` เก็บใน `u.dgcd` · เอาระบบป้องกัน (คลิกขวา/ปุ่ม 🛡) และสตามิน่าออก (`CUR.input` ส่ง `blk:false` เสมอ, ปุ่ม b1 ซ่อน, แถบสตามิน่าซ่อน) · ปุ่มพุ่งมีตัวเลขนับถอยหลัง `.dcd`
   - `c.js` ช่อง 33 ของแถวผู้เล่นตัวเอง (เดิม sta) ตอนนี้ส่ง `dgcd` · ข้อความสอนเล่นใน `moonfall-ui.js` แก้แล้ว

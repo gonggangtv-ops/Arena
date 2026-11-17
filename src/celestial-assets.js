@@ -106,8 +106,8 @@ window.CelestialAssets = (() => {
           if (!r.ok) throw Error('Asset manifest HTTP ' + r.status);
           manifest = await r.json();
           // a page may ask for only some models (Arena Royale loads just the village set)
-          const only = window.CELESTIAL_KEYS;
-          for (const [key, config] of Object.entries(manifest.assets)) if (!only || only.includes(key)) entries.set(key,{config,state:'pending'});
+          const only = window.CELESTIAL_KEYS, skip = window.CELESTIAL_SKIP || [];
+          for (const [key, config] of Object.entries(manifest.assets)) if ((!only || only.includes(key)) && !skip.includes(key)) entries.set(key,{config,state:'pending'});
           // Serialize heavyweight GLBs to limit peak decode memory.
           for (const [key,a] of entries) await load(key,a);
         } catch (e) { error = String(e.message || e); emit(); }
