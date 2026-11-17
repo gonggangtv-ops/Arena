@@ -306,7 +306,7 @@
    "verifiedTaskStatus": "SUCCEEDED"
   },
   "celestial-overlord": {
-   "name": "Celestial Overlord (boss, static mesh)",
+   "name": "Celestial Overlord (boss, Meshy auto-rig + 6 clips)",
    "taskId": "01a1e994-9a14-715f-9105-30d8606c53f1",
    "url": "assets/meshy/celestial-overlord.glb",
    "available": true,
@@ -314,11 +314,20 @@
    "biome": "eclipse",
    "taskType": "text-to-3d-refine",
    "verifiedTaskStatus": "SUCCEEDED",
-   "rigged": false,
-   "animations": []
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Slow_Orc_Walk_inplace",
+    "Sword_Judgment",
+    "Charged_Spell_Cast",
+    "Charged_Ground_Slam",
+    "Dead"
+   ],
+   "rigTaskId": "01a1e9f7-65d4-7039-a329-8e4671097bac",
+   "animationTaskId": "01a1e9f9-5727-7183-8eb0-1510c9fae885"
   },
   "dark-sentinel": {
-   "name": "Dark Sentinel (elite melee, static mesh)",
+   "name": "Dark Sentinel (elite melee, Meshy auto-rig + 6 clips)",
    "taskId": "01a1e994-ab2c-743a-84b2-c753dbf7de31",
    "url": "assets/meshy/dark-sentinel.glb",
    "available": true,
@@ -326,11 +335,20 @@
    "biome": "eclipse",
    "taskType": "text-to-3d-refine",
    "verifiedTaskStatus": "SUCCEEDED",
-   "rigged": false,
-   "animations": []
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Casual_Walk_inplace",
+    "Triple_Combo_Attack",
+    "Sword_Parry",
+    "Hit_Reaction",
+    "Dead"
+   ],
+   "rigTaskId": "01a1e9f7-3549-74b9-a788-e2da9f9d0bb8",
+   "animationTaskId": "01a1e9f9-4dfc-7175-b249-47b946d06bc6"
   },
   "lunar-construct": {
-   "name": "Lunar Construct (heavy golem, static mesh)",
+   "name": "Lunar Construct (heavy golem, Meshy auto-rig + 6 clips)",
    "taskId": "01a1e994-ba44-7630-a09c-83fe5a4b587b",
    "url": "assets/meshy/lunar-construct.glb",
    "available": true,
@@ -338,8 +356,17 @@
    "biome": "eclipse",
    "taskType": "text-to-3d-refine",
    "verifiedTaskStatus": "SUCCEEDED",
-   "rigged": false,
-   "animations": []
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Slow_Orc_Walk_inplace",
+    "Heavy_Hammer_Swing",
+    "Charged_Ground_Slam",
+    "Hit_Reaction",
+    "Knock_Down"
+   ],
+   "rigTaskId": "01a1e9f7-5230-775c-9b95-708193aa4eed",
+   "animationTaskId": "01a1e9f9-528b-7511-b930-e1c0d88360b9"
   },
   "lunar-greatsword": {
    "name": "Lunar Greatsword (legendary weapon)",

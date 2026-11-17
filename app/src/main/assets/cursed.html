@@ -5096,9 +5096,9 @@ R.eclObj=function(u){const M=ECM[u.ecl],root=new T.Group(),body=new T.Group();ro
   if(u.ecl==='overlord'){o.halo=this.mesh(this.G.torus,this.glowM('#9fc4ff',.5),0,M.H*.87,-22,40,40,40,pose);o.halo2=this.mesh(this.G.torus,this.glowM('#7a5aff',.35),0,M.H*.87,-26,52,52,52,pose)}
   if(u.ecl==='sentinel'){o.shield=this.mesh(this.G.disc,this.glowM('#8fb0ff',.0),0,M.H*.5,34,34,34,34,pose);o.shield.visible=false}
   if(u.ecl==='construct'){o.core=this.mesh(this.G.sph,this.glowM('#9fe8ff',.8),0,M.H*.62,-30,9,9,9,pose)}   // weak point glow on the back
-  this.addStatus(o,u);this.scene.add(root);this.objs.set(u.id,o);return o};
+  this.addStatus(o,u);this.scene.add(root);this.objs.set(u.id,o);(this._eclSet||(this._eclSet=new Set())).add(o);return o};
 const _ab=R.animBig;R.animBig=function(o,u,Tm){if(o.ecl)return this.eclAnim(o,u,Tm);return _ab.call(this,o,u,Tm)};
-R.eclAnim=function(o,u,Tm){const dt=Math.min(.1,Math.max(0,Tm-(o.lt||Tm)));o.lt=Tm;
+R.eclAnim=function(o,u,Tm){const dt=Math.min(.1,Math.max(0,Tm-(o.lt||Tm)));o.lt=Tm;o.seenT=performance.now();
   if((o.fallback&&this.eclReady(ECM[o.ecl].key)||!o.sk&&this.eclSkReady(o.ecl))&&!o.swap){o.swap=1;this.scene.remove(o.root);this.objs.delete(u.id);return}  // rebuilt next frame with the real model
   if(o.sk){this.eclAnimSk(o,u,Tm,dt);const P=o.pose;let y=0;if(o.ecl==='overlord'){y=10+Math.sin(Tm*1.3)*5;if(o.halo){o.halo.rotation.z=Tm*.6;o.halo2.rotation.z=-Tm*.4;o.halo.material.opacity=.35+.25*(u.ph===2?1:u.ph===1?.75:.5)+.1*Math.sin(Tm*3)}}
     P.position.set(0,y,0);P.rotation.set(0,0,0);P.scale.set(1,1,1);if(o.shield)o.shield.visible=false;if(o.core)o.core.material.opacity=.55+.35*Math.sin(Tm*4);
@@ -5174,8 +5174,12 @@ R.lgAttach=function(o,u){if(o.lgM){if(o.lgM.parent)o.lgM.parent.remove(o.lgM);o.
 
 // ---- per-frame: altar, HUD, legendary sockets + trails, bloom guard ----
 const _fx=R.effects;R.effects=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);if(!CURSED)return r;
-  try{if(this._eclSk)for(const o of this._eclSk){if(!this.objs.has(o.u.id)||this.objs.get(o.u.id)!==o){this._eclSk.delete(o);continue}
-      if(o.dieT>0){if(!o.dying){o.dying=1;o.overlay=null;o.mixer.stopAllAction();const d=o.act.death;if(d){d.reset().setLoop(T.LoopOnce,1);d.clampWhenFinished=true;d.play();o.dieT=Math.max(o.dieT,d.getClip().duration+.9)}}o.mixer.update(dt)}}
+  try{if(this._eclSet){const now=performance.now();for(const o of this._eclSet){if(this.objs.get(o.u.id)!==o){this._eclSet.delete(o);continue}const u=o.u;
+      // the unit loop hides a mob the frame it dies, before the 'die' event reaches doFx: start the death here while it was on screen a moment ago
+      if(u.dead&&!o.dying&&!(o.dieT>0)&&o.seenT&&now-o.seenT<400){o.dying=1;o.root.visible=true;
+        if(o.sk){o.overlay=null;o.mixer.stopAllAction();const d=o.act.death;if(d){d.reset().setLoop(T.LoopOnce,1);d.clampWhenFinished=true;d.play();o.dieT=d.getClip().duration+.9}else o.dieT=1.4}else o.dieT=1.4}
+      if(!u.dead&&o.dying&&!o.sk)o.dying=0;
+      if(o.sk&&o.dieT>0)o.mixer.update(dt)}}
     this.eclAltar(Tm);const q=fxQ(this);
     for(const u of units){if(!u.hero||u.dead)continue;const o=this.objs.get(u.id);if(!o||!o.root.visible)continue;const lg=lgOf(u),h=o.wpnR||o.wpnL;
       if((lg||o.lgM)&&(o.lgK!==lg+'|'+u.wk+'|'+u.wt||o.lgH!==h))this.lgAttach(o,u);

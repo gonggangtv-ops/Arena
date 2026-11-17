@@ -1,6 +1,6 @@
 # Phase 3 — Eclipse Reign · รายงานการพัฒนา (Claude, 2026-11-17)
 
-Branch `claude/eclipse-reign-p3` → PR เข้า `main` (**ยังไม่ merge — รอเจ้าของอนุมัติ**)
+Branch `claude/eclipse-reign-p3` → PR #15 เข้า `main` (เจ้าของอนุมัติให้ rig + merge 2026-11-17)
 หมายเหตุ: เอกสาร handoff สั่งให้เปิด PR เข้า `gh-pages` แต่ `AGENTS.md` ข้อ 1 ห้าม (gh-pages ถูกเขียนทับทุกครั้งที่ deploy) จึงเปิดเข้า `main` แทน — การไม่ merge = ไม่ deploy
 
 ## 1. โมเดล Meshy (ไม่ใช้เครดิตเพิ่ม)
@@ -17,6 +17,16 @@ Branch `claude/eclipse-reign-p3` → PR เข้า `main` (**ยังไม�
 
 - ทุกตัวเป็น **static mesh ไม่มี rig และไม่มี animation clip** · manifest ระบุ `rigged:false, animations:[]`
 - ทิศ: หน้าหัน +Z ตรงกับระบบเกม · pivot ปรับเป็นฐานกลางโดย `celestialAsset` · อาวุธหมุน/ตั้ง grip ใน `eclipse-fx.js` (`LGW`)
+
+### Rig + animation (เจ้าของอนุมัติเครดิต · ใช้ 69 เครดิต: rig 5×3 + animation 3×6×3)
+| ตัว | rig task | animation task | clips (เรียงตามที่สั่ง) | ไฟล์ |
+|---|---|---|---|---|
+| celestial-overlord | 01a1e9f7-65d4-7039-a329-8e4671097bac | 01a1e9f9-5727-7183-8eb0-1510c9fae885 | Combat_Stance, Slow_Orc_Walk_inplace, Sword_Judgment, Charged_Spell_Cast, Charged_Ground_Slam, Dead | 1.57 MB |
+| dark-sentinel | 01a1e9f7-3549-74b9-a788-e2da9f9d0bb8 | 01a1e9f9-4dfc-7175-b249-47b946d06bc6 | Combat_Stance, Casual_Walk_inplace, Triple_Combo_Attack, Sword_Parry, Hit_Reaction, Dead | 0.94 MB |
+| lunar-construct | 01a1e9f7-5230-775c-9b95-708193aa4eed | 01a1e9f9-528b-7511-b930-e1c0d88360b9 | Combat_Stance, Slow_Orc_Walk_inplace, Heavy_Hammer_Swing, Charged_Ground_Slam, Hit_Reaction, Knock_Down | 0.89 MB |
+- โครง 24 กระดูก (Meshy humanoid) · ย่อด้วย `skpack2.mjs`: เท็กซ์เจอร์ 1024, resample animation, quantize เฉพาะ normal/uv/weights (ไม่แตะ position เพื่อไม่ให้ skin เพี้ยน)
+- `celestial-assets.js` ยอม skinned สำหรับ 3 key นี้ · `eclipse-fx.js`: SkeletonUtils.clone + AnimationMixer, จับคู่ clip ตามชื่อ (fallback ตามลำดับ), สะโพกล็อก x/z (in-place), idle↔walk blend, ท่าโจมตี/ร่าย/ทุบเล่นตาม event `ec cast` ปรับความเร็วให้จบตรงจังหวะ telegraph, Sentinel ยกโล่/เซ, ท่าตายเล่นจนจบก่อนหาย
+- โมเดล static เดิมยังเป็น fallback ถ้าไฟล์ rig โหลดไม่ได้
 
 ## 2. สิ่งที่ทำ (ไฟล์)
 - `src/eclipse.js` (ใหม่, ตรรกะ host): CREEPS 3 ตัว · แท่นบูชา 1 จุด (ancient camp ที่ใกล้กลางแผนที่สุด) · ค่าย Sentinel/Construct (ห่างแท่น ≥1600) · AI · ท่าบอส 3 เฟส · block/weak point/stagger ผ่าน `dealDamage` · ดรอปอาวุธในตำนาน · proc อาวุธ
@@ -59,7 +69,7 @@ Branch `claude/eclipse-reign-p3` → PR เข้า `main` (**ยังไม�
 - **ยังไม่ได้ทดสอบ**: อุปกรณ์จริง (PC GPU, Android, iOS), FPS จริง, การแตะจริงบนมือถือ, memory profiling ระยะยาว — ตัวเลข FPS จาก SwiftShader ไม่มีความหมาย
 
 ## 5. งานค้าง / ข้อจำกัด
-1. **ไม่มี rig/animation**: ทั้ง 3 ตัวขยับแบบ procedural (ลอย เอน พุ่ง ยก-ทุบ ยกโล่ เซ ล้ม) ไม่ใช่ท่าโครงกระดูก — **ไม่ใช่บอสที่ animate สมบูรณ์** · ทางต่อ: Meshy auto-rig (ต้องใช้เครดิต — ต้องขออนุมัติ) เหมาะกับ Sentinel/Construct (ร่างคน) · Overlord มีปีกอาจ rig อัตโนมัติไม่ผ่าน → อาจต้อง rig เองใน Blender · โค้ดฝั่ง celestial-warrior มีระบบตรวจ clips/hand sockets ที่นำมาใช้ต่อได้
+1. ~~ไม่มี rig~~ → rig แล้วทั้ง 3 ตัว (ดูหัวข้อ Rig) · ข้อจำกัด: ปีกของ Overlord ไม่มีกระดูกแยก (ขยับตามลำตัว) · ไม่มีอาวุธในมือของศัตรู (โมเดลสร้างแบบมือเปล่า) · ท่าตีของ Overlord ใช้ Sword Judgment (มือเปล่า)
 2. hitbox เป็นวงกลม (r 64/28/50) ตามระบบเดิม ไม่ใช่ตามรูปปีก
 3. 2D mode ใช้ telegraph สีของ aoe เดิม (ไม่มี VFX 3D) แต่มีแถบบอส
 4. Medium quality ไม่มีตัวเลือกแยกในเมนู (= high ที่ไม่มี post)

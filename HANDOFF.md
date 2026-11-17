@@ -3,18 +3,19 @@
 เขียนรายการใหม่ไว้บนสุด รูปแบบ: `## YYYY-MM-DD · ใคร · เรื่อง` แล้วตามด้วย ทำอะไร / ไฟล์ / ทดสอบ / ค้าง
 
 ## กำลังทำ (อัปเดตเมื่อเริ่ม/จบงาน)
-- Claude · PR `claude/eclipse-reign-p3` รอเจ้าของอนุมัติ (ยังไม่ merge) — `src/eclipse.js` `src/eclipse-fx.js` ใหม่ · แตะ `src/c.js` `src/r4.js` `src/build.py` เล็กน้อย
+- ไม่มี
 
 ---
 
 ## 2026-11-17 · Claude · เปลี่ยนโฟกัส
 - เจ้าของสั่ง: หยุดพัฒนา `cursed.html` ก่อน เน้น `index.html` (เพิ่มเป็นกติกาข้อ 0 ใน AGENTS.md)
-## 2026-11-17 · Claude · Phase 3 Eclipse Reign: Celestial Overlord + Dark Sentinel + Lunar Construct + อาวุธในตำนาน + VFX (branch claude/eclipse-reign-p3, PR รออนุมัติ)
+## 2026-11-17 · Claude · Phase 3 Eclipse Reign: Celestial Overlord + Dark Sentinel + Lunar Construct + อาวุธในตำนาน + VFX (PR #15, merge ตามที่เจ้าของสั่ง)
 - รายงานเต็ม: `moonfall-docs/PHASE3-ECLIPSE-REIGN-REPORT.md`
 - `src/eclipse.js` (host logic, CURSED): ห่อ `genWorld` (แท่น + เปลี่ยนชนิดค่าย ไม่เปลี่ยน id/ตำแหน่ง), `mkMob`, `setMobStats`, `mobThink`, `dealDamage` (block/weak point/poise), `hitArea` (`a.safe`), `kill` (ดรอป), `basic` (proc), `equipWeapon`, `applyEvent` (event `{t:'ec'}`) · aoe kind ใหม่ต่อท้าย `AOE_KINDS` (ห้ามแทรกกลาง — index ใช้ในแพ็กเก็ต)
 - `src/eclipse-fx.js` (render): ห่อ `R3.objFor/animBig/aoeVis/effects`, `drawTarget` (แถบบอสแทนกรอบศัตรูเดิมเมื่อเป็น Overlord)
 - อาวุธในตำนาน = `wv` bit 15–16 (1 greatsword/gsword, 2 scythe/axe, 3 staff/frost) · `heroRow` ช่อง 16 ส่ง id นี้ · `mobRow` ของบริวารต่อท้าย `-1, EK index`
-- โมเดล 6 ตัว static (ไม่มี rig) — การเคลื่อนไหวเป็น procedural · rig ต้องใช้เครดิต Meshy (ยังไม่ขอ)
+- เจ้าของอนุมัติ rig + merge: Overlord/Sentinel/Construct rig ด้วย Meshy (69 เครดิต) 6 clips/ตัว → `eclipse-fx.js` เล่นด้วย AnimationMixer (static mesh เป็น fallback) · loader ยอม skinned เฉพาะ 3 key นี้
+- พบปัญหาเดิมของเกม: unit loop ซ่อน mob ที่ตายก่อน event 'die' ถึง doFx ทำให้ mob ทั่วไปไม่มีท่าตาย — แก้เฉพาะตัว Eclipse (เริ่มท่าตายใน hook ของ eclipse-fx) ตัวอื่นยังเหมือนเดิม
 - ทดสอบ (emulation): ครบทุกเฟส/ท่า/วงปลอดภัย/ดรอป/ติดอาวุธ/proc/ศัตรู ทั้ง index (low) และ cursed (high) · บอท 4 แมตช์ · ออนไลน์ 2 เครื่อง · ยังไม่ทดสอบเครื่องจริง
 
 ## 2026-11-17 · Codex · Arena skill VFX (`codex/arena-skill-vfx`)
