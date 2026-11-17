@@ -121,14 +121,15 @@ window.installMoonfallBiome=function(P){
     this.instC(this.G.cylT,this.std('#514a49',.96,0),[...replacements],(t,add)=>
       add(t.x,this.gY(t.x,t.y)+13,t.y,t.r,26,t.r,0,t.ph,0,null),this.hi);
     this.biomeCounts.treeCollidersRepresented=replacements.size;
-    if(this.gGrass){this.gGrass.material.color.set('#89929c');}
+    // Upright grass cards catch almost no light from above and read as black spikes: light them like the ground they stand on.
+    if(this.gGrass){this.gGrass.material.color.set('#c9d2de');const nm=this.gGrass.geometry.attributes.normal;if(nm){for(let i=0;i<nm.count;i++)nm.setXYZ(i,0,1,0);nm.needsUpdate=true}}
     if(this.gFlow)this.gFlow.material.color.set('#a7b6c8');
   };
   P.updateGround=function(x,y){
-    const previous=this.gGrass?.userData.cell,result=base.ground.call(this,x,y);
-    // Cosmetic ground cover is sparse. Tall hiding-grass volumes are retained.
-    if(enabled&&this.gGrass?.userData.cell!==previous){coolColors(this.gGrass,this.hi?2:3);coolColors(this.gFlow,this.hi?2:3);}
-    return result;
+    // Sparse, cool-toned ground cover. Thinning and tinting are done per tuft inside the base loop
+    // (deterministic by tuft position) so the same tufts stay put while the hero walks.
+    this.gThin=enabled?(this.hi?2:3):0;this.gCool=enabled;
+    return base.ground.call(this,x,y);
   };
   P.buildRocks=function(){
     if(!enabled)return base.rocks.call(this);
