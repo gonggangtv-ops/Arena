@@ -20,20 +20,51 @@ R.lgModel=function(lg){const L=LEG[lg],W=LGW[lg];if(!this.eclReady(L.key))return
   r.position.set(-(bb.min.x+bb.max.x)/2,-(bb.min.y+Lm*W.grip),-(bb.min.z+bb.max.z)/2);const w=new T.Group();w.add(r);
   const tip=new T.Object3D();tip.position.y=Lm*(1-W.grip)*.92;w.add(tip);return{g:w,L:Lm,tip}};
 
+// ---- rigged creatures (Meshy auto-rig + animation pack): clips are matched by name, falling back to the order they were ordered in ----
+const ECLIP={
+  sentinel:{order:['idle','walk','attack','block','hit','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Triple_Combo|Combo|Attack/i,block:/Parry|Block/i,hit:/Hit_Reaction|Hit/i,death:/Dead|Death|Dying/i},
+  construct:{order:['idle','walk','attack','slam','hit','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Hammer|Swing/i,slam:/Ground_Slam|Slam/i,hit:/Hit_Reaction|Hit/i,death:/Knock_Down|Dead|Death/i},
+  overlord:{order:['idle','walk','attack','cast','slam','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Judgment|Sword/i,cast:/Spell|Cast/i,slam:/Ground_Slam|Slam/i,death:/Dead|Death/i}};
+R.eclSkReady=function(ecl){const A=CA(),a=A&&A.get(ECM[ecl].key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations&&a.gltf.animations.length>=2&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
+// in-place clips: the game moves the unit, so the hip bone keeps only its height
+const eclClips=(a,ecl)=>{if(a._eclClips)return a._eclClips;const C=ECLIP[ecl],list=a.gltf.animations,used=new Set(),out={};
+  const inPlace=c=>{const k=c.clone();for(const t of k.tracks){if(!/\.position$/.test(t.name)||!/hips|pelvis|root/i.test(t.name))continue;const v=t.values,x0=v[0],z0=v[2];for(let i=0;i<v.length;i+=3){v[i]=x0;v[i+2]=z0}}return k};
+  for(const key of C.order){let c=list.find(c=>!used.has(c)&&C[key].test(c.name));if(c)used.add(c);out[key]=c}
+  C.order.forEach((key,i)=>{if(!out[key]&&list[i]&&!used.has(list[i])){out[key]=list[i];used.add(list[i])}});
+  for(const k in out)if(out[k])out[k]=inPlace(out[k]);return a._eclClips=out};
+R.eclSkModel=function(o,u,M){const a=CA().get(M.key),model=AR_GLTF.SkeletonUtils.clone(a.gltf.scene);model.rotation.y+=a.config.rotationY||0;model.updateMatrixWorld(true);
+  const bb=new T.Box3().setFromObject(model,true),size=bb.getSize(new T.Vector3()),sc=M.H/Math.max(1e-4,size.y),pivot=new T.Group();pivot.scale.setScalar(sc);pivot.add(model);
+  pivot.position.set(-(bb.min.x+bb.max.x)*sc/2,-bb.min.y*sc,-(bb.min.z+bb.max.z)*sc/2);
+  model.traverse(n=>{if(n.isMesh){n.castShadow=!!this.hi;n.receiveShadow=true;n.frustumCulled=false;if(this.fow){const paint=src=>this.cached('ecl-sk-'+src.uuid,()=>{const m=src.clone();if(m.isMeshStandardMaterial){m.envMap=this.envTex||null;m.envMapIntensity=.5}return this.fow(m,{key:'ecl-sk'})});n.material=Array.isArray(n.material)?n.material.map(paint):paint(n.material)}}});
+  o.sk=1;o.mixer=new T.AnimationMixer(model);o.act={};const clips=eclClips(a,u.ecl);for(const k in clips)if(clips[k])o.act[k]=o.mixer.clipAction(clips[k]);
+  if(o.act.idle)o.act.idle.play();if(o.act.walk){o.act.walk.play();o.act.walk.setEffectiveWeight(0)}(this._eclSk||(this._eclSk=new Set())).add(o);return pivot};
+R.eclPlay=function(o,key,dur){const act=o.act[key];if(!act)return;if(o.overlay&&o.overlay!==act)o.overlay.fadeOut(.12);const c=act.getClip().duration;
+  act.reset().setLoop(T.LoopOnce,1);act.clampWhenFinished=true;act.timeScale=dur?clamp(c/Math.max(.3,dur),.7,2.4):1;act.setEffectiveWeight(1).fadeIn(.1).play();o.overlay=act;o.overlayT=c/act.timeScale};
+R.eclAnimSk=function(o,u,Tm,dt){if(o.dying){o.dying=0;o.mixer.stopAllAction();o.overlay=null;if(o.act.idle)o.act.idle.reset().play();if(o.act.walk)o.act.walk.reset().play()}
+  const A=u.ecA;if(A&&A!==o.lastA){o.lastA=A;const n=A.n,C=o.act;
+    const k=n==='basic'||n==='combo'||n==='heavy'||n==='slash'?'attack':n==='slam'||n==='burst'||n==='phase'||n==='summon'?(C.slam?'slam':C.cast?'cast':'attack'):n==='ultimate'||n==='cage'||n==='rain'?(C.cast?'cast':C.slam?'slam':'attack'):n==='block'?'block':n==='stagger'?'hit':null;
+    if(k&&C[k])this.eclPlay(o,k,k==='hit'||k==='block'?0:A.d)}
+  const mk=o.mvK;let ow=0;if(o.overlay){o.overlayT-=dt;ow=clamp(o.overlayT/.15,0,1);if(o.overlayT<=0){o.overlay.fadeOut(.15);o.overlay=null;ow=0}}
+  if(o.act.idle)o.act.idle.setEffectiveWeight((1-mk)*(1-ow));if(o.act.walk){o.act.walk.setEffectiveWeight(mk*(1-ow));o.act.walk.timeScale=clamp((u.spdBase||140)/140,.7,1.4)}
+  o.mixer.update(dt)};
 // ---- creatures ----
 const _of=R.objFor;R.objFor=function(u){if(u.ecl&&!this.objs.get(u.id))return this.eclObj(u);return _of.call(this,u)};
 R.eclObj=function(u){const M=ECM[u.ecl],root=new T.Group(),body=new T.Group();root.add(body);
   const o={kind:'ecl',ecl:u.ecl,root,body,u,lx:u.x,ly:u.y,rot:Math.atan2(u.fx,u.fy),walk:0,mvK:0,atkPh:0,H:M.H};
-  const pose=new T.Group();body.add(pose);o.pose=pose;
-  const m=this.eclModel(M.key,M.H);
-  if(m)pose.add(m);else{o.fallback=1;const f=this.golem(u,u.ecl!=='construct');f.root.scale.setScalar(u.ecl==='overlord'?2.4:u.ecl==='construct'?1.7:1.2);pose.add(f.root)}
+  const pose=new T.Group();root.add(pose);o.pose=pose;
+  if(this.eclSkReady(u.ecl)){pose.add(this.eclSkModel(o,u,M));o.body=new T.Group()}   // the generic death tilt acts on a detached body; the clip does the falling
+  else{body.add(pose);const m=this.eclModel(M.key,M.H);
+  if(m)pose.add(m);else{o.fallback=1;const f=this.golem(u,u.ecl!=='construct');f.root.scale.setScalar(u.ecl==='overlord'?2.4:u.ecl==='construct'?1.7:1.2);pose.add(f.root)}}
   if(u.ecl==='overlord'){o.halo=this.mesh(this.G.torus,this.glowM('#9fc4ff',.5),0,M.H*.87,-22,40,40,40,pose);o.halo2=this.mesh(this.G.torus,this.glowM('#7a5aff',.35),0,M.H*.87,-26,52,52,52,pose)}
   if(u.ecl==='sentinel'){o.shield=this.mesh(this.G.disc,this.glowM('#8fb0ff',.0),0,M.H*.5,34,34,34,34,pose);o.shield.visible=false}
   if(u.ecl==='construct'){o.core=this.mesh(this.G.sph,this.glowM('#9fe8ff',.8),0,M.H*.62,-30,9,9,9,pose)}   // weak point glow on the back
   this.addStatus(o,u);this.scene.add(root);this.objs.set(u.id,o);return o};
 const _ab=R.animBig;R.animBig=function(o,u,Tm){if(o.ecl)return this.eclAnim(o,u,Tm);return _ab.call(this,o,u,Tm)};
 R.eclAnim=function(o,u,Tm){const dt=Math.min(.1,Math.max(0,Tm-(o.lt||Tm)));o.lt=Tm;
-  if(o.fallback&&this.eclReady(ECM[o.ecl].key)&&!o.swap){o.swap=1;this.scene.remove(o.root);this.objs.delete(u.id);return}  // rebuilt next frame with the real model
+  if((o.fallback&&this.eclReady(ECM[o.ecl].key)||!o.sk&&this.eclSkReady(o.ecl))&&!o.swap){o.swap=1;this.scene.remove(o.root);this.objs.delete(u.id);return}  // rebuilt next frame with the real model
+  if(o.sk){this.eclAnimSk(o,u,Tm,dt);const P=o.pose;let y=0;if(o.ecl==='overlord'){y=10+Math.sin(Tm*1.3)*5;if(o.halo){o.halo.rotation.z=Tm*.6;o.halo2.rotation.z=-Tm*.4;o.halo.material.opacity=.35+.25*(u.ph===2?1:u.ph===1?.75:.5)+.1*Math.sin(Tm*3)}}
+    P.position.set(0,y,0);P.rotation.set(0,0,0);P.scale.set(1,1,1);if(o.shield)o.shield.visible=false;if(o.core)o.core.material.opacity=.55+.35*Math.sin(Tm*4);
+    if(o.ecl==='overlord'&&Math.random()<dt*(4+8*fxQ(this))){const a=Math.random()*6.283;this.sp(true,{x:u.x+Math.cos(a)*rnd(40,120),y:o.gy+rnd(40,o.H),z:u.y+Math.sin(a)*rnd(40,120),vy:rnd(10,40),l:1.2,s:10,s1:2,c:u.ph===2?'#b08aff':'#9fc4ff',sp:1})}return}
   const P=o.pose,H=o.H,k=o.mvK,ph=o.walk*.6;let y=Math.abs(Math.sin(ph))*4*k+Math.sin(Tm*1.6+u.id)*1.2,rx=0,rz=Math.sin(ph)*.045*k,z=0,sc=1+Math.sin(Tm*1.7+u.id)*.012;
   if(o.ecl==='overlord'){y+=16+Math.sin(Tm*1.3)*7;if(o.halo){o.halo.rotation.z=Tm*.6;o.halo2.rotation.z=-Tm*.4;const f=u.ph===2?1:u.ph===1?.75:.5;o.halo.material.opacity=.35+.25*f+.1*Math.sin(Tm*3)}}
   const A=u.ecA;if(A&&A.t>0){A.t-=dt;const p=1-Math.max(0,A.t)/A.d;
@@ -105,7 +136,9 @@ R.lgAttach=function(o,u){if(o.lgM){if(o.lgM.parent)o.lgM.parent.remove(o.lgM);o.
 
 // ---- per-frame: altar, HUD, legendary sockets + trails, bloom guard ----
 const _fx=R.effects;R.effects=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);if(!CURSED)return r;
-  try{this.eclAltar(Tm);const q=fxQ(this);
+  try{if(this._eclSk)for(const o of this._eclSk){if(!this.objs.has(o.u.id)||this.objs.get(o.u.id)!==o){this._eclSk.delete(o);continue}
+      if(o.dieT>0){if(!o.dying){o.dying=1;o.overlay=null;o.mixer.stopAllAction();const d=o.act.death;if(d){d.reset().setLoop(T.LoopOnce,1);d.clampWhenFinished=true;d.play();o.dieT=Math.max(o.dieT,d.getClip().duration+.9)}}o.mixer.update(dt)}}
+    this.eclAltar(Tm);const q=fxQ(this);
     for(const u of units){if(!u.hero||u.dead)continue;const o=this.objs.get(u.id);if(!o||!o.root.visible)continue;const lg=lgOf(u),h=o.wpnR||o.wpnL;
       if((lg||o.lgM)&&(o.lgK!==lg+'|'+u.wk+'|'+u.wt||o.lgH!==h))this.lgAttach(o,u);
       if(o.lgTip&&Math.random()<dt*((u.atkAnim>0?40:5)*QK[q])){o.lgTip.getWorldPosition(this.v);this.sp(true,{x:this.v.x+rnd(-5,5),y:this.v.y+rnd(-5,5),z:this.v.z+rnd(-5,5),vy:rnd(10,40),l:u.atkAnim>0?.5:.8,s:u.atkAnim>0?16:9,s1:2,c:o.lgC,sp:1})}}
