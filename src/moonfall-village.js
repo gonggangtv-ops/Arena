@@ -18,7 +18,7 @@ window.installMoonfallVillage=function(P){
       prepared.set(key,parts);return parts};
     if(A)A.start();
     // the models arrive after the first world build: rebuild the village once they are in
-    if(A)A.subscribe(()=>{if(R3.ok&&WD&&R3.world===WD&&!P._villageDone&&['house-cottage','house-long','house-witch','market-stall','village-well','street-lantern','stone-bridge','plaza-fountain'].every(k=>A.get(k)&&A.get(k).state==='loaded')){P._villageDone=1;R3.world=null}})}
+    if(A)A.subscribe(()=>{if(R3.ok&&WD&&R3.world===WD&&!P._villageDone&&(window.CELESTIAL_KEYS||['house-cottage']).every(k=>A.get(k)&&A.get(k).state==='loaded')){P._villageDone=1;R3.world=null}})}
   // r3 asks this before drawing its own well / fountain / lantern / bridge / stall, so nothing is drawn twice
   P.mfProp=function(key){if(typeof CURSED==='undefined'||!CURSED||!A)return false;const a=A.get(key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.size)};
   const keyFor=h=>h.style==='witch'?'house-witch':(Math.max(h.w,h.h)/Math.min(h.w,h.h)>1.28||h.seed%3===0?'house-long':'house-cottage');
@@ -59,5 +59,27 @@ window.installMoonfallVillage=function(P){
           const geo=T.BufferGeometryUtils?T.BufferGeometryUtils.mergeGeometries(geos):null;
           if(geo){const m=new T.Mesh(geo,p.mat);m.castShadow=this.hi;m.receiveShadow=true;m.userData.ownGeo=1;g.add(m)}else for(const q of geos){const m=new T.Mesh(q,p.mat);m.castShadow=this.hi;m.receiveShadow=true;g.add(m)}}
         this.scene.add(g)}}
+    if(typeof MOON==='undefined'||!MOON)this.buildNature();
   };
+  // ---- Arena Royale nature dressing: mossy boulders, wildflowers by the river, clear-water river stones (decor only, no collision) ----
+  P.buildNature=function(){const tg=WD.tg,n=tg.n,C=tg.C,hg=tg.hg,dens=this.gdens;if(!tg||!dens)return;
+    const hash=(x,y,s)=>{const v=Math.sin(x*12.9898+y*78.233+s*37.719)*43758.5453;return v-Math.floor(v)},sz=k=>{const a=A.get(k);return a&&a.inspection&&a.inspection.size};
+    const inst=(key,items,size)=>{if(!this.mfProp(key)||!items.length)return;const s=sz(key),parts=this.celestialAsset(key);
+      for(const p of parts)this.instC(p.geo,p.mat,items,(q,add)=>{const k=size(q,s);add(q.x,this.gY(q.x,q.y)+(q.dy||0)-1,q.y,k[0],k[1],k[2],0,q.a,0,null)},true)};
+    // mossy boulders take over the plain meadow rocks (same spot, same collision)
+    inst('mossy-boulder',WD.rocks.filter(r=>this.plainRock(r)).map(r=>({x:r.x,y:r.y,r:r.r,a:hash(r.x,r.y,1)*6.283,dy:-r.r*.12})),(q,s)=>{const W=q.r*2.35,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k*1.05,s[2]*k]});
+    const wet=(i,j,R)=>{for(let b=-R;b<=R;b+=1)for(let a=-R;a<=R;a+=1){const ii=i+a,jj=j+b;if(ii>=0&&jj>=0&&ii<n&&jj<n&&hg[jj*n+ii]<WL-1)return true}return false};
+    const stones=[],lupine=[],cushion=[],tall=[];
+    for(let j=2;j<n-2;j+=2)for(let i=2;i<n-2;i+=2){const k=j*n+i,h=hg[k],x=(i+hash(i,j,2))*C,y=(j+hash(i,j,3))*C,r=hash(i,j,4);
+      if(h<WL-1){if(h>WL-18&&r<.09)stones.push({x,y,w:46+hash(i,j,5)*60,a:hash(i,j,6)*6.283,dy:-2});continue}
+      if(h<WL+3){if(r<.32)stones.push({x,y,w:55+hash(i,j,5)*70,a:hash(i,j,6)*6.283});continue}
+      if(!dens[k]||dens[k]<160)continue;const nearW=h<WL+28&&wet(i,j,5);
+      const p=nearW?.34:WD.noise(x,y)<.44?.035:.012;if(r>p)continue;const t=hash(i,j,7);const it={x,y,a:hash(i,j,8)*6.283,s:.75+hash(i,j,9)*.6};
+      (t<.34?lupine:t<.68?cushion:tall).push(it)}
+    inst('river-stones',stones,(q,s)=>{const k=q.w/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
+    inst('lupine-clump',lupine,(q,s)=>{const H=58*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
+    inst('flower-cushion',cushion,(q,s)=>{const W=58*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
+    inst('tall-grass',tall,(q,s)=>{const H=50*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
+    this.natureCounts={stones:stones.length,lupine:lupine.length,cushion:cushion.length,tall:tall.length}};
+  P.plainRock=function(r){return !r.prop&&!r.edge&&!r.cliff&&r.cave===undefined&&(typeof MOON==='undefined'||!MOON)&&this.mfProp('mossy-boulder')};
 };
