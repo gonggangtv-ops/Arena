@@ -304,6 +304,78 @@
    "biome": "arena",
    "taskType": "text-to-3d",
    "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "celestial-overlord": {
+   "name": "Celestial Overlord (boss, static mesh)",
+   "taskId": "01a1e994-9a14-715f-9105-30d8606c53f1",
+   "url": "assets/meshy/celestial-overlord.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "dark-sentinel": {
+   "name": "Dark Sentinel (elite melee, static mesh)",
+   "taskId": "01a1e994-ab2c-743a-84b2-c753dbf7de31",
+   "url": "assets/meshy/dark-sentinel.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "lunar-construct": {
+   "name": "Lunar Construct (heavy golem, static mesh)",
+   "taskId": "01a1e994-ba44-7630-a09c-83fe5a4b587b",
+   "url": "assets/meshy/lunar-construct.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "lunar-greatsword": {
+   "name": "Lunar Greatsword (legendary weapon)",
+   "taskId": "01a1e994-ca3f-747d-af1e-cff70b42a5a4",
+   "url": "assets/meshy/lunar-greatsword.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "eclipse-scythe": {
+   "name": "Eclipse Scythe (legendary weapon)",
+   "taskId": "01a1e994-daa8-7076-a9e4-bc5cd60ee263",
+   "url": "assets/meshy/eclipse-scythe.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "moon-staff": {
+   "name": "Moon Staff (legendary weapon)",
+   "taskId": "01a1e994-eb99-710a-b535-2ce5b760958a",
+   "url": "assets/meshy/moon-staff.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
   }
  },
  "warrior": {
