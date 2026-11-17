@@ -214,6 +214,46 @@
    "biome": "moonfall",
    "taskType": "text-to-3d",
    "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "village-well": {
+   "name": "Village stone well",
+   "taskId": "01a1e8c1-8a21-714e-93ea-31f2340d553e",
+   "url": "assets/meshy/village-well.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "street-lantern": {
+   "name": "Iron street lantern",
+   "taskId": "01a1e821-5e7f-7732-a02b-97302734db44",
+   "url": "assets/meshy/street-lantern.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "stone-bridge": {
+   "name": "Stone bridge arch segment",
+   "taskId": "01a1e821-7f8d-71a6-b6eb-4d1d6a409d90",
+   "url": "assets/meshy/stone-bridge.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "plaza-fountain": {
+   "name": "Plaza fountain",
+   "taskId": "01a1e821-9fe0-748a-b683-a14d5548d563",
+   "url": "assets/meshy/plaza-fountain.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
   }
  },
  "warrior": {
