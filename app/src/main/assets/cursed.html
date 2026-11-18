@@ -5264,7 +5264,8 @@ const P5={warrior:'p5-warrior',assassin:'p5-assassin',archer:'p5-archer',mage:'p
 const P5C={order:['idle','run','attack','cast','dodge','death'],idle:/Combat_Stance|idle/i,run:/Run/i,attack:/Slash|Combo|Shot|Soell|mage_|Attack/i,cast:/Charged|Spin|Spell_Cast/i,dodge:/Roll|Dodge/i,death:/Dead|Death/i};
 const P5H=138;   // hero height in world units (Quaternius heroes are ~140)
 const CA=()=>window.CelestialAssets;
-const p5Class=u=>{const k=u&&u.wk;if(!k)return'warrior';if(typeof FUSED!=='undefined'&&FUSED[k])return'summoner';
+// the Spirit Tome (summoner.js) is the Summoner; a fused weapon keeps the class of the weapon it was forged on
+const p5Class=u=>{let k=u&&u.wk;if(!k)return'warrior';if(k==='soul')return'summoner';if(typeof FUSED!=='undefined'&&FUSED[k])k=FUSED[k].base||k;
   return k==='dagger'?'assassin':k==='bow'||k==='xbow'?'archer':k==='fire'||k==='frost'||k==='storm'?'mage':'warrior'};
 R.p5Ready=function(cls){const A=CA(),a=A&&A.get(P5[cls]);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations.length>=4&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 const p5Clips=a=>{if(a._p5)return a._p5;const list=a.gltf.animations,used=new Set(),out={};
@@ -5315,7 +5316,7 @@ R.p5WModel=function(k){if(!this.p5WReady(k))return null;const S=P5WS[k],a=CA().g
   al.position.set(-gx,-gy,-(bb.min.z+bb.max.z)/2);const w=new T.Group();w.add(al);w.scale.setScalar(S.len/Math.max(1e-6,L));
   const tip=new T.Object3D();tip.position.y=(bb.max.y-gy)*.9;w.add(tip);w.userData.tip=tip;return w};
 R.p5Arm=function(o,u){for(const w of[o.wpnR,o.wpnL,o.focus])if(w&&w.parent)w.parent.remove(w);o.wpnR=o.wpnL=o.wtip=o.focus=null;o.wk=u.wk;o.wt=u.wt;o.lgK=null;o.p5wWait=null;o.p5w=0;
-  if(!u.wk||!o.handR)return;const t=Math.min(4,Math.max(0,u.wt|0)),bow=u.wk==='bow'||u.wk==='xbow',dual=u.wk==='dagger';
+  if(!u.wk||!o.handR)return;const t=Math.min(4,Math.max(0,u.wt|0)),bk=typeof FUSED!=='undefined'&&FUSED[u.wk]?FUSED[u.wk].base:u.wk,bow=bk==='bow'||bk==='xbow',dual=bk==='dagger';
   const wk=this.p5WKey(o.cls,t);
   if(wk&&this.p5WReady(wk)){const S=P5WS[wk];o.p5w=1;o.wglowC=P5WG[o.cls][p5WBand(t)];
     if(S.orb){const f=this.p5WModel(wk);o.focus=f;o.wtip=f.userData.tip;o.root.add(f);return}   // the summoner's focus floats above the off hand

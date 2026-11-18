@@ -5905,7 +5905,8 @@ const P5={warrior:'p5-warrior',assassin:'p5-assassin',archer:'p5-archer',mage:'p
 const P5C={order:['idle','run','attack','cast','dodge','death'],idle:/Combat_Stance|idle/i,run:/Run/i,attack:/Slash|Combo|Shot|Soell|mage_|Attack/i,cast:/Charged|Spin|Spell_Cast/i,dodge:/Roll|Dodge/i,death:/Dead|Death/i};
 const P5H=138;   // hero height in world units (Quaternius heroes are ~140)
 const CA=()=>window.CelestialAssets;
-const p5Class=u=>{const k=u&&u.wk;if(!k)return'warrior';if(typeof FUSED!=='undefined'&&FUSED[k])return'summoner';
+// the Spirit Tome (summoner.js) is the Summoner; a fused weapon keeps the class of the weapon it was forged on
+const p5Class=u=>{let k=u&&u.wk;if(!k)return'warrior';if(k==='soul')return'summoner';if(typeof FUSED!=='undefined'&&FUSED[k])k=FUSED[k].base||k;
   return k==='dagger'?'assassin':k==='bow'||k==='xbow'?'archer':k==='fire'||k==='frost'||k==='storm'?'mage':'warrior'};
 R.p5Ready=function(cls){const A=CA(),a=A&&A.get(P5[cls]);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations.length>=4&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 const p5Clips=a=>{if(a._p5)return a._p5;const list=a.gltf.animations,used=new Set(),out={};
@@ -5956,7 +5957,7 @@ R.p5WModel=function(k){if(!this.p5WReady(k))return null;const S=P5WS[k],a=CA().g
   al.position.set(-gx,-gy,-(bb.min.z+bb.max.z)/2);const w=new T.Group();w.add(al);w.scale.setScalar(S.len/Math.max(1e-6,L));
   const tip=new T.Object3D();tip.position.y=(bb.max.y-gy)*.9;w.add(tip);w.userData.tip=tip;return w};
 R.p5Arm=function(o,u){for(const w of[o.wpnR,o.wpnL,o.focus])if(w&&w.parent)w.parent.remove(w);o.wpnR=o.wpnL=o.wtip=o.focus=null;o.wk=u.wk;o.wt=u.wt;o.lgK=null;o.p5wWait=null;o.p5w=0;
-  if(!u.wk||!o.handR)return;const t=Math.min(4,Math.max(0,u.wt|0)),bow=u.wk==='bow'||u.wk==='xbow',dual=u.wk==='dagger';
+  if(!u.wk||!o.handR)return;const t=Math.min(4,Math.max(0,u.wt|0)),bk=typeof FUSED!=='undefined'&&FUSED[u.wk]?FUSED[u.wk].base:u.wk,bow=bk==='bow'||bk==='xbow',dual=bk==='dagger';
   const wk=this.p5WKey(o.cls,t);
   if(wk&&this.p5WReady(wk)){const S=P5WS[wk];o.p5w=1;o.wglowC=P5WG[o.cls][p5WBand(t)];
     if(S.orb){const f=this.p5WModel(wk);o.focus=f;o.wtip=f.userData.tip;o.root.add(f);return}   // the summoner's focus floats above the off hand
@@ -6005,6 +6006,192 @@ const _fx=R.effects;R.effects=function(Tm,dt,me,L){const r=_fx.apply(this,argume
     for(const u of units){if(!u.hero||u.dead)continue;const o=this.objs.get(u.id);if(o&&o.p5&&o.root.visible)o.seen=performance.now()}}catch(e){}
   return r};
 window.P5_CLASS=p5Class;
+})();
+
+// ===================== SUMMONER · คัมภีร์วิญญาณ (Claude, 2026-11-18 · Arena Royale only) =====================
+// A fifth weapon family: the Spirit Tome. Whoever holds it becomes the Summoner and fights through spirits:
+//  Q  อัญเชิญภูติ       — call spirit wisps (ranged soul bolts); from level 3 a spirit wolf joins them
+//  E  บัญชาวิญญาณ      — hurl a soul lance at a foe; every spirit you own hunts it, empowered and healed
+//  R  อัญเชิญผู้พิทักษ์จันทรา — a Lunar Guardian crashes down (slam + stun) and fights at your side
+// Spirits are host-authoritative mob units (pet:1) on the summoner's team. Their hits count as the summoner's,
+// so kill credit, PvP damping, weapon traits and runes all work unchanged. Clients learn them from the mob snapshot
+// row [..., -2, PK index, owner id] and drop them like any other summon when they leave the snapshot.
+(()=>{
+'use strict';
+const K='soul',PK=['swisp','swolf','sguard'];window.PK=PK;
+WEAPONS[K]={n:'คัมภีร์วิญญาณ',ic:'📖',melee:0,range:470,atkT:.95,dmg:.8,hp:60,armor:1,magic:1,pspd:860,mp:170,mpR:.7,col:'#8fe8ff',
+  names:['ลูกแก้ววิญญาณ','ลูกแก้วดวงจันทร์','คัมภีร์ดวงวิญญาณ','คัมภีร์ปฐมกาล','คัมภีร์เทพอัญเชิญ SSR'],
+  desc:'อาชีพ Summoner: อัญเชิญภูติยิงพลังวิญญาณ สั่งวิญญาณทั้งหมดรุมเป้าหมาย เรียกผู้พิทักษ์จันทรายักษ์ลงมาสู้ข้างกาย'};
+WK.push(K);AW.splice(WK.length-1,0,K);   // network index: base weapons first, then fused (both ends build the same list)
+SK[K]=[{ic:'👻',n:'อัญเชิญภูติ',cd:[13,12,11,10],mp:[70,75,80,85],range:[0,0,0,0]},
+       {ic:'🔮',n:'บัญชาวิญญาณ',cd:[10,9.5,9,8.5],mp:[55,60,65,70],range:[640,660,680,700]},
+       {ic:'🗿',n:'ผู้พิทักษ์จันทรา',cd:[75,65,55],mp:[160,210,260],range:[600,640,680]}];
+SKV[K]=[{n:[2,2,2,2],wolf:[0,0,1,1],hp:[200,280,360,440],dmg:[18,25,32,40],t:[16,17,18,19]},
+        {dmg:[70,110,150,190],buff:[.5,.6,.7,.8],t:4},
+        {dmg:[200,300,400],stun:[1,1.2,1.4],r:[240,260,280],hp:[1600,2400,3200],gd:[55,80,105],t:[18,20,22]}];
+SKA[K]=['self','unit','area'];
+const PDEF={swisp:{name:'ภูติวิญญาณ',hp:200,dmg:20,armor:1,spd:270,r:16,atkT:1.05,range:380,xp:6,col:'#8fe8ff'},
+  swolf:{name:'หมาป่าวิญญาณ',hp:420,dmg:28,armor:3,spd:258,r:24,atkT:.85,range:62,xp:10,col:'#9fd0ff'},
+  sguard:{name:'ผู้พิทักษ์จันทรา',hp:2000,dmg:70,armor:8,spd:165,r:46,atkT:1.6,range:112,xp:30,col:'#b9a6ff',big:1}};
+for(const k of PK)CREEPS[k]=Object.assign({pet:1},PDEF[k]);
+const MAXW=4;let pid=400000,purgeT=0;
+function mkPet(id,kind,x,y,owner){const d=CREEPS[kind];const u=mkUnit({id,type:kind,kind,def:d,name:d.name,mob:true,pet:true,summon:1,camp:-1,owner,team:owner?owner.team:-1,
+    x,y,home:{x,y},big:!!d.big,golem:kind==='sguard'});setMobStats(u,1);u.tx=x;u.ty=y;
+  if(kind==='sguard'){u.ecl='construct';u.poise=0;u.busyT=0;u.blockT=0;u.elite=1}return u}
+const petsOf=(o,kind)=>units.filter(u=>u.pet&&!u.dead&&u.owner===o&&(!kind||u.kind===kind));
+function dismiss(u,quiet){if(u.dead)return;u.hp=0;u.dead=true;u.deadAt=gameT;emit({t:'pd',id:u.id});fxE('die',{id:u.id,x:u.x|0,y:u.y|0});if(!quiet)fxE('soulgone',{x:u.x|0,y:u.y|0,pk:PK.indexOf(u.kind)})}
+function purge(){if(!units.some(u=>u.pet&&u.dead&&gameT-(u.deadAt||0)>2.5))return;units=units.filter(u=>!(u.pet&&u.dead&&gameT-(u.deadAt||0)>2.5));UMAP=new Map(units.map(u=>[u.id,u]))}
+function spawnPet(o,kind,x,y,hp,dmg,life,slot){let p={x,y};if(blockedAt(p,20)||houseAt(p)!==houseAt(o))p={x:o.x,y:o.y};
+  const u=mkPet(pid++,kind,p.x,p.y,o);u.maxHp=Math.round(hp);u.hp=u.maxHp;u.atkDmg=dmg;u.lifeT=life;u.slot=slot;u.rise=kind==='sguard'?.55:.25;u.fx=o.fx;u.fy=o.fy;addUnit(u);return u}
+// ---- skills ----
+const _c0=cast0;cast0=function(u,i,ap){if(u.wk!==K)return _c0(u,i,ap);
+  if(u.dead||u.stunT>0||u.dash||u.leap||u.kb||u.fuseT>0)return false;const L=u.skl[i];if(!L)return false;
+  const s=SK[K][i],li=L-1;if(u.cd[i]>0)return false;const cost=s.mp[li];
+  if(u.mp<cost){if(isHuman(u))emit({t:'s',n:'nomana',x:0,y:0,g:1,v:[u.id]});return false}
+  const V=SKV[K][i],A=u.atkDmg,SA=(1+spellAmp(u))*SKILL_K,rngS=s.range[li]||400;purge();
+  if(ap&&!(Math.hypot(ap.x-u.x,ap.y-u.y)>8))ap=null;
+  const ft=!isHuman(u)&&u.ai.tgt&&!u.ai.tgt.dead?u.ai.tgt:null;
+  if(u.invisT>0){u.invisT=0;u.bsReady=true}
+  if(i===0){const n=V.n[li]+V.wolf[li],live=petsOf(u).filter(p=>p.kind!=='sguard').sort((a,b)=>a.lifeT-b.lifeT);
+    for(let k=0;k<live.length+n-MAXW;k++)dismiss(live[k]);
+    const hp=V.hp[li]+.05*u.maxHp,dmg=(V.dmg[li]+.32*A)*(1+spellAmp(u)),ids=[];
+    for(let k=0;k<n;k++){const wolf=k>=V.n[li],a=Math.atan2(u.fy,u.fx)+Math.PI+(k-(n-1)/2)*.9,d=wolf?70:90;
+      const p=spawnPet(u,wolf?'swolf':'swisp',u.x+Math.cos(a)*d,u.y+Math.sin(a)*d,wolf?hp*1.8:hp,wolf?dmg*1.35:dmg,V.t[li],k);ids.push(p.id)}
+    u.castAnim=.5;u.revealT=1.2;sndAt('orb',u.x,u.y);sndAt('shield',u.x,u.y);fxE('soulsum',{id:u.id,x:u.x|0,y:u.y|0,n})}
+  else if(i===1){const t=ft&&dist(u,ft)<rngS+60?ft:ap?enemyNear(u,ap,rngS):nearestEnemy(u,rngS+40,true);if(!t||dist(u,t)>rngS+80)return false;
+    const d=dist(u,t)||1,nx=(t.x-u.x)/d,ny=(t.y-u.y)/d;u.fx=nx;u.fy=ny;u.revealT=1.2;u.castAnim=.45;
+    proj(u,nx,ny,{spd:1250,r:16,dmg:V.dmg[li]*SA+.6*A,type:'m',kind:16,life:(rngS+120)/1250,big:1});
+    for(const p of petsOf(u)){p.focus=t;p.pbT=V.t;p.pbAmt=V.buff[li];p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.25);p.atkCd=Math.min(p.atkCd,.1)}
+    sndAt('blink',u.x,u.y);fxE('soulcmd',{id:u.id,x:u.x|0,y:u.y|0,x2:t.x|0,y2:t.y|0,tid:t.id})}
+  else{const tg=ft?{x:ft.x,y:ft.y}:ap?ap:aim(u,rngS);const p=landSpot(u,clampTo(u,tg,rngS));const r=V.r[li];
+    for(const g of petsOf(u,'sguard'))dismiss(g);
+    const d=Math.hypot(p.x-u.x,p.y-u.y)||1;u.fx=(p.x-u.x)/d;u.fy=(p.y-u.y)/d;u.castAnim=.6;u.revealT=1.5;
+    aoe({x:p.x,y:p.y,r,dmg:V.dmg[li]*SA+.8*A,type:'m',owner:u,delay:.5,kind:'slam',stun:V.stun[li],big:true});
+    const g=spawnPet(u,'sguard',p.x,p.y,V.hp[li]+.12*u.maxHp,(V.gd[li]+.45*A)*(1+spellAmp(u)),V.t[li],0);g.fx=u.fx;g.fy=u.fy;
+    sndAt('slam',p.x,p.y);sndAt('roar',p.x,p.y);fxE('soulgd',{id:g.id,x:p.x|0,y:p.y|0,r});emit({t:'k',a:8,x:p.x|0,y:p.y|0})}
+  u.cd[i]=s.cd[li]*cdMul(u);u.mp-=cost;return true};
+// ---- spirit AI ----
+function pick(u,O){let best=null,bs=1e9;const bt=O.ai&&O.ai.tgt&&!O.ai.tgt.dead&&isEnemy(O,O.ai.tgt)&&dist(O,O.ai.tgt)<720?O.ai.tgt:null;if(bt&&!isHuman(O))return bt;
+  const lh=O.lastHit&&gameT-O.lastHit.time<5&&!O.lastHit.src.dead&&dist(O,O.lastHit.src)<720?O.lastHit.src:null;if(lh)return lh;
+  for(const o of units){if(o.dead||!isEnemy(O,o)||o.reviveT>0)continue;const dO=dist(O,o);if(dO>560)continue;
+    let s;if(o.hero){if(!visibleTo(o,O))continue;s=dO}else if(o.pet)s=dO+120;else if(o.mob&&(o.aggro===O||o.aggro&&o.aggro.pet&&o.aggro.owner===O))s=dO+200;else continue;
+    if(s<bs){bs=s;best=o}}
+  return best}
+function attack(u,t){const buff=u.pbT>0,dmg=u.atkDmg*(buff?1+u.pbAmt:1)*(isNight()?1.1:1),d=dist(u,t)||1,nx=(t.x-u.x)/d,ny=(t.y-u.y)/d,ang=Math.atan2(ny,nx);
+  u.atkCd=u.atkCdBase/(buff?1.35:1);u.atkAnim=.3;
+  if(u.kind==='swisp'){proj(u,nx,ny,{spd:900,r:9,dmg,type:'m',kind:16,life:(u.range+120)/900});return}
+  if(u.kind==='swolf'){dealDamage(t,dmg,'p',u);emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:'#9fe8ff',k:2});return}
+  eclCast(u,'basic',.7);emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:'#c9b6ff',k:1});
+  for(const o of units){if(o.dead||!isEnemy(u,o))continue;const dd=dist(u,o);if(dd>u.range+u.r+o.r)continue;let da=Math.abs(Math.atan2(o.y-u.y,o.x-u.x)-ang);if(da>Math.PI)da=Math.PI*2-da;
+    if(o===t||da<.9)dealDamage(o,o===t?dmg:dmg*.6,'p',u)}sndAt('hit',u.x,u.y)}
+function petThink(u,dt){const O=u.owner;
+  if(!O||O.dead||O.wk!==K||(u.lifeT-=dt)<=0){dismiss(u);return{mx:0,my:0}}
+  if(u.rise>0){u.rise-=dt;return{mx:0,my:0}}if(u.pbT>0)u.pbT-=dt;
+  if(u.kind==='sguard'){u.busyT=Math.max(0,(u.busyT||0)-dt);u.slT=(u.slT===undefined?3:u.slT)-dt}
+  let t=u.focus&&!u.focus.dead&&u.focus.reviveT<=0&&dist(O,u.focus)<1100?u.focus:null;if(!t)u.focus=null;
+  if(!t){u.pt=(u.pt||0)-dt;if(u.pt<=0||u.tgt&&u.tgt.dead){u.pt=.35;u.tgt=pick(u,O)}t=u.tgt&&!u.tgt.dead&&isEnemy(O,u.tgt)&&dist(O,u.tgt)<780?u.tgt:null}
+  let mx=0,my=0;const fast=u.pbT>0?1.25:1;
+  if(t){const d=dist(u,t),R=u.range+t.r;u.fx=(t.x-u.x)/(d||1);u.fy=(t.y-u.y)/(d||1);
+    if(d>R-8){const v=navDir(u,t.x,t.y);mx=v.x*fast;my=v.y*fast}
+    if(d<R+8&&u.atkCd<=0&&u.stunT<=0)attack(u,t);
+    if(u.kind==='sguard'&&u.slT<=0&&d<230&&u.stunT<=0){u.slT=7;eclCast(u,'slam',1);aoe({x:u.x,y:u.y,r:230,dmg:u.atkDmg*1.5,type:'p',owner:u,delay:.55,kind:'slam',stun:.6,big:true});sndAt('slam',u.x,u.y)}}
+  else{const back=Math.atan2(O.fy,O.fx)+Math.PI,a=back+((u.slot||0)-1)*.85,D=u.kind==='sguard'?150:u.kind==='swolf'?80:95,px=O.x+Math.cos(a)*D,py=O.y+Math.sin(a)*D,dd=Math.hypot(px-u.x,py-u.y);
+    if(dist(u,O)>1150&&!blockedAt({x:px,y:py},u.r)){u.x=px;u.y=py;fxE('soulgone',{x:px|0,y:py|0,pk:PK.indexOf(u.kind)})}
+    else if(dd>28){const v=navDir(u,px,py),k=dd>220?1.1:Math.max(.3,dd/220);mx=v.x*k;my=v.y*k;u.fx=v.x;u.fy=v.y}}
+  if(u.kind==='swisp'){const m=Math.hypot(mx,my);if(m>1){mx/=m;my/=m}}
+  return{mx:mx*fast,my:my*fast}}
+// the tome's basic attack is a soul bolt (projectile kind 16) instead of the default arrow
+const _b=basic;basic=function(u,ft){const n=projs.length,r=_b(u,ft);if(u.wk===K)for(let i=n;i<projs.length;i++)if(projs[i].owner===u&&!projs[i].kind){projs[i].kind=16;projs[i].r=11}return r};
+const _mt=mobThink;mobThink=function(u,dt){return u.pet?petThink(u,dt):_mt(u,dt)};
+const _na=nightAggro;nightAggro=function(u){if(u.pet)return;return _na(u)};
+// spirits strike for their summoner: kill credit, PvP damping, traits and runes are the summoner's
+const _dd=dealDamage;dealDamage=function(t,amt,type,src,quiet,crit){if(src&&src.pet){const o=src.owner;src=o&&!o.dead?o:null}return _dd(t,amt,type,src,quiet,crit)};
+const _k=kill;kill=function(t,src){if(t&&t.pet){if(!t.dead){t.hp=0;dismiss(t);sndAt('mdie',t.x,t.y)}return}return _k(t,src)};
+// bots never farm spirits as creeps
+const _bc=bestCreep;bestCreep=function(u,range){const P=units.filter(o=>o.pet&&!o.dead);for(const p of P)p.dead=true;try{return _bc(u,range)}finally{for(const p of P)p.dead=false}};
+const _ct=curTick;curTick=function(dt){_ct(dt);purgeT-=dt;if(purgeT<=0){purgeT=1;purge()}};
+// bots: wisps early, command when a spirit is up, the guardian on anything big
+const _ai=aiSkills;aiSkills=function(u,t,d,hpR){if(u.wk!==K)return _ai(u,t,d,hpR);
+  const can=i=>u.skl[i]>0&&u.cd[i]<=0&&u.mp>=SK[K][i].mp[u.skl[i]-1],rg=i=>SK[K][i].range[u.skl[i]-1],big=t.hero||t.golem||t.boss;
+  if(can(2)&&(big||Math.random()<.08)&&d<rg(2)*.9&&!(t.hero&&t.hp/t.maxHp<.12))return cast(u,2);
+  if(can(0)&&d<720&&petsOf(u).filter(p=>p.kind!=='sguard').length<2)return cast(u,0);
+  if(can(1)&&d<rg(1)*.95&&(petsOf(u).length||t.hero))return cast(u,1)};
+const _ae=aiEscape;aiEscape=function(u,t,d){if(u.wk===K){if(u.skl[0]&&u.cd[0]<=0&&d<300)cast(u,0);return}return _ae(u,t,d)};
+const _sa=skAim;skAim=function(u,i){const a=_sa(u,i);if(a&&u.wk===K&&i===2)a.r=SKV[K][2].r[u.skl[i]-1];return a};
+// ---- network: [..., -2, PK index, owner id] ----
+const _mr=mobRow;mobRow=function(o){if(o.pet){const r=[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp,-2,PK.indexOf(o.kind),o.owner?o.owner.id:-1];return r}return _mr(o)};
+const _as=applySnap;applySnap=function(d){if(d&&d.m)for(const r of d.m){if(r.length>10&&r[8]===-2&&PK[r[9]]&&!UMAP.get(r[0])){const o=UMAP.get(r[10]);addUnit(mkPet(r[0],PK[r[9]],r[1],r[2],o||null))}}return _as(d)};
+// clients stop receiving dead mobs: this tells them the spirit is gone right away
+const _aev=applyEvent;applyEvent=function(e){if(e&&e.t==='pd'){const u=UMAP.get(e.id);if(u){u.dead=true;u.hp=0}return}return _aev.apply(this,arguments)};
+// ---- the codex card ----
+try{const el=document.createElement('div');el.className='wcard';const d=WEAPONS[K];
+  el.innerHTML=`<div class="ic">${d.ic}</div><b>${d.n}</b><small>${d.desc}</small><div class="sks">${SK[K].map(s=>`<span title="${s.n}">${s.ic}</span>`).join(' ')}</div>`;$('codex').appendChild(el)}catch(e){}
+window.SUMMONER={K,PK,petsOf};
+})();
+
+// ===================== SUMMONER · render (Claude, 2026-11-18 · Arena Royale only) =====================
+// Spirits: wisps are glowing soul orbs with rings and a trail; the spirit wolf and the Lunar Guardian reuse the wolf and
+// rigged Lunar Construct models, re-coloured into translucent spectral copies. Soul bolts are projectile kind 16.
+// The tome itself: the Meshy orb / tome / grimoire when they are loaded (p5-heroes.js), otherwise a small procedural orb.
+(()=>{
+if(typeof R3==='undefined')return;const R=R3,T=THREE,CYAN='#7fe8ff',VIO='#a98bff';
+if(typeof KK_FOR!=='undefined')KK_FOR.soul='Mage';
+if(typeof QN_MOB!=='undefined'&&QN_MOB.wolf)QN_MOB.swolf=QN_MOB.wolf;
+// the tome on the ground / in a non-class hero's hand
+const _w=R.weapon;R.weapon=function(wk,tier){if(wk!=='soul')return _w.call(this,wk,tier);const G=this.G,g=new T.Group(),t=Math.max(0,tier|0),c=TIERS[t].c;
+  this.mesh(G.cyl,this.std('#2a2440',.6,.3),0,10,0,2.4,20,2.4,g);this.mesh(G.sph,this.std('#c9c3e8',.3,.9),0,1,0,3.2,3.2,3.2,g);
+  this.mesh(G.sph,this.glowM(t>=2?VIO:CYAN,.9),0,27,0,7+t,7+t,7+t,g);this.mesh(G.sph,this.bas('#f2ffff'),0,27,0,3.4,3.4,3.4,g);
+  for(const r of[0,1.1]){const q=this.mesh(G.torus,this.glowM(c,.6),0,27,0,10+t,10+t,10+t,g);q.rotation.set(r,r*.6,0)}
+  const tip=new T.Object3D();tip.position.y=27;g.add(tip);g.userData.tip=tip;g.userData.glow=c;return g};
+// translucent spectral copy of a creature's materials (fog-of-war shader kept)
+R.spiritify=function(root,col){if(!root)return;const C=new T.Color(col);root.traverse(n=>{if(!n.isMesh||n.userData.spirit)return;n.userData.spirit=1;
+  const f=m=>this.cached('spirit-'+col+m.uuid,()=>{const c=m.clone();c.onBeforeCompile=m.onBeforeCompile;c.customProgramCacheKey=m.customProgramCacheKey;
+    c.transparent=true;c.opacity=.82;if(c.emissive){c.emissive=C.clone();c.emissiveMap=null;c.emissiveIntensity=.65}if(c.color)c.color=c.color.clone().lerp(C,.5);return c});
+  n.material=Array.isArray(n.material)?n.material.map(f):f(n.material)})};
+R.soulWisp=function(u){const G=this.G,root=new T.Group(),body=new T.Group();root.add(body);
+  const o={kind:'wisp',wisp:1,root,body,u};o.core=this.mesh(G.sph,this.bas('#effeff'),0,42,0,5,5,5,body);
+  o.shell=this.mesh(G.sph,this.glowM(CYAN,.55),0,42,0,11,11,11,body);o.halo=this.mesh(G.sph,this.glowM('#3fa8ff',.18),0,42,0,19,19,19,body);
+  o.rings=[0,1.2].map(r=>{const q=this.mesh(G.torus,this.glowM(VIO,.7),0,42,0,13,13,13,body);q.rotation.set(r,r*.7,0);return q});
+  o.lx=u.x;o.ly=u.y;o.rot=Math.atan2(u.fx,u.fy);o.walk=0;o.mvK=0;o.atkPh=0;this.addStatus(o,u);this.scene.add(root);this.objs.set(u.id,o);return o};
+const _of=R.objFor;R.objFor=function(u){if(!u.pet||this.objs.get(u.id))return _of.call(this,u);
+  if(u.kind==='swisp')return this.soulWisp(u);let o;
+  if(u.kind==='swolf'){u.kind='wolf';try{o=_of.call(this,u)}finally{u.kind='swolf'}}else o=_of.call(this,u);
+  if(o){const me=typeof ME==='function'?ME():null,foe=me&&u.team!==me.team,col=u.kind==='sguard'?VIO:CYAN;try{this.spiritify(o.pose||o.body,col)}catch(e){}
+    const rm=this.glowM(foe?'#ff5a6a':col,.55).clone();o.petRing=this.mesh(this.G.ring,rm,0,3,0,u.r+16,1,u.r+16,o.root);o.petRing.userData.ownMat=1;o.petCol=col}
+  return o};
+const _ab=R.animBig;R.animBig=function(o,u,Tm){if(!o.wisp)return _ab.call(this,o,u,Tm);
+  const k=u.atkAnim>0?1.35:1,b=Math.sin(Tm*3+u.id)*6;o.body.position.y=b;o.core.scale.setScalar(5*k*(1+Math.sin(Tm*14)*.08));o.shell.scale.setScalar(11*k);
+  o.rings[0].rotation.z=Tm*3;o.rings[1].rotation.x=Tm*2.4;
+  if(Math.random()<.55)this.sp(true,{x:u.x+rand(-5,5),y:o.gy+42+b,z:u.y+rand(-5,5),vy:rand(5,30),l:.5,s:12,s1:2,c:CYAN,c2:VIO,sp:3,a:.75})};
+// soul bolts
+const _pn=R.projNew;R.projNew=function(p,y,ang,Tm){if(p.kind!==16)return _pn.call(this,p,y,ang,Tm);const G=this.G;
+  const o=this.get('soulP',()=>{const g=new T.Group();this.mesh(G.sph,this.glowM(CYAN,.85),0,0,0,1,1,1,g);this.mesh(G.sph,this.bas('#f2ffff'),0,0,0,.5,.5,.5,g);
+    const q=this.mesh(G.torus,this.glowM(VIO,.6),0,0,0,1.5,1.5,1.5,g);q.rotation.x=1.2;return g});
+  o.position.set(p.x,y,p.y);o.rotation.set(Tm*6,ang,0);o.scale.setScalar((p.r||10)*(1+Math.sin(Tm*28)*.1));
+  if(Math.random()<.8)this.sp(true,{x:p.x+rand(-4,4),y:y+rand(-4,4),z:p.y+rand(-4,4),vy:rand(10,40),l:.35,s:p.r>12?22:13,s1:2,c:CYAN,c2:VIO,sp:4,a:.8})};
+// summon / command / guardian / dismiss bursts
+const near=(x,y)=>{const L=typeof listener==='function'?listener():null;return !L||Math.hypot(x-L.x,y-L.y)<(typeof visionR==='function'?visionR():1100)+200};
+R.soulFx=function(e){if(!near(e.x,e.y))return;const gy=this.gY(e.x,e.y),v3=(t,o)=>this.v3&&this.v3(t,Object.assign({x:e.x,y:e.y},o));
+  const puff=(x,y,n,c,up)=>{for(let i=0;i<n;i++){const a=Math.random()*6.28,s=rand(20,90);this.sp(true,{x:x+Math.cos(a)*s*.3,y:this.gY(x,y)+rand(10,60),z:y+Math.sin(a)*s*.3,vx:Math.cos(a)*s,vy:rand(40,up||160),vz:Math.sin(a)*s,l:rand(.5,.9),s:rand(14,26),s1:3,c,c2:VIO,sp:3,a:.85})}};
+  if(e.k==='soulsum'){puff(e.x,e.y,this.hi?34:16,CYAN,220);v3('vortex',{r:40,r1:110,h:210,c:CYAN,c2:'#efffff',life:.9,spin:9,k1:1,k2:1,a:.8});v3('shock',{r:20,r1:150,c:CYAN,c2:VIO,life:.6,h:90,ease:1});
+    v3('flare',{r:60,r1:170,c:CYAN,c2:'#ffffff',life:.35,height:60});if(this.hi&&this.flash)this.flash(e.x,gy+80,e.y,CYAN,2600,420,.35)}
+  else if(e.k==='soulcmd'){const g2=this.gY(e.x2,e.y2);if(this.bolt)this.bolt(e.x,gy+60,e.y,e.x2,g2+50,e.y2,CYAN,.22,3);
+    v3('flare',{x:e.x2,y:e.y2,r:50,r1:140,c:VIO,c2:'#ffffff',life:.3,height:50});v3('shock',{x:e.x2,y:e.y2,r:10,r1:110,c:VIO,c2:CYAN,life:.45,h:70,ease:1});puff(e.x2,e.y2,this.hi?16:8,VIO,120)}
+  else if(e.k==='soulgd'){const r=e.r||250;v3('beam',{r:26,r1:60,h:1200,c:VIO,c2:'#f4eeff',life:.9,spin:3,a:.7});v3('shock',{r:r*.15,r1:r,c:VIO,c2:CYAN,life:.6,h:150,ease:1,delay:.45});
+    v3('crack',{r,r1:r,c:VIO,c2:'#ffffff',life:1.6,height:3,k1:7,delay:.45});v3('flare',{r:90,r1:260,c:VIO,c2:'#ffffff',life:.4,height:60,delay:.45});
+    for(let j=0;j<(this.hi?12:6);j++){const an=j/12*6.28,d=r*rand(.5,.95);v3('spike',{x:e.x+Math.cos(an)*d,y:e.y+Math.sin(an)*d,r:rand(8,14),h:rand(60,130),angle:an,tilt:rand(.15,.45),c:VIO,c2:CYAN,life:1.2,delay:.47,height:-4})}
+    if(this.v3Debris)setTimeout(()=>{try{this.v3Debris({x:e.x,y:e.y,r:r*.35,n:this.hi?12:5,c:'#5a5470',up:480,speed:300})}catch(err){}},450);
+    puff(e.x,e.y,this.hi?40:18,VIO,260);if(this.hi&&this.flash)this.flash(e.x,gy+120,e.y,VIO,3000,r*3,.5)}
+  else if(e.k==='soulgone'){puff(e.x,e.y,this.hi?14:7,e.pk===2?VIO:CYAN,140);v3('flare',{r:30,r1:80,c:CYAN,c2:'#ffffff',life:.25,height:40})}};
+const _df=R.doFx;R.doFx=function(e,me,L){if(e&&typeof e.k==='string'&&e.k.slice(0,4)==='soul'){try{this.soulFx(e)}catch(err){}return}return _df.call(this,e,me,L)};
+// spectral shimmer on the wolf and the guardian
+const _fx=R.fxExtra;R.fxExtra=function(Tm,dt,me,L){const r=_fx.call(this,Tm,dt,me,L);
+  try{for(const u of units){if(!u.pet||u.dead||u.kind==='swisp')continue;const o=this.objs.get(u.id);if(!o||!o.root.visible)continue;
+    if(o.petRing)o.petRing.material.opacity=.35+.2*Math.sin(Tm*4+u.id);
+    if(Math.random()<dt*(u.kind==='sguard'?26:12))this.sp(true,{x:u.x+rand(-u.r,u.r),y:o.gy+rand(10,u.kind==='sguard'?180:50),z:u.y+rand(-u.r,u.r),vy:rand(20,60),l:.7,s:rand(10,20),s1:2,c:o.petCol||CYAN,c2:'#ffffff',sp:3,a:.6})}}catch(e){}
+  return r};
+// 2D view: a puff where spirits arrive and leave
+if(typeof applyEvent==='function'){const _ae=applyEvent;applyEvent=function(e){if(e&&e.t==='fx'&&typeof e.k==='string'&&e.k.slice(0,4)==='soul'&&typeof burst==='function'&&!(view3D&&R.ok))burst(e.x,e.y,e.k==='soulgd'?VIO:CYAN,e.k==='soulgd'?40:16);return _ae.apply(this,arguments)}}
 })();
 
 // ===================== SETTINGS: view + graphics quality =====================

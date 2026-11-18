@@ -7,6 +7,17 @@
 
 ---
 
+## 2026-11-18 · Claude · อาชีพที่ 5: Summoner / คัมภีร์วิญญาณ (index เท่านั้น)
+- เจ้าของเลือก "ทำเป็นอาชีพจริง" — อาวุธชนิดใหม่ `soul` (📖 คัมภีร์วิญญาณ) ใน `WK`/`AW` (ต่อท้ายอาวุธพื้นฐาน ก่อนอาวุธหลอม) · ไม่หลอมกับอาวุธอื่น (ไม่มีใน `WCAT`)
+- `src/summoner.js` (ตรรกะ, host-authoritative): Q อัญเชิญภูติ 2 ตัว (เลเวล 3+ + หมาป่าวิญญาณ, สูงสุด 4) · E บัญชาวิญญาณ (หอกวิญญาณ kind 16 + วิญญาณทุกตัวล็อกเป้า แรง/เร็วขึ้น ฟื้นเลือด 25%) · R ผู้พิทักษ์จันทรา (aoe slam + stun, ยักษ์สู้ข้างตัว 18–22 วิ, slam ทุก 7 วิ)
+  - วิญญาณ = mob unit `pet:1, summon:1, owner, team=owner.team` · AI `petThink` (ตามเจ้าของ, เลือกเป้า: เป้าของบอท → คนที่เพิ่งตีเจ้าของ → ฮีโร่ศัตรู → มอนที่ aggro เจ้าของ) · ตายเมื่อหมดเวลา/เจ้าของตาย/เปลี่ยนอาวุธ
+  - ดาเมจของวิญญาณนับเป็นของเจ้าของ (wrap `dealDamage`) → kill credit, PvP damping, trait/rune ใช้ได้ · ฆ่าวิญญาณไม่ได้รางวัล (wrap `kill`) · บอทไม่ฟาร์มวิญญาณ (`bestCreep`) · บอทใช้สกิลเป็น (`aiSkills`/`aiEscape`)
+  - เน็ต: mobRow ของวิญญาณ `[..., -2, PK index, owner id]` → client สร้างใน `applySnap` wrapper · ลบตามกติกา summon เดิม
+- `src/summoner-fx.js` (ภาพ): ภูติ = ลูกแก้ววิญญาณเรืองแสง · หมาป่า/ผู้พิทักษ์ = โมเดล wolf / Lunar Construct (rigged) ทำเป็นวิญญาณโปร่งแสง (คง fog-of-war shader) · projectile kind 16 · fx `soulsum/soulcmd/soulgd/soulgone` ใช้ชั้น VFX 3D
+- `p5-heroes.js`: `soul` → Summoner (ลูกแก้ว/คัมภีร์ Meshy ตามระดับ) · อาวุธหลอมใช้อาชีพของ `FUSED[k].base` (เดิมเป็น Summoner)
+- ไอคอนสกิล: `assets/ui/moonfall-soul.webp` (เรนเดอร์จากโมเดล Meshy ที่มี) + `skill-atlas.json` `sheets.soul`/`fusionSkills.soul` — **ทุกคีย์ใน `AW` ต้องมีไอคอน ไม่งั้น `moonfall-ui.js` โยน 'Missing skill artwork' แล้วหน้าโหลดค้าง** · `moonfall-menu.js` นับจำนวนอาวุธจาก `WK.length`
+- ทดสอบ: แมตช์บอท Summoner 10 ตัว ×3 + แมตช์ปกติ ×3 + cursed ×1, ภาพ 3D ทั้ง 3 สกิล, ออนไลน์ host/client, 0 error
+
 ## 2026-11-18 · Claude · อาวุธ Celestial Armory 15 ชิ้น + VFX สกิล 3D (index เท่านั้น)
 - **อาวุธ:** เจ้าของสร้างใน Meshy เอง (text-to-3d refine, ไม่ใช้เครดิตเพิ่มในงานนี้) → ย่อเหลือ 0.12–0.28 MB/ชิ้น (`p5w-*.glb`, manifest + `build.py` `P5W` → CELESTIAL_KEYS ของ index, CELESTIAL_SKIP ของ cursed)
   - แก้โมเดล: Lunar Longbow ตัดลูกธนูที่ลอยแยก + หมุน −29° · Spirit Orb/Genesis Grimoire ตัดแท่นวาง · Hunter Bow ไม่มีสาย (ปล่อยไว้)

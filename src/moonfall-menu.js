@@ -21,7 +21,7 @@ window.installMoonfallMenuUX=function(){
     const settingTitle=document.createElement('summary');settingTitle.textContent='ภาพ เสียง และสูตรหลอมอาวุธ';settings.appendChild(settingTitle);
     const settingRow=document.getElementById('viewBtn').closest('.row');settingRow.before(settings);settings.appendChild(settingRow);
     const reference=document.createElement('details');reference.className='moonfall-menu-section';reference.id='moonfallWeaponGuide';
-    const referenceTitle=document.createElement('summary');referenceTitle.textContent='รู้จักอาวุธและสกิล · 9 แบบ';reference.appendChild(referenceTitle);
+    const referenceTitle=document.createElement('summary');referenceTitle.textContent='รู้จักอาวุธและสกิล · '+WK.length+' แบบ';reference.appendChild(referenceTitle);
     const codex=document.getElementById('codex');codex.before(reference);reference.appendChild(codex);
     const gallery=document.createElement('button');gallery.type='button';gallery.className='moonfall-gallery-link';gallery.textContent='ดูสูตรหลอมและสกิลหลอมทั้ง 36 สกิล';gallery.onclick=()=>document.getElementById('fuseBtn').click();reference.appendChild(gallery);
     // The play actions lead the lobby. Secondary controls remain keyboard reachable.

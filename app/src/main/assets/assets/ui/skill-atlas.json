@@ -103,6 +103,11 @@
       "สายฟ้าลูกโซ่",
       "สนามไฟฟ้า",
       "อัสนีบาต"
+    ],
+    "soul": [
+      "อัญเชิญภูติ",
+      "บัญชาวิญญาณ",
+      "ผู้พิทักษ์จันทรา"
     ]
   },
   "weaponNames": {
@@ -114,7 +119,8 @@
     "frost": "คทาน้ำแข็ง",
     "gsword": "ดาบใหญ่",
     "xbow": "หน้าไม้",
-    "storm": "คทาสายฟ้า"
+    "storm": "คทาสายฟ้า",
+    "soul": "คัมภีร์วิญญาณ"
   },
   "sheets": {
     "base": {
@@ -140,6 +146,14 @@
       "columns": 6,
       "rows": 5,
       "gridHeight": 1088
+    },
+    "soul": {
+      "image": "assets/ui/moonfall-soul.webp",
+      "width": 1374,
+      "height": 229,
+      "columns": 6,
+      "rows": 1,
+      "gridHeight": 229
     }
   },
   "fusionSkills": {
@@ -309,6 +323,20 @@
       {
         "sheet": "items",
         "cell": 11
+      }
+    ],
+    "soul": [
+      {
+        "sheet": "soul",
+        "cell": 0
+      },
+      {
+        "sheet": "soul",
+        "cell": 1
+      },
+      {
+        "sheet": "soul",
+        "cell": 2
       }
     ]
   },
