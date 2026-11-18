@@ -659,15 +659,17 @@ function genWorld(seed){
     const roll=SR();let v;
     if(rdist>0&&rdist<170&&!foot)v=6;else if(foot)v=dire?(roll<.6?4:0):(roll<.75?0:2);else if(dire)v=roll<.32?3:roll<.62?4:roll<.8?5:1;else v=roll<.42?1:roll<.62?2:roll<.9?0:6;
     if(MOON){v=REG.tree(p.x,p.y,v,roll);if(v<0)continue}
+    else{if(v===6)v=2;else if(v===5)v=4;else if(v===1)v=roll<.5?2:0;else if(v===3)v=roll<.5?4:2}   // Arena Royale (owner 2026-11-18): no willow / dead / round-crowned / crystal trees, pines + birches instead
     const t={x:p.x,y:p.y,r:18,cr:sr(52,76)*(v===6?1.15:1),v,ph:sr(0,6),h:sr(.85,1.2)};w.trees.push(t);tgrid[gy*gw+gx].push(t)}
   // decorative pines on the mountain slopes (no collision)
   for(let k=0;k<33000&&w.mtrees.length<5200;k++){const a=sr(0,6.283),d=bndR(a)+sr(20,1000);const x=CX+Math.cos(a)*d,y=CY+Math.sin(a)*d;const o=d-bndR(a);
     const hh=terrH(x,y);if(hh>720||hh<20)continue;if(caveK(x,y)>0||inDG({x,y},1150))continue;if(w.noise(x,y)<.38&&SR()<.6)continue;if(SR()<o/1300)continue;
     w.mtrees.push({x,y,h:hh,s:sr(.9,1.5)*(1-hh/1600),v:SR()<.25?4:0,ph:sr(0,6)})}
   // bushes
-  for(let k=0;k<9600&&w.bushes.length<620;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300),r:sr(44,66)};
+  for(let k=0;k<9600&&w.bushes.length<(MOON?620:0);k++){   // Arena Royale: no berry bushes (owner 2026-11-18), tall grass still hides
+  const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300),r:sr(44,66)};
     if(!free(p,30)||pathNear(p,25)||w.houses.some(h=>inRect(p,h,p.r+20))||!tFree(p,p.r+14)||rockNear(p,p.r)||w.bushes.some(b=>dist(b,p)<b.r+p.r+50))continue;w.bushes.push(p)}
-  for(const c of w.caves){const ex=c.mx,ey=c.my,px=-Math.sin(c.gap),py=Math.cos(c.gap);for(const s of[1,-1]){const p={x:ex+px*s*95+Math.cos(c.gap)*30,y:ey+py*s*95+Math.sin(c.gap)*30,r:54};if(walkable(p.x,p.y,10))w.bushes.push(p)}}
+  if(MOON)for(const c of w.caves){const ex=c.mx,ey=c.my,px=-Math.sin(c.gap),py=Math.cos(c.gap);for(const s of[1,-1]){const p={x:ex+px*s*95+Math.cos(c.gap)*30,y:ey+py*s*95+Math.sin(c.gap)*30,r:54};if(walkable(p.x,p.y,10))w.bushes.push(p)}}
   // tall-grass meadows: big patches to hide in (inside one you are hidden, like in a bush)
   {const ring=(p,r)=>{for(let a=0;a<6.28;a+=1.05){const x=p.x+Math.cos(a)*r,y=p.y+Math.sin(a)*r;if(!walkable(x,y,6)||inWater(x,y))return false}return true};
    for(let k=0;k<14000&&w.tgrass.length<280;k++){const p={x:sr(400,WORLD-400),y:sr(400,WORLD-400),r:sr(85,150)};

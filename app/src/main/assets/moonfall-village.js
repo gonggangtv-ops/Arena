@@ -83,11 +83,5 @@ window.installMoonfallVillage=function(P){
     inst('rocky-meadow',patch.map(q=>Object.assign(q,{dy:-2})),(q,s)=>{const W=150*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
     inst('banana-plant',banana,(q,s)=>{const H=100*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
     this.natureCounts={stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length}};
-  // owner's Meshy crystal tree replaces the round-crowned oaks and enchanted trees (r3 buildVegetation asks crystalOn first);
-  // drawn through instC with the tree items so felling (trees-break.js) copies it and canopy see-through (treeParts) still works
-  P.crystalOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('crystal-tree')};
-  P.crystalTrees=function(list,reg){if(!list.length)return;const a=A.get('crystal-tree'),s=a.inspection.size,parts=this.celestialAsset('crystal-tree');
-    const place=(t,add)=>{const H=((t.v===3?38:40)*t.h+t.cr*1.5)*1.08,k=H/s[1],R=mulberry32(Math.floor(t.x*7+t.y));add(t.x,this.gY(t.x,t.y)-2,t.y,s[0]*k,H,s[2]*k,0,R()*6.283,0,null)};
-    for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
   P.plainRock=function(r){return !r.prop&&!r.edge&&!r.cliff&&r.cave===undefined&&(typeof MOON==='undefined'||!MOON)&&this.mfProp('mossy-boulder')};
 };

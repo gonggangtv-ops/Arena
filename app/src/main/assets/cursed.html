@@ -119,7 +119,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <link rel="stylesheet" href="moonfall-menu.css" onerror="window.__moonfallCodeFailure='moonfall-menu.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-menu.css')">
 <link rel="stylesheet" href="moonfall-inventory.css" onerror="window.__moonfallCodeFailure='moonfall-inventory.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-inventory.css')">
 <link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
-<script>window.CELESTIAL_SKIP=["mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "crystal-tree", "river-stones", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5-summoner", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire"]</script>
+<script>window.CELESTIAL_SKIP=["mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5-summoner", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire"]</script>
 </head>
 <body>
 <div id="safe"></div>
@@ -925,15 +925,17 @@ function genWorld(seed){
     const roll=SR();let v;
     if(rdist>0&&rdist<170&&!foot)v=6;else if(foot)v=dire?(roll<.6?4:0):(roll<.75?0:2);else if(dire)v=roll<.32?3:roll<.62?4:roll<.8?5:1;else v=roll<.42?1:roll<.62?2:roll<.9?0:6;
     if(MOON){v=REG.tree(p.x,p.y,v,roll);if(v<0)continue}
+    else{if(v===6)v=2;else if(v===5)v=4;else if(v===1)v=roll<.5?2:0;else if(v===3)v=roll<.5?4:2}   // Arena Royale (owner 2026-11-18): no willow / dead / round-crowned / crystal trees, pines + birches instead
     const t={x:p.x,y:p.y,r:18,cr:sr(52,76)*(v===6?1.15:1),v,ph:sr(0,6),h:sr(.85,1.2)};w.trees.push(t);tgrid[gy*gw+gx].push(t)}
   // decorative pines on the mountain slopes (no collision)
   for(let k=0;k<33000&&w.mtrees.length<5200;k++){const a=sr(0,6.283),d=bndR(a)+sr(20,1000);const x=CX+Math.cos(a)*d,y=CY+Math.sin(a)*d;const o=d-bndR(a);
     const hh=terrH(x,y);if(hh>720||hh<20)continue;if(caveK(x,y)>0||inDG({x,y},1150))continue;if(w.noise(x,y)<.38&&SR()<.6)continue;if(SR()<o/1300)continue;
     w.mtrees.push({x,y,h:hh,s:sr(.9,1.5)*(1-hh/1600),v:SR()<.25?4:0,ph:sr(0,6)})}
   // bushes
-  for(let k=0;k<9600&&w.bushes.length<620;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300),r:sr(44,66)};
+  for(let k=0;k<9600&&w.bushes.length<(MOON?620:0);k++){   // Arena Royale: no berry bushes (owner 2026-11-18), tall grass still hides
+  const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300),r:sr(44,66)};
     if(!free(p,30)||pathNear(p,25)||w.houses.some(h=>inRect(p,h,p.r+20))||!tFree(p,p.r+14)||rockNear(p,p.r)||w.bushes.some(b=>dist(b,p)<b.r+p.r+50))continue;w.bushes.push(p)}
-  for(const c of w.caves){const ex=c.mx,ey=c.my,px=-Math.sin(c.gap),py=Math.cos(c.gap);for(const s of[1,-1]){const p={x:ex+px*s*95+Math.cos(c.gap)*30,y:ey+py*s*95+Math.sin(c.gap)*30,r:54};if(walkable(p.x,p.y,10))w.bushes.push(p)}}
+  if(MOON)for(const c of w.caves){const ex=c.mx,ey=c.my,px=-Math.sin(c.gap),py=Math.cos(c.gap);for(const s of[1,-1]){const p={x:ex+px*s*95+Math.cos(c.gap)*30,y:ey+py*s*95+Math.sin(c.gap)*30,r:54};if(walkable(p.x,p.y,10))w.bushes.push(p)}}
   // tall-grass meadows: big patches to hide in (inside one you are hidden, like in a bush)
   {const ring=(p,r)=>{for(let a=0;a<6.28;a+=1.05){const x=p.x+Math.cos(a)*r,y=p.y+Math.sin(a)*r;if(!walkable(x,y,6)||inWater(x,y))return false}return true};
    for(let k=0;k<14000&&w.tgrass.length<280;k++){const p={x:sr(400,WORLD-400),y:sr(400,WORLD-400),r:sr(85,150)};
@@ -3242,10 +3244,8 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const tr=WD.trees;this.trees=tr;this.treeHidden=new Uint8Array(tr.length);this.treeParts=tr.map(()=>[]);tr.forEach((t,i)=>t._i=i);
     const reg=(t,im,i)=>{if(t._i!==undefined)this.treeParts[t._i].push([im,i])};const RT=t=>mulberry32(Math.floor(t.x*7+t.y));
     const TH=t=>(t.v===2?70:t.v===5?54:t.v===6?44:t.v===1?40:38)*t.h;
-    // Arena Royale: round-crowned oaks / enchanted trees become the owner's Meshy crystal tree (moonfall-village.js) when it is loaded
-    const MT=this.crystalOn&&this.crystalOn()?(t=>t.v===1||t.v===3):(()=>false);
     // trunks
-    this.instC(G.cylT,bark,tr.filter(t=>t.v!==2&&!MT(t)),(t,add)=>{const R=RT(t),th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,t.v===1||t.v===6?11:t.v===5?7:8,th,t.v===1||t.v===6?11:8,0,R()*6,0,t.v===3?'#8a7aa8':t.v===5?'#5a4048':'#ffffff')},true);
+    this.instC(G.cylT,bark,tr.filter(t=>t.v!==2),(t,add)=>{const R=RT(t),th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,t.v===1||t.v===6?11:t.v===5?7:8,th,t.v===1||t.v===6?11:8,0,R()*6,0,t.v===3?'#8a7aa8':t.v===5?'#5a4048':'#ffffff')},true);
     this.instC(G.cylT,birch,tr.filter(t=>t.v===2),(t,add)=>{const th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,6,th,6,0,t.x,0,'#ffffff')},true);
     // pines (valley + dark) as stacked cones
     const PINE=TF?['#3f9e4c','#4aaa56','#389348','#52b05a']:['#3a7a3c','#457f40','#356a34','#4a8844'],DPINE=TF?['#2f8a80','#36968a','#2a7c76']:['#2a5a54','#2f6458','#264a48'];
@@ -3254,7 +3254,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     if(cards)this.instC(G.pineRing,needM,pines,(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),P=t.v===0?PINE:DPINE;for(const q of TIERS_P){R();add(t.x,b+th+cr*q[2]-cr*q[1]*.2,t.y,cr*q[0]*1.28,cr*q[1]*.95,cr*q[0]*1.28,0,R()*6,0,P[Math.floor(R()*P.length)])}},true,reg);
     // oak / birch / willow / magic / dead canopies from noisy blobs
     const OAK=TF?['#62b83c','#70c446','#58aa36','#7ccc4e']:['#5a8a3c','#6a9a44','#4f7f36','#76a24c'],BIR=TF?['#a6d454','#b4dc60','#98c84c']:['#9ac45a','#a8cc64','#8ab84e'],MAG=TF?['#3aa49c','#7a62c0','#3a86c0','#a466b8']:['#3ac8c0','#9a6ae8','#4aa8f0','#d07ae0'],DEAD=['#6a3a5e','#7a4a4e','#5a3a6a'],WIL=['#7aa84c','#86b056'];
-    for(let bi=0;bi<3;bi++){const canL=tr.filter(t=>(t.v===1||t.v===2||t.v===6||t.v===5)&&!MT(t)&&(Math.floor(t.x+t.y)%3===bi));
+    for(let bi=0;bi<3;bi++){const canL=tr.filter(t=>(t.v===1||t.v===2||t.v===6||t.v===5)&&(Math.floor(t.x+t.y)%3===bi));
       const canP=(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);
         if(t.v===1)for(const q of[[0,.5,0,.86,.68],[-.4,.86,.12,.6,.5],[.42,.8,-.18,.56,.48],[0,1.08,.1,.5,.42]])add(t.x+cr*q[0],b+th+cr*q[1],t.y+cr*q[2],cr*q[3],cr*q[4],cr*q[3],R(),R()*6,0,OAK[Math.floor(R()*OAK.length)]);
         else if(t.v===2)for(const q of[[0,.2,0,.5,.62],[.18,.75,.1,.42,.5],[-.12,1.15,0,.32,.42]])add(t.x+cr*q[0],b+th+cr*q[1]-20,t.y+cr*q[2],cr*q[3],cr*q[4],cr*q[3],R(),R()*6,0,BIR[Math.floor(R()*BIR.length)]);
@@ -3265,12 +3265,11 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
         this.instC(G.leafc[bi],cardM,canL,(t,add)=>canP(t,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>add(x,y,z,sx*1.14,sy*1.1,sz*1.14,rx,ry,rz,c)),true,reg)}
       else this.instC(G.blob[bi],leafM,canL,canP,true,reg)}
     // boughs reaching from the trunk top into oak canopies
-    if(cards)this.instC(G.cylT,bark,tr.filter(t=>t.v===1&&!MT(t)),(t,add)=>{const R=mulberry32(Math.floor(t.x*13+t.y*7)),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);
+    if(cards)this.instC(G.cylT,bark,tr.filter(t=>t.v===1),(t,add)=>{const R=mulberry32(Math.floor(t.x*13+t.y*7)),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);
       for(let k=0;k<3;k++){const a=k/3*6.283+R(),tl=.55+R()*.35,len=cr*(.62+R()*.25),dx=Math.sin(tl)*Math.cos(a),dy=Math.cos(tl),dz=Math.sin(tl)*Math.sin(a);
         add(t.x+dx*len*.5,b+th*.82+dy*len*.5,t.y+dz*len*.5,5,len,5,0,-a,-tl,null)}},true,reg);
     // enchanted trees: a full leafy crown in one glowing hue per tree
-    if(this.crystalOn&&this.crystalOn())this.crystalTrees(tr.filter(MT),reg);
-    {const mg=tr.filter(t=>t.v===3&&!MT(t)),magP=(t,add,k)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),c=MAG[Math.floor(R()*MAG.length)];
+    {const mg=tr.filter(t=>t.v===3),magP=(t,add,k)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),c=MAG[Math.floor(R()*MAG.length)];
         for(const q of[[0,.5,0,.8,.64],[-.38,.84,.12,.56,.48],[.4,.78,-.16,.52,.46],[0,1.06,.08,.46,.4]])add(t.x+cr*q[0],b+th+cr*q[1],t.y+cr*q[2],cr*q[3]*k,cr*q[4]*k,cr*q[3]*k,R(),R()*6,0,c)};
       this.instC(BLOB(1),magicM,mg,(t,add)=>magP(t,add,cards?.72:1),true,reg);
       if(cards){const magC=this.windMat(new THREE.MeshStandardMaterial({map:this.tex('leafc'),alphaTest:.42,roughness:.8,metalness:0,emissive:'#3a6a78',emissiveMap:this.tex('leafc'),emissiveIntensity:.7}),'MC',.05);this.treeMats.push(magC);

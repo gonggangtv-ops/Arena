@@ -289,14 +289,6 @@
    "rotationY": 0,
    "biome": "arena"
   },
-  "crystal-tree": {
-   "name": "Luminous crystalline tree (replaces round-crowned oaks / enchanted trees)",
-   "source": "Meshy_AI_Luminous_Crystalline__1118001859 (owner upload, simplified to ~6.5k tris)",
-   "url": "assets/meshy/crystal-tree.glb",
-   "available": true,
-   "rotationY": 0,
-   "biome": "arena"
-  },
   "river-stones": {
    "name": "River stones cluster",
    "taskId": "01a1e8e7-b726-7436-a68d-38338f3ab0b0",
