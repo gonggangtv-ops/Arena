@@ -659,7 +659,8 @@ function genWorld(seed){
     const roll=SR();let v;
     if(rdist>0&&rdist<170&&!foot)v=6;else if(foot)v=dire?(roll<.6?4:0):(roll<.75?0:2);else if(dire)v=roll<.32?3:roll<.62?4:roll<.8?5:1;else v=roll<.42?1:roll<.62?2:roll<.9?0:6;
     if(MOON){v=REG.tree(p.x,p.y,v,roll);if(v<0)continue}
-    else{if(v===6)v=2;else if(v===5)v=4;else if(v===1)v=roll<.5?2:0;else if(v===3)v=roll<.5?4:2}   // Arena Royale (owner 2026-11-18): no willow / dead / round-crowned / crystal trees, pines + birches instead
+    else{if(v===6)v=2;else if(v===5)v=4;else if(v===1)v=roll<.5?2:0;else if(v===3)v=roll<.5?4:2}
+    if(!MOON&&(v===0||v===4)&&((roll*7919.37)%1)<.69)continue;   // owner 2026-11-18: 60% fewer pines   // Arena Royale (owner 2026-11-18): no willow / dead / round-crowned / crystal trees, pines + birches instead
     const t={x:p.x,y:p.y,r:18,cr:sr(52,76)*(v===6?1.15:1),v,ph:sr(0,6),h:sr(.85,1.2)};w.trees.push(t);tgrid[gy*gw+gx].push(t)}
   // decorative pines on the mountain slopes (no collision)
   for(let k=0;k<33000&&w.mtrees.length<5200;k++){const a=sr(0,6.283),d=bndR(a)+sr(20,1000);const x=CX+Math.cos(a)*d,y=CY+Math.sin(a)*d;const o=d-bndR(a);

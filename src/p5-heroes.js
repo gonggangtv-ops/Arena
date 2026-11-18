@@ -42,17 +42,18 @@ R.p5Hero=function(u){const cls=p5Class(u);if(!this.p5Ready(cls))return null;cons
 // tiers 0–1 (ธรรมดา/หายาก) -> normal · 2 (มหากาพย์) -> epic · 3–4 (ตำนาน/SSR) -> legendary
 // up = grip->tip axis in the GLB, g = grip point along it (0 = pommel end), len = world length (hero is 138 tall)
 const P5W={warrior:['w0-ironblade','w1-bloodcrest','w2-solar-justice'],assassin:['a0-shadow-fang','a1-night-veil','a2-eclipse-twin'],
-  archer:['b0-hunter-bow','b1-windleaf','b2-lunar-longbow'],mage:['m0-apprentice-staff','m1-arcane-staff','m2-astral-nexus'],summoner:['s0-spirit-orb','s1-soul-tome','s2-genesis-grimoire']};
+  archer:['b0-hunter-bow','b1-windleaf','b2-lunar-longbow'],axe:['x0-molten-axe','x0-molten-axe','x0-molten-axe'],mage:['m0-apprentice-staff','m1-arcane-staff','m2-astral-nexus'],summoner:['s0-spirit-orb','s1-soul-tome','s2-genesis-grimoire']};
 const P5WS={'w0-ironblade':{up:[0,-1,0],g:.1,len:96},'w1-bloodcrest':{up:[-1,0,0],g:.1,len:100},'w2-solar-justice':{up:[-1,0,0],g:.1,len:106},
   'a0-shadow-fang':{up:[-1,0,0],g:.15,len:40},'a1-night-veil':{up:[0,1,0],g:.15,len:42},'a2-eclipse-twin':{up:[-1,0,0],g:.15,len:46},
+  'x0-molten-axe':{up:[0,1,0],g:.17,len:96},
   'b0-hunter-bow':{up:[1,0,0],g:.5,len:92,str:{c:[0,-.026,0],l:.93,r:.0028}},'b1-windleaf':{up:[1,0,0],g:.5,len:96},'b2-lunar-longbow':{up:[0,1,0],g:.5,gx:.12,len:100},
   'm0-apprentice-staff':{up:[0,1,0],g:.36,len:128},'m1-arcane-staff':{up:[0,1,0],g:.36,len:134},'m2-astral-nexus':{up:[0,1,0],g:.36,len:140},
   's0-spirit-orb':{up:[0,1,0],g:.5,len:22,orb:1},'s1-soul-tome':{up:[0,1,0],g:.5,len:24,orb:1},'s2-genesis-grimoire':{up:[0,1,0],g:.5,len:27,orb:1}};
-const P5WG={warrior:['#cfe0ff','#ff4a5a','#ffd890'],assassin:['#c8c8ff','#b46bff','#d878ff'],archer:['#e8c890','#7dff9a','#bfe4ff'],mage:['#9fe0ff','#c080ff','#7ab0ff'],summoner:['#7fe8ff','#b46bff','#d8b0ff']};
+const P5WG={warrior:['#cfe0ff','#ff4a5a','#ffd890'],assassin:['#c8c8ff','#b46bff','#d878ff'],archer:['#e8c890','#7dff9a','#bfe4ff'],axe:['#ff7a2a','#ff6a1a','#ff8a3a'],mage:['#9fe0ff','#c080ff','#7ab0ff'],summoner:['#7fe8ff','#b46bff','#d8b0ff']};
 const p5WBand=t=>t>=3?2:t===2?1:0;
 R.p5WKey=function(cls,t){const L=P5W[cls];return L?L[p5WBand(t)]:null};
-// weapon family -> model set. The axe and the crossbow have no Meshy model yet: they keep the game's own
-const P5FAM={sword:'warrior',gsword:'warrior',dagger:'assassin',bow:'archer',fire:'mage',frost:'mage',storm:'mage',soul:'summoner'};
+// weapon family -> model set. The axe uses the owner's Molten Inferno Axe at every tier (2026-11-18); the crossbow keeps the game's own
+const P5FAM={axe:'axe',sword:'warrior',gsword:'warrior',dagger:'assassin',bow:'archer',fire:'mage',frost:'mage',storm:'mage',soul:'summoner'};
 const p5Fam=wk=>{if(!wk)return null;const b=typeof FUSED!=='undefined'&&FUSED[wk]?FUSED[wk].base:wk;return P5FAM[b]||null};
 R.p5WKeyFor=function(wk,t){const f=p5Fam(wk);return f?P5W[f][p5WBand(Math.min(4,Math.max(0,t|0)))]:null};
 // where a fist closes on each rig: palm centre (hand-bone space, from the skin weights) and the across-the-palm axis toward

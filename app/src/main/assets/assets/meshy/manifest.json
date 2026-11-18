@@ -682,6 +682,71 @@
    "verifiedTaskStatus": "SUCCEEDED",
    "rigged": false,
    "animations": []
+  },
+  "mystic-mushrooms": {
+   "name": "Mystic mushrooms (forest floor decor)",
+   "source": "Meshy_AI_mystic_mushrooms_1117151438 (owner upload, simplified)",
+   "url": "assets/meshy/mystic-mushrooms.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "emerald-crystals": {
+   "name": "Emerald crystal cluster (decor)",
+   "source": "Meshy_AI_Emerald_Crystal_Clust_1117151716 (owner upload, simplified)",
+   "url": "assets/meshy/emerald-crystals.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "dungeon-floor": {
+   "name": "Dungeon flagstone floor (middle of ground_and_floor)",
+   "source": "ground_and_floor_ (owner upload, simplified)",
+   "url": "assets/meshy/dungeon-floor.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "dungeon-wall": {
+   "name": "Dungeon torch wall (side of ground_and_floor)",
+   "source": "ground_and_floor_ (owner upload, simplified)",
+   "url": "assets/meshy/dungeon-wall.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "lava-tiles": {
+   "name": "Crimson lava tiles (meteor zone floor)",
+   "source": "Meshy_AI_Crimson_Lava_Tiles_1118153552 (owner upload, simplified)",
+   "url": "assets/meshy/lava-tiles.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "rift-slab": {
+   "name": "Emerald rift slab (meteor zone floor)",
+   "source": "Meshy_AI_Emerald_Rift_Slab_1118153417 (owner upload, simplified)",
+   "url": "assets/meshy/rift-slab.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "verdant-tree": {
+   "name": "Verdant Solitude tree (replaces birch)",
+   "source": "Meshy_AI_Verdant_Solitude_1117192544 (owner upload, simplified)",
+   "url": "assets/meshy/verdant-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "p5w-x0-molten-axe": {
+   "name": "Molten Inferno Axe (axe, every tier)",
+   "source": "Meshy_AI_Molten_Inferno_Axe_1117205310 (owner upload, simplified to 6k tris)",
+   "url": "assets/meshy/p5w-x0-molten-axe.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": false
   }
  },
  "warrior": {
