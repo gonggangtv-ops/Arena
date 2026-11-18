@@ -199,9 +199,9 @@
       "alive": 32,
       "view3D": true,
       "heroReady": true,
-      "drawCalls": 348,
+      "drawCalls": 301,
       "geometries": 82,
-      "textures": 64
+      "textures": 93
     },
     "diagnostics": {
       "pageErrors": [],
@@ -411,9 +411,9 @@
       "alive": 32,
       "view3D": true,
       "heroReady": true,
-      "drawCalls": 344,
-      "geometries": 86,
-      "textures": 58
+      "drawCalls": 295,
+      "geometries": 73,
+      "textures": 68
     },
     "diagnostics": {
       "pageErrors": [],
@@ -531,9 +531,9 @@
       "alive": 32,
       "view3D": true,
       "heroReady": true,
-      "drawCalls": 309,
-      "geometries": 96,
-      "textures": 113
+      "drawCalls": 343,
+      "geometries": 108,
+      "textures": 139
     },
     "diagnostics": {
       "pageErrors": [],
