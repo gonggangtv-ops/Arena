@@ -470,7 +470,7 @@ Object.assign(R3,{
     if(br&&Math.random()<.9){o.head.getWorldPosition(this.v);const a=o.rot;const dx=Math.sin(a),dz=Math.cos(a);for(let i=0;i<4;i++)this.sp(true,{x:this.v.x+dx*30,y:this.v.y-6,z:this.v.z+dz*30,vx:dx*rand(500,800)+rand(-90,90),vy:rand(-120,-30),vz:dz*rand(500,800)+rand(-90,90),l:.6,s:30,s1:120,c:'#ffe08a',c2:'#ff2a00',sp:3,dr:1})}},
   overlay(me,L){
     for(const u of units){if(u.dead||!unitVisibleTo(u,me,L))continue;if(u.mob&&u.hp>=u.maxHp)continue;if(u.invisT>0&&u!==me&&dist(u,L)>170)continue;
-      const top=u.hero?(this.qn?(camNear?158:146):camNear?162:138):u.ecl&&this.eclTop?this.eclTop(u):u.boss?280:u.zombie||u.undead?(u.lord?170:u.big?150:112):u.kind==='ogre'?158:u.golem?(u.kind==='guardian'?172:146):u.kind==='wolf'?68:74;const o=this.objs.get(u.id);
+      const top=u.hero?(this.qn?(camNear?158:146):camNear?162:138):u.ecl&&this.eclTop?this.eclTop(u):u.boss?(this.bossTop?this.bossTop(u):280):u.zombie||u.undead?(u.lord?170:u.big?150:112):u.kind==='ogre'?158:u.golem?(u.kind==='guardian'?172:146):u.kind==='wolf'?68:74;const o=this.objs.get(u.id);
       const p=this.toScreen(u.x,(o?o.gy:0)+top+(o&&o.body?o.body.position.y:0),u.y);if(!p.ok||p.x<-80||p.x>W+80||p.y<-40||p.y>H+40)continue;drawBars(p.x,p.y,u,me,clamp(UI.s*.95,.8,1.15))}
     ctx.textAlign='center';
     const ts=clamp(UI.s,.8,1.2);for(const h of hitFl){const p=this.toScreen(h.x,this.gY(h.x,h.y)+62,h.y);if(p.ok)drawHitFlash(h,p.x,p.y,ts)}
