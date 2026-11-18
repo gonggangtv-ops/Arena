@@ -99,6 +99,24 @@ window.installMoonfallVillage=function(P){
         const s=1+hash(gx,gy,34)*.3,W=150*s,h0=this.gY(x,y),lo=Math.min(this.gY(x-W/2,y),this.gY(x+W/2,y),this.gY(x,y-W/2),this.gY(x,y+W/2));
         rift.push({x,y,a:hash(gx,gy,33)*6.283,s,drop:Math.max(0,h0-lo),z:hash(gx,gy,35)})}}
     inst('rift-slab',rift,(q,s)=>{const W=150*q.s,k=W/Math.max(s[0],s[2]);q.dy=2.2+q.z*1.4-q.drop-.9*s[1]*k;return[s[0]*k,s[1]*k,s[2]*k]});
+    // owner 2026-11-19: the whole arena is paved with the carved octagon tile, laid on a square grid edge to edge, with slate
+    // diamonds in the gaps (the tile is an irregular octagon: half sides .35 on x faces, .60 on z faces of a 2x2 tile). Each piece
+    // tilts with the ground; water, houses, the dungeon, the rift-paved ash land and steep ground are left as they are. Flowers
+    // and grass cover are cleared under the floor.
+    let octN=0;
+    if(this.mfProp('oct-floor')&&typeof WORLD!=='undefined'){const TW=240,parts=this.celestialAsset('oct-floor'),s0=sz('oct-floor'),TH=s0[1]*TW/s0[0],tg=WD.tg,gd=this.gdens;
+      const ok=(x,y)=>!(inWater(x,y)||house(x,y)||(typeof inDG==='function'&&inDG({x,y},60))||reg(x,y)===3||(typeof outsideD==='function'&&outsideD(x,y)>-30));
+      const tilt=(x,y,r)=>{const hx=(this.gY(x+r,y)-this.gY(x-r,y))/(2*r),hz=(this.gY(x,y+r)-this.gY(x,y-r))/(2*r);return Math.abs(hx)>.42||Math.abs(hz)>.42?null:[-Math.atan(hz),Math.atan(hx)]};
+      const tiles=[],gems=[];
+      for(let y=TW/2;y<WORLD;y+=TW)for(let x=TW/2;x<WORLD;x+=TW){if(!ok(x,y)||!ok(x-TW*.45,y)||!ok(x+TW*.45,y)||!ok(x,y-TW*.45)||!ok(x,y+TW*.45))continue;const t=tilt(x,y,TW/2);if(!t)continue;tiles.push({x,y,t});
+        if(gd&&tg){const i0=Math.floor((x-TW/2)/tg.C),i1=Math.floor((x+TW/2)/tg.C),j0=Math.floor((y-TW/2)/tg.C),j1=Math.floor((y+TW/2)/tg.C);for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++)if(i>=0&&j>=0&&i<tg.n&&j<tg.n)gd[j*tg.n+i]=0}}
+      const has=new Set(tiles.map(q=>q.x+','+q.y));
+      for(const q of tiles){const cx=q.x+TW/2,cy=q.y+TW/2;if(!has.has((q.x+TW)+','+q.y)&&!has.has(q.x+','+(q.y+TW))&&!has.has((q.x+TW)+','+(q.y+TW)))continue;const t=tilt(cx,cy,TW*.3);if(t)gems.push({x:cx,y:cy,t})}
+      const place=(q,add)=>{const y0=this.gY(q.x,q.y)+1-.83*TH;add(q.x,y0,q.y,TW,TH,TW,q.t[0],0,q.t[1],null)};
+      for(const p of parts)this.instC(p.geo,p.mat,tiles,place,!!this.hi,null);
+      const gm=this.cached('oct-gap',()=>this.fow(new T.MeshStandardMaterial({color:'#4b505a',roughness:.78,metalness:.05}),{key:'octgap'})),gg=this.cached('oct-gap-geo',()=>{const g=new T.CylinderGeometry(1,1,1,4);this.cachedGeos.add(g);return g});
+      this.instC(gg,gm,gems,(q,add)=>{add(q.x,this.gY(q.x,q.y)+1-.5*TH*.83,q.y,TW*.2,TH*.83,TW*.325,q.t[0],0,q.t[1],null)},false,null);
+      octN=tiles.length;this.octGems=gems.length}
     let dgF=0,dgW=0;const D=WD.dg;
     if(D&&this.mfProp('dungeon-floor')){const fl=[],TX=176,TZ=150;for(let y=D.y+D.T+TZ/2-8;y<D.y+D.h-D.T;y+=TZ-2)for(let x=D.x+D.T+TX/2-8;x<D.x+D.w-D.T;x+=TX-2)fl.push({x,y,a:0,k:(Math.round(x/TX)+Math.round(y/TZ))&1});
       const s0=sz('dungeon-floor'),H=s0[1]*(TX/s0[0]);inst('dungeon-floor',fl.map(q=>Object.assign(q,{dy:1-.143*H+q.k*.4})),()=>[TX,H,TZ]);dgF=fl.length}
@@ -108,7 +126,7 @@ window.installMoonfallVillage=function(P){
           if(hor){x=q.x+c;y=side<0?q.y-DE/2:q.y+q.h+DE/2;a=side<0?-Math.PI/2:Math.PI/2}else{y=q.y+c;x=side<0?q.x-DE/2:q.x+q.w+DE/2;a=side<0?0:Math.PI}
           const px=hor?x:x+(side<0?-DE:DE),py=hor?y+(side<0?-DE:DE):y;if(!inD(px,py)||inWall(px,py))continue;wl.push({x,y,a,len:step})}}
       inst('dungeon-wall',wl,q=>[DE,170,q.len+2]);dgW=wl.length}
-    this.natureCounts={stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length,mush:mush.length,crys:crys.length,rift:rift.length,dgFloor:dgF,dgWall:dgW}};
+    this.natureCounts={stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length,mush:mush.length,crys:crys.length,rift:rift.length,dgFloor:dgF,dgWall:dgW,oct:octN,octGap:this.octGems||0}};
   // owner's Verdant Solitude tree replaces the birches (r3 buildVegetation asks verdantOn first); drawn through instC with the tree
   // items so felling (trees-break.js) copies it and the see-through-canopy (treeParts) still works
   P.verdantOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('verdant-tree')};

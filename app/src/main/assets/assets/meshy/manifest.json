@@ -739,6 +739,14 @@
    "rotationY": 0,
    "biome": "arena",
    "rigged": false
+  },
+  "oct-floor": {
+   "name": "Carved octagonal floor tile (paves the arena)",
+   "source": "Meshy_AI_hexagonal_floor_tile__1118182729 (owner upload, octagon, simplified to 1.1k tris)",
+   "url": "assets/meshy/oct-floor.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
   }
  },
  "warrior": {
