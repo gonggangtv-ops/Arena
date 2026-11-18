@@ -699,26 +699,10 @@
    "rotationY": 0,
    "biome": "arena"
   },
-  "dungeon-floor": {
-   "name": "Dungeon flagstone floor (middle of ground_and_floor)",
-   "source": "ground_and_floor_ (owner upload, simplified)",
-   "url": "assets/meshy/dungeon-floor.glb",
-   "available": true,
-   "rotationY": 0,
-   "biome": "arena"
-  },
   "dungeon-wall": {
    "name": "Dungeon torch wall (side of ground_and_floor)",
    "source": "ground_and_floor_ (owner upload, simplified)",
    "url": "assets/meshy/dungeon-wall.glb",
-   "available": true,
-   "rotationY": 0,
-   "biome": "arena"
-  },
-  "rift-slab": {
-   "name": "Emerald rift slab (paves the whole ash land, REG 3)",
-   "source": "Meshy_AI_Emerald_Rift_Slab_1118153417 (owner upload, simplified to 700 tris)",
-   "url": "assets/meshy/rift-slab.glb",
    "available": true,
    "rotationY": 0,
    "biome": "arena"
@@ -739,14 +723,6 @@
    "rotationY": 0,
    "biome": "arena",
    "rigged": false
-  },
-  "oct-floor": {
-   "name": "Carved octagonal floor tile (paves the arena)",
-   "source": "Meshy_AI_hexagonal_floor_tile__1118182729 (owner upload, octagon, simplified to 1.1k tris)",
-   "url": "assets/meshy/oct-floor.glb",
-   "available": true,
-   "rotationY": 0,
-   "biome": "arena"
   }
  },
  "warrior": {
