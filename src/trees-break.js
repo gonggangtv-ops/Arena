@@ -72,7 +72,7 @@
       for(let i=0;i<(this.hi?40:18);i++)this.pe({x:x+rand(-cr,cr),y:gy+th+cr*rand(.2,1.4),z:z+rand(-cr,cr),vx:rand(-80,80),vy:rand(0,90),vz:rand(-80,80),g:110,drag:1,life:rand(1.4,2.6),s0:rand(6,11),s1:4,rs:rand(-6,6),kind:4,c:CAN[t.v]||'#5a8a3c',c2:'#3a5a2a'})}
     if(this.v3Debris)this.v3Debris({x,y:z,r:20,n:this.hi?8:4,c:'#6a4a32',size:6,up:300,speed:200})};
   // stumps: one instanced pool per trunk material (bark / birch), plus a pale cut face; they stay until the next world
-  P.treeStump=function(tr,x,gy,z,t){const S=this._stumps||(this._stumps=new Map()),key=tr.im.material.uuid;let p=S.get(key);
+  P.treeStump=function(tr,x,gy,z,t){if(tr.im.geometry.type!=='CylinderGeometry')return;const S=this._stumps||(this._stumps=new Map()),key=tr.im.material.uuid;let p=S.get(key);
     if(!p){const cap=1024,body=new T.InstancedMesh(tr.im.geometry,tr.im.material,cap),cut=new T.InstancedMesh(this.G.cyl,this.cached('stump-cut',()=>{const m=new T.MeshStandardMaterial({color:'#d8b88a',roughness:.85,metalness:0});return this.fow?this.fow(m,{key:'stumpcut'}):m}),cap);
       for(const m of[body,cut]){m.count=0;m.castShadow=!!this.hi;m.receiveShadow=true;m.frustumCulled=false;this.scene.add(m)}p={body,cut,n:0};S.set(key,p)}
     if(p.n>=1024)return;tr.m.decompose(V0,Q0,S0);const h=Math.max(10,Math.min(20,S0.y*.22)),r=S0.x*1.04,i=p.n++;

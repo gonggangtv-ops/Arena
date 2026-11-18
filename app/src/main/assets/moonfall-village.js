@@ -61,7 +61,9 @@ window.installMoonfallVillage=function(P){
         this.scene.add(g)}}
     if(typeof MOON==='undefined'||!MOON)this.buildNature();
   };
-  // ---- Arena Royale nature dressing: mossy boulders, wildflowers by the river, clear-water river stones (decor only, no collision) ----
+  // ---- Arena Royale nature dressing: mossy boulders, nebula blooms / rocky meadow patches / banana plants by the river and in the
+  //      meadows, clear-water river stones (decor only, no collision). Owner 2026-11-18: lupine, flower cushion and the sapling-like
+  //      tall-grass clump were replaced (their Meshy textures had black holes) ----
   P.buildNature=function(){const tg=WD.tg,n=tg.n,C=tg.C,hg=tg.hg,dens=this.gdens;if(!tg||!dens)return;
     const hash=(x,y,s)=>{const v=Math.sin(x*12.9898+y*78.233+s*37.719)*43758.5453;return v-Math.floor(v)},sz=k=>{const a=A.get(k);return a&&a.inspection&&a.inspection.size};
     const inst=(key,items,size)=>{if(!this.mfProp(key)||!items.length)return;const s=sz(key),parts=this.celestialAsset(key);
@@ -69,17 +71,23 @@ window.installMoonfallVillage=function(P){
     // mossy boulders take over the plain meadow rocks (same spot, same collision)
     inst('mossy-boulder',WD.rocks.filter(r=>this.plainRock(r)).map(r=>({x:r.x,y:r.y,r:r.r,a:hash(r.x,r.y,1)*6.283,dy:-r.r*.12})),(q,s)=>{const W=q.r*2.35,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k*1.05,s[2]*k]});
     const wet=(i,j,R)=>{for(let b=-R;b<=R;b+=1)for(let a=-R;a<=R;a+=1){const ii=i+a,jj=j+b;if(ii>=0&&jj>=0&&ii<n&&jj<n&&hg[jj*n+ii]<WL-1)return true}return false};
-    const stones=[],lupine=[],cushion=[],tall=[];
+    const stones=[],bloom=[],patch=[],banana=[];
     for(let j=2;j<n-2;j+=2)for(let i=2;i<n-2;i+=2){const k=j*n+i,h=hg[k],x=(i+hash(i,j,2))*C,y=(j+hash(i,j,3))*C,r=hash(i,j,4);
       if(h<WL-1){if(h>WL-18&&r<.09)stones.push({x,y,w:46+hash(i,j,5)*60,a:hash(i,j,6)*6.283,dy:-2});continue}
       if(h<WL+3){if(r<.32)stones.push({x,y,w:55+hash(i,j,5)*70,a:hash(i,j,6)*6.283});continue}
       if(!dens[k]||dens[k]<160)continue;const nearW=h<WL+28&&wet(i,j,5);
       const p=nearW?.34:WD.noise(x,y)<.44?.035:.012;if(r>p)continue;const t=hash(i,j,7);const it={x,y,a:hash(i,j,8)*6.283,s:.75+hash(i,j,9)*.6};
-      (t<.42?lupine:t<.62?cushion:tall).push(it)}
+      (t<.4?bloom:t<.72?patch:banana).push(it)}
     inst('river-stones',stones,(q,s)=>{const k=q.w/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
-    inst('lupine-clump',lupine,(q,s)=>{const H=58*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
-    inst('flower-cushion',cushion,(q,s)=>{const W=42*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
-    inst('tall-grass',tall,(q,s)=>{const H=50*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
-    this.natureCounts={stones:stones.length,lupine:lupine.length,cushion:cushion.length,tall:tall.length}};
+    inst('nebula-bloom',bloom,(q,s)=>{const H=70*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
+    inst('rocky-meadow',patch.map(q=>Object.assign(q,{dy:-2})),(q,s)=>{const W=150*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
+    inst('banana-plant',banana,(q,s)=>{const H=100*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
+    this.natureCounts={stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length}};
+  // owner's Meshy crystal tree replaces the round-crowned oaks and enchanted trees (r3 buildVegetation asks crystalOn first);
+  // drawn through instC with the tree items so felling (trees-break.js) copies it and canopy see-through (treeParts) still works
+  P.crystalOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('crystal-tree')};
+  P.crystalTrees=function(list,reg){if(!list.length)return;const a=A.get('crystal-tree'),s=a.inspection.size,parts=this.celestialAsset('crystal-tree');
+    const place=(t,add)=>{const H=((t.v===3?38:40)*t.h+t.cr*1.5)*1.08,k=H/s[1],R=mulberry32(Math.floor(t.x*7+t.y));add(t.x,this.gY(t.x,t.y)-2,t.y,s[0]*k,H,s[2]*k,0,R()*6.283,0,null)};
+    for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
   P.plainRock=function(r){return !r.prop&&!r.edge&&!r.cliff&&r.cave===undefined&&(typeof MOON==='undefined'||!MOON)&&this.mfProp('mossy-boulder')};
 };
