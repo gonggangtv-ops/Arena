@@ -51,6 +51,20 @@ const P5WS={'w0-ironblade':{up:[0,-1,0],g:.1,len:96},'w1-bloodcrest':{up:[-1,0,0
 const P5WG={warrior:['#cfe0ff','#ff4a5a','#ffd890'],assassin:['#c8c8ff','#b46bff','#d878ff'],archer:['#e8c890','#7dff9a','#bfe4ff'],mage:['#9fe0ff','#c080ff','#7ab0ff'],summoner:['#7fe8ff','#b46bff','#d8b0ff']};
 const p5WBand=t=>t>=3?2:t===2?1:0;
 R.p5WKey=function(cls,t){const L=P5W[cls];return L?L[p5WBand(t)]:null};
+// weapon family -> model set. The axe and the crossbow have no Meshy model yet: they keep the game's own
+const P5FAM={sword:'warrior',gsword:'warrior',dagger:'assassin',bow:'archer',fire:'mage',frost:'mage',storm:'mage',soul:'summoner'};
+const p5Fam=wk=>{if(!wk)return null;const b=typeof FUSED!=='undefined'&&FUSED[wk]?FUSED[wk].base:wk;return P5FAM[b]||null};
+R.p5WKeyFor=function(wk,t){const f=p5Fam(wk);return f?P5W[f][p5WBand(Math.min(4,Math.max(0,t|0)))]:null};
+// where a fist closes on each rig: palm centre (hand-bone space, from the skin weights) and the across-the-palm axis toward
+// the thumb (the line a held handle follows). Measured from the packed p5-*.glb skins; see HANDOFF 2026-11-18.
+const P5GRIP={warrior:{R:{p:[-1.13,11.11,-.61],d:[-.953,-.039,.301]},L:{p:[.16,10.47,-.54],d:[.927,.007,.374]}},
+  assassin:{R:{p:[-.67,9.24,-.19],d:[-.648,.192,.737]},L:{p:[.62,9.21,.33],d:[.671,.059,.739]}},
+  archer:{R:{p:[.62,11.86,-2],d:[-.751,.252,.61]},L:{p:[-.29,11.97,-.97],d:[.756,.232,.612]}},
+  mage:{R:{p:[-1.14,9.68,1.04],d:[-.701,.003,.713]},L:{p:[.63,10.05,.67],d:[.699,.008,.715]}},
+  summoner:{R:{p:[-1.14,9.68,1.04],d:[-.701,.003,.713]},L:{p:[.55,11.78,.37],d:[.885,.148,.441]}}};
+const p5Grip=(o,hand)=>{const G=P5GRIP[o.cls]||P5GRIP.warrior;return hand===o.handL?G.L:G.R};
+// fit a weapon group into the fist: grip point on the palm centre, handle along the fist axis
+const p5Fist=(g,o,hand,bow)=>{const G=p5Grip(o,hand);g.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3().fromArray(G.d).normalize());if(bow)g.rotateY(Math.PI/2);g.position.fromArray(G.p)};
 R.p5WReady=function(k){const A=CA(),a=k&&A&&A.get('p5w-'+k);return !!(a&&a.state==='loaded'&&a.gltf)};
 // grip at the origin, tip along +Y, scaled to its world length
 R.p5WModel=function(k){if(!this.p5WReady(k))return null;const S=P5WS[k],a=CA().get('p5w-'+k),m=a.gltf.scene.clone(true);
@@ -60,12 +74,16 @@ R.p5WModel=function(k){if(!this.p5WReady(k))return null;const S=P5WS[k],a=CA().g
   const bb=new T.Box3().setFromObject(al),L=bb.max.y-bb.min.y,gy=bb.min.y+L*S.g,gx=S.gx!==undefined?bb.min.x+(bb.max.x-bb.min.x)*S.gx:(bb.min.x+bb.max.x)/2;
   al.position.set(-gx,-gy,-(bb.min.z+bb.max.z)/2);const w=new T.Group();w.add(al);w.scale.setScalar(S.len/Math.max(1e-6,L));
   const tip=new T.Object3D();tip.position.y=(bb.max.y-gy)*.9;w.add(tip);w.userData.tip=tip;return w};
+R.p5WDrop=function(k){const S=P5WS[k],w=this.p5WModel(k),g=new T.Group(),L=S.len,sc=S.orb?1.7:Math.min(1,84/L);
+  w.scale.multiplyScalar(sc);w.position.y=-(L*sc)*(.5-S.g);g.add(w);g.userData.tip=w.userData.tip;return g};
+{const _io=R.itemObj;R.itemObj=function(it){if(it&&it.k==='w'){const k=this.p5WKeyFor(it.wk,it.tier);if(k&&this.p5WReady(k)){const _w=this.weapon;this.weapon=()=>this.p5WDrop(k);
+  try{return _io.call(this,it)}finally{this.weapon=_w}}}return _io.apply(this,arguments)}}
 R.p5Arm=function(o,u){for(const w of[o.wpnR,o.wpnL,o.focus])if(w&&w.parent)w.parent.remove(w);o.wpnR=o.wpnL=o.wtip=o.focus=null;o.wk=u.wk;o.wt=u.wt;o.lgK=null;o.p5wWait=null;o.p5w=0;
   if(!u.wk||!o.handR)return;const t=Math.min(4,Math.max(0,u.wt|0)),bk=typeof FUSED!=='undefined'&&FUSED[u.wk]?FUSED[u.wk].base:u.wk,bow=bk==='bow'||bk==='xbow',dual=bk==='dagger';
-  const wk=this.p5WKey(o.cls,t);
-  if(wk&&this.p5WReady(wk)){const S=P5WS[wk];o.p5w=1;o.wglowC=P5WG[o.cls][p5WBand(t)];
+  const wk=this.p5WKeyFor(u.wk,t),fam=p5Fam(u.wk);
+  if(wk&&this.p5WReady(wk)){const S=P5WS[wk];o.p5w=1;o.wglowC=P5WG[fam][p5WBand(t)];
     if(S.orb){const f=this.p5WModel(wk);o.focus=f;o.wtip=f.userData.tip;o.root.add(f);return}   // the summoner's focus floats above the off hand
-    const mount=hand=>{const w=this.p5WModel(wk),g=new T.Group();g.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3(0,0,1));if(bow)g.rotateY(Math.PI/2);g.add(w);   // a bow grip sits in the fist like a hilt; its string faces the archer
+    const mount=hand=>{const w=this.p5WModel(wk),g=new T.Group();p5Fist(g,o,hand,bow);g.add(w);   // the handle (or a bow's grip) runs through the closed fist
       o.pivot.updateMatrixWorld(true);const ws=new T.Vector3();hand.getWorldScale(ws);g.scale.setScalar(1/Math.max(1e-6,ws.x));hand.add(g);if(!o.wtip)o.wtip=w.userData.tip;return g};
     if(bow&&o.handL)o.wpnL=mount(o.handL);else o.wpnR=mount(o.handR);if(dual&&o.handL)o.wpnL=mount(o.handL);return}
   if(wk)o.p5wWait=wk;   // the Meshy weapon is still loading: show the game's own model until it is in
@@ -74,7 +92,7 @@ R.p5Arm=function(o,u){for(const w of[o.wpnR,o.wpnL,o.focus])if(w&&w.parent)w.par
   const make=hand=>{const w=this.weapon(mk,t);w.updateMatrixWorld(true);const bb=new T.Box3().setFromObject(w);if(bb.isEmpty())return null;
     const ext=[[bb.min.x,bb.max.x],[bb.min.y,bb.max.y],[bb.min.z,bb.max.z]];let ax=0,len=0;ext.forEach((e,i)=>{if(e[1]-e[0]>len){len=e[1]-e[0];ax=i}});
     const e=ext[ax],dir=new T.Vector3();dir.setComponent(ax,Math.abs(e[1])>=Math.abs(e[0])?1:-1);
-    const g=new T.Group(),al=new T.Group();al.quaternion.setFromUnitVectors(dir,bow?new T.Vector3(0,1,0):new T.Vector3(0,0,1));al.add(w);g.add(al);
+    const g=new T.Group(),al=new T.Group();al.quaternion.setFromUnitVectors(dir,new T.Vector3(0,1,0));al.add(w);g.add(al);p5Fist(g,o,hand,false);
     o.pivot.updateMatrixWorld(true);const ws=new T.Vector3();hand.getWorldScale(ws);g.scale.setScalar(1/Math.max(1e-6,ws.x));hand.add(g);
     if(w.userData.tip&&!o.wtip)o.wtip=w.userData.tip;o.wglow=w.userData.glow||null;return g};
   if(bow&&o.handL)o.wpnL=make(o.handL);else o.wpnR=make(o.handR);
