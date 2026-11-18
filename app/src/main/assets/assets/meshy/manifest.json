@@ -715,17 +715,9 @@
    "rotationY": 0,
    "biome": "arena"
   },
-  "lava-tiles": {
-   "name": "Crimson lava tiles (meteor zone floor)",
-   "source": "Meshy_AI_Crimson_Lava_Tiles_1118153552 (owner upload, simplified)",
-   "url": "assets/meshy/lava-tiles.glb",
-   "available": true,
-   "rotationY": 0,
-   "biome": "arena"
-  },
   "rift-slab": {
-   "name": "Emerald rift slab (meteor zone floor)",
-   "source": "Meshy_AI_Emerald_Rift_Slab_1118153417 (owner upload, simplified)",
+   "name": "Emerald rift slab (paves the whole ash land, REG 3)",
+   "source": "Meshy_AI_Emerald_Rift_Slab_1118153417 (owner upload, simplified to 700 tris)",
    "url": "assets/meshy/rift-slab.glb",
    "available": true,
    "rotationY": 0,

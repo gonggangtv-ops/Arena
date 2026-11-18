@@ -7,7 +7,7 @@ arena=not cur and not classic          # index.html: every Cursed Realm system, 
 sys_on=cur or arena
 VILLAGE=['house-cottage','house-long','house-witch','market-stall','village-well','street-lantern','stone-bridge','plaza-fountain']
 # nature dressing joins the required set once its models are in the manifest
-NATURE=['mossy-boulder','nebula-bloom','rocky-meadow','banana-plant','river-stones','mystic-mushrooms','emerald-crystals','dungeon-floor','dungeon-wall','lava-tiles','rift-slab','verdant-tree']
+NATURE=['mossy-boulder','nebula-bloom','rocky-meadow','banana-plant','river-stones','mystic-mushrooms','emerald-crystals','dungeon-floor','dungeon-wall','rift-slab','verdant-tree']
 import json as _j
 _man=_j.load(open(os.path.join(D,'..','app','src','main','assets','assets','meshy','manifest.json'),encoding='utf-8'))['assets']
 VILLAGE+=[k for k in NATURE if k in _man]
