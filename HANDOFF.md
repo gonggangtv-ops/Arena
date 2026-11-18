@@ -7,6 +7,13 @@
 
 ---
 
+## 2026-11-18 · Claude · ภาพคม + VFX อนุภาค/แถบอาวุธ + บอส Lava Titan (index เท่านั้น)
+- เจ้าของ: "VFX 3D สวยขึ้น 300%, ภาพยังเหลี่ยมเหมือนเกมยุคเก่า, เปลี่ยนบอสมังกรเป็นโมเดลใน Meshy" · เครดิต Meshy = 0 → ใช้โมเดล rigged ที่มีแล้ว
+- `src/arena-gfx.js`: บังคับ MSAA ทุกเครื่อง (เดิมมือถือปิด) · pixel ratio high 2 (มือถือ 1.75) / low 1.35–1.45 · primitive ใน `R3.G` เพิ่ม segment, icosphere ของหิน/พุ่มไม้ละเอียดขึ้น 1 ระดับ (desktop) · ปิด flatShading · alphaTest → alphaToCoverage · anisotropy 8/4 · shadow 4096 + radius (r186 ไม่มี PCFSoftShadowMap แล้ว)
+- `src/arena-vfx-particles.js`: GPU particles (คำนวณใน vertex shader: glow/spark ยืดตามความเร็ว/ember/smoke-mist แบบ alpha/shard/star, 7000+700 high · 2400+400 low) · ribbon trail ตามคมอาวุธ (ฮีโร่ p5 `wtip+handR`, สัตว์ Eclipse `wpnTip+hand`) · หางกระสุน · afterimage ตอนพุ่ง · รอยไหม้ · wrap `v3Pulse`/`soulFx`/`hitVfx`/`doFx('die')`
+- `src/boss-titan.js`: บอสปราสาท (`kind:'boss'`) แสดงเป็น Lunar Construct rigged สูง 390 ทาสีหินดำ+ลาวา (`titanForge`) ใช้กลไก `eclSkModel`/`eclAnim` ของ eclipse-fx (ไม่ตั้ง `u.ecl` บนยูนิต → ไม่แตะ AI) · พ่นไฟ = ท่าทุบ + สายไฟจากหัว · slam = Ground_Slam · ชื่อ/ข้อความ "มังกรเพลิง" → "ไททันลาวาบรรพกาล" · `r4.js` HP bar ใช้ `R3.bossTop` ถ้ามี · เปลี่ยนเป็นโมเดลใหม่ภายหลัง: แก้ `TITAN.key`
+- cursed.html ไม่ได้รับไฟล์ใหม่ (arena-only) ยกเว้นบรรทัด HP bar ใน r4 (fallback 280 เหมือนเดิม)
+
 ## 2026-11-18 · Claude · อาชีพที่ 5: Summoner / คัมภีร์วิญญาณ (index เท่านั้น)
 - เจ้าของเลือก "ทำเป็นอาชีพจริง" — อาวุธชนิดใหม่ `soul` (📖 คัมภีร์วิญญาณ) ใน `WK`/`AW` (ต่อท้ายอาวุธพื้นฐาน ก่อนอาวุธหลอม) · ไม่หลอมกับอาวุธอื่น (ไม่มีใน `WCAT`)
 - `src/summoner.js` (ตรรกะ, host-authoritative): Q อัญเชิญภูติ 2 ตัว (เลเวล 3+ + หมาป่าวิญญาณ, สูงสุด 4) · E บัญชาวิญญาณ (หอกวิญญาณ kind 16 + วิญญาณทุกตัวล็อกเป้า แรง/เร็วขึ้น ฟื้นเลือด 25%) · R ผู้พิทักษ์จันทรา (aoe slam + stun, ยักษ์สู้ข้างตัว 18–22 วิ, slam ทุก 7 วิ)
