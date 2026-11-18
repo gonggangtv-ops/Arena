@@ -424,7 +424,7 @@ function terrH(x,y,noCave){
   const ch=cliffH(x,y);if(ch>h)h=ch;
   if(!noCave){const ck=caveK(x,y);if(ck>0)h*=1-ck}
   const D=WD.dg;if(D){const ex=Math.max(D.x-x,x-(D.x+D.w),0),ey=Math.max(D.y-y,y-(D.y+D.h),0),dd=Math.hypot(ex,ey);if(dd<=0)return 0;if(dd<1100){const k=smooth01(dd/1100);h=Math.max(190,lerp(190,h,k))}}
-  if(h<60){const rd=Math.abs(riverD(x,y));if(rd<400){const hw=riverHW(y);if(rd<hw+34){const bed=-14*smooth01((hw+30-rd)/70)-6*smooth01((hw-40-rd)/Math.max(30,hw-40));if(bed<h)h=bed}}
+  if(h<60){const rd=Math.abs(riverD(x,y));if(rd<400){const hw=riverHW(y);if(rd<hw+34){const bed=-14*smooth01((hw+30-rd)/70)-6*smooth01((hw-40-rd)/Math.max(30,hw-40))-(MOON?0:12*smooth01((hw-80-rd)/Math.max(40,hw-80)));if(bed<h)h=bed}}
     const ld=lakeD(x,y);if(ld<50){const bed=ld>0?-6*smooth01((50-ld)/50):-6-10*smooth01(-ld/150)-26*smooth01((-ld-130)/180);if(bed<h)h=bed}
     const pd=poolD(x,y);if(pd<40){const bed=pd>0?-6*smooth01((40-pd)/40):-6-9*smooth01(-pd/70)-20*smooth01((-pd-60)/60);if(bed<h)h=bed}}
   return h}
@@ -465,7 +465,7 @@ function genWorld(seed){
     const A1=sr(540,700),A2=sr(140,210),f1=sr(1.7,2.4),f2=sr(3.6,4.8),q1=sr(0,6.3),q2=sr(0,6.3);
     for(let i=0;i<n;i++){const t=i/(n-1);const tp=smooth01(t/.13)*smooth01((1-t)/.16);xs[i]=lerp(P0.x,Lk.x,t)+(A1*Math.sin(2*Math.PI*t*f1+q1)+A2*Math.sin(2*Math.PI*t*f2+q2))*tp}
     for(let i=0;i<n;i++){const a=xs[Math.max(0,i-1)],b=xs[Math.min(n-1,i+1)];const s=(b-a)/((Math.min(n-1,i+1)-Math.max(0,i-1))*st);il[i]=1/Math.sqrt(1+s*s)}
-    RIV={y0,y1,st,n,xs,il,hw0:88,hw1:138}}
+    RIV={y0,y1,st,n,xs,il,hw0:MOON?88:150,hw1:MOON?138:226}}   // Arena Royale: a wider river (owner 2026-11-18)
   w.river=[];for(let y=RIV.y0;y<=RIV.y1;y+=40){const i=clamp(Math.round((y-RIV.y0)/RIV.st),0,RIV.n-1);const a=RIV.xs[Math.max(0,i-10)],b=RIV.xs[Math.min(RIV.n-1,i+10)];const s=(b-a)/80,L=Math.sqrt(1+s*s);w.river.push({x:RIV.xs[i],y,nx:1/L,ny:-s/L,hw:riverHW(y)})}
   // ---- secret caves dug into the mountain walls (never on the camera-facing south side) ----
   const wfCave=false,nCave=0,caveAng=[];
@@ -599,7 +599,7 @@ function genWorld(seed){
   });
   // ---- bridges across the river ----
   const addBridge=y=>{const i=clamp(Math.round((y-RIV.y0)/RIV.st),0,RIV.n-1);const x=RIV.xs[i];const a=RIV.xs[Math.max(0,i-8)],b=RIV.xs[Math.min(RIV.n-1,i+8)];const s=(b-a)/64,L=Math.sqrt(1+s*s);
-    const ax=1/L,ay=-s/L;const hw=riverHW(y);const br={x,y,ax,ay,len:hw*2+150,wid:122};const e=br.len/2+40;br.r={x:x-ax*e,y:y-ay*e};br.d={x:x+ax*e,y:y+ay*e};
+    const ax=1/L,ay=-s/L;const hw=riverHW(y);const br={x,y,ax,ay,len:hw*2+150,wid:MOON?122:184};const e=br.len/2+40;br.r={x:x-ax*e,y:y-ay*e};br.d={x:x+ax*e,y:y+ay*e};
     if(outsideD(br.r.x,br.r.y)>-200||outsideD(br.d.x,br.d.y)>-200||lakeD(x,y)<120||poolD(x,y)<120)return null;if(w.bridges.some(o=>!o.dock&&Math.hypot(o.x-x,o.y-y)<700))return null;w.bridges.push(br);return br};
   const town=w.villages.find(v=>v.main);if(town){let by=null,bd=1e9;for(let y=RIV.y0+300;y<RIV.y1-300;y+=20){const d=Math.hypot(riverX(y)-town.x,y-town.y);if(d<bd){bd=d;by=y}}if(by!==null){const b=addBridge(by);if(b)b.big=1}}
   for(const f of[.08,.18,.28,.38,.48,.58,.68,.78,.88,.95])addBridge(lerp(RIV.y0,RIV.y1,f));
