@@ -1,0 +1,31 @@
+{
+  "base": "e455f6d88e0675f7284fce6c0f3a9f99bcd03131",
+  "arenaHtmlSHA256": "236f63cef2be256fdb4dba1973f04662bd5b8c12c86c37f9c6c7f6937388358c",
+  "cursedHtmlMatchesPublishedBase": true,
+  "criticalGameplayFilesMatchPublishedBase": true,
+  "sourceDeploymentCopiesMatch": true,
+  "requiredKeyArt": {
+    "width": 1672,
+    "height": 941,
+    "bytes": 195416
+  },
+  "notes": "The new material and UI layers install only in index.html.",
+  "finalMobile844x390": {
+    "settingsAboveFold": true,
+    "settingsTouchTargetAtLeast44px": true,
+    "realSolo": true,
+    "pageErrors": [],
+    "base": "0ca9925b1fda1860f4e00f85902b8b1dfbf4c33e"
+  },
+  "cinematicDesktop": {
+    "sameWorldComparisonSeed": 719243,
+    "inGameLocations": [
+      "village",
+      "river"
+    ],
+    "shadersCompiled": true,
+    "cameraAimRoundTripErrorWorldUnits": 1.8189894035458565e-12,
+    "pageErrors": [],
+    "base": "0ca9925b1fda1860f4e00f85902b8b1dfbf4c33e"
+  }
+}

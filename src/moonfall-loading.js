@@ -90,19 +90,19 @@ window.installMoonfallLoading=function(){
       // CSS alone cannot prove the illustration decoded. Require the same real
       // URL used by both screens, then let the browser reuse its cached pixels.
       const art=new Promise((resolve,reject)=>{
-        const image=new Image(),timer=setTimeout(()=>reject(Error('หมดเวลารอภาพประตูจันทรา')),60000);
+        const image=new Image(),timer=setTimeout(()=>reject(Error('หมดเวลารอภาพหน้าโหลด')),60000);
         image.onload=async()=>{
           try{await image.decode();if(!image.naturalWidth||!image.naturalHeight)throw Error('empty image');clearTimeout(timer);artDone=1;update();resolve();}
-          catch(e){clearTimeout(timer);reject(Error('ภาพประตูจันทราไม่ถูกต้อง'));}
+          catch(e){clearTimeout(timer);reject(Error('ภาพหน้าโหลดไม่ถูกต้อง'));}
         };
-        image.onerror=()=>{clearTimeout(timer);reject(Error('โหลดภาพประตูจันทราไม่สำเร็จ'));};
-        image.src='assets/ui/moonfall-key-art.webp';
+        image.onerror=()=>{clearTimeout(timer);reject(Error('โหลดภาพหน้าโหลดไม่สำเร็จ'));};
+        image.src=screen.dataset.keyArt||'assets/ui/moonfall-key-art.webp';
       });
       const audio=Promise.all(music.map(async name=>{const response=await fetch('music/'+name+'.mp3',{cache:'force-cache',signal:AbortSignal.timeout(60000)});if(!response.ok)throw Error('เสียง '+name+': HTTP '+response.status);const bytes=new Uint8Array(await response.arrayBuffer());if(bytes.length<4||!(String.fromCharCode(...bytes.slice(0,3))==='ID3'||(bytes[0]===255&&(bytes[1]&224)===224)))throw Error('ไฟล์เสียงไม่ถูกต้อง: '+name);musicDone++;update();}));
       const fonts=document.fonts.ready.then(()=>{fontsDone=1;update();});
-      await Promise.all([art,audio,fonts,until(()=>packDone>0,'ตัวละคร'),until(()=>MoonfallUI.snapshot().state==='loaded','ภาพไอคอน'),until(()=>CelestialAssets.snapshot().assets.every(a=>a.state==='loaded'),'ฉาก Moonfall')]);
+      await Promise.all([art,audio,fonts,until(()=>packDone>0,'ตัวละคร'),until(()=>MoonfallUI.snapshot().state==='loaded','ภาพไอคอน'),until(()=>CelestialAssets.snapshot().assets.every(a=>a.state==='loaded'),'ฉากเกม')]);
       if(failed)return;
-      show('กำลังเตรียมภาพและแสงจันทร์…');
+      show(MOON?'กำลังเตรียมภาพและแสงจันทร์…':'กำลังเตรียมภาพสนามประลอง…');
       R3.menuSeed=Math.floor(Math.random()*1e9);setupWorld(R3.menuSeed);R3.buildWorld();R3.menuReady=1;
       await R3.renderer.compileAsync(R3.scene,R3.cam);
       // Exercise the actual menu renderer without exposing an incomplete scene.

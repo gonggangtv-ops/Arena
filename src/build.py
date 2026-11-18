@@ -29,13 +29,17 @@ if arena:game_files[-1:-1]=['arena-vfx-runtime.js','arena-vfx-skills.js','arena-
 # so its own aoe kinds are drawn by eclipse-fx.js and everything else still reaches the arena layer.
 if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js','p5-heroes.js']
 if arena:game_files[-1:-1]=['summoner.js','summoner-fx.js']   # fifth class: the Spirit Tome (Arena Royale only)
-if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','boss-titan.js','trees-break.js']   # image quality, particles/trails, Lava Titan boss
+if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','boss-titan.js','trees-break.js','arena-atmosphere.js']
+if arena:game_files.append('arena-menu.js')
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in game_files)
 js='const CURSED='+('true' if sys_on else 'false')+';const MOON='+('true' if cur else 'false')+';\n'+js
 MOON=['celestial-assets.js','celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js','moonfall-village.js','moonfall-ui.js','moonfall-menu.js','moonfall-inventory.js','moonfall-loading.js']
 MOONCSS=['celestial-theme.css','moonfall-ui.css','moonfall-menu.css','moonfall-inventory.css','moonfall-loading.css']
 if arena:MOON=[f for f in MOON if f not in ('celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js')]
+arena_style='\n<style>'+open(os.path.join(D,'arena-menu.css'),encoding='utf-8').read()+'</style>\n' if arena else ''
 if sys_on:
+    if arena:
+        js += "\nmoody=lsGet('ar_tone2','dark')==='dark';syncTone();installArenaMenuUX();\n"
     js += "\ninstallMoonfallInventory();installMoonfallLoading();\n"
     import re
     if cur:sh=sh.replace('<title>Arena Royale</title>','<title>The Cursed Realm</title>')
@@ -46,9 +50,14 @@ if sys_on:
     sh=sh.replace('  <div class="tip">','  <button class="anime-help-toggle" id="animeHelp" aria-expanded="false" aria-controls="animeGuide">วิธีเล่นและการควบคุม ▾</button>\n  <div class="tip anime-help-collapsed" id="animeGuide">',1)
     sh=re.sub(r'(<div id="loading"[^>]*><div class="spin"></div><div class="sub"[^>]*>)[^<]*',r'\1กำลังเปิดประตูสู่ Moonfall…',sh,count=1)
     assert sh.count('animeHelp')==1 and sh.count('moonfallBtn')==(1 if cur else 0) and 'anime-kicker' in sh and 'ประตูสู่ Moonfall' in sh
-    sh=sh.replace('<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>',(lambda t:t if cur else t.replace('THE CURSED REALM','ARENA ROYALE'))(open(os.path.join(D,'moonfall-loading.html'),encoding='utf-8').read().strip()))
+    loading=open(os.path.join(D,'moonfall-loading.html'),encoding='utf-8').read().strip()
+    if arena:
+        loading=loading.replace('id="loading"','id="loading" data-key-art="assets/ui/arena-citadel.webp"',1)
+        loading=loading.replace('THE CURSED REALM','BATTLE ROYALE').replace('>MOONFALL<','>ARENA ROYALE<')
+        loading=loading.replace('กำลังเปิดประตูจันทรา','กำลังเปิดประตูสนาม').replace('เมื่อจันทราร่วงหล่น ตำนานบทใหม่จึงเริ่มต้น','เตรียมตัวเข้าสู่สนามประลอง').replace('พลังจันทรา','อาวุธ')
+    sh=sh.replace('<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>',loading)
     sh=re.sub(r'(<button[^>]*id="(?:soloBtn|qmBtn|hostBtn|joinBtn|lobbyStart|moonfallBtn)"[^>]*)(>)',r'\1 disabled\2',sh)
-    if arena:sh=sh.replace('</head>','<script>window.CELESTIAL_KEYS='+repr(VILLAGE).replace("'",'"')+'</script>\n</head>',1)
+    if arena:sh=sh.replace('</head>','<script>window.CELESTIAL_KEYS='+repr(VILLAGE).replace("'",'"')+'</script>\n'+arena_style+'</head>',1)
     else:sh=sh.replace('</head>','<script>window.CELESTIAL_SKIP='+repr(NATURE+P5+P5W).replace("'",'"')+'</script>\n</head>',1)  # Moonfall has no meadow dressing
     sh=sh.replace('<!--TURN-->','<!--TURN-->\n'+'\n'.join("<script src=\"%s\" onerror=\"moonfallCodeFailure('%s')\"></script>"%(f,f) for f in MOON),1)
 def critical_libs(text):
@@ -67,7 +76,7 @@ else:
     st=sh[sh.index('<style>'):sh.index('</style>')+8].replace("html,body{margin:0;height:100%;","html,body{margin:0;height:100%;padding:0!important;")
     body=sh[sh.index('<body>')+6:sh.rindex('</body>')].replace('<!--LIBS-->',libs).replace('<!--TURN-->','').replace('/*GAME*/',js)
     out=('<title>The Cursed Realm</title>\n' if cur else '<title>Arena Royale</title>\n')+st+'\n'+body
-    if sys_on:out=out.replace(st,st+''.join('\n<style>'+open(os.path.join(D,f),encoding='utf-8').read()+'</style>' for f in MOONCSS),1)
+    if sys_on:out=out.replace(st,st+''.join('\n<style>'+open(os.path.join(D,f),encoding='utf-8').read()+'</style>' for f in MOONCSS)+arena_style,1)
     p=os.path.join(os.path.dirname(D),'cursed_artifact.html' if cur else 'classic_artifact.html' if classic else 'artifact.html')
 open(p,'w',encoding='utf-8').write(out)
 print(p,len(out))
