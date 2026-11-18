@@ -38,7 +38,9 @@
   P.gfxPolish=function(){if(!this.scene||!this.renderer)return;const seen=this._gfxSeen||(this._gfxSeen=new WeakSet()),aniso=Math.min(this.renderer.capabilities.getMaxAnisotropy?this.renderer.capabilities.getMaxAnisotropy():4,this.hi?8:4);
     const fix=m=>{if(!m||seen.has(m))return;seen.add(m);let ch=false;
       if(m.flatShading){m.flatShading=false;ch=true}
-      if(m.alphaTest>0&&!m.transparent&&!m.alphaToCoverage){m.alphaToCoverage=true;ch=true}
+      // only the game's own painted leaf cards: Meshy foliage textures are black where they are cut out, and wherever the
+      // GPU does not turn alpha into coverage (seen on software GL) those cut-outs drew as black blots
+      if(m.alphaTest>0&&!m.transparent&&!m.alphaToCoverage&&m.map&&m.map.isCanvasTexture){m.alphaToCoverage=true;ch=true}
       for(const k of['map','normalMap','roughnessMap','metalnessMap','emissiveMap','aoMap']){const t=m[k];if(t&&t.isTexture&&!(t.anisotropy>=aniso)&&!t.isRenderTargetTexture){t.anisotropy=aniso;t.needsUpdate=true}}
       if(ch)m.needsUpdate=true};
     this.scene.traverse(o=>{if(o.isMesh||o.isInstancedMesh||o.isSkinnedMesh){if(Array.isArray(o.material))o.material.forEach(fix);else fix(o.material)}})};
