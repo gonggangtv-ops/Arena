@@ -265,35 +265,37 @@
    "taskType": "text-to-3d",
    "verifiedTaskStatus": "SUCCEEDED"
   },
-  "lupine-clump": {
-   "name": "Purple lupine clump",
-   "taskId": "01a1e8e7-9193-732e-b609-e27864634241",
-   "url": "assets/meshy/lupine-clump.glb",
+  "nebula-bloom": {
+   "name": "Nebula Bloom (glowing violet fantasy flower)",
+   "source": "Meshy_AI_Nebula_Bloom_1118115412 (owner upload, simplified to ~5k tris)",
+   "url": "assets/meshy/nebula-bloom.glb",
    "available": true,
    "rotationY": 0,
-   "biome": "arena",
-   "taskType": "text-to-3d",
-   "verifiedTaskStatus": "SUCCEEDED"
+   "biome": "arena"
   },
-  "flower-cushion": {
-   "name": "Pink and white wildflower cushion",
-   "taskId": "01a1e8e7-9cc9-72db-96b2-1ef5f7bb03bc",
-   "url": "assets/meshy/flower-cushion.glb",
+  "rocky-meadow": {
+   "name": "Rocky Meadow patch (stones, moss, wildflowers)",
+   "source": "Meshy_AI_Rocky_Meadow_Scene_1117204216 (owner upload, simplified to ~5k tris)",
+   "url": "assets/meshy/rocky-meadow.glb",
    "available": true,
    "rotationY": 0,
-   "biome": "arena",
-   "taskType": "text-to-3d",
-   "verifiedTaskStatus": "SUCCEEDED"
+   "biome": "arena"
   },
-  "tall-grass": {
-   "name": "Tall meadow grass clump",
-   "taskId": "01a1e8e7-a91c-7789-acd3-67e4a39ebe40",
-   "url": "assets/meshy/tall-grass.glb",
+  "banana-plant": {
+   "name": "Banana plant",
+   "source": "Meshy_AI_Banana_Plant_1117165733 (owner upload, simplified to ~5k tris)",
+   "url": "assets/meshy/banana-plant.glb",
    "available": true,
    "rotationY": 0,
-   "biome": "arena",
-   "taskType": "text-to-3d",
-   "verifiedTaskStatus": "SUCCEEDED"
+   "biome": "arena"
+  },
+  "crystal-tree": {
+   "name": "Luminous crystalline tree (replaces round-crowned oaks / enchanted trees)",
+   "source": "Meshy_AI_Luminous_Crystalline__1118001859 (owner upload, simplified to ~6.5k tris)",
+   "url": "assets/meshy/crystal-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
   },
   "river-stones": {
    "name": "River stones cluster",
