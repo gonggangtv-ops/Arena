@@ -82,6 +82,34 @@ window.installMoonfallVillage=function(P){
     inst('nebula-bloom',bloom,(q,s)=>{const H=70*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
     inst('rocky-meadow',patch.map(q=>Object.assign(q,{dy:-2})),(q,s)=>{const W=150*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
     inst('banana-plant',banana,(q,s)=>{const H=100*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
-    this.natureCounts={stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length}};
+    // owner 2026-11-18: mystic mushrooms at the feet of trees, emerald crystals (thick in the abyss region), lava tiles and rift
+    // slabs paving the meteor zone (แดนเถ้าถ่าน, REG 3), and the dungeon re-laid with the flagstone floor / torch-wall module
+    const mush=[],crys=[],lava=[],rift=[],reg=(x,y)=>typeof REG!=='undefined'&&REG.at?REG.at(x,y):-1,house=(x,y)=>typeof houseAt==='function'&&houseAt({x,y});
+    for(const t of WD.trees){const r=hash(t.x,t.y,11);if(r>.2)continue;const a=hash(t.x,t.y,12)*6.283,d=(t.cr||60)*.75+26,x=t.x+Math.cos(a)*d,y=t.y+Math.sin(a)*d;
+      if(!walkable(x,y,10)||inWater(x,y))continue;mush.push({x,y,a:hash(t.x,t.y,13)*6.283,s:.75+hash(t.x,t.y,14)*.6})}
+    for(let j=2;j<n-2;j+=2)for(let i=2;i<n-2;i+=2){const k=j*n+i,h=hg[k];if(h<WL+3)continue;const x=(i+hash(i,j,21))*C,y=(j+hash(i,j,22))*C,r=hash(i,j,23),g=reg(x,y);
+      if(g===3){if(r<.055&&walkable(x,y,70)&&!house(x,y)&&!(typeof inDG==='function'&&inDG({x,y},200)))(hash(i,j,24)<.6?lava:rift).push({x,y,a:Math.floor(hash(i,j,25)*4)*1.5708+hash(i,j,26)*.3,s:.8+hash(i,j,27)*.5});continue}
+      if(!dens[k])continue;if(r<(g===4?.03:.003)&&walkable(x,y,40)&&!house(x,y))crys.push({x,y,a:hash(i,j,28)*6.283,s:.7+hash(i,j,29)*.7})}
+    inst('mystic-mushrooms',mush,(q,s)=>{const W=72*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
+    inst('emerald-crystals',crys,(q,s)=>{const W=84*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
+    // slabs sink so only their top face shows above the ash
+    inst('lava-tiles',lava.map(q=>Object.assign(q,{dy:-1})),(q,s)=>{const W=170*q.s,k=W/Math.max(s[0],s[2]);q.dy=3-.67*s[1]*k;return[s[0]*k,s[1]*k,s[2]*k]});
+    inst('rift-slab',rift.map(q=>Object.assign(q,{dy:-1})),(q,s)=>{const W=150*q.s,k=W/Math.max(s[0],s[2]);q.dy=3-.9*s[1]*k;return[s[0]*k,s[1]*k,s[2]*k]});
+    let dgF=0,dgW=0;const D=WD.dg;
+    if(D&&this.mfProp('dungeon-floor')){const fl=[],TX=176,TZ=150;for(let y=D.y+D.T+TZ/2-8;y<D.y+D.h-D.T;y+=TZ-2)for(let x=D.x+D.T+TX/2-8;x<D.x+D.w-D.T;x+=TX-2)fl.push({x,y,a:0,k:(Math.round(x/TX)+Math.round(y/TZ))&1});
+      const s0=sz('dungeon-floor'),H=s0[1]*(TX/s0[0]);inst('dungeon-floor',fl.map(q=>Object.assign(q,{dy:1-.143*H+q.k*.4})),()=>[TX,H,TZ]);dgF=fl.length}
+    if(D&&this.mfProp('dungeon-wall')){const wl=[],L=175,DE=46,inD=(x,y)=>x>D.x+D.T&&x<D.x+D.w-D.T&&y>D.y+D.T&&y<D.y+D.h-D.T,inWall=(x,y)=>WD.walls.some(q=>q.castle===3&&x>q.x&&x<q.x+q.w&&y>q.y&&y<q.y+q.h);
+      for(const q of WD.walls){if(q.castle!==3)continue;const hor=q.w>=q.h,len=hor?q.w:q.h,n=Math.max(1,Math.round(len/L)),step=len/n;
+        for(const side of[-1,1])for(let m=0;m<n;m++){const c=(m+.5)*step;let x,y,a;
+          if(hor){x=q.x+c;y=side<0?q.y-DE/2:q.y+q.h+DE/2;a=side<0?-Math.PI/2:Math.PI/2}else{y=q.y+c;x=side<0?q.x-DE/2:q.x+q.w+DE/2;a=side<0?0:Math.PI}
+          const px=hor?x:x+(side<0?-DE:DE),py=hor?y+(side<0?-DE:DE):y;if(!inD(px,py)||inWall(px,py))continue;wl.push({x,y,a,len:step})}}
+      inst('dungeon-wall',wl,q=>[DE,170,q.len+2]);dgW=wl.length}
+    this.natureCounts={stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length,mush:mush.length,crys:crys.length,lava:lava.length,rift:rift.length,dgFloor:dgF,dgWall:dgW}};
+  // owner's Verdant Solitude tree replaces the birches (r3 buildVegetation asks verdantOn first); drawn through instC with the tree
+  // items so felling (trees-break.js) copies it and the see-through-canopy (treeParts) still works
+  P.verdantOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('verdant-tree')};
+  P.verdantTrees=function(list,reg){if(!list.length)return;const a=A.get('verdant-tree'),s=a.inspection.size,parts=this.celestialAsset('verdant-tree');
+    const place=(t,add)=>{const H=(70*t.h+t.cr*1.3),k=H/s[1],R=mulberry32(Math.floor(t.x*7+t.y));add(t.x,this.gY(t.x,t.y)-2,t.y,s[0]*k,H,s[2]*k,0,R()*6.283,0,null)};
+    for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
   P.plainRock=function(r){return !r.prop&&!r.edge&&!r.cliff&&r.cave===undefined&&(typeof MOON==='undefined'||!MOON)&&this.mfProp('mossy-boulder')};
 };
