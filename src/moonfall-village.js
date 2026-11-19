@@ -105,23 +105,7 @@ window.installMoonfallVillage=function(P){
           if(hor){x=q.x+c;y=side<0?q.y-DE/2:q.y+q.h+DE/2;a=side<0?-Math.PI/2:Math.PI/2}else{y=q.y+c;x=side<0?q.x-DE/2:q.x+q.w+DE/2;a=side<0?0:Math.PI}
           const px=hor?x:x+(side<0?-DE:DE),py=hor?y+(side<0?-DE:DE):y;if(!inD(px,py)||inWall(px,py))continue;wl.push({x,y,a,len:step})}}
       inst('dungeon-wall',wl,q=>[DE,170,q.len+2]);dgW=wl.length}
-    // owner 2026-11-19: the Autumn Stone Garden tile floors the whole map (everything but water, houses, the dungeon and the steep
-    // hill/mountain sides): a square grid, tiles overlapping a little with a random quarter turn so the seams and the art don't repeat,
-    // each one tilted with the ground. The plate's carved face points +z in the file, so the geometry is turned face-up once
-    let flN=0;
-    if(this.mfProp('garden-floor')&&typeof WORLD!=='undefined'){const TW=250,SP=TW*.9,tg=WD.tg,gd=this.gdens;
-      const parts=this.celestialAsset('garden-floor').map(p=>({mat:p.mat,geo:this.cached('garden-up-'+p.geo.uuid,()=>{const g=p.geo.clone();g.rotateX(-Math.PI/2);g.translate(0,.5,.5);this.cachedGeos.add(g);return g})}));
-      const s0=sz('garden-floor'),TH=s0[2]*TW/s0[0];
-      const ok=(x,y)=>!(inWater(x,y)||house(x,y)||(typeof inDG==='function'&&inDG({x,y},40))||(typeof outsideD==='function'&&outsideD(x,y)>-30));
-      const tilt=(x,y,r)=>{const hx=(this.gY(x+r,y)-this.gY(x-r,y))/(2*r),hz=(this.gY(x,y+r)-this.gY(x,y-r))/(2*r);return Math.abs(hx)>.5||Math.abs(hz)>.5?null:[-Math.atan(hz),Math.atan(hx)]};
-      const tiles=[];
-      for(let y=SP/2;y<WORLD;y+=SP)for(let x=SP/2;x<WORLD;x+=SP){if(!ok(x,y)||!ok(x-TW*.4,y)||!ok(x+TW*.4,y)||!ok(x,y-TW*.4)||!ok(x,y+TW*.4))continue;const t=tilt(x,y,TW/2);if(!t)continue;
-        tiles.push({x,y,t,q:Math.floor(hash(x,y,51)*4),z:hash(x,y,52)});
-        if(gd&&tg){const i0=Math.floor((x-TW/2)/tg.C),i1=Math.floor((x+TW/2)/tg.C),j0=Math.floor((y-TW/2)/tg.C),j1=Math.floor((y+TW/2)/tg.C);for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++)if(i>=0&&j>=0&&i<tg.n&&j<tg.n)gd[j*tg.n+i]=0}}
-      // the carved face spans .4-.75 of the plate's depth: its lowest dips sit just above the ground, so no grass shows through
-      const place=(q,add)=>{add(q.x,this.gY(q.x,q.y)+3+q.z*1.2-.38*TH,q.y,TW,TH,TW,q.t[0],q.q*Math.PI/2,q.t[1],null)};
-      for(const p of parts)this.instC(p.geo,p.mat,tiles,place,false,null);flN=tiles.length}
-    this.natureCounts={floor:flN,hills:hills.length,stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length,mush:mush.length,crys:crys.length,dgFloor:dgF,dgWall:dgW}};
+    this.natureCounts={hills:hills.length,stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length,mush:mush.length,crys:crys.length,dgFloor:dgF,dgWall:dgW}};
   // owner's Verdant Solitude tree replaces the birches (r3 buildVegetation asks verdantOn first); drawn through instC with the tree
   // items so felling (trees-break.js) copies it and the see-through-canopy (treeParts) still works
   P.verdantOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('verdant-tree')};

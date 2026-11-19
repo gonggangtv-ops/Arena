@@ -788,14 +788,6 @@
    "available": true,
    "rotationY": 0,
    "biome": "arena"
-  },
-  "garden-floor": {
-   "name": "Autumn Stone Garden (map-wide floor tile)",
-   "source": "Autumn_Stone_Garden (owner upload, simplified)",
-   "url": "assets/meshy/garden-floor.glb",
-   "available": true,
-   "rotationY": 0,
-   "biome": "arena"
   }
  },
  "warrior": {
