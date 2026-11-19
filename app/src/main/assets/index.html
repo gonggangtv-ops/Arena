@@ -6989,7 +6989,7 @@ if(typeof applyEvent==='function'){const _ae=applyEvent;applyEvent=function(e){i
     const m=[(a[0]+b[0])/2+rr(-1,1)*L*rough,(a[1]+b[1])/2+rr(-.5,.5)*L*rough*.5,(a[2]+b[2])/2+rr(-1,1)*L*rough];midpoint(pts,a,m,depth-1,rough);midpoint(pts,m,b,depth-1,rough)}
   function strand(R,pts,w,c,life,delay){const a=R._hx;if(!a)return;const b=a.bcur;a.bcur=(a.bcur+1)%a.bolts;a.stats.bolts++;
     const n=Math.min(NP,pts.length),t0=a.time+(delay||0),sd=Math.floor(rnd()*900);a.c.set(c);
-    for(let i=0;i<NP;i++){const p=pts[Math.min(i,n-1)],pn=pts[Math.min(i+1,n-1)],pp=pts[Math.max(i-1,0)];const dx=pn[0]-pp[0],dy=pn[1]-pp[1],dz=pn[2]-pp[2],L=Math.hypot(dx,dy,dz)||1;
+    for(let i=0;i<NP;i++){const p=pts[Math.min(i,n-1)],pn=pts[Math.min(i+1,n-1)],pp=pts[Math.min(Math.max(i-1,0),n-1)];const dx=pn[0]-pp[0],dy=pn[1]-pp[1],dz=pn[2]-pp[2],L=Math.hypot(dx,dy,dz)||1;
       const u=Math.min(i,n-1)/Math.max(1,n-1),wi=w*(1-u*.35);
       for(let k=0;k<2;k++){const v=(b*NP+i)*2+k;a.aPos.array.set(p,v*3);a.aDir.array.set([dx/L,dy/L,dz/L],v*3);a.aInfo.array.set([sd+Math.min(u,.999),wi,t0,life],v*4);a.aCol.array.set([a.c.r,a.c.g,a.c.b],v*3)}}
     for(const x of[a.aPos,a.aDir,a.aInfo,a.aCol])x.needsUpdate=true;a.boltUntil=Math.max(a.boltUntil,t0+life);a.lmesh.visible=true}
@@ -7027,10 +7027,14 @@ if(typeof applyEvent==='function'){const _ae=applyEvent;applyEvent=function(e){i
       if(style==='meteor'||style==='elementslam'){const d=Math.max(.25,fin(o.delay,.6));a.seqs.push({k:'meteor',x:at.x,y:at.y,t:0,d,r,c:fireCol[0],c2:fireCol[1],trail:0})}
       return}
     switch(style){
-      case'fireball':case'explosive':explosion(R,at,Math.max(r,90),fireCol[0],fireCol[1]);break;
+      case'fireball':case'explosive':
+        // the choreography also pulses the style at the caster when the projectile is launched: a muzzle burst there, the explosion on impact
+        if(at.hp!==undefined){hx(R,KIND.flash,{x:at.x,y:at.y,h:45,r:40,r1:70,life:.2,c:fireCol[0],c2:fireCol[1],gain:.8});hx(R,KIND.flame,{x:at.x,y:at.y,h:45,r:22,r1:40,life:.25,c:fireCol[0],c2:fireCol[1]});break}
+        explosion(R,at,Math.max(r,90),fireCol[0],fireCol[1]);break;
       case'fireburst':explosion(R,at,r*.85,fireCol[0],fireCol[1]);
         for(let k=0;k<10;k++){const an=k/10*TAU;hx(R,KIND.fire,{x:at.x+Math.cos(an)*r*.35,y:at.y+Math.sin(an)*r*.35,h:25,r:r*.12,r1:r*.32,life:.75,c:fireCol[0],c2:fireCol[1],vx:Math.cos(an)*r*2.2,vz:Math.sin(an)*r*2.2,vy:30,drag:3.5,delay:.03})}break;
-      case'meteor':explosion(R,at,r*1.05,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#8c7f70',12,{delay:.05});break;
+      case'meteor':if(at.dot||at.kind==='burn')break;   // the burning ground left behind pulses this style too: no second blast
+        explosion(R,at,r*1.05,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#8c7f70',12,{delay:.05});break;
       case'elementslam':if(isFire(S,style))explosion(R,at,r*.9,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#9a8e7f',10);break;
       case'judgment':dustRing(R,at,r,'#a39784',12);hx(R,KIND.flash,{x:at.x,y:at.y,h:60,r:r*.6,r1:r,life:.3,c:c||'#ffe27a',c2:'#ffffff',gain:1});break;
       case'fissure':{const len=fin(o&&o.len,r),an=fin(S&&S.a,0);for(let k=0;k<7;k++){const d=(k+.5)/7*len;dustRing(R,{x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d},70,'#8e8273',3,{delay:k*.035,gain:.7})}break}
@@ -7076,7 +7080,9 @@ if(typeof applyEvent==='function'){const _ae=applyEvent;applyEvent=function(e){i
   function reset(R){const a=R._hx;if(!a)return;for(const s of a.slots)s.on=false;a.seqs=[];a.mesh.count=0;a.mesh.visible=false;a.lmesh.visible=false;a.boltUntil=0;
     a.aInfo.array.fill(0);for(let v=0;v<a.aInfo.count;v++){a.aInfo.array[v*4+2]=-1e9;a.aInfo.array[v*4+3]=.001}a.aInfo.needsUpdate=true}
   // ---------------- hooks ----------------
-  Object.assign(P,{hxEmit(kind,o){return hx(this,KIND[kind]!==undefined?KIND[kind]:kind,o)},hxBolt(x,y,o){return bolt(this,x,y,o)},hxChain(p,q,c,delay){return chainBolt(this,p,q,c,delay)},
+  // every entry point the choreography calls is fenced: a visual must never break the frame
+  const safe=(R,f)=>{try{return f()}catch(e){if(!R._hxErr3){R._hxErr3=1;console.warn('hero vfx',e)}}};
+  Object.assign(P,{hxEmit(kind,o){return safe(this,()=>hx(this,KIND[kind]!==undefined?KIND[kind]:kind,o))},hxBolt(x,y,o){return safe(this,()=>bolt(this,x,y,o))},hxChain(p,q,c,delay){return safe(this,()=>chainBolt(this,p,q,c,delay))},
     hxSnapshot(){const a=this._hx;return a?{billboards:a.slots.filter(s=>s.on).length,cap:a.cap,bolts:a.bolts,stats:Object.assign({},a.stats)}:null}});
   const _pulse=P.v3Pulse;P.v3Pulse=function(style,at,o,S){const r0=_pulse?_pulse.apply(this,arguments):undefined;try{onPulse(this,style,at,o||{},S||{})}catch(e){if(!this._hxErr){this._hxErr=1;console.warn('hero vfx',e)}}return r0};
   P.hxSustain=function(el,at,r){try{if(ensure(this))onSustain(this,this._hx,el,at,r)}catch(e){}};
