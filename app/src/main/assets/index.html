@@ -5118,7 +5118,9 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
     const _imp=R3.impact;if(_imp)R3.impact=function(a){const ring=this.ring,sp=this.sp;
       this.ring=function(x,y,r0,r1,c,life,tex){return c==='#ffffff'?null:ring.call(this,x,y,r0,r1,c,life,tex)};
       this.sp=function(add,o){return add&&o&&o.c==='#ffffff'&&(o.s||0)>150?undefined:sp.call(this,add,o)};
-      try{return _imp.call(this,a)}finally{this.ring=ring;this.sp=sp}}}
+      try{return _imp.call(this,a)}finally{this.ring=ring;this.sp=sp}};
+    // the camera-facing flare sprites (r10) reach r*2.3 on big hits (over 1000 units for the axe line): capped and halved
+    const _flare=R3.flare;if(_flare)R3.flare=function(x,h,y,size,c,life){return _flare.call(this,x,h,y,Math.min(380,(size||100)*.55),c,life)}}
   if(typeof R3!=='undefined'&&typeof R3.draw==='function'){const _draw=R3.draw;R3.draw=function(){clock.value=(performance.now()/1000)%600;return _draw.apply(this,arguments)}}
 })();
 
