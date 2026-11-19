@@ -74,11 +74,11 @@
         env=smoothstep(0.0,.05,age)*(1.0-smoothstep(.8,1.0,age));
       }else if(v3Type<6.5){                // ground cracks: a crack network glowing like lava, revealed outward
         float cw=1.0-smoothstep(.0,.075,vxC(p*1.25+sd));
-        float rays=pow(abs(cos(an*k1+seed+sin(r*13.0+seed)*.45)),70.0);
+        float rays=pow(abs(cos(an*k1+seed+(vxF(vec2(r*1.6,an*.35+sd))-.5)*1.1)),90.0);   // jagged fissures, not wavy roots
         float n=vxF(p*.8+vec2(sd,vxT*.15));
         float reveal=1.0-smoothstep(age*3.2-.05,age*3.2+.05,r+(n-.5)*.15);
         float fall=1.0-smoothstep(.2,1.0,r);
-        mask=(cw*fall*(.55+.7*n)+rays*fall*.45+band(r-.14,.05)*.4+exp(-r*r*30.0)*.4)*reveal;core=(cw*fall*.8+rays*.4)*(.6+.5*n);
+        mask=(cw*fall*(.55+.7*n)+rays*fall*.3+band(r-.14,.05)*.4+exp(-r*r*30.0)*.4)*reveal;core=(cw*fall*.8+rays*.4)*(.6+.5*n);
         env=smoothstep(0.0,.05,age)*pow(max(0.0,1.0-age),.7);
       }else{                               // impact flare (camera facing), flickering rays
         float fk=.6+.8*vxF(vec2(an/TAU*4.0+sd,vxT*2.0));
@@ -191,12 +191,11 @@
   const light=(at,c,I,d,T,h=90)=>{if(hi()&&P.flash)P.flash(at.x,P.gY(at.x,at.y)+h,at.y,c,I,d,T)};
   const shake=(at,s)=>{if(!red()&&P.shakeNear)P.shakeNear(at.x,at.y,s)};
   const rock=(at,r,n,c,o={})=>P.v3Debris(Object.assign({x:at.x,y:at.y,r,n:cnt(n,Math.ceil(n*.45)),c},o));
-  function impact(at,r,el,c,c2,big){const e=EL[el]||[c,c2];
+  function impact(at,r,el,c,c2,big){const e=EL[el]||[c,c2],H=!!P.hxEmit;   // H: the signature layer (arena-vfx-hero.js) draws the fireball, flash, bolts and light
     if(el==='frost'){spikes(at,r*.85,cnt(big?14:9,6),e[0],e[1],1.25,big?60:40,big?150:100,.12);rock(at,r*.4,big?10:6,'#bfe6ff',{size:7,up:300});}
-    else if(el==='storm'){const n=cnt(big?6:3,2);for(let j=0;j<n;j++){const an=rnd()*TAU,d=r*Math.sqrt(rnd())*.8,q={x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d};beam(q,between(9,15),620,e[0],e[1],.32,j*.06);flare(q,90,e[0],e[1],.25,30)}}
-    else{orb(at,r*.1,r*.42,e[0],e[1],.45,r*.2,{ease:1,a:.55});rock(at,r*.3,big?14:7,'#4a3a32',{up:big?520:380,speed:big?380:260});}
-    shock(at,r*.15,r*1.02,e[0],e[1],.55,8,big?160:110);crack(at,r*.9,e[0],e[1],big?1.6:1.1);flare(at,(big?220:150)*(el==='frost'?.8:1),e[0],e[1],.35,40);
-    light(at,e[0],big?5200:3200,r*2.8,big?.5:.3);if(big)shake(at,9)}
+    else if(el==='storm'){const n=H?0:cnt(big?6:3,2);for(let j=0;j<n;j++){const an=rnd()*TAU,d=r*Math.sqrt(rnd())*.8,q={x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d};beam(q,between(9,15),620,e[0],e[1],.32,j*.06);flare(q,90,e[0],e[1],.25,30)}}
+    else{if(!H)orb(at,r*.1,r*.42,e[0],e[1],.45,r*.2,{ease:1,a:.55});rock(at,r*.3,big?14:7,'#4a3a32',{up:big?520:380,speed:big?380:260});}
+    shock(at,r*.15,r*1.02,e[0],e[1],.55,8,big?160:110);crack(at,r*.9,e[0],e[1],big?1.6:1.1);if(!H){flare(at,(big?220:150)*(el==='frost'?.8:1),e[0],e[1],.35,40);light(at,e[0],big?5200:3200,r*2.8,big?.5:.3)}if(big)shake(at,9)}
   // style recipes: same names as the arena choreography (arena-vfx-skills.js)
   P.v3Pulse=function(style,at,o,S){if(!this._v3)return;const r=Math.max(20,S.r||90),c=S.c,c2=S.c2,a=S.a||0,el=S.el,el2=S.el2;
     if(o.phase==='windup'){const dl=Math.max(.2,o.delay||.5);
