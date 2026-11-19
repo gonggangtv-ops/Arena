@@ -74,11 +74,11 @@
         env=smoothstep(0.0,.05,age)*(1.0-smoothstep(.8,1.0,age));
       }else if(v3Type<6.5){                // ground cracks: a crack network glowing like lava, revealed outward
         float cw=1.0-smoothstep(.0,.075,vxC(p*1.25+sd));
-        float rays=pow(abs(cos(an*k1+seed+sin(r*13.0+seed)*.45)),70.0);
+        float rays=pow(abs(cos(an*k1+seed+(vxF(vec2(r*1.6,an*.35+sd))-.5)*1.1)),90.0);   // jagged fissures, not wavy roots
         float n=vxF(p*.8+vec2(sd,vxT*.15));
         float reveal=1.0-smoothstep(age*3.2-.05,age*3.2+.05,r+(n-.5)*.15);
         float fall=1.0-smoothstep(.2,1.0,r);
-        mask=(cw*fall*(.55+.7*n)+rays*fall*.45+band(r-.14,.05)*.4+exp(-r*r*30.0)*.4)*reveal;core=(cw*fall*.8+rays*.4)*(.6+.5*n);
+        mask=(cw*fall*(.55+.7*n)+rays*fall*.3+band(r-.14,.05)*.4+exp(-r*r*30.0)*.4)*reveal;core=(cw*fall*.8+rays*.4)*(.6+.5*n);
         env=smoothstep(0.0,.05,age)*pow(max(0.0,1.0-age),.7);
       }else{                               // impact flare (camera facing), flickering rays
         float fk=.6+.8*vxF(vec2(an/TAU*4.0+sd,vxT*2.0));

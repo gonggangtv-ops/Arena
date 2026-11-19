@@ -28,7 +28,10 @@
     send('streak',{x:(p.x+q.x)*.5,y:(p.y+q.y)*.5},{height:(p.h+q.h)*.5,
       r:length*.55,width,angle:Math.atan2(dz,dx),tilt:Math.atan2(dy,Math.hypot(dx,dz)),c,c2,life,a:.8});
   }
-  function strikes(at,r,c,c2,n,life=.5){for(let j=0;j<n;j++){
+  // VFX round 2: real branching bolts from the signature layer when it is present (arena-vfx-hero.js)
+  function strikes(at,r,c,c2,n,life=.5){if(P.hxBolt&&!P.avReduced){for(let j=0;j<n;j++){const a=j/n*TAU+between(-.2,.2),d=r*between(.3,.85),x=at.x+Math.cos(a)*d,y=at.y+Math.sin(a)*d;
+      P.hxBolt(x,y,{c,delay:j*.045+between(0,.03),life:Math.max(.3,life*.85),fr:Math.min(130,40+r*.25)});send('ring',{x,y},{r:8,r1:38,height:5,c,c2,life:.4,width:.03,a:.7});}return;}
+    for(let j=0;j<n;j++){
     const a=j/n*TAU+between(-.2,.2),d=r*between(.3,.85),x=at.x+Math.cos(a)*d,y=at.y+Math.sin(a)*d;
     const height=between(340,510),segments=P.avReduced?3:P.avHi?7:5,T=life*between(.7,1.2);
     let p={x:x+between(-30,30),y:y+between(-30,30),h:height};
@@ -87,7 +90,7 @@
     }else if(style==='arrowrain'){
       rune(at,r,c,c2,.85,.4);const n=count(16,8);for(let j=0;j<n;j++){const an=j/n*TAU,d=r*Math.sqrt(rnd())*.88;send('streak',at,{x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d,height:between(170,320),r:120,width:4,angle:-.5,tilt:-1.35,vy:-420,c,c2,life:.65,a:.8});}if(p.element)element(at,r,p.element,c,c2,true);
     }else if(style==='fireball'||style==='explosive'||style==='fireburst'||style==='iceburst'||style==='blizzard'||style==='chain'||style==='stormfield'||style==='thunder'){
-      ring(at,r,c,c2,.65);rune(at,r*.94,c,c2,style==='blizzard'?1.2:.8,-.65);
+      ring(at,r,c,c2,.65);if(!P.hxEmit||style==='blizzard'||style==='stormfield')rune(at,r*.94,c,c2,style==='blizzard'?1.2:.8,-.65);   // round 2: the burst itself carries the hit
       const el=style==='iceburst'||style==='blizzard'?'frost':style==='chain'||style==='stormfield'||style==='thunder'?'storm':'fire';element(at,r,el,c,c2);jets(at,r*.5,c,c2,count(16,7),.65);
     }else if(style==='duality'||style==='elementburst'||style==='elementstorm'||style==='elementfield'){
       rune(at,r,c,c2,1.1,.7);send('rune',at,{r:r*.68,r1:r*.93,height:10,c:c2,c2:c,life:1.1,spin:-.9,a:.4});ring(at,r,c,c2,.7);element(at,r,p.element||'fire',c,c2);
@@ -110,7 +113,7 @@
     if(a.dot&&clock>=q.tick){q.tick=clock+(P.avReduced?.4:.22);const profile=profiles[p.key][p.slot],c=profile.c,c2=profile.c2;
       if(a.kind==='rain'||a.kind==='volley'){const n=count(5,3);for(let j=0;j<n;j++){const an=rnd()*TAU,d=Math.sqrt(rnd())*a.r*.9;send('streak',a,{x:a.x+Math.cos(an)*d,y:a.y+Math.sin(an)*d,height:240,r:105,width:3,tilt:-1.4,angle:-.5,vy:-430,c,c2,life:.58,a:.75});}}
       else if(a.kind==='spirit'){petals(a,a.r,c,c2,count(4,3),.65);}
-      else {const el=a.el||(a.kind==='blizz'?'frost':a.kind==='static'||a.kind==='thunder'?'storm':'fire');element(a,a.r,el,c,c2,true);}
+      else {const el=a.el||(a.kind==='blizz'?'frost':a.kind==='static'||a.kind==='thunder'?'storm':'fire');element(a,a.r,el,c,c2,true);if(P.hxSustain)P.hxSustain(el,a,a.r);}
     }
   }
   function eventFX(e){if(e.x===undefined||!near(e.x,e.y))return;const u=e.id!==undefined?UMAP.get(e.id):null,key=u?.wk,a=e.a??Math.atan2(u?.fy||0,u?.fx||1);let k=null,i=0,r=e.r||90;
@@ -120,7 +123,8 @@
       case'chain':k='storm';i=0;r=85;break;case'royal':k='fMM';i=1;break;case'gust':k='fMR';i=1;break;case'trap':k='fRR';i=1;r=170;break;}
     if(k){const opts={r,angle:a,u:u&&visible(u)?u:null};if(e.k==='leap'){opts.phase='windup';opts.delay=.5;}
       pulse(k,i,e,opts);if(e.k==='blink'&&e.x2!==undefined)pulse(k,i,{x:e.x2,y:e.y2},{r:90,mark:false});
-      if(e.k==='chain'&&e.p){for(let j=1;j<e.p.length;j++)strikes({x:e.p[j][0],y:e.p[j][1]},45,palette.storm[0],palette.storm[1],count(2,1),.28);}
+      if(e.k==='chain'&&e.p){if(P.hxChain&&!P.avReduced){for(let j=1;j<e.p.length;j++){P.hxChain({x:e.p[j-1][0],y:e.p[j-1][1]},{x:e.p[j][0],y:e.p[j][1]},palette.storm[0],j*.05);send('ring',{x:e.p[j][0],y:e.p[j][1]},{r:10,r1:60,height:5,c:palette.storm[0],c2:palette.storm[1],life:.4,width:.03,a:.75});}}
+        else for(let j=1;j<e.p.length;j++)strikes({x:e.p[j][0],y:e.p[j][1]},45,palette.storm[0],palette.storm[1],count(2,1),.28);}
     }
   }
   function projectileSkill(p){const u=p.owner,key=u?.wk;if(!u||!profiles[key])return null;let i=-1;
