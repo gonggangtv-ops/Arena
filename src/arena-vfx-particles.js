@@ -47,7 +47,7 @@
       else{float an=atan(q.y,q.x);a=exp(-r*r*7.0)+pow(abs(cos(an*2.0)),26.0)*exp(-r*2.6);hot=exp(-r*r*30.0);}
       float fi=smoothstep(0.0,.06,vT),fo=1.0-smoothstep(k>1.5&&k<2.5?.35:.6,1.0,vT);
       float vis=1.0-smoothstep(uVision-100.0,uVision+20.0,distance(vWorld,uFocus));
-      float op=a*vCol.a*fi*fo*vis;if(op<.004)discard;
+      float op=a*vCol.a*fi*fo*vis;if(k<0.5)op*=.25+.75*smoothstep(.03,.4,op);if(op<.004)discard;
       vec3 c=mix(vCol.rgb,vxHot(vCol.rgb)*1.15,clamp(hot*.85,0.0,1.0))*shade;
       gl_FragColor=vec4(c*(k>1.5&&k<2.5?1.0:uGain*(1.0+hot*.6)),op);
       #include <colorspace_fragment>
@@ -215,7 +215,7 @@
   function upload(a){for(const s of[a.add,a.alpha]){s.mesh.visible=s.alive>a.time;s.m.uniforms.uTime.value=a.time;if(s.hi<0)continue;
       for(const k of['a0','a1','a2','a3','a4','a5']){const at=s.at[k];at.clearUpdateRanges();at.addUpdateRange(s.lo*4,(s.hi-s.lo+1)*4);at.needsUpdate=true}s.lo=1e9;s.hi=-1}}
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.call(this,Tm,dt,me,L);try{const a=ensure(this);if(a){dt=Math.min(.1,Math.max(0,dt||0));a.time+=dt;
-      const gain=(this.post?1.45:1.05)*(a.q.reduced?.8:1);a.add.m.uniforms.uGain.value=gain;for(const t of a.trails)t.m.uniforms.uGain.value=gain*1.2;
+      const gain=(this.post?1.2:1.0)*(a.q.reduced?.8:1);   // round 1: was 1.45/1.05a.add.m.uniforms.uGain.value=gain;for(const t of a.trails)t.m.uniforms.uGain.value=gain*1.2;
       trails(this,a,dt);projTrails(this,a,dt);dashes(this,a,dt);scorchStep(a,dt);upload(a);a.emitted=0}}catch(e){if(!this._pfxErr){this._pfxErr=1;console.warn('pfx',e)}}return r};
   const _ini=P.initFX;if(_ini)P.initFX=function(){const r=_ini.apply(this,arguments);try{const a=this._pfx;if(a){for(const s of[a.add,a.alpha]){s.at.a0.array.fill(-1e9);for(let i=0;i<s.cap;i++)s.at.a0.array[i*4+3]=-1e9;s.lo=0;s.hi=s.cap-1;s.alive=0}for(const t of a.trails){t.o=null;t.mesh.visible=false}a.tmap.clear();for(const s of a.scorch.slots)s.on=false}}catch(e){}return r};
   const _ds=P.disposeScene;P.disposeScene=function(){dispose(this);return _ds.apply(this,arguments)};

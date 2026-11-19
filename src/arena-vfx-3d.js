@@ -86,11 +86,12 @@
         mask=exp(-r*r*9.0)*.85+rays;core=exp(-r*r*36.0);env=pow(max(0.0,1.0-age),1.6)*smoothstep(0.0,.03,age);
       }
       float vis=1.0-smoothstep(v3Vision-100.0,v3Vision+20.0,distance(vWorld,v3Focus));
-      float op=env*clamp(mask,0.0,1.6)*vis;if(op<.003)discard;
+      float op=env*clamp(mask,0.0,1.6)*vis;op*=.22+.78*smoothstep(.02,.38,op);if(op<.003)discard;
       float heat=clamp(core,0.0,1.0);
-      vec3 col=mix(vColor*.65,vColor,smoothstep(0.0,.4,mask));
-      col=mix(col,vColor2,smoothstep(.1,.6,heat));col=mix(col,vxHot(vColor2),smoothstep(.62,1.0,heat));
-      gl_FragColor=vec4(col*v3Gain*(1.0+heat*.7),op);
+      vec3 deep=vColor*vColor/max(max(vColor.r,max(vColor.g,vColor.b)),1e-3);
+      vec3 col=mix(deep*.85,vColor,smoothstep(0.0,.45,mask));
+      col=mix(col,vColor2,smoothstep(.12,.65,heat));col=mix(col,vxHot(vColor2),smoothstep(.65,1.0,heat));
+      gl_FragColor=vec4(col*v3Gain*(1.0+heat*1.3),op);
       #include <colorspace_fragment>
     }`;
   function mode(R){const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;const high=!!R.hi&&!R.mobile;return{high,reduced,key:(high?'h':'l')+(reduced?'r':'')}}
@@ -142,7 +143,7 @@
           s:between(.55,1.25)*fin(o.size,9),rx:rnd()*TAU,ry:rnd()*TAU,wx:between(-9,9),wy:between(-9,9),b:0,cr:a.c.r*tint,cg:a.c.g*tint,cb:a.c.b*tint});made++}
       return made},
     v3Step(dt){if(!this._v3)return;const a=ensure(this);if(!a)return;dt=Math.max(0,fin(dt,0));const md=Math.min(dt,.1),d=a.d,cam=this.cam;
-      const gain=(this.post?1.75:1.15)*(a.q.reduced?.8:1);
+      const gain=(this.post?1.25:1.0)*(a.q.reduced?.8:1);   // round 1: was 1.75/1.15
       for(const type of TYPES){const b=a.b[type];let n=0;b.m.uniforms.v3Gain.value=gain;
         for(const s of b.slots){if(!s.on)continue;s.t+=dt;if(s.t<s.delay)continue;const tt=s.t-s.delay;if(tt>=s.life||s.follow&&s.follow.dead){s.on=false;s.follow=null;continue}
           const age=tt/s.life,grow=s.ease===1?1-Math.pow(1-Math.min(1,age*1.6),3):Math.sin(Math.min(1,age*2.2)*PI/2);

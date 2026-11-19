@@ -117,12 +117,15 @@
       }
       float visibility=1.0-smoothstep(avVision-100.0,avVision+20.0,distance(vWorld,avFocus));
       float opacity=envelope*clamp(mask,0.0,1.0)*visibility;
+      // contrast shaping: faint, broad glow is what washed the screen out; it fades away, strong structure stays
+      opacity*=.22+.78*smoothstep(.02,.38,opacity);
       if(opacity<.002)discard;
       float heat=clamp(core*1.3,0.0,1.0);
-      vec3 color=mix(vColor*.62,vColor,smoothstep(0.0,.45,mask));
-      color=mix(color,vColor2,smoothstep(.12,.65,heat));
-      color=mix(color,vxHot(vColor2),smoothstep(.6,1.0,heat));
-      gl_FragColor=vec4(color*avGain*(1.0+heat*.9),opacity);
+      vec3 deep=vColor*vColor/max(max(vColor.r,max(vColor.g,vColor.b)),1e-3);
+      vec3 color=mix(deep*.85,vColor,smoothstep(0.0,.5,mask));
+      color=mix(color,vColor2,smoothstep(.15,.7,heat));
+      color=mix(color,vxHot(vColor2),smoothstep(.65,1.0,heat));
+      gl_FragColor=vec4(color*avGain*(1.0+heat*1.5),opacity);
       #include <colorspace_fragment>
     }`;
   // the shared noise texture (arena-vfx-tex.js); a 1x1 grey stand-in if the library is absent
@@ -163,7 +166,7 @@
       const color2=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3);
       life.setUsage(THREE.DynamicDrawUsage);color.setUsage(THREE.DynamicDrawUsage);color2.setUsage(THREE.DynamicDrawUsage);
       geometry.setAttribute('avLife',life);geometry.setAttribute('avColor',color);geometry.setAttribute('avColor2',color2);
-      const material=new THREE.ShaderMaterial({uniforms:Object.assign({avType:{value:index},avGain:{value:renderer.post?1.9:1.05},avFocus:renderer.U.fowC,avVision:renderer.U.fowR},noiseUniforms()),
+      const material=new THREE.ShaderMaterial({uniforms:Object.assign({avType:{value:index},avGain:{value:renderer.post?1.25:.95},avFocus:renderer.U.fowC,avVision:renderer.U.fowR},noiseUniforms()),
         vertexShader:VERT,fragmentShader:FRAG,transparent:true,depthTest:true,depthWrite:false,
         side:THREE.DoubleSide,blending:THREE.AdditiveBlending,toneMapped:false});
       const mesh=new THREE.InstancedMesh(geometry,material,capacity);
@@ -224,7 +227,7 @@
       a.steps++;
       for(const type of TYPES){
         const b=a.batches[type];let n=0;
-        b.material.uniforms.avGain.value=(this.post?1.9:1.05)*(a.quality.reduced?.8:1);
+        b.material.uniforms.avGain.value=(this.post?1.25:.95)*(a.quality.reduced?.8:1);   // round 1: was 1.9/1.05 (white-out); hot cores carry the HDR now
         for(const s of b.slots){
           if(!s.on)continue;s.t+=dt;
           if(s.t>=s.life||(s.follow&&!visibleFollow(s.follow,L))){s.on=false;s.follow=null;continue;}

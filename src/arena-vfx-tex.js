@@ -63,5 +63,10 @@
   window.ArenaVFXTex={texture:tex,size:N,ms:Math.round(performance.now()-t0),
     uniforms(){return{vxN:{value:tex},vxT:clock}},
     tick(){clock.value=(performance.now()/1000)%600}};
+  // The base game's additive ground rings (r4 decal) and flash lights (r6 flash) were drawn for the old, darker look; under the new
+  // layers they bleached the screen. Arena only: additive decals at 55% strength, flash lights at 50%.
+  if(typeof R3!=='undefined'&&(typeof MOON==='undefined'||!MOON)){
+    const _decal=R3.decal;if(_decal)R3.decal=function(o){if(o&&!o.normal)o=Object.assign({},o,{a:(o.a===undefined?1:o.a)*.55});return _decal.call(this,o)};
+    const _flash=R3.flash;if(_flash)R3.flash=function(x,y,z,c,I,d,T){return _flash.call(this,x,y,z,c,(I||0)*.5,d,T)}}
   if(typeof R3!=='undefined'&&typeof R3.draw==='function'){const _draw=R3.draw;R3.draw=function(){clock.value=(performance.now()/1000)%600;return _draw.apply(this,arguments)}}
 })();
