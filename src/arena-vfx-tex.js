@@ -67,6 +67,13 @@
   // layers they bleached the screen. Arena only: additive decals at 55% strength, flash lights at 50%.
   if(typeof R3!=='undefined'&&(typeof MOON==='undefined'||!MOON)){
     const _decal=R3.decal;if(_decal)R3.decal=function(o){if(o&&!o.normal)o=Object.assign({},o,{a:(o.a===undefined?1:o.a)*.55});return _decal.call(this,o)};
-    const _flash=R3.flash;if(_flash)R3.flash=function(x,y,z,c,I,d,T){return _flash.call(this,x,y,z,c,(I||0)*.5,d,T)}}
+    const _flash=R3.flash;if(_flash)R3.flash=function(x,y,z,c,I,d,T){return _flash.call(this,x,y,z,c,(I||0)*.5,d,T)};
+    // big additive glow sprites (the old 'everything goes white' bursts) at half strength
+    const _sp=R3.sp;if(_sp)R3.sp=function(add,o){if(add&&o&&(o.s||0)>=150)o=Object.assign({},o,{a:(o.a===undefined?1:o.a)*.5});return _sp.call(this,add,o)};
+    // the old impact layer: no bleaching white shock ring and no screen-sized white sprite (the new layers carry the burst)
+    const _imp=R3.impact;if(_imp)R3.impact=function(a){const ring=this.ring,sp=this.sp;
+      this.ring=function(x,y,r0,r1,c,life,tex){return c==='#ffffff'?null:ring.call(this,x,y,r0,r1,c,life,tex)};
+      this.sp=function(add,o){return add&&o&&o.c==='#ffffff'&&(o.s||0)>150?undefined:sp.call(this,add,o)};
+      try{return _imp.call(this,a)}finally{this.ring=ring;this.sp=sp}}}
   if(typeof R3!=='undefined'&&typeof R3.draw==='function'){const _draw=R3.draw;R3.draw=function(){clock.value=(performance.now()/1000)%600;return _draw.apply(this,arguments)}}
 })();
