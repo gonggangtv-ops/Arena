@@ -19,14 +19,18 @@
   const NXU=()=>window.ArenaVFXTex?ArenaVFXTex.uniforms():{vxN:{value:null},vxT:{value:0}};
   const KIND={fire:0,flame:1,smoke:2,flash:3,mist:4,dust:5};
   // ---------------- billboards ----------------
-  const BVERT=`attribute vec4 hL;attribute vec3 hC;attribute vec3 hC2;
-    varying vec2 vUv;varying vec4 vL;varying vec3 vC;varying vec3 vC2;varying vec2 vWorld;
+  const BVERT=`attribute vec4 hL;attribute vec3 hC;attribute vec3 hC2;attribute float hG;
+    varying vec2 vUv;varying vec4 vL;varying vec3 vC;varying vec3 vC2;varying vec2 vWorld;varying float vSoft;
     void main(){vUv=uv;vL=hL;vC=hC;vC2=hC2;vec4 c=instanceMatrix*vec4(0.0,0.0,0.0,1.0);vWorld=c.xz;
       float s=length(instanceMatrix[0].xyz),rot=hL.y+hL.x*(fract(hL.y*3.7)-.5)*1.4;
-      vec4 mv=modelViewMatrix*c;float cs=cos(rot),sn=sin(rot);mv.xy+=mat2(cs,sn,-sn,cs)*position.xy*s;gl_Position=projectionMatrix*mv;}`;
+      float cs=cos(rot),sn=sin(rot);vec2 o=mat2(cs,sn,-sn,cs)*position.xy*s;
+      // round 3: soft contact — world height of this corner (camera right/up from the view matrix) against the ground under the sprite
+      vec3 camU=vec3(viewMatrix[0][1],viewMatrix[1][1],viewMatrix[2][1]),camR=vec3(viewMatrix[0][0],viewMatrix[1][0],viewMatrix[2][0]);
+      vSoft=clamp(((c.y+camR.y*o.x+camU.y*o.y)-hG)/28.0,0.0,1.0);
+      vec4 mv=modelViewMatrix*c;mv.xy+=o;gl_Position=projectionMatrix*mv;}`;
   const BFRAG=`precision highp float;uniform float hGain;uniform vec2 uFocus;uniform float uVision;
     ${VXN}
-    varying vec2 vUv;varying vec4 vL;varying vec3 vC;varying vec3 vC2;varying vec2 vWorld;
+    varying vec2 vUv;varying vec4 vL;varying vec3 vC;varying vec3 vC2;varying vec2 vWorld;varying float vSoft;
     vec3 fireRamp(float t,vec3 c,vec3 c2){vec3 deep=c*c/max(max(c.r,max(c.g,c.b)),1e-3);
       vec3 col=mix(vec3(0.0),deep*.5,smoothstep(.0,.22,t));col=mix(col,c,smoothstep(.18,.48,t));col=mix(col,c2,smoothstep(.42,.74,t));return mix(col,vxHot(c2)*1.2,smoothstep(.7,1.0,t));}
     float lit(vec3 n,float k){return clamp(dot(normalize(vec3(n.xy+vec2(k-.5)*.9,n.z)),normalize(vec3(-.3,.75,.6))),0.0,1.0);}
@@ -60,7 +64,7 @@
         alpha=body*.42*smoothstep(0.0,.18,age)*(1.0-smoothstep(.45,1.0,age))*gain;
         emit=mix(vC*.6,vC2,l)*alpha*1.15+vC2*body*.1*(1.0-age)*gain;
       }
-      float vis=1.0-smoothstep(uVision-100.0,uVision+20.0,distance(vWorld,uFocus));emit*=vis*hGain;alpha*=vis;
+      float vis=(1.0-smoothstep(uVision-100.0,uVision+20.0,distance(vWorld,uFocus)))*vSoft;emit*=vis*hGain;alpha*=vis;
       if(alpha<.002&&max(emit.r,max(emit.g,emit.b))<.002)discard;
       gl_FragColor=vec4(emit,alpha);
       #include <colorspace_fragment>
@@ -90,7 +94,8 @@
     const cap=Math.floor((q.high?160:64)*(q.reduced?.5:1)),bolts=Math.floor((q.high?40:16)*(q.reduced?.5:1));
     // billboards
     const g=new T.PlaneGeometry(2,2),hL=new T.InstancedBufferAttribute(new Float32Array(cap*4),4),hC=new T.InstancedBufferAttribute(new Float32Array(cap*3),3),hC2=new T.InstancedBufferAttribute(new Float32Array(cap*3),3);
-    for(const a of[hL,hC,hC2])a.setUsage(T.DynamicDrawUsage);g.setAttribute('hL',hL);g.setAttribute('hC',hC);g.setAttribute('hC2',hC2);
+    const hG=new T.InstancedBufferAttribute(new Float32Array(cap),1);
+    for(const a of[hL,hC,hC2,hG])a.setUsage(T.DynamicDrawUsage);g.setAttribute('hL',hL);g.setAttribute('hC',hC);g.setAttribute('hC2',hC2);g.setAttribute('hG',hG);
     const m=new T.ShaderMaterial({uniforms:Object.assign({hGain:{value:1},uFocus:R.U.fowC,uVision:R.U.fowR},NXU()),vertexShader:BVERT,fragmentShader:BFRAG,transparent:true,depthWrite:false,depthTest:true,
       blending:T.CustomBlending,blendEquation:T.AddEquation,blendSrc:T.OneFactor,blendDst:T.OneMinusSrcAlphaFactor,blendSrcAlpha:T.OneFactor,blendDstAlpha:T.OneMinusSrcAlphaFactor,toneMapped:false});
     const mesh=new T.InstancedMesh(g,m,cap);mesh.name='arena-vfx-hero';mesh.count=0;mesh.visible=false;mesh.frustumCulled=false;mesh.renderOrder=7;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);mesh.userData.arenaVFX=true;R.scene.add(mesh);
@@ -103,7 +108,7 @@
     const lm=new T.ShaderMaterial({uniforms:Object.assign({uTime:{value:0},hGain:{value:1},uFocus:R.U.fowC,uVision:R.U.fowR},NXU()),vertexShader:LVERT,fragmentShader:LFRAG,transparent:true,depthWrite:false,depthTest:true,
       blending:T.AdditiveBlending,side:T.DoubleSide,toneMapped:false});
     const lmesh=new T.Mesh(lg,lm);lmesh.name='arena-vfx-bolts';lmesh.frustumCulled=false;lmesh.renderOrder=11;lmesh.visible=false;lmesh.userData.arenaVFX=true;R.scene.add(lmesh);
-    return{scene:R.scene,q,cap,mesh,g,m,hL,hC,hC2,slots:Array.from({length:cap},()=>({on:false})),cur:0,order:[],emitted:0,budget:q.reduced?40:q.high?140:60,
+    return{scene:R.scene,q,cap,mesh,g,m,hL,hC,hC2,hG,slots:Array.from({length:cap},()=>({on:false})),cur:0,order:[],emitted:0,budget:q.reduced?40:q.high?140:60,
       lg,lm,lmesh,bolts,aPos,aDir,aInfo,aCol,bcur:0,time:0,boltUntil:0,seqs:[],d:new T.Object3D(),c:new T.Color(),c2:new T.Color(),v:new T.Vector3(),stats:{acc:0,drop:0,bolts:0}}}
   function create(R){const prev=Math.random;try{Math.random=rnd;return allocate(R)}finally{Math.random=prev}}
   function dispose(R){const a=R._hx;if(!a)return;for(const o of[a.mesh,a.lmesh])a.scene.remove(o);a.g.dispose();a.m.dispose();a.lg.dispose();a.lm.dispose();if(a.mesh.dispose)a.mesh.dispose();R._hx=null}
@@ -135,6 +140,7 @@
     hx(R,KIND.flash,{x,y,h:20,r:fin(o.fr,120),r1:fin(o.fr,120)*1.4,life:.32,c,c2:'#ffffff',delay,gain:1.1});
     hx(R,KIND.smoke,{x,y,h:20,r:30,r1:90,life:1.1,c:'#4a4458',vy:30,delay:delay+.05,gain:.55});
     if(R.flash)R.flash(x,gy+80,y,c,3600,520,.25);
+    if(R.vfxWave)R.vfxWave(x,y,{h:10,r0:10,r1:150,s:.006,life:.35});if(R.vfxGlow)R.vfxGlow(x,y,140,c,1.5,.35);
     const api=R.pfxApi;if(api){try{api.sparks(api.G(x,y,10),a.q.high?16:8,c,'#ffffff',380,true);api.scorch(x,y,52,4)}catch(e){}}}
   function chainBolt(R,p,q,c,delay){const a=R._hx;if(!a)return;const h1=R.gY(p.x,p.y)+60,h2=R.gY(q.x,q.y)+60,A=[p.x,h1,p.y],B=[q.x,h2,q.y],pts=[A];midpoint(pts,A,B,4,.12);strand(R,pts,22,c,.32,delay||0)}
   // ---------------- recipes ----------------
@@ -146,12 +152,16 @@
     // smoke column that keeps rising after the fire is gone
     for(let k=0;k<(big?4:2);k++)hx(R,KIND.smoke,{x:at.x+rr(-.2,.2)*r,y:at.y+rr(-.2,.2)*r,h:r*rr(.3,.5),r:r*.18,r1:r*rr(.42,.6),life:rr(1.6,2.2)*(big?1.2:1),c:'#6a625c',vy:rr(60,100),drag:.8,delay:.2+k*.1,gain:.6});
     if(R.flash)R.flash(at.x,R.gY(at.x,at.y)+90,at.y,c,big?3400:2000,r*2.2,big?.45:.3);
-    const api=R.pfxApi;if(api){try{api.embers(api.G(at.x,at.y,30),R._hx.q.high?(big?22:12):6,c,c2,r*.5);api.scorch(at.x,at.y,r*.7,big?7:4)}catch(e){}}}
+    const api=R.pfxApi;if(api){try{api.embers(api.G(at.x,at.y,30),R._hx.q.high?(big?22:12):6,c,c2,r*.5);api.scorch(at.x,at.y,r*.7,big?7:4)}catch(e){}}
+    if(R.vfxWave){R.vfxWave(at.x,at.y,{h:30,r0:r*.2,r1:r*(big?2.3:1.6),s:big?.016:.009,life:big?.7:.5});R.vfxHeat(at.x,at.y,{h:60,r:r*.9,s:.0035,life:big?2.2:1.4})}
+    if(R.vfxGlow)R.vfxGlow(at.x,at.y,r*1.5,c,1.2,.5);
+    if(big&&R.vfxKick)R.vfxKick(at.x,at.y,{ca:.004,rad:.018,fl:.05,c:c2,stop:.07})}
   function dustRing(R,at,r,c,n,o={}){for(let k=0;k<n;k++){const an=k/n*TAU+rr(-.2,.2),sp=rr(.8,1.25)*r*1.5;
     hx(R,KIND.dust,{x:at.x+Math.cos(an)*r*.25,y:at.y+Math.sin(an)*r*.25,h:16,r:r*.1,r1:r*rr(.2,.28),life:rr(1.0,1.4)*(o.life||1),c:c||'#6e6456',vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(15,40),drag:2.6,gain:(o.gain||.8)*.6,delay:o.delay||0})}}
   function frostBurst(R,at,r,c,c2,n){for(let k=0;k<n;k++){const an=k/n*TAU+rr(-.25,.25),sp=rr(.6,1.1)*r*1.2;
     hx(R,KIND.mist,{x:at.x+Math.cos(an)*r*.2,y:at.y+Math.sin(an)*r*.2,h:rr(15,45),r:r*.12,r1:r*rr(.26,.38),life:rr(1.1,1.6),c,c2,vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(5,25),drag:2.2,gain:.85})}
-    hx(R,KIND.flash,{x:at.x,y:at.y,h:30,r:r*.25,r1:r*.45,life:.22,c,c2:'#ffffff',gain:.6})}
+    hx(R,KIND.flash,{x:at.x,y:at.y,h:30,r:r*.25,r1:r*.45,life:.22,c,c2:'#ffffff',gain:.6});
+    if(R.vfxWave)R.vfxWave(at.x,at.y,{h:20,r0:r*.15,r1:r*1.5,s:.008,life:.55});if(R.vfxGlow)R.vfxGlow(at.x,at.y,r*1.2,c,.9,.5)}
   const FIREC=['#ff6a1f','#ffd78a'],STORMC='#b49cff',FROSTC=['#7fd8ff','#f0fdff'];
   const isFire=(S,style)=>S&&S.el?S.el==='fire':['fireball','fireburst','meteor','explosive'].includes(style);
   function onPulse(R,style,at,o,S){const a=ensure(R);if(!a||!at||!listenerNear(at.x,at.y,(S&&S.r)||200))return;const r=Math.max(40,fin(S&&S.r,90)),c=S&&S.c,c2=S&&S.c2;
@@ -169,17 +179,19 @@
       case'meteor':if(at.dot||at.kind==='burn')break;   // the burning ground left behind pulses this style too: no second blast
         explosion(R,at,r*1.05,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#8c7f70',12,{delay:.05});break;
       case'elementslam':if(isFire(S,style))explosion(R,at,r*.9,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#9a8e7f',10);break;
-      case'judgment':dustRing(R,at,r,'#74695b',12);hx(R,KIND.flash,{x:at.x,y:at.y,h:60,r:r*.25,r1:r*.45,life:.24,c:c||'#ffe27a',c2:'#fff6d8',gain:.7});if(R.flash)R.flash(at.x,R.gY(at.x,at.y)+100,at.y,c||'#ffe27a',2600,r*2.4,.4);break;
+      case'judgment':dustRing(R,at,r,'#74695b',12);hx(R,KIND.flash,{x:at.x,y:at.y,h:60,r:r*.25,r1:r*.45,life:.24,c:c||'#ffe27a',c2:'#fff6d8',gain:.7});if(R.flash)R.flash(at.x,R.gY(at.x,at.y)+100,at.y,c||'#ffe27a',2600,r*2.4,.4);
+        if(R.vfxWave)R.vfxWave(at.x,at.y,{h:15,r0:r*.2,r1:r*1.8,s:.013,life:.6});if(R.vfxGlow)R.vfxGlow(at.x,at.y,r*1.3,c||'#ffe27a',1,.5);if(R.vfxKick)R.vfxKick(at.x,at.y,{rad:.015,fl:.05,c:'#fff2c0',stop:.06});break;
       case'fissure':{const len=fin(o&&o.len,r),an=fin(S&&S.a,0);for(let k=0;k<7;k++){const d=(k+.5)/7*len;dustRing(R,{x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d},70,'#8e8273',3,{delay:k*.035,gain:.7})}break}
-      case'warcry':dustRing(R,at,r*.8,'#9b8f80',10,{gain:.6});break;
+      case'warcry':dustRing(R,at,r*.8,'#9b8f80',10,{gain:.6});if(R.vfxWave){R.vfxWave(at.x,at.y,{h:40,r0:30,r1:r*1.3,s:.012,life:.5});R.vfxWave(at.x,at.y,{h:40,r0:20,r1:r*.9,s:.008,life:.45})}break;
       case'cyclone':dustRing(R,at,r*.7,'#9b8f80',8,{gain:.55,life:.8});break;
-      case'thunder':case'elementstorm':hx(R,KIND.flash,{x:at.x,y:at.y,h:120,r:r*.5,r1:r*.9,life:.3,c:c||STORMC,c2:'#ffffff',gain:.8});break;
+      case'thunder':case'elementstorm':hx(R,KIND.flash,{x:at.x,y:at.y,h:120,r:r*.5,r1:r*.9,life:.3,c:c||STORMC,c2:'#ffffff',gain:.8});if(R.vfxKick)R.vfxKick(at.x,at.y,{ca:.003,fl:.05,c:c||STORMC,stop:.05});break;
       case'iceburst':frostBurst(R,at,r,FROSTC[0],FROSTC[1],a.q.high?9:5);break;
       case'blizzard':frostBurst(R,at,r,FROSTC[0],FROSTC[1],a.q.high?7:4);a.seqs.push({k:'blizz',x:at.x,y:at.y,t:0,d:2.2,r,acc:0});break;
       case'icelance':hx(R,KIND.mist,{x:at.x,y:at.y,h:35,r:40,r1:110,life:1,c:FROSTC[0],c2:FROSTC[1],gain:.8});break;
     }}
   // sustained areas tick through the same dispatch (sustain=true in the choreography); a light touch for them
-  function onSustain(R,a,el,at,r){if(el==='fire'){for(let k=0;k<2;k++){const an=rr(0,TAU),d=Math.sqrt(rnd())*r*.8;hx(R,KIND.flame,{x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d,h:rr(10,30),r:rr(14,24),r1:rr(26,44),life:rr(.45,.7),c:FIREC[0],c2:FIREC[1],vy:rr(60,120),drag:1})}
+  function onSustain(R,a,el,at,r){if(el==='fire'&&R.vfxHeat&&rnd()<.35)R.vfxHeat(at.x+rr(-.3,.3)*r,at.y+rr(-.3,.3)*r,{h:40,r:r*.6,s:.003,life:1.2});
+    if(el==='fire'){for(let k=0;k<2;k++){const an=rr(0,TAU),d=Math.sqrt(rnd())*r*.8;hx(R,KIND.flame,{x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d,h:rr(10,30),r:rr(14,24),r1:rr(26,44),life:rr(.45,.7),c:FIREC[0],c2:FIREC[1],vy:rr(60,120),drag:1})}
       if(rnd()<.5)hx(R,KIND.smoke,{x:at.x+rr(-.5,.5)*r,y:at.y+rr(-.5,.5)*r,h:40,r:24,r1:70,life:1.4,c:'#3c3734',vy:70,drag:.8,gain:.6})}
     else if(el==='frost'){if(rnd()<.6)hx(R,KIND.mist,{x:at.x+rr(-.6,.6)*r,y:at.y+rr(-.6,.6)*r,h:20,r:r*.15,r1:r*.32,life:1.3,c:FROSTC[0],c2:FROSTC[1],vx:rr(-40,40),vz:rr(-40,40),gain:.8})}}
   // ---------------- per frame ----------------
@@ -208,8 +220,8 @@
     ord.sort((p,q)=>q.dist-p.dist);const d=a.d;let n=0;
     for(const s of ord){const k=s.kind===KIND.flash?s.age:1-Math.pow(1-s.age,2.2),rad=s.r+(s.r1-s.r)*k;
       d.position.set(s.x,s.y,s.z);d.rotation.set(0,0,0);d.scale.setScalar(Math.max(.01,rad));d.updateMatrix();a.mesh.setMatrixAt(n,d.matrix);
-      a.hL.setXYZW(n,s.age,s.seed,s.kind,s.gain);a.hC.setXYZ(n,s.cr,s.cg,s.cb);a.hC2.setXYZ(n,s.c2r,s.c2g,s.c2b);n++}
-    a.mesh.count=n;a.mesh.visible=n>0;if(n){a.mesh.instanceMatrix.needsUpdate=true;a.hL.needsUpdate=true;a.hC.needsUpdate=true;a.hC2.needsUpdate=true}}
+      a.hL.setXYZW(n,s.age,s.seed,s.kind,s.gain);a.hC.setXYZ(n,s.cr,s.cg,s.cb);a.hC2.setXYZ(n,s.c2r,s.c2g,s.c2b);a.hG.setX(n,R.gY(s.x,s.z)-4);n++}
+    a.mesh.count=n;a.mesh.visible=n>0;if(n){a.mesh.instanceMatrix.needsUpdate=true;a.hL.needsUpdate=true;a.hC.needsUpdate=true;a.hC2.needsUpdate=true;a.hG.needsUpdate=true}}
   function reset(R){const a=R._hx;if(!a)return;for(const s of a.slots)s.on=false;a.seqs=[];a.mesh.count=0;a.mesh.visible=false;a.lmesh.visible=false;a.boltUntil=0;
     a.aInfo.array.fill(0);for(let v=0;v<a.aInfo.count;v++){a.aInfo.array[v*4+2]=-1e9;a.aInfo.array[v*4+3]=.001}a.aInfo.needsUpdate=true}
   // ---------------- hooks ----------------
