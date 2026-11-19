@@ -723,6 +723,79 @@
    "rotationY": 0,
    "biome": "arena",
    "rigged": false
+  },
+  "stone-guardian": {
+   "name": "Stone Guardian (replaces the rock golem)",
+   "source": "Meshy_AI_Stone_Guardian animated (owner upload, simplified)",
+   "url": "assets/meshy/stone-guardian.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Walking",
+    "Reaping_Swing",
+    "Angry_Ground_Stomp_2",
+    "Hit_Reaction",
+    "dying_backwards"
+   ]
+  },
+  "magma-titan": {
+   "name": "Magma Titan (replaces the crystal guardian)",
+   "source": "Meshy_AI_Magma_Titan animated (owner upload, simplified)",
+   "url": "assets/meshy/magma-titan.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Walking",
+    "Attack",
+    "Flying_Fist_Kick",
+    "Hit_Reaction",
+    "dying_backwards"
+   ]
+  },
+  "pine-tree": {
+   "name": "Pine tree (replaces the procedural pines)",
+   "source": "Meshy_AI_pine_tree_3d (owner upload, simplified)",
+   "url": "assets/meshy/pine-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "pine-tree-lo": {
+   "name": "Pine tree, low detail (mountain forests)",
+   "source": "Meshy_AI_pine_tree_3d (owner upload, simplified to 1.6k tris)",
+   "url": "assets/meshy/pine-tree-lo.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "wide-rock": {
+   "name": "Detailed wide rock (replaces every boulder)",
+   "source": "detailed_wide_rock (owner upload, simplified)",
+   "url": "assets/meshy/wide-rock.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "bastion-hill": {
+   "name": "Ironvein Bastion (hill outcrops)",
+   "source": "Ironvein_Bastion (owner upload, simplified)",
+   "url": "assets/meshy/bastion-hill.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "garden-floor": {
+   "name": "Autumn Stone Garden (map-wide floor tile)",
+   "source": "Autumn_Stone_Garden (owner upload, simplified)",
+   "url": "assets/meshy/garden-floor.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
   }
  },
  "warrior": {

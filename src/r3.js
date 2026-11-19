@@ -398,12 +398,14 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const TH=t=>(t.v===2?70:t.v===5?54:t.v===6?44:t.v===1?40:38)*t.h;
     // Arena Royale: birches become the owner's Meshy Verdant Solitude tree (moonfall-village.js) when it is loaded
     const MT=this.verdantOn&&this.verdantOn()?(t=>t.v===2):(()=>false);
+    // ...and pines become the owner's Meshy pine (moonfall-village.js pineTrees) when it is loaded
+    const PM=this.pineOn&&this.pineOn()?(t=>t.v===0||t.v===4):(()=>false);
     // trunks
-    this.instC(G.cylT,bark,tr.filter(t=>t.v!==2),(t,add)=>{const R=RT(t),th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,t.v===1||t.v===6?11:t.v===5?7:8,th,t.v===1||t.v===6?11:8,0,R()*6,0,t.v===3?'#8a7aa8':t.v===5?'#5a4048':'#ffffff')},true);
+    this.instC(G.cylT,bark,tr.filter(t=>t.v!==2&&!PM(t)),(t,add)=>{const R=RT(t),th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,t.v===1||t.v===6?11:t.v===5?7:8,th,t.v===1||t.v===6?11:8,0,R()*6,0,t.v===3?'#8a7aa8':t.v===5?'#5a4048':'#ffffff')},true);
     this.instC(G.cylT,birch,tr.filter(t=>t.v===2&&!MT(t)),(t,add)=>{const th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,6,th,6,0,t.x,0,'#ffffff')},true);
     // pines (valley + dark) as stacked cones
     const PINE=TF?['#3f9e4c','#4aaa56','#389348','#52b05a']:['#3a7a3c','#457f40','#356a34','#4a8844'],DPINE=TF?['#2f8a80','#36968a','#2a7c76']:['#2a5a54','#2f6458','#264a48'];
-    const pines=tr.filter(t=>t.v===0||t.v===4),TIERS_P=[[1,1.05,.4],[.78,.95,.95],[.52,.85,1.45],[.28,.6,1.85]];
+    const pines=tr.filter(t=>(t.v===0||t.v===4)&&!PM(t)),TIERS_P=[[1,1.05,.4],[.78,.95,.95],[.52,.85,1.45],[.28,.6,1.85]];
     this.instC(CONE,pineM,pines,(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),P=t.v===0?PINE:DPINE,k=cards?.82:1;for(const q of TIERS_P)add(t.x,b+th+cr*q[2]-(TF?cr*q[1]*.25:0),t.y,cr*q[0]*k*(TF?1.12:1),cr*q[1]*(TF?.82:1),cr*q[0]*k*(TF?1.12:1),0,R()*6,0,cards?dimC(P[Math.floor(R()*P.length)],.85):P[Math.floor(R()*P.length)])},true,reg);
     if(cards)this.instC(G.pineRing,needM,pines,(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),P=t.v===0?PINE:DPINE;for(const q of TIERS_P){R();add(t.x,b+th+cr*q[2]-cr*q[1]*.2,t.y,cr*q[0]*1.28,cr*q[1]*.95,cr*q[0]*1.28,0,R()*6,0,P[Math.floor(R()*P.length)])}},true,reg);
     // oak / birch / willow / magic / dead canopies from noisy blobs
@@ -424,6 +426,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
         add(t.x+dx*len*.5,b+th*.82+dy*len*.5,t.y+dz*len*.5,5,len,5,0,-a,-tl,null)}},true,reg);
     // enchanted trees: a full leafy crown in one glowing hue per tree
     if(this.verdantOn&&this.verdantOn())this.verdantTrees(tr.filter(MT),reg);
+    if(this.pineOn&&this.pineOn())this.pineTrees(tr.filter(PM),reg);
     {const mg=tr.filter(t=>t.v===3),magP=(t,add,k)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),c=MAG[Math.floor(R()*MAG.length)];
         for(const q of[[0,.5,0,.8,.64],[-.38,.84,.12,.56,.48],[.4,.78,-.16,.52,.46],[0,1.06,.08,.46,.4]])add(t.x+cr*q[0],b+th+cr*q[1],t.y+cr*q[2],cr*q[3]*k,cr*q[4]*k,cr*q[3]*k,R(),R()*6,0,c)};
       this.instC(BLOB(1),magicM,mg,(t,add)=>magP(t,add,cards?.72:1),true,reg);
@@ -432,8 +435,8 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     if(!TF)this.instC(G.openCyl,willowM,tr.filter(t=>t.v===6),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);add(t.x,b+th+cr*.32-cr*.42,t.y,cr*.9,cr*.95,cr*.9,0,t.x,0,'#8f9c80')},true,reg);
     this.instC(this.cylg(.5,1,1,5),bark,tr.filter(t=>t.v===5),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);for(const s of[-1,1])add(t.x+s*cr*.24,b+th*.82,t.y,3,cr*.72,3,0,0,s*.95,'#5a4048')},true);
     // mountain pines (no shadows, bigger chunks)
-    this.instC(G.cylT,bark,WD.mtrees,(t,add)=>{add(t.x,t.h+20*t.s,t.y,9*t.s,40*t.s,9*t.s,0,t.x,0,'#ffffff')},false,null,2500);
-    this.instC(CONE,pineM,WD.mtrees,(t,add)=>{const R=mulberry32(Math.floor(t.x*3+t.y)),P=t.v===0?PINE:DPINE,cr=62*t.s,th=40*t.s;for(const q of[[1,1.1,.42],[.72,1,1],[.45,.85,1.5]])add(t.x,t.h+th+cr*q[2],t.y,cr*q[0],cr*q[1],cr*q[0],0,R()*6,0,P[Math.floor(R()*P.length)])},true,null,2500);
+    if(!(this.pineMtrees&&this.pineMtrees(WD.mtrees))){this.instC(G.cylT,bark,WD.mtrees,(t,add)=>{add(t.x,t.h+20*t.s,t.y,9*t.s,40*t.s,9*t.s,0,t.x,0,'#ffffff')},false,null,2500);
+    this.instC(CONE,pineM,WD.mtrees,(t,add)=>{const R=mulberry32(Math.floor(t.x*3+t.y)),P=t.v===0?PINE:DPINE,cr=62*t.s,th=40*t.s;for(const q of[[1,1.1,.42],[.72,1,1],[.45,.85,1.5]])add(t.x,t.h+th+cr*q[2],t.y,cr*q[0],cr*q[1],cr*q[0],0,R()*6,0,P[Math.floor(R()*P.length)])},true,null,2500)}
     this.treeMeshes=null;
     // bushes (hiding spots)
     const bu=WD.bushes,pf=[[0,0,1],[.45,.2,.74],[-.42,.25,.76],[.1,-.42,.62]];
@@ -467,7 +470,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       add(r.x,y+r.r*hy*.3,r.y,r.r*1.08,r.r*hy,r.r,R()*.4,R()*6,R()*.3,r.cave!==undefined?'#9a94a8':r.edge?'#a8a49a':'#b8b4aa')},true);
     // decor boulders lining cave passages and the waterfall
     const deco=[];for(const c of WD.caves){const L=Math.hypot(c.x-c.mx,c.y-c.my);const nx=(c.x-c.mx)/L,ny=(c.y-c.my)/L;for(let s=0;s<L;s+=40)for(const sd of[-1,1]){const w=c.w+sr2(c.x+s*sd,20,40);deco.push({x:c.mx+nx*s-ny*w*sd,y:c.my+ny*s+nx*w*sd,r:sr2(s+sd,30,50)})}}
-    this.instC(G.rock[1],rm,deco,(r,add)=>{const y=this.gY(r.x,r.y);add(r.x,Math.max(0,y)+r.r*.4,r.y,r.r,r.r*1.4,r.r,0,r.x,0,'#a8a49a')},true)},
+    if(!(this.rockDeco&&this.rockDeco(deco)))this.instC(G.rock[1],rm,deco,(r,add)=>{const y=this.gY(r.x,r.y);add(r.x,Math.max(0,y)+r.r*.4,r.y,r.r,r.r*1.4,r.r,0,r.x,0,'#a8a49a')},true)},
   glowSet(list){const g=new THREE.BufferGeometry();const pa=new Float32Array(list.length*3),ca=new Float32Array(list.length*3),sa=new Float32Array(list.length);
     list.forEach((q,i)=>{pa[i*3]=q[0];pa[i*3+1]=q[1];pa[i*3+2]=q[2];this.col.set(q[3]);ca[i*3]=this.col.r*.75;ca[i*3+1]=this.col.g*.75;ca[i*3+2]=this.col.b*.75;sa[i]=q[4]});
     g.setAttribute('position',new THREE.BufferAttribute(pa,3));g.setAttribute('color',new THREE.BufferAttribute(ca,3));g.setAttribute('gsize',new THREE.BufferAttribute(sa,1));

@@ -7,6 +7,18 @@
 
 ---
 
+## 2026-11-19 · Claude · โกเลม/ต้นสน/หิน/เนินเขา/พื้น เป็นโมเดลของเจ้าของ (index เท่านั้น)
+- เจ้าของส่ง 6 ไฟล์: Stone Guardian + Magma Titan (มีกระดูก+ท่า), pine_tree_3d, detailed_wide_rock, Ironvein_Bastion, Autumn_Stone_Garden
+- โกเลม: `src/golem-meshy.js` (ใหม่) — `golem` (โกเลมหินผา) = `stone-guardian` H170, `guardian` (ผู้พิทักษ์คริสตัล) = `magma-titan` H188. ใช้ทาง skinned ของ Eclipse (`eclSkModel`/`eclAnimSk`/`_eclSet` ท่าตาย) โดยเติม `a._eclClips` เอง: ตัดคลิปโจมตีเหลือช่วงที่ฟาดโดน (Reaping_Swing 2–3.05s, Attack .5–1.85s, Flying_Fist_Kick 1.1–2.95s), ทุกการโจมตีที่ 3 เล่นท่าหนัก (Ground_Stomp / Flying_Fist_Kick), Magma ไม่มีท่ายืน → ใช้เฟรมแรกของ Attack ค้างไว้. ก่อน GLB โหลดเสร็จวาดโกเลมเดิม แล้วสลับเฟรมถัดไป. ความสูงแถบ HP ผ่าน `R.golemTop` (r4.js). ค่าพลัง/AI ไม่เปลี่ยน
+- `celestial-assets.js`: เพิ่ม `stone-guardian`,`magma-titan` ใน allow-list ของโมเดล skinned (ไม่งั้นโหลดเป็น error และ **หน้าเกมค้างที่ปุ่มเริ่ม** — ระวังเวลาเพิ่มโมเดลมีกระดูกตัวใหม่)
+- ต้นสน: `pine-tree` (3.9k tris) แทนสน v0/v4 ใน WD.trees ผ่าน instC + reg (โค่นได้, ไม่มีตอ), `pine-tree-lo` (1.6k tris, ไม่มีเงา) แทนสนภูเขา WD.mtrees ~5200 ต้น; สนมืด (v4) ย้อมสี #a9c4bc. hook ใน r3 buildVegetation (`pineOn`/`pineTrees`/`pineMtrees`)
+- หิน: `wide-rock` แทนหินทุกก้อน (ทุ่ง/ขอบแมป/รอบเนิน/ปากถ้ำ + หินประดับทางถ้ำผ่าน `rockDeco`); `plainRock` คืน true ทุกก้อนที่ไม่ใช่ prop เมื่อโหลดแล้ว. ตำแหน่ง/การชนเดิม
+- เนินเขา: `bastion-hill` วางบนทุก part ของ `WD.cliffs` (137 ชิ้น) กว้าง 2.2r สูง ≥1.28h ฐานอยู่ระดับพื้นรอบเนิน
+- พื้น: `garden-floor` แผ่นสี่เหลี่ยม 250 ระยะ 225 (ซ้อนกันเล็กน้อย) หมุนทีละ 90° สุ่ม เอียงตามพื้น ทั่วแมป (~3260 แผ่น) ยกเว้นน้ำ/บ้าน/คุกใต้ดิน/นอกแมป/ทางชันเกิน .5; geometry หมุนหน้าขึ้นครั้งเดียว (ไฟล์หันหน้า +z); ล้าง gdens ใต้แผ่น. ไม่มีเงา (รับเงาอย่างเดียว)
+- ขนาด: stone-guardian 0.86 MB, magma-titan 1.03 MB (ตัดคลิปที่ไม่ใช้ + ลดโพลี + quantize), ที่เหลือ < 0.4 MB
+- ทดสอบ: ภาพในเกม (พื้น/เนิน/ป่าสน/สนภูเขา/โกเลมทั้งสองตอนโจมตี), แมตช์บอท index + cursed, smoke test Codex, build ตรง
+- ค้าง: ยังไม่ได้วัด FPS บนมือถือจริง (พื้น 3260 แผ่น × 3.6k tris + สนภูเขา 5200 × 1.6k ถูกแบ่ง chunk + frustum cull)
+
 ## 2026-11-19 · Claude · เอาพื้นทุกอย่างออก (index เท่านั้น)
 - เจ้าของ: "เอาพื้นทุกอย่างออก" → ลบ `oct-floor` (พื้นแปดเหลี่ยมทั้งแมป, #30), `rift-slab` (แดนเถ้าถ่าน, #29/#28), `dungeon-floor` (คุกใต้ดิน, #28) ทั้ง asset/manifest/NATURE/โค้ดใน `moonfall-village.js` — กลับเป็นพื้น terrain เดิม (ดอกไม้กลับมาที่เคยถูกล้างใต้แผ่น)
 - คงไว้: ผนังคบไฟในคุก (`dungeon-wall`), หย่อม `rocky-meadow` (ของตกแต่ง), เห็ด/คริสตัล/พืชอื่น

@@ -66,10 +66,16 @@ window.installMoonfallVillage=function(P){
   //      tall-grass clump were replaced (their Meshy textures had black holes) ----
   P.buildNature=function(){const tg=WD.tg,n=tg.n,C=tg.C,hg=tg.hg,dens=this.gdens;if(!tg||!dens)return;
     const hash=(x,y,s)=>{const v=Math.sin(x*12.9898+y*78.233+s*37.719)*43758.5453;return v-Math.floor(v)},sz=k=>{const a=A.get(k);return a&&a.inspection&&a.inspection.size};
-    const inst=(key,items,size)=>{if(!this.mfProp(key)||!items.length)return;const s=sz(key),parts=this.celestialAsset(key);
-      for(const p of parts)this.instC(p.geo,p.mat,items,(q,add)=>{const k=size(q,s);add(q.x,this.gY(q.x,q.y)+(q.dy||0)-1,q.y,k[0],k[1],k[2],0,q.a,0,null)},true)};
-    // mossy boulders take over the plain meadow rocks (same spot, same collision)
-    inst('mossy-boulder',WD.rocks.filter(r=>this.plainRock(r)).map(r=>({x:r.x,y:r.y,r:r.r,a:hash(r.x,r.y,1)*6.283,dy:-r.r*.12})),(q,s)=>{const W=q.r*2.35,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k*1.05,s[2]*k]});
+    const inst=(key,items,size)=>this.natInst(key,items,size);
+    // owner 2026-11-19: the detailed wide rock takes over EVERY boulder (meadow, map edge, hill ring, cave mouth); taller where the
+    // old rock was a wall piece. Same spot, same collision. Before it loads, mossy boulders stand in for the meadow rocks
+    if(this.mfProp('wide-rock'))inst('wide-rock',WD.rocks.filter(r=>this.plainRock(r)).map(r=>({x:r.x,y:r.y,r:r.r,hy:r.edge?1.9:r.cliff?1.6:r.cave!==undefined?1.4:1.1,a:hash(r.x,r.y,1)*6.283,dy:-r.r*.14})),(q,s)=>{const W=q.r*2.25,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k*q.hy,s[2]*k]});
+    else inst('mossy-boulder',WD.rocks.filter(r=>this.plainRock(r)).map(r=>({x:r.x,y:r.y,r:r.r,a:hash(r.x,r.y,1)*6.283,dy:-r.r*.12})),(q,s)=>{const W=q.r*2.35,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k*1.05,s[2]*k]});
+    // owner 2026-11-19: every rocky hill (outcrop part) is dressed as an Ironvein Bastion, standing on the ground around it and
+    // rising past the raised plateau so the terrain bump never shows through
+    const hills=[];for(const cl of WD.cliffs||[])for(const c of cl.parts){let g=Infinity;for(let a=0;a<6.28;a+=.785)g=Math.min(g,this.gY(c.x+Math.cos(a)*c.r,c.y+Math.sin(a)*c.r));
+      hills.push({x:c.x,y:c.y,r:c.r,h:Math.max(40,this.gY(c.x,c.y)-g),dy:g-this.gY(c.x,c.y)-6,a:hash(c.x,c.y,41)*6.283})}
+    inst('bastion-hill',hills,(q,s)=>{const W=q.r*2.2,k=W/Math.max(s[0],s[2]);return[s[0]*k,Math.max(s[1]*k,q.h*1.28),s[2]*k]});
     const wet=(i,j,R)=>{for(let b=-R;b<=R;b+=1)for(let a=-R;a<=R;a+=1){const ii=i+a,jj=j+b;if(ii>=0&&jj>=0&&ii<n&&jj<n&&hg[jj*n+ii]<WL-1)return true}return false};
     const stones=[],bloom=[],patch=[],banana=[];
     for(let j=2;j<n-2;j+=2)for(let i=2;i<n-2;i+=2){const k=j*n+i,h=hg[k],x=(i+hash(i,j,2))*C,y=(j+hash(i,j,3))*C,r=hash(i,j,4);
@@ -99,12 +105,44 @@ window.installMoonfallVillage=function(P){
           if(hor){x=q.x+c;y=side<0?q.y-DE/2:q.y+q.h+DE/2;a=side<0?-Math.PI/2:Math.PI/2}else{y=q.y+c;x=side<0?q.x-DE/2:q.x+q.w+DE/2;a=side<0?0:Math.PI}
           const px=hor?x:x+(side<0?-DE:DE),py=hor?y+(side<0?-DE:DE):y;if(!inD(px,py)||inWall(px,py))continue;wl.push({x,y,a,len:step})}}
       inst('dungeon-wall',wl,q=>[DE,170,q.len+2]);dgW=wl.length}
-    this.natureCounts={stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length,mush:mush.length,crys:crys.length,dgFloor:dgF,dgWall:dgW}};
+    // owner 2026-11-19: the Autumn Stone Garden tile floors the whole map (everything but water, houses, the dungeon and the steep
+    // hill/mountain sides): a square grid, tiles overlapping a little with a random quarter turn so the seams and the art don't repeat,
+    // each one tilted with the ground. The plate's carved face points +z in the file, so the geometry is turned face-up once
+    let flN=0;
+    if(this.mfProp('garden-floor')&&typeof WORLD!=='undefined'){const TW=250,SP=TW*.9,tg=WD.tg,gd=this.gdens;
+      const parts=this.celestialAsset('garden-floor').map(p=>({mat:p.mat,geo:this.cached('garden-up-'+p.geo.uuid,()=>{const g=p.geo.clone();g.rotateX(-Math.PI/2);g.translate(0,.5,.5);this.cachedGeos.add(g);return g})}));
+      const s0=sz('garden-floor'),TH=s0[2]*TW/s0[0];
+      const ok=(x,y)=>!(inWater(x,y)||house(x,y)||(typeof inDG==='function'&&inDG({x,y},40))||(typeof outsideD==='function'&&outsideD(x,y)>-30));
+      const tilt=(x,y,r)=>{const hx=(this.gY(x+r,y)-this.gY(x-r,y))/(2*r),hz=(this.gY(x,y+r)-this.gY(x,y-r))/(2*r);return Math.abs(hx)>.5||Math.abs(hz)>.5?null:[-Math.atan(hz),Math.atan(hx)]};
+      const tiles=[];
+      for(let y=SP/2;y<WORLD;y+=SP)for(let x=SP/2;x<WORLD;x+=SP){if(!ok(x,y)||!ok(x-TW*.4,y)||!ok(x+TW*.4,y)||!ok(x,y-TW*.4)||!ok(x,y+TW*.4))continue;const t=tilt(x,y,TW/2);if(!t)continue;
+        tiles.push({x,y,t,q:Math.floor(hash(x,y,51)*4),z:hash(x,y,52)});
+        if(gd&&tg){const i0=Math.floor((x-TW/2)/tg.C),i1=Math.floor((x+TW/2)/tg.C),j0=Math.floor((y-TW/2)/tg.C),j1=Math.floor((y+TW/2)/tg.C);for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++)if(i>=0&&j>=0&&i<tg.n&&j<tg.n)gd[j*tg.n+i]=0}}
+      // the carved face spans .4-.75 of the plate's depth: its lowest dips sit just above the ground, so no grass shows through
+      const place=(q,add)=>{add(q.x,this.gY(q.x,q.y)+3+q.z*1.2-.38*TH,q.y,TW,TH,TW,q.t[0],q.q*Math.PI/2,q.t[1],null)};
+      for(const p of parts)this.instC(p.geo,p.mat,tiles,place,false,null);flN=tiles.length}
+    this.natureCounts={floor:flN,hills:hills.length,stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length,mush:mush.length,crys:crys.length,dgFloor:dgF,dgWall:dgW}};
   // owner's Verdant Solitude tree replaces the birches (r3 buildVegetation asks verdantOn first); drawn through instC with the tree
   // items so felling (trees-break.js) copies it and the see-through-canopy (treeParts) still works
   P.verdantOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('verdant-tree')};
   P.verdantTrees=function(list,reg){if(!list.length)return;const a=A.get('verdant-tree'),s=a.inspection.size,parts=this.celestialAsset('verdant-tree');
     const place=(t,add)=>{const H=(70*t.h+t.cr*1.3),k=H/s[1],R=mulberry32(Math.floor(t.x*7+t.y));add(t.x,this.gY(t.x,t.y)-2,t.y,s[0]*k,H,s[2]*k,0,R()*6.283,0,null)};
     for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
-  P.plainRock=function(r){return !r.prop&&!r.edge&&!r.cliff&&r.cave===undefined&&(typeof MOON==='undefined'||!MOON)&&this.mfProp('mossy-boulder')};
+  P.plainRock=function(r){return !r.prop&&(typeof MOON==='undefined'||!MOON)&&(this.mfProp('wide-rock')||!r.edge&&!r.cliff&&r.cave===undefined&&this.mfProp('mossy-boulder'))};
+  // one Meshy prop instanced over a list (size(q,s) -> [sx,sy,sz] from the model's own proportions s)
+  P.natInst=function(key,items,size,csz){if(!this.mfProp(key)||!items.length)return false;const s=A.get(key).inspection.size,parts=this.celestialAsset(key);
+    for(const p of parts)this.instC(p.geo,p.mat,items,(q,add)=>{const k=size(q,s);add(q.x,this.gY(q.x,q.y)+(q.dy||0)-1,q.y,k[0],k[1],k[2],0,q.a,0,q.c===undefined?null:q.c)},true,null,csz);return true};
+  // the boulders lining cave passages (r3 buildRocks asks first)
+  P.rockDeco=function(deco){if(typeof MOON!=='undefined'&&MOON)return false;
+    return this.natInst('wide-rock',deco.map(r=>({x:r.x,y:r.y,r:r.r,a:r.x%6.283,dy:Math.max(0,this.gY(r.x,r.y))-this.gY(r.x,r.y)-r.r*.2})),(q,s)=>{const W=q.r*2.1,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k*1.5,s[2]*k]})};
+  // owner 2026-11-19: the Meshy pine replaces the stacked-cone pines (valley + dark). Valley-forest pines use the full model through
+  // instC with the tree items (felling and see-through canopies keep working); the thousands of mountain pines use a 1.6k-triangle
+  // copy. Dark pines keep their cooler tint
+  P.pineOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('pine-tree')};
+  P.pineTrees=function(list,reg){if(!list.length)return;const a=A.get('pine-tree'),s=a.inspection.size,parts=this.celestialAsset('pine-tree');
+    const place=(t,add)=>{const H=38*t.h+t.cr*2.15,k=H/s[1],R=mulberry32(Math.floor(t.x*7+t.y));add(t.x,this.gY(t.x,t.y)-3,t.y,s[0]*k*1.35,H,s[2]*k*1.35,0,R()*6.283,0,t.v===4?'#a9c4bc':'#ffffff')};
+    for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
+  P.pineMtrees=function(list){if(!this.pineOn()||!this.mfProp('pine-tree-lo'))return false;const s=A.get('pine-tree-lo').inspection.size,parts=this.celestialAsset('pine-tree-lo');
+    const place=(t,add)=>{const H=165*t.s,k=H/s[1];add(t.x,t.h-3,t.y,s[0]*k*1.4,H,s[2]*k*1.4,0,(t.x*1.7+t.y)%6.283,0,t.v===4?'#a9c4bc':'#ffffff')};
+    for(const p of parts)this.instC(p.geo,p.mat,list,place,false,null,2500);return true};
 };
