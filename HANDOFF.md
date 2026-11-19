@@ -7,6 +7,15 @@
 
 ---
 
+## 2026-11-19 · Claude · VFX รอบ 1: texture ขยับได้ + คุมแสงไม่ให้ขาวโพลน (index เท่านั้น)
+- เจ้าของ: "VFX ยังดูเหมือนเกมยุคเก่า" → แผน 4 รอบ (1 texture/สลาย, 2 สร้างสกิลหลักใหม่เป็นชั้นๆ, 3 บิดอากาศ/แสงจากเอฟเฟกต์/soft particles, 4 ฮิตสต็อป/จอสั่น/แฟลช)
+- ไฟล์ใหม่ `src/arena-vfx-tex.js` (โหลดก่อน arena-vfx-runtime.js): สร้าง noise texture แบบ tile ได้ในโค้ด (256² เดสก์ท็อป / 128² มือถือ, RGBA = fbm / cell walls / ridged / fbm ที่ 2) + GLSL helpers `window.VFXN_GLSL` (vxF/vxC/vxR/vxA/vxFlow/vxBurn/vxRim/vxHot) + uniforms `vxN`,`vxT` ผ่าน `ArenaVFXTex.uniforms()` (vxT เดินใน R3.draw). สร้างด้วย random stream ของตัวเอง (Math.random ถูกสลับชั่วคราวตอนสร้าง DataTexture)
+- shader ทุกชั้นใช้ texture: `arena-vfx-runtime.js` (8 batch ของ Codex — จำนวน batch/material เท่าเดิม), `arena-vfx-3d.js`, `arena-vfx-particles.js` (puff เป็นเปลวไฟที่สลาย, ควันมีแสงเงา, ribbon ฟันเป็นเส้นริ้ว, รอยไหม้มีรอยแตกเรืองแสง). สีไล่ ขอบเข้ม → สี → แกนร้อน (HDR เฉพาะแกน)
+- **คุมแสง (ต้นเหตุภาพขาวโพลน)**: gain ลด (runtime 1.9→1.25, 3D 1.75→1.25, particles 1.45→1.2) + contrast shaping (แสงจางกว้างๆ ถูกกด, โครงสร้างชัดคงอยู่) + ขอบสีอิ่ม; ชั้นเก่าใน arena (wrapper ใน arena-vfx-tex.js): decal additive ×.55, flash light ×.5, sprite ใหญ่ (s≥150) ×.5, `impact()` ไม่วาดวงแหวนขาวและ sprite ขาวขนาดจอ
+- เครื่องมือทดสอบ (scratchpad): vfxshow.py (ร่ายสกิลจริง 12 แบบแล้วถ่ายภาพ ก่อน/หลัง), attrib.py (ปิดทีละชั้นเพื่อหาว่าชั้นไหนทำภาพขาว)
+- หมายเหตุ: `src/tests/smoke-arena-vfx.py` ยัง assert 63 สกิล แต่ตอนนี้ FK=[] (เหลือ 27) — test ค้างจากของเดิม ไม่ได้แก้ไฟล์ test; รันสำเนาที่เปลี่ยนเฉพาะจำนวนแทน
+- ทดสอบ: VFX smoke (สำเนา, desktop-high + cursed), แมตช์บอท index + cursed, smoke test Codex (arena-refresh)
+
 ## 2026-11-19 · Claude · ต้นมะม่วง +10%, ก็อบลินเป็น Goblin Shaman, คริสตัลมรกต −85% (index เท่านั้น)
 - **ต้นมะม่วง** (`mango-tree`, ไฟล์ Big Mango Tree 6.9M tris → 8.8k, 0.43 MB): a.js หลัง loop ต้นไม้ (`!MOON`) เพิ่มต้นไม้ = 10% ของจำนวนเดิม (~140 ต้น) บนที่โล่งระหว่างป่า (noise ≤ .5, ห่างทาง/หิน/บ้าน, ห่างต้นอื่น 170) เป็นต้นไม้ปกติ (ชนได้ r22, โค่นได้) v:2 + `mg:1`; r3 hook `MG` แยกออกจาก verdant/birch แล้ววาดผ่าน `mangoTrees` (instC + reg). ถ้าโมเดลไม่โหลด วาดเป็นเบิร์ชเดิม. หมายเหตุ: world gen เปลี่ยน (SR() เพิ่ม) แต่ host/client ใช้ seed เดียวกัน
 - **ก็อบลิน** → `goblin-shaman` (Gloombraid Goblin Shaman, mixamo, 5k tris, 0.82 MB) ผ่าน `golem-meshy.js` เดิม (ตอนนี้ใช้กับ mob ทุก kind ใน GM ไม่ใช่แค่ golem): ท่ายืน=เฟรมแรกของ Attack, ตี=Attack .55–1.6s, ทุกครั้งที่ 3=Axe_Spin_Attack .3–1.4s, H92. การสลับโมเดลที่สร้างก่อนโหลด (KayKit Puglin/โกเลมเดิม) ย้ายไปทำใน fxExtra. แถบ HP: `golemTop` คืน 0 เมื่อไม่ใช่ → r4 ใช้ค่าเดิม. เพิ่มใน allow-list skinned ของ celestial-assets.js
