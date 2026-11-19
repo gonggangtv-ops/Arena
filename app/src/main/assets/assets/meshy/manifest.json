@@ -788,6 +788,30 @@
    "available": true,
    "rotationY": 0,
    "biome": "arena"
+  },
+  "mango-tree": {
+   "name": "Big Mango Tree (10% more trees on open ground)",
+   "source": "Meshy_AI_Big_Mango_Tree image-to-3d (owner upload, 6.9M tris simplified to 8.8k)",
+   "url": "assets/meshy/mango-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "goblin-shaman": {
+   "name": "Gloombraid Goblin Shaman (replaces the goblin)",
+   "source": "Meshy_AI_Gloombraid_Goblin_Shaman animated mixamo (owner upload, simplified)",
+   "url": "assets/meshy/goblin-shaman.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Walking",
+    "Attack",
+    "Axe_Spin_Attack",
+    "Hit_Reaction_1",
+    "dying_backwards"
+   ]
   }
  },
  "warrior": {
