@@ -7,6 +7,14 @@
 
 ---
 
+## 2026-11-19 · Claude · เอาพื้นออก + เชดเดอร์ Realistic แฟนตาซี มีมิติ (index เท่านั้น)
+- เอาพื้น `garden-floor` ออก (โค้ดปูพื้นใน buildNature, manifest, GLB, preload) — โกเลม/สน/หิน/เนินเขายังอยู่
+- ไฟล์ใหม่ `src/arena-shading.js` (โหลดหลัง arena-aaa.js, render อย่างเดียว):
+  - **Rim light** ทุกวัสดุที่มีแสง (ห่อ `R3.fow`): ขอบ fresnel สีแดด+สีฟ้า ทำให้ตัวละคร/มอน/ต้นไม้/หินแยกจากพื้น ทำงานทุกระดับกราฟิก (ไม่ต้องมี post). แทรกก่อนบล็อก fog-of-war (`{float fd=distance(vFowW,uFowC);`) ใช้ `normal`/`vViewPosition` — ข้ามวัสดุที่ไม่มี vViewPosition
+  - **Depth grade pass** (post คุณภาพสูง, ก่อน bloom หลัง AAA) อ่าน `_sceneDepth`: aerial perspective (หมอกสีแดดไกลออกไป สว่างขึ้นฝั่งพระอาทิตย์), หมอกในที่ต่ำ, depth of field อ่อนๆ (คมรอบผู้เล่น เบลอไกล >1.5× ระยะโฟกัส และใกล้เลนส์ <.36×, ปิดบนมือถือ), clarity (local contrast), vibrance, split tone ทองตรงแสง/เขียวอมฟ้าในเงา. ในคุกใต้ดินปิดหมอก/DoF
+  - toggle: `localStorage ar_fx_rim / ar_fx_depth / ar_fx_dof = '0'`; ทดสอบก่อน/หลังด้วย `ARENA_SHADING.off=1`
+- ทดสอบ: ภาพก่อน/หลัง 3 จุด, แมตช์บอท index + cursed, smoke test Codex
+
 ## 2026-11-19 · Claude · โกเลม/ต้นสน/หิน/เนินเขา/พื้น เป็นโมเดลของเจ้าของ (index เท่านั้น)
 - เจ้าของส่ง 6 ไฟล์: Stone Guardian + Magma Titan (มีกระดูก+ท่า), pine_tree_3d, detailed_wide_rock, Ironvein_Bastion, Autumn_Stone_Garden
 - โกเลม: `src/golem-meshy.js` (ใหม่) — `golem` (โกเลมหินผา) = `stone-guardian` H170, `guardian` (ผู้พิทักษ์คริสตัล) = `magma-titan` H188. ใช้ทาง skinned ของ Eclipse (`eclSkModel`/`eclAnimSk`/`_eclSet` ท่าตาย) โดยเติม `a._eclClips` เอง: ตัดคลิปโจมตีเหลือช่วงที่ฟาดโดน (Reaping_Swing 2–3.05s, Attack .5–1.85s, Flying_Fist_Kick 1.1–2.95s), ทุกการโจมตีที่ 3 เล่นท่าหนัก (Ground_Stomp / Flying_Fist_Kick), Magma ไม่มีท่ายืน → ใช้เฟรมแรกของ Attack ค้างไว้. ก่อน GLB โหลดเสร็จวาดโกเลมเดิม แล้วสลับเฟรมถัดไป. ความสูงแถบ HP ผ่าน `R.golemTop` (r4.js). ค่าพลัง/AI ไม่เปลี่ยน
