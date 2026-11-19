@@ -7,6 +7,12 @@
 
 ---
 
+## 2026-11-19 · Claude · ต้นมะม่วง +10%, ก็อบลินเป็น Goblin Shaman, คริสตัลมรกต −85% (index เท่านั้น)
+- **ต้นมะม่วง** (`mango-tree`, ไฟล์ Big Mango Tree 6.9M tris → 8.8k, 0.43 MB): a.js หลัง loop ต้นไม้ (`!MOON`) เพิ่มต้นไม้ = 10% ของจำนวนเดิม (~140 ต้น) บนที่โล่งระหว่างป่า (noise ≤ .5, ห่างทาง/หิน/บ้าน, ห่างต้นอื่น 170) เป็นต้นไม้ปกติ (ชนได้ r22, โค่นได้) v:2 + `mg:1`; r3 hook `MG` แยกออกจาก verdant/birch แล้ววาดผ่าน `mangoTrees` (instC + reg). ถ้าโมเดลไม่โหลด วาดเป็นเบิร์ชเดิม. หมายเหตุ: world gen เปลี่ยน (SR() เพิ่ม) แต่ host/client ใช้ seed เดียวกัน
+- **ก็อบลิน** → `goblin-shaman` (Gloombraid Goblin Shaman, mixamo, 5k tris, 0.82 MB) ผ่าน `golem-meshy.js` เดิม (ตอนนี้ใช้กับ mob ทุก kind ใน GM ไม่ใช่แค่ golem): ท่ายืน=เฟรมแรกของ Attack, ตี=Attack .55–1.6s, ทุกครั้งที่ 3=Axe_Spin_Attack .3–1.4s, H92. การสลับโมเดลที่สร้างก่อนโหลด (KayKit Puglin/โกเลมเดิม) ย้ายไปทำใน fxExtra. แถบ HP: `golemTop` คืน 0 เมื่อไม่ใช่ → r4 ใช้ค่าเดิม. เพิ่มใน allow-list skinned ของ celestial-assets.js
+- **คริสตัลมรกต** ลด 85%: ความหนาแน่น .03/.003 → .0045/.00045 (~530 → ~80)
+- ทดสอบ: ภาพในเกม (ต้นมะม่วง, ก็อบลิน), แมตช์บอท index + cursed, smoke test Codex
+
 ## 2026-11-19 · Claude · เอาพื้นออก + เชดเดอร์ Realistic แฟนตาซี มีมิติ (index เท่านั้น)
 - เอาพื้น `garden-floor` ออก (โค้ดปูพื้นใน buildNature, manifest, GLB, preload) — โกเลม/สน/หิน/เนินเขายังอยู่
 - ไฟล์ใหม่ `src/arena-shading.js` (โหลดหลัง arena-aaa.js, render อย่างเดียว):
