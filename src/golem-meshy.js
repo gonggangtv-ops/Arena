@@ -12,8 +12,8 @@
   const R=R3,T=THREE,CA=()=>window.CelestialAssets;
   // win: [start,end] seconds kept from a long clip; still: a one-frame pose taken at that time
   const GM={
-    golem:{key:'stone-guardian',H:170,idle:{c:/Combat_Stance/},walk:{c:/^Walking/},attack:{c:/Reaping_Swing/,win:[2,3.05]},slam:{c:/Angry_Ground_Stomp/},hit:{c:/^Hit_Reaction/},death:{c:/dying/i},atk:.75,slam:1},
-    guardian:{key:'magma-titan',H:188,idle:{c:/^Attack/,still:0},walk:{c:/^Walking/},attack:{c:/^Attack/,win:[.5,1.85]},slam:{c:/Flying_Fist_Kick/,win:[1.1,2.95]},hit:{c:/^Hit_Reaction$/},death:{c:/dying/i},atk:.75,slam:1.1}};
+    golem:{key:'stone-guardian',H:170,idle:{c:/Combat_Stance/},walk:{c:/^Walking/},attack:{c:/Reaping_Swing/,win:[2,3.05]},slam:{c:/Angry_Ground_Stomp/},hit:{c:/^Hit_Reaction/},death:{c:/dying/i},atkD:.75,slamD:1},
+    guardian:{key:'magma-titan',H:188,idle:{c:/^Attack/,still:0},walk:{c:/^Walking/},attack:{c:/^Attack/,win:[.5,1.85]},slam:{c:/Flying_Fist_Kick/,win:[1.1,2.95]},hit:{c:/^Hit_Reaction$/},death:{c:/dying/i},atkD:.75,slamD:1.1}};
   const ready=kind=>{const g=GM[kind],A=CA(),a=g&&A&&A.get(g.key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf&&a.gltf.animations&&a.gltf.animations.length>=2&&window.AR_GLTF&&AR_GLTF.SkeletonUtils&&R.eclSkModel)};
   const hipT=c=>c.tracks.find(t=>/\.position$/.test(t.name)&&/hips|pelvis/i.test(t.name));
   // keep [a,b] of a clip, times shifted to start at 0
@@ -42,7 +42,7 @@
   // swing cues (atkAnim rises on the host and on clients alike)
   const _fx=R.fxExtra;R.fxExtra=function(Tm,dt,me,L){const r=_fx.call(this,Tm,dt,me,L);try{if(typeof units==='undefined')return r;
     for(const u of units){if(!u.golem||!GM[u.kind])continue;const o=this.objs.get(u.id);if(!o||!o.gm)continue;const g=GM[u.kind],atk=u.atkAnim>0;
-      if(atk&&!o.wasAtk){o.nAtk=(o.nAtk||0)+1;u.ecA=o.nAtk%3===0?{n:'slam',t:g.slam,d:g.slam}:{n:'basic',t:g.atk,d:g.atk}}
+      if(atk&&!o.wasAtk){o.nAtk=(o.nAtk||0)+1;u.ecA=o.nAtk%3===0?{n:'slam',t:g.slamD,d:g.slamD}:{n:'basic',t:g.atkD,d:g.atkD}}
       o.wasAtk=atk}}catch(e){if(!this._gmFxErr){this._gmFxErr=1;console.warn('golem fx',e)}}return r};
   window.GOLEM_MODELS=GM;
 })();

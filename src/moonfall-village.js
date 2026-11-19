@@ -118,8 +118,8 @@ window.installMoonfallVillage=function(P){
       for(let y=SP/2;y<WORLD;y+=SP)for(let x=SP/2;x<WORLD;x+=SP){if(!ok(x,y)||!ok(x-TW*.4,y)||!ok(x+TW*.4,y)||!ok(x,y-TW*.4)||!ok(x,y+TW*.4))continue;const t=tilt(x,y,TW/2);if(!t)continue;
         tiles.push({x,y,t,q:Math.floor(hash(x,y,51)*4),z:hash(x,y,52)});
         if(gd&&tg){const i0=Math.floor((x-TW/2)/tg.C),i1=Math.floor((x+TW/2)/tg.C),j0=Math.floor((y-TW/2)/tg.C),j1=Math.floor((y+TW/2)/tg.C);for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++)if(i>=0&&j>=0&&i<tg.n&&j<tg.n)gd[j*tg.n+i]=0}}
-      // the carved face sits around .6 of the plate's depth: put that just above the ground
-      const place=(q,add)=>{add(q.x,this.gY(q.x,q.y)+2.5+q.z*1.2-.6*TH,q.y,TW,TH,TW,q.t[0],q.q*Math.PI/2,q.t[1],null)};
+      // the carved face spans .4-.75 of the plate's depth: its lowest dips sit just above the ground, so no grass shows through
+      const place=(q,add)=>{add(q.x,this.gY(q.x,q.y)+3+q.z*1.2-.38*TH,q.y,TW,TH,TW,q.t[0],q.q*Math.PI/2,q.t[1],null)};
       for(const p of parts)this.instC(p.geo,p.mat,tiles,place,false,null);flN=tiles.length}
     this.natureCounts={floor:flN,hills:hills.length,stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length,mush:mush.length,crys:crys.length,dgFloor:dgF,dgWall:dgW}};
   // owner's Verdant Solitude tree replaces the birches (r3 buildVegetation asks verdantOn first); drawn through instC with the tree
