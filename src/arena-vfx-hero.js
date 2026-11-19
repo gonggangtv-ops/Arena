@@ -155,7 +155,7 @@
     const api=R.pfxApi;if(api){try{api.embers(api.G(at.x,at.y,30),R._hx.q.high?(big?22:12):6,c,c2,r*.5);api.scorch(at.x,at.y,r*.7,big?7:4)}catch(e){}}
     if(R.vfxWave){R.vfxWave(at.x,at.y,{h:30,r0:r*.2,r1:r*(big?2.3:1.6),s:big?.016:.009,life:big?.7:.5});R.vfxHeat(at.x,at.y,{h:60,r:r*.9,s:.0035,life:big?2.2:1.4})}
     if(R.vfxGlow)R.vfxGlow(at.x,at.y,r*1.5,c,1.2,.5);
-    if(big&&R.vfxKick)R.vfxKick(at.x,at.y,{ca:.006,rad:.028,fl:.1,c:c2,stop:.07})}
+    if(big&&R.vfxKick)R.vfxKick(at.x,at.y,{ca:.004,rad:.018,fl:.05,c:c2,stop:.07})}
   function dustRing(R,at,r,c,n,o={}){for(let k=0;k<n;k++){const an=k/n*TAU+rr(-.2,.2),sp=rr(.8,1.25)*r*1.5;
     hx(R,KIND.dust,{x:at.x+Math.cos(an)*r*.25,y:at.y+Math.sin(an)*r*.25,h:16,r:r*.1,r1:r*rr(.2,.28),life:rr(1.0,1.4)*(o.life||1),c:c||'#6e6456',vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(15,40),drag:2.6,gain:(o.gain||.8)*.6,delay:o.delay||0})}}
   function frostBurst(R,at,r,c,c2,n){for(let k=0;k<n;k++){const an=k/n*TAU+rr(-.25,.25),sp=rr(.6,1.1)*r*1.2;
@@ -180,11 +180,11 @@
         explosion(R,at,r*1.05,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#8c7f70',12,{delay:.05});break;
       case'elementslam':if(isFire(S,style))explosion(R,at,r*.9,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#9a8e7f',10);break;
       case'judgment':dustRing(R,at,r,'#74695b',12);hx(R,KIND.flash,{x:at.x,y:at.y,h:60,r:r*.25,r1:r*.45,life:.24,c:c||'#ffe27a',c2:'#fff6d8',gain:.7});if(R.flash)R.flash(at.x,R.gY(at.x,at.y)+100,at.y,c||'#ffe27a',2600,r*2.4,.4);
-        if(R.vfxWave)R.vfxWave(at.x,at.y,{h:15,r0:r*.2,r1:r*1.8,s:.013,life:.6});if(R.vfxGlow)R.vfxGlow(at.x,at.y,r*1.3,c||'#ffe27a',1,.5);if(R.vfxKick)R.vfxKick(at.x,at.y,{rad:.022,fl:.08,c:'#fff2c0',stop:.06});break;
+        if(R.vfxWave)R.vfxWave(at.x,at.y,{h:15,r0:r*.2,r1:r*1.8,s:.013,life:.6});if(R.vfxGlow)R.vfxGlow(at.x,at.y,r*1.3,c||'#ffe27a',1,.5);if(R.vfxKick)R.vfxKick(at.x,at.y,{rad:.015,fl:.05,c:'#fff2c0',stop:.06});break;
       case'fissure':{const len=fin(o&&o.len,r),an=fin(S&&S.a,0);for(let k=0;k<7;k++){const d=(k+.5)/7*len;dustRing(R,{x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d},70,'#8e8273',3,{delay:k*.035,gain:.7})}break}
       case'warcry':dustRing(R,at,r*.8,'#9b8f80',10,{gain:.6});if(R.vfxWave){R.vfxWave(at.x,at.y,{h:40,r0:30,r1:r*1.3,s:.012,life:.5});R.vfxWave(at.x,at.y,{h:40,r0:20,r1:r*.9,s:.008,life:.45})}break;
       case'cyclone':dustRing(R,at,r*.7,'#9b8f80',8,{gain:.55,life:.8});break;
-      case'thunder':case'elementstorm':hx(R,KIND.flash,{x:at.x,y:at.y,h:120,r:r*.5,r1:r*.9,life:.3,c:c||STORMC,c2:'#ffffff',gain:.8});if(R.vfxKick)R.vfxKick(at.x,at.y,{ca:.004,fl:.08,c:c||STORMC,stop:.05});break;
+      case'thunder':case'elementstorm':hx(R,KIND.flash,{x:at.x,y:at.y,h:120,r:r*.5,r1:r*.9,life:.3,c:c||STORMC,c2:'#ffffff',gain:.8});if(R.vfxKick)R.vfxKick(at.x,at.y,{ca:.003,fl:.05,c:c||STORMC,stop:.05});break;
       case'iceburst':frostBurst(R,at,r,FROSTC[0],FROSTC[1],a.q.high?9:5);break;
       case'blizzard':frostBurst(R,at,r,FROSTC[0],FROSTC[1],a.q.high?7:4);a.seqs.push({k:'blizz',x:at.x,y:at.y,t:0,d:2.2,r,acc:0});break;
       case'icelance':hx(R,KIND.mist,{x:at.x,y:at.y,h:35,r:40,r1:110,life:1,c:FROSTC[0],c2:FROSTC[1],gain:.8});break;
