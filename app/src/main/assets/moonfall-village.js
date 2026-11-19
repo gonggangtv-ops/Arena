@@ -95,8 +95,9 @@ window.installMoonfallVillage=function(P){
       if(!walkable(x,y,10)||inWater(x,y))continue;mush.push({x,y,a:hash(t.x,t.y,13)*6.283,s:.75+hash(t.x,t.y,14)*.6})}
     for(let j=2;j<n-2;j+=2)for(let i=2;i<n-2;i+=2){const k=j*n+i,h=hg[k];if(h<WL+3)continue;const x=(i+hash(i,j,21))*C,y=(j+hash(i,j,22))*C,r=hash(i,j,23),g=reg(x,y);
       if(g===3)continue;
-      if(!dens[k])continue;if(r<(g===4?.03:.003)&&walkable(x,y,40)&&!house(x,y))crys.push({x,y,a:hash(i,j,28)*6.283,s:.7+hash(i,j,29)*.7})}
+      if(!dens[k])continue;if(r<(g===4?.0045:.00045)&&walkable(x,y,40)&&!house(x,y))crys.push({x,y,a:hash(i,j,28)*6.283,s:.7+hash(i,j,29)*.7})}
     inst('mystic-mushrooms',mush,(q,s)=>{const W=72*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
+    // (owner 2026-11-19: crystal density cut 85%, .03/.003 -> .0045/.00045)
     inst('emerald-crystals',crys,(q,s)=>{const W=84*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
     let dgF=0,dgW=0;const D=WD.dg;
     if(D&&this.mfProp('dungeon-wall')){const wl=[],L=175,DE=46,inD=(x,y)=>x>D.x+D.T&&x<D.x+D.w-D.T&&y>D.y+D.T&&y<D.y+D.h-D.T,inWall=(x,y)=>WD.walls.some(q=>q.castle===3&&x>q.x&&x<q.x+q.w&&y>q.y&&y<q.y+q.h);
@@ -125,6 +126,11 @@ window.installMoonfallVillage=function(P){
   P.pineOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('pine-tree')};
   P.pineTrees=function(list,reg){if(!list.length)return;const a=A.get('pine-tree'),s=a.inspection.size,parts=this.celestialAsset('pine-tree');
     const place=(t,add)=>{const H=38*t.h+t.cr*2.15,k=H/s[1],R=mulberry32(Math.floor(t.x*7+t.y));add(t.x,this.gY(t.x,t.y)-3,t.y,s[0]*k*1.35,H,s[2]*k*1.35,0,R()*6.283,0,t.v===4?'#a9c4bc':'#ffffff')};
+    for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
+  // owner 2026-11-19: Big Mango Tree for the mango items (wide canopy: the model's own width, about 2.3x the crown radius)
+  P.mangoOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('mango-tree')};
+  P.mangoTrees=function(list,reg){if(!list.length)return;const s=A.get('mango-tree').inspection.size,parts=this.celestialAsset('mango-tree');
+    const place=(t,add)=>{const W=t.cr*2.5,k=W/Math.max(s[0],s[2]),R=mulberry32(Math.floor(t.x*5+t.y*3));add(t.x,this.gY(t.x,t.y)-4,t.y,s[0]*k,s[1]*k*t.h,s[2]*k,0,R()*6.283,0,null)};
     for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
   P.pineMtrees=function(list){if(!this.pineOn()||!this.mfProp('pine-tree-lo'))return false;const s=A.get('pine-tree-lo').inspection.size,parts=this.celestialAsset('pine-tree-lo');
     const place=(t,add)=>{const H=165*t.s,k=H/s[1];add(t.x,t.h-3,t.y,s[0]*k*1.4,H,s[2]*k*1.4,0,(t.x*1.7+t.y)%6.283,0,t.v===4?'#a9c4bc':'#ffffff')};

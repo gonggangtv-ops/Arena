@@ -5,15 +5,17 @@
  * Rendering only: HP, damage, speed and AI are unchanged. The skinned path is the Eclipse one (eclSkModel/eclAnimSk):
  * the clip map is filled here before the first build, with each attack cut down to the swing that lands, so the blow
  * reads on the frame the server deals the damage. Every third swing plays the heavy move instead. Until the GLB loads
- * the old procedural golem is drawn, then swapped on the next frame. */
+ * the old procedural golem is drawn, then swapped on the next frame.
+ * 2026-11-19 (later): ก็อบลิน (kind 'goblin', normally the KayKit Puglin) → the owner's Gloombraid Goblin Shaman, same path. */
 (()=>{
   'use strict';
   if(typeof R3==='undefined'||typeof MOON==='undefined'||MOON)return;
   const R=R3,T=THREE,CA=()=>window.CelestialAssets;
   // win: [start,end] seconds kept from a long clip; still: a one-frame pose taken at that time
   const GM={
-    golem:{key:'stone-guardian',H:170,idle:{c:/Combat_Stance/},walk:{c:/^Walking/},attack:{c:/Reaping_Swing/,win:[2,3.05]},slam:{c:/Angry_Ground_Stomp/},hit:{c:/^Hit_Reaction/},death:{c:/dying/i},atkD:.75,slamD:1},
-    guardian:{key:'magma-titan',H:188,idle:{c:/^Attack/,still:0},walk:{c:/^Walking/},attack:{c:/^Attack/,win:[.5,1.85]},slam:{c:/Flying_Fist_Kick/,win:[1.1,2.95]},hit:{c:/^Hit_Reaction$/},death:{c:/dying/i},atkD:.75,slamD:1.1}};
+    golem:{key:'stone-guardian',H:170,idle:{c:/Combat_Stance/},walk:{c:/^Walking/},attack:{c:/Reaping_Swing/,win:[2,3.05]},slam:{c:/Angry_Ground_Stomp/},hit:{c:/^Hit_Reaction/},death:{c:/dying/i},atkD:.75,slamD:1,top:36},
+    guardian:{key:'magma-titan',H:188,idle:{c:/^Attack/,still:0},walk:{c:/^Walking/},attack:{c:/^Attack/,win:[.5,1.85]},slam:{c:/Flying_Fist_Kick/,win:[1.1,2.95]},hit:{c:/^Hit_Reaction$/},death:{c:/dying/i},atkD:.75,slamD:1.1,top:36},
+    goblin:{key:'goblin-shaman',H:92,idle:{c:/^Attack$/,still:0},walk:{c:/^Walking/},attack:{c:/^Attack$/,win:[.55,1.6]},slam:{c:/Axe_Spin_Attack/,win:[.3,1.4]},hit:{c:/^Hit_Reaction/},death:{c:/dying/i},atkD:.42,slamD:.6,top:26}};
   const ready=kind=>{const g=GM[kind],A=CA(),a=g&&A&&A.get(g.key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf&&a.gltf.animations&&a.gltf.animations.length>=2&&window.AR_GLTF&&AR_GLTF.SkeletonUtils&&R.eclSkModel)};
   const hipT=c=>c.tracks.find(t=>/\.position$/.test(t.name)&&/hips|pelvis/i.test(t.name));
   // keep [a,b] of a clip, times shifted to start at 0
@@ -35,13 +37,15 @@
     const o={kind:'ecl',gm:1,root,body,u,lx:u.x,ly:u.y,rot:Math.atan2(u.fx,u.fy),walk:0,mvK:0,atkPh:0,H:g.H};const pose=new T.Group();root.add(pose);o.pose=pose;
     clipsFor(u.kind);pose.add(this.eclSkModel(o,{ecl:'construct'},{key:g.key,H:g.H}));o.body=new T.Group();o.ecl='construct';   // set after the model: no weapon in its hand
     this.addStatus(o,u);this.scene.add(root);this.objs.set(u.id,o);(this._eclSet||(this._eclSet=new Set())).add(o);return o};
-  const _of=R.objFor;R.objFor=function(u){if(u&&u.golem&&GM[u.kind]&&!this.objs.get(u.id)&&ready(u.kind))try{return this.gmObj(u)}catch(e){if(!this._gmErr){this._gmErr=1;console.warn('golem model',e)}}return _of.call(this,u)};
+  const _of=R.objFor;R.objFor=function(u){if(u&&u.mob&&GM[u.kind]&&!this.objs.get(u.id)&&ready(u.kind))try{return this.gmObj(u)}catch(e){if(!this._gmErr){this._gmErr=1;console.warn('golem model',e)}}return _of.call(this,u)};
   // the procedural golem drawn before the GLB finished loading is replaced on the next frame
-  const _ab=R.animBig;R.animBig=function(o,u,Tm){if(!o.gm&&u&&u.golem&&GM[u.kind]&&!u.dead&&ready(u.kind)){this.scene.remove(o.root);this.objs.delete(u.id);return}return _ab.apply(this,arguments)};
-  R.golemTop=u=>GM[u.kind]&&ready(u.kind)?GM[u.kind].H+36:u.kind==='guardian'?172:146;
+  const _ab=R.animBig;R.animBig=function(o,u,Tm){if(!o.gm&&u&&u.mob&&GM[u.kind]&&!u.dead&&ready(u.kind)){this.scene.remove(o.root);this.objs.delete(u.id);return}return _ab.apply(this,arguments)};
+  R.golemTop=u=>GM[u.kind]&&ready(u.kind)?GM[u.kind].H+GM[u.kind].top:0;
   // swing cues (atkAnim rises on the host and on clients alike)
   const _fx=R.fxExtra;R.fxExtra=function(Tm,dt,me,L){const r=_fx.call(this,Tm,dt,me,L);try{if(typeof units==='undefined')return r;
-    for(const u of units){if(!u.golem||!GM[u.kind])continue;const o=this.objs.get(u.id);if(!o||!o.gm)continue;const g=GM[u.kind],atk=u.atkAnim>0;
+    for(const u of units){if(!u.mob||!GM[u.kind])continue;const o=this.objs.get(u.id);if(!o)continue;
+      // any other model built before the GLB loaded (procedural golem, KayKit goblin) is dropped; objFor rebuilds it next frame
+      if(!o.gm){if(!u.dead&&ready(u.kind)){this.scene.remove(o.root);this.objs.delete(u.id)}continue}const g=GM[u.kind],atk=u.atkAnim>0;
       if(atk&&!o.wasAtk){o.nAtk=(o.nAtk||0)+1;u.ecA=o.nAtk%3===0?{n:'slam',t:g.slamD,d:g.slamD}:{n:'basic',t:g.atkD,d:g.atkD}}
       o.wasAtk=atk}}catch(e){if(!this._gmFxErr){this._gmFxErr=1;console.warn('golem fx',e)}}return r};
   window.GOLEM_MODELS=GM;

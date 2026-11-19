@@ -397,7 +397,9 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const reg=(t,im,i)=>{if(t._i!==undefined)this.treeParts[t._i].push([im,i])};const RT=t=>mulberry32(Math.floor(t.x*7+t.y));
     const TH=t=>(t.v===2?70:t.v===5?54:t.v===6?44:t.v===1?40:38)*t.h;
     // Arena Royale: birches become the owner's Meshy Verdant Solitude tree (moonfall-village.js) when it is loaded
-    const MT=this.verdantOn&&this.verdantOn()?(t=>t.v===2):(()=>false);
+    const MT0=this.verdantOn&&this.verdantOn()?(t=>t.v===2):(()=>false);
+    // ...mango trees (birch-class items flagged mg) become the owner's Big Mango Tree when it is loaded (moonfall-village.js mangoTrees)
+    const MG=this.mangoOn&&this.mangoOn()?(t=>!!t.mg):(()=>false),MT=t=>MT0(t)||MG(t);
     // ...and pines become the owner's Meshy pine (moonfall-village.js pineTrees) when it is loaded
     const PM=this.pineOn&&this.pineOn()?(t=>t.v===0||t.v===4):(()=>false);
     // trunks
@@ -425,7 +427,8 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       for(let k=0;k<3;k++){const a=k/3*6.283+R(),tl=.55+R()*.35,len=cr*(.62+R()*.25),dx=Math.sin(tl)*Math.cos(a),dy=Math.cos(tl),dz=Math.sin(tl)*Math.sin(a);
         add(t.x+dx*len*.5,b+th*.82+dy*len*.5,t.y+dz*len*.5,5,len,5,0,-a,-tl,null)}},true,reg);
     // enchanted trees: a full leafy crown in one glowing hue per tree
-    if(this.verdantOn&&this.verdantOn())this.verdantTrees(tr.filter(MT),reg);
+    if(this.verdantOn&&this.verdantOn())this.verdantTrees(tr.filter(t=>MT0(t)&&!MG(t)),reg);
+    if(this.mangoOn&&this.mangoOn())this.mangoTrees(tr.filter(MG),reg);
     if(this.pineOn&&this.pineOn())this.pineTrees(tr.filter(PM),reg);
     {const mg=tr.filter(t=>t.v===3),magP=(t,add,k)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),c=MAG[Math.floor(R()*MAG.length)];
         for(const q of[[0,.5,0,.8,.64],[-.38,.84,.12,.56,.48],[.4,.78,-.16,.52,.46],[0,1.06,.08,.46,.4]])add(t.x+cr*q[0],b+th+cr*q[1],t.y+cr*q[2],cr*q[3]*k,cr*q[4]*k,cr*q[3]*k,R(),R()*6,0,c)};

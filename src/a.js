@@ -662,6 +662,11 @@ function genWorld(seed){
     else{if(v===6)v=2;else if(v===5)v=4;else if(v===1)v=roll<.5?2:0;else if(v===3)v=roll<.5?4:2}
     if(!MOON&&(v===0||v===4)&&((roll*7919.37)%1)<.69)continue;   // owner 2026-11-18: 60% fewer pines   // Arena Royale (owner 2026-11-18): no willow / dead / round-crowned / crystal trees, pines + birches instead
     const t={x:p.x,y:p.y,r:18,cr:sr(52,76)*(v===6?1.15:1),v,ph:sr(0,6),h:sr(.85,1.2)};w.trees.push(t);tgrid[gy*gw+gx].push(t)}
+  // Arena Royale (owner 2026-11-19): Big Mango Trees, 10% more trees, scattered over the open ground between the woods. They are
+  // ordinary birch-class trees (collision, felling) flagged mg; the renderer swaps in the owner's model
+  if(!MOON){const nM=Math.round(w.trees.length*.10);let mN=0;for(let k=0;k<nM*60&&mN<nM;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};
+    if(outsideD(p.x,p.y)>-140||w.noise(p.x,p.y)>.5)continue;if(!free(p,48)||pathNear(p,60)||rockNear(p,56)||w.houses.some(h=>inRect(p,h,70))||!tFree(p,170))continue;
+    const t={x:p.x,y:p.y,r:22,cr:sr(72,96),v:2,mg:1,ph:sr(0,6),h:sr(.9,1.15)};w.trees.push(t);tgrid[Math.floor(p.y/TS)*gw+Math.floor(p.x/TS)].push(t);mN++}}
   // decorative pines on the mountain slopes (no collision)
   for(let k=0;k<33000&&w.mtrees.length<5200;k++){const a=sr(0,6.283),d=bndR(a)+sr(20,1000);const x=CX+Math.cos(a)*d,y=CY+Math.sin(a)*d;const o=d-bndR(a);
     const hh=terrH(x,y);if(hh>720||hh<20)continue;if(caveK(x,y)>0||inDG({x,y},1150))continue;if(w.noise(x,y)<.38&&SR()<.6)continue;if(SR()<o/1300)continue;
