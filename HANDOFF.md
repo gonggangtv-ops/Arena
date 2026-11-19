@@ -7,6 +7,15 @@
 
 ---
 
+## 2026-11-20 · Claude · VFX รอบ 2: สกิลหลักสร้างใหม่เป็นชั้นๆ (index เท่านั้น)
+- ไฟล์ใหม่ `src/arena-vfx-hero.js` (โหลดหลัง arena-vfx-particles.js, render อย่างเดียว, random stream ของตัวเอง):
+  - **billboard premultiplied** (blend One / OneMinusSrcAlpha — สไปรต์เดียวเรืองแสงได้ (ไฟ) และบังได้ (ควัน) โดยไม่ทำจอขาว): ชนิด fire (แกนร้อนขาว→ส้ม→แดง→ควันเทามีแสงเงา), flame, smoke, flash, mist (หมอกน้ำแข็ง), dust (ฝุ่นพื้น). เรียงจากไกลไปใกล้ทุกเฟรม. ความจุ 160 (มือถือ 64)
+  - **สายฟ้าแตกกิ่ง**: midpoint displacement 4 ชั้น + กิ่ง 1–2, ribbon หันหากล้องใน vertex shader, ฟาดลงมาในช่วง 1/8 แรกของอายุแล้วกะพริบดับ, ต่อจุดตก: flash + ควัน + ประกายไฟ + รอยไหม้ + แสง. 40 เส้น (มือถือ 16), เขียน buffer ตอนเกิดเท่านั้น
+  - สูตรตาม style: fireball/explosive (ระเบิดตอนโดน, แค่ไฟปากกระบอกตอนยิง), fireburst (วงไฟพุ่งออก), meteor (ลูกไฟตกจากฟ้าพร้อมควันระหว่าง windup → ระเบิดใหญ่ + ฝุ่น; พื้นไฟที่เหลือไม่ระเบิดซ้ำ), burn/พื้นไฟ (เปลวไฟเลียและควันตาม tick), thunder/stormfield/chain (สายฟ้าจริงผ่าน `strikes()` ของท่าร่าย; chain เป็นสายฟ้าโค้งระหว่างเป้า), iceburst/blizzard (หมอกน้ำแข็งพุ่ง/หมุนวน), icelance, judgment/fissure/warcry/cyclone (ฝุ่นพื้นกระจาย), ลูกไฟระหว่างบินมีเปลวและควัน
+  - hook: ห่อ `R3.v3Pulse` (style dispatch), `fxExtra` (step), `initFX` (reset), `disposeScene`; API `R3.hxEmit/hxBolt/hxChain/hxSustain` (ทุกตัวมี try/catch — ภาพพังต้องไม่ทำให้เฟรมพัง)
+- แก้ร่วม: `arena-vfx-skills.js` (Codex) — `strikes()` ใช้ `P.hxBolt` ถ้ามี, chain ใช้ `P.hxChain`, DOT tick เรียก `P.hxSustain`, ระเบิดไฟไม่วาด pillar/jets/วงเวทซ้ำเมื่อมีชั้นนี้; `arena-vfx-3d.js` — เมื่อมีชั้นนี้ impact ไม่วาด orb/flare/แสง และไม่วาดลำแสงฟ้าของ storm (ชั้นนี้วาดแทน), รอยแตกพื้นเป็นเส้นหยัก ไม่เป็นรากไม้
+- ทดสอบ: ภาพก่อน/หลังด้วย vfxshow.py (ไฟ ระเบิด อุกกาบาต สายฟ้า น้ำแข็ง ดาบ ขวาน), เวลาเฟรม (swiftshader ~6 วิ/เฟรมทั้งมีและไม่มีชั้นนี้ — ชั้นนี้ไม่เพิ่มภาระที่วัดได้), VFX smoke (สำเนา), แมตช์บอท index + cursed, smoke Codex
+
 ## 2026-11-19 · Claude · VFX รอบ 1: texture ขยับได้ + คุมแสงไม่ให้ขาวโพลน (index เท่านั้น)
 - เจ้าของ: "VFX ยังดูเหมือนเกมยุคเก่า" → แผน 4 รอบ (1 texture/สลาย, 2 สร้างสกิลหลักใหม่เป็นชั้นๆ, 3 บิดอากาศ/แสงจากเอฟเฟกต์/soft particles, 4 ฮิตสต็อป/จอสั่น/แฟลช)
 - ไฟล์ใหม่ `src/arena-vfx-tex.js` (โหลดก่อน arena-vfx-runtime.js): สร้าง noise texture แบบ tile ได้ในโค้ด (256² เดสก์ท็อป / 128² มือถือ, RGBA = fbm / cell walls / ridged / fbm ที่ 2) + GLSL helpers `window.VFXN_GLSL` (vxF/vxC/vxR/vxA/vxFlow/vxBurn/vxRim/vxHot) + uniforms `vxN`,`vxT` ผ่าน `ArenaVFXTex.uniforms()` (vxT เดินใน R3.draw). สร้างด้วย random stream ของตัวเอง (Math.random ถูกสลับชั่วคราวตอนสร้าง DataTexture)
