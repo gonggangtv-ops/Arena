@@ -29,63 +29,109 @@
       vNormal=normalize(normalMatrix*mat3(instanceMatrix)*normal);
       gl_Position=projectionMatrix*mv;
     }`;
+  // Fallback when the texture library is missing: flat mid-grey noise keeps every shape working as before.
+  const VXN=window.VFXN_GLSL||`uniform sampler2D vxN;uniform float vxT;float vxF(vec2 u){return .5;}float vxC(vec2 u){return 1.0;}float vxR(vec2 u){return .5;}float vxA(vec2 u){return .5;}
+    float vxFlow(vec2 u,vec2 v){return .5;}float vxBurn(float n,float th,float w){return smoothstep(th-w,th+w,n);}float vxRim(float n,float th,float w){return 0.0;}vec3 vxHot(vec3 c){return c;}`;
+  // 2026-11-19 (Claude, VFX round 1): every shape now samples the shared noise texture: rings wobble and boil, magic circles are
+  // inscribed by a sweeping head and burn away, pillars lick upward like flame, shields show flowing hex cells, slashes streak and
+  // fray into wisps, trails go wispy, glows flicker like fire. Colours run deep edge -> colour -> hot core with HDR cores for bloom.
   const FRAG=`
     precision highp float;
     uniform float avType; uniform float avGain;uniform vec2 avFocus;uniform float avVision;
+    ${VXN}
     varying vec2 vUv; varying vec4 vLife; varying vec3 vColor; varying vec3 vColor2;
     varying vec3 vNormal; varying vec3 vEye; varying vec2 vWorld;
     const float PI=3.14159265359;const float TAU=6.28318530718;
     float band(float x,float width){return 1.0-smoothstep(width,width*1.85,abs(x));}
     void main(){
-      vec2 p=vUv*2.0-1.0;float r=length(p),an=atan(p.y,p.x);
-      float age=vLife.x,seed=vLife.y,width=vLife.z,span=vLife.w;
+      vec2 p=vUv*2.0-1.0;float r=length(p),an=atan(p.y,p.x),au=an/TAU+.5;
+      float age=vLife.x,seed=vLife.y,width=vLife.z,span=vLife.w,sd=fract(seed*.1591)*7.0;
       float envelope=smoothstep(0.0,.09,age)*pow(max(0.0,1.0-age),.85);
       float mask=0.0;float core=.0;
-      if(avType<.5){
-        mask=band(r-.83,width)*.8+band(r-.66,width*.45)*.28;
-        float ripple=.45+.55*sin(an*12.0+seed+age*6.0);mask*=.78+.22*ripple;
-        core=band(r-.83,width*.3);
-      }else if(avType<1.5){
+      if(avType<.5){                                   // shock ring: a boiling, wobbling front that burns away
+        float n=vxFlow(vec2(au*3.0+sd,r*1.3-age*.8),vec2(0.0,-.3));
+        float rr=r+(n-.5)*(.09+width*1.6);
+        mask=band(rr-.83,width*(.75+n*.9))*.95+band(rr-.66,width*.45)*.3*n;
+        mask+=smoothstep(.85,.3,r)*smoothstep(.05,.55,r)*pow(n,2.4)*.5*(1.0-age);
+        core=band(rr-.83,width*.3)*(.5+n);
+        float th=smoothstep(.3,1.0,age)*.85;core+=vxRim(n,th,.05)*mask*1.4;mask*=vxBurn(n,th,.07);
+      }else if(avType<1.5){                            // magic circle: inscribed by a sweeping head, energy runs the lines
         float hex=r*cos(mod(an+PI/6.0,PI/3.0)-PI/6.0);
         float hexb=r*cos(mod(an+PI/2.0,PI/3.0)-PI/6.0);
         float circle=band(r-.90,.012)+band(r-.76,.008)*.65;
         float star=(band(hex-.56,.008)+band(hexb-.56,.008))*(1.0-smoothstep(.83,.87,r));
         float tick=step(.72,cos(an*24.0))*smoothstep(.77,.80,r)*(1.0-smoothstep(.86,.88,r));
         float inner=band(r-.27,.01)*.8+band(r-.36,.006)*.45;
-        mask=circle*.65+star*.7+tick*.7+inner;core=circle*.35+star*.2;
-      }else if(avType<2.5){
-        float h=vUv.y;float column=pow(max(0.0,1.0-h),1.8);
+        float gly=smoothstep(.58,.8,vxR(vec2(au*16.0+sd,r*2.5)))*band(r-.465,.06);
+        float fl=vxF(vec2(au*6.0-vxT*.22+sd,r*2.0));
+        mask=(circle*.65+star*.7+tick*.7+inner+gly*.6)*(.6+.75*fl);core=circle*.35+star*.2+(circle+star)*fl*.35;
+        float rev=age/.16,sw=fract(au+sd*.13);
+        mask*=smoothstep(sw-.035,sw,rev);core+=exp(-pow((rev-sw)*22.0,2.0))*(circle+star+inner+gly)*1.6*step(rev,1.2);
+        float n=vxF(p*.9+sd),th=smoothstep(.62,1.0,age);core+=vxRim(n,th,.05)*1.2*step(.02,mask);mask*=vxBurn(n,th,.06);
+      }else if(avType<2.5){                            // pillar: flame licks rising and thinning
+        float h=vUv.y;
+        float n=vxFlow(vec2(vUv.x*2.0+sd,h*.8),vec2(0.0,-1.3));
+        float rid=vxR(vec2(vUv.x*3.0+sd-vxT*.1,h*1.5-vxT*1.0));
+        float column=pow(max(0.0,1.0-h),1.3);
+        float lick=smoothstep(.3+h*.5,.9,n+(1.0-h)*.28);
         float braid=pow(max(0.0,sin(vUv.x*TAU*3.0+h*8.0-age*5.0+seed)),9.0);
-        mask=column*(.11+braid*.46);core=column*braid*.35;
+        mask=column*(.08+lick*.7+rid*.22*(1.0-h)+braid*.25);core=column*(lick*lick*.55+braid*.2);
         envelope*=1.0-smoothstep(.55,1.0,age);
-      }else if(avType<3.5){
-        float rim=pow(1.0-abs(dot(normalize(vNormal),normalize(vEye))),2.8);
-        float lattice=pow(abs(sin(vUv.x*TAU*12.0)),32.0)*.22+
-          pow(abs(sin(vUv.y*TAU*7.0)),38.0)*.22;
-        mask=rim*.7+lattice;core=rim*.18;
-      }else if(avType<4.5){
-        float angle=abs(atan(p.y,p.x));
+      }else if(avType<3.5){                            // dome shield: fresnel rim, flowing hex cells, a scanning wave
+        vec3 N=normalize(vNormal),E=normalize(vEye);
+        float rim=pow(1.0-abs(dot(N,E)),2.4);
+        float cell=vxC(vUv*vec2(6.0,3.0)+vec2(vxT*.02+sd,0.0));
+        float wall=1.0-smoothstep(.04,.16,cell);
+        float fl=vxFlow(vUv*vec2(4.0,2.0)+sd,vec2(.04,.1));
+        float wave=exp(-pow((vUv.y-fract(.85-age*1.3))*7.0,2.0));
+        mask=rim*.62+wall*(.14+rim*.45)*(.55+.9*fl)+fl*.07+wave*(.18+wall*.4);
+        core=rim*.18+wall*fl*.22+wave*.25;
+        float th=smoothstep(.55,1.0,age);core+=vxRim(fl,th,.05)*.8;mask*=vxBurn(fl,th,.07);
+      }else if(avType<4.5){                            // slash arc: streaked along the swing, frays into wisps
+        float angle=abs(an);
         float end=1.0-smoothstep(max(0.0,span*.5-.16),span*.5,angle);
         float taper=pow(max(0.0,cos(angle/max(span,.01)*PI)),.5);
-        mask=(band(r-.83,width)*.9+band(r-.64,width*.4)*.28)*end*taper;
-        core=band(r-.83,width*.22)*end*taper;
-      }else if(avType<5.5){
-        float rim=pow(1.0-abs(dot(normalize(vNormal),normalize(vEye))),1.6);
-        mask=.24+rim*.6;core=.12+rim*.15;
-      }else if(avType<6.5){
-        mask=(1.0-smoothstep(.25,1.0,abs(p.x)))*(1.0-smoothstep(.0,1.0,abs(p.y)));
-        core=mask*mask*.4;
-      }else{
-        float rr=dot(p,p);mask=exp(-rr*5.5)*(1.0-smoothstep(.65,1.0,r));
-        core=exp(-rr*22.0)*.45;
+        float sa=an/max(span,.01)+.5;
+        float n=vxFlow(vec2(sa*1.5+sd,r*2.5),vec2(-.9,0.0));
+        float st=vxF(vec2(sa*.7-age*1.8+sd,r*7.0));
+        float rr=r+(n-.5)*.05;
+        mask=(band(rr-.83,width*(.7+st))*.9+band(rr-.64,width*.4)*.3*n)*end*taper*(.5+.9*st);
+        core=band(rr-.83,width*.22)*end*taper*(.45+st);
+        float th=smoothstep(.2,1.0,age)*.9;core+=vxRim(n,th,.05)*mask*1.3;mask*=vxBurn(n,th,.07);
+      }else if(avType<5.5){                            // crystal shard: facets, cracks and a glint
+        vec3 N=normalize(vNormal),E=normalize(vEye);
+        float rim=pow(1.0-abs(dot(N,E)),1.6);
+        float crk=1.0-smoothstep(.03,.12,vxC(vUv*1.5+sd));
+        float gl=pow(max(0.0,dot(reflect(-E,N),normalize(vec3(.35,.8,.45)))),20.0);
+        mask=.2+rim*.55+crk*.3;core=.1+rim*.15+gl*.9+crk*.15;
+      }else if(avType<6.5){                            // streak: wispy, flowing trail
+        float n=vxFlow(vec2(p.x*.4+sd,vUv.y*1.2),vec2(0.0,-2.0));
+        float w=1.0-smoothstep(.12+.55*n,1.0,abs(p.x));
+        mask=w*(1.0-smoothstep(.0,1.0,abs(p.y)))*(.5+n);
+        core=pow(max(0.0,1.0-abs(p.x)),5.0)*(1.0-abs(p.y))*.55;
+      }else{                                           // glow: a flickering, warped fireball rather than a perfect disc
+        vec2 wq=p+(vec2(vxF(p*.3+sd+vxT*.12),vxA(p*.3-sd+vxT*.1))-.5)*.6;
+        float rr=dot(wq,wq),n=vxF(wq*.5+vec2(sd,-vxT*.35));
+        mask=exp(-rr*5.0)*(.55+.9*n)*(1.0-smoothstep(.65,1.0,r));
+        core=exp(-rr*20.0)*.55;
       }
       float visibility=1.0-smoothstep(avVision-100.0,avVision+20.0,distance(vWorld,avFocus));
       float opacity=envelope*clamp(mask,0.0,1.0)*visibility;
+      // contrast shaping: faint, broad glow is what washed the screen out; it fades away, strong structure stays
+      opacity*=.22+.78*smoothstep(.02,.38,opacity);
       if(opacity<.002)discard;
-      vec3 color=mix(vColor,vColor2,clamp(core*.65+age*.22,0.0,.85));
-      gl_FragColor=vec4(color*avGain,opacity);
+      float heat=clamp(core*1.3,0.0,1.0);
+      vec3 deep=vColor*vColor/max(max(vColor.r,max(vColor.g,vColor.b)),1e-3);
+      vec3 color=mix(deep*.85,vColor,smoothstep(0.0,.5,mask));
+      color=mix(color,vColor2,smoothstep(.15,.7,heat));
+      color=mix(color,vxHot(vColor2),smoothstep(.65,1.0,heat));
+      gl_FragColor=vec4(color*avGain*(1.0+heat*1.5),opacity);
       #include <colorspace_fragment>
     }`;
+  // the shared noise texture (arena-vfx-tex.js); a 1x1 grey stand-in if the library is absent
+  let grey=null;
+  function noiseUniforms(){if(window.ArenaVFXTex)return ArenaVFXTex.uniforms();
+    if(!grey){grey=new THREE.DataTexture(new Uint8Array([128,255,128,128]),1,1);grey.needsUpdate=true}return{vxN:{value:grey},vxT:{value:0}}}
   function mode(renderer){
     const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
     const high=!!renderer.hi&&!renderer.mobile;
@@ -120,7 +166,7 @@
       const color2=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3);
       life.setUsage(THREE.DynamicDrawUsage);color.setUsage(THREE.DynamicDrawUsage);color2.setUsage(THREE.DynamicDrawUsage);
       geometry.setAttribute('avLife',life);geometry.setAttribute('avColor',color);geometry.setAttribute('avColor2',color2);
-      const material=new THREE.ShaderMaterial({uniforms:{avType:{value:index},avGain:{value:renderer.post?1.9:1.05},avFocus:renderer.U.fowC,avVision:renderer.U.fowR},
+      const material=new THREE.ShaderMaterial({uniforms:Object.assign({avType:{value:index},avGain:{value:renderer.post?1.25:.95},avFocus:renderer.U.fowC,avVision:renderer.U.fowR},noiseUniforms()),
         vertexShader:VERT,fragmentShader:FRAG,transparent:true,depthTest:true,depthWrite:false,
         side:THREE.DoubleSide,blending:THREE.AdditiveBlending,toneMapped:false});
       const mesh=new THREE.InstancedMesh(geometry,material,capacity);
@@ -181,7 +227,7 @@
       a.steps++;
       for(const type of TYPES){
         const b=a.batches[type];let n=0;
-        b.material.uniforms.avGain.value=(this.post?1.9:1.05)*(a.quality.reduced?.8:1);
+        b.material.uniforms.avGain.value=(this.post?1.25:.95)*(a.quality.reduced?.8:1);   // round 1: was 1.9/1.05 (white-out); hot cores carry the HDR now
         for(const s of b.slots){
           if(!s.on)continue;s.t+=dt;
           if(s.t>=s.life||(s.follow&&!visibleFollow(s.follow,L))){s.on=false;s.follow=null;continue;}

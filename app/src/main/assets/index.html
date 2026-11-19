@@ -5042,6 +5042,86 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
   addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'||state!=='play'||e.repeat)return;if(e.code==='ShiftLeft'||e.code==='ShiftRight')CUR.dodge();else if(e.code==='KeyV')CUR.special();else if(e.code==='KeyP')CUR.toggle();else if(e.code==='Escape'&&CUR.open)CUR.toggle(false)});
 }
 
+/* Arena Royale · VFX texture library (Claude, 2026-11-19 · index only). Render only.
+ * The skill effects used to be pure shader shapes with flat gradients, which is what made them read as old-generation.
+ * This builds ONE tileable noise texture in code at load (no image files) that every effect shader samples to flow,
+ * swirl, flicker and burn away:
+ *   R = fbm (soft clouds: fire licks, smoke, energy flow)   G = cell walls (0 on the walls: cracks, shield hexes, crystal facets)
+ *   B = ridged veins (lightning-like filaments, runes)      A = a second, decorrelated fbm (domain warping, double flow)
+ * 256² RGBA on desktop, 128² on phones; deterministic, with its own random stream (the simulation's stream is untouched,
+ * Math.random included: three's UUIDs are drawn from this stream too).
+ * Shaders get the GLSL helpers in window.VFXN_GLSL and two uniforms: vxN (the texture) and vxT (seconds, wraps at 600). */
+(()=>{
+  'use strict';
+  if(typeof THREE==='undefined')return;
+  const T=THREE,MOB=/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent),N=MOB?128:256;
+  let s=0x6d2b79f5;const rnd=()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return(s>>>0)/4294967296};
+  const perm=new Uint8Array(512),GX=new Float32Array(256),GY=new Float32Array(256);
+  {const a=Array.from({length:256},(_,i)=>i);for(let i=255;i>0;i--){const j=Math.floor(rnd()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}
+    for(let i=0;i<512;i++)perm[i]=a[i&255];for(let i=0;i<256;i++){const t=rnd()*Math.PI*2;GX[i]=Math.cos(t);GY[i]=Math.sin(t)}}
+  // periodic gradient noise: x,y in lattice units, period P lattice cells, 'off' picks a different gradient field
+  const wrap=(i,P)=>((i%P)+P)%P;
+  function pn(x,y,P,off){const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi;
+    const g=(i,j,dx,dy)=>{const k=perm[((wrap(i,P)+off)&255)+perm[wrap(j,P)&255]];return GX[k]*dx+GY[k]*dy};
+    const u=xf*xf*xf*(xf*(xf*6-15)+10),v=yf*yf*yf*(yf*(yf*6-15)+10);
+    const a=g(xi,yi,xf,yf),b=g(xi+1,yi,xf-1,yf),c=g(xi,yi+1,xf,yf-1),d=g(xi+1,yi+1,xf-1,yf-1);
+    return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v}
+  function fbm(u,v,base,oct,off){let t=0,a=.5,f=base,n=0;for(let o=0;o<oct;o++){t+=a*pn(u*f,v*f,f,off+o*37);n+=a;a*=.5;f*=2}return t/n}
+  function ridged(u,v,base,oct,off){let t=0,a=.5,f=base,n=0;for(let o=0;o<oct;o++){const r=1-Math.abs(pn(u*f,v*f,f,off+o*53))*1.6;t+=a*r*r;n+=a;a*=.55;f*=2}return t/n}
+  // tileable Worley: distance between the two nearest feature points (0 on a cell wall)
+  function cellsField(G,off){const pts=new Float32Array(G*G*2);for(let i=0;i<pts.length;i++)pts[i]=.12+.76*rnd();
+    return(u,v)=>{const x=u*G,y=v*G,cx=Math.floor(x),cy=Math.floor(y);let f1=9,f2=9;
+      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const ix=cx+dx,iy=cy+dy,k=(wrap(iy,G)*G+wrap(ix,G))*2,px=ix+pts[k],py=iy+pts[k+1],d=Math.hypot(x-px,y-py);
+        if(d<f1){f2=f1;f1=d}else if(d<f2)f2=d}return f2-f1}}
+  function build(){const R=new Float32Array(N*N),G=new Float32Array(N*N),B=new Float32Array(N*N),A=new Float32Array(N*N);
+    const c1=cellsField(7,0),c2=cellsField(15,1);
+    for(let j=0;j<N;j++)for(let i=0;i<N;i++){const u=i/N,v=j/N,k=j*N+i;
+      R[k]=fbm(u,v,4,MOB?4:5,0);A[k]=fbm(u+.31,v+.67,3,MOB?4:5,101);B[k]=ridged(u,v,3,4,203);G[k]=c1(u,v)*.68+c2(u,v)*.32}
+    // spread each channel over 0..1 (fbm clusters round the middle); the cell channel keeps its walls at 0
+    const norm=(F,lo,hi,gam)=>{let a=1e9,b=-1e9;for(const x of F){if(x<a)a=x;if(x>b)b=x}const out=new Uint8Array(N*N);
+      for(let k=0;k<F.length;k++){let t=(F[k]-a)/Math.max(1e-6,b-a);t=Math.min(1,Math.max(0,(t-lo)/(hi-lo)));out[k]=Math.round(Math.pow(t,gam)*255)}return out};
+    const r=norm(R,.08,.92,1),g=norm(G,0,.62,.8),b=norm(B,.05,1,1.6),a=norm(A,.08,.92,1),px=new Uint8Array(N*N*4);
+    for(let k=0;k<N*N;k++){px[k*4]=r[k];px[k*4+1]=g[k];px[k*4+2]=b[k];px[k*4+3]=a[k]}
+    return px}
+  const t0=performance.now(),data=build(),prev=Math.random;let tex;
+  try{Math.random=rnd;tex=new T.DataTexture(data,N,N,T.RGBAFormat,T.UnsignedByteType)}finally{Math.random=prev}
+  tex.wrapS=tex.wrapT=T.RepeatWrapping;tex.magFilter=T.LinearFilter;tex.minFilter=T.LinearMipmapLinearFilter;tex.generateMipmaps=true;
+  if('colorSpace' in tex)tex.colorSpace=T.NoColorSpace||'';tex.anisotropy=4;tex.needsUpdate=true;tex.name='arena-vfx-noise';
+  const clock={value:0};
+  // GLSL helpers (paste after the precision line; the material must carry vxN and vxT uniforms)
+  window.VFXN_GLSL=`
+    uniform sampler2D vxN;uniform float vxT;
+    float vxF(vec2 u){return texture2D(vxN,u).r;}
+    float vxC(vec2 u){return texture2D(vxN,u).g;}
+    float vxR(vec2 u){return texture2D(vxN,u).b;}
+    float vxA(vec2 u){return texture2D(vxN,u).a;}
+    // two layers drifting at different speeds: flowing detail with no visible repeat
+    float vxFlow(vec2 u,vec2 v){return vxF(u+v*vxT)*.62+vxA(u*1.93-v*vxT*1.37+.37)*.38;}
+    // burn-away dissolve: 1 where the noise is above the rising threshold, soft over w
+    float vxBurn(float n,float th,float w){return smoothstep(th-w,th+w,n);}
+    // the glowing rim right at the burning edge (0 before the dissolve starts)
+    float vxRim(float n,float th,float w){float d=(n-th)/w;return exp(-d*d*2.2)*smoothstep(0.0,.04,th);}
+    // a hotter, whiter version of a colour (keeps any premultiplied opacity)
+    vec3 vxHot(vec3 c){float m=max(c.r,max(c.g,c.b));return mix(c,vec3(m),.62)*1.12;}
+  `;
+  window.ArenaVFXTex={texture:tex,size:N,ms:Math.round(performance.now()-t0),
+    uniforms(){return{vxN:{value:tex},vxT:clock}},
+    tick(){clock.value=(performance.now()/1000)%600}};
+  // The base game's additive ground rings (r4 decal) and flash lights (r6 flash) were drawn for the old, darker look; under the new
+  // layers they bleached the screen. Arena only: additive decals at 55% strength, flash lights at 50%.
+  if(typeof R3!=='undefined'&&(typeof MOON==='undefined'||!MOON)){
+    const _decal=R3.decal;if(_decal)R3.decal=function(o){if(o&&!o.normal)o=Object.assign({},o,{a:(o.a===undefined?1:o.a)*.55});return _decal.call(this,o)};
+    const _flash=R3.flash;if(_flash)R3.flash=function(x,y,z,c,I,d,T){return _flash.call(this,x,y,z,c,(I||0)*.5,d,T)};
+    // big additive glow sprites (the old 'everything goes white' bursts) at half strength
+    const _sp=R3.sp;if(_sp)R3.sp=function(add,o){if(add&&o&&(o.s||0)>=150)o=Object.assign({},o,{a:(o.a===undefined?1:o.a)*.5});return _sp.call(this,add,o)};
+    // the old impact layer: no bleaching white shock ring and no screen-sized white sprite (the new layers carry the burst)
+    const _imp=R3.impact;if(_imp)R3.impact=function(a){const ring=this.ring,sp=this.sp;
+      this.ring=function(x,y,r0,r1,c,life,tex){return c==='#ffffff'?null:ring.call(this,x,y,r0,r1,c,life,tex)};
+      this.sp=function(add,o){return add&&o&&o.c==='#ffffff'&&(o.s||0)>150?undefined:sp.call(this,add,o)};
+      try{return _imp.call(this,a)}finally{this.ring=ring;this.sp=sp}}}
+  if(typeof R3!=='undefined'&&typeof R3.draw==='function'){const _draw=R3.draw;R3.draw=function(){clock.value=(performance.now()/1000)%600;return _draw.apply(this,arguments)}}
+})();
+
 /* Arena skill VFX: eight bounded GPU batches, no simulation or combat state.
  * Every emission reuses a preallocated slot; geometry/materials live per scene.
  * Coordinates are game x/y; height is measured above the local terrain. */
@@ -5073,63 +5153,109 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
       vNormal=normalize(normalMatrix*mat3(instanceMatrix)*normal);
       gl_Position=projectionMatrix*mv;
     }`;
+  // Fallback when the texture library is missing: flat mid-grey noise keeps every shape working as before.
+  const VXN=window.VFXN_GLSL||`uniform sampler2D vxN;uniform float vxT;float vxF(vec2 u){return .5;}float vxC(vec2 u){return 1.0;}float vxR(vec2 u){return .5;}float vxA(vec2 u){return .5;}
+    float vxFlow(vec2 u,vec2 v){return .5;}float vxBurn(float n,float th,float w){return smoothstep(th-w,th+w,n);}float vxRim(float n,float th,float w){return 0.0;}vec3 vxHot(vec3 c){return c;}`;
+  // 2026-11-19 (Claude, VFX round 1): every shape now samples the shared noise texture: rings wobble and boil, magic circles are
+  // inscribed by a sweeping head and burn away, pillars lick upward like flame, shields show flowing hex cells, slashes streak and
+  // fray into wisps, trails go wispy, glows flicker like fire. Colours run deep edge -> colour -> hot core with HDR cores for bloom.
   const FRAG=`
     precision highp float;
     uniform float avType; uniform float avGain;uniform vec2 avFocus;uniform float avVision;
+    ${VXN}
     varying vec2 vUv; varying vec4 vLife; varying vec3 vColor; varying vec3 vColor2;
     varying vec3 vNormal; varying vec3 vEye; varying vec2 vWorld;
     const float PI=3.14159265359;const float TAU=6.28318530718;
     float band(float x,float width){return 1.0-smoothstep(width,width*1.85,abs(x));}
     void main(){
-      vec2 p=vUv*2.0-1.0;float r=length(p),an=atan(p.y,p.x);
-      float age=vLife.x,seed=vLife.y,width=vLife.z,span=vLife.w;
+      vec2 p=vUv*2.0-1.0;float r=length(p),an=atan(p.y,p.x),au=an/TAU+.5;
+      float age=vLife.x,seed=vLife.y,width=vLife.z,span=vLife.w,sd=fract(seed*.1591)*7.0;
       float envelope=smoothstep(0.0,.09,age)*pow(max(0.0,1.0-age),.85);
       float mask=0.0;float core=.0;
-      if(avType<.5){
-        mask=band(r-.83,width)*.8+band(r-.66,width*.45)*.28;
-        float ripple=.45+.55*sin(an*12.0+seed+age*6.0);mask*=.78+.22*ripple;
-        core=band(r-.83,width*.3);
-      }else if(avType<1.5){
+      if(avType<.5){                                   // shock ring: a boiling, wobbling front that burns away
+        float n=vxFlow(vec2(au*3.0+sd,r*1.3-age*.8),vec2(0.0,-.3));
+        float rr=r+(n-.5)*(.09+width*1.6);
+        mask=band(rr-.83,width*(.75+n*.9))*.95+band(rr-.66,width*.45)*.3*n;
+        mask+=smoothstep(.85,.3,r)*smoothstep(.05,.55,r)*pow(n,2.4)*.5*(1.0-age);
+        core=band(rr-.83,width*.3)*(.5+n);
+        float th=smoothstep(.3,1.0,age)*.85;core+=vxRim(n,th,.05)*mask*1.4;mask*=vxBurn(n,th,.07);
+      }else if(avType<1.5){                            // magic circle: inscribed by a sweeping head, energy runs the lines
         float hex=r*cos(mod(an+PI/6.0,PI/3.0)-PI/6.0);
         float hexb=r*cos(mod(an+PI/2.0,PI/3.0)-PI/6.0);
         float circle=band(r-.90,.012)+band(r-.76,.008)*.65;
         float star=(band(hex-.56,.008)+band(hexb-.56,.008))*(1.0-smoothstep(.83,.87,r));
         float tick=step(.72,cos(an*24.0))*smoothstep(.77,.80,r)*(1.0-smoothstep(.86,.88,r));
         float inner=band(r-.27,.01)*.8+band(r-.36,.006)*.45;
-        mask=circle*.65+star*.7+tick*.7+inner;core=circle*.35+star*.2;
-      }else if(avType<2.5){
-        float h=vUv.y;float column=pow(max(0.0,1.0-h),1.8);
+        float gly=smoothstep(.58,.8,vxR(vec2(au*16.0+sd,r*2.5)))*band(r-.465,.06);
+        float fl=vxF(vec2(au*6.0-vxT*.22+sd,r*2.0));
+        mask=(circle*.65+star*.7+tick*.7+inner+gly*.6)*(.6+.75*fl);core=circle*.35+star*.2+(circle+star)*fl*.35;
+        float rev=age/.16,sw=fract(au+sd*.13);
+        mask*=smoothstep(sw-.035,sw,rev);core+=exp(-pow((rev-sw)*22.0,2.0))*(circle+star+inner+gly)*1.6*step(rev,1.2);
+        float n=vxF(p*.9+sd),th=smoothstep(.62,1.0,age);core+=vxRim(n,th,.05)*1.2*step(.02,mask);mask*=vxBurn(n,th,.06);
+      }else if(avType<2.5){                            // pillar: flame licks rising and thinning
+        float h=vUv.y;
+        float n=vxFlow(vec2(vUv.x*2.0+sd,h*.8),vec2(0.0,-1.3));
+        float rid=vxR(vec2(vUv.x*3.0+sd-vxT*.1,h*1.5-vxT*1.0));
+        float column=pow(max(0.0,1.0-h),1.3);
+        float lick=smoothstep(.3+h*.5,.9,n+(1.0-h)*.28);
         float braid=pow(max(0.0,sin(vUv.x*TAU*3.0+h*8.0-age*5.0+seed)),9.0);
-        mask=column*(.11+braid*.46);core=column*braid*.35;
+        mask=column*(.08+lick*.7+rid*.22*(1.0-h)+braid*.25);core=column*(lick*lick*.55+braid*.2);
         envelope*=1.0-smoothstep(.55,1.0,age);
-      }else if(avType<3.5){
-        float rim=pow(1.0-abs(dot(normalize(vNormal),normalize(vEye))),2.8);
-        float lattice=pow(abs(sin(vUv.x*TAU*12.0)),32.0)*.22+
-          pow(abs(sin(vUv.y*TAU*7.0)),38.0)*.22;
-        mask=rim*.7+lattice;core=rim*.18;
-      }else if(avType<4.5){
-        float angle=abs(atan(p.y,p.x));
+      }else if(avType<3.5){                            // dome shield: fresnel rim, flowing hex cells, a scanning wave
+        vec3 N=normalize(vNormal),E=normalize(vEye);
+        float rim=pow(1.0-abs(dot(N,E)),2.4);
+        float cell=vxC(vUv*vec2(6.0,3.0)+vec2(vxT*.02+sd,0.0));
+        float wall=1.0-smoothstep(.04,.16,cell);
+        float fl=vxFlow(vUv*vec2(4.0,2.0)+sd,vec2(.04,.1));
+        float wave=exp(-pow((vUv.y-fract(.85-age*1.3))*7.0,2.0));
+        mask=rim*.62+wall*(.14+rim*.45)*(.55+.9*fl)+fl*.07+wave*(.18+wall*.4);
+        core=rim*.18+wall*fl*.22+wave*.25;
+        float th=smoothstep(.55,1.0,age);core+=vxRim(fl,th,.05)*.8;mask*=vxBurn(fl,th,.07);
+      }else if(avType<4.5){                            // slash arc: streaked along the swing, frays into wisps
+        float angle=abs(an);
         float end=1.0-smoothstep(max(0.0,span*.5-.16),span*.5,angle);
         float taper=pow(max(0.0,cos(angle/max(span,.01)*PI)),.5);
-        mask=(band(r-.83,width)*.9+band(r-.64,width*.4)*.28)*end*taper;
-        core=band(r-.83,width*.22)*end*taper;
-      }else if(avType<5.5){
-        float rim=pow(1.0-abs(dot(normalize(vNormal),normalize(vEye))),1.6);
-        mask=.24+rim*.6;core=.12+rim*.15;
-      }else if(avType<6.5){
-        mask=(1.0-smoothstep(.25,1.0,abs(p.x)))*(1.0-smoothstep(.0,1.0,abs(p.y)));
-        core=mask*mask*.4;
-      }else{
-        float rr=dot(p,p);mask=exp(-rr*5.5)*(1.0-smoothstep(.65,1.0,r));
-        core=exp(-rr*22.0)*.45;
+        float sa=an/max(span,.01)+.5;
+        float n=vxFlow(vec2(sa*1.5+sd,r*2.5),vec2(-.9,0.0));
+        float st=vxF(vec2(sa*.7-age*1.8+sd,r*7.0));
+        float rr=r+(n-.5)*.05;
+        mask=(band(rr-.83,width*(.7+st))*.9+band(rr-.64,width*.4)*.3*n)*end*taper*(.5+.9*st);
+        core=band(rr-.83,width*.22)*end*taper*(.45+st);
+        float th=smoothstep(.2,1.0,age)*.9;core+=vxRim(n,th,.05)*mask*1.3;mask*=vxBurn(n,th,.07);
+      }else if(avType<5.5){                            // crystal shard: facets, cracks and a glint
+        vec3 N=normalize(vNormal),E=normalize(vEye);
+        float rim=pow(1.0-abs(dot(N,E)),1.6);
+        float crk=1.0-smoothstep(.03,.12,vxC(vUv*1.5+sd));
+        float gl=pow(max(0.0,dot(reflect(-E,N),normalize(vec3(.35,.8,.45)))),20.0);
+        mask=.2+rim*.55+crk*.3;core=.1+rim*.15+gl*.9+crk*.15;
+      }else if(avType<6.5){                            // streak: wispy, flowing trail
+        float n=vxFlow(vec2(p.x*.4+sd,vUv.y*1.2),vec2(0.0,-2.0));
+        float w=1.0-smoothstep(.12+.55*n,1.0,abs(p.x));
+        mask=w*(1.0-smoothstep(.0,1.0,abs(p.y)))*(.5+n);
+        core=pow(max(0.0,1.0-abs(p.x)),5.0)*(1.0-abs(p.y))*.55;
+      }else{                                           // glow: a flickering, warped fireball rather than a perfect disc
+        vec2 wq=p+(vec2(vxF(p*.3+sd+vxT*.12),vxA(p*.3-sd+vxT*.1))-.5)*.6;
+        float rr=dot(wq,wq),n=vxF(wq*.5+vec2(sd,-vxT*.35));
+        mask=exp(-rr*5.0)*(.55+.9*n)*(1.0-smoothstep(.65,1.0,r));
+        core=exp(-rr*20.0)*.55;
       }
       float visibility=1.0-smoothstep(avVision-100.0,avVision+20.0,distance(vWorld,avFocus));
       float opacity=envelope*clamp(mask,0.0,1.0)*visibility;
+      // contrast shaping: faint, broad glow is what washed the screen out; it fades away, strong structure stays
+      opacity*=.22+.78*smoothstep(.02,.38,opacity);
       if(opacity<.002)discard;
-      vec3 color=mix(vColor,vColor2,clamp(core*.65+age*.22,0.0,.85));
-      gl_FragColor=vec4(color*avGain,opacity);
+      float heat=clamp(core*1.3,0.0,1.0);
+      vec3 deep=vColor*vColor/max(max(vColor.r,max(vColor.g,vColor.b)),1e-3);
+      vec3 color=mix(deep*.85,vColor,smoothstep(0.0,.5,mask));
+      color=mix(color,vColor2,smoothstep(.15,.7,heat));
+      color=mix(color,vxHot(vColor2),smoothstep(.65,1.0,heat));
+      gl_FragColor=vec4(color*avGain*(1.0+heat*1.5),opacity);
       #include <colorspace_fragment>
     }`;
+  // the shared noise texture (arena-vfx-tex.js); a 1x1 grey stand-in if the library is absent
+  let grey=null;
+  function noiseUniforms(){if(window.ArenaVFXTex)return ArenaVFXTex.uniforms();
+    if(!grey){grey=new THREE.DataTexture(new Uint8Array([128,255,128,128]),1,1);grey.needsUpdate=true}return{vxN:{value:grey},vxT:{value:0}}}
   function mode(renderer){
     const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
     const high=!!renderer.hi&&!renderer.mobile;
@@ -5164,7 +5290,7 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
       const color2=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3);
       life.setUsage(THREE.DynamicDrawUsage);color.setUsage(THREE.DynamicDrawUsage);color2.setUsage(THREE.DynamicDrawUsage);
       geometry.setAttribute('avLife',life);geometry.setAttribute('avColor',color);geometry.setAttribute('avColor2',color2);
-      const material=new THREE.ShaderMaterial({uniforms:{avType:{value:index},avGain:{value:renderer.post?1.9:1.05},avFocus:renderer.U.fowC,avVision:renderer.U.fowR},
+      const material=new THREE.ShaderMaterial({uniforms:Object.assign({avType:{value:index},avGain:{value:renderer.post?1.25:.95},avFocus:renderer.U.fowC,avVision:renderer.U.fowR},noiseUniforms()),
         vertexShader:VERT,fragmentShader:FRAG,transparent:true,depthTest:true,depthWrite:false,
         side:THREE.DoubleSide,blending:THREE.AdditiveBlending,toneMapped:false});
       const mesh=new THREE.InstancedMesh(geometry,material,capacity);
@@ -5225,7 +5351,7 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
       a.steps++;
       for(const type of TYPES){
         const b=a.batches[type];let n=0;
-        b.material.uniforms.avGain.value=(this.post?1.9:1.05)*(a.quality.reduced?.8:1);
+        b.material.uniforms.avGain.value=(this.post?1.25:.95)*(a.quality.reduced?.8:1);   // round 1: was 1.9/1.05 (white-out); hot cores carry the HDR now
         for(const s of b.slots){
           if(!s.on)continue;s.t+=dt;
           if(s.t>=s.life||(s.follow&&!visibleFollow(s.follow,L))){s.on=false;s.follow=null;continue;}
@@ -5472,55 +5598,80 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
     void main(){vUv=uv;vLife=v3Life;vColor=v3Color;vColor2=v3Color2;vPos=position;
       vec4 p=instanceMatrix*vec4(position,1.0);vWorld=(modelMatrix*p).xz;vec4 mv=modelViewMatrix*p;vEye=normalize(-mv.xyz);
       vNormal=normalize(normalMatrix*mat3(instanceMatrix)*normal);gl_Position=projectionMatrix*mv;}`;
+  const VXN=window.VFXN_GLSL||`uniform sampler2D vxN;uniform float vxT;float vxF(vec2 u){return .5;}float vxC(vec2 u){return 1.0;}float vxR(vec2 u){return .5;}float vxA(vec2 u){return .5;}
+    float vxFlow(vec2 u,vec2 v){return .5;}float vxBurn(float n,float th,float w){return smoothstep(th-w,th+w,n);}float vxRim(float n,float th,float w){return 0.0;}vec3 vxHot(vec3 c){return c;}`;
+  // 2026-11-19 (VFX round 1): textured with the shared noise: funnels churn, shock tori boil and burn off, crescents streak and
+  // fray behind the leading edge, orbs swirl, beams surge, spikes show facets, ground cracks are a real crack network glowing
+  // like lava, flares flicker. Same deep-edge -> colour -> white-hot ramp as the arena layer.
   const FRAG=`
     precision highp float;
     uniform float v3Type;uniform float v3Gain;uniform vec2 v3Focus;uniform float v3Vision;
+    ${VXN}
     varying vec2 vUv;varying vec4 vLife;varying vec3 vColor;varying vec3 vColor2;varying vec3 vNormal;varying vec3 vEye;varying vec2 vWorld;varying vec3 vPos;
     const float PI=3.14159265359;const float TAU=6.28318530718;
     float band(float x,float w){return 1.0-smoothstep(w,w*1.9,abs(x));}
     void main(){
-      float age=vLife.x,seed=vLife.y,k1=vLife.z,k2=vLife.w;
+      float age=vLife.x,seed=vLife.y,k1=vLife.z,k2=vLife.w,sd=fract(seed*.1591)*7.0;
       float env=smoothstep(0.0,.07,age)*pow(max(0.0,1.0-age),.9);
       float fres=1.0-abs(dot(normalize(vNormal),normalize(vEye)));
       float mask=0.0,core=0.0;vec2 p=vUv*2.0-1.0;float r=length(p),an=atan(p.y,p.x);
-      if(v3Type<.5){                       // vortex: twisting funnel bands
+      if(v3Type<.5){                       // vortex: twisting funnel bands churned by noise
         float h=vUv.y,sw=vUv.x*TAU*3.0+h*(7.0+k1*4.0)-age*16.0*k2+seed;
         float b1=pow(.5+.5*sin(sw),5.0),b2=pow(.5+.5*sin(vUv.x*TAU*7.0-h*5.0-age*22.0*k2+seed*2.0),14.0);
+        float n=vxFlow(vec2(vUv.x*3.0+h*1.4+sd,h*1.2),vec2(-.7*k2,-1.3));
         float fh=smoothstep(0.0,.1,h)*(1.0-smoothstep(.62,1.0,h));
-        mask=(b1*.75+b2*.55)*fh*(.35+.75*pow(fres,1.4));core=b1*fh*.55;
-      }else if(v3Type<1.5){                // shock torus
+        mask=(b1*.6+b2*.45+n*n*.55)*fh*(.35+.75*pow(fres,1.4))*(.55+.8*n);core=(b1*.45+n*n*.35)*fh;
+        float th=smoothstep(.45,1.0,age)*.85;core+=vxRim(n,th,.05)*fh;mask*=vxBurn(n,th,.07);
+      }else if(v3Type<1.5){                // shock torus: boiling surface that burns off
         env=smoothstep(0.0,.05,age)*pow(max(0.0,1.0-age),1.5);
-        mask=.3+pow(fres,1.6)*.95;core=pow(1.0-fres,3.0)*.9;
-      }else if(v3Type<2.5){                // crescent slash, sweeping from tail to head
+        float n=vxFlow(vUv*vec2(6.0,2.0)+sd,vec2(.35,0.0));
+        mask=(.22+pow(fres,1.6)*.85)*(.5+.9*n);core=pow(1.0-fres,3.0)*(.5+.7*n);
+        float th=smoothstep(.25,1.0,age)*.8;core+=vxRim(n,th,.05);mask*=vxBurn(n,th,.07);
+      }else if(v3Type<2.5){                // crescent slash: streaked, sweeping from tail to head, fraying behind the head
         float span=max(k2,.2),t=an/span+.5;float front=smoothstep(0.0,.32,age)*1.25;
         float on=step(0.0,t)*step(t,1.0)*(1.0-smoothstep(front-.02,front+.08,t));
         float trail=clamp(1.0-(front-t)*1.6,0.0,1.0);float th=k1*pow(max(0.0,sin(PI*clamp(t,0.0,1.0))),.7);
-        mask=(band(r-.82,th)*.95+band(r-.74,th*.5)*.35)*on*(.25+.75*trail);core=band(r-.83,th*.35)*on*trail;
+        float st=vxF(vec2(t*.8-age*2.0+sd,r*8.0)),n=vxFlow(vec2(t*1.6+sd,r*3.0),vec2(-.8,0.0));
+        float rr=r+(n-.5)*.04;
+        mask=(band(rr-.82,th*(.75+st*.8))*.95+band(rr-.74,th*.5)*.35*n)*on*(.25+.75*trail)*(.5+.9*st);
+        core=band(rr-.83,th*.35)*on*trail*(.5+st);
+        float er=clamp((front-t)*1.1-.15,0.0,1.0)+smoothstep(.55,1.0,age)*.6;core+=vxRim(n,er,.05)*mask*1.2;mask*=vxBurn(n,er,.08);
         env=smoothstep(0.0,.04,age)*pow(max(0.0,1.0-age),1.1);
-      }else if(v3Type<3.5){                // energy orb
-        float sw=sin(vPos.x*7.0+age*9.0+seed)*sin(vPos.y*6.0-age*8.0)*sin(vPos.z*8.0+age*6.0+seed);
-        mask=.22+pow(fres,2.0)*.95+sw*.18;core=pow(1.0-fres,2.0)*.95;
+      }else if(v3Type<3.5){                // energy orb: swirling plasma
+        vec3 q=normalize(vPos);
+        float n=vxF(q.xy*.55+vec2(sd,vxT*.45))*.5+vxA(q.yz*.55-vec2(vxT*.38,sd))*.5;
+        float vein=vxR(q.xz*.7+vec2(vxT*.2,sd));
+        mask=.16+pow(fres,2.0)*.9+(n-.5)*.55+vein*.2;core=pow(1.0-fres,2.0)*(.65+.7*n)+vein*.15;
         env=smoothstep(0.0,.1,age)*pow(max(0.0,1.0-age),k1>0.5?.4:.9);
-      }else if(v3Type<4.5){                // sky beam
-        float h=vUv.y,ctr=pow(1.0-fres,2.5),flow=.55+.45*sin(h*34.0-age*44.0+seed);
+      }else if(v3Type<4.5){                // sky beam: surging energy
+        float h=vUv.y,ctr=pow(1.0-fres,2.5);
+        float n=vxFlow(vec2(vUv.x*2.0+sd,h*3.0),vec2(0.0,-4.0)),rid=vxR(vec2(vUv.x*3.0+sd,h*2.0-vxT*3.0));
         float fh=smoothstep(0.0,.04,h)*(1.0-smoothstep(.45,1.0,h));
-        mask=(ctr*flow*1.15+.08)*fh;core=ctr*fh;env=smoothstep(0.0,.06,age)*pow(max(0.0,1.0-age),1.3);
-      }else if(v3Type<5.5){                // crystal spike
-        mask=.28+pow(fres,1.3)*.75;core=pow(fres,3.0)*.5+(1.0-vUv.y)*.25;
+        mask=(ctr*(.45+.85*n)*1.15+.06*n+rid*.25*ctr)*fh;core=ctr*fh*(.55+.6*n);env=smoothstep(0.0,.06,age)*pow(max(0.0,1.0-age),1.3);
+      }else if(v3Type<5.5){                // crystal spike: facets, cracks, glint at the tip
+        float crk=1.0-smoothstep(.03,.12,vxC(vUv*vec2(2.0,1.0)+sd));
+        mask=.26+pow(fres,1.3)*.7+crk*.3;core=pow(fres,3.0)*.5+(1.0-vUv.y)*.25+crk*.2;
         env=smoothstep(0.0,.05,age)*(1.0-smoothstep(.8,1.0,age));
-      }else if(v3Type<6.5){                // glowing ground cracks
+      }else if(v3Type<6.5){                // ground cracks: a crack network glowing like lava, revealed outward
+        float cw=1.0-smoothstep(.0,.075,vxC(p*1.25+sd));
         float rays=pow(abs(cos(an*k1+seed+sin(r*13.0+seed)*.45)),70.0);
-        float reveal=1.0-smoothstep(age*3.2-.05,age*3.2+.05,r);
-        mask=(rays*(1.0-smoothstep(.25,1.0,r))+band(r-.14,.05)*.45+exp(-r*r*30.0)*.4)*reveal;core=rays*.5;
+        float n=vxF(p*.8+vec2(sd,vxT*.15));
+        float reveal=1.0-smoothstep(age*3.2-.05,age*3.2+.05,r+(n-.5)*.15);
+        float fall=1.0-smoothstep(.2,1.0,r);
+        mask=(cw*fall*(.55+.7*n)+rays*fall*.45+band(r-.14,.05)*.4+exp(-r*r*30.0)*.4)*reveal;core=(cw*fall*.8+rays*.4)*(.6+.5*n);
         env=smoothstep(0.0,.05,age)*pow(max(0.0,1.0-age),.7);
-      }else{                               // impact flare (camera facing)
-        float rays=pow(abs(cos(an*2.0+seed)),40.0)*exp(-r*2.2)+pow(abs(cos(an*2.0+seed+PI*.25)),60.0)*exp(-r*3.5)*.55;
+      }else{                               // impact flare (camera facing), flickering rays
+        float fk=.6+.8*vxF(vec2(an/TAU*4.0+sd,vxT*2.0));
+        float rays=(pow(abs(cos(an*2.0+seed)),40.0)*exp(-r*2.2)+pow(abs(cos(an*2.0+seed+PI*.25)),60.0)*exp(-r*3.5)*.55)*fk;
         mask=exp(-r*r*9.0)*.85+rays;core=exp(-r*r*36.0);env=pow(max(0.0,1.0-age),1.6)*smoothstep(0.0,.03,age);
       }
       float vis=1.0-smoothstep(v3Vision-100.0,v3Vision+20.0,distance(vWorld,v3Focus));
-      float op=env*clamp(mask,0.0,1.6)*vis;if(op<.003)discard;
-      vec3 col=mix(vColor,vColor2,clamp(core,0.0,1.0));
-      gl_FragColor=vec4(col*v3Gain,op);
+      float op=env*clamp(mask,0.0,1.6)*vis;op*=.22+.78*smoothstep(.02,.38,op);if(op<.003)discard;
+      float heat=clamp(core,0.0,1.0);
+      vec3 deep=vColor*vColor/max(max(vColor.r,max(vColor.g,vColor.b)),1e-3);
+      vec3 col=mix(deep*.85,vColor,smoothstep(0.0,.45,mask));
+      col=mix(col,vColor2,smoothstep(.12,.65,heat));col=mix(col,vxHot(vColor2),smoothstep(.65,1.0,heat));
+      gl_FragColor=vec4(col*v3Gain*(1.0+heat*1.3),op);
       #include <colorspace_fragment>
     }`;
   function mode(R){const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;const high=!!R.hi&&!R.mobile;return{high,reduced,key:(high?'h':'l')+(reduced?'r':'')}}
@@ -5538,7 +5689,7 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
     TYPES.forEach((type,i)=>{const cap=Math.max(4,Math.floor(caps[i]*(q.reduced?.5:1))),g=geo(type,q.high);
       const life=new THREE.InstancedBufferAttribute(new Float32Array(cap*4),4),col=new THREE.InstancedBufferAttribute(new Float32Array(cap*3),3),col2=new THREE.InstancedBufferAttribute(new Float32Array(cap*3),3);
       for(const a of[life,col,col2])a.setUsage(THREE.DynamicDrawUsage);g.setAttribute('v3Life',life);g.setAttribute('v3Color',col);g.setAttribute('v3Color2',col2);
-      const m=new THREE.ShaderMaterial({uniforms:{v3Type:{value:i},v3Gain:{value:1},v3Focus:R.U.fowC,v3Vision:R.U.fowR},vertexShader:VERT,fragmentShader:FRAG,
+      const m=new THREE.ShaderMaterial({uniforms:Object.assign({v3Type:{value:i},v3Gain:{value:1},v3Focus:R.U.fowC,v3Vision:R.U.fowR},window.ArenaVFXTex?ArenaVFXTex.uniforms():{vxN:{value:null},vxT:{value:0}}),vertexShader:VERT,fragmentShader:FRAG,
         transparent:true,depthTest:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,toneMapped:false});
       const mesh=new THREE.InstancedMesh(g,m,cap);mesh.name='arena-vfx3d-'+type;mesh.count=0;mesh.visible=false;mesh.frustumCulled=false;mesh.renderOrder=9;
       mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.userData.arenaVFX=true;R.scene.add(mesh);
@@ -5572,7 +5723,7 @@ if(CURSED){CUR.ui();CUR.el.hint.textContent='ฆ่ามอนสเตอร�
           s:between(.55,1.25)*fin(o.size,9),rx:rnd()*TAU,ry:rnd()*TAU,wx:between(-9,9),wy:between(-9,9),b:0,cr:a.c.r*tint,cg:a.c.g*tint,cb:a.c.b*tint});made++}
       return made},
     v3Step(dt){if(!this._v3)return;const a=ensure(this);if(!a)return;dt=Math.max(0,fin(dt,0));const md=Math.min(dt,.1),d=a.d,cam=this.cam;
-      const gain=(this.post?1.75:1.15)*(a.q.reduced?.8:1);
+      const gain=(this.post?1.25:1.0)*(a.q.reduced?.8:1);   // round 1: was 1.75/1.15
       for(const type of TYPES){const b=a.b[type];let n=0;b.m.uniforms.v3Gain.value=gain;
         for(const s of b.slots){if(!s.on)continue;s.t+=dt;if(s.t<s.delay)continue;const tt=s.t-s.delay;if(tt>=s.life||s.follow&&s.follow.dead){s.on=false;s.follow=null;continue}
           const age=tt/s.life,grow=s.ease===1?1-Math.pow(1-Math.min(1,age*1.6),3):Math.sin(Math.min(1,age*2.2)*PI/2);
@@ -6511,23 +6662,33 @@ if(typeof applyEvent==='function'){const _ae=applyEvent;applyEvent=function(e){i
         mv.xy+=dir*off.y*(sz+L*a5.z)+nr*off.x*sz;}
       else{float r=a5.x+a5.y*age,c=cos(r),s=sin(r);mv.xy+=mat2(c,s,-s,c)*off*sz;}
       gl_Position=projectionMatrix*mv;vUv=uv;vT=t;vKind=a4.w;vSeed=a5.w;vCol=vec4(mix(a3.rgb,a4.rgb,t),a3.a);vWorld=p.xz;}`;
+  const VXN=window.VFXN_GLSL||`uniform sampler2D vxN;uniform float vxT;float vxF(vec2 u){return .5;}float vxC(vec2 u){return 1.0;}float vxR(vec2 u){return .5;}float vxA(vec2 u){return .5;}
+    float vxFlow(vec2 u,vec2 v){return .5;}float vxBurn(float n,float th,float w){return smoothstep(th-w,th+w,n);}float vxRim(float n,float th,float w){return 0.0;}vec3 vxHot(vec3 c){return c;}`;
+  const NXU=()=>window.ArenaVFXTex?ArenaVFXTex.uniforms():{vxN:{value:null},vxT:{value:0}};
+  // 2026-11-19 (VFX round 1): fire puffs are warped flame tongues that burn away as they age, smoke is billowy and lit
+  // (normal from the noise gradient, light from above), embers flicker from the texture instead of a sine.
   const PFRAG=`
     precision highp float;uniform float uGain;uniform vec2 uFocus;uniform float uVision;
+    ${VXN}
     varying vec2 vUv;varying vec4 vCol;varying float vKind;varying float vT;varying float vSeed;varying vec2 vWorld;
-    float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-    float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
-    void main(){if(vT>1.0)discard;vec2 q=vUv*2.0-1.0;float r=length(q),a=0.0,hot=0.0,k=vKind;
-      if(k<0.5){a=exp(-r*r*4.5);hot=exp(-r*r*22.0);}
+    void main(){if(vT>1.0)discard;vec2 q=vUv*2.0-1.0;float r=length(q),a=0.0,hot=0.0,k=vKind,sd=fract(vSeed*.1591)*7.0;vec3 shade=vec3(1.0);
+      if(k<0.5){                                     // fire puff: warped flame tongues burning away with age
+        vec2 w=q+(vec2(vxF(q*.3+sd),vxA(q*.3-sd))-.5)*.75;float n=vxF(w*.42+vec2(sd,-vT*1.1-vxT*.3));
+        a=exp(-dot(w,w)*3.2)*(.5+.8*n)*vxBurn(n,vT*.75-.05,.12);hot=exp(-r*r*18.0)*(1.0-vT)*(.6+.6*n);}
       else if(k<1.5){a=exp(-q.x*q.x*14.0)*(1.0-smoothstep(.55,1.0,abs(q.y)));hot=exp(-q.x*q.x*60.0)*(1.0-abs(q.y));}
-      else if(k<2.5){float n=n2(q*2.2+vSeed*9.0+vT*1.3)*.6+n2(q*4.7-vSeed*5.0)*.4;a=smoothstep(1.0,.25,r+(n-.5)*.7)*.8;}
-      else if(k<3.5){a=exp(-r*r*9.0)*(.65+.35*sin(vSeed*50.0+vT*40.0));hot=exp(-r*r*40.0);}
+      else if(k<2.5){                                // smoke: billowy, lit from above
+        vec2 u=q*.5+vec2(sd,-vT*.35);float e=.035;
+        float n=vxF(u)*.62+vxA(u*2.1+sd)*.38,nx=vxF(u+vec2(e,0.0))*.62+vxA((u+vec2(e,0.0))*2.1+sd)*.38,ny=vxF(u+vec2(0.0,e))*.62+vxA((u+vec2(0.0,e))*2.1+sd)*.38;
+        vec3 nrm=normalize(vec3(-(nx-n)/e*.09,-(ny-n)/e*.09,.6));float lit=clamp(dot(nrm,normalize(vec3(-.35,.75,.55))),0.0,1.0);
+        a=smoothstep(1.0,.22,r+(n-.5)*.95)*.85*(.7+.5*n);shade=vec3(.55+.65*lit);}
+      else if(k<3.5){a=exp(-r*r*9.0)*(.55+.7*vxF(vec2(sd,vxT*3.0+vSeed)));hot=exp(-r*r*40.0);}
       else if(k<4.5){float d=abs(q.x)*1.7+abs(q.y);a=1.0-smoothstep(.82,.95,d);hot=(1.0-smoothstep(0.0,.6,d))*.7;}
       else{float an=atan(q.y,q.x);a=exp(-r*r*7.0)+pow(abs(cos(an*2.0)),26.0)*exp(-r*2.6);hot=exp(-r*r*30.0);}
       float fi=smoothstep(0.0,.06,vT),fo=1.0-smoothstep(k>1.5&&k<2.5?.35:.6,1.0,vT);
       float vis=1.0-smoothstep(uVision-100.0,uVision+20.0,distance(vWorld,uFocus));
-      float op=a*vCol.a*fi*fo*vis;if(op<.004)discard;
-      vec3 c=mix(vCol.rgb,vec3(1.0,.97,.9),clamp(hot*.75,0.0,1.0));
-      gl_FragColor=vec4(c*(k>1.5&&k<2.5?1.0:uGain),op);
+      float op=a*vCol.a*fi*fo*vis;if(k<0.5)op*=.25+.75*smoothstep(.03,.4,op);if(op<.004)discard;
+      vec3 c=mix(vCol.rgb,vxHot(vCol.rgb)*1.15,clamp(hot*.85,0.0,1.0))*shade;
+      gl_FragColor=vec4(c*(k>1.5&&k<2.5?1.0:uGain*(1.0+hot*.6)),op);
       #include <colorspace_fragment>
     }`;
   function psys(R,cap,additive){const base=new T.PlaneGeometry(1,1),g=new T.InstancedBufferGeometry();g.index=base.index;g.setAttribute('position',base.attributes.position);g.setAttribute('uv',base.attributes.uv);
@@ -6535,35 +6696,39 @@ if(typeof applyEvent==='function'){const _ae=applyEvent;applyEvent=function(e){i
     for(let i=0;i<cap;i++)at.a1.array[i*4+3]=1e-3;   // empty slots read as long dead
     for(let i=0;i<cap;i++)at.a0.array[i*4+3]=-1e9;
     g.instanceCount=cap;
-    const m=new T.ShaderMaterial({uniforms:{uTime:{value:0},uGain:{value:1},uFocus:R.U.fowC,uVision:R.U.fowR},vertexShader:PVERT,fragmentShader:PFRAG,transparent:true,depthWrite:false,depthTest:true,
+    const m=new T.ShaderMaterial({uniforms:Object.assign({uTime:{value:0},uGain:{value:1},uFocus:R.U.fowC,uVision:R.U.fowR},NXU()),vertexShader:PVERT,fragmentShader:PFRAG,transparent:true,depthWrite:false,depthTest:true,
       blending:additive?T.AdditiveBlending:T.NormalBlending,toneMapped:false});
     const mesh=new T.Mesh(g,m);mesh.frustumCulled=false;mesh.renderOrder=additive?10:8;mesh.visible=false;mesh.userData.arenaVFX=true;R.scene.add(mesh);
     return{g,m,mesh,at,cap,cur:0,lo:1e9,hi:-1,alive:0,base}}
   // ---------------- trails ----------------
   const TN=22;
   const TVERT=`attribute float aT;attribute float aS;varying float vT;varying float vS;void main(){vT=aT;vS=aS;gl_Position=projectionMatrix*viewMatrix*vec4(position,1.0);}`;
-  const TFRAG=`precision highp float;uniform vec3 uC;uniform float uGain;varying float vT;varying float vS;
-    void main(){float a=pow(max(0.0,1.0-vT),1.6)*mix(.12,1.0,smoothstep(0.0,1.0,vS));if(a<.004)discard;vec3 c=mix(uC,vec3(1.0),smoothstep(.75,1.0,vS)*(1.0-vT)*.8);gl_FragColor=vec4(c*uGain,a);
+  // weapon ribbons: streaked along the swing and fraying into wisps toward the tail (round 1)
+  const TFRAG=`precision highp float;uniform vec3 uC;uniform float uGain;${VXN}varying float vT;varying float vS;
+    void main(){float n=vxF(vec2(vT*1.7-vxT*1.6,vS*1.6))*.65+vxA(vec2(vT*3.1-vxT*2.3,vS*3.3))*.35;
+      float a=pow(max(0.0,1.0-vT),1.4)*mix(.12,1.0,smoothstep(0.0,1.0,vS))*(.45+.95*n)*vxBurn(n,vT*.85-.1,.12);if(a<.004)discard;
+      float hot=smoothstep(.7,1.0,vS)*(1.0-vT);vec3 c=mix(uC,vxHot(uC)*1.2,hot*.85);gl_FragColor=vec4(c*uGain*(1.0+hot*.7),a);
     #include <colorspace_fragment>
     }`;
   function mkTrail(R){const g=new T.BufferGeometry(),pos=new Float32Array(TN*2*3),aT=new Float32Array(TN*2),aS=new Float32Array(TN*2),idx=[];
     for(let i=0;i<TN;i++){aS[i*2]=0;aS[i*2+1]=1}for(let i=0;i<TN-1;i++){const a=i*2;idx.push(a,a+1,a+2,a+1,a+3,a+2)}
     g.setAttribute('position',new T.BufferAttribute(pos,3).setUsage(T.DynamicDrawUsage));g.setAttribute('aT',new T.BufferAttribute(aT,1).setUsage(T.DynamicDrawUsage));g.setAttribute('aS',new T.BufferAttribute(aS,1));g.setIndex(idx);
-    const m=new T.ShaderMaterial({uniforms:{uC:{value:new T.Color('#cfe6ff')},uGain:{value:1.4}},vertexShader:TVERT,fragmentShader:TFRAG,transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide,toneMapped:false});
+    const m=new T.ShaderMaterial({uniforms:Object.assign({uC:{value:new T.Color('#cfe6ff')},uGain:{value:1.4}},NXU()),vertexShader:TVERT,fragmentShader:TFRAG,transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide,toneMapped:false});
     const mesh=new T.Mesh(g,m);mesh.frustumCulled=false;mesh.renderOrder=11;mesh.visible=false;mesh.userData.arenaVFX=true;R.scene.add(mesh);
     return{g,m,mesh,pos,aT,tip:new Float32Array(TN*3),base:new Float32Array(TN*3),t:new Float32Array(TN).fill(-9),head:0,o:null,last:-9}}
   // ---------------- scorch marks (alpha blended, darken the ground) ----------------
   const SVERT=`attribute vec2 sA;varying vec2 vUv;varying vec2 vA;varying vec2 vWorld;void main(){vUv=uv;vA=sA;vec4 p=instanceMatrix*vec4(position,1.0);vWorld=(modelMatrix*p).xz;gl_Position=projectionMatrix*modelViewMatrix*p;}`;
-  const SFRAG=`precision highp float;uniform vec2 uFocus;uniform float uVision;varying vec2 vUv;varying vec2 vA;varying vec2 vWorld;
+  const SFRAG=`precision highp float;uniform vec2 uFocus;uniform float uVision;${VXN}varying vec2 vUv;varying vec2 vA;varying vec2 vWorld;
     float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
     void main(){vec2 q=vUv*2.0-1.0;float r=length(q),n=n2(q*3.0+vA.y*13.0)*.6+n2(q*8.0+vA.y*3.0)*.4;float m=1.0-smoothstep(.45,1.0,r+(n-.5)*.5);
       float glow=(1.0-smoothstep(0.0,.18,vA.x))*exp(-r*r*3.0);float a=m*.62*(1.0-smoothstep(.55,1.0,vA.x));
       float vis=1.0-smoothstep(uVision-100.0,uVision+20.0,distance(vWorld,uFocus));a*=vis;if(a<.004)discard;
-      vec3 c=mix(vec3(.05,.035,.03),vec3(1.0,.42,.12),glow*smoothstep(.3,.8,n));gl_FragColor=vec4(c,a);
+      float cw=(1.0-smoothstep(.0,.09,vxC(q*.85+vA.y*3.7)))*(1.0-smoothstep(.2,.9,r));float ember=cw*(1.0-smoothstep(.0,.45,vA.x));
+      vec3 c=mix(vec3(.05,.035,.03),vec3(1.0,.42,.12),clamp(glow*smoothstep(.3,.8,n)+ember*1.2,0.0,1.0));a=max(a,ember*.9*vis);gl_FragColor=vec4(c*(1.0+ember*1.4),a);
       #include <colorspace_fragment>
     }`;
   function mkScorch(R,cap){const g=new T.PlaneGeometry(2,2).rotateX(-Math.PI/2),sA=new T.InstancedBufferAttribute(new Float32Array(cap*2),2);sA.setUsage(T.DynamicDrawUsage);g.setAttribute('sA',sA);
-    const m=new T.ShaderMaterial({uniforms:{uFocus:R.U.fowC,uVision:R.U.fowR},vertexShader:SVERT,fragmentShader:SFRAG,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,toneMapped:false});
+    const m=new T.ShaderMaterial({uniforms:Object.assign({uFocus:R.U.fowC,uVision:R.U.fowR},NXU()),vertexShader:SVERT,fragmentShader:SFRAG,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,toneMapped:false});
     const mesh=new T.InstancedMesh(g,m,cap);mesh.count=0;mesh.frustumCulled=false;mesh.renderOrder=2;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);mesh.userData.arenaVFX=true;R.scene.add(mesh);
     return{g,m,mesh,sA,cap,slots:Array.from({length:cap},()=>({on:false})),cur:0}}
   // ---------------- lifecycle ----------------
@@ -6689,7 +6854,7 @@ if(typeof applyEvent==='function'){const _ae=applyEvent;applyEvent=function(e){i
   function upload(a){for(const s of[a.add,a.alpha]){s.mesh.visible=s.alive>a.time;s.m.uniforms.uTime.value=a.time;if(s.hi<0)continue;
       for(const k of['a0','a1','a2','a3','a4','a5']){const at=s.at[k];at.clearUpdateRanges();at.addUpdateRange(s.lo*4,(s.hi-s.lo+1)*4);at.needsUpdate=true}s.lo=1e9;s.hi=-1}}
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.call(this,Tm,dt,me,L);try{const a=ensure(this);if(a){dt=Math.min(.1,Math.max(0,dt||0));a.time+=dt;
-      const gain=(this.post?1.45:1.05)*(a.q.reduced?.8:1);a.add.m.uniforms.uGain.value=gain;for(const t of a.trails)t.m.uniforms.uGain.value=gain*1.2;
+      const gain=(this.post?1.2:1.0)*(a.q.reduced?.8:1);   // round 1: was 1.45/1.05a.add.m.uniforms.uGain.value=gain;for(const t of a.trails)t.m.uniforms.uGain.value=gain*1.2;
       trails(this,a,dt);projTrails(this,a,dt);dashes(this,a,dt);scorchStep(a,dt);upload(a);a.emitted=0}}catch(e){if(!this._pfxErr){this._pfxErr=1;console.warn('pfx',e)}}return r};
   const _ini=P.initFX;if(_ini)P.initFX=function(){const r=_ini.apply(this,arguments);try{const a=this._pfx;if(a){for(const s of[a.add,a.alpha]){s.at.a0.array.fill(-1e9);for(let i=0;i<s.cap;i++)s.at.a0.array[i*4+3]=-1e9;s.lo=0;s.hi=s.cap-1;s.alive=0}for(const t of a.trails){t.o=null;t.mesh.visible=false}a.tmap.clear();for(const s of a.scorch.slots)s.on=false}}catch(e){}return r};
   const _ds=P.disposeScene;P.disposeScene=function(){dispose(this);return _ds.apply(this,arguments)};
