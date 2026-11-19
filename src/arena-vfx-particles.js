@@ -23,23 +23,33 @@
         mv.xy+=dir*off.y*(sz+L*a5.z)+nr*off.x*sz;}
       else{float r=a5.x+a5.y*age,c=cos(r),s=sin(r);mv.xy+=mat2(c,s,-s,c)*off*sz;}
       gl_Position=projectionMatrix*mv;vUv=uv;vT=t;vKind=a4.w;vSeed=a5.w;vCol=vec4(mix(a3.rgb,a4.rgb,t),a3.a);vWorld=p.xz;}`;
+  const VXN=window.VFXN_GLSL||`uniform sampler2D vxN;uniform float vxT;float vxF(vec2 u){return .5;}float vxC(vec2 u){return 1.0;}float vxR(vec2 u){return .5;}float vxA(vec2 u){return .5;}
+    float vxFlow(vec2 u,vec2 v){return .5;}float vxBurn(float n,float th,float w){return smoothstep(th-w,th+w,n);}float vxRim(float n,float th,float w){return 0.0;}vec3 vxHot(vec3 c){return c;}`;
+  const NXU=()=>window.ArenaVFXTex?ArenaVFXTex.uniforms():{vxN:{value:null},vxT:{value:0}};
+  // 2026-11-19 (VFX round 1): fire puffs are warped flame tongues that burn away as they age, smoke is billowy and lit
+  // (normal from the noise gradient, light from above), embers flicker from the texture instead of a sine.
   const PFRAG=`
     precision highp float;uniform float uGain;uniform vec2 uFocus;uniform float uVision;
+    ${VXN}
     varying vec2 vUv;varying vec4 vCol;varying float vKind;varying float vT;varying float vSeed;varying vec2 vWorld;
-    float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-    float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
-    void main(){if(vT>1.0)discard;vec2 q=vUv*2.0-1.0;float r=length(q),a=0.0,hot=0.0,k=vKind;
-      if(k<0.5){a=exp(-r*r*4.5);hot=exp(-r*r*22.0);}
+    void main(){if(vT>1.0)discard;vec2 q=vUv*2.0-1.0;float r=length(q),a=0.0,hot=0.0,k=vKind,sd=fract(vSeed*.1591)*7.0;vec3 shade=vec3(1.0);
+      if(k<0.5){                                     // fire puff: warped flame tongues burning away with age
+        vec2 w=q+(vec2(vxF(q*.3+sd),vxA(q*.3-sd))-.5)*.75;float n=vxF(w*.42+vec2(sd,-vT*1.1-vxT*.3));
+        a=exp(-dot(w,w)*3.2)*(.5+.8*n)*vxBurn(n,vT*.75-.05,.12);hot=exp(-r*r*18.0)*(1.0-vT)*(.6+.6*n);}
       else if(k<1.5){a=exp(-q.x*q.x*14.0)*(1.0-smoothstep(.55,1.0,abs(q.y)));hot=exp(-q.x*q.x*60.0)*(1.0-abs(q.y));}
-      else if(k<2.5){float n=n2(q*2.2+vSeed*9.0+vT*1.3)*.6+n2(q*4.7-vSeed*5.0)*.4;a=smoothstep(1.0,.25,r+(n-.5)*.7)*.8;}
-      else if(k<3.5){a=exp(-r*r*9.0)*(.65+.35*sin(vSeed*50.0+vT*40.0));hot=exp(-r*r*40.0);}
+      else if(k<2.5){                                // smoke: billowy, lit from above
+        vec2 u=q*.5+vec2(sd,-vT*.35);float e=.035;
+        float n=vxF(u)*.62+vxA(u*2.1+sd)*.38,nx=vxF(u+vec2(e,0.0))*.62+vxA((u+vec2(e,0.0))*2.1+sd)*.38,ny=vxF(u+vec2(0.0,e))*.62+vxA((u+vec2(0.0,e))*2.1+sd)*.38;
+        vec3 nrm=normalize(vec3(-(nx-n)/e*.09,-(ny-n)/e*.09,.6));float lit=clamp(dot(nrm,normalize(vec3(-.35,.75,.55))),0.0,1.0);
+        a=smoothstep(1.0,.22,r+(n-.5)*.95)*.85*(.7+.5*n);shade=vec3(.55+.65*lit);}
+      else if(k<3.5){a=exp(-r*r*9.0)*(.55+.7*vxF(vec2(sd,vxT*3.0+vSeed)));hot=exp(-r*r*40.0);}
       else if(k<4.5){float d=abs(q.x)*1.7+abs(q.y);a=1.0-smoothstep(.82,.95,d);hot=(1.0-smoothstep(0.0,.6,d))*.7;}
       else{float an=atan(q.y,q.x);a=exp(-r*r*7.0)+pow(abs(cos(an*2.0)),26.0)*exp(-r*2.6);hot=exp(-r*r*30.0);}
       float fi=smoothstep(0.0,.06,vT),fo=1.0-smoothstep(k>1.5&&k<2.5?.35:.6,1.0,vT);
       float vis=1.0-smoothstep(uVision-100.0,uVision+20.0,distance(vWorld,uFocus));
       float op=a*vCol.a*fi*fo*vis;if(op<.004)discard;
-      vec3 c=mix(vCol.rgb,vec3(1.0,.97,.9),clamp(hot*.75,0.0,1.0));
-      gl_FragColor=vec4(c*(k>1.5&&k<2.5?1.0:uGain),op);
+      vec3 c=mix(vCol.rgb,vxHot(vCol.rgb)*1.15,clamp(hot*.85,0.0,1.0))*shade;
+      gl_FragColor=vec4(c*(k>1.5&&k<2.5?1.0:uGain*(1.0+hot*.6)),op);
       #include <colorspace_fragment>
     }`;
   function psys(R,cap,additive){const base=new T.PlaneGeometry(1,1),g=new T.InstancedBufferGeometry();g.index=base.index;g.setAttribute('position',base.attributes.position);g.setAttribute('uv',base.attributes.uv);
@@ -47,35 +57,39 @@
     for(let i=0;i<cap;i++)at.a1.array[i*4+3]=1e-3;   // empty slots read as long dead
     for(let i=0;i<cap;i++)at.a0.array[i*4+3]=-1e9;
     g.instanceCount=cap;
-    const m=new T.ShaderMaterial({uniforms:{uTime:{value:0},uGain:{value:1},uFocus:R.U.fowC,uVision:R.U.fowR},vertexShader:PVERT,fragmentShader:PFRAG,transparent:true,depthWrite:false,depthTest:true,
+    const m=new T.ShaderMaterial({uniforms:Object.assign({uTime:{value:0},uGain:{value:1},uFocus:R.U.fowC,uVision:R.U.fowR},NXU()),vertexShader:PVERT,fragmentShader:PFRAG,transparent:true,depthWrite:false,depthTest:true,
       blending:additive?T.AdditiveBlending:T.NormalBlending,toneMapped:false});
     const mesh=new T.Mesh(g,m);mesh.frustumCulled=false;mesh.renderOrder=additive?10:8;mesh.visible=false;mesh.userData.arenaVFX=true;R.scene.add(mesh);
     return{g,m,mesh,at,cap,cur:0,lo:1e9,hi:-1,alive:0,base}}
   // ---------------- trails ----------------
   const TN=22;
   const TVERT=`attribute float aT;attribute float aS;varying float vT;varying float vS;void main(){vT=aT;vS=aS;gl_Position=projectionMatrix*viewMatrix*vec4(position,1.0);}`;
-  const TFRAG=`precision highp float;uniform vec3 uC;uniform float uGain;varying float vT;varying float vS;
-    void main(){float a=pow(max(0.0,1.0-vT),1.6)*mix(.12,1.0,smoothstep(0.0,1.0,vS));if(a<.004)discard;vec3 c=mix(uC,vec3(1.0),smoothstep(.75,1.0,vS)*(1.0-vT)*.8);gl_FragColor=vec4(c*uGain,a);
+  // weapon ribbons: streaked along the swing and fraying into wisps toward the tail (round 1)
+  const TFRAG=`precision highp float;uniform vec3 uC;uniform float uGain;${VXN}varying float vT;varying float vS;
+    void main(){float n=vxF(vec2(vT*1.7-vxT*1.6,vS*1.6))*.65+vxA(vec2(vT*3.1-vxT*2.3,vS*3.3))*.35;
+      float a=pow(max(0.0,1.0-vT),1.4)*mix(.12,1.0,smoothstep(0.0,1.0,vS))*(.45+.95*n)*vxBurn(n,vT*.85-.1,.12);if(a<.004)discard;
+      float hot=smoothstep(.7,1.0,vS)*(1.0-vT);vec3 c=mix(uC,vxHot(uC)*1.2,hot*.85);gl_FragColor=vec4(c*uGain*(1.0+hot*.7),a);
     #include <colorspace_fragment>
     }`;
   function mkTrail(R){const g=new T.BufferGeometry(),pos=new Float32Array(TN*2*3),aT=new Float32Array(TN*2),aS=new Float32Array(TN*2),idx=[];
     for(let i=0;i<TN;i++){aS[i*2]=0;aS[i*2+1]=1}for(let i=0;i<TN-1;i++){const a=i*2;idx.push(a,a+1,a+2,a+1,a+3,a+2)}
     g.setAttribute('position',new T.BufferAttribute(pos,3).setUsage(T.DynamicDrawUsage));g.setAttribute('aT',new T.BufferAttribute(aT,1).setUsage(T.DynamicDrawUsage));g.setAttribute('aS',new T.BufferAttribute(aS,1));g.setIndex(idx);
-    const m=new T.ShaderMaterial({uniforms:{uC:{value:new T.Color('#cfe6ff')},uGain:{value:1.4}},vertexShader:TVERT,fragmentShader:TFRAG,transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide,toneMapped:false});
+    const m=new T.ShaderMaterial({uniforms:Object.assign({uC:{value:new T.Color('#cfe6ff')},uGain:{value:1.4}},NXU()),vertexShader:TVERT,fragmentShader:TFRAG,transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide,toneMapped:false});
     const mesh=new T.Mesh(g,m);mesh.frustumCulled=false;mesh.renderOrder=11;mesh.visible=false;mesh.userData.arenaVFX=true;R.scene.add(mesh);
     return{g,m,mesh,pos,aT,tip:new Float32Array(TN*3),base:new Float32Array(TN*3),t:new Float32Array(TN).fill(-9),head:0,o:null,last:-9}}
   // ---------------- scorch marks (alpha blended, darken the ground) ----------------
   const SVERT=`attribute vec2 sA;varying vec2 vUv;varying vec2 vA;varying vec2 vWorld;void main(){vUv=uv;vA=sA;vec4 p=instanceMatrix*vec4(position,1.0);vWorld=(modelMatrix*p).xz;gl_Position=projectionMatrix*modelViewMatrix*p;}`;
-  const SFRAG=`precision highp float;uniform vec2 uFocus;uniform float uVision;varying vec2 vUv;varying vec2 vA;varying vec2 vWorld;
+  const SFRAG=`precision highp float;uniform vec2 uFocus;uniform float uVision;${VXN}varying vec2 vUv;varying vec2 vA;varying vec2 vWorld;
     float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
     void main(){vec2 q=vUv*2.0-1.0;float r=length(q),n=n2(q*3.0+vA.y*13.0)*.6+n2(q*8.0+vA.y*3.0)*.4;float m=1.0-smoothstep(.45,1.0,r+(n-.5)*.5);
       float glow=(1.0-smoothstep(0.0,.18,vA.x))*exp(-r*r*3.0);float a=m*.62*(1.0-smoothstep(.55,1.0,vA.x));
       float vis=1.0-smoothstep(uVision-100.0,uVision+20.0,distance(vWorld,uFocus));a*=vis;if(a<.004)discard;
-      vec3 c=mix(vec3(.05,.035,.03),vec3(1.0,.42,.12),glow*smoothstep(.3,.8,n));gl_FragColor=vec4(c,a);
+      float cw=(1.0-smoothstep(.0,.09,vxC(q*.85+vA.y*3.7)))*(1.0-smoothstep(.2,.9,r));float ember=cw*(1.0-smoothstep(.0,.45,vA.x));
+      vec3 c=mix(vec3(.05,.035,.03),vec3(1.0,.42,.12),clamp(glow*smoothstep(.3,.8,n)+ember*1.2,0.0,1.0));a=max(a,ember*.9*vis);gl_FragColor=vec4(c*(1.0+ember*1.4),a);
       #include <colorspace_fragment>
     }`;
   function mkScorch(R,cap){const g=new T.PlaneGeometry(2,2).rotateX(-Math.PI/2),sA=new T.InstancedBufferAttribute(new Float32Array(cap*2),2);sA.setUsage(T.DynamicDrawUsage);g.setAttribute('sA',sA);
-    const m=new T.ShaderMaterial({uniforms:{uFocus:R.U.fowC,uVision:R.U.fowR},vertexShader:SVERT,fragmentShader:SFRAG,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,toneMapped:false});
+    const m=new T.ShaderMaterial({uniforms:Object.assign({uFocus:R.U.fowC,uVision:R.U.fowR},NXU()),vertexShader:SVERT,fragmentShader:SFRAG,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,toneMapped:false});
     const mesh=new T.InstancedMesh(g,m,cap);mesh.count=0;mesh.frustumCulled=false;mesh.renderOrder=2;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);mesh.userData.arenaVFX=true;R.scene.add(mesh);
     return{g,m,mesh,sA,cap,slots:Array.from({length:cap},()=>({on:false})),cur:0}}
   // ---------------- lifecycle ----------------

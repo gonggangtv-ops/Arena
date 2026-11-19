@@ -24,7 +24,7 @@ sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()
 game_files=['a.js','gi.js','b.js','c.js','r3.js','r4.js','r5.js','r6.js','r7.js','r8.js','r9.js','r10.js','r11.js','r12.js','t1.js','d.js']
 # Arena's visual layer must install before d.js initializes the renderer.
 # Keep Cursed Realm and classic builds on their original rendering path.
-if arena:game_files[-1:-1]=['arena-vfx-runtime.js','arena-vfx-skills.js','arena-vfx-3d.js']
+if arena:game_files[-1:-1]=['arena-vfx-tex.js','arena-vfx-runtime.js','arena-vfx-skills.js','arena-vfx-3d.js']
 # Eclipse Reign (boss, enemies, legendary weapons) runs in both CURSED builds; it installs after the arena VFX
 # so its own aoe kinds are drawn by eclipse-fx.js and everything else still reaches the arena layer.
 if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js','p5-heroes.js']

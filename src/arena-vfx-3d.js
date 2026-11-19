@@ -18,55 +18,79 @@
     void main(){vUv=uv;vLife=v3Life;vColor=v3Color;vColor2=v3Color2;vPos=position;
       vec4 p=instanceMatrix*vec4(position,1.0);vWorld=(modelMatrix*p).xz;vec4 mv=modelViewMatrix*p;vEye=normalize(-mv.xyz);
       vNormal=normalize(normalMatrix*mat3(instanceMatrix)*normal);gl_Position=projectionMatrix*mv;}`;
+  const VXN=window.VFXN_GLSL||`uniform sampler2D vxN;uniform float vxT;float vxF(vec2 u){return .5;}float vxC(vec2 u){return 1.0;}float vxR(vec2 u){return .5;}float vxA(vec2 u){return .5;}
+    float vxFlow(vec2 u,vec2 v){return .5;}float vxBurn(float n,float th,float w){return smoothstep(th-w,th+w,n);}float vxRim(float n,float th,float w){return 0.0;}vec3 vxHot(vec3 c){return c;}`;
+  // 2026-11-19 (VFX round 1): textured with the shared noise: funnels churn, shock tori boil and burn off, crescents streak and
+  // fray behind the leading edge, orbs swirl, beams surge, spikes show facets, ground cracks are a real crack network glowing
+  // like lava, flares flicker. Same deep-edge -> colour -> white-hot ramp as the arena layer.
   const FRAG=`
     precision highp float;
     uniform float v3Type;uniform float v3Gain;uniform vec2 v3Focus;uniform float v3Vision;
+    ${VXN}
     varying vec2 vUv;varying vec4 vLife;varying vec3 vColor;varying vec3 vColor2;varying vec3 vNormal;varying vec3 vEye;varying vec2 vWorld;varying vec3 vPos;
     const float PI=3.14159265359;const float TAU=6.28318530718;
     float band(float x,float w){return 1.0-smoothstep(w,w*1.9,abs(x));}
     void main(){
-      float age=vLife.x,seed=vLife.y,k1=vLife.z,k2=vLife.w;
+      float age=vLife.x,seed=vLife.y,k1=vLife.z,k2=vLife.w,sd=fract(seed*.1591)*7.0;
       float env=smoothstep(0.0,.07,age)*pow(max(0.0,1.0-age),.9);
       float fres=1.0-abs(dot(normalize(vNormal),normalize(vEye)));
       float mask=0.0,core=0.0;vec2 p=vUv*2.0-1.0;float r=length(p),an=atan(p.y,p.x);
-      if(v3Type<.5){                       // vortex: twisting funnel bands
+      if(v3Type<.5){                       // vortex: twisting funnel bands churned by noise
         float h=vUv.y,sw=vUv.x*TAU*3.0+h*(7.0+k1*4.0)-age*16.0*k2+seed;
         float b1=pow(.5+.5*sin(sw),5.0),b2=pow(.5+.5*sin(vUv.x*TAU*7.0-h*5.0-age*22.0*k2+seed*2.0),14.0);
+        float n=vxFlow(vec2(vUv.x*3.0+h*1.4+sd,h*1.2),vec2(-.7*k2,-1.3));
         float fh=smoothstep(0.0,.1,h)*(1.0-smoothstep(.62,1.0,h));
-        mask=(b1*.75+b2*.55)*fh*(.35+.75*pow(fres,1.4));core=b1*fh*.55;
-      }else if(v3Type<1.5){                // shock torus
+        mask=(b1*.6+b2*.45+n*n*.55)*fh*(.35+.75*pow(fres,1.4))*(.55+.8*n);core=(b1*.45+n*n*.35)*fh;
+        float th=smoothstep(.45,1.0,age)*.85;core+=vxRim(n,th,.05)*fh;mask*=vxBurn(n,th,.07);
+      }else if(v3Type<1.5){                // shock torus: boiling surface that burns off
         env=smoothstep(0.0,.05,age)*pow(max(0.0,1.0-age),1.5);
-        mask=.3+pow(fres,1.6)*.95;core=pow(1.0-fres,3.0)*.9;
-      }else if(v3Type<2.5){                // crescent slash, sweeping from tail to head
+        float n=vxFlow(vUv*vec2(6.0,2.0)+sd,vec2(.35,0.0));
+        mask=(.22+pow(fres,1.6)*.85)*(.5+.9*n);core=pow(1.0-fres,3.0)*(.5+.7*n);
+        float th=smoothstep(.25,1.0,age)*.8;core+=vxRim(n,th,.05);mask*=vxBurn(n,th,.07);
+      }else if(v3Type<2.5){                // crescent slash: streaked, sweeping from tail to head, fraying behind the head
         float span=max(k2,.2),t=an/span+.5;float front=smoothstep(0.0,.32,age)*1.25;
         float on=step(0.0,t)*step(t,1.0)*(1.0-smoothstep(front-.02,front+.08,t));
         float trail=clamp(1.0-(front-t)*1.6,0.0,1.0);float th=k1*pow(max(0.0,sin(PI*clamp(t,0.0,1.0))),.7);
-        mask=(band(r-.82,th)*.95+band(r-.74,th*.5)*.35)*on*(.25+.75*trail);core=band(r-.83,th*.35)*on*trail;
+        float st=vxF(vec2(t*.8-age*2.0+sd,r*8.0)),n=vxFlow(vec2(t*1.6+sd,r*3.0),vec2(-.8,0.0));
+        float rr=r+(n-.5)*.04;
+        mask=(band(rr-.82,th*(.75+st*.8))*.95+band(rr-.74,th*.5)*.35*n)*on*(.25+.75*trail)*(.5+.9*st);
+        core=band(rr-.83,th*.35)*on*trail*(.5+st);
+        float er=clamp((front-t)*1.1-.15,0.0,1.0)+smoothstep(.55,1.0,age)*.6;core+=vxRim(n,er,.05)*mask*1.2;mask*=vxBurn(n,er,.08);
         env=smoothstep(0.0,.04,age)*pow(max(0.0,1.0-age),1.1);
-      }else if(v3Type<3.5){                // energy orb
-        float sw=sin(vPos.x*7.0+age*9.0+seed)*sin(vPos.y*6.0-age*8.0)*sin(vPos.z*8.0+age*6.0+seed);
-        mask=.22+pow(fres,2.0)*.95+sw*.18;core=pow(1.0-fres,2.0)*.95;
+      }else if(v3Type<3.5){                // energy orb: swirling plasma
+        vec3 q=normalize(vPos);
+        float n=vxF(q.xy*.55+vec2(sd,vxT*.45))*.5+vxA(q.yz*.55-vec2(vxT*.38,sd))*.5;
+        float vein=vxR(q.xz*.7+vec2(vxT*.2,sd));
+        mask=.16+pow(fres,2.0)*.9+(n-.5)*.55+vein*.2;core=pow(1.0-fres,2.0)*(.65+.7*n)+vein*.15;
         env=smoothstep(0.0,.1,age)*pow(max(0.0,1.0-age),k1>0.5?.4:.9);
-      }else if(v3Type<4.5){                // sky beam
-        float h=vUv.y,ctr=pow(1.0-fres,2.5),flow=.55+.45*sin(h*34.0-age*44.0+seed);
+      }else if(v3Type<4.5){                // sky beam: surging energy
+        float h=vUv.y,ctr=pow(1.0-fres,2.5);
+        float n=vxFlow(vec2(vUv.x*2.0+sd,h*3.0),vec2(0.0,-4.0)),rid=vxR(vec2(vUv.x*3.0+sd,h*2.0-vxT*3.0));
         float fh=smoothstep(0.0,.04,h)*(1.0-smoothstep(.45,1.0,h));
-        mask=(ctr*flow*1.15+.08)*fh;core=ctr*fh;env=smoothstep(0.0,.06,age)*pow(max(0.0,1.0-age),1.3);
-      }else if(v3Type<5.5){                // crystal spike
-        mask=.28+pow(fres,1.3)*.75;core=pow(fres,3.0)*.5+(1.0-vUv.y)*.25;
+        mask=(ctr*(.45+.85*n)*1.15+.06*n+rid*.25*ctr)*fh;core=ctr*fh*(.55+.6*n);env=smoothstep(0.0,.06,age)*pow(max(0.0,1.0-age),1.3);
+      }else if(v3Type<5.5){                // crystal spike: facets, cracks, glint at the tip
+        float crk=1.0-smoothstep(.03,.12,vxC(vUv*vec2(2.0,1.0)+sd));
+        mask=.26+pow(fres,1.3)*.7+crk*.3;core=pow(fres,3.0)*.5+(1.0-vUv.y)*.25+crk*.2;
         env=smoothstep(0.0,.05,age)*(1.0-smoothstep(.8,1.0,age));
-      }else if(v3Type<6.5){                // glowing ground cracks
+      }else if(v3Type<6.5){                // ground cracks: a crack network glowing like lava, revealed outward
+        float cw=1.0-smoothstep(.0,.075,vxC(p*1.25+sd));
         float rays=pow(abs(cos(an*k1+seed+sin(r*13.0+seed)*.45)),70.0);
-        float reveal=1.0-smoothstep(age*3.2-.05,age*3.2+.05,r);
-        mask=(rays*(1.0-smoothstep(.25,1.0,r))+band(r-.14,.05)*.45+exp(-r*r*30.0)*.4)*reveal;core=rays*.5;
+        float n=vxF(p*.8+vec2(sd,vxT*.15));
+        float reveal=1.0-smoothstep(age*3.2-.05,age*3.2+.05,r+(n-.5)*.15);
+        float fall=1.0-smoothstep(.2,1.0,r);
+        mask=(cw*fall*(.55+.7*n)+rays*fall*.45+band(r-.14,.05)*.4+exp(-r*r*30.0)*.4)*reveal;core=(cw*fall*.8+rays*.4)*(.6+.5*n);
         env=smoothstep(0.0,.05,age)*pow(max(0.0,1.0-age),.7);
-      }else{                               // impact flare (camera facing)
-        float rays=pow(abs(cos(an*2.0+seed)),40.0)*exp(-r*2.2)+pow(abs(cos(an*2.0+seed+PI*.25)),60.0)*exp(-r*3.5)*.55;
+      }else{                               // impact flare (camera facing), flickering rays
+        float fk=.6+.8*vxF(vec2(an/TAU*4.0+sd,vxT*2.0));
+        float rays=(pow(abs(cos(an*2.0+seed)),40.0)*exp(-r*2.2)+pow(abs(cos(an*2.0+seed+PI*.25)),60.0)*exp(-r*3.5)*.55)*fk;
         mask=exp(-r*r*9.0)*.85+rays;core=exp(-r*r*36.0);env=pow(max(0.0,1.0-age),1.6)*smoothstep(0.0,.03,age);
       }
       float vis=1.0-smoothstep(v3Vision-100.0,v3Vision+20.0,distance(vWorld,v3Focus));
       float op=env*clamp(mask,0.0,1.6)*vis;if(op<.003)discard;
-      vec3 col=mix(vColor,vColor2,clamp(core,0.0,1.0));
-      gl_FragColor=vec4(col*v3Gain,op);
+      float heat=clamp(core,0.0,1.0);
+      vec3 col=mix(vColor*.65,vColor,smoothstep(0.0,.4,mask));
+      col=mix(col,vColor2,smoothstep(.1,.6,heat));col=mix(col,vxHot(vColor2),smoothstep(.62,1.0,heat));
+      gl_FragColor=vec4(col*v3Gain*(1.0+heat*.7),op);
       #include <colorspace_fragment>
     }`;
   function mode(R){const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;const high=!!R.hi&&!R.mobile;return{high,reduced,key:(high?'h':'l')+(reduced?'r':'')}}
@@ -84,7 +108,7 @@
     TYPES.forEach((type,i)=>{const cap=Math.max(4,Math.floor(caps[i]*(q.reduced?.5:1))),g=geo(type,q.high);
       const life=new THREE.InstancedBufferAttribute(new Float32Array(cap*4),4),col=new THREE.InstancedBufferAttribute(new Float32Array(cap*3),3),col2=new THREE.InstancedBufferAttribute(new Float32Array(cap*3),3);
       for(const a of[life,col,col2])a.setUsage(THREE.DynamicDrawUsage);g.setAttribute('v3Life',life);g.setAttribute('v3Color',col);g.setAttribute('v3Color2',col2);
-      const m=new THREE.ShaderMaterial({uniforms:{v3Type:{value:i},v3Gain:{value:1},v3Focus:R.U.fowC,v3Vision:R.U.fowR},vertexShader:VERT,fragmentShader:FRAG,
+      const m=new THREE.ShaderMaterial({uniforms:Object.assign({v3Type:{value:i},v3Gain:{value:1},v3Focus:R.U.fowC,v3Vision:R.U.fowR},window.ArenaVFXTex?ArenaVFXTex.uniforms():{vxN:{value:null},vxT:{value:0}}),vertexShader:VERT,fragmentShader:FRAG,
         transparent:true,depthTest:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,toneMapped:false});
       const mesh=new THREE.InstancedMesh(g,m,cap);mesh.name='arena-vfx3d-'+type;mesh.count=0;mesh.visible=false;mesh.frustumCulled=false;mesh.renderOrder=9;
       mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.userData.arenaVFX=true;R.scene.add(mesh);
