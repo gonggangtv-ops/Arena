@@ -91,7 +91,8 @@
       rune(at,r,c,c2,.85,.4);const n=count(16,8);for(let j=0;j<n;j++){const an=j/n*TAU,d=r*Math.sqrt(rnd())*.88;send('streak',at,{x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d,height:between(170,320),r:120,width:4,angle:-.5,tilt:-1.35,vy:-420,c,c2,life:.65,a:.8});}if(p.element)element(at,r,p.element,c,c2,true);
     }else if(style==='fireball'||style==='explosive'||style==='fireburst'||style==='iceburst'||style==='blizzard'||style==='chain'||style==='stormfield'||style==='thunder'){
       ring(at,r,c,c2,.65);if(!P.hxEmit||style==='blizzard'||style==='stormfield')rune(at,r*.94,c,c2,style==='blizzard'?1.2:.8,-.65);   // round 2: the burst itself carries the hit
-      const el=style==='iceburst'||style==='blizzard'?'frost':style==='chain'||style==='stormfield'||style==='thunder'?'storm':'fire';element(at,r,el,c,c2);jets(at,r*.5,c,c2,count(16,7),.65);
+      const el=style==='iceburst'||style==='blizzard'?'frost':style==='chain'||style==='stormfield'||style==='thunder'?'storm':'fire';
+      if(!(P.hxEmit&&el==='fire')){element(at,r,el,c,c2);jets(at,r*.5,c,c2,count(16,7),.65);}   // round 2: the signature explosion replaces pillars + jets
     }else if(style==='duality'||style==='elementburst'||style==='elementstorm'||style==='elementfield'){
       rune(at,r,c,c2,1.1,.7);send('rune',at,{r:r*.68,r1:r*.93,height:10,c:c2,c2:c,life:1.1,spin:-.9,a:.4});ring(at,r,c,c2,.7);element(at,r,p.element||'fire',c,c2);
       if(p.element2)element(at,r,p.element2,c2,c);send('dome',at,{r:r*.15,r1:r*.88,height:5,c,c2,life:.7,a:.18});

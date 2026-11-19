@@ -36,15 +36,15 @@
       if(kind<.5){                                  // fireball: white-hot core cooling into dark, lit smoke
         vec2 u=su*.55+vec2(sd,-age*.35-vxT*.04);float n=vxF(u)*.55+vxA(u*2.1+vec2(age*.3,sd))*.3+vxR(u*3.3-sd)*.15;
         float body=1.0-smoothstep(.48,.97,r+(n-.5)*.62);
-        float temp=clamp((1.0-age*1.35)*(.45+.75*z)+(n-.5)*.7+.1,0.0,1.0);
+        float temp=clamp((1.0-age*1.7)*(.3+.62*z)+(n-.5)*.7,0.0,1.0);
         float fireA=body*smoothstep(.12,.4,temp);
         float smk=body*(1.0-smoothstep(.12,.42,temp))*smoothstep(.04,.28,age)*(1.0-smoothstep(.7,1.0,age));
-        vec3 smokeC=mix(vec3(.03,.026,.024),vec3(.29,.27,.25),lit(nrm,n))*(.75+.5*n);
-        alpha=smk*.9;emit=fireRamp(temp,vC,vC2)*fireA*(1.0+temp*2.4)+smokeC*alpha;alpha=max(alpha,fireA*.3);
+        vec3 smokeC=mix(vec3(.05,.045,.042),vec3(.36,.34,.32),lit(nrm,n))*(.75+.5*n);
+        alpha=smk*.72;emit=fireRamp(temp,vC,vC2)*fireA*(.55+temp*1.5)+smokeC*alpha;alpha=max(alpha,fireA*.3);
       }else if(kind<1.5){                           // flame: licking fire, no smoke
         vec2 u=su*.5+vec2(sd,-vxT*1.6);float n=vxF(u)*.6+vxA(u*2.3-vec2(0.0,vxT*2.1))*.4;
         float body=1.0-smoothstep(.32,.95,r+(n-.5)*.6);float temp=clamp(.5+z*.5+(n-.5)*.65-age*.5,0.0,1.0);
-        emit=fireRamp(temp,vC,vC2)*body*(1.0+temp*2.0)*(1.0-smoothstep(.6,1.0,age));alpha=body*.15*(1.0-age);
+        emit=fireRamp(temp,vC,vC2)*body*(.6+temp*1.3)*(1.0-smoothstep(.6,1.0,age));alpha=body*.15*(1.0-age);
       }else if(kind<2.5||kind>4.5){                 // smoke (2) and ground dust (5): billowing, lit from above
         vec2 u=su*.5+vec2(sd,-age*.22);float n=vxF(u)*.6+vxA(u*2.0+sd)*.4;
         float body=1.0-smoothstep(.3,1.0,r+(n-.5)*.8);float l=lit(nrm,n);
@@ -53,7 +53,7 @@
       }else if(kind<3.5){                           // flash: a white-hot point with flickering rays and a coloured halo
         float an=atan(q.y,q.x),core=exp(-r2*16.0),halo=exp(-r2*3.2)*.32;
         float rays=pow(abs(cos(an*3.0+sd)),22.0)*exp(-r*2.4)*(.55+.9*vxF(vec2(an/6.2831*3.0+sd,vxT*1.5)));
-        float f=pow(max(0.0,1.0-age),2.2);emit=(vxHot(vC2)*core*3.2+vC*(halo+rays*.8))*f*gain;
+        float f=pow(max(0.0,1.0-age),2.4);emit=(vxHot(vC2)*core*2.0+vC*(halo*.6+rays*.6))*f*gain;
       }else{                                        // frost mist: pale, lit, drifting
         vec2 u=su*.5+vec2(sd,-age*.12+vxT*.03);float n=vxF(u)*.6+vxA(u*2.2+sd)*.4;
         float body=1.0-smoothstep(.28,1.0,r+(n-.5)*.85);float l=lit(nrm,n);
@@ -139,19 +139,19 @@
   function chainBolt(R,p,q,c,delay){const a=R._hx;if(!a)return;const h1=R.gY(p.x,p.y)+60,h2=R.gY(q.x,q.y)+60,A=[p.x,h1,p.y],B=[q.x,h2,q.y],pts=[A];midpoint(pts,A,B,4,.12);strand(R,pts,22,c,.32,delay||0)}
   // ---------------- recipes ----------------
   function explosion(R,at,r,c,c2,o={}){const big=!!o.big,n=big?7:4,life=big?1.5:1.0;
-    hx(R,KIND.flash,{x:at.x,y:at.y,h:40,r:r*.7,r1:r*1.1,life:.28,c,c2,gain:1.2});
-    hx(R,KIND.fire,{x:at.x,y:at.y,h:r*.3,r:r*.32,r1:r*.95,life,c,c2,vy:big?60:30,drag:2,rise:big?40:20});
+    hx(R,KIND.flash,{x:at.x,y:at.y,h:40,r:r*.32,r1:r*.55,life:.22,c,c2,gain:.85});
+    hx(R,KIND.fire,{x:at.x,y:at.y,h:r*.25,r:r*.22,r1:r*.62,life,c,c2,vy:big?60:30,drag:2,rise:big?40:20});
     for(let k=0;k<n;k++){const an=k/n*TAU+rr(-.3,.3),sp=rr(.9,1.6)*r*1.6;
-      hx(R,KIND.fire,{x:at.x+Math.cos(an)*r*.18,y:at.y+Math.sin(an)*r*.18,h:r*rr(.15,.35),r:r*rr(.16,.24),r1:r*rr(.42,.6),life:life*rr(.75,1),c,c2,vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(40,140),drag:3.2,delay:rr(0,.06)})}
+      hx(R,KIND.fire,{x:at.x+Math.cos(an)*r*.18,y:at.y+Math.sin(an)*r*.18,h:r*rr(.15,.3),r:r*rr(.1,.15),r1:r*rr(.26,.38),life:life*rr(.7,.95),c,c2,vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(40,140),drag:3.2,delay:rr(0,.06)})}
     // smoke column that keeps rising after the fire is gone
-    for(let k=0;k<(big?5:3);k++)hx(R,KIND.smoke,{x:at.x+rr(-.25,.25)*r,y:at.y+rr(-.25,.25)*r,h:r*rr(.3,.6),r:r*.3,r1:r*rr(.75,1.05),life:rr(1.8,2.6)*(big?1.2:1),c:'#3a3532',vy:rr(55,95),drag:.8,delay:.18+k*.08,gain:.9});
-    if(R.flash)R.flash(at.x,R.gY(at.x,at.y)+90,at.y,c,big?4200:2600,r*2.4,big?.5:.32);
+    for(let k=0;k<(big?4:2);k++)hx(R,KIND.smoke,{x:at.x+rr(-.2,.2)*r,y:at.y+rr(-.2,.2)*r,h:r*rr(.3,.5),r:r*.18,r1:r*rr(.42,.6),life:rr(1.6,2.2)*(big?1.2:1),c:'#6a625c',vy:rr(60,100),drag:.8,delay:.2+k*.1,gain:.6});
+    if(R.flash)R.flash(at.x,R.gY(at.x,at.y)+90,at.y,c,big?3400:2000,r*2.2,big?.45:.3);
     const api=R.pfxApi;if(api){try{api.embers(api.G(at.x,at.y,30),R._hx.q.high?(big?22:12):6,c,c2,r*.5);api.scorch(at.x,at.y,r*.7,big?7:4)}catch(e){}}}
   function dustRing(R,at,r,c,n,o={}){for(let k=0;k<n;k++){const an=k/n*TAU+rr(-.2,.2),sp=rr(.8,1.25)*r*1.5;
-    hx(R,KIND.dust,{x:at.x+Math.cos(an)*r*.25,y:at.y+Math.sin(an)*r*.25,h:18,r:r*.14,r1:r*rr(.3,.42),life:rr(1.1,1.6)*(o.life||1),c:c||'#9c8f7e',vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(15,45),drag:2.6,gain:o.gain||.8,delay:o.delay||0})}}
+    hx(R,KIND.dust,{x:at.x+Math.cos(an)*r*.25,y:at.y+Math.sin(an)*r*.25,h:16,r:r*.1,r1:r*rr(.2,.28),life:rr(1.0,1.4)*(o.life||1),c:c||'#8a7e6e',vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(15,40),drag:2.6,gain:(o.gain||.8)*.75,delay:o.delay||0})}}
   function frostBurst(R,at,r,c,c2,n){for(let k=0;k<n;k++){const an=k/n*TAU+rr(-.25,.25),sp=rr(.6,1.1)*r*1.2;
-    hx(R,KIND.mist,{x:at.x+Math.cos(an)*r*.2,y:at.y+Math.sin(an)*r*.2,h:rr(15,45),r:r*.16,r1:r*rr(.38,.55),life:rr(1.2,1.8),c,c2,vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(5,25),drag:2.2,gain:1})}
-    hx(R,KIND.flash,{x:at.x,y:at.y,h:30,r:r*.5,r1:r*.8,life:.26,c,c2:'#ffffff',gain:.9})}
+    hx(R,KIND.mist,{x:at.x+Math.cos(an)*r*.2,y:at.y+Math.sin(an)*r*.2,h:rr(15,45),r:r*.12,r1:r*rr(.26,.38),life:rr(1.1,1.6),c,c2,vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(5,25),drag:2.2,gain:.85})}
+    hx(R,KIND.flash,{x:at.x,y:at.y,h:30,r:r*.25,r1:r*.45,life:.22,c,c2:'#ffffff',gain:.6})}
   const FIREC=['#ff6a1f','#ffd78a'],STORMC='#b49cff',FROSTC=['#7fd8ff','#f0fdff'];
   const isFire=(S,style)=>S&&S.el?S.el==='fire':['fireball','fireburst','meteor','explosive'].includes(style);
   function onPulse(R,style,at,o,S){const a=ensure(R);if(!a||!at||!listenerNear(at.x,at.y,(S&&S.r)||200))return;const r=Math.max(40,fin(S&&S.r,90)),c=S&&S.c,c2=S&&S.c2;
@@ -165,11 +165,11 @@
         if(at.hp!==undefined){hx(R,KIND.flash,{x:at.x,y:at.y,h:45,r:40,r1:70,life:.2,c:fireCol[0],c2:fireCol[1],gain:.8});hx(R,KIND.flame,{x:at.x,y:at.y,h:45,r:22,r1:40,life:.25,c:fireCol[0],c2:fireCol[1]});break}
         explosion(R,at,Math.max(r,90),fireCol[0],fireCol[1]);break;
       case'fireburst':explosion(R,at,r*.85,fireCol[0],fireCol[1]);
-        for(let k=0;k<10;k++){const an=k/10*TAU;hx(R,KIND.fire,{x:at.x+Math.cos(an)*r*.35,y:at.y+Math.sin(an)*r*.35,h:25,r:r*.12,r1:r*.32,life:.75,c:fireCol[0],c2:fireCol[1],vx:Math.cos(an)*r*2.2,vz:Math.sin(an)*r*2.2,vy:30,drag:3.5,delay:.03})}break;
+        for(let k=0;k<8;k++){const an=k/8*TAU;hx(R,KIND.fire,{x:at.x+Math.cos(an)*r*.35,y:at.y+Math.sin(an)*r*.35,h:25,r:r*.08,r1:r*.2,life:.7,c:fireCol[0],c2:fireCol[1],vx:Math.cos(an)*r*2.2,vz:Math.sin(an)*r*2.2,vy:30,drag:3.5,delay:.03})}break;
       case'meteor':if(at.dot||at.kind==='burn')break;   // the burning ground left behind pulses this style too: no second blast
         explosion(R,at,r*1.05,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#8c7f70',12,{delay:.05});break;
       case'elementslam':if(isFire(S,style))explosion(R,at,r*.9,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#9a8e7f',10);break;
-      case'judgment':dustRing(R,at,r,'#a39784',12);hx(R,KIND.flash,{x:at.x,y:at.y,h:60,r:r*.6,r1:r,life:.3,c:c||'#ffe27a',c2:'#ffffff',gain:1});break;
+      case'judgment':dustRing(R,at,r,'#8f8472',12);hx(R,KIND.flash,{x:at.x,y:at.y,h:60,r:r*.25,r1:r*.45,life:.24,c:c||'#ffe27a',c2:'#fff6d8',gain:.7});if(R.flash)R.flash(at.x,R.gY(at.x,at.y)+100,at.y,c||'#ffe27a',2600,r*2.4,.4);break;
       case'fissure':{const len=fin(o&&o.len,r),an=fin(S&&S.a,0);for(let k=0;k<7;k++){const d=(k+.5)/7*len;dustRing(R,{x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d},70,'#8e8273',3,{delay:k*.035,gain:.7})}break}
       case'warcry':dustRing(R,at,r*.8,'#9b8f80',10,{gain:.6});break;
       case'cyclone':dustRing(R,at,r*.7,'#9b8f80',8,{gain:.55,life:.8});break;
