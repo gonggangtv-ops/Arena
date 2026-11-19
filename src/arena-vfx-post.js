@@ -41,7 +41,9 @@
       if(uRad>.0005){vec2 dir=uv-uC;col=vec3(0.0);for(int i=0;i<6;i++)col+=texture2D(tColor,uv+off-dir*uRad*float(i)/5.0).rgb;col/=6.0;}
       else col=texture2D(tColor,uv+off).rgb;
       if(uCA>.0003){vec2 cd=(uv-.5)*uCA;col.r=texture2D(tColor,uv+off+cd).r;col.b=texture2D(tColor,uv+off-cd).b;}
-      gl_FragColor=vec4(col+uFlC*uFl,1.0);}`;
+      // the flash is light from the blast: strongest round the impact, a faint tint elsewhere (a flat full-screen wash read as haze)
+      vec2 fd=(uv-uC)*asp;col+=uFlC*uFl*(.25+.75*exp(-dot(fd,fd)*6.0));
+      gl_FragColor=vec4(col,1.0);}`;
   function makePass(R){const tri=new T.BufferGeometry();tri.setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3));tri.setAttribute('uv',new T.Float32BufferAttribute([0,0,2,0,0,2],2));
     const uW=Array.from({length:NW},()=>new T.Vector4()),uH=Array.from({length:NH},()=>new T.Vector4());
     const m=new T.ShaderMaterial({uniforms:Object.assign({tColor:{value:null},uW:{value:uW},uH:{value:uH},uAsp:{value:1},uCA:{value:0},uRad:{value:0},uFl:{value:0},uC:{value:new T.Vector2(.5,.5)},uFlC:{value:new T.Color()}},NXU()),
@@ -86,7 +88,7 @@
       if(!project(R,h.x,h.y,h.h))continue;const cx=V.x*.5+.5,cy=V.y*.5+.5;V2.set(h.x,R.gY(h.x,h.y)+h.h,h.y).addScaledVector(RT,h.r).project(cam);
       u.set(cx,cy,Math.hypot((V2.x*.5+.5-cx)*asp,V2.y*.5+.5-cy),h.s*f);any=true}
     U.uCA.value=kick.ca;U.uRad.value=kick.rad;U.uFl.value=kick.fl;U.uFlC.value.copy(kick.c);
-    if(kick.rad>0&&Number.isFinite(kick.wx)&&project(R,kick.wx,kick.wy,30))U.uC.value.set(V.x*.5+.5,V.y*.5+.5);
+    if((kick.rad>0||kick.fl>0)&&Number.isFinite(kick.wx)&&project(R,kick.wx,kick.wy,30))U.uC.value.set(V.x*.5+.5,V.y*.5+.5);
     pass.enabled=any||kick.ca>0||kick.rad>0||kick.fl>0}
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.call(this,Tm,dt,me,L);try{step(this,dt)}catch(e){if(!this._vpErr){this._vpErr=1;console.warn('vfx post step',e)}}return r};
   const _ini=P.initFX;if(_ini)P.initFX=function(){const r=_ini.apply(this,arguments);waves.length=0;heats.length=0;kick.ca=kick.rad=kick.fl=0;if(this._vglow){this._vglow.list=[]}return r};
