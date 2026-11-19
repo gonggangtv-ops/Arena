@@ -148,7 +148,7 @@
     if(R.flash)R.flash(at.x,R.gY(at.x,at.y)+90,at.y,c,big?3400:2000,r*2.2,big?.45:.3);
     const api=R.pfxApi;if(api){try{api.embers(api.G(at.x,at.y,30),R._hx.q.high?(big?22:12):6,c,c2,r*.5);api.scorch(at.x,at.y,r*.7,big?7:4)}catch(e){}}}
   function dustRing(R,at,r,c,n,o={}){for(let k=0;k<n;k++){const an=k/n*TAU+rr(-.2,.2),sp=rr(.8,1.25)*r*1.5;
-    hx(R,KIND.dust,{x:at.x+Math.cos(an)*r*.25,y:at.y+Math.sin(an)*r*.25,h:16,r:r*.1,r1:r*rr(.2,.28),life:rr(1.0,1.4)*(o.life||1),c:c||'#8a7e6e',vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(15,40),drag:2.6,gain:(o.gain||.8)*.75,delay:o.delay||0})}}
+    hx(R,KIND.dust,{x:at.x+Math.cos(an)*r*.25,y:at.y+Math.sin(an)*r*.25,h:16,r:r*.1,r1:r*rr(.2,.28),life:rr(1.0,1.4)*(o.life||1),c:c||'#6e6456',vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(15,40),drag:2.6,gain:(o.gain||.8)*.6,delay:o.delay||0})}}
   function frostBurst(R,at,r,c,c2,n){for(let k=0;k<n;k++){const an=k/n*TAU+rr(-.25,.25),sp=rr(.6,1.1)*r*1.2;
     hx(R,KIND.mist,{x:at.x+Math.cos(an)*r*.2,y:at.y+Math.sin(an)*r*.2,h:rr(15,45),r:r*.12,r1:r*rr(.26,.38),life:rr(1.1,1.6),c,c2,vx:Math.cos(an)*sp,vz:Math.sin(an)*sp,vy:rr(5,25),drag:2.2,gain:.85})}
     hx(R,KIND.flash,{x:at.x,y:at.y,h:30,r:r*.25,r1:r*.45,life:.22,c,c2:'#ffffff',gain:.6})}
@@ -169,7 +169,7 @@
       case'meteor':if(at.dot||at.kind==='burn')break;   // the burning ground left behind pulses this style too: no second blast
         explosion(R,at,r*1.05,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#8c7f70',12,{delay:.05});break;
       case'elementslam':if(isFire(S,style))explosion(R,at,r*.9,fireCol[0],fireCol[1],{big:true});dustRing(R,at,r,'#9a8e7f',10);break;
-      case'judgment':dustRing(R,at,r,'#8f8472',12);hx(R,KIND.flash,{x:at.x,y:at.y,h:60,r:r*.25,r1:r*.45,life:.24,c:c||'#ffe27a',c2:'#fff6d8',gain:.7});if(R.flash)R.flash(at.x,R.gY(at.x,at.y)+100,at.y,c||'#ffe27a',2600,r*2.4,.4);break;
+      case'judgment':dustRing(R,at,r,'#74695b',12);hx(R,KIND.flash,{x:at.x,y:at.y,h:60,r:r*.25,r1:r*.45,life:.24,c:c||'#ffe27a',c2:'#fff6d8',gain:.7});if(R.flash)R.flash(at.x,R.gY(at.x,at.y)+100,at.y,c||'#ffe27a',2600,r*2.4,.4);break;
       case'fissure':{const len=fin(o&&o.len,r),an=fin(S&&S.a,0);for(let k=0;k<7;k++){const d=(k+.5)/7*len;dustRing(R,{x:at.x+Math.cos(an)*d,y:at.y+Math.sin(an)*d},70,'#8e8273',3,{delay:k*.035,gain:.7})}break}
       case'warcry':dustRing(R,at,r*.8,'#9b8f80',10,{gain:.6});break;
       case'cyclone':dustRing(R,at,r*.7,'#9b8f80',8,{gain:.55,life:.8});break;
@@ -219,6 +219,11 @@
     hxSnapshot(){const a=this._hx;return a?{billboards:a.slots.filter(s=>s.on).length,cap:a.cap,bolts:a.bolts,stats:Object.assign({},a.stats)}:null}});
   const _pulse=P.v3Pulse;P.v3Pulse=function(style,at,o,S){const r0=_pulse?_pulse.apply(this,arguments):undefined;try{onPulse(this,style,at,o||{},S||{})}catch(e){if(!this._hxErr){this._hxErr=1;console.warn('hero vfx',e)}}return r0};
   P.hxSustain=function(el,at,r){try{if(ensure(this))onSustain(this,this._hx,el,at,r)}catch(e){}};
+  // the base game's own lightning (r6 bolt: thin squiggles) is redrawn as a real branching strand; heights are absolute there
+  P.hxBoltRaw=function(A,B,c,life,w){return safe(this,()=>{const a=this._hx;if(!a)return false;const pts=[A];midpoint(pts,A,B,4,.14);strand(this,pts,Math.max(12,(w||6)*2.6),c||STORMC,Math.max(.22,life||.3),0);return true})};
+  const _bolt=P.bolt;if(_bolt)P.bolt=function(ax,ay,az,bx,by,bz,c,life,w){if(this._hx&&this.hxBoltRaw([ax,ay,az],[bx,by,bz],c,life,w))return;return _bolt.apply(this,arguments)};
+  // the base game's light pillars (r10, two additive cylinders up to 1200 tall) were the white column over every big hit: slimmer, shorter
+  const _pil=P.pillar;if(_pil)P.pillar=function(x,y,r,c,life){return _pil.call(this,x,y,(r||100)*.4,c,(life||.6)*.7)};
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r0=_fx.call(this,Tm,dt,me,L);try{step(this,dt)}catch(e){if(!this._hxErr2){this._hxErr2=1;console.warn('hero vfx step',e)}}return r0};
   const _ini=P.initFX;if(_ini)P.initFX=function(){const r0=_ini.apply(this,arguments);try{if(this._hx)reset(this)}catch(e){}return r0};
   const _ds=P.disposeScene;P.disposeScene=function(){dispose(this);return _ds.apply(this,arguments)};
