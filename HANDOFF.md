@@ -7,6 +7,52 @@
 
 ---
 
+## 2026-11-20 · Claude · บ้าน 3 แบบและ Warrior ตัวใหม่จากโมเดลของเจ้าของ (index เท่านั้น)
+- เจ้าของส่ง GLB มา 4 ไฟล์
+  1. The Last Candle → บ้านในป่าต้องสาป
+  2. Timberstone Cottage → บ้านปกติ (อาณาจักร วิหารน้ำแข็ง แดนเถ้าถ่าน)
+  3. Magic Potion House → บ้านในหมู่บ้านอเวจี
+  4. Celestial Warrior (rig Mixamo, 13 ท่า) → แทนฮีโร่ Warrior เดิม (`p5-warrior`)
+- ไฟล์บ้าน (`assets/meshy/house-*.glb`, วัสดุ metal 0 rough .85, ประตูหัน +Z = `doorAngle` π/2)
+  - `house-timber` 2.4M → 16k tris, base 1024 + normal 512, 0.8 MB
+  - `house-potion` 97k → 12k tris, 0.6 MB
+  - `house-candle` 2.65M → 30k tris, 1.55 MB: ทั้งหลังเป็นแผ่นไม้บางๆ และ UV ของ Meshy เป็นเกาะเล็กหลายพันเกาะ
+    - ลดแบบคง UV เดิม (`hpack.mjs`) ได้ก้อนดำยับๆ และ UV ของ mesh ที่ลดแล้วซ้อนกันจน bake ลง atlas เดิมไม่ได้
+    - จึงลดตามรูปทรงอย่างเดียว (เชื่อมจุดตามตำแหน่ง ไม่สนรอยต่อ UV, error .002) ทำ UV atlas ใหม่ด้วย xatlas (1 หน้า 1024)
+      แล้ว bake สีพื้นและ normal map จากโมเดลเต็มลง atlas ใหม่ (ยิง ray ตาม normal ±2% ของเส้นทแยง, พลาดใช้จุดใกล้สุด) → เห็นแผ่นไม้ หน้าต่าง ระเบียง ต้นไม้ตายสองข้าง
+    - สีพื้นยกด้วย gamma .5 (เดิมเกือบดำ ป่าต้องสาปยังหม่นลงอีก ×.74)
+    - normal map เข้ารหัสแบบ glTF (+Y ขึ้นในภาพ: three.js กลับ `normalScale.y` ให้เองเมื่อไม่มี tangent)
+  - manifest มี `body` = กรอบผนังจริงในกล่องโมเดล (สัดส่วน x0,x1,z0,z1 วัดจากภาคตัดขวางที่ 15–30% ของความสูง)
+  - scratch: `kkb/hpack.mjs` (timber/potion), `kkb/rbake.mjs` + `kkb/ratlas.py` (candle), `kkb/body.mjs` (กรอบผนัง)
+- การใส่ในเกม (`moonfall-village.js`, ทุกอย่างมีเงื่อนไข `!MOON`)
+  - `LANDHOUSE` เลือกโมเดลตาม `REG.at` ของกลางบ้าน
+  - `build.py`: index โหลด 3 key ใหม่แทน cottage/long/witch, cursed ข้ามทั้ง 3 key (Cursed Realm ยังเป็นบ้าน Moonfall 3 แบบเดิม)
+  - โมเดลเกือบจัตุรัส จึงหมุนให้ประตูโมเดลตรงช่องประตูจริงทุกหลัง ยืดแต่ละแกนเต็ม footprint+56 และเลื่อนให้กลางผนังจริงอยู่กลาง footprint
+  - ผนังกล่อง เสามุม กรอบประตู หน้าต่างเรืองแสง และฐานของบ้านแบบเดิม (r3 `buildBuildings`) โผล่นอกผนังโมเดลใหม่
+    (กล่องโมเดลรวมระเบียง ชายคา ต้นไม้ตาย จึงใหญ่กว่าผนัง) → วาดเฉพาะตอนเปลือกบ้านโปร่ง (ฮีโร่อยู่ในบ้านหรือหลังบ้าน)
+    - วัสดุของชิ้นเหล่านั้น discard ใน footprint (+16) ของบ้าน 24 หลังที่ใกล้กล้องที่สุดซึ่งเปลือกทึบ (`uHouseQ`, อัปเดตใน `scene.onBeforeRender`)
+    - collision ช่องประตู ของในบ้าน และภาพตอนเดินเข้าบ้านเหมือนเดิม
+  - ขยายโมเดลให้ผนังโมเดลครอบผนังเดิมไม่ได้: บ้านห่างกันแค่ 70–90 หน่วย (median 88) จะชนบ้านข้างๆ
+    ผลคือผนัง The Last Candle อยู่ด้านในเส้นชนราว 50 หน่วยด้านข้าง (ตรงนั้นเป็นกิ่งต้นไม้ตาย) และ ~20 หน่วยด้านหน้า/หลัง
+- Warrior (`p5-warrior.glb` 10.3k tris, base 1024 + normal/MR 512, 1.45 MB, scratch `kkb/wpack.mjs`)
+  - ตัด prefix `mixamorig:` (p5-heroes หากระดูก Hips/RightHand/LeftHand ตามชื่อ)
+  - คลิปตามลำดับ `P5C`: Combat_Stance (โมเดลไม่มี idle: ท่าเตรียมจากเฟรมแรกของ Double_Combo_Attack หายใจ 2.1 วิ), Running,
+    Double_Combo_Attack, Charged_Overhead_Slam (= Attack, ฟาดสองมือลงพื้น), Sprint_Dodge (= Running, dash เล่น 2.6x), Death_Backwards
+  - `P5GRIP.warrior`: PCA ใช้ไม่ได้ (ฝ่ามือกว้างพอๆ กับยาว) จึงใช้เส้นข้อนิ้ว pinky1→index1 เป็นแกนกำปั้น
+    จุดจับเลื่อนจากกลางข้อนิ้วไปทางข้อมือ 3 ซม. และทางฝ่ามือ 2 ซม. (bind pose คว่ำฝ่ามือ); ขวาน Molten ใช้ grip เดียวกัน
+  - wpack ต้อง dispose channel/sampler ก่อน animation ไม่งั้น accessor ค้างในไฟล์ (4.1 MB → 1.4 MB)
+- ทดสอบ
+  - ภาพบ้านระยะใกล้ทุกดินแดน (มุมกล้องเกม) ยืนในบ้าน และภาพหมู่บ้านจากกล้องเกม: ไม่มี error และไม่มี shader error
+  - ท่า Warrior 8 ท่าทั้งดาบและขวาน: อาวุธอยู่ในกำปั้นทุกท่า
+  - smoke desktop-high ผ่านทุกขั้น ยกเว้นจำนวน draw call ตอน stress (58) ซึ่งแกว่งตามฉาก
+    - `stresscmp` ได้ 32 เท่ากันทั้ง main และ branch
+    - texture +2 ระหว่างรอบ dispose/recreate เกิดกับ main ด้วย
+  - mobile-low ผ่าน, Cursed Realm ผ่าน, Codex smoke (strict art gate) ผ่านครบ 4 ข้อ
+  - บอท index 2 แมตช์และ cursed 1 แมตช์เล่นจนจบ ไม่มี error
+  - build ตรงทุกไบต์ทั้ง `index.html` และ `cursed.html`
+- harness (scratch): `vfx/warshow.py` ท่า Warrior ระยะใกล้ (หาที่โล่ง กล้องตั้งตอน `composer.render` เพราะ wrapper บรรยากาศหมุนกล้องเอง),
+  `vfx/housecam.py` บ้านแต่ละดินแดนด้วยมุมกล้องเกม (`mode=in` ยืนในบ้าน; ต้องเรียก `fxUpdate` ด้วย `roofA` ถึงจะเปลี่ยน)
+
 ## 2026-11-20 · Claude · หลังคาบ้านในแต่ละดินแดนดูแปลก: บ้านใช้ลุคของสิ่งก่อสร้างแทนลุคต้นไม้ (index เท่านั้น)
 - เจ้าของส่งภาพมา 2 ภาพ
   - ดินแดนน้ำแข็ง: หลังคาบ้านเป็นลายหิมะสลับไม้เหมือนม้าลาย
