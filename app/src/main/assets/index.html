@@ -7991,22 +7991,23 @@ float iTr=1.0,iTh=1.0;vec3 iEm=vec3(0.0),iBump=vec3(0.0);
   diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.92,.96,1.0),white);
   iTr=1.0-clamp(white*.88+frost*.1,0.0,.94);
   float iGl=pow(clamp((nF.b-.74)*4.0,0.0,1.0),3.0)*step(.58,fract(dot(floor(vIP*.55),vec3(.13,.71,.37))+vxT*.33+dot(iV,vec3(1.7,2.3,1.1))));
-  iEm=vec3(.85,.95,1.0)*iGl*(1.2+frost)*uIceGlint+vec3(.3,.66,1.0)*vIA.w*(.3+.7*(1.0-iFr))+vec3(.5,.78,1.0)*iFr*.34+vec3(.9,.97,1.0)*crack*cFl*1.4+vec3(.16,.4,.62)*uIceLit*(.22+.5*(1.0-iFr))*(1.0-white*.6);
+  iEm=vec3(.85,.95,1.0)*iGl*(1.2+frost)*uIceGlint+vec3(.3,.66,1.0)*vIA.w*(.3+.7*(1.0-iFr))+vec3(.5,.78,1.0)*iFr*.34+vec3(.9,.97,1.0)*crack*cFl*1.4+vec3(.16,.4,.62)*uIceLit*(.22+.5*(1.0-iFr))*(1.0-white*.6)*ICE_SCAT;
 #ifdef ICE_LOW
-  float wl=clamp(white*.65+iFr*.45,0.0,1.0);                 // no refraction pass: a bluer glassy body instead
-  diffuseColor.rgb=mix(vec3(.36,.66,.9),vec3(.9,.96,1.0),wl);
-  diffuseColor.a=clamp(.42+white*.4+iFr*.35,0.0,1.0)*opacity;
+  float wl=clamp(white*.55+iFr*.4,0.0,1.0);                  // no refraction pass: a bluer glassy body instead
+  diffuseColor.rgb=mix(vec3(.34,.64,.9),vec3(.9,.96,1.0),wl);
+  diffuseColor.a=clamp(.32+white*.38+iFr*.4,0.0,1.0)*opacity;
 #endif
 }
 `;
   const TRANS=String(T.ShaderChunk.transmission_fragment||'').replace('material.transmission = transmission;','material.transmission = transmission*iTr;').replace('material.thickness = thickness;','material.thickness = thickness*iTh;');
-  function iceMat(kind,q,U,GL,LIT){const hi=q.high,shell=kind==='shell';
-    const m=new T.MeshPhysicalMaterial({color:0xeef7ff,roughness:shell?.18:.14,metalness:0,ior:1.31,transmission:hi?1:0,thickness:shell?22:30,
-      attenuationColor:new T.Color(shell?'#5fb2ec':'#86ccf2'),attenuationDistance:hi?(shell?60:110):Infinity,specularIntensity:1,envMap:P.envTex||null,envMapIntensity:1.2,
-      flatShading:true,transparent:!hi,opacity:1,depthWrite:true});
+  // tr: real refraction (high quality only). Shells switch it per state with setTrans (slow frost does not need it)
+  function iceMat(kind,tr,U,GL,LIT){const shell=kind==='shell';
+    const m=new T.MeshPhysicalMaterial({color:0xeef7ff,roughness:shell?.18:.14,metalness:0,ior:1.31,transmission:tr?1:0,thickness:shell?22:30,
+      attenuationColor:new T.Color(shell?'#5fb2ec':'#86ccf2'),attenuationDistance:tr?(shell?110:110):Infinity,specularIntensity:1,envMap:P.envTex||null,envMapIntensity:1.2,
+      flatShading:true,transparent:!tr,opacity:1,depthWrite:true});
     const NU=NXU();m.name='arena-ice-'+kind;
     m.onBeforeCompile=sh=>{Object.assign(sh.uniforms,NU,{uIceGlint:GL,uIceLit:LIT},U||{});
-      const D=(shell?'#define ICE_SHELL\n#define ICE_BUMP .22\n':'#define ICE_INST\n#define ICE_BUMP .22\n')+(hi?'':'#define ICE_LOW\n');
+      const D=(shell?'#define ICE_SHELL\n#define ICE_BUMP .22\n#define ICE_SCAT .45\n':'#define ICE_INST\n#define ICE_BUMP .22\n#define ICE_SCAT 1.0\n')+(m.transmission>0?'':'#define ICE_LOW\n');
       sh.vertexShader=D+VDECL+sh.vertexShader.replace('#include <displacementmap_vertex>',VMAIN+'#include <displacementmap_vertex>');
       sh.fragmentShader=D+FDECL+sh.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\n'+FCOL)
         .replace('#include <roughnessmap_fragment>','#include <roughnessmap_fragment>\nroughnessFactor=mix(roughnessFactor,.6,clamp(1.0-iTr,0.0,1.0));')
@@ -8014,7 +8015,8 @@ float iTr=1.0,iTh=1.0;vec3 iEm=vec3(0.0),iBump=vec3(0.0);
         .replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance+=iEm;')
         .replace('#include <transmission_fragment>',TRANS)
         .replace('#include <opaque_fragment>','outgoingLight=min(outgoingLight,vec3(2.2));if(any(isnan(outgoingLight)))outgoingLight=vec3(0.0);\n#include <opaque_fragment>')};
-    m.customProgramCacheKey=()=>'arIce1'+kind+(hi?'h':'l');return m}
+    m.customProgramCacheKey=()=>'arIce2'+kind+(m.transmission>0?'t':'o');return m}
+  function setTrans(m,on){if(!m||(m.transmission>0)===on)return;m.transmission=on?1:0;m.transparent=!on;m.attenuationDistance=on?110:Infinity;m.needsUpdate=true}
 
   // ---------------- frost on the ground (terrain-hugging discs) ----------------
   const DR=10,DS=40;let DIDX=null;
@@ -8058,9 +8060,9 @@ void main(){float d=length(vL);vec2 q=vW.xz*.0085+uF.ww;
 
   function create(R,q){const a={scene:R.scene,q,time:0,fall:[],stuck:[],frag:[],crys:[],decals:[],pools:{},GL:{value:q.high?1:.75},LIT:{value:1},twinN:0,twinCap:q.high?200:56,
       fragCap:q.high?220:70,stuckCap:q.high?44:16,lit:new T.Color(1,1,1)};
-    a.mat=iceMat('inst',q,null,a.GL,a.LIT);
-    const mk=(shape,n,cap)=>{const out=[];for(let i=0;i<n;i++)out.push(pool(R,shape(),a.mat,cap));return out};
-    a.pools.shard=mk(shardShape,3,q.high?48:20);a.pools.crys=mk(crystalShape,2,q.high?64:28);a.pools.chunk=mk(chunkShape,3,q.high?84:28);
+    a.mat=iceMat('inst',q.high,null,a.GL,a.LIT);a.matF=q.high?iceMat('inst',false,null,a.GL,a.LIT):a.mat;
+    const mk=(shape,n,cap,mat)=>{const out=[];for(let i=0;i<n;i++)out.push(pool(R,shape(),mat||a.mat,cap));return out};
+    a.pools.shard=mk(shardShape,3,q.high?48:20);a.pools.crys=mk(crystalShape,2,q.high?64:28);a.pools.chunk=mk(chunkShape,3,q.high?84:28,a.matF);a.pools.lance=mk(shardShape,1,8,a.matF);
     for(let i=0;i<(q.high?8:5);i++)a.decals.push(decalSlot(R));
     // the refraction pass renders the opaque scene again while any ice is on screen: at half resolution (ice blurs it anyway)
     if(q.high)try{if('transmissionResolutionScale' in R.renderer)R.renderer.transmissionResolutionScale=.5}catch(e){}
@@ -8071,7 +8073,7 @@ void main(){float d=length(vL);vec2 q=vW.xz*.0085+uF.ww;
   function frag(R,a,x,y,z,s,vx,vy,vz,frost){if(a.frag.length>=a.fragCap)return;V1.set(rr(-1,1),rr(-1,1),rr(-1,1)).normalize();
     const q=new T.Quaternion().setFromAxisAngle(V1,rr(0,TAU));V1.set(rr(-1,1),rr(-1,1),rr(-1,1)).normalize();
     a.frag.push({pool:rnd()*a.pools.chunk.length|0,x,y,z,vx,vy,vz,q,wx:V1.x,wy:V1.y,wz:V1.z,w:rr(5,15),sx:s*rr(.7,1.1),sy:s*rr(1,1.7),sz:s*rr(.7,1.1),
-      t:0,life:rr(.9,1.6),bn:0,rest:0,seed:rnd(),frost:fin(frost,rr(.3,.6))})}
+      t:0,life:rr(.9,1.6),bn:0,rest:0,seed:rnd(),frost:fin(frost,rr(.12,.3))})}
   function burst(R,a,x,y,z,n,s,spd,up,bx,bz){if(a.q.reduced)n=Math.ceil(n*.5);for(let i=0;i<n;i++){const an=rnd()*TAU,v=spd*rr(.35,1);frag(R,a,x+rr(-3,3),y+rr(-3,3),z+rr(-3,3),s*rr(.55,1.15),Math.cos(an)*v+(bx||0),up*rr(.45,1.1),Math.sin(an)*v+(bz||0))}}
   function puff(R,x,z,r,g,h){if(R.hxEmit)R.hxEmit('mist',{x,y:z,h:fin(h,rr(8,18)),r:r*.35,r1:r*rr(.9,1.3),life:rr(.6,1),c:'#cfeeff',c2:'#ffffff',vy:rr(10,30),drag:2,gain:.55*(g||1)})}
   function glit(R,x,y,z,n,r){const A=R.pfxApi;if(A&&A.stars)A.stars({x,y,z},n,'#eaf8ff',rr(5,8),r||24)}
@@ -8124,7 +8126,7 @@ void main(){float d=length(vL);vec2 q=vW.xz*.0085+uF.ww;
   function stormShatter(R,a,x,y,r){let n=0;
     for(const s of a.stuck){if(s.gone||Math.hypot(s.x-x,s.z-y)>r+60)continue;s.gone=1;n++;const m=a.q.high?4:2;
       for(let i=0;i<m;i++){const k=rr(.1,.9)*s.len,px=s.x+s.dx*k,py=s.y+s.dy*k,pz=s.z+s.dz*k,dx=px-x,dz=pz-y,dl=Math.hypot(dx,dz)||1,v=rr(120,320);
-        frag(R,a,px,py,pz,s.rad*rr(.55,1),dx/dl*v,rr(180,460),dz/dl*v,.35)}}
+        frag(R,a,px,py,pz,s.rad*rr(.55,1),dx/dl*v,rr(180,460),dz/dl*v,.22)}}
     const k=(x|0)+'_'+(y|0),s=BZ.get(k);if(s)release(s.decal,1.4,2.2);
     for(let i=0;i<(a.q.high?6:3);i++){const an=rnd()*TAU,d=r*Math.sqrt(rnd())*.9;puff(R,x+Math.cos(an)*d,y+Math.sin(an)*d,r*.35,.8)}
     glit(R,x,R.gY(x,y)+30,y,a.q.high?14:5,r*.7);return n}
@@ -8137,7 +8139,7 @@ void main(){float d=length(vL);vec2 q=vW.xz*.0085+uF.ww;
       mt.side!==T.BackSide&&!(mt.alphaTest>0)&&!m.geometry.isInstancedBufferGeometry)};
   // the crust is a twin of every body part: same geometry, same skeleton, the ice material pushing it out along the normals
   function buildTwins(R,a,st,o){if(!o||!o.root)return;
-    if(!st.mat){st.U={uIceA:{value:new T.Vector4(st.seed,.5,0,0)},uIceS:{value:new T.Vector4(0,4,0,120)},uIceM:{value:new T.Vector4(.85,1,0,0)}};st.mat=iceMat('shell',a.q,st.U,a.GL,a.LIT)}
+    if(!st.mat){st.U={uIceA:{value:new T.Vector4(st.seed,.5,0,0)},uIceS:{value:new T.Vector4(0,4,0,120)},uIceM:{value:new T.Vector4(.85,1,0,0)}};st.mat=iceMat('shell',false,st.U,a.GL,a.LIT)}
     const skip=new Set([o.ring,o.fxRing,o.ice,o.bubble,o.stars].filter(Boolean)),src=[];
     const walk=n=>{if(skip.has(n)||n.userData.iceTwin)return;if(n.isMesh&&!n.isInstancedMesh&&twinOk(n))src.push(n);for(const c of n.children)walk(c)};walk(o.root);
     if(src.length>48){src.sort((p,q)=>q.geometry.attributes.position.count-p.geometry.attributes.position.count);src.length=48}
@@ -8168,7 +8170,7 @@ void main(){float d=length(vL);vec2 q=vW.xz*.0085+uF.ww;
     // the crust bursts off the body
     const n=a.q.high?14:5;for(let i=0;i<n;i++){let x=u.x+rr(-ur,ur),y=gy+rr(.15,.9)*H,z=u.y+rr(-ur,ur);
       if(st.src&&st.src.length&&bodyPoint(st,V1)){x=V1.x;y=V1.y;z=V1.z}
-      const dx=x-u.x,dz=z-u.y,dl=Math.hypot(dx,dz)||1,v=rr(150,340);frag(R,a,x,y,z,H*rr(.03,.06),dx/dl*v,rr(120,380),dz/dl*v,.45)}
+      const dx=x-u.x,dz=z-u.y,dl=Math.hypot(dx,dz)||1,v=rr(150,340);frag(R,a,x,y,z,H*rr(.03,.06),dx/dl*v,rr(120,380),dz/dl*v,.25)}
     st.lvl=0;st.crack=0;release(st.puddle,1.2,1.4);st.puddle=null;
     for(let i=0;i<3;i++)puff(R,u.x+rr(-ur,ur),u.y+rr(-ur,ur),H*.55,.9,H*rr(.2,.6));glit(R,u.x,gy+H*.5,u.y,a.q.high?12:4,ur*1.5);
     if(R.vfxWave)R.vfxWave(u.x,u.y,{h:H*.4,r0:ur*.5,r1:ur*6,s:.008,life:.35})}
@@ -8193,7 +8195,7 @@ void main(){float d=length(vL);vec2 q=vW.xz*.0085+uF.ww;
       let inStorm=false;for(const s of BZ.values())if(Math.hypot(u.x-s.x,u.y-s.y)<s.r+(u.r||20)){inStorm=true;break}
       st.bz=clamp(st.bz+(inStorm&&slow?dt*.14:-dt*.3),0,.34);
       let tgt=0,hw=st.hw,nw=st.nw,th=st.th,fr=st.fr;
-      if(frz){tgt=1;hw=.8;nw=.45;th=.042;fr=.18}else if(root){tgt=.6;hw=1.8;nw=.4;th=.032;fr=.28}else if(slow){tgt=.16+st.bz;hw=.8;nw=1.3;th=.022;fr=.45}
+      if(frz){tgt=1;hw=.8;nw=.45;th=.042;fr=.18}else if(root){tgt=.6;hw=1.8;nw=.4;th=.032;fr=.28}else if(slow){tgt=.16+Math.min(st.bz,.24);hw=.8;nw=1.3;th=.022;fr=.26}
       if(frz&&!st.frz){if(st.root)rootOut(R,a,st);freezeIn(R,a,st,u,o)}
       if(!frz&&st.frz)freezeOut(R,a,st,u,o);
       if(root&&!st.root&&!frz)rootIn(R,a,st,u,o);
@@ -8204,7 +8206,7 @@ void main(){float d=length(vL);vec2 q=vW.xz*.0085+uF.ww;
       // the host knows the stun's time left: the ice cracks for the last moment before it breaks
       st.crack=frz&&u.stunT>0&&u.stunT<.3?clamp(1-u.stunT/.3,0,1):Math.max(0,st.crack-dt*6);
       if(vis&&st.lvl>.004&&!st.twins&&a.twinN<a.twinCap)buildTwins(R,a,st,o);
-      if(st.mat){const show=vis&&st.lvl>.004&&!!st.twins;st.mat.visible=show;
+      if(st.mat){const show=vis&&st.lvl>.004&&!!st.twins;st.mat.visible=show;setTrans(st.mat,a.q.high&&(frz||st.root||(slow&&inStorm)));
         if(show){st.U.uIceA.value.set(st.seed,st.fr,0,frz?.1+.3*st.crack:0);st.U.uIceS.value.set(st.lvl,st.H*st.th,fin(o.gy,0),st.H);st.U.uIceM.value.set(st.hw,st.nw,st.crack,0)}}
       if(st.iciT>0){st.iciT-=dt;if(st.iciT<=0&&frz&&vis)icicles(R,a,st,u,o)}
       st.crys=st.crys.filter(c=>!c.gone&&c.diss<1);
@@ -8254,20 +8256,22 @@ void main(){float d=length(vL);vec2 q=vW.xz*.0085+uF.ww;
     // write the instances
     for(const k in a.pools)for(const p of a.pools[k])p.n=0;
     const SH=a.pools.shard,CR=a.pools.crys,CH=a.pools.chunk;
-    for(const l of LANCE.values())if(l.x!==undefined)put(SH[l.pool],l.x,l.y,l.z,l.q,9.5,l.len,9.5,l.seed,.14,0,.42);
+    for(const l of LANCE.values())if(l.x!==undefined)put(a.pools.lance[0],l.x,l.y,l.z,l.q,9.5,l.len,9.5,l.seed,.14,0,.42);
     for(const e of a.fall)put(SH[e.pool],e.x,e.y,e.z,e.q,e.rad,e.len,e.rad,e.seed,.2,0,.3);
     for(const s of a.stuck)put(SH[s.pool],s.x,s.y,s.z,s.q,s.rad,s.len,s.rad,s.seed,.24+.3*Math.min(1,s.t/2),s.diss,0);
     for(const f of a.frag){const k=f.t/f.life;put(CH[f.pool],f.x,f.y,f.z,f.q,f.sx,f.sy,f.sz,f.seed,f.frost,k>.62?(k-.62)/.38:0,0)}
     for(const c of a.crys){const g=eob(c.t/c.grow),w=.55+.45*Math.min(1,g),P2=c.pk==='shard'?SH:CR;
       put(P2[c.pool%P2.length],c.x,c.y,c.z,c.q,c.rad*w,c.len*Math.max(.01,g),c.rad*w,c.seed,c.frost,c.diss,c.glow*Math.max(0,1-c.t/.6))}
-    let on=false;for(const k in a.pools)for(const p of a.pools[k]){flush(p);if(p.n)on=true}
-    if(!on)for(const st of US.values())if(st.mat&&st.mat.visible){on=true;break}
+    let on=false;for(const p of a.pools.shard.concat(a.pools.crys))if(p.n){on=a.q.high;break}
+    if(!on)for(const st of US.values())if(st.mat&&st.mat.visible&&st.mat.transmission>0){on=true;break}
+    for(const p of a.pools.chunk.concat(a.pools.lance))p.im.material=on?a.mat:a.matF;
+    for(const k in a.pools)for(const p of a.pools[k])flush(p);
     ICEON=a.q.high&&on;if(ICEON)trimPass(R,a)}
   function reset(R){const a=R._ice;ICEON=false;for(const st of US.values())freeSt(a||{twinN:0},st);US.clear();FRZ.clear();ROOTF.clear();BZ.clear();LANCE.clear();
     if(!a)return;a.fall=[];a.stuck=[];a.frag=[];a.crys=[];a.twinN=0;for(const d of a.decals){d.on=false;d.mesh.visible=false}for(const k in a.pools)for(const p of a.pools[k]){p.n=0;flush(p)}}
   function dispose(R){const a=R._ice;reset(R);if(!a)return;
     for(const k in a.pools)for(const p of a.pools[k]){if(p.im.parent)p.im.parent.remove(p.im);p.geo.dispose();p.im.dispose&&p.im.dispose()}
-    for(const d of a.decals){if(d.mesh.parent)d.mesh.parent.remove(d.mesh);d.g.dispose();d.m.dispose()}a.mat.dispose();R._ice=null}
+    for(const d of a.decals){if(d.mesh.parent)d.mesh.parent.remove(d.mesh);d.g.dispose();d.m.dispose()}a.mat.dispose();if(a.matF!==a.mat)a.matF.dispose();R._ice=null}
 
   // ---------------- hooks ----------------
   // a frozen unit keeps its pose: its animation runs on a stopped clock (every model kind goes through one of these)
