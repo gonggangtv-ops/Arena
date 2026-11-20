@@ -204,6 +204,51 @@
    "taskType": "text-to-3d",
    "verifiedTaskStatus": "SUCCEEDED"
   },
+  "house-timber": {
+   "name": "Timberstone Cottage (owner, Meshy) - houses in the Fallen Kingdom, Frozen Sanctuary and Ashen Wastes",
+   "url": "assets/meshy/house-timber.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "body": [
+    -0.441,
+    0.421,
+    -0.387,
+    0.346
+   ],
+   "biome": "arena",
+   "source": "owner upload 2026-11-20 (Meshy_AI_Timberstone_Cottage_1120102340), 2.4M -> 16k tris"
+  },
+  "house-candle": {
+   "name": "The Last Candle (owner, Meshy) - houses in the Cursed Forest",
+   "url": "assets/meshy/house-candle.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "body": [
+    -0.261,
+    0.301,
+    -0.433,
+    0.221
+   ],
+   "biome": "arena",
+   "source": "owner upload 2026-11-20 (Meshy_AI_The_Last_Candle_1120101757): 2.65M tris re-simplified by shape to 30k, fresh UV atlas (xatlas), base colour and normal map baked from the full model at 1024, albedo lifted (gamma .5)"
+  },
+  "house-potion": {
+   "name": "Magic Potion House (owner, Meshy) - houses in the Abyss",
+   "url": "assets/meshy/house-potion.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "body": [
+    -0.36,
+    0.35,
+    -0.382,
+    0.302
+   ],
+   "biome": "arena",
+   "source": "owner upload 2026-11-20 (Meshy_AI_Magic_Potion_House_1120103817), 97k -> 12k tris"
+  },
   "market-stall": {
    "name": "Market stall",
    "taskId": "01a1e77b-1119-75f5-a5a3-4410effc1b5f",
@@ -399,25 +444,21 @@
    "animations": []
   },
   "p5-warrior": {
-   "name": "Celestial Armory Warrior (Phase 5 class hero, Meshy auto-rig + 6 clips)",
-   "taskId": "01a1ea26-0d4d-74da-8fa6-20180724290f",
-   "rigTaskId": "01a1ea5f-67e7-73ae-b164-c05751c90298",
-   "animationTaskId": "01a1ea60-6c4e-7669-a817-c8743cd8d7ad",
+   "name": "Celestial Warrior (owner, Meshy, Mixamo rig) - Warrior class hero",
    "url": "assets/meshy/p5-warrior.glb",
    "available": true,
    "rotationY": 0,
    "biome": "arena",
-   "taskType": "image-to-3d",
-   "verifiedTaskStatus": "SUCCEEDED",
    "rigged": true,
    "animations": [
     "Combat_Stance",
-    "Run_02",
-    "Left_Slash",
-    "Charged_Ground_Slam",
-    "Roll_Dodge",
-    "Dead"
-   ]
+    "Running",
+    "Double_Combo_Attack",
+    "Charged_Overhead_Slam",
+    "Sprint_Dodge",
+    "Death_Backwards"
+   ],
+   "source": "owner upload 2026-11-20 (Meshy_AI_A_full_body_male_Celestial_Warrior_20261120_animated_mixamo_All_animation): bones without the mixamorig: prefix; clips Combat_Stance (made from Double_Combo_Attack frame 0 + breathing), Running, Double_Combo_Attack, Charged_Overhead_Slam (= Attack), Sprint_Dodge (= Running), Death_Backwards (= dying_backwards)"
   },
   "p5-assassin": {
    "name": "Celestial Armory Assassin (Phase 5 class hero, Meshy auto-rig + 6 clips)",
