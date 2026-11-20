@@ -22,52 +22,69 @@ window.installMoonfallVillage=function(P){
   // r3 asks this before drawing its own well / fountain / lantern / bridge / stall, so nothing is drawn twice
   P.mfProp=function(key){if(typeof CURSED==='undefined'||!CURSED||!A)return false;const a=A.get(key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.size)};
   // Arena Royale: one house per land, the owner's models (2026-11-20): The Last Candle in the Cursed Forest, the Magic Potion House
-  // in the Abyss, the Timberstone Cottage everywhere else (REG lands: kingdom, cursed, frost, ash, abyss). The Cursed Realm keeps
-  // its three Moonfall houses, and so does any house whose new model failed to load.
-  const LANDHOUSE=['house-timber','house-candle','house-timber','house-timber','house-potion'];
-  const keyFor=h=>{if(typeof MOON==='undefined'||!MOON){const g=typeof REG!=='undefined'&&REG.at?REG.at(h.x+h.w/2,h.y+h.h/2):0,k=LANDHOUSE[g]||LANDHOUSE[0],a=A&&A.get(k);if(a&&a.state==='loaded')return k}
+  // in the Abyss, the Timberstone Cottage everywhere else. World gen (a.js HOUSEFIT / houseFit) already picked the model of each
+  // house (h.mk) and fitted its walls, doorway, loot and chests to that model; the picked footprint is h.al. The Cursed Realm
+  // keeps its three Moonfall houses; a house whose model failed to load keeps the plain box house.
+  const arena=()=>typeof MOON==='undefined'||!MOON;
+  const FIT=k=>typeof HOUSEFIT!=='undefined'&&HOUSEFIT[k];
+  const keyFor=h=>{if(arena()){const k=h.mk||(FIT('house-timber')&&typeof REG!=='undefined'&&REG.at?HOUSEFIT.land[REG.at(h.x+h.w/2,h.y+h.h/2)]:null),a=k&&A&&A.get(k);if(a&&a.state==='loaded')return k;if(h.mk)return null}
     return h.style==='witch'?'house-witch':(Math.max(h.w,h.h)/Math.min(h.w,h.h)>1.28||h.seed%3===0?'house-long':'house-cottage')};
-  function shell(R,key,mats){
+  // Arena houses never fade: when the hero is inside or behind one, the model is cut away instead (everything above wall height
+  // goes, the doorway opens, the inner faces darken) so the room shows inside the model's own walls. Per-house uniforms.
+  function cutaway(m){const ob=m.onBeforeCompile,ck=m.customProgramCacheKey;m.userData.cut={value:new T.Vector4(1e9,0,0,0)};m.userData.door={value:new T.Vector4(1e9,1e9,-1e9,-1e9)};
+    m.onBeforeCompile=function(sh,rr){if(ob)ob.call(this,sh,rr);sh.uniforms.uCut=this.userData.cut;sh.uniforms.uDoorQ=this.userData.door;
+      sh.fragmentShader=sh.fragmentShader.replace('void main() {','uniform vec4 uCut;uniform vec4 uDoorQ;\nvoid main() {\n  if(vWY>uCut.x)discard;\n  if(uCut.y>.5&&vWY>uCut.z&&vWY<uCut.w&&vFowW.x>uDoorQ.x&&vFowW.x<uDoorQ.z&&vFowW.y>uDoorQ.y&&vFowW.y<uDoorQ.w)discard;')
+        .replace('#include <emissivemap_fragment>','if(uCut.y>.5&&!gl_FrontFacing)diffuseColor.rgb*=.4;\n#include <emissivemap_fragment>')};
+    m.customProgramCacheKey=function(){return (ck?ck.call(this):'')+'cut'};m.side=T.DoubleSide;m.transparent=false;m.opacity=1;return m}
+  function shell(R,key,mats,cut){
     const parts=R.celestialAsset(key);if(!parts)return null;const g=new T.Group();
-    for(const p of parts){const m=p.mat.clone();m.onBeforeCompile=p.mat.onBeforeCompile;m.customProgramCacheKey=p.mat.customProgramCacheKey;m.transparent=true;mats&&mats.push(m);
+    for(const p of parts){const m=p.mat.clone();m.onBeforeCompile=p.mat.onBeforeCompile;m.customProgramCacheKey=p.mat.customProgramCacheKey;m.transparent=true;if(cut)cutaway(m);mats&&mats.push(m);
       const mesh=new T.Mesh(p.geo,m);mesh.castShadow=R.hi;mesh.receiveShadow=true;mesh.userData.ownMat=1;g.add(mesh)}
     return g}
-  // Arena Royale: the owner's houses have their walls well inside the bounding box (porch and steps, wide eaves, dead trees), so
-  // the box walls, corner posts, door frames and lit windows of the old house would poke out of them. Those parts stay for the
-  // collisions and for the view inside, but they are only drawn while the house shell is see-through (hero inside or behind it):
-  // their materials skip the footprints of the nearest houses whose shell is solid this frame.
-  const arena=()=>typeof MOON==='undefined'||!MOON;
-  const HN=24,hideQ={value:Array.from({length:HN},()=>new T.Vector4(1e9,1e9,-1e9,-1e9))},hideN={value:0};
-  function hideParts(R){
+  // The box walls, corner posts, door frames, lit windows and footings of the old house sit along the same walls as the model now
+  // and would poke out of it (a porch or a recessed front): for a house with a model they are never drawn (their materials skip
+  // the footprints of the nearest such houses). They still give the collisions; the plank floor stays for the room inside.
+  const HN=24,hideQ={value:Array.from({length:HN},()=>new T.Vector4(1e9,1e9,-1e9,-1e9))},hideN={value:0},CUT=96;
+  function houseView(R){
     const tex={tudor:'plaster',lake:'planks',witch:'plaster',cabin:'logs',stone:'bricks'},col={tudor:'#ffffff',lake:'#a8c0d0',witch:'#9a90a8',cabin:'#ffffff',stone:'#e8e0d0'};
-    const ms=new Set([R.tstd('bricks','#b8b0a0',.9,0),R.tstd('planks','#c8a07a',.85,0),R.tstd('bark','#5a3a24',.9,0),R.winMat]);for(const s in tex)ms.add(R.tstd(tex[s],col[s],.88,0));
+    const ms=new Set([R.tstd('bricks','#b8b0a0',.9,0),R.tstd('bark','#5a3a24',.9,0),R.winMat]);for(const s in tex)ms.add(R.tstd(tex[s],col[s],.88,0));
     for(const m of ms){if(!m||m._houseHide)continue;m._houseHide=1;const ob=m.onBeforeCompile,ck=m.customProgramCacheKey;
       m.onBeforeCompile=function(sh,rr){if(ob)ob.call(this,sh,rr);sh.uniforms.uHouseQ=hideQ;sh.uniforms.uHouseN=hideN;
         sh.fragmentShader=sh.fragmentShader.replace('void main() {','uniform vec4 uHouseQ['+HN+'];uniform int uHouseN;\nvoid main() {\n  for(int i=0;i<'+HN+';i++){if(i>=uHouseN)break;vec4 q=uHouseQ[i];if(vFowW.x>q.x&&vFowW.x<q.z&&vFowW.y>q.y&&vFowW.y<q.w&&vWY<170.)discard;}')};
       m.customProgramCacheKey=function(){return (ck?ck.call(this):'')+'hh'};m.needsUpdate=true}
     const sc=R.scene;if(sc._houseHide)return;sc._houseHide=1;const ob=sc.onBeforeRender;
     sc.onBeforeRender=function(){try{const tx=R.tx||0,ty=R.ty||0,c=[];
-        for(const r of R.roofs||[]){if(!r.shell||!r.g.visible||!r.mats.length||r.mats[0].opacity<.97)continue;const h=r.h,dx=h.x+h.w/2-tx,dy=h.y+h.h/2-ty,d=dx*dx+dy*dy;if(d<2.6e6)c.push([d,h])}
+        for(const r of R.roofs||[]){if(!r.shell)continue;const h=r.h,dx=h.x+h.w/2-tx,dy=h.y+h.h/2-ty,d=dx*dx+dy*dy;if(d<2.6e6)c.push([d,h]);
+          // r4 has just set the fade (inside: roofA -> 0, behind: occ -> .18); it becomes how far the cut has come down
+          const a=Math.min(h.roofA===undefined?1:h.roofA,r.occ===undefined?1:r.occ),k=clamp((a-.18)/.82,0,1),on=k<.995,base=r.g.position.y;
+          r.g.visible=true;const cy=on?base+CUT+(r.H-CUT)*k*k*k:1e9;
+          for(const m of r.mats){m.opacity=1;m.depthWrite=true;const u=m.userData.cut&&m.userData.cut.value;if(!u)continue;u.set(cy,on?1:0,base+5,base+CUT+2);m.userData.door.value.copy(r.dq)}
+          if(r.cutOn!==on){r.cutOn=on;r.g.traverse(o=>{if(o.isMesh)o.castShadow=R.hi&&!on})}}
         c.sort((a,b)=>a[0]-b[0]);const n=Math.min(HN,c.length);for(let i=0;i<n;i++){const h=c[i][1];hideQ.value[i].set(h.x-16,h.y-16,h.x+h.w+16,h.y+h.h+16)}hideN.value=n}catch(e){hideN.value=0}
       if(ob)return ob.apply(this,arguments)}}
   P.buildWorld=function(){
     build.call(this);
     if(!A||typeof CURSED==='undefined'||!CURSED)return;
-    for(const r of this.roofs||[]){const h=r.h,key=keyFor(h),a=A.get(key),size=a&&a.inspection&&a.inspection.size;if(!size)continue;
-      const mats=[],inner=shell(this,key,mats);if(!inner)continue;
-      const along=h.w>=h.h,L=Math.max(h.w,h.h)+56,W=Math.min(h.w,h.h)+56,mx=size[0]>=size[2],ml=Math.max(size[0],size[2]),H=Math.min(300,Math.max(150,L*size[1]/ml));
-      const want=WANT[h.side]||0,body=a.config.body;
-      if(arena()&&body&&a.config.doorAngle!==undefined){
-        // near-square models: turn the door to the real doorway, stretch each model axis over the footprint axis it lands on,
-        // and put the middle of the model's walls (not of its box) on the middle of the footprint
-        const rot=a.config.doorAngle-want,sw=Math.abs(Math.sin(rot))>.5,sx=sw?h.h+56:h.w+56,sz=sw?h.w+56:h.h+56,ox=-(body[0]+body[1])/2*sx,oz=-(body[2]+body[3])/2*sz,c=Math.cos(rot),s=Math.sin(rot);
+    for(const r of this.roofs||[]){const h=r.h,key=keyFor(h),a=key&&A.get(key),size=a&&a.inspection&&a.inspection.size;if(!size)continue;
+      const F=arena()&&FIT(key),mats=[],inner=shell(this,key,mats,!!F);if(!inner)continue;
+      const al=F&&h.al||h,along=al.w>=al.h,L=Math.max(al.w,al.h)+56,W=Math.min(al.w,al.h)+56,mx=size[0]>=size[2],ml=Math.max(size[0],size[2]),H=Math.min(300,Math.max(150,L*size[1]/ml));
+      const want=WANT[h.side]||0;
+      if(F){
+        // the same fit as a.js houseFit: the door turned to the doorway, each model axis stretched over the footprint axis it lands
+        // on, the middle of the model's walls (not of its box) on the middle of the footprint
+        const body=F.body,rot=(a.config.doorAngle||Math.PI/2)-want,sw=Math.abs(Math.sin(rot))>.5,sx=sw?al.h+56:al.w+56,sz=sw?al.w+56:al.h+56,ox=-(body[0]+body[1])/2*sx,oz=-(body[2]+body[3])/2*sz,c=Math.cos(rot),s=Math.sin(rot);
         inner.scale.set(sx,H,sz);inner.rotation.y=rot;inner.position.set(ox*c+oz*s,0,-ox*s+oz*c)}
       else{inner.scale.set(mx?L:W,H,mx?W:L);let rot=(mx===along)?0:Math.PI/2;
         // turn the model so its door faces the real doorway when the model has one on that axis
         const da=(a.config.doorAngle||0)-rot;if(Math.cos(da-want)<-.3)rot+=Math.PI;inner.rotation.y=rot}
-      const g=new T.Group();g.add(inner);g.position.set(h.x+h.w/2,this.gY(h.x+h.w/2,h.y+h.h/2)-2,h.y+h.h/2);
-      this.scene.remove(r.g);this.scene.add(g);r.g=g;r.mats=mats;r.shell=!!body;r.smoke={x:g.position.x,y:H*.9,z:g.position.z}}
-    if(arena()&&(this.roofs||[]).some(r=>r.shell))hideParts(this);
+      const g=new T.Group();g.add(inner);g.position.set(al.x+al.w/2,this.gY(al.x+al.w/2,al.y+al.h/2)-2,al.y+al.h/2);
+      this.scene.remove(r.g);this.scene.add(g);r.g=g;r.mats=mats;r.shell=!!F;r.H=H;r.smoke={x:g.position.x,y:H*.9,z:g.position.z};
+      // the doorway opened in the model while it is cut away: the gap in the walls, from inside the room to the step outside
+      if(F&&h.door){const n=h.side==='r'?[1,0]:h.side==='l'?[-1,0]:h.side==='b'?[0,1]:[0,-1],lat=n[0]?[0,1]:[1,0],dx=h.door.x,dy=h.door.y,q=[];
+        for(const u of[-49,49])for(const v of[-84,64])q.push([dx+lat[0]*u+n[0]*v,dy+lat[1]*u+n[1]*v]);
+        r.dq=new T.Vector4(Math.min(...q.map(p=>p[0])),Math.min(...q.map(p=>p[1])),Math.max(...q.map(p=>p[0])),Math.max(...q.map(p=>p[1])))}
+      else r.dq=new T.Vector4(1e9,1e9,-1e9,-1e9)}
+    if(arena()&&(this.roofs||[]).some(r=>r.shell))houseView(this);
     const sa=A.get('market-stall'),ss=sa&&sa.inspection&&sa.inspection.size;
     if(ss)for(const s of WD.stalls||[]){const g=shell(this,'market-stall');if(!g)break;const k=118/Math.max(ss[0],ss[2]);g.scale.set(ss[0]*k,ss[1]*k,ss[2]*k);g.rotation.y=-s.a-Math.PI/2;g.position.set(s.x,this.gY(s.x,s.y)-1,s.y);this.scene.add(g)}
     // ---- village dressing: wells, plaza fountains, street lanterns, river bridges ----

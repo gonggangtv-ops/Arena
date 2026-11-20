@@ -848,6 +848,22 @@ function heightAt(x,y){const g=WD.tg;if(x<0||y<0||x>WORLD||y>WORLD)return terrH(
 function solidAt(x,y){const g=WD.tg;const i=Math.floor(x/g.C),j=Math.floor(y/g.C);if(i<0||j<0||i>=g.n||j>=g.n)return true;return g.sol[j*g.n+i]===1}
 function walkable(x,y,m){return sdfAt(x,y)>(m||0)}
 
+// Arena Royale (index): one house model per land, the owner's (2026-11-20; REG lands: kingdom, cursed, frost, ash, abyss).
+// moonfall-village.js stretches the model over the picked footprint + 56 with its door turned to the doorway; the house's walls,
+// doorway, loot and chests then follow the model's own walls ("body": where the walls sit in the model's box, from cross-sections
+// at 15-30% of its height, x0,x1,z0,z1 as fractions of the box) and its door (middle of the door along the front, fraction of the
+// width; the door faces +z). The picked footprint stays as h.al, so spacing, trees, grass and spawn spots keep clear of the
+// whole model (eaves, porch, dead trees). Pure function of the footprint, door side and REG (fixed seeds): same on every machine.
+const HOUSEFIT={land:['house-timber','house-candle','house-timber','house-timber','house-potion'],
+  'house-timber':{body:[-.441,.421,-.387,.346],door:-.178},'house-candle':{body:[-.261,.301,-.433,.221],door:.02},'house-potion':{body:[-.36,.35,-.382,.302],door:.003}};
+const HOUSE_WANT={r:0,b:Math.PI/2,l:Math.PI,t:-Math.PI/2};
+function houseFit(h,side){if(typeof REG==='undefined'||!REG.at)return null;
+  const cx=h.x+h.w/2,cy=h.y+h.h/2,key=HOUSEFIT.land[REG.at(cx,cy)]||HOUSEFIT.land[0],F=HOUSEFIT[key],b=F.body;
+  const rot=Math.PI/2-HOUSE_WANT[side],sw=Math.abs(Math.sin(rot))>.5,sx=(sw?h.h:h.w)+56,sz=(sw?h.w:h.h)+56;   // what model x and z are stretched over
+  const bw=(b[1]-b[0])*sx,bd=(b[3]-b[2])*sz,W=Math.round(sw?bd:bw),H=Math.round(sw?bw:bd);
+  const off=(F.door-(b[0]+b[1])/2)*sx;   // the door's offset from the middle of the walls along the front (model +x), turned like the model
+  return {key,x:Math.round(cx-W/2),y:Math.round(cy-H/2),w:W,h:H,dl:side==='b'||side==='l'?off:-off}}
+
 function genWorld(seed){
   SR=mulberry32(seed);
   const w={seed,houses:[],walls:[],trees:[],mtrees:[],rocks:[],solids:[],bushes:[],caves:[],lanterns:[],mush:[],crystals:[],grass:[],flowers:[],villages:[],items:[],mobs:[],camps:[],paths:[],
@@ -960,15 +976,17 @@ function genWorld(seed){
       const hw=sr(230,320),hh=sr(190,250);const cx=V.x+Math.cos(a)*d,cy=V.y+Math.sin(a)*d;const h={x:cx-hw/2,y:cy-hh/2,w:hw,h:hh};
       const cs=[[h.x,h.y],[h.x+h.w,h.y],[h.x,h.y+h.h],[h.x+h.w,h.y+h.h],[cx,cy]];
       if(cs.some(q=>outsideD(q[0],q[1])>-140||Math.abs(riverD(q[0],q[1]))<riverHW(q[1])+80||lakeD(q[0],q[1])<70||poolD(q[0],q[1])<80))continue;
-      if(w.houses.some(o=>!(h.x>o.x+o.w+70||h.x+h.w<o.x-70||h.y>o.y+o.h+70||h.y+h.h<o.y-70)))continue;
+      if(w.houses.some(o=>{const q=o.al||o;return !(h.x>q.x+q.w+70||h.x+h.w<q.x-70||h.y>q.y+q.h+70||h.y+h.h<q.y-70)}))continue;
       if(Math.hypot(cx-V.x,cy-V.y)<(V.plaza?210:170)+(CURSED?70:0)+Math.max(hw,hh)/2)continue;
       const dx=V.x-cx,dy=V.y-cy;const side=Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'b':'t');
       h.side=side;h.dire=V.dire;h.v=vi;h.style=V.style;const pal=ROOF[V.style];h.roof=pal[Math.floor(SR()*pal.length)];h.roofA=1;h.id=w.houses.length;h.seed=Math.floor(SR()*1e6);
+      if(CURSED&&!MOON){const f=houseFit(h,side);if(f){h.al={x:h.x,y:h.y,w:h.w,h:h.h};h.mk=f.key;h.x=f.x;h.y=f.y;h.w=f.w;h.h=f.h;h.dl=f.dl}}
       const T=16,G=86;const sides={t:[h.x,h.y,h.w,T],b:[h.x,h.y+h.h-T,h.w,T],l:[h.x,h.y,T,h.h],r:[h.x+h.w-T,h.y,T,h.h]};
       for(const s of['t','b','l','r']){const [x,y,ww,hh2]=sides[s];
         if(s!==side){w.walls.push({x,y,w:ww,h:hh2,house:h.id});continue}
-        if(s==='t'||s==='b'){const m=x+ww/2;w.walls.push({x,y,w:m-G/2-x,h:hh2,house:h.id},{x:m+G/2,y,w:x+ww-(m+G/2),h:hh2,house:h.id});h.door={x:m,y:y+hh2/2}}
-        else{const m=y+hh2/2;w.walls.push({x,y,w:ww,h:m-G/2-y,house:h.id},{x,y:m+G/2,w:ww,h:y+hh2-(m+G/2),house:h.id});h.door={x:x+ww/2,y:m}}}
+        const dm=(lo,len)=>clamp(lo+len/2+(h.dl||0),lo+T+G/2+6,lo+len-T-G/2-6);
+        if(s==='t'||s==='b'){const m=dm(x,ww);w.walls.push({x,y,w:m-G/2-x,h:hh2,house:h.id},{x:m+G/2,y,w:x+ww-(m+G/2),h:hh2,house:h.id});h.door={x:m,y:y+hh2/2}}
+        else{const m=dm(y,hh2);w.walls.push({x,y,w:ww,h:m-G/2-y,house:h.id},{x,y:m+G/2,w:ww,h:y+hh2-(m+G/2),house:h.id});h.door={x:x+ww/2,y:m}}}
       const nx=side==='r'?1:side==='l'?-1:0,ny=side==='b'?1:side==='t'?-1:0;
       h.out={x:h.door.x+nx*55,y:h.door.y+ny*55};h.inn={x:h.door.x-nx*55,y:h.door.y-ny*55};
       w.lanterns.push({x:h.out.x+(ny?52:0),y:h.out.y+(nx?52:0),dire:V.dire,small:1});
@@ -981,11 +999,11 @@ function genWorld(seed){
         for(let q=0;q<nb;q++){const f=nb===1?sr(.3,.7):q?sr(.68,.85):sr(.15,.32);let bx,by;
           if(back==='t'||back==='b'){bx=lerp(h.x+60,h.x+h.w-60,f);by=back==='t'?h.y+T+26:h.y+h.h-T-26}else{by=lerp(h.y+60,h.y+h.h-60,f);bx=back==='l'?h.x+T+26:h.x+h.w-T-26}
           w.boxes.push({id:w.boxes.length,x:bx,y:by,a:Math.atan2(h.door.y-by,h.door.x-bx),house:h.id});w.rocks.push({x:bx,y:by,r:18,prop:1})}}
-      const corners=[[h.x-24,h.y+26],[h.x+h.w+24,h.y+26],[h.x-24,h.y+h.h-26],[h.x+h.w+24,h.y+h.h-26]];
+      const HA=h.al||h,corners=[[HA.x-24,HA.y+26],[HA.x+HA.w+24,HA.y+26],[HA.x-24,HA.y+HA.h-26],[HA.x+HA.w+24,HA.y+HA.h-26]];
       let np=0;for(const c of corners){if(np>=2)break;if(Math.hypot(c[0]-h.out.x,c[1]-h.out.y)<90||SR()<.35)continue;const t=SR()<.5?'barrel':'crate';w.props.push({x:c[0],y:c[1],t});w.rocks.push({x:c[0],y:c[1],r:15,prop:1});np++}
       w.houses.push(h);placed++}
     // village extras
-    if(V.plaza){for(let k=0;k<4;k++){const a=k/4*Math.PI*2+.78+sr(-.2,.2);const p={x:V.x+Math.cos(a)*250,y:V.y+Math.sin(a)*250};if(w.houses.some(h=>inRect(p,h,50)))continue;
+    if(V.plaza){for(let k=0;k<4;k++){const a=k/4*Math.PI*2+.78+sr(-.2,.2);const p={x:V.x+Math.cos(a)*250,y:V.y+Math.sin(a)*250};if(w.houses.some(h=>inRect(p,h.al||h,50)))continue;
       const st={x:p.x,y:p.y,a:a+Math.PI/2,c:['#c83a3a','#3a6ac8','#e0a020','#3a9a5a'][k]};w.stalls.push(st);w.solids.push({x:p.x,y:p.y,r:34,t:'stall'})}
       for(let k=0;k<6;k++){const a=k/6*Math.PI*2;w.banners.push({x:V.x+Math.cos(a)*205,y:V.y+Math.sin(a)*205,c:LOOKS[k].c})}}
     if(V.key==='farm'){for(let k=0;k<2;k++){for(let t=0;t<60;t++){const a=sr(0,6.3),d=V.r+sr(110,260);const p={x:V.x+Math.cos(a)*d,y:V.y+Math.sin(a)*d};
@@ -994,7 +1012,7 @@ function genWorld(seed){
         const R=Math.hypot(f.w,f.h)/2;if(outsideD(p.x,p.y)>-R-140||Math.abs(riverD(p.x,p.y))<riverHW(p.y)+R+60||lakeD(p.x,p.y)<R+60)continue;
         if(w.fields.some(o=>dist(o,f)<R+Math.hypot(o.w,o.h)/2+40)||w.windmills.some(m=>dist(m,f)<R+90)||w.villages.some(v=>dist(v,f)<v.r+R*.8))continue;w.fields.push(f);break}}
       for(let k=0;k<8;k++){const a=sr(0,6.3),d=V.r+sr(60,200);const p={x:V.x+Math.cos(a)*d,y:V.y+Math.sin(a)*d};w.hay.push({x:p.x,y:p.y,r:22,a:sr(0,3)});w.rocks.push({x:p.x,y:p.y,r:22,prop:1})}}
-    if(V.key==='wood'){for(let k=0;k<5;k++){const a=sr(0,6.3),d=V.r*sr(.2,.45);const p={x:V.x+Math.cos(a)*d,y:V.y+Math.sin(a)*d};if(w.houses.some(h=>inRect(p,h,40))||dist(p,V)<90)continue;w.logs.push({x:p.x,y:p.y,a:sr(0,3.1)});w.rocks.push({x:p.x,y:p.y,r:30,prop:1})}}
+    if(V.key==='wood'){for(let k=0;k<5;k++){const a=sr(0,6.3),d=V.r*sr(.2,.45);const p={x:V.x+Math.cos(a)*d,y:V.y+Math.sin(a)*d};if(w.houses.some(h=>inRect(p,h.al||h,40))||dist(p,V)<90)continue;w.logs.push({x:p.x,y:p.y,a:sr(0,3.1)});w.rocks.push({x:p.x,y:p.y,r:30,prop:1})}}
     if(V.key==='lake'){const a=Math.atan2(V.y-Lk.y,V.x-Lk.x);let sh=null;for(let d=Lk.R+300;d>Lk.R-300;d-=10){const p={x:Lk.x+Math.cos(a)*d,y:Lk.y+Math.sin(a)*d};if(lakeD(p.x,p.y)<0){sh=p;break}}
       if(sh){const ax=-Math.cos(a),ay=-Math.sin(a);const len=260;w.bridges.push({x:sh.x+ax*(len/2-50),y:sh.y+ay*(len/2-50),ax,ay,len,wid:54,dock:1})}}
   });
@@ -1056,7 +1074,7 @@ function genWorld(seed){
     const p={x:gx*TS+sr(10,TS-10),y:gy*TS+sr(10,TS-10)};const o=outsideD(p.x,p.y);if(o>-30)continue;
     const nz=w.noise(p.x,p.y),foot=o>-420;const dire=isDire(p.x,p.y);const rdist=Math.abs(riverD(p.x,p.y))-riverHW(p.y);
     let want=nz>.53||(foot&&nz>.43)||(dire&&nz>.5);if(!want&&rdist>0&&rdist<170&&SR()<.12)want=true;if(!want)continue;if(SR()<(CURSED?.5:.22))continue;
-    if(!free(p,42)||pathNear(p,45)||rockNear(p,44)||w.houses.some(h=>inRect(p,h,52))||!tFree(p,104))continue;
+    if(!free(p,42)||pathNear(p,45)||rockNear(p,44)||w.houses.some(h=>inRect(p,h.al||h,52))||!tFree(p,104))continue;
     const roll=SR();let v;
     if(rdist>0&&rdist<170&&!foot)v=6;else if(foot)v=dire?(roll<.6?4:0):(roll<.75?0:2);else if(dire)v=roll<.32?3:roll<.62?4:roll<.8?5:1;else v=roll<.42?1:roll<.62?2:roll<.9?0:6;
     if(MOON){v=REG.tree(p.x,p.y,v,roll);if(v<0)continue}
@@ -1066,7 +1084,7 @@ function genWorld(seed){
   // Arena Royale (owner 2026-11-19): Big Mango Trees, 10% more trees, scattered over the open ground between the woods. They are
   // ordinary birch-class trees (collision, felling) flagged mg; the renderer swaps in the owner's model
   if(!MOON){const nM=Math.round(w.trees.length*.10);let mN=0;for(let k=0;k<nM*60&&mN<nM;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};
-    if(outsideD(p.x,p.y)>-140||w.noise(p.x,p.y)>.5)continue;if(!free(p,48)||pathNear(p,60)||rockNear(p,56)||w.houses.some(h=>inRect(p,h,70))||!tFree(p,170))continue;
+    if(outsideD(p.x,p.y)>-140||w.noise(p.x,p.y)>.5)continue;if(!free(p,48)||pathNear(p,60)||rockNear(p,56)||w.houses.some(h=>inRect(p,h.al||h,70))||!tFree(p,170))continue;
     const t={x:p.x,y:p.y,r:22,cr:sr(72,96),v:2,mg:1,ph:sr(0,6),h:sr(.9,1.15)};w.trees.push(t);tgrid[Math.floor(p.y/TS)*gw+Math.floor(p.x/TS)].push(t);mN++}}
   // decorative pines on the mountain slopes (no collision)
   for(let k=0;k<33000&&w.mtrees.length<5200;k++){const a=sr(0,6.283),d=bndR(a)+sr(20,1000);const x=CX+Math.cos(a)*d,y=CY+Math.sin(a)*d;const o=d-bndR(a);
@@ -1075,22 +1093,22 @@ function genWorld(seed){
   // bushes
   for(let k=0;k<9600&&w.bushes.length<(MOON?620:0);k++){   // Arena Royale: no berry bushes (owner 2026-11-18), tall grass still hides
   const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300),r:sr(44,66)};
-    if(!free(p,30)||pathNear(p,25)||w.houses.some(h=>inRect(p,h,p.r+20))||!tFree(p,p.r+14)||rockNear(p,p.r)||w.bushes.some(b=>dist(b,p)<b.r+p.r+50))continue;w.bushes.push(p)}
+    if(!free(p,30)||pathNear(p,25)||w.houses.some(h=>inRect(p,h.al||h,p.r+20))||!tFree(p,p.r+14)||rockNear(p,p.r)||w.bushes.some(b=>dist(b,p)<b.r+p.r+50))continue;w.bushes.push(p)}
   if(MOON)for(const c of w.caves){const ex=c.mx,ey=c.my,px=-Math.sin(c.gap),py=Math.cos(c.gap);for(const s of[1,-1]){const p={x:ex+px*s*95+Math.cos(c.gap)*30,y:ey+py*s*95+Math.sin(c.gap)*30,r:54};if(walkable(p.x,p.y,10))w.bushes.push(p)}}
   // tall-grass meadows: big patches to hide in (inside one you are hidden, like in a bush)
   {const ring=(p,r)=>{for(let a=0;a<6.28;a+=1.05){const x=p.x+Math.cos(a)*r,y=p.y+Math.sin(a)*r;if(!walkable(x,y,6)||inWater(x,y))return false}return true};
    for(let k=0;k<14000&&w.tgrass.length<280;k++){const p={x:sr(400,WORLD-400),y:sr(400,WORLD-400),r:sr(85,150)};
-    if(!free(p,40)||!ring(p,p.r*.85)||pathNear(p,p.r*.55)||w.houses.some(h=>inRect(p,h,p.r+30))||rockNear(p,p.r*.6)||!tFree(p,p.r*.5))continue;
+    if(!free(p,40)||!ring(p,p.r*.85)||pathNear(p,p.r*.55)||w.houses.some(h=>inRect(p,h.al||h,p.r+30))||rockNear(p,p.r*.6)||!tFree(p,p.r*.5))continue;
     if(w.bushes.some(b=>dist(b,p)<b.r+p.r+20)||w.tgrass.some(b=>dist(b,p)<b.r+p.r+160))continue;p.s=SR();w.tgrass.push(p)}}
   // glowing mushrooms, crystals, grass, flowers, reeds, lilies
   for(let k=0;k<5600&&w.mush.length<880;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300)};if(!free(p,0))continue;const rg=MOON?REG.at(p.x,p.y):-1,dire=MOON?rg===1||rg===4:isDire(p.x,p.y);if(!dire&&SR()<.85)continue;
     const near=w.trees.length?tFree(p,20):true;if(!near)continue;w.mush.push({x:p.x,y:p.y,c:rg===1?(SR()<.55?'#8dff7a':'#e8ff7a'):SR()<.55?'#6ff7ff':'#ff7ae6',s:sr(5,9)})}
   for(let k=0;k<3600&&w.crystals.length<20+180;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300)};const rg=MOON?REG.at(p.x,p.y):-1;if(!free(p,40)||(MOON?rg<2:!isDire(p.x,p.y)))continue;w.crystals.push({x:p.x,y:p.y,c:rg===3?(SR()<.5?'#ff7a2a':'#ffb347'):rg===2?(SR()<.5?'#9fe8ff':'#dff6ff'):rg===4?(SR()<.5?'#c58aff':'#8a5aff'):SR()<.5?'#7ff3ff':'#c58aff',s:sr(9,14)})}
   for(let k=0;k<64000&&w.grass.length<20800;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,8)||inWater(p.x,p.y)||heightAt(p.x,p.y)<-3)continue;
-    if(w.villages.some(v=>v.plaza&&dist(p,v)<220))continue;if(w.houses.some(h=>inRect(p,h,4)))continue;if(inCastle(p,-30))continue;if(pathNear(p,-6))continue;
+    if(w.villages.some(v=>v.plaza&&dist(p,v)<220))continue;if(w.houses.some(h=>inRect(p,h.al||h,4)))continue;if(inCastle(p,-30))continue;if(pathNear(p,-6))continue;
     w.grass.push({x:p.x,y:p.y,s:sr(.7,1.35),c:SR(),d:isDire(p.x,p.y)?1:0})}
   for(let k=0;k<28000&&w.flowers.length<6000;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,6)||inWater(p.x,p.y))continue;const meadow=w.noise(p.x,p.y)<.42||w.villages.some(v=>dist(p,v)<v.r);if(!meadow&&SR()<.7)continue;
-    if(w.houses.some(h=>inRect(p,h,2))||pathNear(p,-4)||inCastle(p,0))continue;w.flowers.push({x:p.x,y:p.y,c:SR(),d:isDire(p.x,p.y)?1:0})}
+    if(w.houses.some(h=>inRect(p,h.al||h,2))||pathNear(p,-4)||inCastle(p,0))continue;w.flowers.push({x:p.x,y:p.y,c:SR(),d:isDire(p.x,p.y)?1:0})}
   for(let k=0;k<9900&&w.reeds.length<1400;k++){const y=sr(RIV.y0,RIV.y1);const hw=riverHW(y);const side=SR()<.5?-1:1;const off=hw+sr(-14,28);const i=clamp(Math.round((y-RIV.y0)/RIV.st),0,RIV.n-1);const x=RIV.xs[i]+side*off/RIV.il[i];
     if(onBridge(x,y)||!walkable(x,y,0))continue;w.reeds.push({x,y,s:sr(.8,1.3)})}
   for(let k=0;k<400;k++){const a=sr(0,6.3),d=Lk.R+sr(-120,30);const x=Lk.x+Math.cos(a)*d,y=Lk.y+Math.sin(a)*d;const ld=lakeD(x,y);if(ld>-20&&ld<20)w.reeds.push({x,y,s:sr(.8,1.3)});else if(ld<-60&&w.lilies.length<70)w.lilies.push({x,y,s:sr(.8,1.3),a:sr(0,6.3),f:SR()<.3})}
@@ -1099,7 +1117,7 @@ function genWorld(seed){
     for(let i=0;i<4;i++){if(i===2)continue;w.fences.push([cs[i].x,cs[i].y,cs[(i+1)%4].x,cs[(i+1)%4].y])}}
   // ---- loot outside ----
   const blockedGen=(p,r)=>{for(const o of w.rocks)if(Math.abs(o.x-p.x)<o.r+r&&dist(p,o)<o.r+r)return true;for(const o of w.solids)if(dist(p,o)<o.r+r)return true;for(const t of w.trees)if(Math.abs(t.x-p.x)<t.r+r&&dist(p,t)<t.r+r)return true;for(const q of w.walls)if(circRect(p.x,p.y,r,q))return true;return false};
-  const outSpot=m=>{for(let k=0;k<120;k++){const p={x:sr(m,WORLD-m),y:sr(m,WORLD-m)};if(!free(p,0)||blockedGen(p,30)||w.houses.some(h=>inRect(p,h,10)))continue;return p}return{x:town?town.x+sr(-120,120):CX,y:town?town.y+sr(160,240):CY}};
+  const outSpot=m=>{for(let k=0;k<120;k++){const p={x:sr(m,WORLD-m),y:sr(m,WORLD-m)};if(!free(p,0)||blockedGen(p,30)||w.houses.some(h=>inRect(p,h.al||h,10)))continue;return p}return{x:town?town.x+sr(-120,120):CX,y:town?town.y+sr(160,240):CY}};
   for(let k=0;k<176;k++){const p=outSpot(300);w.items.push({id:iid++,k:'c',x:p.x,y:p.y,n:1+(SR()<.25?1:0)})}
   for(let k=0;k<104;k++){const p=outSpot(300);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([64,28,8,0],SR)})}
   for(let k=0;k<120;k++){const p=outSpot(300);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:pickTier([50,32,14,4,0],SR)})}
@@ -1158,11 +1176,11 @@ function genWorld(seed){
   // ---- spawn points, each with two different starter weapons nearby ----
   for(let i=0;i<TOTAL_HEROES;i++){let best=null,bs=-1e9;const a0=i/TOTAL_HEROES*Math.PI*2+sr(-.15,.15);
     for(let k=0;k<160;k++){const a=a0+sr(-.25,.25)*(1+k/60),f=sr(.42,.82);const rb=bndR(a);const p={x:CX+Math.cos(a)*rb*f,y:CY+Math.sin(a)*rb*f};
-      if(!free(p,60)||blockedGen(p,40)||w.houses.some(h=>inRect(p,h,40)))continue;let sc=1e9;for(const s of w.spawns)sc=Math.min(sc,dist(p,s)-1000);for(const c of w.camps)if(dist(p,c)<450)sc-=600;for(const g of w.graves)if(dist(p,g)<520)sc-=600;
+      if(!free(p,60)||blockedGen(p,40)||w.houses.some(h=>inRect(p,h.al||h,40)))continue;let sc=1e9;for(const s of w.spawns)sc=Math.min(sc,dist(p,s)-1000);for(const c of w.camps)if(dist(p,c)<450)sc-=600;for(const g of w.graves)if(dist(p,g)<520)sc-=600;
       if(sc>=0){best=p;break}if(sc>bs){bs=sc;best=p}}
     if(!best)best={x:CX+sr(-300,300),y:CY+sr(-300,300)};w.spawns.push(best);
     const k1=Math.floor(SR()*WK.length);let k2=Math.floor(SR()*(WK.length-1));if(k2>=k1)k2++;const a1=sr(0,6.3);
-    for(const [wk,ang] of[[WK[k1],a1],[WK[k2],a1+Math.PI]]){let q=null;for(let t=0;t<40;t++){const a=ang+t*.7,d=sr(120,190);const p={x:best.x+Math.cos(a)*d,y:best.y+Math.sin(a)*d};if(free(p,0)&&!blockedGen(p,26)&&!w.houses.some(h=>inRect(p,h,10))){q=p;break}}
+    for(const [wk,ang] of[[WK[k1],a1],[WK[k2],a1+Math.PI]]){let q=null;for(let t=0;t<40;t++){const a=ang+t*.7,d=sr(120,190);const p={x:best.x+Math.cos(a)*d,y:best.y+Math.sin(a)*d};if(free(p,0)&&!blockedGen(p,26)&&!w.houses.some(h=>inRect(p,h.al||h,10))){q=p;break}}
       if(q)w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk,tier:0})}}
   SR=Math.random;
   return w;
@@ -1177,7 +1195,7 @@ function normCfg(c){c=c||{};const ts=[1,2,4].indexOf(c.ts|0)>=0?c.ts|0:1;let n=c
   return{n,size:SIZE_F[c.size]?c.size:autoSize(n),ts}}
 function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:9400*f,f};if(cfg.size==='L'){if(cfg.ts>1)teamKit(seed,items);return}
   let s=((seed|0)^0x5bd1e995^(cfg.n*7919))>>>0;const R=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
-  const r0=ARENA.r,ok=(p,m)=>walkable(p.x,p.y,m)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h,30))&&!inCastleYard(p);
+  const r0=ARENA.r,ok=(p,m)=>walkable(p.x,p.y,m)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h.al||h,30))&&!inCastleYard(p);
   // centre somewhere in the walkable heart of the valley, so the whole start circle is playable
   for(let k=0;k<120;k++){const a=R()*6.2832,d=R()*Math.max(0,6080-r0*.9);const p={x:CX+Math.cos(a)*d,y:CY+Math.sin(a)*d};if(ok(p,90)){ARENA.x=p.x;ARENA.y=p.y;break}}
   // one spawn point per team (per hero in free-for-all), each with enough starter weapons for the whole team
@@ -1191,7 +1209,7 @@ function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA
     for(const [wk,ang] of kit)for(let t=0;t<40;t++){const a=ang+t*.7,d=120+R()*70+(nw>2?40:0);const p={x:best.x+Math.cos(a)*d,y:best.y+Math.sin(a)*d};if(ok(p,26)){items.push({id:iid++,k:'w',x:p.x,y:p.y,wk,tier:0});break}}}}
 // team games: two extra starter weapons by every spawn point so a whole squad can arm up where it lands
 function teamKit(seed,items){let s=((seed|0)^0x2c1b3c6d)>>>0;const R=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
-  let iid=4600;const ok=p=>walkable(p.x,p.y,26)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h,10));
+  let iid=4600;const ok=p=>walkable(p.x,p.y,26)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h.al||h,10));
   for(const sp of WD.spawns){const a0=R()*6.3;for(let k=0;k<2;k++){const wk=WK[Math.floor(R()*WK.length)];for(let t=0;t<30;t++){const a=a0+k*Math.PI+Math.PI/2+t*.6,d=150+R()*80;const p={x:sp.x+Math.cos(a)*d,y:sp.y+Math.sin(a)*d};if(ok(p)){items.push({id:iid++,k:'w',x:p.x,y:p.y,wk,tier:0});break}}}}}
 // ---- static collision grid (rocks, trees, solids, walls) ----
 function buildCollide(w){const C=200,n=Math.ceil(WORLD/C);const cells=Array.from({length:n*n},()=>[]);
@@ -1215,7 +1233,7 @@ function buildNav(){const C=60,n=Math.ceil(WORLD/C),g=new Uint8Array(n*n);
   for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=i*C+C/2,y=j*C+C/2;let b=0;
     if(sdfAt(x,y)<24)b=1;
     else if(forObstacles(x,y,22,o=>o.c===1?((x-o.x)**2+(y-o.y)**2<(o.r+22)**2):circRect(x,y,22,o)))b=1;
-    else for(const h of WD.houses)if(inRect({x,y},h,20)){b=1;break}
+    else for(const h of WD.houses)if(inRect({x,y},h.al||h,20)){b=1;break}
     g[j*n+i]=b}
   NAV={C,n,g,gs:new Float32Array(n*n),fs:new Float32Array(n*n),came:new Int32Array(n*n),gen:new Uint32Array(n*n),closed:new Uint32Array(n*n),heap:new Int32Array(n*n*8),stamp:0}}
 function navBlocked(x,y){const N=NAV;const i=Math.floor(x/N.C),j=Math.floor(y/N.C);if(i<0||j<0||i>=N.n||j>=N.n)return true;return N.g[j*N.n+i]===1}
@@ -3325,7 +3343,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     {const gt=WD.tg,n2=gt.n,M=Math.round(WORLD*.025),md=paintMasks(.025).getContext('2d').getImageData(0,0,M,M).data;const dens=new Uint8Array(n2*n2);
       for(let j=0;j<n2;j++)for(let i=0;i<n2;i++){const k=j*n2+i,h=gt.hg[k];if(h>20||h<-1.5||gt.blk[k]){continue}const mi=(Math.floor(j/n2*M)*M+Math.floor(i/n2*M))*4;const road=md[mi]/255,cob=md[mi+1]/255,fld=md[mi+2]/255;
         dens[k]=Math.round(255*clamp(1-road*1.6-cob*2-fld*2,0,1))}
-      for(const hs of WD.houses)for(let y=hs.y;y<hs.y+hs.h;y+=20)for(let x=hs.x;x<hs.x+hs.w;x+=20){const i=Math.floor(x/gt.C),j=Math.floor(y/gt.C);if(i>=0&&j>=0&&i<n2&&j<n2)dens[j*n2+i]=0}
+      for(const h0 of WD.houses){const hs=h0.al||h0;for(let y=hs.y;y<hs.y+hs.h;y+=20)for(let x=hs.x;x<hs.x+hs.w;x+=20){const i=Math.floor(x/gt.C),j=Math.floor(y/gt.C);if(i>=0&&j>=0&&i<n2&&j<n2)dens[j*n2+i]=0}}
       for(let j=0;j<n2;j++)for(let i=0;i<n2;i++){const k=j*n2+i;if(dens[k]&&caveK((i+.5)*gt.C,(j+.5)*gt.C)>0)dens[k]=0}
       if(WD.dg){const D=WD.dg;for(const e of D.ents)for(let y=e.y-160;y<e.y+160;y+=20)for(let x=e.x-160;x<e.x+160;x+=20){const i=Math.floor(x/gt.C),j=Math.floor(y/gt.C);if(i>=0&&j>=0&&i<n2&&j<n2)dens[j*n2+i]=0}
         for(let y=D.y;y<D.y+D.h;y+=20)for(let x=D.x;x<D.x+D.w;x+=20){const i=Math.floor(x/gt.C),j=Math.floor(y/gt.C);if(i>=0&&j>=0&&i<n2&&j<n2)dens[j*n2+i]=0}}
@@ -8334,16 +8352,24 @@ void main(){float d=length(vL);vec2 q=vW.xz*.0085+uF.ww;
   const warn=(k,e)=>{if(!P['_regE'+k]){P['_regE'+k]=1;console.warn('regions',k,e)}};
 
   // ---------------- the region weight map ----------------
-  const RM={tex:null,N:256};
-  function regionMap(){if(RM.tex)return RM.tex;const N=RM.N,data=new Uint8Array(N*N*4),o=[0,0,0,0,0],dg=typeof WD!=='undefined'&&WD?WD.dg:null;
+  // deep snow (owner, 2026-11-20): wide patches of thick soft snow in the heart of the frozen land, where everyone leaves
+  // footprints. A pure function of the position (REG + its own fixed noise), cached in a second map the ground shader reads
+  const RM={tex:null,N:256,deep:null,snow:null},sst=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+  function regionMap(){if(RM.tex)return RM.tex;const N=RM.N,data=new Uint8Array(N*N*4),deep=new Uint8Array(N*N),o=[0,0,0,0,0],dg=typeof WD!=='undefined'&&WD?WD.dg:null,nz=makeNoise(mulberry32(1313),1600);
     for(let j=0;j<N;j++)for(let i=0;i<N;i++){const x=(i+.5)/N*W,y=(j+.5)/N*W,k=(j*N+i)*4;
       if(dg&&x>dg.x-260&&x<dg.x+dg.w+260&&y>dg.y-260&&y<dg.y+dg.h+260)continue;   // the dungeon keeps its own look
-      REG.w(x,y,o);data[k]=Math.round(o[1]*255);data[k+1]=Math.round(o[2]*255);data[k+2]=Math.round(o[3]*255);data[k+3]=Math.round(o[4]*255)}
+      REG.w(x,y,o);data[k]=Math.round(o[1]*255);data[k+1]=Math.round(o[2]*255);data[k+2]=Math.round(o[3]*255);data[k+3]=Math.round(o[4]*255);
+      deep[j*N+i]=Math.round(255*sst(.35,.7,o[2])*sst(.46,.6,nz(x,y)))}
     const t=new T.DataTexture(data,N,N,T.RGBAFormat,T.UnsignedByteType);t.magFilter=t.minFilter=T.LinearFilter;t.wrapS=t.wrapT=T.ClampToEdgeWrapping;
-    t.generateMipmaps=false;t.needsUpdate=true;t.name='arena-regions';RM.tex=t;return t}
-  const U={uRegMap:{value:null},uRegP:{value:new T.Vector4(0,0,1,0)},vxN:{value:null}};
+    t.generateMipmaps=false;t.needsUpdate=true;t.name='arena-regions';RM.tex=t;
+    const ts=new T.DataTexture(deep,N,N,T.RedFormat,T.UnsignedByteType);ts.magFilter=ts.minFilter=T.LinearFilter;ts.wrapS=ts.wrapT=T.ClampToEdgeWrapping;
+    ts.generateMipmaps=false;ts.needsUpdate=true;ts.name='arena-deep-snow';RM.deep=deep;RM.snow=ts;U.uSnowMap.value=ts;return t}
+  // how deep the snow is here, 0..1 (bilinear over the same map the shader reads)
+  function deepAt(x,y){const D=RM.deep;if(!D)return 0;const N=RM.N,fx=clamp(x/W*N-.5,0,N-1.001),fy=clamp(y/W*N-.5,0,N-1.001),i=fx|0,j=fy|0,tx=fx-i,ty=fy-j,k=j*N+i;
+    return ((D[k]*(1-tx)+D[k+1]*tx)*(1-ty)+(D[k+N]*(1-tx)+D[k+N+1]*tx)*ty)/255}
+  const U={uRegMap:{value:null},uSnowMap:{value:null},uRegP:{value:new T.Vector4(0,0,1,0)},vxN:{value:null}};
   const bind=sh=>{if(!U.uRegMap.value)U.uRegMap.value=regionMap();if(!U.vxN.value&&window.ArenaVFXTex)U.vxN.value=ArenaVFXTex.texture;Object.assign(sh.uniforms,U)};
-  const DECL='uniform sampler2D uRegMap,vxN;uniform vec4 uRegP;\n';
+  const DECL='uniform sampler2D uRegMap,uSnowMap,vxN;uniform vec4 uRegP;\n';
   // crisp cell walls for plates and fractures: F2−F1 of a jittered grid (0 on a wall, ~0.5 inside a cell)
   const CELLS=`vec2 regH2(vec2 p){vec3 q=fract(vec3(p.xyx)*vec3(.1031,.103,.0973));q+=dot(q,q.yzx+33.33);return fract((q.xx+q.yz)*q.zy);}
 float regCell(vec2 x){vec2 n=floor(x),f=fract(x);float f1=8.,f2=8.;
@@ -8390,8 +8416,8 @@ float regIce=0.;vec3 regIbl=vec3(1.);
 #ifdef USE_INSTANCING
 rp=instanceMatrix[3].xyz;
 #endif
-rp=(modelMatrix*vec4(rp,1.)).xyz;vec4 rg=texture2D(uRegMap,rp.xz*${INV.toExponential(6)});
-transformed.y*=max(1.-.8*rg.g-.62*rg.b-.32*rg.a+.08*rg.r,.1);}
+rp=(modelMatrix*vec4(rp,1.)).xyz;vec4 rg=texture2D(uRegMap,rp.xz*${INV.toExponential(6)});float ds=texture2D(uSnowMap,rp.xz*${INV.toExponential(6)}).r;
+transformed.y*=max(1.-.8*rg.g-.62*rg.b-.32*rg.a+.08*rg.r,.1)*(1.-.95*ds);}
 `;
   // the sky light reflected from the environment map takes the land's colour too (a blue sky glow is wrong over ash or void)
   // man-made things (village houses, stalls, wells: the Meshy 'moon-asset' shells) keep their texture: a frosting that grows
@@ -8425,7 +8451,7 @@ radiance*=regIbl;
     if(kind!=='water')f=f.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance=totalEmissiveRadiance*regEmK+regEm;');
     else if(f.indexOf('#include <roughnessmap_fragment>')>=0)f=f.replace('#include <lights_physical_fragment>','roughnessFactor=mix(roughnessFactor,.32,regIce);\n#include <lights_physical_fragment>');
     sh.fragmentShader=f;
-    if(kind==='grass'&&sh.vertexShader.indexOf('#include <begin_vertex>')>=0)sh.vertexShader='uniform sampler2D uRegMap;\n'+sh.vertexShader.replace('#include <begin_vertex>',GRASSV)}
+    if(kind==='grass'&&sh.vertexShader.indexOf('#include <begin_vertex>')>=0)sh.vertexShader='uniform sampler2D uRegMap,uSnowMap;\n'+sh.vertexShader.replace('#include <begin_vertex>',GRASSV)}
   const chain=(m,kind)=>{const ob=m.onBeforeCompile,ck=m.customProgramCacheKey;
     m.onBeforeCompile=function(sh,rd){if(ob)ob.call(this,sh,rd);try{regionEdit(sh,kind)}catch(e){warn('edit',e)}};
     m.customProgramCacheKey=()=>(ck?ck.call(m):'')+'|reg2'+kind;return m};
@@ -8439,7 +8465,8 @@ radiance*=regIbl;
  // FROZEN: the ground is a sheet of ice (deep blue where thick, pale where thin, white fractures at two scales, trapped air,
  // the sky sliding over it as the camera moves) with packed snow drifted around it, over the slopes and on the rock
  if(wI>.004){vec4 nz=texture2D(vxN,w*.0021),nz2=texture2D(vxN,w*.00105+vec2(.3)),nz3=texture2D(vxN,w*.0049+vec2(.17,.61));
-   float s0=nz2.r+(nz.a-.5)*.18,sheet=smoothstep(.41,.45,s0)*fl*(1.-k*.9),rim=smoothstep(.34,.41,s0)*(1.-smoothstep(.41,.45,s0));
+   float ds=texture2D(uSnowMap,w*${INV.toExponential(6)}).r,dsk=smoothstep(.12,.55,ds)*(1.-wt);
+   float s0=nz2.r+(nz.a-.5)*.18,sheet=smoothstep(.41,.45,s0)*fl*(1.-k*.9)*(1.-dsk),rim=smoothstep(.34,.41,s0)*(1.-smoothstep(.41,.45,s0))*(1.-dsk);
    float th=clamp(nz.a*.65+nz3.r*.35,0.,1.);vec3 ice=mix(vec3(.07,.22,.38),vec3(.3,.55,.72),th);
    ice=mix(ice,vec3(.03,.1,.2),smoothstep(.6,.88,nz2.a)*.6);
    vec2 wq=w+(nz.rg-.5)*60.;float cr1=1.-smoothstep(.0,.045,regCell(wq*(1./150.)));
@@ -8449,11 +8476,15 @@ radiance*=regIbl;
    vec2 ws=vec2(w.x*.91+w.y*.41,w.y*.91-w.x*.41);float streak=smoothstep(.52,.82,texture2D(vxN,vec2(ws.x*.0011,ws.y*.0072)).r);
    vec3 snow=vec3(.8,.85,.92)*(.88+.12*nz.r);snow=mix(snow,snow*vec3(.88,.93,1.03),smoothstep(.4,.7,nz3.g)*.45);
    float ic=sheet*(1.-streak*.35);vec3 fz=mix(snow*(1.+rim*.06),ice,ic);
+   // DEEP SNOW: thick, soft and bright, in long wind-shaped drifts with blue shade in the hollows
+   vec3 deep=vec3(.84,.88,.95)*(.94+.06*nz.r);float drift=smoothstep(.25,.75,texture2D(vxN,vec2(ws.x*.0009,ws.y*.0035)+vec2(.4,.2)).g);
+   deep=mix(deep*vec3(.84,.9,1.02),deep,drift);fz=mix(fz,deep,dsk);
    fz=mix(fz,c*vec3(.66,.76,.92)+vec3(.16,.19,.24),k*(1.-smoothstep(.5,.78,vWN.y))*.8);
    fz=mix(fz,mix(ice,vec3(.62,.8,.92),.35),wt*.9);
    c=mix(c,fz,wI);float gl=max(ic,wt*.8)*wI;regGloss=max(regGloss,gl);
    regEm+=vec3(.42,.56,.7)*smoothstep(.5,.85,texture2D(vxN,gl_FragCoord.xy*.0011+w*.00009).r)*gl*.22*(1.-nt*.7);
-   regEm+=vec3(.75,.88,1.)*pow(clamp((texture2D(vxN,w*.05).b-.8)*5.,0.,1.),3.)*step(.6,fract(dot(floor(w*.31),vec2(.13,.71))+tp*.35))*(1.-ic)*wI*.5;}
+   regEm+=vec3(.75,.88,1.)*pow(clamp((texture2D(vxN,w*.05).b-.8)*5.,0.,1.),3.)*step(.6,fract(dot(floor(w*.31),vec2(.13,.71))+tp*.35))*(1.-ic)*wI*.5;
+   regEm+=vec3(.85,.93,1.)*pow(clamp((texture2D(vxN,w*.13+vec2(.3)).b-.86)*7.,0.,1.),3.)*step(.55,fract(dot(floor(w*.5),vec2(.31,.17))+tp*.5))*dsk*wI*.45*(1.-nt*.6);}
  // CURSED: the grass dies back to bare earth and leaf litter, black rot spreads, dark roots run over everything (some carrying
  // a sick glow), bile pools in the hollows; the glow wakes at night
  if(wC>.004){vec4 cn=texture2D(vxN,w*.0016+vec2(.7)),cn2=texture2D(vxN,w*.0045+vec2(.2,.4));float l=dot(c,vec3(.3,.59,.11));
@@ -8467,16 +8498,18 @@ radiance*=regIbl;
    dead=mix(dead,vec3(.025,.035,.01),pool*.92);
    c=mix(c,dead,wC);regGloss=max(regGloss,pool*wC*.45);float pulse=.65+.35*sin(tp*1.3+w.x*.004+w.y*.003);
    regEm+=(vec3(.32,.66,.12)*glow*(.12+.88*nt)*pulse+(vec3(.3,.5,.06)*prim*(.08+.4*nt)+vec3(.04,.07,.01)*pool*nt)*(.8+.2*pulse))*wC;}
- // ASHEN: grey-black ash, fields of cooled basalt plates with magma glowing in the seams, embers settled in the ash
- if(wA>.004){vec4 an=texture2D(vxN,w*.0018),an2=texture2D(vxN,w*.0052+vec2(.3,.8));
-   vec3 ash=mix(vec3(.07,.065,.063),vec3(.24,.225,.21),an.r*.75+an2.r*.25)*mix(1.,.75,k);
+ // ASHEN: grey-black ash, here and there a field of cooled basalt plates with magma glowing along a few seams, embers in the
+ // ash (calmed 2026-11-20 at the owner's request, it was too busy: fewer and larger plates, seams that glow only in stretches
+ // instead of a closed web, dimmer and steadier glow, flatter ash)
+ if(wA>.004){vec4 an=texture2D(vxN,w*.0012),an2=texture2D(vxN,w*.0041+vec2(.3,.8));
+   vec3 ash=mix(vec3(.1,.093,.088),vec3(.2,.188,.176),an.r*.8+an2.r*.2)*mix(1.,.8,k);
    ash=mix(ash,c*vec3(.55,.52,.5),clamp(sp.g*1.3,0.,1.)*.8);
-   float field=smoothstep(.46,.58,texture2D(vxN,w*.0011+vec2(.1)).r)*(1.-wt)*(1.-clamp(sp.g*1.3+sp.r*.9,0.,1.)),seam=regCell((w+(an.rg-.5)*70.)*(1./170.));
-   float core=1.-smoothstep(.0,.03,seam),halo=1.-smoothstep(.0,.12,seam);
-   ash=mix(ash,vec3(.05,.042,.038)*(.8+.4*an2.r),field*.85);ash=mix(ash,vec3(.09,.03,.015),halo*field);
-   float spark=pow(clamp((texture2D(vxN,w*.047).b-.84)*6.,0.,1.),2.)*(1.-field);
-   c=mix(c,ash,wA);float heat=1.1+.45*sin(tp*2.1+w.y*.01+w.x*.006);
-   regEm+=((vec3(1.,.3,.05)*halo*.5+vec3(1.,.62,.2)*core*1.4)*field*heat*(.55+.45*nt)+vec3(1.,.4,.08)*spark*(.5+.5*sin(tp*5.+w.x*.03))*.6)*wA;}
+   float field=smoothstep(.5,.68,texture2D(vxN,w*.0008+vec2(.1)).r)*(1.-wt)*(1.-clamp(sp.g*1.3+sp.r*.9,0.,1.)),seam=regCell((w+(an.rg-.5)*90.)*(1./260.));
+   float run=smoothstep(.42,.7,texture2D(vxN,w*.0027+vec2(.55,.15)).g),core=(1.-smoothstep(.0,.022,seam))*run,halo=(1.-smoothstep(.0,.08,seam))*run;
+   ash=mix(ash,vec3(.075,.066,.06)*(.9+.2*an2.r),field*.45);ash=mix(ash,vec3(.09,.035,.02),halo*field*.7);
+   float spark=pow(clamp((texture2D(vxN,w*.047).b-.9)*9.,0.,1.),2.)*(1.-field);
+   c=mix(c,ash,wA);float heat=1.+.18*sin(tp*1.4+w.y*.01+w.x*.006);
+   regEm+=((vec3(1.,.3,.05)*halo*.22+vec3(1.,.55,.18)*core*.85)*field*heat*(.6+.4*nt)+vec3(1.,.4,.08)*spark*(.5+.5*sin(tp*4.+w.x*.03))*.35)*wA;}
  // ABYSS: black-violet obsidian in glassy plates, veins of void light pulsing, rifts where the starfield shows through
  if(wV>.004){vec4 vn=texture2D(vxN,w*.0017+vec2(.9)),vn2=texture2D(vxN,w*.0056+vec2(.1,.3));float l=dot(c,vec3(.3,.59,.11));
    vec3 vs=mix(vec3(.04,.03,.04),vec3(.15,.115,.15),clamp(l*1.1+vn.r*.25,0.,1.));vs=mix(vs,vec3(.022,.016,.026),smoothstep(.55,.8,vn2.a)*.6);
@@ -8610,31 +8643,83 @@ void main(){vec2 d=gl_PointCoord-.5;float r=length(d)*2.;if(r>1.)discard;float a
       else if(L2.night){u.uLook.value.y=L2.alpha*clamp((1-dk)*1.6-.1,0,1)}}}
 
   // ---------------- music and ambience of each land ----------------
-  const TRK=['reg-kingdom','reg-cursed','reg-frost','reg-ash','reg-abyss'],AMB=['wind','amb-cursed','amb-frost','amb-ash','amb-abyss'];
+  const TRK=['reg-kingdom','reg-cursed','reg-frost','reg-ash','reg-abyss'],AMB=['amb-kingdom','amb-cursed','amb-frost','amb-ash','amb-abyss'];
+  // no wind (owner, 2026-11-20): every land has its own living sounds, the Fallen Kingdom a day bed (birds) and a night bed (crickets)
+  const ambFor=i=>i===0&&typeof isNight==='function'&&isNight()?'amb-night':AMB[i];
   let MUS=true;try{MUS=localStorage.getItem('ar_regmusic')!=='0'}catch(e){}
   if(typeof MUS_VOL!=='undefined')Object.assign(MUS_VOL,{'reg-kingdom':.78,'reg-cursed':.9,'reg-frost':.92,'reg-ash':.72,'reg-abyss':.9});
-  if(typeof AMB_VOL!=='undefined')Object.assign(AMB_VOL,{'amb-cursed':.55,'amb-frost':.5,'amb-ash':.45,'amb-abyss':.48});
+  if(typeof AMB_VOL!=='undefined')Object.assign(AMB_VOL,{'amb-kingdom':.55,'amb-night':.5,'amb-cursed':.55,'amb-frost':.55,'amb-ash':.45,'amb-abyss':.48});
   const failed=n=>{try{const t=AU.trk&&AU.trk[n];return !!(t&&t.ok===false)}catch(e){return false}};
   // the menu's sound credits: these tracks are original, made in code for this game (src/tools/region-music.py)
   try{const cl=document.getElementById('credList');if(cl&&MUS)cl.insertAdjacentHTML('beforeend','<h4>เพลงประจำดินแดน</h4><div><b>Fallen Kingdom · Cursed Forest · Frozen Sanctuary · Ashen Wastes · The Abyss และเสียงบรรยากาศของแต่ละดินแดน</b> — แต่งและสังเคราะห์ด้วยโค้ดสำหรับเกมนี้ <small>(ต้นฉบับ)</small></div>')}catch(e){}
-  if(MUS&&typeof AU!=='undefined'&&AU.setMusic&&AU.setAmb){
-    const _sm=AU.setMusic,_sa=AU.setAmb;
-    AU.setMusic=function(m){try{if(state==='play'&&!this.inCave&&(m==='day'||(m==='night'&&S.aud!==0))){const r=TRK[S.aud];if(r&&!failed(r))m=r}}catch(e){}return _sm.call(this,m)};
-    AU.setAmb=function(a){try{if(state==='play'&&this.mode!==2&&(a==='wind'||(a===null&&!this.inCave&&!gameOver&&S.aud!==0))){const r=AMB[S.aud];if(r&&!failed(r))a=r}}catch(e){}return _sa.call(this,a)};}
+  if(MUS&&typeof AU!=='undefined'&&AU.setMusic){const _sm=AU.setMusic;
+    AU.setMusic=function(m){try{if(state==='play'&&!this.inCave&&(m==='day'||(m==='night'&&S.aud!==0))){const r=TRK[S.aud];if(r&&!failed(r))m=r}}catch(e){}return _sm.call(this,m)}}
+  // the ambience follows the land whether or not the land music is on (it replaces the old wind loop)
+  if(typeof AU!=='undefined'&&AU.setAmb){const _sa=AU.setAmb;
+    AU.setAmb=function(a){try{if(state==='play'&&this.mode!==2&&(a==='wind'||(a===null&&!this.inCave&&!gameOver))){const r=ambFor(S.aud);if(r&&!failed(r))a=r}}catch(e){}return _sa.call(this,a)}}
   // which land the music follows: the one clearly underfoot for a moment (no flapping on the borders)
   function audioLand(L,dt){let b=0;for(let i=1;i<5;i++)if(S.w[i]>S.w[b])b=i;
     if(S.fresh){S.fresh=0;if(b!==S.aud){S.aud=b;S.domT=0;if(typeof AU!=='undefined')AU.mt=0}}   // a new match: start on the land underfoot
     else if(typeof inDG==='function'&&inDG(L))return;
     else if(b!==S.aud&&S.w[b]>.55){S.domT+=dt;if(S.domT>1.5){S.aud=b;S.domT=0;if(typeof AU!=='undefined')AU.mt=0}}else S.domT=0;
     // start loading a land's music while still crossing its border (each track streams only once it is near)
-    if(MUS&&typeof AU!=='undefined'&&AU.ctx){S.warm=S.warm||[0,0,0,0,0];for(let i=0;i<5;i++)if(!S.warm[i]&&(S.w[i]>.12||i===S.aud)){S.warm[i]=1;try{AU.track(TRK[i]);if(i)AU.track(AMB[i])}catch(e){}}}}
+    if(typeof AU!=='undefined'&&AU.ctx){S.warm=S.warm||[0,0,0,0,0];for(let i=0;i<5;i++)if(!S.warm[i]&&(S.w[i]>.12||i===S.aud)){S.warm[i]=1;try{if(MUS)AU.track(TRK[i]);AU.track(AMB[i]);if(!i)AU.track('amb-night')}catch(e){}}}}
 
+  // ---------------- footprints in the deep snow ----------------
+  // every hero the player can see wades through deep snow: a soft furrow along the way and a boot print at every step (left,
+  // right, ...), fading after a while. One instanced mesh, a ring of FP.N decals, two shapes in one small atlas; render only
+  const FP={mesh:null,scene:null,i:0,N:900,life:18,last:new Map(),tex:null,U:null};
+  function fpTexture(){const c=document.createElement('canvas');c.width=128;c.height=128;const g=c.getContext('2d');
+    const blob=(x,y,rx,ry,a)=>{const gr=g.createRadialGradient(0,0,0,0,0,1);gr.addColorStop(0,'rgba(255,255,255,'+a+')');gr.addColorStop(.7,'rgba(255,255,255,'+a*.85+')');gr.addColorStop(1,'rgba(255,255,255,0)');
+      g.save();g.translate(x,y);g.scale(rx,ry);g.fillStyle=gr;g.beginPath();g.arc(0,0,1,0,6.283);g.fill();g.restore()};
+    blob(34,40,18,32,1);blob(31,100,14,18,1);for(let k=0;k<4;k++)blob(22+k*6,16+Math.abs(k-1.5)*3,3,3,.5);   // left half: the boot print, toe up
+    const gr=g.createRadialGradient(0,0,0,0,0,1);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.55,'rgba(255,255,255,.7)');gr.addColorStop(1,'rgba(255,255,255,0)');
+    g.save();g.translate(96,64);g.scale(30,62);g.fillStyle=gr;g.beginPath();g.arc(0,0,1,0,6.283);g.fill();g.restore();   // right half: a soft furrow
+    const t=new T.CanvasTexture(c);t.colorSpace=T.NoColorSpace;return t}
+  function fpMesh(R){
+    const geo=new T.PlaneGeometry(1,1),born=new Float32Array(FP.N).fill(-1e4),kind=new Float32Array(FP.N);
+    geo.setAttribute('aBorn',new T.InstancedBufferAttribute(born,1));geo.setAttribute('aKind',new T.InstancedBufferAttribute(kind,1));
+    FP.tex=FP.tex||fpTexture();
+    FP.U=Object.assign(T.UniformsUtils.clone(T.UniformsLib.fog),{map:{value:FP.tex},uT:{value:0},uLife:{value:FP.life},uLit:{value:1},uFowC:R.U.fowC,uFowR:R.U.fowR});
+    const m=new T.ShaderMaterial({uniforms:FP.U,transparent:true,depthWrite:false,fog:true,side:T.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4,
+      vertexShader:`attribute float aBorn,aKind;uniform float uT,uLife;varying vec2 vUv;varying float vA,vK;varying vec2 vW;
+#include <fog_pars_vertex>
+void main(){vUv=vec2(uv.x*.5+aKind*.5,uv.y);vK=aKind;float age=uT-aBorn;vA=smoothstep(0.,.15,age)*(1.-smoothstep(uLife*.4,uLife,age));
+ vec4 wp=modelMatrix*instanceMatrix*vec4(position,1.);vW=wp.xz;vec4 mvPosition=viewMatrix*wp;gl_Position=projectionMatrix*mvPosition;
+#include <fog_vertex>
+}`,
+      fragmentShader:`uniform sampler2D map;uniform float uLit;uniform vec2 uFowC;uniform float uFowR;varying vec2 vUv;varying float vA,vK;varying vec2 vW;
+#include <fog_pars_fragment>
+void main(){float a=texture2D(map,vUv).a*vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,distance(vW,uFowC)))*mix(.85,.28,vK);if(a<.01)discard;
+ gl_FragColor=vec4(vec3(.24,.31,.46)*uLit,a);
+#include <fog_fragment>
+}`});
+    const mesh=new T.InstancedMesh(geo,m,FP.N);mesh.frustumCulled=false;mesh.renderOrder=1;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
+    const z=new T.Matrix4().makeScale(0,0,0);for(let i=0;i<FP.N;i++)mesh.setMatrixAt(i,z);mesh.instanceMatrix.needsUpdate=true;
+    R.scene.add(mesh);FP.mesh=mesh;FP.scene=R.scene;FP.i=0;FP.last.clear()}
+  const fpM=new T.Matrix4(),fpR=new T.Matrix4(),fpX=new T.Matrix4().makeRotationX(-Math.PI/2),fpS=new T.Matrix4();
+  function fpPut(R,x,y,a,sx,sy,kind){const i=FP.i;FP.i=(FP.i+1)%FP.N;
+    fpS.makeScale(sx,sy,1);fpR.makeRotationY(-a-Math.PI/2);fpM.makeTranslation(x,R.gY(x,y)+.8,y).multiply(fpR).multiply(fpX).multiply(fpS);
+    FP.mesh.setMatrixAt(i,fpM);FP.mesh.instanceMatrix.needsUpdate=true;const g=FP.mesh.geometry.attributes;g.aBorn.array[i]=S.t;g.aBorn.needsUpdate=true;g.aKind.array[i]=kind;g.aKind.needsUpdate=true}
+  function footprints(R,L,dt){if(!R.scene||!R.gY||typeof units==='undefined')return;if(!RM.deep)regionMap();
+    if(FP.mesh&&FP.scene!==R.scene){FP.mesh=null}
+    const me=typeof ME==='function'?ME():null,tx=R.tx||L.x,ty=R.ty||L.y;
+    for(const u of units){if(!u.hero||u.dead||Math.abs(u.x-tx)>1600||Math.abs(u.y-ty)>1200){FP.last.delete(u.id);continue}
+      const d=deepAt(u.x,u.y);if(d<.45||(typeof unitVisibleTo==='function'&&!unitVisibleTo(u,me,L))||(u.invisT>0&&u!==me)){FP.last.delete(u.id);continue}
+      let s=FP.last.get(u.id);if(!s){FP.last.set(u.id,{x:u.x,y:u.y,side:1});continue}
+      const dx=u.x-s.x,dy=u.y-s.y,dd=Math.hypot(dx,dy);if(dd>180||u.dash){s.x=u.x;s.y=u.y;continue}   // blinked or dashed: no trail across
+      if(dd<34)continue;if(!FP.mesh)fpMesh(R);
+      const a=Math.atan2(dy,dx),c=Math.cos(a+1.5708),sn=Math.sin(a+1.5708);s.side=-s.side;
+      fpPut(R,(u.x+s.x)/2,(u.y+s.y)/2,a,40,dd+30,1);                                 // the furrow, under both feet
+      fpPut(R,u.x+c*9*s.side,u.y+sn*9*s.side,a,16*s.side,34,0);s.x=u.x;s.y=u.y}       // the print, left or right of the way
+    if(FP.mesh){FP.U.uT.value=S.t;FP.U.uLit.value=.3+.7*(typeof R.dayK==='function'?R.dayK():1)}}
   // ---------------- per frame ----------------
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);
-    try{if(L&&typeof state!=='undefined'&&state==='play'){dt=Math.min(.1,Math.max(0,dt||0));S.t=(S.t+dt)%3600;atmosphere(this,L,dt);weather(this,L,dt);audioLand(L,dt)}}catch(e){warn('frame',e)}return r};
+    try{if(L&&typeof state!=='undefined'&&state==='play'){dt=Math.min(.1,Math.max(0,dt||0));S.t=(S.t+dt)%3600;atmosphere(this,L,dt);weather(this,L,dt);audioLand(L,dt);footprints(this,L,dt)}}catch(e){warn('frame',e)}return r};
   const _ds=P.disposeScene;if(_ds)P.disposeScene=function(){S.fresh=1;try{if(S.lay)for(const l of S.lay){if(l.pts.parent)l.pts.parent.remove(l.pts);l.pts.geometry.dispose();l.m.dispose()}S.lay=null;
-      if(RM.tex){RM.tex.dispose();RM.tex=null;U.uRegMap.value=null}}catch(e){}return _ds.apply(this,arguments)};
-  window.ArenaRegions={state:S,weights:()=>S.w.slice(),land:()=>S.aud,map:()=>regionMap()};
+      if(RM.tex){RM.tex.dispose();RM.tex=null;U.uRegMap.value=null}if(RM.snow){RM.snow.dispose();RM.snow=null;RM.deep=null;U.uSnowMap.value=null}
+      if(FP.mesh){if(FP.mesh.parent)FP.mesh.parent.remove(FP.mesh);FP.mesh.geometry.dispose();FP.mesh.material.dispose();FP.mesh=null}FP.last.clear()}catch(e){}return _ds.apply(this,arguments)};
+  window.ArenaRegions={state:S,weights:()=>S.w.slice(),land:()=>S.aud,map:()=>regionMap(),deep:(x,y)=>{if(!RM.deep)regionMap();return deepAt(x,y)},prints:()=>FP};
 })();
 
 // ===================== SETTINGS: view + graphics quality =====================

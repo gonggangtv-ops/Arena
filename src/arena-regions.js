@@ -28,16 +28,24 @@
   const warn=(k,e)=>{if(!P['_regE'+k]){P['_regE'+k]=1;console.warn('regions',k,e)}};
 
   // ---------------- the region weight map ----------------
-  const RM={tex:null,N:256};
-  function regionMap(){if(RM.tex)return RM.tex;const N=RM.N,data=new Uint8Array(N*N*4),o=[0,0,0,0,0],dg=typeof WD!=='undefined'&&WD?WD.dg:null;
+  // deep snow (owner, 2026-11-20): wide patches of thick soft snow in the heart of the frozen land, where everyone leaves
+  // footprints. A pure function of the position (REG + its own fixed noise), cached in a second map the ground shader reads
+  const RM={tex:null,N:256,deep:null,snow:null},sst=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+  function regionMap(){if(RM.tex)return RM.tex;const N=RM.N,data=new Uint8Array(N*N*4),deep=new Uint8Array(N*N),o=[0,0,0,0,0],dg=typeof WD!=='undefined'&&WD?WD.dg:null,nz=makeNoise(mulberry32(1313),1600);
     for(let j=0;j<N;j++)for(let i=0;i<N;i++){const x=(i+.5)/N*W,y=(j+.5)/N*W,k=(j*N+i)*4;
       if(dg&&x>dg.x-260&&x<dg.x+dg.w+260&&y>dg.y-260&&y<dg.y+dg.h+260)continue;   // the dungeon keeps its own look
-      REG.w(x,y,o);data[k]=Math.round(o[1]*255);data[k+1]=Math.round(o[2]*255);data[k+2]=Math.round(o[3]*255);data[k+3]=Math.round(o[4]*255)}
+      REG.w(x,y,o);data[k]=Math.round(o[1]*255);data[k+1]=Math.round(o[2]*255);data[k+2]=Math.round(o[3]*255);data[k+3]=Math.round(o[4]*255);
+      deep[j*N+i]=Math.round(255*sst(.35,.7,o[2])*sst(.46,.6,nz(x,y)))}
     const t=new T.DataTexture(data,N,N,T.RGBAFormat,T.UnsignedByteType);t.magFilter=t.minFilter=T.LinearFilter;t.wrapS=t.wrapT=T.ClampToEdgeWrapping;
-    t.generateMipmaps=false;t.needsUpdate=true;t.name='arena-regions';RM.tex=t;return t}
-  const U={uRegMap:{value:null},uRegP:{value:new T.Vector4(0,0,1,0)},vxN:{value:null}};
+    t.generateMipmaps=false;t.needsUpdate=true;t.name='arena-regions';RM.tex=t;
+    const ts=new T.DataTexture(deep,N,N,T.RedFormat,T.UnsignedByteType);ts.magFilter=ts.minFilter=T.LinearFilter;ts.wrapS=ts.wrapT=T.ClampToEdgeWrapping;
+    ts.generateMipmaps=false;ts.needsUpdate=true;ts.name='arena-deep-snow';RM.deep=deep;RM.snow=ts;U.uSnowMap.value=ts;return t}
+  // how deep the snow is here, 0..1 (bilinear over the same map the shader reads)
+  function deepAt(x,y){const D=RM.deep;if(!D)return 0;const N=RM.N,fx=clamp(x/W*N-.5,0,N-1.001),fy=clamp(y/W*N-.5,0,N-1.001),i=fx|0,j=fy|0,tx=fx-i,ty=fy-j,k=j*N+i;
+    return ((D[k]*(1-tx)+D[k+1]*tx)*(1-ty)+(D[k+N]*(1-tx)+D[k+N+1]*tx)*ty)/255}
+  const U={uRegMap:{value:null},uSnowMap:{value:null},uRegP:{value:new T.Vector4(0,0,1,0)},vxN:{value:null}};
   const bind=sh=>{if(!U.uRegMap.value)U.uRegMap.value=regionMap();if(!U.vxN.value&&window.ArenaVFXTex)U.vxN.value=ArenaVFXTex.texture;Object.assign(sh.uniforms,U)};
-  const DECL='uniform sampler2D uRegMap,vxN;uniform vec4 uRegP;\n';
+  const DECL='uniform sampler2D uRegMap,uSnowMap,vxN;uniform vec4 uRegP;\n';
   // crisp cell walls for plates and fractures: F2−F1 of a jittered grid (0 on a wall, ~0.5 inside a cell)
   const CELLS=`vec2 regH2(vec2 p){vec3 q=fract(vec3(p.xyx)*vec3(.1031,.103,.0973));q+=dot(q,q.yzx+33.33);return fract((q.xx+q.yz)*q.zy);}
 float regCell(vec2 x){vec2 n=floor(x),f=fract(x);float f1=8.,f2=8.;
@@ -84,8 +92,8 @@ float regIce=0.;vec3 regIbl=vec3(1.);
 #ifdef USE_INSTANCING
 rp=instanceMatrix[3].xyz;
 #endif
-rp=(modelMatrix*vec4(rp,1.)).xyz;vec4 rg=texture2D(uRegMap,rp.xz*${INV.toExponential(6)});
-transformed.y*=max(1.-.8*rg.g-.62*rg.b-.32*rg.a+.08*rg.r,.1);}
+rp=(modelMatrix*vec4(rp,1.)).xyz;vec4 rg=texture2D(uRegMap,rp.xz*${INV.toExponential(6)});float ds=texture2D(uSnowMap,rp.xz*${INV.toExponential(6)}).r;
+transformed.y*=max(1.-.8*rg.g-.62*rg.b-.32*rg.a+.08*rg.r,.1)*(1.-.95*ds);}
 `;
   // the sky light reflected from the environment map takes the land's colour too (a blue sky glow is wrong over ash or void)
   // man-made things (village houses, stalls, wells: the Meshy 'moon-asset' shells) keep their texture: a frosting that grows
@@ -119,7 +127,7 @@ radiance*=regIbl;
     if(kind!=='water')f=f.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance=totalEmissiveRadiance*regEmK+regEm;');
     else if(f.indexOf('#include <roughnessmap_fragment>')>=0)f=f.replace('#include <lights_physical_fragment>','roughnessFactor=mix(roughnessFactor,.32,regIce);\n#include <lights_physical_fragment>');
     sh.fragmentShader=f;
-    if(kind==='grass'&&sh.vertexShader.indexOf('#include <begin_vertex>')>=0)sh.vertexShader='uniform sampler2D uRegMap;\n'+sh.vertexShader.replace('#include <begin_vertex>',GRASSV)}
+    if(kind==='grass'&&sh.vertexShader.indexOf('#include <begin_vertex>')>=0)sh.vertexShader='uniform sampler2D uRegMap,uSnowMap;\n'+sh.vertexShader.replace('#include <begin_vertex>',GRASSV)}
   const chain=(m,kind)=>{const ob=m.onBeforeCompile,ck=m.customProgramCacheKey;
     m.onBeforeCompile=function(sh,rd){if(ob)ob.call(this,sh,rd);try{regionEdit(sh,kind)}catch(e){warn('edit',e)}};
     m.customProgramCacheKey=()=>(ck?ck.call(m):'')+'|reg2'+kind;return m};
@@ -133,7 +141,8 @@ radiance*=regIbl;
  // FROZEN: the ground is a sheet of ice (deep blue where thick, pale where thin, white fractures at two scales, trapped air,
  // the sky sliding over it as the camera moves) with packed snow drifted around it, over the slopes and on the rock
  if(wI>.004){vec4 nz=texture2D(vxN,w*.0021),nz2=texture2D(vxN,w*.00105+vec2(.3)),nz3=texture2D(vxN,w*.0049+vec2(.17,.61));
-   float s0=nz2.r+(nz.a-.5)*.18,sheet=smoothstep(.41,.45,s0)*fl*(1.-k*.9),rim=smoothstep(.34,.41,s0)*(1.-smoothstep(.41,.45,s0));
+   float ds=texture2D(uSnowMap,w*${INV.toExponential(6)}).r,dsk=smoothstep(.12,.55,ds)*(1.-wt);
+   float s0=nz2.r+(nz.a-.5)*.18,sheet=smoothstep(.41,.45,s0)*fl*(1.-k*.9)*(1.-dsk),rim=smoothstep(.34,.41,s0)*(1.-smoothstep(.41,.45,s0))*(1.-dsk);
    float th=clamp(nz.a*.65+nz3.r*.35,0.,1.);vec3 ice=mix(vec3(.07,.22,.38),vec3(.3,.55,.72),th);
    ice=mix(ice,vec3(.03,.1,.2),smoothstep(.6,.88,nz2.a)*.6);
    vec2 wq=w+(nz.rg-.5)*60.;float cr1=1.-smoothstep(.0,.045,regCell(wq*(1./150.)));
@@ -143,11 +152,15 @@ radiance*=regIbl;
    vec2 ws=vec2(w.x*.91+w.y*.41,w.y*.91-w.x*.41);float streak=smoothstep(.52,.82,texture2D(vxN,vec2(ws.x*.0011,ws.y*.0072)).r);
    vec3 snow=vec3(.8,.85,.92)*(.88+.12*nz.r);snow=mix(snow,snow*vec3(.88,.93,1.03),smoothstep(.4,.7,nz3.g)*.45);
    float ic=sheet*(1.-streak*.35);vec3 fz=mix(snow*(1.+rim*.06),ice,ic);
+   // DEEP SNOW: thick, soft and bright, in long wind-shaped drifts with blue shade in the hollows
+   vec3 deep=vec3(.84,.88,.95)*(.94+.06*nz.r);float drift=smoothstep(.25,.75,texture2D(vxN,vec2(ws.x*.0009,ws.y*.0035)+vec2(.4,.2)).g);
+   deep=mix(deep*vec3(.84,.9,1.02),deep,drift);fz=mix(fz,deep,dsk);
    fz=mix(fz,c*vec3(.66,.76,.92)+vec3(.16,.19,.24),k*(1.-smoothstep(.5,.78,vWN.y))*.8);
    fz=mix(fz,mix(ice,vec3(.62,.8,.92),.35),wt*.9);
    c=mix(c,fz,wI);float gl=max(ic,wt*.8)*wI;regGloss=max(regGloss,gl);
    regEm+=vec3(.42,.56,.7)*smoothstep(.5,.85,texture2D(vxN,gl_FragCoord.xy*.0011+w*.00009).r)*gl*.22*(1.-nt*.7);
-   regEm+=vec3(.75,.88,1.)*pow(clamp((texture2D(vxN,w*.05).b-.8)*5.,0.,1.),3.)*step(.6,fract(dot(floor(w*.31),vec2(.13,.71))+tp*.35))*(1.-ic)*wI*.5;}
+   regEm+=vec3(.75,.88,1.)*pow(clamp((texture2D(vxN,w*.05).b-.8)*5.,0.,1.),3.)*step(.6,fract(dot(floor(w*.31),vec2(.13,.71))+tp*.35))*(1.-ic)*wI*.5;
+   regEm+=vec3(.85,.93,1.)*pow(clamp((texture2D(vxN,w*.13+vec2(.3)).b-.86)*7.,0.,1.),3.)*step(.55,fract(dot(floor(w*.5),vec2(.31,.17))+tp*.5))*dsk*wI*.45*(1.-nt*.6);}
  // CURSED: the grass dies back to bare earth and leaf litter, black rot spreads, dark roots run over everything (some carrying
  // a sick glow), bile pools in the hollows; the glow wakes at night
  if(wC>.004){vec4 cn=texture2D(vxN,w*.0016+vec2(.7)),cn2=texture2D(vxN,w*.0045+vec2(.2,.4));float l=dot(c,vec3(.3,.59,.11));
@@ -161,16 +174,18 @@ radiance*=regIbl;
    dead=mix(dead,vec3(.025,.035,.01),pool*.92);
    c=mix(c,dead,wC);regGloss=max(regGloss,pool*wC*.45);float pulse=.65+.35*sin(tp*1.3+w.x*.004+w.y*.003);
    regEm+=(vec3(.32,.66,.12)*glow*(.12+.88*nt)*pulse+(vec3(.3,.5,.06)*prim*(.08+.4*nt)+vec3(.04,.07,.01)*pool*nt)*(.8+.2*pulse))*wC;}
- // ASHEN: grey-black ash, fields of cooled basalt plates with magma glowing in the seams, embers settled in the ash
- if(wA>.004){vec4 an=texture2D(vxN,w*.0018),an2=texture2D(vxN,w*.0052+vec2(.3,.8));
-   vec3 ash=mix(vec3(.07,.065,.063),vec3(.24,.225,.21),an.r*.75+an2.r*.25)*mix(1.,.75,k);
+ // ASHEN: grey-black ash, here and there a field of cooled basalt plates with magma glowing along a few seams, embers in the
+ // ash (calmed 2026-11-20 at the owner's request, it was too busy: fewer and larger plates, seams that glow only in stretches
+ // instead of a closed web, dimmer and steadier glow, flatter ash)
+ if(wA>.004){vec4 an=texture2D(vxN,w*.0012),an2=texture2D(vxN,w*.0041+vec2(.3,.8));
+   vec3 ash=mix(vec3(.1,.093,.088),vec3(.2,.188,.176),an.r*.8+an2.r*.2)*mix(1.,.8,k);
    ash=mix(ash,c*vec3(.55,.52,.5),clamp(sp.g*1.3,0.,1.)*.8);
-   float field=smoothstep(.46,.58,texture2D(vxN,w*.0011+vec2(.1)).r)*(1.-wt)*(1.-clamp(sp.g*1.3+sp.r*.9,0.,1.)),seam=regCell((w+(an.rg-.5)*70.)*(1./170.));
-   float core=1.-smoothstep(.0,.03,seam),halo=1.-smoothstep(.0,.12,seam);
-   ash=mix(ash,vec3(.05,.042,.038)*(.8+.4*an2.r),field*.85);ash=mix(ash,vec3(.09,.03,.015),halo*field);
-   float spark=pow(clamp((texture2D(vxN,w*.047).b-.84)*6.,0.,1.),2.)*(1.-field);
-   c=mix(c,ash,wA);float heat=1.1+.45*sin(tp*2.1+w.y*.01+w.x*.006);
-   regEm+=((vec3(1.,.3,.05)*halo*.5+vec3(1.,.62,.2)*core*1.4)*field*heat*(.55+.45*nt)+vec3(1.,.4,.08)*spark*(.5+.5*sin(tp*5.+w.x*.03))*.6)*wA;}
+   float field=smoothstep(.5,.68,texture2D(vxN,w*.0008+vec2(.1)).r)*(1.-wt)*(1.-clamp(sp.g*1.3+sp.r*.9,0.,1.)),seam=regCell((w+(an.rg-.5)*90.)*(1./260.));
+   float run=smoothstep(.42,.7,texture2D(vxN,w*.0027+vec2(.55,.15)).g),core=(1.-smoothstep(.0,.022,seam))*run,halo=(1.-smoothstep(.0,.08,seam))*run;
+   ash=mix(ash,vec3(.075,.066,.06)*(.9+.2*an2.r),field*.45);ash=mix(ash,vec3(.09,.035,.02),halo*field*.7);
+   float spark=pow(clamp((texture2D(vxN,w*.047).b-.9)*9.,0.,1.),2.)*(1.-field);
+   c=mix(c,ash,wA);float heat=1.+.18*sin(tp*1.4+w.y*.01+w.x*.006);
+   regEm+=((vec3(1.,.3,.05)*halo*.22+vec3(1.,.55,.18)*core*.85)*field*heat*(.6+.4*nt)+vec3(1.,.4,.08)*spark*(.5+.5*sin(tp*4.+w.x*.03))*.35)*wA;}
  // ABYSS: black-violet obsidian in glassy plates, veins of void light pulsing, rifts where the starfield shows through
  if(wV>.004){vec4 vn=texture2D(vxN,w*.0017+vec2(.9)),vn2=texture2D(vxN,w*.0056+vec2(.1,.3));float l=dot(c,vec3(.3,.59,.11));
    vec3 vs=mix(vec3(.04,.03,.04),vec3(.15,.115,.15),clamp(l*1.1+vn.r*.25,0.,1.));vs=mix(vs,vec3(.022,.016,.026),smoothstep(.55,.8,vn2.a)*.6);
@@ -304,29 +319,81 @@ void main(){vec2 d=gl_PointCoord-.5;float r=length(d)*2.;if(r>1.)discard;float a
       else if(L2.night){u.uLook.value.y=L2.alpha*clamp((1-dk)*1.6-.1,0,1)}}}
 
   // ---------------- music and ambience of each land ----------------
-  const TRK=['reg-kingdom','reg-cursed','reg-frost','reg-ash','reg-abyss'],AMB=['wind','amb-cursed','amb-frost','amb-ash','amb-abyss'];
+  const TRK=['reg-kingdom','reg-cursed','reg-frost','reg-ash','reg-abyss'],AMB=['amb-kingdom','amb-cursed','amb-frost','amb-ash','amb-abyss'];
+  // no wind (owner, 2026-11-20): every land has its own living sounds, the Fallen Kingdom a day bed (birds) and a night bed (crickets)
+  const ambFor=i=>i===0&&typeof isNight==='function'&&isNight()?'amb-night':AMB[i];
   let MUS=true;try{MUS=localStorage.getItem('ar_regmusic')!=='0'}catch(e){}
   if(typeof MUS_VOL!=='undefined')Object.assign(MUS_VOL,{'reg-kingdom':.78,'reg-cursed':.9,'reg-frost':.92,'reg-ash':.72,'reg-abyss':.9});
-  if(typeof AMB_VOL!=='undefined')Object.assign(AMB_VOL,{'amb-cursed':.55,'amb-frost':.5,'amb-ash':.45,'amb-abyss':.48});
+  if(typeof AMB_VOL!=='undefined')Object.assign(AMB_VOL,{'amb-kingdom':.55,'amb-night':.5,'amb-cursed':.55,'amb-frost':.55,'amb-ash':.45,'amb-abyss':.48});
   const failed=n=>{try{const t=AU.trk&&AU.trk[n];return !!(t&&t.ok===false)}catch(e){return false}};
   // the menu's sound credits: these tracks are original, made in code for this game (src/tools/region-music.py)
   try{const cl=document.getElementById('credList');if(cl&&MUS)cl.insertAdjacentHTML('beforeend','<h4>เพลงประจำดินแดน</h4><div><b>Fallen Kingdom · Cursed Forest · Frozen Sanctuary · Ashen Wastes · The Abyss และเสียงบรรยากาศของแต่ละดินแดน</b> — แต่งและสังเคราะห์ด้วยโค้ดสำหรับเกมนี้ <small>(ต้นฉบับ)</small></div>')}catch(e){}
-  if(MUS&&typeof AU!=='undefined'&&AU.setMusic&&AU.setAmb){
-    const _sm=AU.setMusic,_sa=AU.setAmb;
-    AU.setMusic=function(m){try{if(state==='play'&&!this.inCave&&(m==='day'||(m==='night'&&S.aud!==0))){const r=TRK[S.aud];if(r&&!failed(r))m=r}}catch(e){}return _sm.call(this,m)};
-    AU.setAmb=function(a){try{if(state==='play'&&this.mode!==2&&(a==='wind'||(a===null&&!this.inCave&&!gameOver&&S.aud!==0))){const r=AMB[S.aud];if(r&&!failed(r))a=r}}catch(e){}return _sa.call(this,a)};}
+  if(MUS&&typeof AU!=='undefined'&&AU.setMusic){const _sm=AU.setMusic;
+    AU.setMusic=function(m){try{if(state==='play'&&!this.inCave&&(m==='day'||(m==='night'&&S.aud!==0))){const r=TRK[S.aud];if(r&&!failed(r))m=r}}catch(e){}return _sm.call(this,m)}}
+  // the ambience follows the land whether or not the land music is on (it replaces the old wind loop)
+  if(typeof AU!=='undefined'&&AU.setAmb){const _sa=AU.setAmb;
+    AU.setAmb=function(a){try{if(state==='play'&&this.mode!==2&&(a==='wind'||(a===null&&!this.inCave&&!gameOver))){const r=ambFor(S.aud);if(r&&!failed(r))a=r}}catch(e){}return _sa.call(this,a)}}
   // which land the music follows: the one clearly underfoot for a moment (no flapping on the borders)
   function audioLand(L,dt){let b=0;for(let i=1;i<5;i++)if(S.w[i]>S.w[b])b=i;
     if(S.fresh){S.fresh=0;if(b!==S.aud){S.aud=b;S.domT=0;if(typeof AU!=='undefined')AU.mt=0}}   // a new match: start on the land underfoot
     else if(typeof inDG==='function'&&inDG(L))return;
     else if(b!==S.aud&&S.w[b]>.55){S.domT+=dt;if(S.domT>1.5){S.aud=b;S.domT=0;if(typeof AU!=='undefined')AU.mt=0}}else S.domT=0;
     // start loading a land's music while still crossing its border (each track streams only once it is near)
-    if(MUS&&typeof AU!=='undefined'&&AU.ctx){S.warm=S.warm||[0,0,0,0,0];for(let i=0;i<5;i++)if(!S.warm[i]&&(S.w[i]>.12||i===S.aud)){S.warm[i]=1;try{AU.track(TRK[i]);if(i)AU.track(AMB[i])}catch(e){}}}}
+    if(typeof AU!=='undefined'&&AU.ctx){S.warm=S.warm||[0,0,0,0,0];for(let i=0;i<5;i++)if(!S.warm[i]&&(S.w[i]>.12||i===S.aud)){S.warm[i]=1;try{if(MUS)AU.track(TRK[i]);AU.track(AMB[i]);if(!i)AU.track('amb-night')}catch(e){}}}}
 
+  // ---------------- footprints in the deep snow ----------------
+  // every hero the player can see wades through deep snow: a soft furrow along the way and a boot print at every step (left,
+  // right, ...), fading after a while. One instanced mesh, a ring of FP.N decals, two shapes in one small atlas; render only
+  const FP={mesh:null,scene:null,i:0,N:900,life:18,last:new Map(),tex:null,U:null};
+  function fpTexture(){const c=document.createElement('canvas');c.width=128;c.height=128;const g=c.getContext('2d');
+    const blob=(x,y,rx,ry,a)=>{const gr=g.createRadialGradient(0,0,0,0,0,1);gr.addColorStop(0,'rgba(255,255,255,'+a+')');gr.addColorStop(.7,'rgba(255,255,255,'+a*.85+')');gr.addColorStop(1,'rgba(255,255,255,0)');
+      g.save();g.translate(x,y);g.scale(rx,ry);g.fillStyle=gr;g.beginPath();g.arc(0,0,1,0,6.283);g.fill();g.restore()};
+    blob(34,40,18,32,1);blob(31,100,14,18,1);for(let k=0;k<4;k++)blob(22+k*6,16+Math.abs(k-1.5)*3,3,3,.5);   // left half: the boot print, toe up
+    const gr=g.createRadialGradient(0,0,0,0,0,1);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.55,'rgba(255,255,255,.7)');gr.addColorStop(1,'rgba(255,255,255,0)');
+    g.save();g.translate(96,64);g.scale(30,62);g.fillStyle=gr;g.beginPath();g.arc(0,0,1,0,6.283);g.fill();g.restore();   // right half: a soft furrow
+    const t=new T.CanvasTexture(c);t.colorSpace=T.NoColorSpace;return t}
+  function fpMesh(R){
+    const geo=new T.PlaneGeometry(1,1),born=new Float32Array(FP.N).fill(-1e4),kind=new Float32Array(FP.N);
+    geo.setAttribute('aBorn',new T.InstancedBufferAttribute(born,1));geo.setAttribute('aKind',new T.InstancedBufferAttribute(kind,1));
+    FP.tex=FP.tex||fpTexture();
+    FP.U=Object.assign(T.UniformsUtils.clone(T.UniformsLib.fog),{map:{value:FP.tex},uT:{value:0},uLife:{value:FP.life},uLit:{value:1},uFowC:R.U.fowC,uFowR:R.U.fowR});
+    const m=new T.ShaderMaterial({uniforms:FP.U,transparent:true,depthWrite:false,fog:true,side:T.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4,
+      vertexShader:`attribute float aBorn,aKind;uniform float uT,uLife;varying vec2 vUv;varying float vA,vK;varying vec2 vW;
+#include <fog_pars_vertex>
+void main(){vUv=vec2(uv.x*.5+aKind*.5,uv.y);vK=aKind;float age=uT-aBorn;vA=smoothstep(0.,.15,age)*(1.-smoothstep(uLife*.4,uLife,age));
+ vec4 wp=modelMatrix*instanceMatrix*vec4(position,1.);vW=wp.xz;vec4 mvPosition=viewMatrix*wp;gl_Position=projectionMatrix*mvPosition;
+#include <fog_vertex>
+}`,
+      fragmentShader:`uniform sampler2D map;uniform float uLit;uniform vec2 uFowC;uniform float uFowR;varying vec2 vUv;varying float vA,vK;varying vec2 vW;
+#include <fog_pars_fragment>
+void main(){float a=texture2D(map,vUv).a*vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,distance(vW,uFowC)))*mix(.85,.28,vK);if(a<.01)discard;
+ gl_FragColor=vec4(vec3(.24,.31,.46)*uLit,a);
+#include <fog_fragment>
+}`});
+    const mesh=new T.InstancedMesh(geo,m,FP.N);mesh.frustumCulled=false;mesh.renderOrder=1;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
+    const z=new T.Matrix4().makeScale(0,0,0);for(let i=0;i<FP.N;i++)mesh.setMatrixAt(i,z);mesh.instanceMatrix.needsUpdate=true;
+    R.scene.add(mesh);FP.mesh=mesh;FP.scene=R.scene;FP.i=0;FP.last.clear()}
+  const fpM=new T.Matrix4(),fpR=new T.Matrix4(),fpX=new T.Matrix4().makeRotationX(-Math.PI/2),fpS=new T.Matrix4();
+  function fpPut(R,x,y,a,sx,sy,kind){const i=FP.i;FP.i=(FP.i+1)%FP.N;
+    fpS.makeScale(sx,sy,1);fpR.makeRotationY(-a-Math.PI/2);fpM.makeTranslation(x,R.gY(x,y)+.8,y).multiply(fpR).multiply(fpX).multiply(fpS);
+    FP.mesh.setMatrixAt(i,fpM);FP.mesh.instanceMatrix.needsUpdate=true;const g=FP.mesh.geometry.attributes;g.aBorn.array[i]=S.t;g.aBorn.needsUpdate=true;g.aKind.array[i]=kind;g.aKind.needsUpdate=true}
+  function footprints(R,L,dt){if(!R.scene||!R.gY||typeof units==='undefined')return;if(!RM.deep)regionMap();
+    if(FP.mesh&&FP.scene!==R.scene){FP.mesh=null}
+    const me=typeof ME==='function'?ME():null,tx=R.tx||L.x,ty=R.ty||L.y;
+    for(const u of units){if(!u.hero||u.dead||Math.abs(u.x-tx)>1600||Math.abs(u.y-ty)>1200){FP.last.delete(u.id);continue}
+      const d=deepAt(u.x,u.y);if(d<.45||(typeof unitVisibleTo==='function'&&!unitVisibleTo(u,me,L))||(u.invisT>0&&u!==me)){FP.last.delete(u.id);continue}
+      let s=FP.last.get(u.id);if(!s){FP.last.set(u.id,{x:u.x,y:u.y,side:1});continue}
+      const dx=u.x-s.x,dy=u.y-s.y,dd=Math.hypot(dx,dy);if(dd>180||u.dash){s.x=u.x;s.y=u.y;continue}   // blinked or dashed: no trail across
+      if(dd<34)continue;if(!FP.mesh)fpMesh(R);
+      const a=Math.atan2(dy,dx),c=Math.cos(a+1.5708),sn=Math.sin(a+1.5708);s.side=-s.side;
+      fpPut(R,(u.x+s.x)/2,(u.y+s.y)/2,a,40,dd+30,1);                                 // the furrow, under both feet
+      fpPut(R,u.x+c*9*s.side,u.y+sn*9*s.side,a,16*s.side,34,0);s.x=u.x;s.y=u.y}       // the print, left or right of the way
+    if(FP.mesh){FP.U.uT.value=S.t;FP.U.uLit.value=.3+.7*(typeof R.dayK==='function'?R.dayK():1)}}
   // ---------------- per frame ----------------
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);
-    try{if(L&&typeof state!=='undefined'&&state==='play'){dt=Math.min(.1,Math.max(0,dt||0));S.t=(S.t+dt)%3600;atmosphere(this,L,dt);weather(this,L,dt);audioLand(L,dt)}}catch(e){warn('frame',e)}return r};
+    try{if(L&&typeof state!=='undefined'&&state==='play'){dt=Math.min(.1,Math.max(0,dt||0));S.t=(S.t+dt)%3600;atmosphere(this,L,dt);weather(this,L,dt);audioLand(L,dt);footprints(this,L,dt)}}catch(e){warn('frame',e)}return r};
   const _ds=P.disposeScene;if(_ds)P.disposeScene=function(){S.fresh=1;try{if(S.lay)for(const l of S.lay){if(l.pts.parent)l.pts.parent.remove(l.pts);l.pts.geometry.dispose();l.m.dispose()}S.lay=null;
-      if(RM.tex){RM.tex.dispose();RM.tex=null;U.uRegMap.value=null}}catch(e){}return _ds.apply(this,arguments)};
-  window.ArenaRegions={state:S,weights:()=>S.w.slice(),land:()=>S.aud,map:()=>regionMap()};
+      if(RM.tex){RM.tex.dispose();RM.tex=null;U.uRegMap.value=null}if(RM.snow){RM.snow.dispose();RM.snow=null;RM.deep=null;U.uSnowMap.value=null}
+      if(FP.mesh){if(FP.mesh.parent)FP.mesh.parent.remove(FP.mesh);FP.mesh.geometry.dispose();FP.mesh.material.dispose();FP.mesh=null}FP.last.clear()}catch(e){}return _ds.apply(this,arguments)};
+  window.ArenaRegions={state:S,weights:()=>S.w.slice(),land:()=>S.aud,map:()=>regionMap(),deep:(x,y)=>{if(!RM.deep)regionMap();return deepAt(x,y)},prints:()=>FP};
 })();

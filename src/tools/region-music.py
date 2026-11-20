@@ -7,8 +7,13 @@ Original pieces written and synthesised in code for this game (no samples, no th
   reg-frost    Frozen Sanctuary D lydian, 72 bpm   glass bells and celesta, airy pad, distant choir, glass harmonica
   reg-ash      Ashen Wastes     E phrygian dominant, 84 bpm   war drums, low horns, reed lead, low choir
   reg-abyss    The Abyss        C locrian, 50 bpm  sub drone, dark choir cluster, struck metal, singing glass
-and the ambience beds (seamless loops): amb-frost (blizzard, ice creaks), amb-cursed (wind in dead trees, creaks, owl,
-whispers), amb-ash (rumble, bubbling lava, crackle, far eruptions), amb-abyss (void hum, moans, glass tones).
+and the ambience beds (seamless loops, no wind noise since 2026-11-20 at the owner's request):
+  amb-kingdom  songbirds, a cuckoo far off, leaves, crickets in the grass       (the Fallen Kingdom by day; it used wind.mp3)
+  amb-night    crickets, frogs by the water, an owl, a nightjar's churr         (the Fallen Kingdom at night; it was silent)
+  amb-cursed   a low uneasy drone, crows, branches creaking, dripping, frogs in the bog, an owl, whispers
+  amb-frost    falling snow hush, ice chimes, ice creaking, a wolf far off
+  amb-ash      rumble, bubbling lava, crackle, far eruptions
+  amb-abyss    void hum, moans, singing glass, echoing drips, slow bubbles
 
 Every track is rendered with its reverb tail folded back into its start, so the loop has no seam.
 usage: python3 src/tools/region-music.py [out_dir] [--only frost,ash] [--sec 30]   (needs numpy, scipy, ffmpeg)
@@ -471,24 +476,40 @@ def wind_layer(n, seed, lo, hi, rate=.12, gust=.5):
     return a * m1 + b * m2 * gust
 def amb_frost():
     D = length(42.) + 3; n = int(D * SR); r = rng(61)
-    L = wind_layer(n, 1, 250, 900, .1) * .9 + wind_layer(n, 2, 900, 2600, .15, .7) * .35
-    R = wind_layer(n, 3, 250, 900, .1) * .9 + wind_layer(n, 4, 900, 2600, .15, .7) * .35
-    # howl: a whistling tone that rises and falls with the gusts
-    f = smooth_noise(n, .18, 8, 380, 780); g = smooth_noise(n, .12, 9, 0, 1.) ** 2
-    howl = filt(sine(f, n) + .3 * sine(f * 2.01, n), 'low', 2000) * g * .22
-    L += howl * .8; R += howl
+    # falling snow: a soft high hush that breathes very slowly, and the lightest air low down
+    hush = lambda sd: filt(rng(sd).standard_normal(n), 'band', (3000, 8000), 2) * smooth_noise(n, .05, sd + 1, .3, 1.) * .028
+    L = hush(1) + filt(rng(3).standard_normal(n), 'low', 380) * smooth_noise(n, .04, 4, .2, 1.) * .1
+    R = hush(2) + filt(rng(5).standard_normal(n), 'low', 380) * smooth_noise(n, .04, 6, .2, 1.) * .1
+    # ice chimes: little clusters of struck crystal, D lydian up high
+    scale = [hz(x) for x in ('D6', 'E6', 'F#6', 'G#6', 'A6', 'B6', 'C#7', 'D7', 'E7')]
+    t0 = 1.
+    while t0 < D - 3:
+        for j in range(int(r.integers(2, 6))):
+            addp(L, R, tinkle(scale[int(r.integers(0, len(scale)))], 1.8, int(r.integers(0, 1e6))) * r.uniform(.05, .1), t0 + j * r.uniform(.07, .22), r.uniform(-.9, .9), 1.)
+        t0 += r.uniform(2.5, 5.5)
     # ice creaks and ticks
     for k in range(9):
-        t0 = r.uniform(1, D - 2); i0 = int(t0 * SR); ln = int(r.uniform(.15, .5) * SR)
+        t0 = r.uniform(1, D - 2); ln = int(r.uniform(.15, .5) * SR)
         cr = np.zeros(ln); rate = r.uniform(40, 120); ph = np.cumsum(np.full(ln, rate / SR) * (1 + .5 * np.sin(np.linspace(0, 3, ln))))
         cr[np.where(np.diff(np.floor(ph)) > 0)[0]] = 1
         cr = filt(cr, 'band', (r.uniform(1200, 2500), r.uniform(3000, 5000))) * np.sin(np.linspace(0, np.pi, ln))
-        addp(L, R, cr, t0, r.uniform(-1, 1), .25)
-    L, R = loopify(L, R); L, R = norm(L, R, -19.5)
+        addp(L, R, cr, t0, r.uniform(-1, 1), .22)
+    addp(L, R, howl(7) * .07, 19., -.6, 1.)
+    L, R = outdoor(L, R, n, .45, make_ir(4., 33, 1.1, .04))
+    L, R = loopify(L, R); L, R = norm(L, R, -22.)
     write('amb-frost', L, R, 64)
 def amb_cursed():
-    D = length(44.) + 3; n = int(D * SR); r = rng(71)
-    L = wind_layer(n, 11, 120, 500, .08, .4) * .7; R = wind_layer(n, 12, 120, 500, .08, .4) * .7
+    D = length(44.) + 3; n = int(D * SR); r = rng(71); t = tt(n)
+    # an uneasy low drone (two tones beating slowly) instead of wind
+    dr = (np.sin(2 * np.pi * 49 * t) + .7 * np.sin(2 * np.pi * 51.7 * t) + .3 * np.sin(2 * np.pi * 98.4 * t)) * smooth_noise(n, .05, 3, .3, 1.)
+    dr += filt(r.standard_normal(n), 'band', (180, 420), 2) * smooth_noise(n, .07, 4, 0, 1.) ** 2 * .5
+    L = dr * .07; R = dr * .07
+    for k in range(4):                        # crows somewhere in the dead trees
+        addp(L, R, filt(caw(int(r.integers(0, 1e6))), 'low', 3500) * .2, r.uniform(2, D - 4), r.uniform(-1, 1), 1.)
+    for k in range(14):                       # water dripping from branches
+        addp(L, R, drip(int(r.integers(0, 1e6))) * .1, r.uniform(1, D - 1), r.uniform(-.9, .9), 1.)
+    for k in range(7):                        # frogs in the bog
+        addp(L, R, filt(croak(int(r.integers(0, 1e6)), r.uniform(120, 170)), 'low', 1200) * .1, r.uniform(1, D - 2), r.uniform(-1, 1), 1.)
     # dead branches creaking
     for k in range(10):
         t0 = r.uniform(1, D - 3); i0 = int(t0 * SR); ln = int(r.uniform(.6, 1.6) * SR)
@@ -497,12 +518,7 @@ def amb_cursed():
         cr = filt(imp, 'band', (300, 650)) + .6 * filt(imp, 'band', (900, 1400)) + .3 * filt(imp, 'band', (2000, 2600))
         cr *= np.sin(np.linspace(0, np.pi, ln)) ** 2
         addp(L, R, cr, t0, r.uniform(-1, 1), .45)
-    # an owl far off: hoo, hoo-hoo
-    for t0 in (9.5, 31.):
-        for off, ln in ((0, .45), (.85, .2), (1.1, .5)):
-            m_ = int(ln * SR); f = 360 * (1 + .06 * np.sin(np.linspace(0, np.pi, m_)))
-            h = sine(f, m_) * np.sin(np.linspace(0, np.pi, m_)) ** 2
-            h = filt(h, 'low', 900) * .18; addp(L, R, h, t0 + off, -.25, .65)
+    owl(L, R, 9.5); owl(L, R, 31.)
     # whispers
     for k in range(5):
         t0 = r.uniform(2, D - 4); i0 = int(t0 * SR); tot = int(2.2 * SR); x = np.zeros(tot); tt0 = 0
@@ -516,7 +532,7 @@ def amb_cursed():
         x = x / (np.abs(x).max() + 1e-9) * .12; addp(L, R, x, t0, r.uniform(-1, 1), .5)
     ir = make_ir(3., 13, 1.2)
     L = L + sg.fftconvolve(L, ir[0])[:n] * .5; R = R + sg.fftconvolve(R, ir[1])[:n] * .5
-    L, R = loopify(L, R); L, R = norm(L, R, -19.5)
+    L, R = loopify(L, R); L, R = norm(L, R, -21.)
     write('amb-cursed', L, R, 64)
 def amb_ash():
     D = length(40.) + 3; n = int(D * SR); r = rng(81)
@@ -543,7 +559,11 @@ def amb_abyss():
     D = length(44.) + 3; n = int(D * SR); r = rng(91); t = tt(n)
     hum = (np.sin(2 * np.pi * 55 * t) + .45 * np.sin(2 * np.pi * 55.6 * t) + .5 * np.sin(2 * np.pi * 82.5 * t) + .25 * np.sin(2 * np.pi * 83.3 * t)) * smooth_noise(n, .08, 5, .5, 1.)
     L = hum * .3; R = hum * .3
-    L += wind_layer(n, 21, 80, 300, .06, .3) * .35; R += wind_layer(n, 22, 80, 300, .06, .3) * .35
+    for k in range(12):                       # drips echoing in the deep
+        addp(L, R, drip(int(r.integers(0, 1e6)), True) * .09, r.uniform(1, D - 1), r.uniform(-.9, .9), 1.)
+    for k in range(int(D * .6)):              # slow deep bubbles rising
+        ln = int(r.uniform(.12, .3) * SR); f = np.linspace(r.uniform(60, 90), r.uniform(120, 180), ln)
+        addp(L, R, sine(f, ln) * np.sin(np.linspace(0, np.pi, ln)) ** 2 * r.uniform(.12, .25), r.uniform(0, D - 1), r.uniform(-.6, .6), .5)
     # moans far away: formant voices gliding
     for k in range(4):
         t0 = r.uniform(2, D - 8); d = r.uniform(4, 7); m_ = int(d * SR); f = np.linspace(r.uniform(110, 160), r.uniform(70, 100), m_)
@@ -557,7 +577,119 @@ def amb_abyss():
     L, R = loopify(L, R); L, R = norm(L, R, -20.5)
     write('amb-abyss', L, R, 64)
 
+# ---------------- sounds of living places (2026-11-20: the beds lose their wind) ----------------
+def chirp(f0, f1, dur, shape=1., fm=0., fmr=0., h2=.12):
+    """a bird note: a pure tone sliding f0 -> f1, a little vibrato, soft ends"""
+    n = max(8, int(dur * SR)); x = np.linspace(0, 1, n); f = f0 + (f1 - f0) * x ** shape
+    if fm: f = f * (1 + fm * np.sin(2 * np.pi * fmr * tt(n)))
+    return (sine(f, n) + h2 * sine(2 * f, n)) * np.sin(np.pi * x) ** .7 * (1 - .35 * x)
+def gap(sec): return np.zeros(max(1, int(sec * SR)))
+def bird(kind, seed):
+    r = rng(seed); seg = []
+    if kind == 'warbler':                     # a quick tumbling phrase
+        for i in range(int(r.integers(5, 10))):
+            f0 = r.uniform(2600, 4800); seg += [chirp(f0, f0 * r.uniform(.72, 1.3), r.uniform(.05, .13), r.uniform(.5, 2.), .03, r.uniform(30, 80)), gap(r.uniform(.02, .07))]
+    elif kind == 'whistle':                   # two clear notes, the second lower
+        f = r.uniform(3100, 3700); seg = [chirp(f, f * 1.01, .3), gap(.07), chirp(f * .86, f * .84, .36)]
+    elif kind == 'trill':                     # a dry rattle of tiny chirps
+        rate = r.uniform(12, 19); f = r.uniform(4200, 6000)
+        for i in range(int(r.uniform(.6, 1.1) * rate)): seg += [chirp(f * 1.12, f * .9, .034), gap(1 / rate - .034)]
+    elif kind == 'robin':                     # rising and falling carols
+        for i in range(int(r.integers(3, 6))):
+            f = r.uniform(2000, 3200); seg += [chirp(f, f * r.uniform(1.15, 1.45), r.uniform(.1, .18), .7, .02, 40), chirp(f * 1.3, f * .95, r.uniform(.08, .14), 1.4), gap(r.uniform(.12, .3))]
+    elif kind == 'cuckoo':                    # cu-ckoo, far off, low and hollow
+        f = r.uniform(680, 760); seg = [chirp(f, f * .97, .26, h2=.03), gap(.13), chirp(f * .8, f * .78, .42, h2=.03)]
+    return np.concatenate(seg)
+def leaves(n, seed, level):
+    """leaves stirring, not wind: a light high rustle in small fluttering bursts"""
+    r = rng(seed); hiss = filt(r.standard_normal(n), 'band', (2000, 8000), 2)
+    flutter = smooth_noise(n, 16, seed + 1, 0, 1) ** 4; swell = smooth_noise(n, .06, seed + 2, .1, 1.) ** 2
+    return hiss * (.12 + flutter) * swell * level
+def crickets(n, seed, level, count=3):
+    """field crickets: each one a carrier around 4.5 kHz gated into chirps of three to four pulses"""
+    r = rng(seed); t = tt(n); L = np.zeros(n); R = np.zeros(n)
+    for k in range(count):
+        f = r.uniform(4100, 5300); rate = r.uniform(1.8, 3.2); pulses = r.integers(3, 5); pr = r.uniform(26, 34)
+        ph = (t * rate + r.random()) % 1; pp = (t * pr) % 1
+        g = ((ph < pulses * rate / pr) & (pp < .55)).astype(float)
+        g = filt(g, 'low', 260) * smooth_noise(n, .05, seed + 10 + k, .4, 1.)
+        y = np.sin(2 * np.pi * f * t + r.random() * 6) * g * r.uniform(.5, 1.) * level
+        pan = r.uniform(-.9, .9); a = (pan + 1) * np.pi / 4; L += y * np.cos(a); R += y * np.sin(a)
+    return L, R
+def drip(seed, big=False):
+    """a water drop: a short upward 'plink' and a ring"""
+    r = rng(seed); n = int(.18 * SR); x = tt(n); f0 = r.uniform(700, 1100) * (.6 if big else 1)
+    f = f0 * (1 + 1.4 * (1 - np.exp(-x * 90))); return sine(f, n) * np.exp(-x * (28 if big else 38)) * (1 - np.exp(-x * 2500))
+def caw(seed):
+    """a crow: two or three harsh caws"""
+    r = rng(seed); seg = []
+    for i in range(int(r.integers(2, 4))):
+        ns = int(r.uniform(.24, .32) * SR); f = np.linspace(r.uniform(430, 520), r.uniform(330, 380), ns); src = saw(f, ns, r.random()) + .5 * r.standard_normal(ns) * .3
+        y = np.zeros(ns)
+        for F, B, g in FORM['ah']: y += g * filt(src, 'band', (F * 1.15 - B, F * 1.15 + B * 1.4))
+        y *= np.sin(np.linspace(0, np.pi, ns)) ** .5 * np.exp(-np.linspace(0, 1.4, ns)); seg += [y / (np.abs(y).max() + 1e-9), gap(r.uniform(.25, .42))]
+    return np.concatenate(seg)
+def croak(seed, f0=None):
+    """a frog: a low buzzing croak or two"""
+    r = rng(seed); seg = []
+    for i in range(int(r.integers(1, 3))):
+        ns = int(r.uniform(.18, .32) * SR); f = (f0 or r.uniform(140, 220)) * (1 + .08 * np.linspace(1, -1, ns)); src = saw(f, ns, r.random())
+        y = filt(src, 'band', (280, 1100)) + .4 * filt(src, 'band', (1500, 2200)); y *= (np.sin(np.linspace(0, np.pi, ns)) ** .4) * (.6 + .4 * np.sin(2 * np.pi * 34 * tt(ns)))
+        seg += [y / (np.abs(y).max() + 1e-9), gap(r.uniform(.12, .3))]
+    return np.concatenate(seg)
+def owl(L, R, t0, pan=-.25, gain=.65):
+    for off, ln in ((0, .45), (.85, .2), (1.1, .5)):
+        m_ = int(ln * SR); f = 360 * (1 + .06 * np.sin(np.linspace(0, np.pi, m_)))
+        h = sine(f, m_) * np.sin(np.linspace(0, np.pi, m_)) ** 2; addp(L, R, filt(h, 'low', 900) * .18, t0 + off, pan, gain)
+def tinkle(f, dur=1.8, seed=0):
+    """an ice chime: a struck crystal, inharmonic partials ringing out"""
+    n = int(dur * SR); t = tt(n); r = rng(seed); y = np.zeros(n)
+    for k, a, d in ((1, 1., 2.6), (2.76, .42, 4.4), (5.4, .2, 7.5), (8.93, .09, 11.)): y += a * np.sin(2 * np.pi * f * k * t + r.random() * 6) * np.exp(-t * d)
+    return y * (1 - np.exp(-t * 900))
+def howl(seed):
+    """a wolf far away: a long gliding call"""
+    r = rng(seed); d = r.uniform(3.2, 4.2); n = int(d * SR); x = np.linspace(0, 1, n)
+    f = np.interp(x, [0, .22, .7, 1], [r.uniform(330, 380), r.uniform(560, 640), r.uniform(540, 600), r.uniform(380, 430)]) * vibrato(n, 5.2, .012, .5, seed)
+    src = saw(f, n, r.random()); y = np.zeros(n)
+    for F, B, g in FORM['oo']: y += g * filt(src, 'band', (F * 1.5 - B, F * 1.5 + B * 2))
+    y = filt(y + .3 * sine(f, n), 'low', 1600) * env_ar(n, .5, 1.2); return y / (np.abs(y).max() + 1e-9)
+def outdoor(L, R, n, wet, ir):
+    return L + sg.fftconvolve(L, ir[0])[:n] * wet, R + sg.fftconvolve(R, ir[1])[:n] * wet
+def amb_kingdom():
+    D = length(46.) + 3; n = int(D * SR); r = rng(101)
+    L = leaves(n, 1, .5); R = leaves(n, 2, .5)
+    cl, cr_ = crickets(n, 3, .05, 2); L += cl; R += cr_
+    kinds = ['warbler', 'whistle', 'robin', 'trill', 'warbler', 'robin']
+    t0 = .6
+    while t0 < D - 3:
+        k = kinds[int(r.integers(0, len(kinds)))]; y = bird(k, int(r.integers(0, 1e6))); far = r.random() < .45
+        if far: y = filt(y, 'low', 3200) * .45
+        pan = r.uniform(-.95, .95); addp(L, R, y * .5, t0, pan, 1.)
+        if r.random() < .5:                      # another of its kind answers from the other side
+            addp(L, R, bird(k, int(r.integers(0, 1e6))) * (.22 if far else .3), t0 + len(y) / SR + r.uniform(.5, 1.6), -pan * .8, 1.)
+        t0 += r.uniform(1.4, 3.4)
+    for t1 in (8., 30.):
+        cu = bird('cuckoo', int(t1)); cu = filt(cu, 'low', 1800) * .32
+        for rep in range(3): addp(L, R, cu, t1 + rep * 1.15, .55, 1.)
+    L, R = outdoor(L, R, n, .22, make_ir(1.6, 31, 1.4, .02))
+    L, R = loopify(L, R); L, R = norm(L, R, -23.)
+    write('amb-kingdom', L, R, 64)
+def amb_night():
+    D = length(44.) + 3; n = int(D * SR); r = rng(111)
+    L, R = crickets(n, 5, .16, 5)
+    L += leaves(n, 6, .18); R += leaves(n, 7, .18)
+    for k in range(9):
+        t0 = r.uniform(1, D - 3); addp(L, R, filt(croak(int(r.integers(0, 1e6)), r.uniform(150, 200)), 'low', 1400) * .16, t0, r.uniform(-1, -.2), 1.)
+    owl(L, R, 6.5, .35, .8); owl(L, R, 27., -.4, .6)
+    # a nightjar's long churr far off
+    ns = int(4.5 * SR); ch = sine(np.full(ns, 1900.) * (1 + .03 * np.sin(2 * np.pi * .7 * tt(ns))), ns) * ((tt(ns) * 38) % 1 < .5) * env_ar(ns, .6, 1.)
+    addp(L, R, filt(ch, 'band', (1200, 2600)) * .05, 16., .7, 1.)
+    L, R = outdoor(L, R, n, .3, make_ir(2.2, 32, 1.2, .03))
+    L, R = loopify(L, R); L, R = norm(L, R, -24.)
+    write('amb-night', L, R, 64)
+
 JOBS = {'kingdom': kingdom, 'cursed': cursed, 'frost': frost, 'ash': ash, 'abyss': abyss,
+        'amb-kingdom': amb_kingdom, 'amb-night': amb_night,
         'amb-frost': amb_frost, 'amb-cursed': amb_cursed, 'amb-ash': amb_ash, 'amb-abyss': amb_abyss}
 if __name__ == '__main__':
     for name, job in JOBS.items():

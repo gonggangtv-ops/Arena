@@ -210,12 +210,6 @@
    "available": true,
    "rotationY": 0,
    "doorAngle": 1.5708,
-   "body": [
-    -0.441,
-    0.421,
-    -0.387,
-    0.346
-   ],
    "biome": "arena",
    "source": "owner upload 2026-11-20 (Meshy_AI_Timberstone_Cottage_1120102340), 2.4M -> 16k tris"
   },
@@ -225,12 +219,6 @@
    "available": true,
    "rotationY": 0,
    "doorAngle": 1.5708,
-   "body": [
-    -0.261,
-    0.301,
-    -0.433,
-    0.221
-   ],
    "biome": "arena",
    "source": "owner upload 2026-11-20 (Meshy_AI_The_Last_Candle_1120101757): 2.65M tris re-simplified by shape to 30k, fresh UV atlas (xatlas), base colour and normal map baked from the full model at 1024, albedo lifted (gamma .5)"
   },
@@ -240,12 +228,6 @@
    "available": true,
    "rotationY": 0,
    "doorAngle": 1.5708,
-   "body": [
-    -0.36,
-    0.35,
-    -0.382,
-    0.302
-   ],
    "biome": "arena",
    "source": "owner upload 2026-11-20 (Meshy_AI_Magic_Potion_House_1120103817), 97k -> 12k tris"
   },

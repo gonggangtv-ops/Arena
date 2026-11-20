@@ -12,13 +12,13 @@
 | ต่อสู้ | Determined Pursuit — https://opengameart.org/content/determined-pursuit-epic-orchestra-loop | Emma_MA | CC0 |
 | วงสุดท้าย | Land of Fearless — https://opengameart.org/node/79931 | Alexandr Zhelanov | CC BY 4.0 |
 | ในถ้ำ | cave ambience (from Fantasy Sound Effects Library) | Little Robot Sound Factory | CC BY 3.0 |
-| ลม | wind1 — https://opengameart.org/content/wind1 | Luke.RUSTLTD | CC0 |
+| ลม (เฉพาะ Cursed Realm; Arena ใช้เสียงบรรยากาศดินแดนแทนตั้งแต่ 2026-11-20) | wind1 — https://opengameart.org/content/wind1 | Luke.RUSTLTD | CC0 |
 | Arena · อาณาจักรล่มสลาย (กลางวัน) | Fallen Kingdom (`reg-kingdom.mp3`) — D dorian: พิณ เครื่องสาย ขลุ่ยไม้ เชลโล กลองเฟรม | ต้นฉบับของเกม · แต่งและสังเคราะห์ด้วยโค้ด `src/tools/region-music.py` (Claude) | ของโปรเจกต์ (ไม่มีลิขสิทธิ์บุคคลที่สาม) |
 | Arena · ป่าต้องสาป | Cursed Forest (`reg-cursed.mp3`) — D minor/phrygian: กล่องดนตรีเพี้ยน เสียงโดรน เครื่องสายไม่ลงตัว เสียงหัวใจ เสียงกระซิบ | 〃 | 〃 |
 | Arena · วิหารน้ำแข็ง | Frozen Sanctuary (`reg-frost.mp3`) — D lydian: ระฆังแก้ว เซเลสตา คณะประสานเสียงไกลๆ ฮาร์โมนิกาแก้ว | 〃 | 〃 |
 | Arena · แดนเถ้าถ่าน | Ashen Wastes (`reg-ash.mp3`) — E phrygian dominant: กลองศึก แตรต่ำ ปี่ลิ้นคู่ คณะประสานเสียงต่ำ | 〃 | 〃 |
 | Arena · ห้วงอเวจี | The Abyss (`reg-abyss.mp3`) — C locrian: โดรนเสียงต่ำ คอรัสมืด โลหะกระทบ แก้วร้อง | 〃 | 〃 |
-| Arena · บรรยากาศดินแดน | `amb-frost` (พายุหิมะ น้ำแข็งลั่น), `amb-cursed` (ลมผ่านต้นไม้ตาย กิ่งลั่น นกฮูก เสียงกระซิบ), `amb-ash` (เสียงครืน ลาวาเดือด ประกายไฟ ภูเขาไฟไกลๆ), `amb-abyss` (เสียงหึ่งของห้วง เสียงคราง แก้ว) | 〃 | 〃 |
+| Arena · บรรยากาศดินแดน (ไม่มีเสียงลมแล้ว) | `amb-kingdom` (นกร้อง นกกาเหว่าไกลๆ ใบไม้ไหว จิ้งหรีด), `amb-night` (กลางคืนอาณาจักร: จิ้งหรีด กบ นกฮูก), `amb-cursed` (เสียงต่ำหลอนๆ อีกา กิ่งลั่น น้ำหยด กบในหนอง นกฮูก เสียงกระซิบ), `amb-frost` (หิมะโปรย ระฆังน้ำแข็ง น้ำแข็งลั่น หมาป่าไกลๆ), `amb-ash` (เสียงครืน ลาวาเดือด ประกายไฟ ภูเขาไฟไกลๆ), `amb-abyss` (เสียงหึ่งของห้วง เสียงคราง แก้ว น้ำหยดก้อง ฟองอากาศ) | 〃 | 〃 |
 
 ## Sound effects
 | Pack | Author | License |
