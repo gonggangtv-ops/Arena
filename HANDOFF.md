@@ -13,7 +13,10 @@
   - เปลี่ยนเสียงลมเป็นเสียงบรรยากาศ
   - พื้นแดนเถ้าถ่านลายตา
   - วิหารน้ำแข็งเพิ่มโซนหิมะหนา เดินแล้วมีรอยเท้า
-  - ใส่งานใน Workspace `a28e7ca` ด้วย: หาไม่เจอ (ไม่มีบน GitHub ในเครื่องทำงาน หรือโฟลเดอร์ที่เชื่อมไว้) เจ้าของให้ข้ามไปก่อน
+  - ใส่งานใน Workspace `a28e7ca` ด้วย
+    - ตอนเช็คแรกยังไม่มีบน GitHub (เจ้าของให้ข้ามไปก่อน)
+    - ต่อมาคือ commit ใน PR #42 ของ Codex (HUD ต่อสู้) ที่ merge เข้า main ระหว่างงานนี้
+    - merge main เข้า branch นี้แล้ว build ใหม่และทดสอบรวมกัน (conflict มีแค่ HANDOFF)
 - บ้าน: world gen (`a.js`, เงื่อนไข `CURSED&&!MOON`)
   - `HOUSEFIT` + `houseFit(h,side)` เก็บกรอบผนังจริง (body) ของ 3 โมเดล และกลางประตูตามแนวหน้า (timber −.178, candle .02, potion .003)
     - ย้ายมาจาก manifest เพื่อให้ world gen กับภาพใช้ค่าเดียวกัน
@@ -71,12 +74,23 @@
   - mobile-low ผ่าน, Cursed Realm ผ่าน, Codex smoke (strict art gate) ผ่านครบ 4 ข้อ
   - บอท index 2 แมตช์และ cursed 1 แมตช์เล่นจนจบ ไม่มี error
   - build ตรงทุกไบต์ทั้งสองไฟล์
+  - หลัง merge main (PR #42 HUD ต่อสู้ของ Codex)
+    - ชุดทดสอบทั้งหมดผ่านอีกรอบ (draw call stress ได้ 56 เหมือนเดิม)
+    - `smoke-arena-combat-hud.py` ผ่านครบ: desktop, mobile, Arena 2D, Cursed
 - harness (scratch)
   - `vfx/housecam.py` (`mode=out|in|behind`)
   - `vfx/snowtest.py` (เดินผ่านหิมะหนา + ภาพใกล้)
   - `vfx/ambtest.py` (เสียงแต่ละดินแดน กลางวัน/คืน)
   - `vfx/wdhouse.py` (เช็คบ้าน 3 seed)
-- ค้าง: งาน `a28e7ca` ของเจ้าของ
+- ค้าง: ไม่มี
+## 2026-11-20 · Codex · HUD ต่อสู้ Arena Royale (branch codex/arena-combat-hud)
+- จัดภาพสกิลเดิม 66 ภาพในกรอบเหล็กเหลี่ยม แสดงระดับสกิล ค่ามานา คูลดาวน์ และสถานะล็อกบนปุ่ม พร้อมตราอาวุธโลหะทั้งอาวุธพื้นฐานและอาวุธหลอม
+- เปลี่ยนกรอบพลังของผู้เล่น เป้าหมาย และยูนิตในฉาก ใช้หลอดเลือดแดงโกเมน มานาฟ้า และโล่สีทอง กรอบ XP แผนที่ ปุ่มเสียง พุ่ง และสกิลพิเศษใช้โทนเดียวกัน
+- บนจอแนวนอนขนาดเล็ก ปุ่มพุ่งและสกิลพิเศษอยู่ภายในจอพร้อมพื้นที่แตะ 60×60 พิกเซลเดิม ตรวจจริงที่ 568×320 และที่ 390×844 หน้าหมุนจอไม่ถูก HUD บัง
+- ซอร์ส: `src/arena-hud.js`, `src/arena-vitals.js`, `src/arena-combat-controls.js`, `src/arena-combat-hud.css`, `src/build.py` และจุดอัปเดต tooltip ใน `src/moonfall-ui.js` ไฟล์ HTML และ JS ที่ build อยู่ใน `app/src/main/assets/`
+- ขอบเขต: HUD ใหม่ติดตั้งใน `index.html` ส่วน `cursed.html` ใช้ชุด HUD เดิม ค่าพลัง เงื่อนไขร่ายสกิล และระบบออนไลน์ใช้โค้ดเกมเดิม
+- ทดสอบ: `node --check`, build ทั้งสองเกม, `cursed.html` ตรงกับไฟล์เดิมทุกไบต์ และเปิด Solo ได้ผ่าน HTTP ชุด `src/tests/smoke-arena-combat-hud.py` ผ่าน Arena 3D บน Chromium ทั้งคีย์บอร์ดและมือถือ Android จำลอง, Arena 2D และ Cursed ตรวจพบภาพครบ 84 ชิ้น รวมสกิล 66 ชิ้น สถานะ HUD ทั้งสี่ การใช้ยา และการอัปสกิล ผ่านโดยไม่มี JavaScript หรือ shader error
+- รายงาน: `moonfall-docs/reports/arena-combat-hud/smoke.json` ทดสอบรอบนี้ใน Solo บน Chromium
 
 ## 2026-11-20 · Claude · บ้าน 3 แบบและ Warrior ตัวใหม่จากโมเดลของเจ้าของ (index เท่านั้น)
 - เจ้าของส่ง GLB มา 4 ไฟล์
