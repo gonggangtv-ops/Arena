@@ -1,0 +1,2618 @@
+[
+  {
+    "case": "desktop",
+    "art": {
+      "skills": [
+        {
+          "key": "sword",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "sword",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "sword",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "axe",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "axe",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "axe",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "dagger",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "dagger",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "dagger",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "bow",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "bow",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "bow",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fire",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fire",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fire",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "frost",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "frost",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "frost",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "gsword",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "gsword",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "gsword",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "xbow",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "xbow",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "xbow",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "storm",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "storm",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "storm",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "soul",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "soul",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "soul",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fMM",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fMM",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fMM",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fMR",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fMR",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fMR",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fRR",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fRR",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fRR",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 2,
+          "painted": true
+        }
+      ],
+      "utilities": [
+        {
+          "key": "hp",
+          "painted": true
+        },
+        {
+          "key": "mp",
+          "painted": true
+        },
+        {
+          "key": "big",
+          "painted": true
+        },
+        {
+          "key": "spd",
+          "painted": true
+        },
+        {
+          "key": "lv",
+          "painted": true
+        },
+        {
+          "key": "rf",
+          "painted": true
+        },
+        {
+          "key": "x1",
+          "painted": true
+        },
+        {
+          "key": "x2",
+          "painted": true
+        },
+        {
+          "key": "x3",
+          "painted": true
+        },
+        {
+          "key": "x4",
+          "painted": true
+        },
+        {
+          "key": "x5",
+          "painted": true
+        },
+        {
+          "key": "x6",
+          "painted": true
+        },
+        {
+          "key": "coin",
+          "painted": true
+        },
+        {
+          "key": "bag",
+          "painted": true
+        },
+        {
+          "key": "shop",
+          "painted": true
+        },
+        {
+          "key": "block",
+          "painted": true
+        },
+        {
+          "key": "dodge",
+          "painted": true
+        },
+        {
+          "key": "special",
+          "painted": true
+        }
+      ],
+      "loaded": 84
+    },
+    "healthy": {
+      "actor": {
+        "id": 1,
+        "hp": 1440,
+        "maxHp": 1440,
+        "mp": 584,
+        "maxMp": 584,
+        "shieldHp": 0,
+        "shieldT": 0,
+        "dead": false,
+        "lvl": 8,
+        "xp": 0,
+        "pts": 0,
+        "wk": "fire",
+        "wt": 2,
+        "wv": 0,
+        "wk2": null,
+        "wt2": -1,
+        "at": -1,
+        "atkDmg": 99.588,
+        "armorV": 3.96,
+        "mr": 0.18,
+        "dmgB": 0,
+        "spdB": 0,
+        "hpB": 0,
+        "gold": 777,
+        "x": 15023.510014312466,
+        "y": 6900.75222592523,
+        "team": 1,
+        "hidden": false,
+        "invisT": 0,
+        "stunT": 0,
+        "rootT": 0,
+        "burnT": 0,
+        "spinT": 0,
+        "lotusT": 0,
+        "fuseT": 0,
+        "atkCd": 0,
+        "skl": [
+          1,
+          1,
+          1
+        ],
+        "cd": [
+          0,
+          0,
+          0
+        ],
+        "bag": [
+          3,
+          2,
+          1,
+          1
+        ],
+        "bcd": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "xs": null,
+        "xl": null,
+        "xcd": null,
+        "dgcd": null
+      },
+      "target": {
+        "id": 2,
+        "hp": 928.8,
+        "maxHp": 1290,
+        "mp": 244,
+        "maxMp": 400,
+        "shieldHp": 0,
+        "shieldT": 0,
+        "dead": false,
+        "lvl": 6,
+        "xp": 0,
+        "pts": 1,
+        "wk": "sword",
+        "wt": 1,
+        "wv": null,
+        "wk2": null,
+        "wt2": -1,
+        "at": -1,
+        "atkDmg": 82.96,
+        "armorV": 6.4,
+        "mr": 0.22999999999999998,
+        "dmgB": 0,
+        "spdB": 0,
+        "hpB": 0,
+        "gold": null,
+        "x": 15263.510014312466,
+        "y": 6900.75222592523,
+        "team": 2,
+        "hidden": false,
+        "invisT": 0,
+        "stunT": 0,
+        "rootT": 0,
+        "burnT": 0,
+        "spinT": 0,
+        "lotusT": 0,
+        "fuseT": 0,
+        "atkCd": 0,
+        "skl": [
+          0,
+          0,
+          0
+        ],
+        "cd": [
+          0,
+          0,
+          0
+        ],
+        "bag": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "bcd": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "xs": null,
+        "xl": null,
+        "xcd": null,
+        "dgcd": null
+      },
+      "calls": {
+        "frame": 1,
+        "target": 1,
+        "bar": 1,
+        "skill": [
+          {
+            "slot": 0,
+            "state": "ready",
+            "cost": 70
+          },
+          {
+            "slot": 1,
+            "state": "ready",
+            "cost": 80
+          },
+          {
+            "slot": 2,
+            "state": "ready",
+            "cost": 160
+          }
+        ],
+        "attack": 1,
+        "images": 33
+      },
+      "metadata": {
+        "frame": {
+          "id": 1,
+          "dead": false,
+          "hp": 1440,
+          "maxHp": 1440,
+          "mp": 584,
+          "maxMp": 584,
+          "shieldHp": 0,
+          "hpRatio": 1,
+          "mpRatio": 1,
+          "shieldRatio": 0,
+          "x": 6,
+          "y": 5,
+          "w": 351,
+          "h": 67.60000000000001,
+          "critical": false,
+          "rail": {
+            "x": 81.19200000000001,
+            "y": 15.4,
+            "width": 260.20799999999997,
+            "hpHeight": 15.600000000000001,
+            "mpY": 34.900000000000006,
+            "mpHeight": 10.4
+          },
+          "mainSwap": {
+            "x": 39.800000000000004,
+            "y": 38.800000000000004,
+            "r": 28.392000000000003
+          },
+          "reserveSwap": null
+        },
+        "lastTarget": {
+          "id": 2,
+          "dead": false,
+          "hp": 928.8,
+          "maxHp": 1290,
+          "mp": 244,
+          "maxMp": 400,
+          "shieldHp": 0,
+          "hpRatio": 0.72,
+          "mpRatio": 0.61,
+          "shieldRatio": 0,
+          "x": 448,
+          "y": 26.5,
+          "w": 384,
+          "h": 15.600000000000001,
+          "relation": "enemy",
+          "name": "HUD Target"
+        },
+        "lastWorld": {
+          "id": 2,
+          "dead": false,
+          "hp": 928.8,
+          "maxHp": 1290,
+          "mp": 244,
+          "maxMp": 400,
+          "shieldHp": 0,
+          "hpRatio": 0.72,
+          "mpRatio": 0.61,
+          "shieldRatio": 0,
+          "x": 602,
+          "y": 376,
+          "w": 76,
+          "h": 8,
+          "relation": "enemy"
+        },
+        "paintCount": 6,
+        "paintCapacity": 12,
+        "drawCounts": {
+          "frame": 3,
+          "target": 2,
+          "world": 4
+        }
+      },
+      "hpPixels": {
+        "hash": "18632f73",
+        "opaque": 4176,
+        "area": 4176,
+        "colors": 76
+      },
+      "mpPixels": {
+        "hash": "328ef59a",
+        "opaque": 2871,
+        "area": 2871,
+        "colors": 69
+      },
+      "skills": [
+        {
+          "hash": "ab023875",
+          "opaque": 10485,
+          "area": 13225,
+          "colors": 319
+        },
+        {
+          "hash": "6adc1dd1",
+          "opaque": 10283,
+          "area": 13225,
+          "colors": 337
+        },
+        {
+          "hash": "a214820a",
+          "opaque": 10402,
+          "area": 13225,
+          "colors": 415
+        }
+      ]
+    },
+    "woundedShield": {
+      "actor": {
+        "id": 1,
+        "hp": 259.2,
+        "maxHp": 1440,
+        "mp": 157.68,
+        "maxMp": 584,
+        "shieldHp": 288,
+        "shieldT": 4,
+        "dead": false,
+        "lvl": 8,
+        "xp": 0,
+        "pts": 0,
+        "wk": "fire",
+        "wt": 2,
+        "wv": 0,
+        "wk2": null,
+        "wt2": -1,
+        "at": -1,
+        "atkDmg": 99.588,
+        "armorV": 3.96,
+        "mr": 0.18,
+        "dmgB": 0,
+        "spdB": 0,
+        "hpB": 0,
+        "gold": 777,
+        "x": 15023.510014312466,
+        "y": 6900.75222592523,
+        "team": 1,
+        "hidden": false,
+        "invisT": 0,
+        "stunT": 0,
+        "rootT": 0,
+        "burnT": 0,
+        "spinT": 0,
+        "lotusT": 0,
+        "fuseT": 0,
+        "atkCd": 0,
+        "skl": [
+          1,
+          1,
+          1
+        ],
+        "cd": [
+          0,
+          0,
+          0
+        ],
+        "bag": [
+          3,
+          2,
+          1,
+          1
+        ],
+        "bcd": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "xs": null,
+        "xl": null,
+        "xcd": null,
+        "dgcd": null
+      },
+      "target": {
+        "id": 2,
+        "hp": 928.8,
+        "maxHp": 1290,
+        "mp": 244,
+        "maxMp": 400,
+        "shieldHp": 0,
+        "shieldT": 0,
+        "dead": false,
+        "lvl": 6,
+        "xp": 0,
+        "pts": 1,
+        "wk": "sword",
+        "wt": 1,
+        "wv": null,
+        "wk2": null,
+        "wt2": -1,
+        "at": -1,
+        "atkDmg": 82.96,
+        "armorV": 6.4,
+        "mr": 0.22999999999999998,
+        "dmgB": 0,
+        "spdB": 0,
+        "hpB": 0,
+        "gold": null,
+        "x": 15263.510014312466,
+        "y": 6900.75222592523,
+        "team": 2,
+        "hidden": false,
+        "invisT": 0,
+        "stunT": 0,
+        "rootT": 0,
+        "burnT": 0,
+        "spinT": 0,
+        "lotusT": 0,
+        "fuseT": 0,
+        "atkCd": 0,
+        "skl": [
+          0,
+          0,
+          0
+        ],
+        "cd": [
+          0,
+          0,
+          0
+        ],
+        "bag": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "bcd": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "xs": null,
+        "xl": null,
+        "xcd": null,
+        "dgcd": null
+      },
+      "calls": {
+        "frame": 1,
+        "target": 1,
+        "bar": 1,
+        "skill": [
+          {
+            "slot": 0,
+            "state": "ready",
+            "cost": 70
+          },
+          {
+            "slot": 1,
+            "state": "ready",
+            "cost": 80
+          },
+          {
+            "slot": 2,
+            "state": "mana",
+            "cost": 160
+          }
+        ],
+        "attack": 1,
+        "images": 35
+      },
+      "metadata": {
+        "frame": {
+          "id": 1,
+          "dead": false,
+          "hp": 259.2,
+          "maxHp": 1440,
+          "mp": 157.68,
+          "maxMp": 584,
+          "shieldHp": 288,
+          "hpRatio": 0.18,
+          "mpRatio": 0.27,
+          "shieldRatio": 0.2,
+          "x": 6,
+          "y": 5,
+          "w": 351,
+          "h": 67.60000000000001,
+          "critical": true,
+          "rail": {
+            "x": 81.19200000000001,
+            "y": 15.4,
+            "width": 260.20799999999997,
+            "hpHeight": 15.600000000000001,
+            "mpY": 34.900000000000006,
+            "mpHeight": 10.4
+          },
+          "mainSwap": {
+            "x": 39.800000000000004,
+            "y": 38.800000000000004,
+            "r": 28.392000000000003
+          },
+          "reserveSwap": null
+        },
+        "lastTarget": {
+          "id": 2,
+          "dead": false,
+          "hp": 928.8,
+          "maxHp": 1290,
+          "mp": 244,
+          "maxMp": 400,
+          "shieldHp": 0,
+          "hpRatio": 0.72,
+          "mpRatio": 0.61,
+          "shieldRatio": 0,
+          "x": 448,
+          "y": 26.5,
+          "w": 384,
+          "h": 15.600000000000001,
+          "relation": "enemy",
+          "name": "HUD Target"
+        },
+        "lastWorld": {
+          "id": 2,
+          "dead": false,
+          "hp": 928.8,
+          "maxHp": 1290,
+          "mp": 244,
+          "maxMp": 400,
+          "shieldHp": 0,
+          "hpRatio": 0.72,
+          "mpRatio": 0.61,
+          "shieldRatio": 0,
+          "x": 602,
+          "y": 376,
+          "w": 76,
+          "h": 8,
+          "relation": "enemy"
+        },
+        "paintCount": 8,
+        "paintCapacity": 12,
+        "drawCounts": {
+          "frame": 5,
+          "target": 4,
+          "world": 7
+        }
+      },
+      "hpPixels": {
+        "hash": "fc324c1a",
+        "opaque": 4176,
+        "area": 4176,
+        "colors": 91
+      },
+      "mpPixels": {
+        "hash": "b957da29",
+        "opaque": 2871,
+        "area": 2871,
+        "colors": 46
+      },
+      "skills": [
+        {
+          "hash": "ab023875",
+          "opaque": 10485,
+          "area": 13225,
+          "colors": 319
+        },
+        {
+          "hash": "6adc1dd1",
+          "opaque": 10283,
+          "area": 13225,
+          "colors": 337
+        },
+        {
+          "hash": "a6463c9a",
+          "opaque": 10402,
+          "area": 13225,
+          "colors": 214
+        }
+      ]
+    },
+    "states": [
+      {
+        "kind": "locked",
+        "pixels": {
+          "hash": "b9b5e292",
+          "opaque": 10207,
+          "area": 13225,
+          "colors": 124
+        },
+        "actual": {
+          "id": 1,
+          "hp": 259.2,
+          "maxHp": 1440,
+          "mp": 584,
+          "maxMp": 584,
+          "shieldHp": 288,
+          "shieldT": 4,
+          "dead": false,
+          "lvl": 8,
+          "xp": 0,
+          "pts": 0,
+          "wk": "fire",
+          "wt": 2,
+          "wv": 0,
+          "wk2": null,
+          "wt2": -1,
+          "at": -1,
+          "atkDmg": 99.588,
+          "armorV": 3.96,
+          "mr": 0.18,
+          "dmgB": 0,
+          "spdB": 0,
+          "hpB": 0,
+          "gold": 777,
+          "x": 15023.510014312466,
+          "y": 6900.75222592523,
+          "team": 1,
+          "hidden": false,
+          "invisT": 0,
+          "stunT": 0,
+          "rootT": 0,
+          "burnT": 0,
+          "spinT": 0,
+          "lotusT": 0,
+          "fuseT": 0,
+          "atkCd": 0,
+          "skl": [
+            0,
+            1,
+            1
+          ],
+          "cd": [
+            0,
+            0,
+            0
+          ],
+          "bag": [
+            3,
+            2,
+            1,
+            1
+          ],
+          "bcd": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "xs": null,
+          "xl": null,
+          "xcd": null,
+          "dgcd": null
+        }
+      },
+      {
+        "kind": "cooldown",
+        "pixels": {
+          "hash": "e5b1e38c",
+          "opaque": 10702,
+          "area": 13225,
+          "colors": 310
+        },
+        "actual": {
+          "id": 1,
+          "hp": 259.2,
+          "maxHp": 1440,
+          "mp": 584,
+          "maxMp": 584,
+          "shieldHp": 288,
+          "shieldT": 4,
+          "dead": false,
+          "lvl": 8,
+          "xp": 0,
+          "pts": 0,
+          "wk": "fire",
+          "wt": 2,
+          "wv": 0,
+          "wk2": null,
+          "wt2": -1,
+          "at": -1,
+          "atkDmg": 99.588,
+          "armorV": 3.96,
+          "mr": 0.18,
+          "dmgB": 0,
+          "spdB": 0,
+          "hpB": 0,
+          "gold": 777,
+          "x": 15023.510014312466,
+          "y": 6900.75222592523,
+          "team": 1,
+          "hidden": false,
+          "invisT": 0,
+          "stunT": 0,
+          "rootT": 0,
+          "burnT": 0,
+          "spinT": 0,
+          "lotusT": 0,
+          "fuseT": 0,
+          "atkCd": 0,
+          "skl": [
+            1,
+            1,
+            1
+          ],
+          "cd": [
+            2.4,
+            0,
+            0
+          ],
+          "bag": [
+            3,
+            2,
+            1,
+            1
+          ],
+          "bcd": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "xs": null,
+          "xl": null,
+          "xcd": null,
+          "dgcd": null
+        }
+      },
+      {
+        "kind": "mana",
+        "pixels": {
+          "hash": "60ad0d1",
+          "opaque": 10485,
+          "area": 13225,
+          "colors": 183
+        },
+        "actual": {
+          "id": 1,
+          "hp": 259.2,
+          "maxHp": 1440,
+          "mp": 0,
+          "maxMp": 584,
+          "shieldHp": 288,
+          "shieldT": 4,
+          "dead": false,
+          "lvl": 8,
+          "xp": 0,
+          "pts": 0,
+          "wk": "fire",
+          "wt": 2,
+          "wv": 0,
+          "wk2": null,
+          "wt2": -1,
+          "at": -1,
+          "atkDmg": 99.588,
+          "armorV": 3.96,
+          "mr": 0.18,
+          "dmgB": 0,
+          "spdB": 0,
+          "hpB": 0,
+          "gold": 777,
+          "x": 15023.510014312466,
+          "y": 6900.75222592523,
+          "team": 1,
+          "hidden": false,
+          "invisT": 0,
+          "stunT": 0,
+          "rootT": 0,
+          "burnT": 0,
+          "spinT": 0,
+          "lotusT": 0,
+          "fuseT": 0,
+          "atkCd": 0,
+          "skl": [
+            1,
+            1,
+            1
+          ],
+          "cd": [
+            0,
+            0,
+            0
+          ],
+          "bag": [
+            3,
+            2,
+            1,
+            1
+          ],
+          "bcd": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "xs": null,
+          "xl": null,
+          "xcd": null,
+          "dgcd": null
+        }
+      },
+      {
+        "kind": "ready",
+        "pixels": {
+          "hash": "ab023875",
+          "opaque": 10485,
+          "area": 13225,
+          "colors": 319
+        },
+        "actual": {
+          "id": 1,
+          "hp": 259.2,
+          "maxHp": 1440,
+          "mp": 584,
+          "maxMp": 584,
+          "shieldHp": 288,
+          "shieldT": 4,
+          "dead": false,
+          "lvl": 8,
+          "xp": 0,
+          "pts": 0,
+          "wk": "fire",
+          "wt": 2,
+          "wv": 0,
+          "wk2": null,
+          "wt2": -1,
+          "at": -1,
+          "atkDmg": 99.588,
+          "armorV": 3.96,
+          "mr": 0.18,
+          "dmgB": 0,
+          "spdB": 0,
+          "hpB": 0,
+          "gold": 777,
+          "x": 15023.510014312466,
+          "y": 6900.75222592523,
+          "team": 1,
+          "hidden": false,
+          "invisT": 0,
+          "stunT": 0,
+          "rootT": 0,
+          "burnT": 0,
+          "spinT": 0,
+          "lotusT": 0,
+          "fuseT": 0,
+          "atkCd": 0,
+          "skl": [
+            1,
+            1,
+            1
+          ],
+          "cd": [
+            0,
+            0,
+            0
+          ],
+          "bag": [
+            3,
+            2,
+            1,
+            1
+          ],
+          "bcd": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "xs": null,
+          "xl": null,
+          "xcd": null,
+          "dgcd": null
+        }
+      }
+    ],
+    "nativeInputs": [
+      {
+        "slot": 0,
+        "expected": {
+          "mp": 584,
+          "cost": 70,
+          "cd": 7
+        },
+        "actual": {
+          "mp": 514,
+          "cd": 7,
+          "projs": 1,
+          "aoes": 0
+        }
+      },
+      {
+        "slot": 1,
+        "expected": {
+          "mp": 584,
+          "cost": 80,
+          "cd": 13
+        },
+        "actual": {
+          "mp": 504,
+          "cd": 13,
+          "projs": 1,
+          "aoes": 1
+        }
+      },
+      {
+        "slot": 2,
+        "expected": {
+          "mp": 584,
+          "cost": 160,
+          "cd": 60
+        },
+        "actual": {
+          "mp": 424,
+          "cd": 60,
+          "projs": 1,
+          "aoes": 2
+        }
+      }
+    ],
+    "blockedInputs": true,
+    "nativeLearning": "Q-key",
+    "seed": 719243,
+    "nativePotion": true,
+    "gameplayUnchangedByPainting": true,
+    "errors": [],
+    "shaderErrors": [],
+    "programs": {
+      "badPrograms": 0,
+      "contextLost": false
+    }
+  },
+  {
+    "case": "mobile",
+    "art": {
+      "skills": [
+        {
+          "key": "sword",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "sword",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "sword",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "axe",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "axe",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "axe",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "dagger",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "dagger",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "dagger",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "bow",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "bow",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "bow",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fire",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fire",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fire",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "frost",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "frost",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "frost",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "gsword",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "gsword",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "gsword",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "xbow",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "xbow",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "xbow",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "storm",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "storm",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "storm",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "soul",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "soul",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "soul",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fMM",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fMM",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fMM",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fMR",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fMR",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fMR",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fMS_fire",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fRS_fire",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fMS_frost",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fRS_frost",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fMS_storm",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fRS_storm",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fRR",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fRR",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fRR",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fSS_steam",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fSS_blaze",
+          "slot": 2,
+          "painted": true
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 0,
+          "painted": true
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 1,
+          "painted": true
+        },
+        {
+          "key": "fSS_tempest",
+          "slot": 2,
+          "painted": true
+        }
+      ],
+      "utilities": [
+        {
+          "key": "hp",
+          "painted": true
+        },
+        {
+          "key": "mp",
+          "painted": true
+        },
+        {
+          "key": "big",
+          "painted": true
+        },
+        {
+          "key": "spd",
+          "painted": true
+        },
+        {
+          "key": "lv",
+          "painted": true
+        },
+        {
+          "key": "rf",
+          "painted": true
+        },
+        {
+          "key": "x1",
+          "painted": true
+        },
+        {
+          "key": "x2",
+          "painted": true
+        },
+        {
+          "key": "x3",
+          "painted": true
+        },
+        {
+          "key": "x4",
+          "painted": true
+        },
+        {
+          "key": "x5",
+          "painted": true
+        },
+        {
+          "key": "x6",
+          "painted": true
+        },
+        {
+          "key": "coin",
+          "painted": true
+        },
+        {
+          "key": "bag",
+          "painted": true
+        },
+        {
+          "key": "shop",
+          "painted": true
+        },
+        {
+          "key": "block",
+          "painted": true
+        },
+        {
+          "key": "dodge",
+          "painted": true
+        },
+        {
+          "key": "special",
+          "painted": true
+        }
+      ],
+      "loaded": 84
+    },
+    "healthy": {
+      "actor": {
+        "id": 1,
+        "hp": 1440,
+        "maxHp": 1440,
+        "mp": 584,
+        "maxMp": 584,
+        "shieldHp": 0,
+        "shieldT": 0,
+        "dead": false,
+        "lvl": 8,
+        "xp": 0,
+        "pts": 0,
+        "wk": "fire",
+        "wt": 2,
+        "wv": 0,
+        "wk2": null,
+        "wt2": -1,
+        "at": -1,
+        "atkDmg": 99.588,
+        "armorV": 3.96,
+        "mr": 0.18,
+        "dmgB": 0,
+        "spdB": 0,
+        "hpB": 0,
+        "gold": 777,
+        "x": 15929.016590230665,
+        "y": 12805.575954305492,
+        "team": 1,
+        "hidden": false,
+        "invisT": 0,
+        "stunT": 0,
+        "rootT": 0,
+        "burnT": 0,
+        "spinT": 0,
+        "lotusT": 0,
+        "fuseT": 0,
+        "atkCd": 0,
+        "skl": [
+          1,
+          1,
+          1
+        ],
+        "cd": [
+          0,
+          0,
+          0
+        ],
+        "bag": [
+          3,
+          2,
+          1,
+          1
+        ],
+        "bcd": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "xs": null,
+        "xl": null,
+        "xcd": null,
+        "dgcd": null
+      },
+      "target": {
+        "id": 2,
+        "hp": 928.8,
+        "maxHp": 1290,
+        "mp": 244,
+        "maxMp": 400,
+        "shieldHp": 0,
+        "shieldT": 0,
+        "dead": false,
+        "lvl": 6,
+        "xp": 0,
+        "pts": 1,
+        "wk": "sword",
+        "wt": 1,
+        "wv": null,
+        "wk2": null,
+        "wt2": -1,
+        "at": -1,
+        "atkDmg": 82.96,
+        "armorV": 6.4,
+        "mr": 0.22999999999999998,
+        "dmgB": 0,
+        "spdB": 0,
+        "hpB": 0,
+        "gold": null,
+        "x": 16169.016590230665,
+        "y": 12805.575954305492,
+        "team": 2,
+        "hidden": false,
+        "invisT": 0,
+        "stunT": 0,
+        "rootT": 0,
+        "burnT": 0,
+        "spinT": 0,
+        "lotusT": 0,
+        "fuseT": 0,
+        "atkCd": 0,
+        "skl": [
+          0,
+          0,
+          0
+        ],
+        "cd": [
+          0,
+          0,
+          0
+        ],
+        "bag": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "bcd": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "xs": null,
+        "xl": null,
+        "xcd": null,
+        "dgcd": null
+      },
+      "calls": {
+        "frame": 1,
+        "target": 1,
+        "bar": 1,
+        "skill": [
+          {
+            "slot": 0,
+            "state": "ready",
+            "cost": 70
+          },
+          {
+            "slot": 1,
+            "state": "ready",
+            "cost": 80
+          },
+          {
+            "slot": 2,
+            "state": "ready",
+            "cost": 160
+          }
+        ],
+        "attack": 1,
+        "images": 33
+      },
+      "metadata": {
+        "frame": {
+          "id": 1,
+          "dead": false,
+          "hp": 1440,
+          "maxHp": 1440,
+          "mp": 584,
+          "maxMp": 584,
+          "shieldHp": 0,
+          "hpRatio": 1,
+          "mpRatio": 1,
+          "shieldRatio": 0,
+          "x": 6,
+          "y": 5,
+          "w": 253.2,
+          "h": 50.699999999999996,
+          "critical": false,
+          "rail": {
+            "x": 62.39399999999999,
+            "y": 12.8,
+            "width": 185.106,
+            "hpHeight": 11.7,
+            "mpY": 27.425,
+            "mpHeight": 7.8
+          },
+          "mainSwap": {
+            "x": 31.349999999999998,
+            "y": 30.349999999999998,
+            "r": 21.293999999999997
+          },
+          "reserveSwap": null
+        },
+        "lastTarget": {
+          "id": 2,
+          "dead": false,
+          "hp": 928.8,
+          "maxHp": 1290,
+          "mp": 244,
+          "maxMp": 400,
+          "shieldHp": 0,
+          "hpRatio": 0.72,
+          "mpRatio": 0.61,
+          "shieldRatio": 0,
+          "x": 295.4,
+          "y": 21.625,
+          "w": 253.2,
+          "h": 11.7,
+          "relation": "enemy",
+          "name": "HUD Target"
+        },
+        "lastWorld": {
+          "id": 2,
+          "dead": false,
+          "hp": 928.8,
+          "maxHp": 1290,
+          "mp": 244,
+          "maxMp": 400,
+          "shieldHp": 0,
+          "hpRatio": 0.72,
+          "mpRatio": 0.61,
+          "shieldRatio": 0,
+          "x": 384,
+          "y": 183.29999999999998,
+          "w": 76,
+          "h": 8,
+          "relation": "enemy"
+        },
+        "paintCount": 6,
+        "paintCapacity": 12,
+        "drawCounts": {
+          "frame": 3,
+          "target": 2,
+          "world": 4
+        }
+      },
+      "hpPixels": {
+        "hash": "5f1e2ac3",
+        "opaque": 2232,
+        "area": 2232,
+        "colors": 58
+      },
+      "mpPixels": {
+        "hash": "f15646f4",
+        "opaque": 1488,
+        "area": 1488,
+        "colors": 52
+      },
+      "skills": [
+        {
+          "hash": "c20bb4cb",
+          "opaque": 2553,
+          "area": 3136,
+          "colors": 196
+        },
+        {
+          "hash": "574c951a",
+          "opaque": 2483,
+          "area": 3136,
+          "colors": 189
+        },
+        {
+          "hash": "b84f7677",
+          "opaque": 2484,
+          "area": 3136,
+          "colors": 235
+        }
+      ]
+    },
+    "woundedShield": {
+      "actor": {
+        "id": 1,
+        "hp": 259.2,
+        "maxHp": 1440,
+        "mp": 157.68,
+        "maxMp": 584,
+        "shieldHp": 288,
+        "shieldT": 4,
+        "dead": false,
+        "lvl": 8,
+        "xp": 0,
+        "pts": 0,
+        "wk": "fire",
+        "wt": 2,
+        "wv": 0,
+        "wk2": null,
+        "wt2": -1,
+        "at": -1,
+        "atkDmg": 99.588,
+        "armorV": 3.96,
+        "mr": 0.18,
+        "dmgB": 0,
+        "spdB": 0,
+        "hpB": 0,
+        "gold": 777,
+        "x": 15929.016590230665,
+        "y": 12805.575954305492,
+        "team": 1,
+        "hidden": false,
+        "invisT": 0,
+        "stunT": 0,
+        "rootT": 0,
+        "burnT": 0,
+        "spinT": 0,
+        "lotusT": 0,
+        "fuseT": 0,
+        "atkCd": 0,
+        "skl": [
+          1,
+          1,
+          1
+        ],
+        "cd": [
+          0,
+          0,
+          0
+        ],
+        "bag": [
+          3,
+          2,
+          1,
+          1
+        ],
+        "bcd": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "xs": null,
+        "xl": null,
+        "xcd": null,
+        "dgcd": null
+      },
+      "target": {
+        "id": 2,
+        "hp": 928.8,
+        "maxHp": 1290,
+        "mp": 244,
+        "maxMp": 400,
+        "shieldHp": 0,
+        "shieldT": 0,
+        "dead": false,
+        "lvl": 6,
+        "xp": 0,
+        "pts": 1,
+        "wk": "sword",
+        "wt": 1,
+        "wv": null,
+        "wk2": null,
+        "wt2": -1,
+        "at": -1,
+        "atkDmg": 82.96,
+        "armorV": 6.4,
+        "mr": 0.22999999999999998,
+        "dmgB": 0,
+        "spdB": 0,
+        "hpB": 0,
+        "gold": null,
+        "x": 16169.016590230665,
+        "y": 12805.575954305492,
+        "team": 2,
+        "hidden": false,
+        "invisT": 0,
+        "stunT": 0,
+        "rootT": 0,
+        "burnT": 0,
+        "spinT": 0,
+        "lotusT": 0,
+        "fuseT": 0,
+        "atkCd": 0,
+        "skl": [
+          0,
+          0,
+          0
+        ],
+        "cd": [
+          0,
+          0,
+          0
+        ],
+        "bag": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "bcd": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "xs": null,
+        "xl": null,
+        "xcd": null,
+        "dgcd": null
+      },
+      "calls": {
+        "frame": 1,
+        "target": 1,
+        "bar": 1,
+        "skill": [
+          {
+            "slot": 0,
+            "state": "ready",
+            "cost": 70
+          },
+          {
+            "slot": 1,
+            "state": "ready",
+            "cost": 80
+          },
+          {
+            "slot": 2,
+            "state": "mana",
+            "cost": 160
+          }
+        ],
+        "attack": 1,
+        "images": 35
+      },
+      "metadata": {
+        "frame": {
+          "id": 1,
+          "dead": false,
+          "hp": 259.2,
+          "maxHp": 1440,
+          "mp": 157.68,
+          "maxMp": 584,
+          "shieldHp": 288,
+          "hpRatio": 0.18,
+          "mpRatio": 0.27,
+          "shieldRatio": 0.2,
+          "x": 6,
+          "y": 5,
+          "w": 253.2,
+          "h": 50.699999999999996,
+          "critical": true,
+          "rail": {
+            "x": 62.39399999999999,
+            "y": 12.8,
+            "width": 185.106,
+            "hpHeight": 11.7,
+            "mpY": 27.425,
+            "mpHeight": 7.8
+          },
+          "mainSwap": {
+            "x": 31.349999999999998,
+            "y": 30.349999999999998,
+            "r": 21.293999999999997
+          },
+          "reserveSwap": null
+        },
+        "lastTarget": {
+          "id": 2,
+          "dead": false,
+          "hp": 928.8,
+          "maxHp": 1290,
+          "mp": 244,
+          "maxMp": 400,
+          "shieldHp": 0,
+          "hpRatio": 0.72,
+          "mpRatio": 0.61,
+          "shieldRatio": 0,
+          "x": 295.4,
+          "y": 21.625,
+          "w": 253.2,
+          "h": 11.7,
+          "relation": "enemy",
+          "name": "HUD Target"
+        },
+        "lastWorld": {
+          "id": 2,
+          "dead": false,
+          "hp": 928.8,
+          "maxHp": 1290,
+          "mp": 244,
+          "maxMp": 400,
+          "shieldHp": 0,
+          "hpRatio": 0.72,
+          "mpRatio": 0.61,
+          "shieldRatio": 0,
+          "x": 384,
+          "y": 183.29999999999998,
+          "w": 76,
+          "h": 8,
+          "relation": "enemy"
+        },
+        "paintCount": 8,
+        "paintCapacity": 12,
+        "drawCounts": {
+          "frame": 5,
+          "target": 4,
+          "world": 7
+        }
+      },
+      "hpPixels": {
+        "hash": "f065516b",
+        "opaque": 2232,
+        "area": 2232,
+        "colors": 80
+      },
+      "mpPixels": {
+        "hash": "c86d4d80",
+        "opaque": 1488,
+        "area": 1488,
+        "colors": 43
+      },
+      "skills": [
+        {
+          "hash": "c20bb4cb",
+          "opaque": 2553,
+          "area": 3136,
+          "colors": 196
+        },
+        {
+          "hash": "574c951a",
+          "opaque": 2483,
+          "area": 3136,
+          "colors": 189
+        },
+        {
+          "hash": "bdb80321",
+          "opaque": 2484,
+          "area": 3136,
+          "colors": 148
+        }
+      ]
+    },
+    "states": [
+      {
+        "kind": "locked",
+        "pixels": {
+          "hash": "5bba59fc",
+          "opaque": 2459,
+          "area": 3136,
+          "colors": 95
+        },
+        "actual": {
+          "id": 1,
+          "hp": 259.2,
+          "maxHp": 1440,
+          "mp": 584,
+          "maxMp": 584,
+          "shieldHp": 288,
+          "shieldT": 4,
+          "dead": false,
+          "lvl": 8,
+          "xp": 0,
+          "pts": 0,
+          "wk": "fire",
+          "wt": 2,
+          "wv": 0,
+          "wk2": null,
+          "wt2": -1,
+          "at": -1,
+          "atkDmg": 99.588,
+          "armorV": 3.96,
+          "mr": 0.18,
+          "dmgB": 0,
+          "spdB": 0,
+          "hpB": 0,
+          "gold": 777,
+          "x": 15929.016590230665,
+          "y": 12805.575954305492,
+          "team": 1,
+          "hidden": false,
+          "invisT": 0,
+          "stunT": 0,
+          "rootT": 0,
+          "burnT": 0,
+          "spinT": 0,
+          "lotusT": 0,
+          "fuseT": 0,
+          "atkCd": 0,
+          "skl": [
+            0,
+            1,
+            1
+          ],
+          "cd": [
+            0,
+            0,
+            0
+          ],
+          "bag": [
+            3,
+            2,
+            1,
+            1
+          ],
+          "bcd": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "xs": null,
+          "xl": null,
+          "xcd": null,
+          "dgcd": null
+        }
+      },
+      {
+        "kind": "cooldown",
+        "pixels": {
+          "hash": "9fa1a45f",
+          "opaque": 2605,
+          "area": 3136,
+          "colors": 181
+        },
+        "actual": {
+          "id": 1,
+          "hp": 259.2,
+          "maxHp": 1440,
+          "mp": 584,
+          "maxMp": 584,
+          "shieldHp": 288,
+          "shieldT": 4,
+          "dead": false,
+          "lvl": 8,
+          "xp": 0,
+          "pts": 0,
+          "wk": "fire",
+          "wt": 2,
+          "wv": 0,
+          "wk2": null,
+          "wt2": -1,
+          "at": -1,
+          "atkDmg": 99.588,
+          "armorV": 3.96,
+          "mr": 0.18,
+          "dmgB": 0,
+          "spdB": 0,
+          "hpB": 0,
+          "gold": 777,
+          "x": 15929.016590230665,
+          "y": 12805.575954305492,
+          "team": 1,
+          "hidden": false,
+          "invisT": 0,
+          "stunT": 0,
+          "rootT": 0,
+          "burnT": 0,
+          "spinT": 0,
+          "lotusT": 0,
+          "fuseT": 0,
+          "atkCd": 0,
+          "skl": [
+            1,
+            1,
+            1
+          ],
+          "cd": [
+            2.4,
+            0,
+            0
+          ],
+          "bag": [
+            3,
+            2,
+            1,
+            1
+          ],
+          "bcd": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "xs": null,
+          "xl": null,
+          "xcd": null,
+          "dgcd": null
+        }
+      },
+      {
+        "kind": "mana",
+        "pixels": {
+          "hash": "8ce8dad6",
+          "opaque": 2553,
+          "area": 3136,
+          "colors": 140
+        },
+        "actual": {
+          "id": 1,
+          "hp": 259.2,
+          "maxHp": 1440,
+          "mp": 0,
+          "maxMp": 584,
+          "shieldHp": 288,
+          "shieldT": 4,
+          "dead": false,
+          "lvl": 8,
+          "xp": 0,
+          "pts": 0,
+          "wk": "fire",
+          "wt": 2,
+          "wv": 0,
+          "wk2": null,
+          "wt2": -1,
+          "at": -1,
+          "atkDmg": 99.588,
+          "armorV": 3.96,
+          "mr": 0.18,
+          "dmgB": 0,
+          "spdB": 0,
+          "hpB": 0,
+          "gold": 777,
+          "x": 15929.016590230665,
+          "y": 12805.575954305492,
+          "team": 1,
+          "hidden": false,
+          "invisT": 0,
+          "stunT": 0,
+          "rootT": 0,
+          "burnT": 0,
+          "spinT": 0,
+          "lotusT": 0,
+          "fuseT": 0,
+          "atkCd": 0,
+          "skl": [
+            1,
+            1,
+            1
+          ],
+          "cd": [
+            0,
+            0,
+            0
+          ],
+          "bag": [
+            3,
+            2,
+            1,
+            1
+          ],
+          "bcd": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "xs": null,
+          "xl": null,
+          "xcd": null,
+          "dgcd": null
+        }
+      },
+      {
+        "kind": "ready",
+        "pixels": {
+          "hash": "c20bb4cb",
+          "opaque": 2553,
+          "area": 3136,
+          "colors": 196
+        },
+        "actual": {
+          "id": 1,
+          "hp": 259.2,
+          "maxHp": 1440,
+          "mp": 584,
+          "maxMp": 584,
+          "shieldHp": 288,
+          "shieldT": 4,
+          "dead": false,
+          "lvl": 8,
+          "xp": 0,
+          "pts": 0,
+          "wk": "fire",
+          "wt": 2,
+          "wv": 0,
+          "wk2": null,
+          "wt2": -1,
+          "at": -1,
+          "atkDmg": 99.588,
+          "armorV": 3.96,
+          "mr": 0.18,
+          "dmgB": 0,
+          "spdB": 0,
+          "hpB": 0,
+          "gold": 777,
+          "x": 15929.016590230665,
+          "y": 12805.575954305492,
+          "team": 1,
+          "hidden": false,
+          "invisT": 0,
+          "stunT": 0,
+          "rootT": 0,
+          "burnT": 0,
+          "spinT": 0,
+          "lotusT": 0,
+          "fuseT": 0,
+          "atkCd": 0,
+          "skl": [
+            1,
+            1,
+            1
+          ],
+          "cd": [
+            0,
+            0,
+            0
+          ],
+          "bag": [
+            3,
+            2,
+            1,
+            1
+          ],
+          "bcd": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "xs": null,
+          "xl": null,
+          "xcd": null,
+          "dgcd": null
+        }
+      }
+    ],
+    "nativeInputs": [
+      {
+        "slot": 0,
+        "expected": {
+          "mp": 584,
+          "cost": 70,
+          "cd": 7
+        },
+        "actual": {
+          "mp": 514,
+          "cd": 7,
+          "projs": 1,
+          "aoes": 0
+        }
+      },
+      {
+        "slot": 1,
+        "expected": {
+          "mp": 584,
+          "cost": 80,
+          "cd": 13
+        },
+        "actual": {
+          "mp": 504,
+          "cd": 13,
+          "projs": 1,
+          "aoes": 1
+        }
+      },
+      {
+        "slot": 2,
+        "expected": {
+          "mp": 584,
+          "cost": 160,
+          "cd": 60
+        },
+        "actual": {
+          "mp": 424,
+          "cd": 60,
+          "projs": 1,
+          "aoes": 2
+        }
+      }
+    ],
+    "blockedInputs": true,
+    "nativeLearning": "plus-touch",
+    "seed": 719243,
+    "nativePotion": true,
+    "gameplayUnchangedByPainting": true,
+    "errors": [],
+    "shaderErrors": [],
+    "programs": {
+      "badPrograms": 0,
+      "contextLost": false
+    }
+  },
+  {
+    "case": "arena-2d",
+    "unchanged": true,
+    "frame": {
+      "id": 1,
+      "dead": false,
+      "hp": 1440,
+      "maxHp": 1440,
+      "mp": 584,
+      "maxMp": 584,
+      "shieldHp": 0,
+      "hpRatio": 1,
+      "mpRatio": 1,
+      "shieldRatio": 0,
+      "x": 6,
+      "y": 5,
+      "w": 351,
+      "h": 67.60000000000001,
+      "critical": false,
+      "rail": {
+        "x": 81.19200000000001,
+        "y": 15.4,
+        "width": 260.20799999999997,
+        "hpHeight": 15.600000000000001,
+        "mpY": 34.900000000000006,
+        "mpHeight": 10.4
+      },
+      "mainSwap": {
+        "x": 39.800000000000004,
+        "y": 38.800000000000004,
+        "r": 28.392000000000003
+      },
+      "reserveSwap": null
+    },
+    "pixels": {
+      "hash": "a3ebc757",
+      "opaque": 1024000,
+      "area": 1024000,
+      "colors": 1227
+    },
+    "view3D": false,
+    "errors": [],
+    "shaderErrors": []
+  },
+  {
+    "case": "cursed-isolated-start",
+    "arenaHUDAbsent": true,
+    "errors": [],
+    "shaderErrors": []
+  }
+]

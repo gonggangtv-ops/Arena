@@ -64,7 +64,7 @@ window.installMoonfallUI=function(){
     ctx.restore();if(hover===i)updateHint();
   };
   drawHUD=function(){if(state!=='play'||ME()?.dead)hint.hidden=true;return original.hud();};
-  window.MoonfallUI={state:skillState,snapshot:()=>({state:loadState,error:loadError,loadedIcons:icons.size,atlas,hotkeys:[...hotkeys]}),
+  window.MoonfallUI={state:skillState,refreshHint:i=>{if(hover===i)updateHint();},snapshot:()=>({state:loadState,error:loadError,loadedIcons:icons.size,atlas,hotkeys:[...hotkeys]}),
     icon:(key,i)=>icons.get(key+':'+i)||null,item:key=>icons.get('item:'+key)||null};
   (async()=>{
     try{

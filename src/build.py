@@ -30,17 +30,20 @@ if arena:game_files[-1:-1]=['arena-vfx-tex.js','arena-vfx-runtime.js','arena-vfx
 if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js','p5-heroes.js']
 if arena:game_files[-1:-1]=['summoner.js','summoner-fx.js']   # fifth class: the Spirit Tome (Arena Royale only)
 if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js']
-if arena:game_files.append('arena-menu.js')
+if arena:game_files.extend(['arena-menu.js','arena-hud.js','arena-vitals.js','arena-combat-controls.js'])
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in game_files)
 js='const CURSED='+('true' if sys_on else 'false')+';const MOON='+('true' if cur else 'false')+';\n'+js
 MOON=['celestial-assets.js','celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js','moonfall-village.js','moonfall-ui.js','moonfall-menu.js','moonfall-inventory.js','moonfall-loading.js']
 MOONCSS=['celestial-theme.css','moonfall-ui.css','moonfall-menu.css','moonfall-inventory.css','moonfall-loading.css']
 if arena:MOON=[f for f in MOON if f not in ('celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js')]
-arena_style='\n<style>'+open(os.path.join(D,'arena-menu.css'),encoding='utf-8').read()+'</style>\n' if arena else ''
+arena_style='\n<style>'+'\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['arena-menu.css','arena-combat-hud.css'])+'</style>\n' if arena else ''
 if sys_on:
     if arena:
         js += "\nmoody=lsGet('ar_tone2','dark')==='dark';syncTone();installArenaMenuUX();\n"
-    js += "\ninstallMoonfallInventory();installMoonfallLoading();\n"
+    js += "\ninstallMoonfallInventory();"
+    if arena:
+        js += "installArenaHud();installArenaVitals();installArenaCombatControls();"
+    js += "installMoonfallLoading();\n"
     import re
     if cur:sh=sh.replace('<title>Arena Royale</title>','<title>The Cursed Realm</title>')
     sh=sh.replace('<title>Arena Royale</title>','<title>Arena Royale</title>').replace('<meta name="theme-color" content="#0c0a08">','<meta name="theme-color" content="#080b16">')
