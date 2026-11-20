@@ -336,7 +336,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     {const gt=WD.tg,n2=gt.n,M=Math.round(WORLD*.025),md=paintMasks(.025).getContext('2d').getImageData(0,0,M,M).data;const dens=new Uint8Array(n2*n2);
       for(let j=0;j<n2;j++)for(let i=0;i<n2;i++){const k=j*n2+i,h=gt.hg[k];if(h>20||h<-1.5||gt.blk[k]){continue}const mi=(Math.floor(j/n2*M)*M+Math.floor(i/n2*M))*4;const road=md[mi]/255,cob=md[mi+1]/255,fld=md[mi+2]/255;
         dens[k]=Math.round(255*clamp(1-road*1.6-cob*2-fld*2,0,1))}
-      for(const hs of WD.houses)for(let y=hs.y;y<hs.y+hs.h;y+=20)for(let x=hs.x;x<hs.x+hs.w;x+=20){const i=Math.floor(x/gt.C),j=Math.floor(y/gt.C);if(i>=0&&j>=0&&i<n2&&j<n2)dens[j*n2+i]=0}
+      for(const h0 of WD.houses){const hs=h0.al||h0;for(let y=hs.y;y<hs.y+hs.h;y+=20)for(let x=hs.x;x<hs.x+hs.w;x+=20){const i=Math.floor(x/gt.C),j=Math.floor(y/gt.C);if(i>=0&&j>=0&&i<n2&&j<n2)dens[j*n2+i]=0}}
       for(let j=0;j<n2;j++)for(let i=0;i<n2;i++){const k=j*n2+i;if(dens[k]&&caveK((i+.5)*gt.C,(j+.5)*gt.C)>0)dens[k]=0}
       if(WD.dg){const D=WD.dg;for(const e of D.ents)for(let y=e.y-160;y<e.y+160;y+=20)for(let x=e.x-160;x<e.x+160;x+=20){const i=Math.floor(x/gt.C),j=Math.floor(y/gt.C);if(i>=0&&j>=0&&i<n2&&j<n2)dens[j*n2+i]=0}
         for(let y=D.y;y<D.y+D.h;y+=20)for(let x=D.x;x<D.x+D.w;x+=20){const i=Math.floor(x/gt.C),j=Math.floor(y/gt.C);if(i>=0&&j>=0&&i<n2&&j<n2)dens[j*n2+i]=0}}

@@ -447,6 +447,22 @@ function heightAt(x,y){const g=WD.tg;if(x<0||y<0||x>WORLD||y>WORLD)return terrH(
 function solidAt(x,y){const g=WD.tg;const i=Math.floor(x/g.C),j=Math.floor(y/g.C);if(i<0||j<0||i>=g.n||j>=g.n)return true;return g.sol[j*g.n+i]===1}
 function walkable(x,y,m){return sdfAt(x,y)>(m||0)}
 
+// Arena Royale (index): one house model per land, the owner's (2026-11-20; REG lands: kingdom, cursed, frost, ash, abyss).
+// moonfall-village.js stretches the model over the picked footprint + 56 with its door turned to the doorway; the house's walls,
+// doorway, loot and chests then follow the model's own walls ("body": where the walls sit in the model's box, from cross-sections
+// at 15-30% of its height, x0,x1,z0,z1 as fractions of the box) and its door (middle of the door along the front, fraction of the
+// width; the door faces +z). The picked footprint stays as h.al, so spacing, trees, grass and spawn spots keep clear of the
+// whole model (eaves, porch, dead trees). Pure function of the footprint, door side and REG (fixed seeds): same on every machine.
+const HOUSEFIT={land:['house-timber','house-candle','house-timber','house-timber','house-potion'],
+  'house-timber':{body:[-.441,.421,-.387,.346],door:-.178},'house-candle':{body:[-.261,.301,-.433,.221],door:.02},'house-potion':{body:[-.36,.35,-.382,.302],door:.003}};
+const HOUSE_WANT={r:0,b:Math.PI/2,l:Math.PI,t:-Math.PI/2};
+function houseFit(h,side){if(typeof REG==='undefined'||!REG.at)return null;
+  const cx=h.x+h.w/2,cy=h.y+h.h/2,key=HOUSEFIT.land[REG.at(cx,cy)]||HOUSEFIT.land[0],F=HOUSEFIT[key],b=F.body;
+  const rot=Math.PI/2-HOUSE_WANT[side],sw=Math.abs(Math.sin(rot))>.5,sx=(sw?h.h:h.w)+56,sz=(sw?h.w:h.h)+56;   // what model x and z are stretched over
+  const bw=(b[1]-b[0])*sx,bd=(b[3]-b[2])*sz,W=Math.round(sw?bd:bw),H=Math.round(sw?bw:bd);
+  const off=(F.door-(b[0]+b[1])/2)*sx;   // the door's offset from the middle of the walls along the front (model +x), turned like the model
+  return {key,x:Math.round(cx-W/2),y:Math.round(cy-H/2),w:W,h:H,dl:side==='b'||side==='l'?off:-off}}
+
 function genWorld(seed){
   SR=mulberry32(seed);
   const w={seed,houses:[],walls:[],trees:[],mtrees:[],rocks:[],solids:[],bushes:[],caves:[],lanterns:[],mush:[],crystals:[],grass:[],flowers:[],villages:[],items:[],mobs:[],camps:[],paths:[],
@@ -559,15 +575,17 @@ function genWorld(seed){
       const hw=sr(230,320),hh=sr(190,250);const cx=V.x+Math.cos(a)*d,cy=V.y+Math.sin(a)*d;const h={x:cx-hw/2,y:cy-hh/2,w:hw,h:hh};
       const cs=[[h.x,h.y],[h.x+h.w,h.y],[h.x,h.y+h.h],[h.x+h.w,h.y+h.h],[cx,cy]];
       if(cs.some(q=>outsideD(q[0],q[1])>-140||Math.abs(riverD(q[0],q[1]))<riverHW(q[1])+80||lakeD(q[0],q[1])<70||poolD(q[0],q[1])<80))continue;
-      if(w.houses.some(o=>!(h.x>o.x+o.w+70||h.x+h.w<o.x-70||h.y>o.y+o.h+70||h.y+h.h<o.y-70)))continue;
+      if(w.houses.some(o=>{const q=o.al||o;return !(h.x>q.x+q.w+70||h.x+h.w<q.x-70||h.y>q.y+q.h+70||h.y+h.h<q.y-70)}))continue;
       if(Math.hypot(cx-V.x,cy-V.y)<(V.plaza?210:170)+(CURSED?70:0)+Math.max(hw,hh)/2)continue;
       const dx=V.x-cx,dy=V.y-cy;const side=Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'b':'t');
       h.side=side;h.dire=V.dire;h.v=vi;h.style=V.style;const pal=ROOF[V.style];h.roof=pal[Math.floor(SR()*pal.length)];h.roofA=1;h.id=w.houses.length;h.seed=Math.floor(SR()*1e6);
+      if(CURSED&&!MOON){const f=houseFit(h,side);if(f){h.al={x:h.x,y:h.y,w:h.w,h:h.h};h.mk=f.key;h.x=f.x;h.y=f.y;h.w=f.w;h.h=f.h;h.dl=f.dl}}
       const T=16,G=86;const sides={t:[h.x,h.y,h.w,T],b:[h.x,h.y+h.h-T,h.w,T],l:[h.x,h.y,T,h.h],r:[h.x+h.w-T,h.y,T,h.h]};
       for(const s of['t','b','l','r']){const [x,y,ww,hh2]=sides[s];
         if(s!==side){w.walls.push({x,y,w:ww,h:hh2,house:h.id});continue}
-        if(s==='t'||s==='b'){const m=x+ww/2;w.walls.push({x,y,w:m-G/2-x,h:hh2,house:h.id},{x:m+G/2,y,w:x+ww-(m+G/2),h:hh2,house:h.id});h.door={x:m,y:y+hh2/2}}
-        else{const m=y+hh2/2;w.walls.push({x,y,w:ww,h:m-G/2-y,house:h.id},{x,y:m+G/2,w:ww,h:y+hh2-(m+G/2),house:h.id});h.door={x:x+ww/2,y:m}}}
+        const dm=(lo,len)=>clamp(lo+len/2+(h.dl||0),lo+T+G/2+6,lo+len-T-G/2-6);
+        if(s==='t'||s==='b'){const m=dm(x,ww);w.walls.push({x,y,w:m-G/2-x,h:hh2,house:h.id},{x:m+G/2,y,w:x+ww-(m+G/2),h:hh2,house:h.id});h.door={x:m,y:y+hh2/2}}
+        else{const m=dm(y,hh2);w.walls.push({x,y,w:ww,h:m-G/2-y,house:h.id},{x,y:m+G/2,w:ww,h:y+hh2-(m+G/2),house:h.id});h.door={x:x+ww/2,y:m}}}
       const nx=side==='r'?1:side==='l'?-1:0,ny=side==='b'?1:side==='t'?-1:0;
       h.out={x:h.door.x+nx*55,y:h.door.y+ny*55};h.inn={x:h.door.x-nx*55,y:h.door.y-ny*55};
       w.lanterns.push({x:h.out.x+(ny?52:0),y:h.out.y+(nx?52:0),dire:V.dire,small:1});
@@ -580,11 +598,11 @@ function genWorld(seed){
         for(let q=0;q<nb;q++){const f=nb===1?sr(.3,.7):q?sr(.68,.85):sr(.15,.32);let bx,by;
           if(back==='t'||back==='b'){bx=lerp(h.x+60,h.x+h.w-60,f);by=back==='t'?h.y+T+26:h.y+h.h-T-26}else{by=lerp(h.y+60,h.y+h.h-60,f);bx=back==='l'?h.x+T+26:h.x+h.w-T-26}
           w.boxes.push({id:w.boxes.length,x:bx,y:by,a:Math.atan2(h.door.y-by,h.door.x-bx),house:h.id});w.rocks.push({x:bx,y:by,r:18,prop:1})}}
-      const corners=[[h.x-24,h.y+26],[h.x+h.w+24,h.y+26],[h.x-24,h.y+h.h-26],[h.x+h.w+24,h.y+h.h-26]];
+      const HA=h.al||h,corners=[[HA.x-24,HA.y+26],[HA.x+HA.w+24,HA.y+26],[HA.x-24,HA.y+HA.h-26],[HA.x+HA.w+24,HA.y+HA.h-26]];
       let np=0;for(const c of corners){if(np>=2)break;if(Math.hypot(c[0]-h.out.x,c[1]-h.out.y)<90||SR()<.35)continue;const t=SR()<.5?'barrel':'crate';w.props.push({x:c[0],y:c[1],t});w.rocks.push({x:c[0],y:c[1],r:15,prop:1});np++}
       w.houses.push(h);placed++}
     // village extras
-    if(V.plaza){for(let k=0;k<4;k++){const a=k/4*Math.PI*2+.78+sr(-.2,.2);const p={x:V.x+Math.cos(a)*250,y:V.y+Math.sin(a)*250};if(w.houses.some(h=>inRect(p,h,50)))continue;
+    if(V.plaza){for(let k=0;k<4;k++){const a=k/4*Math.PI*2+.78+sr(-.2,.2);const p={x:V.x+Math.cos(a)*250,y:V.y+Math.sin(a)*250};if(w.houses.some(h=>inRect(p,h.al||h,50)))continue;
       const st={x:p.x,y:p.y,a:a+Math.PI/2,c:['#c83a3a','#3a6ac8','#e0a020','#3a9a5a'][k]};w.stalls.push(st);w.solids.push({x:p.x,y:p.y,r:34,t:'stall'})}
       for(let k=0;k<6;k++){const a=k/6*Math.PI*2;w.banners.push({x:V.x+Math.cos(a)*205,y:V.y+Math.sin(a)*205,c:LOOKS[k].c})}}
     if(V.key==='farm'){for(let k=0;k<2;k++){for(let t=0;t<60;t++){const a=sr(0,6.3),d=V.r+sr(110,260);const p={x:V.x+Math.cos(a)*d,y:V.y+Math.sin(a)*d};
@@ -593,7 +611,7 @@ function genWorld(seed){
         const R=Math.hypot(f.w,f.h)/2;if(outsideD(p.x,p.y)>-R-140||Math.abs(riverD(p.x,p.y))<riverHW(p.y)+R+60||lakeD(p.x,p.y)<R+60)continue;
         if(w.fields.some(o=>dist(o,f)<R+Math.hypot(o.w,o.h)/2+40)||w.windmills.some(m=>dist(m,f)<R+90)||w.villages.some(v=>dist(v,f)<v.r+R*.8))continue;w.fields.push(f);break}}
       for(let k=0;k<8;k++){const a=sr(0,6.3),d=V.r+sr(60,200);const p={x:V.x+Math.cos(a)*d,y:V.y+Math.sin(a)*d};w.hay.push({x:p.x,y:p.y,r:22,a:sr(0,3)});w.rocks.push({x:p.x,y:p.y,r:22,prop:1})}}
-    if(V.key==='wood'){for(let k=0;k<5;k++){const a=sr(0,6.3),d=V.r*sr(.2,.45);const p={x:V.x+Math.cos(a)*d,y:V.y+Math.sin(a)*d};if(w.houses.some(h=>inRect(p,h,40))||dist(p,V)<90)continue;w.logs.push({x:p.x,y:p.y,a:sr(0,3.1)});w.rocks.push({x:p.x,y:p.y,r:30,prop:1})}}
+    if(V.key==='wood'){for(let k=0;k<5;k++){const a=sr(0,6.3),d=V.r*sr(.2,.45);const p={x:V.x+Math.cos(a)*d,y:V.y+Math.sin(a)*d};if(w.houses.some(h=>inRect(p,h.al||h,40))||dist(p,V)<90)continue;w.logs.push({x:p.x,y:p.y,a:sr(0,3.1)});w.rocks.push({x:p.x,y:p.y,r:30,prop:1})}}
     if(V.key==='lake'){const a=Math.atan2(V.y-Lk.y,V.x-Lk.x);let sh=null;for(let d=Lk.R+300;d>Lk.R-300;d-=10){const p={x:Lk.x+Math.cos(a)*d,y:Lk.y+Math.sin(a)*d};if(lakeD(p.x,p.y)<0){sh=p;break}}
       if(sh){const ax=-Math.cos(a),ay=-Math.sin(a);const len=260;w.bridges.push({x:sh.x+ax*(len/2-50),y:sh.y+ay*(len/2-50),ax,ay,len,wid:54,dock:1})}}
   });
@@ -655,7 +673,7 @@ function genWorld(seed){
     const p={x:gx*TS+sr(10,TS-10),y:gy*TS+sr(10,TS-10)};const o=outsideD(p.x,p.y);if(o>-30)continue;
     const nz=w.noise(p.x,p.y),foot=o>-420;const dire=isDire(p.x,p.y);const rdist=Math.abs(riverD(p.x,p.y))-riverHW(p.y);
     let want=nz>.53||(foot&&nz>.43)||(dire&&nz>.5);if(!want&&rdist>0&&rdist<170&&SR()<.12)want=true;if(!want)continue;if(SR()<(CURSED?.5:.22))continue;
-    if(!free(p,42)||pathNear(p,45)||rockNear(p,44)||w.houses.some(h=>inRect(p,h,52))||!tFree(p,104))continue;
+    if(!free(p,42)||pathNear(p,45)||rockNear(p,44)||w.houses.some(h=>inRect(p,h.al||h,52))||!tFree(p,104))continue;
     const roll=SR();let v;
     if(rdist>0&&rdist<170&&!foot)v=6;else if(foot)v=dire?(roll<.6?4:0):(roll<.75?0:2);else if(dire)v=roll<.32?3:roll<.62?4:roll<.8?5:1;else v=roll<.42?1:roll<.62?2:roll<.9?0:6;
     if(MOON){v=REG.tree(p.x,p.y,v,roll);if(v<0)continue}
@@ -665,7 +683,7 @@ function genWorld(seed){
   // Arena Royale (owner 2026-11-19): Big Mango Trees, 10% more trees, scattered over the open ground between the woods. They are
   // ordinary birch-class trees (collision, felling) flagged mg; the renderer swaps in the owner's model
   if(!MOON){const nM=Math.round(w.trees.length*.10);let mN=0;for(let k=0;k<nM*60&&mN<nM;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};
-    if(outsideD(p.x,p.y)>-140||w.noise(p.x,p.y)>.5)continue;if(!free(p,48)||pathNear(p,60)||rockNear(p,56)||w.houses.some(h=>inRect(p,h,70))||!tFree(p,170))continue;
+    if(outsideD(p.x,p.y)>-140||w.noise(p.x,p.y)>.5)continue;if(!free(p,48)||pathNear(p,60)||rockNear(p,56)||w.houses.some(h=>inRect(p,h.al||h,70))||!tFree(p,170))continue;
     const t={x:p.x,y:p.y,r:22,cr:sr(72,96),v:2,mg:1,ph:sr(0,6),h:sr(.9,1.15)};w.trees.push(t);tgrid[Math.floor(p.y/TS)*gw+Math.floor(p.x/TS)].push(t);mN++}}
   // decorative pines on the mountain slopes (no collision)
   for(let k=0;k<33000&&w.mtrees.length<5200;k++){const a=sr(0,6.283),d=bndR(a)+sr(20,1000);const x=CX+Math.cos(a)*d,y=CY+Math.sin(a)*d;const o=d-bndR(a);
@@ -674,22 +692,22 @@ function genWorld(seed){
   // bushes
   for(let k=0;k<9600&&w.bushes.length<(MOON?620:0);k++){   // Arena Royale: no berry bushes (owner 2026-11-18), tall grass still hides
   const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300),r:sr(44,66)};
-    if(!free(p,30)||pathNear(p,25)||w.houses.some(h=>inRect(p,h,p.r+20))||!tFree(p,p.r+14)||rockNear(p,p.r)||w.bushes.some(b=>dist(b,p)<b.r+p.r+50))continue;w.bushes.push(p)}
+    if(!free(p,30)||pathNear(p,25)||w.houses.some(h=>inRect(p,h.al||h,p.r+20))||!tFree(p,p.r+14)||rockNear(p,p.r)||w.bushes.some(b=>dist(b,p)<b.r+p.r+50))continue;w.bushes.push(p)}
   if(MOON)for(const c of w.caves){const ex=c.mx,ey=c.my,px=-Math.sin(c.gap),py=Math.cos(c.gap);for(const s of[1,-1]){const p={x:ex+px*s*95+Math.cos(c.gap)*30,y:ey+py*s*95+Math.sin(c.gap)*30,r:54};if(walkable(p.x,p.y,10))w.bushes.push(p)}}
   // tall-grass meadows: big patches to hide in (inside one you are hidden, like in a bush)
   {const ring=(p,r)=>{for(let a=0;a<6.28;a+=1.05){const x=p.x+Math.cos(a)*r,y=p.y+Math.sin(a)*r;if(!walkable(x,y,6)||inWater(x,y))return false}return true};
    for(let k=0;k<14000&&w.tgrass.length<280;k++){const p={x:sr(400,WORLD-400),y:sr(400,WORLD-400),r:sr(85,150)};
-    if(!free(p,40)||!ring(p,p.r*.85)||pathNear(p,p.r*.55)||w.houses.some(h=>inRect(p,h,p.r+30))||rockNear(p,p.r*.6)||!tFree(p,p.r*.5))continue;
+    if(!free(p,40)||!ring(p,p.r*.85)||pathNear(p,p.r*.55)||w.houses.some(h=>inRect(p,h.al||h,p.r+30))||rockNear(p,p.r*.6)||!tFree(p,p.r*.5))continue;
     if(w.bushes.some(b=>dist(b,p)<b.r+p.r+20)||w.tgrass.some(b=>dist(b,p)<b.r+p.r+160))continue;p.s=SR();w.tgrass.push(p)}}
   // glowing mushrooms, crystals, grass, flowers, reeds, lilies
   for(let k=0;k<5600&&w.mush.length<880;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300)};if(!free(p,0))continue;const rg=MOON?REG.at(p.x,p.y):-1,dire=MOON?rg===1||rg===4:isDire(p.x,p.y);if(!dire&&SR()<.85)continue;
     const near=w.trees.length?tFree(p,20):true;if(!near)continue;w.mush.push({x:p.x,y:p.y,c:rg===1?(SR()<.55?'#8dff7a':'#e8ff7a'):SR()<.55?'#6ff7ff':'#ff7ae6',s:sr(5,9)})}
   for(let k=0;k<3600&&w.crystals.length<20+180;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300)};const rg=MOON?REG.at(p.x,p.y):-1;if(!free(p,40)||(MOON?rg<2:!isDire(p.x,p.y)))continue;w.crystals.push({x:p.x,y:p.y,c:rg===3?(SR()<.5?'#ff7a2a':'#ffb347'):rg===2?(SR()<.5?'#9fe8ff':'#dff6ff'):rg===4?(SR()<.5?'#c58aff':'#8a5aff'):SR()<.5?'#7ff3ff':'#c58aff',s:sr(9,14)})}
   for(let k=0;k<64000&&w.grass.length<20800;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,8)||inWater(p.x,p.y)||heightAt(p.x,p.y)<-3)continue;
-    if(w.villages.some(v=>v.plaza&&dist(p,v)<220))continue;if(w.houses.some(h=>inRect(p,h,4)))continue;if(inCastle(p,-30))continue;if(pathNear(p,-6))continue;
+    if(w.villages.some(v=>v.plaza&&dist(p,v)<220))continue;if(w.houses.some(h=>inRect(p,h.al||h,4)))continue;if(inCastle(p,-30))continue;if(pathNear(p,-6))continue;
     w.grass.push({x:p.x,y:p.y,s:sr(.7,1.35),c:SR(),d:isDire(p.x,p.y)?1:0})}
   for(let k=0;k<28000&&w.flowers.length<6000;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,6)||inWater(p.x,p.y))continue;const meadow=w.noise(p.x,p.y)<.42||w.villages.some(v=>dist(p,v)<v.r);if(!meadow&&SR()<.7)continue;
-    if(w.houses.some(h=>inRect(p,h,2))||pathNear(p,-4)||inCastle(p,0))continue;w.flowers.push({x:p.x,y:p.y,c:SR(),d:isDire(p.x,p.y)?1:0})}
+    if(w.houses.some(h=>inRect(p,h.al||h,2))||pathNear(p,-4)||inCastle(p,0))continue;w.flowers.push({x:p.x,y:p.y,c:SR(),d:isDire(p.x,p.y)?1:0})}
   for(let k=0;k<9900&&w.reeds.length<1400;k++){const y=sr(RIV.y0,RIV.y1);const hw=riverHW(y);const side=SR()<.5?-1:1;const off=hw+sr(-14,28);const i=clamp(Math.round((y-RIV.y0)/RIV.st),0,RIV.n-1);const x=RIV.xs[i]+side*off/RIV.il[i];
     if(onBridge(x,y)||!walkable(x,y,0))continue;w.reeds.push({x,y,s:sr(.8,1.3)})}
   for(let k=0;k<400;k++){const a=sr(0,6.3),d=Lk.R+sr(-120,30);const x=Lk.x+Math.cos(a)*d,y=Lk.y+Math.sin(a)*d;const ld=lakeD(x,y);if(ld>-20&&ld<20)w.reeds.push({x,y,s:sr(.8,1.3)});else if(ld<-60&&w.lilies.length<70)w.lilies.push({x,y,s:sr(.8,1.3),a:sr(0,6.3),f:SR()<.3})}
@@ -698,7 +716,7 @@ function genWorld(seed){
     for(let i=0;i<4;i++){if(i===2)continue;w.fences.push([cs[i].x,cs[i].y,cs[(i+1)%4].x,cs[(i+1)%4].y])}}
   // ---- loot outside ----
   const blockedGen=(p,r)=>{for(const o of w.rocks)if(Math.abs(o.x-p.x)<o.r+r&&dist(p,o)<o.r+r)return true;for(const o of w.solids)if(dist(p,o)<o.r+r)return true;for(const t of w.trees)if(Math.abs(t.x-p.x)<t.r+r&&dist(p,t)<t.r+r)return true;for(const q of w.walls)if(circRect(p.x,p.y,r,q))return true;return false};
-  const outSpot=m=>{for(let k=0;k<120;k++){const p={x:sr(m,WORLD-m),y:sr(m,WORLD-m)};if(!free(p,0)||blockedGen(p,30)||w.houses.some(h=>inRect(p,h,10)))continue;return p}return{x:town?town.x+sr(-120,120):CX,y:town?town.y+sr(160,240):CY}};
+  const outSpot=m=>{for(let k=0;k<120;k++){const p={x:sr(m,WORLD-m),y:sr(m,WORLD-m)};if(!free(p,0)||blockedGen(p,30)||w.houses.some(h=>inRect(p,h.al||h,10)))continue;return p}return{x:town?town.x+sr(-120,120):CX,y:town?town.y+sr(160,240):CY}};
   for(let k=0;k<176;k++){const p=outSpot(300);w.items.push({id:iid++,k:'c',x:p.x,y:p.y,n:1+(SR()<.25?1:0)})}
   for(let k=0;k<104;k++){const p=outSpot(300);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([64,28,8,0],SR)})}
   for(let k=0;k<120;k++){const p=outSpot(300);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:pickTier([50,32,14,4,0],SR)})}
@@ -757,11 +775,11 @@ function genWorld(seed){
   // ---- spawn points, each with two different starter weapons nearby ----
   for(let i=0;i<TOTAL_HEROES;i++){let best=null,bs=-1e9;const a0=i/TOTAL_HEROES*Math.PI*2+sr(-.15,.15);
     for(let k=0;k<160;k++){const a=a0+sr(-.25,.25)*(1+k/60),f=sr(.42,.82);const rb=bndR(a);const p={x:CX+Math.cos(a)*rb*f,y:CY+Math.sin(a)*rb*f};
-      if(!free(p,60)||blockedGen(p,40)||w.houses.some(h=>inRect(p,h,40)))continue;let sc=1e9;for(const s of w.spawns)sc=Math.min(sc,dist(p,s)-1000);for(const c of w.camps)if(dist(p,c)<450)sc-=600;for(const g of w.graves)if(dist(p,g)<520)sc-=600;
+      if(!free(p,60)||blockedGen(p,40)||w.houses.some(h=>inRect(p,h.al||h,40)))continue;let sc=1e9;for(const s of w.spawns)sc=Math.min(sc,dist(p,s)-1000);for(const c of w.camps)if(dist(p,c)<450)sc-=600;for(const g of w.graves)if(dist(p,g)<520)sc-=600;
       if(sc>=0){best=p;break}if(sc>bs){bs=sc;best=p}}
     if(!best)best={x:CX+sr(-300,300),y:CY+sr(-300,300)};w.spawns.push(best);
     const k1=Math.floor(SR()*WK.length);let k2=Math.floor(SR()*(WK.length-1));if(k2>=k1)k2++;const a1=sr(0,6.3);
-    for(const [wk,ang] of[[WK[k1],a1],[WK[k2],a1+Math.PI]]){let q=null;for(let t=0;t<40;t++){const a=ang+t*.7,d=sr(120,190);const p={x:best.x+Math.cos(a)*d,y:best.y+Math.sin(a)*d};if(free(p,0)&&!blockedGen(p,26)&&!w.houses.some(h=>inRect(p,h,10))){q=p;break}}
+    for(const [wk,ang] of[[WK[k1],a1],[WK[k2],a1+Math.PI]]){let q=null;for(let t=0;t<40;t++){const a=ang+t*.7,d=sr(120,190);const p={x:best.x+Math.cos(a)*d,y:best.y+Math.sin(a)*d};if(free(p,0)&&!blockedGen(p,26)&&!w.houses.some(h=>inRect(p,h.al||h,10))){q=p;break}}
       if(q)w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk,tier:0})}}
   SR=Math.random;
   return w;
@@ -776,7 +794,7 @@ function normCfg(c){c=c||{};const ts=[1,2,4].indexOf(c.ts|0)>=0?c.ts|0:1;let n=c
   return{n,size:SIZE_F[c.size]?c.size:autoSize(n),ts}}
 function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:9400*f,f};if(cfg.size==='L'){if(cfg.ts>1)teamKit(seed,items);return}
   let s=((seed|0)^0x5bd1e995^(cfg.n*7919))>>>0;const R=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
-  const r0=ARENA.r,ok=(p,m)=>walkable(p.x,p.y,m)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h,30))&&!inCastleYard(p);
+  const r0=ARENA.r,ok=(p,m)=>walkable(p.x,p.y,m)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h.al||h,30))&&!inCastleYard(p);
   // centre somewhere in the walkable heart of the valley, so the whole start circle is playable
   for(let k=0;k<120;k++){const a=R()*6.2832,d=R()*Math.max(0,6080-r0*.9);const p={x:CX+Math.cos(a)*d,y:CY+Math.sin(a)*d};if(ok(p,90)){ARENA.x=p.x;ARENA.y=p.y;break}}
   // one spawn point per team (per hero in free-for-all), each with enough starter weapons for the whole team
@@ -790,7 +808,7 @@ function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA
     for(const [wk,ang] of kit)for(let t=0;t<40;t++){const a=ang+t*.7,d=120+R()*70+(nw>2?40:0);const p={x:best.x+Math.cos(a)*d,y:best.y+Math.sin(a)*d};if(ok(p,26)){items.push({id:iid++,k:'w',x:p.x,y:p.y,wk,tier:0});break}}}}
 // team games: two extra starter weapons by every spawn point so a whole squad can arm up where it lands
 function teamKit(seed,items){let s=((seed|0)^0x2c1b3c6d)>>>0;const R=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
-  let iid=4600;const ok=p=>walkable(p.x,p.y,26)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h,10));
+  let iid=4600;const ok=p=>walkable(p.x,p.y,26)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h.al||h,10));
   for(const sp of WD.spawns){const a0=R()*6.3;for(let k=0;k<2;k++){const wk=WK[Math.floor(R()*WK.length)];for(let t=0;t<30;t++){const a=a0+k*Math.PI+Math.PI/2+t*.6,d=150+R()*80;const p={x:sp.x+Math.cos(a)*d,y:sp.y+Math.sin(a)*d};if(ok(p)){items.push({id:iid++,k:'w',x:p.x,y:p.y,wk,tier:0});break}}}}}
 // ---- static collision grid (rocks, trees, solids, walls) ----
 function buildCollide(w){const C=200,n=Math.ceil(WORLD/C);const cells=Array.from({length:n*n},()=>[]);
@@ -814,7 +832,7 @@ function buildNav(){const C=60,n=Math.ceil(WORLD/C),g=new Uint8Array(n*n);
   for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=i*C+C/2,y=j*C+C/2;let b=0;
     if(sdfAt(x,y)<24)b=1;
     else if(forObstacles(x,y,22,o=>o.c===1?((x-o.x)**2+(y-o.y)**2<(o.r+22)**2):circRect(x,y,22,o)))b=1;
-    else for(const h of WD.houses)if(inRect({x,y},h,20)){b=1;break}
+    else for(const h of WD.houses)if(inRect({x,y},h.al||h,20)){b=1;break}
     g[j*n+i]=b}
   NAV={C,n,g,gs:new Float32Array(n*n),fs:new Float32Array(n*n),came:new Int32Array(n*n),gen:new Uint32Array(n*n),closed:new Uint32Array(n*n),heap:new Int32Array(n*n*8),stamp:0}}
 function navBlocked(x,y){const N=NAV;const i=Math.floor(x/N.C),j=Math.floor(y/N.C);if(i<0||j<0||i>=N.n||j>=N.n)return true;return N.g[j*N.n+i]===1}
