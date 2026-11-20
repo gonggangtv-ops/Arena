@@ -21,23 +21,53 @@ window.installMoonfallVillage=function(P){
     if(A)A.subscribe(()=>{if(R3.ok&&WD&&R3.world===WD&&!P._villageDone&&(window.CELESTIAL_KEYS||['house-cottage']).every(k=>A.get(k)&&A.get(k).state==='loaded')){P._villageDone=1;R3.world=null}})}
   // r3 asks this before drawing its own well / fountain / lantern / bridge / stall, so nothing is drawn twice
   P.mfProp=function(key){if(typeof CURSED==='undefined'||!CURSED||!A)return false;const a=A.get(key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.size)};
-  const keyFor=h=>h.style==='witch'?'house-witch':(Math.max(h.w,h.h)/Math.min(h.w,h.h)>1.28||h.seed%3===0?'house-long':'house-cottage');
+  // Arena Royale: one house per land, the owner's models (2026-11-20): The Last Candle in the Cursed Forest, the Magic Potion House
+  // in the Abyss, the Timberstone Cottage everywhere else (REG lands: kingdom, cursed, frost, ash, abyss). The Cursed Realm keeps
+  // its three Moonfall houses, and so does any house whose new model failed to load.
+  const LANDHOUSE=['house-timber','house-candle','house-timber','house-timber','house-potion'];
+  const keyFor=h=>{if(typeof MOON==='undefined'||!MOON){const g=typeof REG!=='undefined'&&REG.at?REG.at(h.x+h.w/2,h.y+h.h/2):0,k=LANDHOUSE[g]||LANDHOUSE[0],a=A&&A.get(k);if(a&&a.state==='loaded')return k}
+    return h.style==='witch'?'house-witch':(Math.max(h.w,h.h)/Math.min(h.w,h.h)>1.28||h.seed%3===0?'house-long':'house-cottage')};
   function shell(R,key,mats){
     const parts=R.celestialAsset(key);if(!parts)return null;const g=new T.Group();
     for(const p of parts){const m=p.mat.clone();m.onBeforeCompile=p.mat.onBeforeCompile;m.customProgramCacheKey=p.mat.customProgramCacheKey;m.transparent=true;mats&&mats.push(m);
       const mesh=new T.Mesh(p.geo,m);mesh.castShadow=R.hi;mesh.receiveShadow=true;mesh.userData.ownMat=1;g.add(mesh)}
     return g}
+  // Arena Royale: the owner's houses have their walls well inside the bounding box (porch and steps, wide eaves, dead trees), so
+  // the box walls, corner posts, door frames and lit windows of the old house would poke out of them. Those parts stay for the
+  // collisions and for the view inside, but they are only drawn while the house shell is see-through (hero inside or behind it):
+  // their materials skip the footprints of the nearest houses whose shell is solid this frame.
+  const arena=()=>typeof MOON==='undefined'||!MOON;
+  const HN=24,hideQ={value:Array.from({length:HN},()=>new T.Vector4(1e9,1e9,-1e9,-1e9))},hideN={value:0};
+  function hideParts(R){
+    const tex={tudor:'plaster',lake:'planks',witch:'plaster',cabin:'logs',stone:'bricks'},col={tudor:'#ffffff',lake:'#a8c0d0',witch:'#9a90a8',cabin:'#ffffff',stone:'#e8e0d0'};
+    const ms=new Set([R.tstd('bricks','#b8b0a0',.9,0),R.tstd('planks','#c8a07a',.85,0),R.tstd('bark','#5a3a24',.9,0),R.winMat]);for(const s in tex)ms.add(R.tstd(tex[s],col[s],.88,0));
+    for(const m of ms){if(!m||m._houseHide)continue;m._houseHide=1;const ob=m.onBeforeCompile,ck=m.customProgramCacheKey;
+      m.onBeforeCompile=function(sh,rr){if(ob)ob.call(this,sh,rr);sh.uniforms.uHouseQ=hideQ;sh.uniforms.uHouseN=hideN;
+        sh.fragmentShader=sh.fragmentShader.replace('void main() {','uniform vec4 uHouseQ['+HN+'];uniform int uHouseN;\nvoid main() {\n  for(int i=0;i<'+HN+';i++){if(i>=uHouseN)break;vec4 q=uHouseQ[i];if(vFowW.x>q.x&&vFowW.x<q.z&&vFowW.y>q.y&&vFowW.y<q.w&&vWY<170.)discard;}')};
+      m.customProgramCacheKey=function(){return (ck?ck.call(this):'')+'hh'};m.needsUpdate=true}
+    const sc=R.scene;if(sc._houseHide)return;sc._houseHide=1;const ob=sc.onBeforeRender;
+    sc.onBeforeRender=function(){try{const tx=R.tx||0,ty=R.ty||0,c=[];
+        for(const r of R.roofs||[]){if(!r.shell||!r.g.visible||!r.mats.length||r.mats[0].opacity<.97)continue;const h=r.h,dx=h.x+h.w/2-tx,dy=h.y+h.h/2-ty,d=dx*dx+dy*dy;if(d<2.6e6)c.push([d,h])}
+        c.sort((a,b)=>a[0]-b[0]);const n=Math.min(HN,c.length);for(let i=0;i<n;i++){const h=c[i][1];hideQ.value[i].set(h.x-16,h.y-16,h.x+h.w+16,h.y+h.h+16)}hideN.value=n}catch(e){hideN.value=0}
+      if(ob)return ob.apply(this,arguments)}}
   P.buildWorld=function(){
     build.call(this);
     if(!A||typeof CURSED==='undefined'||!CURSED)return;
     for(const r of this.roofs||[]){const h=r.h,key=keyFor(h),a=A.get(key),size=a&&a.inspection&&a.inspection.size;if(!size)continue;
       const mats=[],inner=shell(this,key,mats);if(!inner)continue;
       const along=h.w>=h.h,L=Math.max(h.w,h.h)+56,W=Math.min(h.w,h.h)+56,mx=size[0]>=size[2],ml=Math.max(size[0],size[2]),H=Math.min(300,Math.max(150,L*size[1]/ml));
-      inner.scale.set(mx?L:W,H,mx?W:L);let rot=(mx===along)?0:Math.PI/2;
-      // turn the model so its door faces the real doorway when the model has one on that axis
-      const da=(a.config.doorAngle||0)-rot,want=WANT[h.side]||0;if(Math.cos(da-want)<-.3)rot+=Math.PI;inner.rotation.y=rot;
+      const want=WANT[h.side]||0,body=a.config.body;
+      if(arena()&&body&&a.config.doorAngle!==undefined){
+        // near-square models: turn the door to the real doorway, stretch each model axis over the footprint axis it lands on,
+        // and put the middle of the model's walls (not of its box) on the middle of the footprint
+        const rot=a.config.doorAngle-want,sw=Math.abs(Math.sin(rot))>.5,sx=sw?h.h+56:h.w+56,sz=sw?h.w+56:h.h+56,ox=-(body[0]+body[1])/2*sx,oz=-(body[2]+body[3])/2*sz,c=Math.cos(rot),s=Math.sin(rot);
+        inner.scale.set(sx,H,sz);inner.rotation.y=rot;inner.position.set(ox*c+oz*s,0,-ox*s+oz*c)}
+      else{inner.scale.set(mx?L:W,H,mx?W:L);let rot=(mx===along)?0:Math.PI/2;
+        // turn the model so its door faces the real doorway when the model has one on that axis
+        const da=(a.config.doorAngle||0)-rot;if(Math.cos(da-want)<-.3)rot+=Math.PI;inner.rotation.y=rot}
       const g=new T.Group();g.add(inner);g.position.set(h.x+h.w/2,this.gY(h.x+h.w/2,h.y+h.h/2)-2,h.y+h.h/2);
-      this.scene.remove(r.g);this.scene.add(g);r.g=g;r.mats=mats;r.smoke={x:g.position.x,y:H*.9,z:g.position.z}}
+      this.scene.remove(r.g);this.scene.add(g);r.g=g;r.mats=mats;r.shell=!!body;r.smoke={x:g.position.x,y:H*.9,z:g.position.z}}
+    if(arena()&&(this.roofs||[]).some(r=>r.shell))hideParts(this);
     const sa=A.get('market-stall'),ss=sa&&sa.inspection&&sa.inspection.size;
     if(ss)for(const s of WD.stalls||[]){const g=shell(this,'market-stall');if(!g)break;const k=118/Math.max(ss[0],ss[2]);g.scale.set(ss[0]*k,ss[1]*k,ss[2]*k);g.rotation.y=-s.a-Math.PI/2;g.position.set(s.x,this.gY(s.x,s.y)-1,s.y);this.scene.add(g)}
     // ---- village dressing: wells, plaza fountains, street lanterns, river bridges ----

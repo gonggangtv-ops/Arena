@@ -58,7 +58,10 @@ const p5Fam=wk=>{if(!wk)return null;const b=typeof FUSED!=='undefined'&&FUSED[wk
 R.p5WKeyFor=function(wk,t){const f=p5Fam(wk);return f?P5W[f][p5WBand(Math.min(4,Math.max(0,t|0)))]:null};
 // where a fist closes on each rig: palm centre (hand-bone space, from the skin weights) and the across-the-palm axis toward
 // the thumb (the line a held handle follows). Measured from the packed p5-*.glb skins; see HANDOFF 2026-11-18.
-const P5GRIP={warrior:{R:{p:[-1.13,11.11,-.61],d:[-.953,-.039,.301]},L:{p:[.16,10.47,-.54],d:[.927,.007,.374]}},
+// The Warrior is the owner's Celestial Warrior since 2026-11-20 (Mixamo rig, metres): its PCA fails (the palm is as wide as it is
+// long), so the axis is the knuckle line pinky1 -> index1 and the point sits 3 cm toward the wrist and 2 cm toward the palm (the palm
+// faces the ground in the bind pose) from the knuckles' middle.
+const P5GRIP={warrior:{R:{p:[-.0157,.0908,.0033],d:[.577,.052,.816]},L:{p:[.0157,.0898,.0033],d:[-.577,.052,.816]}},
   assassin:{R:{p:[-.67,9.24,-.19],d:[-.648,.192,.737]},L:{p:[.62,9.21,.33],d:[.671,.059,.739]}},
   archer:{R:{p:[.62,11.86,-2],d:[-.751,.252,.61]},L:{p:[-.29,11.97,-.97],d:[.756,.232,.612]}},
   mage:{R:{p:[-1.14,9.68,1.04],d:[-.701,.003,.713]},L:{p:[.63,10.05,.67],d:[.699,.008,.715]}},

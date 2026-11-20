@@ -20,6 +20,9 @@ VILLAGE+=[k for k in P5 if k in _man]
 # Phase 5 class weapons: normal / epic / legendary per class (Arena Royale only)
 P5W=[k for k in _man if k.startswith('p5w-')]
 VILLAGE+=P5W
+# Arena Royale's houses are the owner's models, one per land (2026-11-20); The Cursed Realm keeps the three Moonfall houses
+HOUSES=['house-timber','house-candle','house-potion']
+if arena and all(k in _man for k in HOUSES):VILLAGE=[k for k in VILLAGE if k not in ('house-cottage','house-long','house-witch')]+HOUSES
 sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()
 game_files=['a.js','gi.js','b.js','c.js','r3.js','r4.js','r5.js','r6.js','r7.js','r8.js','r9.js','r10.js','r11.js','r12.js','t1.js','d.js']
 # Arena's visual layer must install before d.js initializes the renderer.
@@ -61,7 +64,7 @@ if sys_on:
     sh=sh.replace('<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>',loading)
     sh=re.sub(r'(<button[^>]*id="(?:soloBtn|qmBtn|hostBtn|joinBtn|lobbyStart|moonfallBtn)"[^>]*)(>)',r'\1 disabled\2',sh)
     if arena:sh=sh.replace('</head>','<script>window.CELESTIAL_KEYS='+repr(VILLAGE).replace("'",'"')+'</script>\n'+arena_style+'</head>',1)
-    else:sh=sh.replace('</head>','<script>window.CELESTIAL_SKIP='+repr(NATURE+P5+P5W).replace("'",'"')+'</script>\n</head>',1)  # Moonfall has no meadow dressing
+    else:sh=sh.replace('</head>','<script>window.CELESTIAL_SKIP='+repr(NATURE+P5+P5W+HOUSES).replace("'",'"')+'</script>\n</head>',1)  # Moonfall has no meadow dressing
     sh=sh.replace('<!--TURN-->','<!--TURN-->\n'+'\n'.join("<script src=\"%s\" onerror=\"moonfallCodeFailure('%s')\"></script>"%(f,f) for f in MOON),1)
 def critical_libs(text):
     if sys_on:
