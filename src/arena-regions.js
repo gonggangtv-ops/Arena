@@ -50,7 +50,7 @@ float regCell(vec2 x){vec2 n=floor(x),f=fract(x);float f1=8.,f2=8.;
   const FLORA=(K,SNOW)=>`
 vec3 regEm=vec3(0.);vec3 regEmK=vec3(1.);vec3 regIbl=vec3(1.);
 {vec4 rg=texture2D(uRegMap,vFowW*${INV.toExponential(6)});float wC=rg.r,wI=rg.g,wA=rg.b,wV=rg.a,w0=clamp(1.-wC-wI-wA-wV,0.,1.);
- regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.6,.44,.95)*wV;
+ regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
  vec3 wn=normalize((vec4(normal,0.)*viewMatrix).xyz);
  vec4 nz=texture2D(vxN,vFowW*.011+vec2(vWY*.006,0.));
  vec3 c=diffuseColor.rgb;float l=dot(c,vec3(.3,.59,.11));
@@ -69,7 +69,7 @@ vec3 regEm=vec3(0.);vec3 regEmK=vec3(1.);vec3 regIbl=vec3(1.);
   const WATER=`
 float regIce=0.;vec3 regIbl=vec3(1.);
 {vec4 rg=texture2D(uRegMap,vFowW*${INV.toExponential(6)});float wC=rg.r,wI=rg.g,wA=rg.b,wV=rg.a,w0=clamp(1.-wC-wI-wA-wV,0.,1.);
- regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.6,.44,.95)*wV;
+ regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
  if(wI>.01){vec4 nz=texture2D(vxN,vFowW*.004);float cr=1.-smoothstep(.015,.05,texture2D(vxN,vFowW*.009).g);
    vec3 ice=mix(vec3(.55,.72,.84),vec3(.82,.9,.97),nz.r)+cr*.22;
    diffuseColor.rgb=mix(diffuseColor.rgb,ice,wI*.94);diffuseColor.a=mix(diffuseColor.a,.97,wI);
@@ -88,6 +88,19 @@ rp=(modelMatrix*vec4(rp,1.)).xyz;vec4 rg=texture2D(uRegMap,rp.xz*${INV.toExponen
 transformed.y*=max(1.-.8*rg.g-.62*rg.b-.32*rg.a+.08*rg.r,.1);}
 `;
   // the sky light reflected from the environment map takes the land's colour too (a blue sky glow is wrong over ash or void)
+  // man-made things (village houses, stalls, wells: the Meshy 'moon-asset' shells) keep their texture: a frosting that grows
+  // smoothly with how much a face looks at the sky (so planks and shingles never stripe), grime in the cursed land, soot in
+  // the ash, dusk violet in the abyss; lit windows keep their glow
+  const BUILD=`
+vec3 regEm=vec3(0.);vec3 regEmK=vec3(1.);vec3 regIbl=vec3(1.);
+{vec4 rg=texture2D(uRegMap,vFowW*${INV.toExponential(6)});float wC=rg.r,wI=rg.g,wA=rg.b,wV=rg.a,w0=clamp(1.-wC-wI-wA-wV,0.,1.);
+ regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
+ vec3 wn=normalize((vec4(normal,0.)*viewMatrix).xyz);
+ vec3 c=diffuseColor.rgb;vec3 g=mix(vec3(dot(c,vec3(.3,.59,.11))),c,.5);
+ float fz=.12+.45*smoothstep(.15,.95,wn.y);
+ vec3 fr=mix(c*vec3(.86,.92,1.03)+vec3(.02,.03,.05),vec3(.84,.89,.95),fz);
+ diffuseColor.rgb=c*vec3(1.03,1.,.95)*w0+g*vec3(.74,.75,.66)*wC+fr*wI+g*vec3(.62,.58,.54)*wA+g*vec3(.7,.62,.84)*wV;}
+`;
   const IBLK=`#include <lights_fragment_maps>
 #if defined( RE_IndirectDiffuse )
 iblIrradiance*=regIbl;
@@ -99,9 +112,9 @@ radiance*=regIbl;
   function classify(key,m){if(/^terr/.test(key)||key==='p5'||key==='moon-warrior'||key==='ecl-sk'||key==='win')return null;
     if(!(m&&(m.isMeshStandardMaterial||m.isMeshLambertMaterial||m.isMeshPhongMaterial)))return null;
     if(key==='water')return'water';if(/^wind[GFTH]$/.test(key))return'grass';
-    if(/^wind/.test(key)||key==='moon-asset'||key==='stumpcut')return'flora';return'tint'}
+    if(key==='moon-asset')return'build';if(/^wind/.test(key)||key==='stumpcut')return'flora';return'tint'}
   function regionEdit(sh,kind){if(sh.skinning&&kind!=='flora')return;bind(sh);const F=sh.fragmentShader;if(F.indexOf('#include <normal_fragment_maps>')<0||F.indexOf('vFowW')<0)return;
-    let code=kind==='water'?WATER:kind==='grass'?FLORA('.92','.25'):kind==='flora'?FLORA('.9','1.0'):FLORA('.55','.6');
+    let code=kind==='water'?WATER:kind==='build'?BUILD:kind==='grass'?FLORA('.92','.25'):kind==='flora'?FLORA('.9','1.0'):FLORA('.55','.6');
     let f=DECL+F.replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\n'+code).replace('#include <lights_fragment_maps>',IBLK);
     if(kind!=='water')f=f.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance=totalEmissiveRadiance*regEmK+regEm;');
     else if(f.indexOf('#include <roughnessmap_fragment>')>=0)f=f.replace('#include <lights_physical_fragment>','roughnessFactor=mix(roughnessFactor,.32,regIce);\n#include <lights_physical_fragment>');
@@ -115,7 +128,7 @@ radiance*=regIbl;
   // ---------------- the ground of each land ----------------
   const TERR=`
 {vec4 rg=texture2D(uRegMap,w*${INV.toExponential(6)});float wC=rg.r,wI=rg.g,wA=rg.b,wV=rg.a,w0=clamp(1.-wC-wI-wA-wV,0.,1.);
- regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.6,.44,.95)*wV;
+ regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
  float tp=uRegP.x,nt=uRegP.y,fl=smoothstep(.78,.95,vWN.y);
  // FROZEN: the ground is a sheet of ice (deep blue where thick, pale where thin, white fractures at two scales, trapped air,
  // the sky sliding over it as the camera moves) with packed snow drifted around it, over the slopes and on the rock
@@ -142,15 +155,17 @@ radiance*=regIbl;
    dead=mix(dead,vec3(.2,.16,.11)*(.8+.4*cn2.r),smoothstep(.45,.7,cn2.a)*.55*(1.-k));
    dead=mix(dead,vec3(.045,.05,.04),smoothstep(.5,.78,cn.r)*.7);
    float rv=smoothstep(.5,.8,texture2D(vxN,w*.0019+vec2(.2)).b),glow=rv*smoothstep(.35,.7,texture2D(vxN,w*.0008).a)*(1.-k);
+   float pv_=1.-clamp(sp.g*1.3+sp.r,0.,1.);rv*=1.-sp.g*.6;glow*=1.-sp.g*.6;
    dead=mix(dead,vec3(.05,.035,.05),rv*.55);
-   float pa=texture2D(vxN,w*.0016+vec2(.5,.1)).a,pool=smoothstep(.76,.81,pa)*fl*(1.-k),prim=pool*(1.-smoothstep(.81,.88,pa));
+   float pa=texture2D(vxN,w*.0016+vec2(.5,.1)).a,pool=smoothstep(.76,.81,pa)*fl*(1.-k)*pv_,prim=pool*(1.-smoothstep(.81,.88,pa));
    dead=mix(dead,vec3(.025,.035,.01),pool*.92);
    c=mix(c,dead,wC);regGloss=max(regGloss,pool*wC*.45);float pulse=.65+.35*sin(tp*1.3+w.x*.004+w.y*.003);
    regEm+=(vec3(.32,.66,.12)*glow*(.12+.88*nt)*pulse+(vec3(.3,.5,.06)*prim*(.08+.4*nt)+vec3(.04,.07,.01)*pool*nt)*(.8+.2*pulse))*wC;}
  // ASHEN: grey-black ash, fields of cooled basalt plates with magma glowing in the seams, embers settled in the ash
  if(wA>.004){vec4 an=texture2D(vxN,w*.0018),an2=texture2D(vxN,w*.0052+vec2(.3,.8));
    vec3 ash=mix(vec3(.07,.065,.063),vec3(.24,.225,.21),an.r*.75+an2.r*.25)*mix(1.,.75,k);
-   float field=smoothstep(.46,.58,texture2D(vxN,w*.0011+vec2(.1)).r)*(1.-wt),seam=regCell((w+(an.rg-.5)*70.)*(1./170.));
+   ash=mix(ash,c*vec3(.55,.52,.5),clamp(sp.g*1.3,0.,1.)*.8);
+   float field=smoothstep(.46,.58,texture2D(vxN,w*.0011+vec2(.1)).r)*(1.-wt)*(1.-clamp(sp.g*1.3+sp.r*.9,0.,1.)),seam=regCell((w+(an.rg-.5)*70.)*(1./170.));
    float core=1.-smoothstep(.0,.03,seam),halo=1.-smoothstep(.0,.12,seam);
    ash=mix(ash,vec3(.05,.042,.038)*(.8+.4*an2.r),field*.85);ash=mix(ash,vec3(.09,.03,.015),halo*field);
    float spark=pow(clamp((texture2D(vxN,w*.047).b-.84)*6.,0.,1.),2.)*(1.-field);
@@ -158,9 +173,10 @@ radiance*=regIbl;
    regEm+=((vec3(1.,.3,.05)*halo*.5+vec3(1.,.62,.2)*core*1.4)*field*heat*(.55+.45*nt)+vec3(1.,.4,.08)*spark*(.5+.5*sin(tp*5.+w.x*.03))*.6)*wA;}
  // ABYSS: black-violet obsidian in glassy plates, veins of void light pulsing, rifts where the starfield shows through
  if(wV>.004){vec4 vn=texture2D(vxN,w*.0017+vec2(.9)),vn2=texture2D(vxN,w*.0056+vec2(.1,.3));float l=dot(c,vec3(.3,.59,.11));
-   vec3 vs=mix(vec3(.035,.03,.045),vec3(.13,.11,.16),clamp(l*1.1+vn.r*.25,0.,1.));vs=mix(vs,vec3(.02,.017,.03),smoothstep(.55,.8,vn2.a)*.6);
+   vec3 vs=mix(vec3(.04,.03,.04),vec3(.15,.115,.15),clamp(l*1.1+vn.r*.25,0.,1.));vs=mix(vs,vec3(.022,.016,.026),smoothstep(.55,.8,vn2.a)*.6);
    float plate=1.-smoothstep(.0,.03,regCell((w+(vn.rg-.5)*50.)*(1./210.)+3.1)),vein=smoothstep(.62,.88,texture2D(vxN,w*.0013+vec2(.9)).b);
-   float rift=smoothstep(.66,.74,vn.a)*fl*(1.-k),pulse=.5+.5*sin(tp*1.7+dot(w,vec2(.0031,.0022)));
+   vs=mix(vs,c*vec3(.56,.5,.56),clamp(sp.g*1.3,0.,1.)*.8);vein*=1.-sp.g*.5;
+   float rift=smoothstep(.66,.74,vn.a)*fl*(1.-k)*(1.-clamp(sp.g*1.3+sp.r,0.,1.)),pulse=.5+.5*sin(tp*1.7+dot(w,vec2(.0031,.0022)));
    float star=pow(clamp((texture2D(vxN,w*.04).b-.86)*7.,0.,1.),2.);
    vs=mix(vs,vec3(.01,.005,.02),rift);c=mix(c,vs,wV);regGloss=max(regGloss,(1.-k)*wV*.45);
    regEm+=(vec3(.55,.18,1.)*vein*(.3+.7*pulse)*1.1+vec3(.75,.35,1.)*plate*.08+vec3(.8,.6,1.)*star*(.25+.75*rift)*.8+vec3(.35,.1,.6)*rift*(.2+.3*pulse))*wV*(.45+.55*nt);}
@@ -185,7 +201,7 @@ radiance*=regIbl;
     {fog:'#262924',fogD:.00032,hemi:'#808a7c',hl:.7,hemiK:.74,sun:'#b0b294',sunK:.52,mist:2.2,ap:1.7,bloom:.9,sat:.5,con:1.12,vig:.5,lift:[-.002,.008,-.002],gain:[.94,.97,.84]},
     {fog:'#a3bacf',fogD:.00018,hemi:'#d6e6ff',hl:.6,hemiK:1.05,sun:'#eef4ff',sunK:1.05,mist:1.05,ap:1.2,bloom:1.1,sat:.9,con:1.07,vig:.2,lift:[0,.006,.02],gain:[.95,1.,1.06]},
     {fog:'#2a1d18',fogD:.00027,hemi:'#9c8f88',hl:.6,hemiK:.8,sun:'#ffb886',sunK:.82,mist:1.5,ap:1.7,bloom:1.25,sat:.92,con:1.12,vig:.38,lift:[.006,.002,0],gain:[1.03,.98,.92]},
-    {fog:'#150f22',fogD:.00025,hemi:'#5f5878',hl:.75,hemiK:.66,sun:'#a898d0',sunK:.6,mist:1.8,ap:1.7,bloom:1.25,sat:.8,con:1.1,vig:.5,lift:[.004,0,.008],gain:[.98,.94,1.02]}];
+    {fog:'#1c1620',fogD:.00022,hemi:'#6a5e78',hl:.75,hemiK:.7,sun:'#a898d0',sunK:.62,mist:1.1,ap:1.2,bloom:1.25,sat:.85,con:1.05,vig:.45,lift:[.006,.002,.01],gain:[1.,.95,1.02]}];
   const AC=ATM.map(a=>({fog:a.fog?new T.Color(a.fog):null,hemi:new T.Color(a.hemi),sun:new T.Color(a.sun)}));
   const S={w:[1,0,0,0,0],o:[0,0,0,0,0],dom:0,domT:0,aud:0,grade:{sat:1,con:1,vig:0,lift:new T.Vector3(),gain:new T.Vector3(1,1,1)},mist:1,ap:1,t:0,fresh:1,
     at:{on:false,dk:1,fog:new T.Color(),dens:0,hemi:new T.Color(),hl:0,hk:1,sun:new T.Color(),sk:1,bl:1},frame:0,done:-1};
