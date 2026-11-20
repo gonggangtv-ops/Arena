@@ -39,7 +39,16 @@
     - ฉากทดสอบ: ไม่มีน้ำแข็ง 5.56M tris, มีน้ำแข็ง 6.06M (ก่อนตัด 8.42M)
     - เพดาน: twin 200/56, เศษ 220/70, แท่งปัก 44/16
 - ไฟล์อื่น: `src/build.py` (arena list)
-- ทดสอบ: ภาพ storm/freeze/shatter/nova/lance คุณภาพสูงและต่ำ ไม่มี error/shader error, VFX smoke สำเนา, มือถือ low, cursed, แมตช์บอท index + cursed, smoke Codex, build ตรง
+- ทดสอบ
+  - ภาพ storm/freeze/shatter/nova/lance ทั้งคุณภาพสูงและต่ำ: ไม่มี error และไม่มี shader error
+  - VFX smoke สำเนา desktop-high: ทั้ง 63 สกิล ดาเมจ/สถานะ/network เหมือนเดิม
+  - mobile-low: native และ purity ผ่าน, memory drift ของ stress เท่ากับ main
+  - cursed ผ่าน
+  - แมตช์บอท index ×2 และ cursed ×1 จบเกมครบ ไม่มี error
+  - แมตช์บอท 32 ตัวที่ให้ `R3.frame` ทำงานทุกเฟรม (ปิดแค่การวาด) และให้บอทครึ่งหนึ่งใช้อาวุธน้ำแข็ง: สูง 300 วินาที (แช่แข็ง 8 ตัว, twin สูงสุด 21) และมือถือ 200 วินาที ไม่มี warning ไม่มี error ไม่มีค่า NaN
+  - smoke Codex 4/4
+  - build ตรงทุกไบต์
+  - หมายเหตุ: ค่า `extraDrawCalls` ใน stress ของ VFX smoke แกว่งระหว่างหน้ามาก (11–56) แม้ตอนที่โมดูลน้ำแข็งยังไม่ได้สร้างอะไร จึงไม่ใช้ค่านี้เป็นเกณฑ์
 - หมายเหตุ harness: ใน lab ที่เรียกแค่ `hostUpdate`+`R3.frame` นั้น `hitFl`/`texts` (hit flash 2D) ไม่หมดอายุ วงแสงค้างที่เป้าในภาพทดสอบเก่าจึงเป็น hit flash ไม่ใช่เอฟเฟกต์ (ล้าง `hitFl=[];texts=[]` ก่อนถ่าย)
 
 ## 2026-11-20 · Claude · VFX รอบ 3+4: อากาศบิด แสงจากเอฟเฟกต์ และความแรงตอนโดน (index เท่านั้น)
