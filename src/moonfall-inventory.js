@@ -23,8 +23,15 @@ window.installMoonfallInventory=function(){
     const art=MoonfallUI.item(p.k);if(art)ctx.drawImage(art,B.x-B.r*.85,B.y-B.r*.85,B.r*1.7,B.r*1.7);ctx.restore();
     if(cd>0&&n>0){ctx.fillStyle='#040a15b3';ctx.beginPath();ctx.moveTo(B.x,B.y);ctx.arc(B.x,B.y,B.r-1,-Math.PI/2,-Math.PI/2+Math.PI*2*clamp(cd/p.cd,0,1));ctx.fill();}
     ctx.fillStyle='#0b1423';ctx.beginPath();ctx.arc(B.x+B.r*.7,B.y+B.r*.7,8*s,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#c9b27f';ctx.lineWidth=1.2;ctx.stroke();
-    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=n?'#f6e5bf':'#8995a9';ctx.font=`bold ${10*s}px system-ui`;ctx.fillText(n,B.x+B.r*.7,B.y+B.r*.72);ctx.textBaseline='alphabetic';
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=n?'#f6e5bf':'#8995a9';ctx.font=`bold ${10*s}px system-ui`;ctx.fillText(n,B.x+B.r*.7,B.y+B.r*.72);
+    // under attack: healing and mana potions work at half strength (b.js potK); the host knows the last hit, a client watches its HP drop
+    if(n>0&&b<3&&typeof potFight==='function'&&(net.mode!=='client'&&me.lastDmgT!==undefined?potFight(me):gameT-(me._potHit===undefined?-99:me._potHit)<POT_FIGHT)){
+      ctx.fillStyle='#5a1410e6';ctx.beginPath();ctx.arc(B.x-B.r*.7,B.y-B.r*.7,8.5*s,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#ff8a70';ctx.lineWidth=1.2;ctx.stroke();
+      ctx.fillStyle='#ffd8cc';ctx.font=`bold ${9.5*s}px system-ui`;ctx.fillText('½',B.x-B.r*.7,B.y-B.r*.68);}
+    ctx.textBaseline='alphabetic';
   };
+  // a client has no lastDmgT for its hero: remember when the HP last dropped
+  const originalPotions=drawPotions;drawPotions=function(me,s,pr){if(me&&net.mode==='client'){if(me._potHp!==undefined&&me.hp<me._potHp-.5)me._potHit=gameT;me._potHp=me.hp;}return originalPotions.call(this,me,s,pr);};
   CUR.row=function(me,key,ic,name,description,own){
     const price=shopPrice(me,key),enabled=price!==null&&(me.gold|0)>=price;
     return '<div class="moonfall-shop-row">'+imageHTML(key,name)+'<div class="moonfall-shop-copy"><b>'+escapeHtml(name)+'</b>'+(own?' <span class="moonfall-owned">'+escapeHtml(own)+'</span>':'')+'<div>'+description+'</div></div>'+

@@ -50,7 +50,7 @@ window.installMoonfallVillage=function(P){
     const ms=new Set([R.tstd('bricks','#b8b0a0',.9,0),R.tstd('bark','#5a3a24',.9,0),R.winMat]);for(const s in tex)ms.add(R.tstd(tex[s],col[s],.88,0));
     for(const m of ms){if(!m||m._houseHide)continue;m._houseHide=1;const ob=m.onBeforeCompile,ck=m.customProgramCacheKey;
       m.onBeforeCompile=function(sh,rr){if(ob)ob.call(this,sh,rr);sh.uniforms.uHouseQ=hideQ;sh.uniforms.uHouseN=hideN;
-        sh.fragmentShader=sh.fragmentShader.replace('void main() {','uniform vec4 uHouseQ['+HN+'];uniform int uHouseN;\nvoid main() {\n  for(int i=0;i<'+HN+';i++){if(i>=uHouseN)break;vec4 q=uHouseQ[i];if(vFowW.x>q.x&&vFowW.x<q.z&&vFowW.y>q.y&&vFowW.y<q.w&&vWY<170.)discard;}')};
+        sh.fragmentShader=sh.fragmentShader.replace('void main() {','uniform vec4 uHouseQ['+HN+'];uniform int uHouseN;\nvoid main() {\n  for(int i=0;i<'+HN+';i++){if(i>=uHouseN)break;vec4 q=uHouseQ[i];if(vFowW.x>q.x&&vFowW.x<q.z&&vFowW.y>q.y&&vFowW.y<q.w&&vWY<420.)discard;}')};   // 420: the Old Town's houses stand on the plateau (a.js CITY_P)
       m.customProgramCacheKey=function(){return (ck?ck.call(this):'')+'hh'};m.needsUpdate=true}
     const sc=R.scene;if(sc._houseHide)return;sc._houseHide=1;const ob=sc.onBeforeRender;
     sc.onBeforeRender=function(){try{const tx=R.tx||0,ty=R.ty||0,c=[];
@@ -178,6 +178,13 @@ window.installMoonfallVillage=function(P){
   P.mangoOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('mango-tree')};
   P.mangoTrees=function(list,reg){if(!list.length)return;const s=A.get('mango-tree').inspection.size,parts=this.celestialAsset('mango-tree');
     const place=(t,add)=>{const W=t.cr*2.5,k=W/Math.max(s[0],s[2]),R=mulberry32(Math.floor(t.x*5+t.y*3));add(t.x,this.gY(t.x,t.y)-4,t.y,s[0]*k,s[1]*k*t.h,s[2]*k,0,R()*6.283,0,null)};
+    for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
+  // owner 2026-11-21: the Cursed Forest's trees are the gnarled leafless moon tree (the model the owner sent with the Moonfall set); r3
+  // buildVegetation hands over every tree item standing in REG land 1, through instC with the tree items so felling and see-through
+  // canopies keep working. Height follows the item's own size, a random turn per tree
+  P.deadOn=function(){return (typeof MOON==='undefined'||!MOON)&&typeof REG!=='undefined'&&!!REG.at&&this.mfProp('moon-dead-tree')};
+  P.deadTrees=function(list,reg){if(!list.length)return;const s=A.get('moon-dead-tree').inspection.size,parts=this.celestialAsset('moon-dead-tree');
+    const place=(t,add)=>{const R=mulberry32(Math.floor(t.x*7+t.y)),H=(t.mg?250:t.v===2?225:200)*t.h*(.9+R()*.2),k=H/s[1];add(t.x,this.gY(t.x,t.y)-3,t.y,s[0]*k,H,s[2]*k,0,R()*6.283,0,null)};
     for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
   P.pineMtrees=function(list){if(!this.pineOn()||!this.mfProp('pine-tree-lo'))return false;const s=A.get('pine-tree-lo').inspection.size,parts=this.celestialAsset('pine-tree-lo');
     const place=(t,add)=>{const H=165*t.s,k=H/s[1];add(t.x,t.h-3,t.y,s[0]*k*1.4,H,s[2]*k*1.4,0,(t.x*1.7+t.y)%6.283,0,t.v===4?'#a9c4bc':'#ffffff')};

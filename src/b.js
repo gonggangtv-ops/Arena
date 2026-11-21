@@ -26,7 +26,7 @@ function recalc(u,full){if(!u.hero)return;const L=u.lvl-1,Wp=wdef(u),A=u.at>=0?A
 function mkHero(id,name,ctrl,look,team){look=clamp(look|0,0,LOOKS.length-1);const u=mkUnit({id,type:'hero',def:{color:LOOKS[look].c,name},look,name,ctrl:ctrl||null,hero:true,team:team||id,r:26,pts:1});u.bag=[1,1,0,0];recalc(u,true);return u}
 function setMobStats(u,scale){const d=u.def;u.scale=scale;u.maxHp=Math.round(d.hp*scale);u.hp=u.maxHp;u.atkDmg=d.dmg*scale;u.armorV=d.armor;u.mr=.15;u.atkCdBase=d.atkT;u.range=d.range;u.spdBase=d.spd;u.r=d.r;if(CURSED&&u.home)regMob(u)}
 function mkZombie(id,kind,x,y,sc){const d=CREEPS[kind];const u=mkUnit({id,type:kind,kind,def:d,name:d.name,mob:true,zombie:true,team:0,x,y,home:{x,y},big:!!d.big,lord:!!d.lord});setMobStats(u,sc||1);u.tx=x;u.ty=y;u.rise=1.3;return u}
-function mkMob(m){const d=CREEPS[m.kind];const u=mkUnit({id:m.id,type:m.kind,kind:m.kind,def:d,name:d.name,mob:true,team:0,x:m.x,y:m.y,home:{x:m.x,y:m.y},camp:m.camp,golem:m.kind==='golem'||m.kind==='guardian',boss:m.kind==='boss',undead:!!m.undead,big:!!d.big,lord:!!d.lord,rich:m.rich|0});setMobStats(u,m.sc||1);u.tx=m.x;u.ty=m.y;return u}
+function mkMob(m){const d=CREEPS[m.kind];const u=mkUnit({id:m.id,type:m.kind,kind:m.kind,def:d,name:d.name,mob:true,team:0,x:m.x,y:m.y,home:{x:m.x,y:m.y},camp:m.camp,golem:m.kind==='golem'||m.kind==='guardian'||m.kind==='magma',boss:m.kind==='boss',undead:!!m.undead,big:!!d.big,lord:!!d.lord,rich:m.rich|0});setMobStats(u,m.sc||1);u.tx=m.x;u.ty=m.y;return u}
 function addUnit(u){units.push(u);UMAP.set(u.id,u)}
 
 function setupWorld(seed,cfg){
@@ -171,6 +171,7 @@ function kill(t,src){
       dropItem({k:'a',x:t.x,y:t.y});dropItem({k:'c',x:tx+60,y:ty,n:3,gold:true});dropItem({k:'w',x:tx-60,y:ty,wk:WK[Math.floor(Math.random()*WK.length)],tier:3});dropItem({k:'r',x:tx,y:ty+60,tier:4});dropItem({k:'i',x:tx,y:ty-60,it:'tome'});
       emit({t:'f',s:`🐉 ${src&&src.hero?src.name:'ใครบางคน'} ปราบมังกรเพลิง! สมบัติอยู่ในปราสาท`});emit({t:'a',s:'🐉 มังกรเพลิงพ่ายแพ้!',d:3})}
     else if(t.kind==='guardian'){dropItem({k:'c',x:t.x,y:t.y,n:2,gold:true});emit({t:'a',s:'💎 ผู้พิทักษ์คริสตัลพ่ายแพ้!',v:src&&isHuman(src)?[src.id]:[]})}
+    else if(t.kind==='magma'){dropItem({k:'c',x:t.x,y:t.y,n:2,gold:true});if(Math.random()<.5)dropItem({k:'r',x:t.x+50,y:t.y,tier:pickTier([0,30,45,22,3])});emit({t:'a',s:'🌋 ไททันลาวาพ่ายแพ้!',v:src&&isHuman(src)?[src.id]:[]})}
     else if(t.rich)richLoot(t,src);
     else if(Math.random()<(t.kind==='golem'||t.kind==='ogre'?.6:.3))dropItem({k:'c',x:t.x,y:t.y,n:1});
     const c=WD.camps[t.camp];if(c&&c.mem.every(id=>{const m=UMAP.get(id);return !m||m.dead}))c.deadAt=gameT;
@@ -470,14 +471,21 @@ function tryPickup(u){
 }
 // ---- backpack ----
 function bagAdd(u,b){if(!u.bag||u.bag[b]>=BAG[b].max)return false;u.bag[b]++;return true}
-function usePotion(u,b){const B=BAG[b];if(!B||!u||u.dead||!u.hero||u.bag[b]<=0||u.bcd[b]>0)return false;u.bag[b]--;u.bcd[b]=B.cd;
-  if(B.k==='hp'){u.hotT=3;u.hotV=u.maxHp*.4/3}else if(B.k==='mp'){u.motT=2;u.motV=u.maxMp*.5/2}else if(B.k==='big'){u.hp=u.maxHp;u.mp=u.maxMp;burstE(u.x,u.y,'#ff9ae8',20)}else if(B.k==='spd')u.spdPT=6;
+// potions under attack (owner 2026-11-21): while the drinker has taken damage from an enemy in the last POT_FIGHT seconds, healing and mana
+// potions restore half. The heal/mana over time checks every tick, so a hit halfway through halves the rest while the fight goes on,
+// and stepping out of the fight brings the full rate back. The storm (pure damage, no source) does not count as being attacked.
+const POT_FIGHT=3;
+function potFight(u){return gameT-(u.lastDmgT===undefined?-99:u.lastDmgT)<POT_FIGHT}
+function potK(u){return potFight(u)?.5:1}
+function usePotion(u,b){const B=BAG[b];if(!B||!u||u.dead||!u.hero||u.bag[b]<=0||u.bcd[b]>0)return false;u.bag[b]--;u.bcd[b]=B.cd;const fight=B.k!=='spd'&&potFight(u);
+  if(B.k==='hp'){u.hotT=3;u.hotP=0;u.hotV=u.maxHp*.4/3}else if(B.k==='mp'){u.motT=2;u.motV=u.maxMp*.5/2}
+  else if(B.k==='big'){const k=fight?.5:1;u.hp=Math.min(u.maxHp,u.hp+(u.maxHp-u.hp)*k);u.mp=Math.min(u.maxMp,u.mp+(u.maxMp-u.mp)*k);burstE(u.x,u.y,'#ff9ae8',fight?10:20)}else if(B.k==='spd')u.spdPT=6;
   fxE('potion',{id:u.id,x:u.x|0,y:u.y|0,c:['#ff5a6a','#5aa8ff','#ff9ae8','#9dffb0'][b]});sndAt('potion',u.x,u.y);if(B.k==='spd')sndAt('speed',u.x,u.y);
-  if(isHuman(u))fxTextFor(u.x,u.y-80,B.ic+' '+B.n,'#ffe9a8',1.2,[u.id]);return true}
+  if(isHuman(u)){fxTextFor(u.x,u.y-80,B.ic+' '+B.n,'#ffe9a8',1.2,[u.id]);if(fight)fxTextFor(u.x,u.y-104,'⚔️ โดนโจมตีอยู่ · ยาได้ผลครึ่งเดียว','#ff9a8a',1.5,[u.id])}return true}
 function applyItem(u,it){
   switch(it.id){
-    case 'potion':heal(u,u.maxHp*.4);break;
-    case 'mana':u.mp=Math.min(u.maxMp,u.mp+u.maxMp*.5);break;
+    case 'potion':heal(u,u.maxHp*.4*potK(u));break;
+    case 'mana':u.mp=Math.min(u.maxMp,u.mp+u.maxMp*.5*potK(u));break;
     case 'whet':u.dmgB+=.1;recalc(u);break;
     case 'boots':u.spdB=Math.min(.35,u.spdB+.07);break;
     case 'heart':u.hpB+=.12;recalc(u);break;
@@ -658,13 +666,14 @@ function botThink(u,dt){
 }
 // camp monsters fight smarter once the match is under way (4:00+, owner 2026-11-21): trolls and golems slam the ground (stun),
 // wolves pounce on anyone keeping away, goblins throw knives
-const MOB_ACT={ogre:{cd:8,rng:190},golem:{cd:9,rng:230},guardian:{cd:9,rng:240},wolf:{cd:7,rng:420,min:150},goblin:{cd:4.5,rng:440,min:130}};
+const MOB_ACT={ogre:{cd:8,rng:190},golem:{cd:9,rng:230},guardian:{cd:9,rng:240},magma:{cd:8,rng:250},wolf:{cd:7,rng:420,min:150},goblin:{cd:4.5,rng:440,min:130}};
 function mobAct(u,t,d,dt){const A=MOB_ACT[u.kind];if(!A||u.ecl||u.boss||u.pet||gameT<240||u.stunT>0||u.busyT>0||u.dash)return;
   u.actT=(u.actT===undefined?A.cd*.4:u.actT)-dt;if(u.actT>0||d>A.rng||d<(A.min||0))return;u.actT=A.cd*rand(.85,1.15);
   const nx=(t.x-u.x)/(d||1),ny=(t.y-u.y)/(d||1);u.fx=nx;u.fy=ny;
   if(u.kind==='wolf'){const sp=1100;u.dash={vx:nx*sp,vy:ny*sp,t:Math.min(d-30,380)/sp,dmg:u.atkDmg*1.2,stun:.3,hit:new Set(),stop:true};u.atkAnim=.3;
     fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(ny,nx).toFixed(2)});sndAt('dash',u.x,u.y)}
   else if(u.kind==='goblin'){proj(u,nx,ny,{spd:950,r:8,dmg:u.atkDmg*.9,type:'p',kind:0,life:(A.rng+60)/950});u.atkAnim=.3;sndAt('shoot',u.x,u.y)}
+  else if(u.kind==='magma'){u.busyT=.8;u.castAnim=.85;aoe({x:u.x,y:u.y,r:230,dmg:u.atkDmg*1.45,type:'m',owner:u,delay:.6,kind:'meteor',stun:.5,big:true,el:'fire',elP:1,burn:10+.12*u.atkDmg});sndAt('meteor',u.x,u.y)}
   else{const og=u.kind==='ogre';u.busyT=.75;u.castAnim=.8;aoe({x:u.x,y:u.y,r:og?180:220,dmg:u.atkDmg*(og?1.3:1.5),type:'p',owner:u,delay:.55,kind:'slam',stun:og?.55:.7,big:true});sndAt('slam',u.x,u.y)}}
 function mobThink(u,dt){
   let mx=0,my=0;const t=u.aggro,L=u.def.leash||420;const dh=dist(u,u.home);if(!u.boss&&u.busyT>0)u.busyT=Math.max(0,u.busyT-dt);
@@ -673,8 +682,8 @@ function mobThink(u,dt){
     u.fx=(t.x-u.x)/(d||1);u.fy=(t.y-u.y)/(d||1);
     if(d<R+6&&u.atkCd<=0&&u.stunT<=0&&!u.busyT){u.atkCd=u.atkCdBase;u.atkAnim=.3;const ang=Math.atan2(t.y-u.y,t.x-u.x);
       if(u.def.cleave){for(const o of units){if(o.dead||!isEnemy(u,o)||dist(u,o)>R+o.r)continue;let da=Math.abs(Math.atan2(o.y-u.y,o.x-u.x)-ang);if(da>Math.PI)da=Math.PI*2-da;if(da<1)dealDamage(o,u.atkDmg*(isNight()?1.4:1),'p',u)}}
-      else dealDamage(t,u.atkDmg*(isNight()?1.4:1),'p',u);
-      emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:isNight()?'#ff5a4a':u.golem?'#9fd0ff':u.boss?'#ff8a5a':'#d8c48a',k:4});if(u.r>30)sndAt('hit',u.x,u.y)}
+      else{dealDamage(t,u.atkDmg*(isNight()?1.4:1),'p',u);if(u.def.fire&&!t.dead)stAdd(u,t,'fire',1)}
+      emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:isNight()?'#ff5a4a':u.def.fire?'#ff8a3a':u.golem?'#9fd0ff':u.boss?'#ff8a5a':'#d8c48a',k:4});if(u.r>30)sndAt('hit',u.x,u.y)}
     if(u.boss&&u.stunT<=0){u.brT=(u.brT===undefined?3:u.brT)-dt;u.slT=(u.slT===undefined?6:u.slT)-dt;u.busyT=Math.max(0,(u.busyT||0)-dt);
       if(u.brT<=0&&d<430){u.brT=8;u.busyT=1.4;const ang=Math.atan2(t.y-u.y,t.x-u.x);aoe({x:u.x+Math.cos(ang)*40,y:u.y+Math.sin(ang)*40,r:440,ang,len:440,arc:.55,shape:'cone',dmg:42*u.scale,type:'m',owner:u,kind:'breath',delay:.35,dot:1.6,tick:.2,burn:0});sndAt('breath',u.x,u.y);u.castAnim=1.6}
       else if(u.slT<=0&&d<260){u.slT=9;u.busyT=.8;aoe({x:u.x,y:u.y,r:270,dmg:180*u.scale,type:'m',owner:u,delay:.7,kind:'slam',stun:1,big:true});sndAt('slam',u.x,u.y);u.castAnim=.9}}
@@ -794,7 +803,7 @@ function hostUpdate(dt){
     if(u.dead){if(u.reviveT>0){u.reviveT-=dt;if(u.reviveT<=0)reviveUnit(u)}continue}
     u.atkCd-=dt;u.atkSlowT-=dt;u.stunT-=dt;u.slowT-=dt;u.buffT-=dt;u.hurtT-=dt;u.revealT-=dt;u.rootT-=dt;u.atkAnim-=dt;u.castAnim-=dt;for(let i=0;i<3;i++)u.cd[i]-=dt;
     if(u.shieldT>0){u.shieldT-=dt;if(u.shieldT<=0)u.shieldHp=0}if(u.asT>0)u.asT-=dt;if(u.furyT>0){u.furyT-=dt;if(u.furyT<=0)u.fury=0}if(u.invisT>0)u.invisT-=dt;
-    if(u.hero){for(let i=0;i<4;i++)if(u.bcd[i]>0)u.bcd[i]-=dt;if(u.hotT>0){u.hotT-=dt;heal(u,u.hotV*dt)}if(u.motT>0){u.motT-=dt;u.mp=Math.min(u.maxMp,u.mp+u.motV*dt)}if(u.spdPT>0)u.spdPT-=dt}
+    if(u.hero){for(let i=0;i<4;i++)if(u.bcd[i]>0)u.bcd[i]-=dt;if(u.hotT>0||u.motT>0){const pk=potK(u);if(u.hotT>0){u.hotT-=dt;heal(u,u.hotV*dt*(u.hotP?1:pk))}if(u.motT>0){u.motT-=dt;u.mp=Math.min(u.maxMp,u.mp+u.motV*dt*pk)}}if(u.spdPT>0)u.spdPT-=dt}
     if(u.burnT>0){u.burnT-=dt;u._bn=(u._bn||0)+dealDamage(u,u.burnDps*dt,'m',u.burnSrc&&!u.burnSrc.dead?u.burnSrc:null,true);if(u.dead)continue}
     if(u.ignT>0){u.ignT-=dt;u._bn=(u._bn||0)+dealDamage(u,ST_HP(u)*.005*(u.ign||0)*dt,'m',u.ignSrc&&!u.ignSrc.dead?u.ignSrc:null,true);if(u.ignT<=0)u.ign=0;if(u.dead)continue}
     if(u.rotT>0){u.rotT-=dt;u._rn=(u._rn||0)+dealDamage(u,(u.rotDps||0)*dt,'pure',u.rotSrc&&!u.rotSrc.dead?u.rotSrc:null,true);if(u.dead)continue;

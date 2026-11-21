@@ -2,6 +2,7 @@
  * The owner swapped the two stone camp monsters for their own animated Meshy models:
  *   โกเลมหินผา (kind 'golem')            → Stone Guardian  (Meshy auto-rig: stance, walk, reaping swing, ground stomp, hit, death)
  *   ผู้พิทักษ์คริสตัล (kind 'guardian')  → Magma Titan     (Mixamo rig: walk, attack, flying fist kick, hit, death)
+ *   ไททันลาวา (kind 'magma', 2026-11-21) → Magma Titan again: lone fire-golem camps in the Ashen Wastes (a.js), blows that burn
  * Rendering only: HP, damage, speed and AI are unchanged. The skinned path is the Eclipse one (eclSkModel/eclAnimSk):
  * the clip map is filled here before the first build, with each attack cut down to the swing that lands, so the blow
  * reads on the frame the server deals the damage. Every third swing plays the heavy move instead. Until the GLB loads
@@ -15,6 +16,8 @@
   const GM={
     golem:{key:'stone-guardian',H:170,idle:{c:/Combat_Stance/},walk:{c:/^Walking/},attack:{c:/Reaping_Swing/,win:[2,3.05]},slam:{c:/Angry_Ground_Stomp/},hit:{c:/^Hit_Reaction/},death:{c:/dying/i},atkD:.75,slamD:1,top:36},
     guardian:{key:'magma-titan',H:188,idle:{c:/^Attack/,still:0},walk:{c:/^Walking/},attack:{c:/^Attack/,win:[.5,1.85]},slam:{c:/Flying_Fist_Kick/,win:[1.1,2.95]},hit:{c:/^Hit_Reaction$/},death:{c:/dying/i},atkD:.75,slamD:1.1,top:36},
+    // owner 2026-11-21: the same Magma Titan, now its own fire-golem camp in the Ashen Wastes (kind 'magma'), a little bigger
+    magma:{key:'magma-titan',H:205,idle:{c:/^Attack/,still:0},walk:{c:/^Walking/},attack:{c:/^Attack/,win:[.5,1.85]},slam:{c:/Flying_Fist_Kick/,win:[1.1,2.95]},hit:{c:/^Hit_Reaction$/},death:{c:/dying/i},atkD:.75,slamD:1.1,top:38},
     goblin:{key:'goblin-shaman',H:92,idle:{c:/^Attack$/,still:0},walk:{c:/^Walking/},attack:{c:/^Attack$/,win:[.55,1.6]},slam:{c:/Axe_Spin_Attack/,win:[.3,1.4]},hit:{c:/^Hit_Reaction/},death:{c:/dying/i},atkD:.42,slamD:.6,top:26}};
   const ready=kind=>{const g=GM[kind],A=CA(),a=g&&A&&A.get(g.key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf&&a.gltf.animations&&a.gltf.animations.length>=2&&window.AR_GLTF&&AR_GLTF.SkeletonUtils&&R.eclSkModel)};
   const hipT=c=>c.tracks.find(t=>/\.position$/.test(t.name)&&/hips|pelvis/i.test(t.name));
