@@ -407,6 +407,9 @@ Object.assign(R3,{
       o.ice.visible=u.rootT>0;o.stars.visible=u.stunT>0;o.stars.rotation.y=T*5;o.bubble.visible=u.shieldHp>0;if(o.bubble.visible)o.bubble.material.opacity=.14+.06*Math.sin(T*6);
       if(u.burnT>0&&Math.random()<dt*20)this.sp(true,{x:u.x+rand(-14,14),y:o.gy+rand(10,70),z:u.y+rand(-14,14),vy:rand(40,90),l:.45,s:20,s1:5,c:'#ffd070',c2:'#ff3a10',sp:3});
       if(u.slowT>0&&Math.random()<dt*6)this.sp(true,{x:u.x+rand(-16,16),y:o.gy+rand(20,80),z:u.y+rand(-16,16),vy:-20,l:.8,s:8,s1:3,c:'#dff8ff',sp:4});
+      if(u.ignT>0&&u.ign>=3&&Math.random()<dt*24)this.sp(true,{x:u.x+rand(-22,22),y:o.gy+rand(20,110),z:u.y+rand(-22,22),vy:rand(80,150),l:.55,s:30,s1:6,c:'#ffc050',c2:'#ff2a08',sp:3});   // fire stacks: the target is ablaze
+      if(u.rotT>0&&Math.random()<dt*10)this.sp(true,{x:u.x+rand(-16,16),y:o.gy+rand(10,60),z:u.y+rand(-16,16),vy:rand(10,40),l:.7,s:14,s1:4,c:'#9dff6a',c2:'#2f5a1a',sp:3,a:.7});   // zombie rot
+      if(u.statT>0&&u.stat>0&&Math.random()<dt*16)this.sp(true,{x:u.x+rand(-18,18),y:o.gy+rand(20,100),z:u.y+rand(-18,18),vx:rand(-120,120),vy:rand(-30,110),vz:rand(-120,120),l:.16,s:11,s1:1,c:'#f4eeff',c2:'#9a7aff',sp:1});   // storm static crackles
       if(u.aegis&&Math.random()<dt*8)this.sp(true,{x:u.x+rand(-20,20),y:o.gy+rand(0,30),z:u.y+rand(-20,20),vy:rand(40,90),l:.8,s:8,s1:2,c:'#ffe27a',sp:1});
       if(u.hero&&o.wglow&&Math.random()<dt*(o.wt>=3?10:5)){const h=(o.wpnR||o.wpnL);if(h){h.getWorldPosition(this.v);this.sp(true,{x:this.v.x+rand(-6,6),y:this.v.y+rand(-4,14),z:this.v.z+rand(-6,6),vy:rand(10,40),l:.6,s:9,s1:2,c:o.wglow,sp:o.wk==='frost'?4:o.wk==='fire'?3:1})}}
       if(u.hero&&u.at===4&&Math.random()<dt*6)this.sp(true,{x:u.x+rand(-14,14),y:o.gy+rand(30,80),z:u.y+rand(-14,14),vy:40,l:.5,s:10,s1:2,c:'#ff8a2a',sp:3});

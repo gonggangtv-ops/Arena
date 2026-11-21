@@ -128,10 +128,11 @@ const CREEPS={
   guardian:{name:'ผู้พิทักษ์คริสตัล',hp:2700,dmg:62,armor:5,spd:118,r:42,atkT:1.5,range:86,xp:320,col:'#6a7ab0',leash:220},
   boss:{name:'มังกรเพลิง',hp:9500,dmg:110,armor:7,spd:150,r:66,atkT:1.6,range:122,xp:1100,col:'#a83a1a',leash:360,dragon:true},
   // night only: the dead rise and hunt every hero they can smell
-  zombie:{name:'ซอมบี้',hp:420,dmg:24,armor:2,spd:150,r:24,atkT:1.1,range:62,xp:70,col:'#6f8f5a',zombie:1,kk:'Skeleton_Minion'},
-  zrunner:{name:'ซอมบี้วิ่งไว',hp:300,dmg:20,armor:1,spd:205,r:22,atkT:.8,range:58,xp:60,col:'#8aa070',zombie:1,kk:'Skeleton_Rogue'},
-  zbrute:{name:'ซอมบี้ยักษ์',hp:1300,dmg:46,armor:5,spd:132,r:34,atkT:1.5,range:84,xp:180,col:'#5a7048',zombie:1,kk:'Skeleton_Warrior',big:1},
-  zlord:{name:'ราชาซอมบี้',hp:2600,dmg:58,armor:6,spd:140,r:38,atkT:1.4,range:92,xp:420,col:'#4a6a3a',zombie:1,kk:'Skeleton_Mage',big:1,lord:1}
+  // (owner 2026-11-21: much tougher — more HP and bite, rotting bites, runners lunge, brutes slam, the king raises the dead)
+  zombie:{name:'ซอมบี้',hp:640,dmg:34,armor:3,spd:162,r:24,atkT:1.05,range:62,xp:80,col:'#6f8f5a',zombie:1,kk:'Skeleton_Minion'},
+  zrunner:{name:'ซอมบี้วิ่งไว',hp:460,dmg:28,armor:2,spd:222,r:22,atkT:.75,range:58,xp:70,col:'#8aa070',zombie:1,kk:'Skeleton_Rogue'},
+  zbrute:{name:'ซอมบี้ยักษ์',hp:2200,dmg:70,armor:6,spd:138,r:34,atkT:1.45,range:84,xp:220,col:'#5a7048',zombie:1,kk:'Skeleton_Warrior',big:1},
+  zlord:{name:'ราชาซอมบี้',hp:4600,dmg:88,armor:8,spd:146,r:38,atkT:1.35,range:92,xp:520,col:'#4a6a3a',zombie:1,kk:'Skeleton_Mage',big:1,lord:1}
 };
 const ZK=['zombie','zrunner','zbrute','zlord'];
 const CAMP_KINDS={small:['goblin','goblin','goblin','goblin','goblin'],medium:['wolf','wolf','wolf'],large:['ogre','wolf','wolf'],ancient:['golem','ogre'],

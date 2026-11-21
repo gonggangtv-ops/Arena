@@ -271,7 +271,7 @@ function decEv(a){if(!Array.isArray(a))return a;switch(a[0]){
 // ---- snapshots ----
 const f1=v=>Math.round(v*10)/10;
 function uflags(o){return(o.dead?1:0)|(o.stunT>0?2:0)|(o.slowT>0?4:0)|(o.buffT>0||o.asT>0?8:0)|(o.hurtT>0?16:0)|(o.hidden?32:0)|(o.inBush?64:0)|(o.dash?128:0)|(o.rootT>0?256:0)|(o.reviveT>0?512:0)
-  |(o.atkAnim>0?1024:0)|(o.castAnim>0?2048:0)|(o.wet?4096:0)|(o.shieldHp>0?8192:0)|(o.spinT>0?16384:0)|(o.lotusT>0?32768:0)|(o.leap?65536:0)|(o.invisT>0?131072:0)|(o.burnT>0?262144:0)|(o.aegis?524288:0)|(o.kb?1048576:0)|(o.rise>0?2097152:0)|(o.spdPT>0?4194304:0)|(o.fuseT>0?8388608:0)}
+  |(o.atkAnim>0?1024:0)|(o.castAnim>0?2048:0)|(o.wet?4096:0)|(o.shieldHp>0?8192:0)|(o.spinT>0?16384:0)|(o.lotusT>0?32768:0)|(o.leap?65536:0)|(o.invisT>0?131072:0)|(o.burnT>0?262144:0)|(o.aegis?524288:0)|(o.kb?1048576:0)|(o.rise>0?2097152:0)|(o.spdPT>0?4194304:0)|(o.fuseT>0?8388608:0)|(o.ignT>0&&o.ign>=3?16777216:0)|(o.statT>0&&o.stat>0?33554432:0)|(o.rotT>0?67108864:0)}
 function heroRow(o){return[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp,o.lvl,o.wk?AW.indexOf(o.wk):-1,o.wt,o.at,o.kills,o.mp|0,o.maxMp,o.shieldHp|0,((o.wv|0)>>15)&3]}
 function selfRow(o){return[Math.round(o.xp),o.skl[0],o.skl[1],o.skl[2],o.pts,f1(Math.max(0,o.cd[0])),f1(Math.max(0,o.cd[1])),f1(Math.max(0,o.cd[2])),f1(o.armorV),Math.round(o.atkDmg),Math.round(o.spdB*100),Math.round(o.dmgB*100),Math.round(o.mr*100),f1(Math.max(0,o.shieldT)),
   o.bag[0],o.bag[1],o.bag[2],o.bag[3],f1(Math.max(0,o.bcd[0])),f1(Math.max(0,o.bcd[1])),f1(Math.max(0,o.bcd[2])),f1(Math.max(0,o.bcd[3])),f1(Math.max(0,o.spdPT)),o.wk2?AW.indexOf(o.wk2):-1,o.wt2,o.fury|0,o.gold|0,o.wv|0,o.wv2|0,o.xs|0,o.xl|0,f1(Math.max(0,o.xcd||0)),f1(Math.max(0,o.dgcd||0))]}
@@ -308,7 +308,7 @@ function clientStart(d){net.pendS=[];withLoading(()=>clientStart2(d))}
 function clientStart2(d){setupWorld(d.seed,d.cfg);if(view3D&&has3D()&&R3.ok)R3.sync();for(const h of d.heroes)addUnit(mkHero(h[0],h[1],h[3]?'remote':null,h[2],h[4]|0||h[0]));myId=d.you;alive=d.heroes.length;net.lastN=0;net.lastEv=0;enterPlay();const P=net.pendS||[];net.pendS=null;for(const q of P)applySnap(q)}
 function setFlags(u,fl){u.dead=!!(fl&1);u.stunT=fl&2?1:0;u.slowT=fl&4?1:0;u.buffT=fl&8?1:0;u.hurtT=fl&16?.1:0;u.hidden=!!(fl&32);u.inBush=!!(fl&64);u.dash=fl&128?{}:null;
   u.rootT=fl&256?1:0;u.reviveT=fl&512?1:0;if(fl&1024)u.atkAnim=Math.max(u.atkAnim,.2);if(fl&2048)u.castAnim=Math.max(u.castAnim,.3);u.wet=!!(fl&4096);
-  u.shieldHp=fl&8192?Math.max(1,u.shieldHp):0;u.spinT=fl&16384?1:0;u.lotusT=fl&32768?1:0;u.leap=fl&65536?(u.leap||{c:1}):null;u.invisT=fl&131072?1:0;u.burnT=fl&262144?1:0;u.aegis=!!(fl&524288);u.kb=fl&1048576?{}:null;u.rise=fl&2097152?1:0;u.spdPT=fl&4194304?1:0;u.fuseT=fl&8388608?1:0}
+  u.shieldHp=fl&8192?Math.max(1,u.shieldHp):0;u.spinT=fl&16384?1:0;u.lotusT=fl&32768?1:0;u.leap=fl&65536?(u.leap||{c:1}):null;u.invisT=fl&131072?1:0;u.burnT=fl&262144?1:0;u.aegis=!!(fl&524288);u.kb=fl&1048576?{}:null;u.rise=fl&2097152?1:0;u.spdPT=fl&4194304?1:0;u.fuseT=fl&8388608?1:0;u.ign=fl&16777216?3:0;u.ignT=u.ign?1:0;u.stat=fl&33554432?2:0;u.statT=u.stat?1:0;u.rotT=fl&67108864?1:0}
 function applySnap(d){
   if(d.n<=net.lastN)return;net.lastN=d.n;
   gameT=d.g;alive=d.a;const z=d.z;Object.assign(zone,{x:z[0],y:z[1],r:z[2],tx:z[3],ty:z[4],tr:z[5],st:['wait','shrink','done'][z[6]],t:z[7],ph:z[8]});

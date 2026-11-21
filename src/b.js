@@ -59,11 +59,19 @@ function hostNewGame(players,seed,cfg){
   return seed;
 }
 function zTime(){return .55+.45*ARENA.f}
-function nextTarget(){const p={r:PHASES[zone.ph].r*ARENA.f};
-  for(let k=0;k<60;k++){const maxOff=Math.max(0,zone.r-p.r)*.55;const a=Math.random()*Math.PI*2,o=rand(0,maxOff);let tx=zone.x+Math.cos(a)*o,ty=zone.y+Math.sin(a)*o;
-    const lim=Math.max(0,7000-p.r*.85),dc=Math.hypot(tx-CX,ty-CY);if(dc>lim){tx=CX+(tx-CX)/dc*lim;ty=CY+(ty-CY)/dc*lim}
-    if(p.r<1270&&(!walkable(tx,ty,40)||inCastleYard({x:tx,y:ty})&&p.r<300))continue;zone.tx=tx;zone.ty=ty;zone.tr=p.r;return}
-  zone.tx=zone.x;zone.ty=zone.y;zone.tr=p.r}
+// The storm closes on a random spot (owner 2026-11-21: every game it ended near the middle of the map). The host draws the final
+// point once, anywhere on open land in the valley; each next circle lies inside the current one and still holds that point (with a
+// tenth of its radius to spare), so the circles drift toward it phase by phase. Clients only ever see the circles (snapshot z).
+function zoneEnd(){const M=ARENA.r*.68;
+  for(let k=0;k<240;k++){const a=Math.random()*Math.PI*2,d=Math.max(0,Math.min(M,bndR(a)-1500))*Math.sqrt(Math.random()),x=ARENA.x+Math.cos(a)*d,y=ARENA.y+Math.sin(a)*d,p={x,y};
+    if(walkable(x,y,60)&&!inWater(x,y)&&!inCastleYard(p)&&!inDG(p,300))return p}
+  return{x:ARENA.x,y:ARENA.y}}
+function nextTarget(){const r=PHASES[zone.ph].r*ARENA.f;if(!zone.end)zone.end=zoneEnd();const F=zone.end,room=Math.max(0,zone.r-r),m=r*.9;let c=null;
+  for(let k=0;k<70;k++){const a=Math.random()*Math.PI*2,o=m*Math.sqrt(Math.random()),tx=F.x+Math.cos(a)*o,ty=F.y+Math.sin(a)*o;
+    if(Math.hypot(tx-zone.x,ty-zone.y)>room)continue;c={x:tx,y:ty};
+    if(r<1270&&(!walkable(tx,ty,40)||inCastleYard(c)&&r<300))continue;break}
+  if(!c){const dx=F.x-zone.x,dy=F.y-zone.y,d=Math.hypot(dx,dy),k=d>room?room/d:1;c={x:zone.x+dx*k,y:zone.y+dy*k}}
+  zone.tx=c.x;zone.ty=c.y;zone.tr=r}
 
 // ===================== EVENTS =====================
 function emit(ev){applyEvent(ev);if(net.mode==='host')netQueue(ev)}
@@ -116,12 +124,12 @@ function gainXp(u,x){
     fxTextFor(u.x,u.y-70,'LEVEL '+u.lvl,'#ffd35a',1.3,isHuman(u)?[u.id]:[]);fxE('lvl',{id:u.id,x:u.x|0,y:u.y|0});
     if(isHuman(u))emit({t:'s',n:'lvl',x:u.x|0,y:u.y|0,g:1,v:[u.id]});else botLearn(u)}
   if(u.lvl>=MAXL)u.xp=0}
-function heal(u,a){u.hp=Math.min(u.maxHp,u.hp+a)}
+function heal(u,a){if(u.rotT>0)a*=.5;u.hp=Math.min(u.maxHp,u.hp+a)}   // a zombie's rot halves healing
 
 // ===================== COMBAT (host) =====================
 function addFury(u){if(!u||!u.hero||u.dead)return;u.fury=Math.min(FURY_MAX,(u.fury||0)+1);u.furyT=FURY_T}
 function dealDamage(t,amt,type,src,quiet,crit){
-  if(t.dead||t.reviveT>0||amt<=0)return 0;if(CURSED){amt=curDmg(t,amt,type,src,quiet);if(amt<=0)return 0}
+  if(t.dead||t.reviveT>0||amt<=0)return 0;if(CURSED){amt=curDmg(t,amt,type,src,quiet);if(amt<=0)return 0}if(t.statT>0&&t.stat>0)amt*=1+.015*t.stat;   // storm static
   let k=1;if(type==='p')k=1-armorRed(t.armorV);else if(type==='m')k=1-t.mr;if(t.hero&&src&&src.hero&&src!==t)k*=PVP_K;
   let d=amt*k,ab=0;
   if(t.shieldHp>0){ab=Math.min(t.shieldHp,d);t.shieldHp-=ab;d-=ab}
@@ -230,7 +238,8 @@ function basic(u,ft){
   }else{const F=Wp.fused?Wp:null;let k,el=null;
     if(F){if(F.arch==='RS'){k=13;el=F.el}else if(F.arch==='RR')k=7;else{u.altE=!u.altE;el=u.altE&&F.el2?F.el2:F.el;k=BK[el]}}
     else k=u.wk==='fire'?1:u.wk==='frost'?3:u.wk==='xbow'?7:u.wk==='storm'?10:0;
-    const o={spd:u.pspd,r:k===0||k===7||k===13?8:k===1?12:11,dmg,type:Wp.magic?'m':'p',crit,kind:k,slow:Wp.chill?1:0,slowAmt:Wp.chill||0,life:(u.range+80)/u.pspd,el,elP:.45,basic:1};
+    const o={spd:u.pspd,r:k===0||k===7||k===13?8:k===1?12:11,dmg,type:Wp.magic?'m':'p',crit,kind:k,slow:Wp.chill?1:0,slowAmt:Wp.chill||0,life:(u.range+80)/u.pspd,el,elP:.45,basic:1,
+      st:!F&&(k===1||k===3||k===10)?u.wk:undefined};   // a staff's bolt leaves its element's status
     if(F&&F.arch==='RR'){o.dmg=dmg*.58;for(const s of[-1,1]){const a=Math.atan2(ny,nx)+s*.05;proj(u,Math.cos(a),Math.sin(a),o)}}   // twin crossbows: two bolts a shot
     else proj(u,nx,ny,o);
     sndAt(k===0||k===7||k===13?'shoot':k===1?'orb':k===10?'zap':'ice',u.x,u.y)}
@@ -269,14 +278,14 @@ function cast0(u,i,ap){
     case 'bow1':{face();proj(u,nx,ny,{spd:1300,r:12,dmg:V.dmg[li]+.4*A,type:'p',kind:5,root:V.root[li],life:rngS/1300});
       let mx=-nx,my=-ny;u.dash={vx:mx*1100,vy:my*1100,t:.26,hit:null};sndAt('dash',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(my,mx).toFixed(2)});break}
     case 'bow2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:260,dmg:V.dmg[li]+.15*A,type:'p',owner:u,kind:'rain',dot:3,tick:.3,slow:.6,slowAmt:.3});sndAt('rain',p.x,p.y);break}
-    case 'fire0':face();proj(u,nx,ny,{spd:820,r:18,dmg:V.dmg[li]*SA,type:'m',kind:2,boom:110,life:rngS/820});sndAt('orb',u.x,u.y);break;
+    case 'fire0':face();proj(u,nx,ny,{spd:820,r:18,dmg:V.dmg[li]*SA,type:'m',kind:2,boom:110,bkind:'boom',el:'fire',elP:1,life:rngS/820});sndAt('orb',u.x,u.y);break;
     case 'fire1':{u.castAnim=.4;for(const o of units){if(o.dead||!isEnemy(u,o))continue;const dd=dist(u,o);if(dd>230+o.r*.6)continue;dealDamage(o,V.dmg[li]*SA,'m',u);if(o.dead)continue;
-        o.burnT=3;o.burnDps=V.burn[li]*SA;o.burnSrc=u;if(!o.boss&&!o.golem){const kx=(o.x-u.x)/(dd||1),ky=(o.y-u.y)/(dd||1);o.kb={vx:kx*900,vy:ky*900,t:.28};o.dash=null}}
+        o.burnT=3;o.burnDps=V.burn[li]*SA;o.burnSrc=u;stAdd(u,o,'fire',2);if(!o.boss&&!o.golem){const kx=(o.x-u.x)/(dd||1),ky=(o.y-u.y)/(dd||1);o.kb={vx:kx*900,vy:ky*900,t:.28};o.dash=null}}
       aoe({x:u.x,y:u.y,r:230,dmg:0,owner:u,kind:'nova',fxOnly:true,vis:.45});sndAt('nova',u.x,u.y);emit({t:'k',a:5,x:u.x|0,y:u.y|0});break}
-    case 'fire2':{face();const tu=ft||tg.t;const lead=tu?{x:tg.x+(tu.mvx||0)*speedOf(tu)*.6,y:tg.y+(tu.mvy||0)*speedOf(tu)*.6}:tg;const p=clampTo(u,lead,rngS);aoe({x:p.x,y:p.y,r:V.r[li],dmg:V.dmg[li]*SA,type:'m',owner:u,delay:.85,kind:'meteor',big:true,burn:V.burn[li]*SA});sndAt('meteor',p.x,p.y);break}
-    case 'frost0':face();proj(u,nx,ny,{spd:1250,r:16,dmg:V.dmg[li]*SA,type:'m',kind:4,pierce:1,slow:2,slowAmt:.4,life:rngS/1250});sndAt('lance',u.x,u.y);break;
-    case 'frost1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:240,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'frost',root:V.root[li],slow:V.root[li]+2,slowAmt:.4});sndAt('frost',u.x,u.y);break;
-    case 'frost2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:330,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'blizz',dot:4,tick:.4,slow:.6,slowAmt:.5,endStun:V.stun[li]});sndAt('freeze',p.x,p.y);break}
+    case 'fire2':{face();const tu=ft||tg.t;const lead=tu?{x:tg.x+(tu.mvx||0)*speedOf(tu)*.6,y:tg.y+(tu.mvy||0)*speedOf(tu)*.6}:tg;const p=clampTo(u,lead,rngS);aoe({x:p.x,y:p.y,r:V.r[li],dmg:V.dmg[li]*SA,type:'m',owner:u,delay:.85,kind:'meteor',big:true,burn:V.burn[li]*SA,el:'fire',elP:1});sndAt('meteor',p.x,p.y);break}
+    case 'frost0':face();proj(u,nx,ny,{spd:1250,r:16,dmg:V.dmg[li]*SA,type:'m',kind:4,pierce:1,slow:2,slowAmt:.4,el:'frost',elP:1,life:rngS/1250});sndAt('lance',u.x,u.y);break;
+    case 'frost1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:240,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'frost',root:V.root[li],slow:V.root[li]+2,slowAmt:.4,el:'frost',elP:1});sndAt('frost',u.x,u.y);break;
+    case 'frost2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:330,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'blizz',dot:4,tick:.4,slow:.6,slowAmt:.5,endStun:V.stun[li],st:'frost'});sndAt('freeze',p.x,p.y);break}
     // ---- greatsword ----
     case 'gsword0':{face();u.atkAnim=.3;const ang=Math.atan2(ny,nx);aoe({x:u.x,y:u.y,r:rngS,len:rngS,ang,arc:.95,shape:'cone',dmg:V.dmg[li]+.9*A,type:'p',owner:u,kind:'crescent',slow:1.6,slowAmt:V.slow[li],vis:.4});sndAt('heavy',u.x,u.y);emit({t:'k',a:6,x:u.x|0,y:u.y|0});break}
     case 'gsword1':{u.castAnim=.4;u.spinT=Math.max(u.spinT,.35);u.spinTick=99;aoe({x:u.x,y:u.y,r:rngS,dmg:V.dmg[li]+.6*A,type:'p',owner:u,kind:'whirl',kb:V.kb,stun:.5,vis:.45});sndAt('spin',u.x,u.y);break}
@@ -288,11 +297,11 @@ function cast0(u,i,ap){
     // ---- lightning staff ----
     case 'storm0':{const t=ft&&dist(u,ft)<=rngS+40?ft:ap?tg.t:nearestEnemy(u,rngS,true);if(!t)return false;const d0=dist(u,t)||1;u.fx=(t.x-u.x)/d0;u.fy=(t.y-u.y)/d0;u.revealT=1.2;u.castAnim=.4;
       const hit=new Set(),pts=[[u.x|0,u.y|0]];let cur=t,dm=V.dmg[li]*SA;
-      for(let k=0;k<V.n[li]&&cur;k++){hit.add(cur);pts.push([cur.x|0,cur.y|0]);dealDamage(cur,dm,'m',u);if(!cur.dead)cur.stunT=Math.max(cur.stunT,.18);dm*=.8;
+      for(let k=0;k<V.n[li]&&cur;k++){hit.add(cur);pts.push([cur.x|0,cur.y|0]);dealDamage(cur,dm,'m',u);if(!cur.dead){cur.stunT=Math.max(cur.stunT,.18);stAdd(u,cur,'storm',2)}dm*=.8;
         let nb=null,bd=330;for(const o of units){if(o.dead||hit.has(o)||!isEnemy(u,o))continue;const dd=dist(cur,o);if(dd<bd){bd=dd;nb=o}}cur=nb}
       fxE('chain',{x:u.x|0,y:u.y|0,p:pts});sndAt('lance',t.x,t.y);break}
-    case 'storm1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:rngS,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'static',follow:u,followAll:true,dot:3,tick:.5,slow:.6,slowAmt:.35});sndAt('nova',u.x,u.y);break;
-    case 'storm2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:310,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'thunder',delay:.3,dot:1.6,tick:.32,endStun:V.stun[li]});sndAt('thunder',p.x,p.y);break}
+    case 'storm1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:rngS,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'static',follow:u,followAll:true,dot:3,tick:.5,slow:.6,slowAmt:.35,st:'storm',stP:.5});sndAt('nova',u.x,u.y);break;
+    case 'storm2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:310,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'thunder',delay:.3,dot:1.6,tick:.32,endStun:V.stun[li],st:'storm',stP:.6});sndAt('thunder',p.x,p.y);break}
     default:if(!FUSED[u.wk]||castF(u,i,li,V,A,SA,rngS,tg,nx,ny,d,ft,ap,face)===false)return false;
   }
   u.mp-=cost;u.cd[i]=s.cd[li]*cdMul(u);return true;
@@ -302,12 +311,33 @@ const ROOT_NO={fMM0:1,fMM2:1,fMR1:1,fMS_fire2:1,fMS_frost2:1,fMS_storm2:1};
 const EL=['fire','frost','storm'];
 const EL_BURST={fire:'nova',frost:'frost',storm:'whirl'},EL_FIELD={fire:'burn',frost:'blizz',storm:'static'},EL_DOT={fire:'burn',frost:'blizz',storm:'thunder'};
 // element riders on hits: fire burns, frost chills, storm arcs to a second enemy. k = strength (basic attacks ~.45, skills 1)
-function elemHit(src,o,el,k){if(!o||o.dead||!el||!src)return;k=k||1;const amp=1+spellAmp(src);
+function elemHit(src,o,el,k){if(!o||o.dead||!el||!src)return;k=k||1;const amp=1+spellAmp(src);stAdd(src,o,el,k>=.8?2:1);if(o.dead)return;
   if(el==='fire'){const dps=(10+1.1*src.lvl)*k*amp;if(o.burnT<=0||o.burnDps<dps){o.burnDps=dps;o.burnSrc=src}o.burnT=Math.max(o.burnT,2.5)}
   else if(el==='frost'){const T=1.1+.6*k,s=.16+.16*k;o.slowAmt=Math.max(o.slowT>T?o.slowAmt:0,s);o.slowT=Math.max(o.slowT,T)}
   else if(el==='storm'){if(Math.random()>.18+.42*k)return;let nb=null,bd=280;for(const q of units){if(q.dead||q===o||!isEnemy(src,q)||Math.abs(q.x-o.x)>bd)continue;const dd=dist(o,q);if(dd<bd){bd=dd;nb=q}}
     const dm=(8+1.6*src.lvl)*(.4+.6*k)*amp,tg=nb||o;dealDamage(tg,dm,'m',src,true);if(!tg.dead)tg.stunT=Math.max(tg.stunT,.12*k);
     if(nb)fxE('chain',{x:o.x|0,y:o.y|0,p:[[o.x|0,o.y|0],[nb.x|0,nb.y|0]]});else fxE('hit',{x:o.x|0,y:o.y|0,c:'#c8b4ff'})}}
+// ---- element statuses (owner 2026-11-21: mages felt weak, so every element now leaves a status that builds up) ----
+//  fire  เผาไหม้   up to 4 stacks, 3 s: each burns 0.5% of max HP a second on top of the flat burn
+//  frost หนาวเหน็บ up to 5 stacks, 2.6 s: 7% slow each; the 5th freezes the target solid (heroes .5 s, monsters 1.4 s, bosses .45 s)
+//                  with a burst of 3% max HP, and it cannot be frozen again for 6 s
+//  storm ไฟฟ้าสถิต up to 5 stacks, 4 s: the target takes 1.5% more damage per stack; the 5th overloads it (3% max HP, a short stun,
+//                  arcs to two enemies nearby) and the stacks reset
+// Basic hits add one stack, skills two (elemHit k>=.8), damage-over-time fields one per tick (aoe st, stP = chance). Big monsters measure the % against
+// a capped HP, and hero-vs-hero damage is still damped by PVP_K in dealDamage.
+const ST_HP=o=>o.hero?o.maxHp:Math.min(o.maxHp,o.boss||o.golem||o.ecl||o.lord?2400:3600);
+function stAdd(src,o,el,n){if(src&&src.pet&&src.owner)src=src.owner;if(!o||o.dead||!src||!el||o.reviveT>0)return;n=n||1;const H=[];if(isHuman(o))H.push(o.id);if(isHuman(src))H.push(src.id);
+  if(el==='fire'){o.ign=Math.min(4,(o.ignT>0?o.ign||0:0)+n);o.ignT=3;o.ignSrc=src}
+  else if(el==='frost'){if(o.frzImm>0)return;o.chill=Math.min(5,(o.chillT>0?o.chill||0:0)+n);o.chillT=2.6;o.slowAmt=Math.max(o.slowT>0?o.slowAmt:0,.07*o.chill);o.slowT=Math.max(o.slowT,1.2);
+    if(o.chill>=5){o.chill=0;o.chillT=0;const T=o.boss?.45:o.hero?.5:o.golem||o.ecl?.9:1.4;o.stunT=Math.max(o.stunT,T);o.frzImm=T+6;
+      fxE('freeze',{id:o.id,x:o.x|0,y:o.y|0});sndAt('freeze',o.x,o.y);if(H.length)fxTextFor(o.x,o.y-o.r-46,'❄ แช่แข็ง!','#bfefff',1.1,H);
+      dealDamage(o,ST_HP(o)*.03+6+.8*(src.lvl||1),'m',src,false)}}
+  else if(el==='storm'){o.stat=Math.min(5,(o.statT>0?o.stat||0:0)+n);o.statT=4;
+    if(o.stat>=5){o.stat=0;o.statT=0;const dm=ST_HP(o)*.03+6+.9*(src.lvl||1),pts=[[o.x|0,o.y|0]];let n2=0;
+      for(const q of units){if(n2>=2)break;if(q.dead||q===o||!isEnemy(src,q)||Math.abs(q.x-o.x)>300||dist(o,q)>300)continue;pts.push([q.x|0,q.y|0]);n2++;dealDamage(q,dm*.5,'m',src,true)}
+      fxE('chain',{x:o.x|0,y:o.y|0,p:pts.length>1?pts:[[o.x|0,o.y-120|0],[o.x|0,o.y|0]]});fxE('hit',{x:o.x|0,y:o.y|0,c:'#c8b4ff'});sndAt('zap',o.x,o.y);
+      if(H.length)fxTextFor(o.x,o.y-o.r-46,'⚡ ช็อต!','#d8c8ff',1.1,H);
+      dealDamage(o,dm,'m',src,false);if(!o.dead)o.stunT=Math.max(o.stunT,o.hero?.2:o.boss?.2:.6)}}}
 function castF(u,i,li,V,A,SA,rngS,tg,nx,ny,d,ft,ap,face){const F=WEAPONS[u.wk],e=F.el,ang=Math.atan2(ny,nx);
   switch(F.arch+i){
     // ---- 👑 twin royal swords ----
@@ -626,10 +656,20 @@ function botThink(u,dt){
   if(ai.detT>0){ai.detT-=dt;const s=ai.detS;const nx=-my*s,ny=mx*s;mx=nx*.9+mx*.3;my=ny*.9+my*.3}
   return{mx,my};
 }
+// camp monsters fight smarter once the match is under way (4:00+, owner 2026-11-21): trolls and golems slam the ground (stun),
+// wolves pounce on anyone keeping away, goblins throw knives
+const MOB_ACT={ogre:{cd:8,rng:190},golem:{cd:9,rng:230},guardian:{cd:9,rng:240},wolf:{cd:7,rng:420,min:150},goblin:{cd:4.5,rng:440,min:130}};
+function mobAct(u,t,d,dt){const A=MOB_ACT[u.kind];if(!A||u.ecl||u.boss||u.pet||gameT<240||u.stunT>0||u.busyT>0||u.dash)return;
+  u.actT=(u.actT===undefined?A.cd*.4:u.actT)-dt;if(u.actT>0||d>A.rng||d<(A.min||0))return;u.actT=A.cd*rand(.85,1.15);
+  const nx=(t.x-u.x)/(d||1),ny=(t.y-u.y)/(d||1);u.fx=nx;u.fy=ny;
+  if(u.kind==='wolf'){const sp=1100;u.dash={vx:nx*sp,vy:ny*sp,t:Math.min(d-30,380)/sp,dmg:u.atkDmg*1.2,stun:.3,hit:new Set(),stop:true};u.atkAnim=.3;
+    fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(ny,nx).toFixed(2)});sndAt('dash',u.x,u.y)}
+  else if(u.kind==='goblin'){proj(u,nx,ny,{spd:950,r:8,dmg:u.atkDmg*.9,type:'p',kind:0,life:(A.rng+60)/950});u.atkAnim=.3;sndAt('shoot',u.x,u.y)}
+  else{const og=u.kind==='ogre';u.busyT=.75;u.castAnim=.8;aoe({x:u.x,y:u.y,r:og?180:220,dmg:u.atkDmg*(og?1.3:1.5),type:'p',owner:u,delay:.55,kind:'slam',stun:og?.55:.7,big:true});sndAt('slam',u.x,u.y)}}
 function mobThink(u,dt){
-  let mx=0,my=0;const t=u.aggro,L=u.def.leash||420;const dh=dist(u,u.home);
+  let mx=0,my=0;const t=u.aggro,L=u.def.leash||420;const dh=dist(u,u.home);if(!u.boss&&u.busyT>0)u.busyT=Math.max(0,u.busyT-dt);
   if(t&&!t.dead&&dh<L&&dist(t,u.home)<L+120&&(!t.hidden||dist(u,t)<170)){
-    const d=dist(u,t),R=u.range+t.r;if(d>R-6){mx=(t.x-u.x)/d;my=(t.y-u.y)/d}
+    const d=dist(u,t),R=u.range+t.r;if(d>R-6){mx=(t.x-u.x)/d;my=(t.y-u.y)/d}mobAct(u,t,d,dt);
     u.fx=(t.x-u.x)/(d||1);u.fy=(t.y-u.y)/(d||1);
     if(d<R+6&&u.atkCd<=0&&u.stunT<=0&&!u.busyT){u.atkCd=u.atkCdBase;u.atkAnim=.3;const ang=Math.atan2(t.y-u.y,t.x-u.x);
       if(u.def.cleave){for(const o of units){if(o.dead||!isEnemy(u,o)||dist(u,o)>R+o.r)continue;let da=Math.abs(Math.atan2(o.y-u.y,o.x-u.x)-ang);if(da>Math.PI)da=Math.PI*2-da;if(da<1)dealDamage(o,u.atkDmg*(isNight()?1.4:1),'p',u)}}
@@ -660,15 +700,15 @@ function zSpot(){const ok=p=>walkable(p.x,p.y,34)&&!inWater(p.x,p.y)&&!houseAt(p
   if(WD.graves.length&&Math.random()<.4){const gs=WD.graves.filter(g=>inZone(g,200));if(gs.length){const g=gs[Math.floor(Math.random()*gs.length)];for(let t=0;t<12;t++){const a=Math.random()*6.3,d=rand(20,160);const p={x:g.x+Math.cos(a)*d,y:g.y+Math.sin(a)*d};if(ok(p))return p}}}
   const hs=units.filter(u=>u.hero&&!u.dead);if(!hs.length)return null;const h=hs[Math.floor(Math.random()*hs.length)];
   for(let t=0;t<16;t++){const a=Math.random()*6.3,d=rand(visionR()+120,visionR()+650);const p={x:h.x+Math.cos(a)*d,y:h.y+Math.sin(a)*d};if(ok(p)&&!units.some(o=>o.hero&&!o.dead&&dist(o,p)<visionR()))return p}return null}
-function spawnZombie(kind,p){const sc=1+Math.min(1.6,gameT/560);const u=mkZombie(zid++,kind,p.x,p.y,sc);addUnit(u);fxE('rise',{x:p.x|0,y:p.y|0,big:CREEPS[kind].big?1:0});sndAt('rise',p.x,p.y);return u}
+function spawnZombie(kind,p){const sc=1+Math.min(2.6,gameT/420);const u=mkZombie(zid++,kind,p.x,p.y,sc);u.atkDmg*=(1+.8*(sc-1))/sc;addUnit(u);fxE('rise',{x:p.x|0,y:p.y|0,big:CREEPS[kind].big?1:0});sndAt('rise',p.x,p.y);return u}
 function nightTick(dt){
-  if(zWave){zWave.t-=dt;if(zWave.t<=0&&zWave.left>0&&isNight()){zWave.t=rand(.35,.8);
-      const cap=Math.min(76,4+Math.round(alive*2.1));if(zAlive()<cap){const p=zSpot();if(p){const r=Math.random(),late=nightN>=2;
-        const kind=zWave.lord>0&&WD.graves.length?(zWave.lord--,'zlord'):r<(late?.18:.1)?'zbrute':r<.42?'zrunner':'zombie';spawnZombie(kind,p);zWave.left--}}}
+  if(zWave){zWave.t-=dt;if(zWave.t<=0&&zWave.left>0&&isNight()){zWave.t=rand(.28,.65);
+      const cap=Math.min(100,6+Math.round(alive*2.7));if(zAlive()<cap){const p=zSpot();if(p){const r=Math.random(),late=nightN>=2;
+        const kind=zWave.lord>0&&WD.graves.length?(zWave.lord--,'zlord'):r<(late?.26:.14)?'zbrute':r<.5?'zrunner':'zombie';spawnZombie(kind,p);zWave.left--}}}
     if(!isNight())zWave=null}
   // corpses of the dead stay a moment, then go
   if(units.some(u=>u.zombie&&u.dead&&gameT-(u.deadAt||0)>4)){units=units.filter(u=>!(u.zombie&&u.dead&&gameT-(u.deadAt||0)>4));UMAP=new Map(units.map(u=>[u.id,u]))}}
-function nightStart(){nightN++;zWave={t:2,left:Math.min(110,6+Math.round(alive*(2.2+.4*nightN))),lord:nightN>=2&&alive>=6?1:0};
+function nightStart(){nightN++;zWave={t:2,left:Math.min(150,10+Math.round(alive*(2.8+.6*nightN))),lord:nightN>=2?Math.min(3,nightN-1):0};
   emit({t:'a',s:'🌙 ค่ำแล้ว! ซอมบี้ออกล่า · มอนสเตอร์ดุร้ายขึ้น · ซ่อนในพุ่มหญ้าได้',d:4});emit({t:'f',s:'🧟 ซอมบี้ลุกขึ้นจากหลุม! ฆ่าแล้วสุ่มได้ไอเทม (SSR 1%)'})}
 function dawn(){for(const u of units)if(u.zombie&&!u.dead){u.dead=true;u.deadAt=gameT;fxE('dust',{id:u.id,x:u.x|0,y:u.y|0});fxE('die',{id:u.id,x:u.x|0,y:u.y|0})}
   emit({t:'f',s:'☀️ รุ่งเช้า ซอมบี้สลายเป็นผุยผง'})}
@@ -680,20 +720,30 @@ function zombieLoot(t,src){const x=t.x,y=t.y,r=Math.random(),H=isHuman(src)?[src
   else if(r<.31)dropItem({k:'p',x,y,b:0});else if(r<.45)dropItem({k:'p',x,y,b:1});else if(r<.50)dropItem({k:'p',x,y,b:2});else if(r<.55)dropItem({k:'p',x,y,b:3});
   else if(r<.62){const pool=ITEMS.filter(i=>i.id!=='potion'&&i.id!=='mana');dropItem({k:'i',x,y,it:pickW(pool).id})}
   if(t.lord){wpn(pickTier([0,0,55,45]));dropItem({k:'p',x:x+30,y,b:2});dropItem({k:'p',x:x-30,y,b:0});emit({t:'f',s:`👑 ${src.name} ปราบราชาซอมบี้!`})}}
+// a zombie's bite rots: 1% of max HP a second (+ a little more each night) for 4 s, refreshed by every bite, healing halved meanwhile
+function rotBite(z,t){if(!t.hero)return;t.rotT=4;t.rotDps=t.maxHp*.01+4+2*nightN;t.rotSrc=z}
+// the Zombie King calls three more of the dead out of the ground around it
+function raiseDead(u){const cap=Math.min(110,10+Math.round(alive*3));if(zAlive()>=cap)return;u.castAnim=1;sndAt('rise',u.x,u.y);emit({t:'k',a:4,x:u.x|0,y:u.y|0});
+  for(let i=0;i<3;i++){const a=Math.random()*6.28,d=rand(70,160),p={x:u.x+Math.cos(a)*d,y:u.y+Math.sin(a)*d};if(!walkable(p.x,p.y,30)||inWater(p.x,p.y)||houseAt(p))continue;
+    const z=spawnZombie(Math.random()<.3?'zrunner':'zombie',p);z.aggro=u.aggro}}
 function zombieThink(u,dt){
   if(u.rise>0){u.rise-=dt;return{mx:0,my:0}}
   u.zt=(u.zt||0)-dt;
-  if(u.zt<=0){u.zt=rand(.4,.75);let best=null,bd=1600;   // they smell the living; tall grass hides you unless they are close
-    for(const h of HEROES){if(h.dead||h.reviveT>0)continue;const d=dist(u,h);if(d>=bd||h.hidden&&d>190)continue;bd=d;best=h}
-    if(u.aggro&&!u.aggro.dead&&u.aggro.hero&&dist(u,u.aggro)<bd+150&&!(u.aggro.hidden&&dist(u,u.aggro)>190))best=u.aggro;
+  if(u.zt<=0){u.zt=rand(.35,.65);let best=null,bd=2000;   // they smell the living; tall grass hides you unless they are close
+    for(const h of HEROES){if(h.dead||h.reviveT>0)continue;const d=dist(u,h);if(d>=bd||h.hidden&&d>230)continue;bd=d;best=h}
+    if(u.aggro&&!u.aggro.dead&&u.aggro.hero&&dist(u,u.aggro)<bd+150&&!(u.aggro.hidden&&dist(u,u.aggro)>230))best=u.aggro;
     u.aggro=best;if(!best&&(!u.wx||Math.hypot(u.wx-u.x,u.wy-u.y)<90)){const a=Math.random()*6.3,r=rand(150,500);u.wx=u.x+Math.cos(a)*r;u.wy=u.y+Math.sin(a)*r;if(!walkable(u.wx,u.wy,30)){u.wx=zone.x;u.wy=zone.y}}}
   const t=u.aggro;let mx=0,my=0;
   if(t&&!t.dead){const d=dist(u,t),R=u.range+t.r;u.fx=(t.x-u.x)/(d||1);u.fy=(t.y-u.y)/(d||1);
     if(d>R-6){const v=navDir(u,t.x,t.y);mx=v.x;my=v.y}
     if(d<R+6&&u.atkCd<=0&&u.stunT<=0){u.atkCd=u.atkCdBase;u.atkAnim=.3;const ang=Math.atan2(t.y-u.y,t.x-u.x);
-      dealDamage(t,u.atkDmg*(u.lord?1:1),'p',u);if(!t.dead&&!t.hidden){t.slowT=Math.max(t.slowT,.8);t.slowAmt=Math.max(t.slowT>.8?t.slowAmt:0,.25)}
+      dealDamage(t,u.atkDmg,'p',u);if(!t.dead){if(!t.hidden){t.slowT=Math.max(t.slowT,.8);t.slowAmt=Math.max(t.slowT>.8?t.slowAmt:0,.25)}rotBite(u,t)}
       emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:'#9dff7a',k:4});if(u.big)sndAt('hit',u.x,u.y)}
-    if(u.lord&&u.stunT<=0){u.slT=(u.slT===undefined?5:u.slT)-dt;if(u.slT<=0&&d<300){u.slT=7;aoe({x:u.x,y:u.y,r:260,dmg:110*u.scale,type:'m',owner:u,delay:.6,kind:'slam',stun:.8,big:true,slow:2,slowAmt:.4});sndAt('slam',u.x,u.y);u.castAnim=.8}}}
+    if(u.lord&&u.stunT<=0){u.slT=(u.slT===undefined?5:u.slT)-dt;if(u.slT<=0&&d<300){u.slT=7;aoe({x:u.x,y:u.y,r:260,dmg:130*u.scale,type:'m',owner:u,delay:.6,kind:'slam',stun:.8,big:true,slow:2,slowAmt:.4});sndAt('slam',u.x,u.y);u.castAnim=.8}
+      u.rsT=(u.rsT===undefined?4:u.rsT)-dt;if(u.rsT<=0&&d<900){u.rsT=10;raiseDead(u)}}
+    if(u.stunT<=0&&!u.dash&&(u.kind==='zrunner'||u.kind==='zbrute')){u.zsT=(u.zsT===undefined?rand(1,3):u.zsT)-dt;
+      if(u.zsT<=0){if(u.kind==='zrunner'&&d>130&&d<380){u.zsT=rand(4.5,6);const sp=1050,nx=(t.x-u.x)/(d||1),ny=(t.y-u.y)/(d||1);u.dash={vx:nx*sp,vy:ny*sp,t:Math.min(d-25,360)/sp,dmg:u.atkDmg*1.1,stun:.2,hit:new Set(),stop:true};u.atkAnim=.3;fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(ny,nx).toFixed(2)})}
+        else if(u.kind==='zbrute'&&d<200){u.zsT=rand(6,8);u.castAnim=.8;aoe({x:u.x,y:u.y,r:200,dmg:u.atkDmg*1.3,type:'p',owner:u,delay:.55,kind:'slam',stun:.6,big:true});sndAt('slam',u.x,u.y)}}}}
   else if(u.wx){const v=dirTo(u,{x:u.wx,y:u.wy});mx=v.x*.45;my=v.y*.45}
   return{mx,my}}
 // camp monsters at night: harder hits and they charge anyone who walks too close to their camp
@@ -719,9 +769,19 @@ function zoneTick(dt){const P=PHASES[Math.min(zone.ph,PHASES.length-1)];if(zone.
     if(zone.t<=0){zone.ph++;if(zone.ph<PHASES.length){zone.st='wait';zone.t=PHASES[zone.ph].w*zTime();nextTarget()}else zone.st='done'}}}
 let warnN=false;
 function dayTick(){const n=isNight();const cyc=gameT%(DAY+NIGHT);if(!n&&cyc>DAY-15&&!warnN&&gameT>20){warnN=true;emit({t:'a',s:'🌙 อีก 15 วินาทีจะค่ำ — ซอมบี้กำลังจะลุกขึ้น! หาที่ซ่อนหรือเตรียมสู้',d:3.5})}if(n)warnN=false;if(n!==lastNight){lastNight=n;if(gameT>5){if(n)nightStart();else{emit({t:'a',s:'☀️ เช้าแล้ว',d:3});dawn()}emit({t:'s',n:n?'night':'day',x:0,y:0,g:1})}}}
-function campTick(){for(const c of WD.camps){if(c.deadAt<0||c.respawns>=c.maxRespawn)continue;const wait=c.tier==='boss'?240:75;
-  if(gameT-c.deadAt>wait&&!units.some(u=>u.hero&&!u.dead&&dist(u,c)<750)){const sc=1+Math.min(1.5,gameT/480);
-    for(const id of c.mem){const m=UMAP.get(id);if(!m)continue;setMobStats(m,sc*(c.sc||1));m.dead=false;m.x=m.home.x;m.y=m.home.y;m.aggro=null;m.stunT=0;m.rootT=0;m.slowT=0;m.burnT=0;m.kb=null}
+// Monsters grow with the match (owner 2026-11-21: tougher monsters, but not in the first minutes): x1 until 3:00, x2 at 8:00, x3.2 at 14:00,
+// x4 by 24:00. Living camps catch up every 6 s while nobody fights them (their health keeps its share); a camp that respawns comes back a
+// step ahead. Their bite grows slower than their health (x1 + 80% of the rise). The castle boss and the Overlord stop at x2.5.
+function mobPow(t){return 1+2.2*clamp((t-180)/660,0,1)+.8*clamp((t-840)/600,0,1)}
+const mobCap=m=>m.boss||m.ecl==='overlord'?2.5:9;
+function mobScale(m,k){const f=m.dead?1:m.hp/Math.max(1,m.maxHp);setMobStats(m,k);m.atkDmg*=(1+.8*(k-1))/k;m.hp=Math.max(1,m.maxHp*f)}
+let mobGrowT=0;
+function campTick(){const P=mobPow(gameT),grow=(mobGrowT-=1)<=0&&P>1;if(grow)mobGrowT=6;
+  for(const c of WD.camps){
+    if(c.deadAt<0){if(grow)for(const id of c.mem){const m=UMAP.get(id);if(!m||m.dead||m.aggro||m.pet)continue;const k=Math.min(mobCap(m),P*(c.sc||1));if(k>(m.scale||1)*1.03)mobScale(m,k)}continue}
+    if(c.respawns>=c.maxRespawn)continue;const wait=c.tier==='boss'?240:75;
+  if(gameT-c.deadAt>wait&&!units.some(u=>u.hero&&!u.dead&&dist(u,c)<750)){const sc=Math.max(1.15,P*1.1);
+    for(const id of c.mem){const m=UMAP.get(id);if(!m)continue;mobScale(m,Math.min(mobCap(m),sc*(c.sc||1)));m.dead=false;m.x=m.home.x;m.y=m.home.y;m.aggro=null;m.stunT=0;m.rootT=0;m.slowT=0;m.burnT=0;m.kb=null}
     c.deadAt=-1;c.respawns++;if(c.tier==='boss')emit({t:'f',s:'🐉 มังกรเพลิงกลับมาเฝ้าปราสาท!'})}}}
 let avgLvl=1,frameN=0,HEROES=[];
 function hitArea(a,u){if(a.shape==='line'){const ex=a.x+Math.cos(a.ang)*a.len,ey=a.y+Math.sin(a.ang)*a.len;return segDist(u,[a.x,a.y,ex,ey])<a.w/2+u.r*.5}
@@ -735,12 +795,18 @@ function hostUpdate(dt){
     u.atkCd-=dt;u.atkSlowT-=dt;u.stunT-=dt;u.slowT-=dt;u.buffT-=dt;u.hurtT-=dt;u.revealT-=dt;u.rootT-=dt;u.atkAnim-=dt;u.castAnim-=dt;for(let i=0;i<3;i++)u.cd[i]-=dt;
     if(u.shieldT>0){u.shieldT-=dt;if(u.shieldT<=0)u.shieldHp=0}if(u.asT>0)u.asT-=dt;if(u.furyT>0){u.furyT-=dt;if(u.furyT<=0)u.fury=0}if(u.invisT>0)u.invisT-=dt;
     if(u.hero){for(let i=0;i<4;i++)if(u.bcd[i]>0)u.bcd[i]-=dt;if(u.hotT>0){u.hotT-=dt;heal(u,u.hotV*dt)}if(u.motT>0){u.motT-=dt;u.mp=Math.min(u.maxMp,u.mp+u.motV*dt)}if(u.spdPT>0)u.spdPT-=dt}
-    if(u.burnT>0){u.burnT-=dt;dealDamage(u,u.burnDps*dt,'m',u.burnSrc&&!u.burnSrc.dead?u.burnSrc:null,true);if(u.dead)continue}
+    if(u.burnT>0){u.burnT-=dt;u._bn=(u._bn||0)+dealDamage(u,u.burnDps*dt,'m',u.burnSrc&&!u.burnSrc.dead?u.burnSrc:null,true);if(u.dead)continue}
+    if(u.ignT>0){u.ignT-=dt;u._bn=(u._bn||0)+dealDamage(u,ST_HP(u)*.005*(u.ign||0)*dt,'m',u.ignSrc&&!u.ignSrc.dead?u.ignSrc:null,true);if(u.ignT<=0)u.ign=0;if(u.dead)continue}
+    if(u.rotT>0){u.rotT-=dt;u._rn=(u._rn||0)+dealDamage(u,(u.rotDps||0)*dt,'pure',u.rotSrc&&!u.rotSrc.dead?u.rotSrc:null,true);if(u.dead)continue;
+      if(u._rn>=1&&(u._rnT=(u._rnT||0)-dt)<=0){u._rnT=.6;if(isHuman(u))fxTextFor(u.x+rand(-14,14),u.y-u.r-20,fmtN(u._rn),'#9dff6a',.7,[u.id],0,u.id,-1);u._rn=0}}
+    if(u.chillT>0){u.chillT-=dt;if(u.chillT<=0)u.chill=0}if(u.statT>0){u.statT-=dt;if(u.statT<=0)u.stat=0}if(u.frzImm>0)u.frzImm-=dt;
+    if(u._bn>0){u._bnT=(u._bnT||0)-dt;if(u._bnT<=0){u._bnT=.6;const s=u.ignT>0&&u.ignSrc?u.ignSrc:u.burnSrc,v=[];if(isHuman(u))v.push(u.id);if(s&&!s.dead&&isHuman(s))v.push(s.id);   // burn damage, shown every .6 s
+      if(v.length&&u._bn>=1)fxTextFor(u.x+rand(-14,14),u.y-u.r-20,fmtN(u._bn),'#ff9a3a',.7,v,0,u.id,s?s.id:-1);u._bn=0}}
     if(u.hero){
       {const zp=zoneXY(u);if(Math.hypot(zp.x-zone.x,zp.y-zone.y)>zone.r)dealDamage(u,u.maxHp*(.03+.02*zph)*dt,'pure',null,true)}
       dgPort(u,dt);
       if(u.dead)continue;
-      let hr=u.hpRegen;const ooc=gameT-u.lastDmgT;if(ooc>6)hr+=u.maxHp*.01;
+      let hr=u.hpRegen;const ooc=gameT-u.lastDmgT;if(ooc>6)hr+=u.maxHp*.01;if(u.rotT>0)hr*=.5;
       u.hp=Math.min(u.maxHp,u.hp+hr*dt);u.mp=Math.min(u.maxMp,u.mp+u.mpRegen*dt);
       for(const s of WD.shrines)if(Math.abs(u.x-s.x)<s.r&&dist(u,s)<s.r&&ooc>3){u.hp=Math.min(u.maxHp,u.hp+u.maxHp*.06*dt);u.mp=Math.min(u.maxMp,u.mp+u.maxMp*.06*dt);if(Math.random()<dt*5)burstE(u.x,u.y,'#8cffb0',3)}
       gainXp(u,3.2*dt*(1+.12*Math.max(0,avgLvl-u.lvl)));
@@ -787,7 +853,7 @@ function hostUpdate(dt){
       if(Math.abs(p.x-u.x)<u.r+p.r&&dist(p,u)<u.r+p.r){p.hit.add(u);
         if(p.basic)addFury(p.owner);if(!p.boom){dealDamage(u,p.dmg,p.crit?'pure':p.type,p.owner,false,p.crit);sndAt(p.crit?'crit':projHitSnd(p),u.x,u.y);
           if(!u.dead){if(p.slow){u.slowT=Math.max(u.slowT,p.slow);u.slowAmt=Math.max(u.slowT>p.slow?u.slowAmt:0,p.slowAmt)}if(p.root){u.rootT=Math.max(u.rootT,p.root);fxE('snare',{id:u.id,x:u.x|0,y:u.y|0})}
-            if(p.el)elemHit(p.owner,u,p.el,p.elP);if(p.kbF&&!u.boss&&!u.golem){const l=Math.hypot(p.vx,p.vy)||1;u.kb={vx:p.vx/l*p.kbF,vy:p.vy/l*p.kbF,t:.2};u.dash=null}}
+            if(p.el)elemHit(p.owner,u,p.el,p.elP);else if(p.st&&(!p.stP||Math.random()<p.stP))stAdd(p.owner,u,p.st,1);if(p.kbF&&!u.boss&&!u.golem){const l=Math.hypot(p.vx,p.vy)||1;u.kb={vx:p.vx/l*p.kbF,vy:p.vy/l*p.kbF,t:.2};u.dash=null}}
           if(p.kind===4)fxE('shatter',{x:u.x|0,y:u.y|0});else if(p.kind>=11)fxE('hit',{x:u.x|0,y:u.y|0,c:p.el?ELEM[p.el].c:p.kind===11?'#7ff0d8':'#ffb46a'})}
         if(!p.pierce){hitS=true;break}}}
     if(hitS||p.life<=0){p.dead=true;
@@ -802,7 +868,7 @@ function hostUpdate(dt){
     if(a.dot){a.dotT=(a.dotT||0)-dt;if(a.t-a.delay<a.dot){if(a.dotT<=0){a.dotT=a.tick;applyAoe(a)}}else{a.done=true;if(a.endStun){for(const u of units){if(u.dead||!isEnemy(a.owner,u)||!hitArea(a,u))continue;u.stunT=Math.max(u.stunT,a.endStun);fxE('freeze',{id:u.id,x:u.x|0,y:u.y|0})}fxE('shatter',{x:a.x|0,y:a.y|0,r:a.r});sndAt('freeze',a.x,a.y)}}continue}
     if(!a.done){a.done=true;if(!a.fxOnly)applyAoe(a);a.fxT=a.vis;
       if(a.big){emit({t:'k',a:a.kind==='meteor'?12:9,x:a.x|0,y:a.y|0});sndAt(a.kind==='meteor'?'boom':'quake',a.x,a.y)}
-      if(a.burn)fresh.push({x:a.x,y:a.y,r:a.r*.85,dmg:a.burn*.5,type:'m',owner:a.owner,kind:'burn',dot:3,tick:.5,t:0,delay:0,done:false,vis:.3,fxT:0})}
+      if(a.burn)fresh.push({x:a.x,y:a.y,r:a.r*.85,dmg:a.burn*.5,type:'m',owner:a.owner,kind:'burn',dot:3,tick:.5,t:0,delay:0,done:false,vis:.3,fxT:0,st:a.el==='fire'?'fire':undefined})}
     a.fxT-=dt;
   }
   aoes=aoes.filter(a=>!(a.done&&(a.dot?true:a.fxT<=0))).concat(fresh);
@@ -810,7 +876,7 @@ function hostUpdate(dt){
 function applyAoe(a){for(const u of units){if(u.dead||!isEnemy(a.owner,u))continue;
   if(hitArea(a,u)){dealDamage(u,a.dmg,a.type,a.owner,!!a.dot&&a.kind!=='rain'&&a.kind!=='blizz'&&a.kind!=='volley'&&a.kind!=='thunder');if(u.dead)continue;
     if(a.kb&&!u.boss&&!u.golem){const d=dist(a,u)||1;u.kb={vx:(u.x-a.x)/d*a.kb,vy:(u.y-a.y)/d*a.kb,t:.26};u.dash=null}if(a.stun)u.stunT=Math.max(u.stunT,a.stun);if(a.root)u.rootT=Math.max(u.rootT,a.root);if(a.slow){u.slowT=Math.max(u.slowT,a.slow);u.slowAmt=a.slowAmt||.4}
-    if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP)}}}
+    if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP);else if(a.st&&(!a.stP||Math.random()<a.stP))stAdd(a.owner,u,a.st,1)}}}
 
 // ===================== SHARED VISUAL UPDATE =====================
 const pushMass=u=>u.boss||u.golem?12:u.hero?(u.ctrl?6:3):u.big||u.lord?2:1;

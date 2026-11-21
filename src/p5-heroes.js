@@ -5,13 +5,14 @@
 // The heroes ride on the Quaternius hero hooks (o.qn) so the frame loop, death and outline code keep working;
 // whenever a class GLB is missing the old hero model is used.
 (function(){if(typeof R3==='undefined'||typeof CURSED==='undefined'||!CURSED)return;const T=THREE,R=R3;
-const P5={warrior:'p5-warrior',assassin:'p5-assassin',archer:'p5-archer',mage:'p5-mage',summoner:'p5-summoner'};
+// 2026-11-21: the Archer is the owner's Celestial Archer, and the owner's Celestial Mage plays both the Mage and the Summoner (one file)
+const P5={warrior:'p5-warrior',assassin:'p5-assassin',archer:'p5-archer',mage:'p5-mage',summoner:'p5-mage'};
 const P5C={order:['idle','run','attack','cast','dodge','death'],idle:/Combat_Stance|idle/i,run:/Run/i,attack:/Slash|Combo|Shot|Soell|mage_|Attack/i,cast:/Charged|Spin|Spell_Cast/i,dodge:/Roll|Dodge/i,death:/Dead|Death/i};
 const P5H=138;   // hero height in world units (Quaternius heroes are ~140)
 const CA=()=>window.CelestialAssets;
 // the Spirit Tome (summoner.js) is the Summoner; a fused weapon keeps the class of the weapon it was forged on
-const p5Class=u=>{let k=u&&u.wk;if(!k)return'warrior';if(k==='soul')return'summoner';if(typeof FUSED!=='undefined'&&FUSED[k])k=FUSED[k].base||k;
-  return k==='dagger'?'assassin':k==='bow'||k==='xbow'?'archer':k==='fire'||k==='frost'||k==='storm'?'mage':'warrior'};
+const p5Class=u=>{let k=u&&u.wk;if(!k)return'warrior';if(typeof FUSED!=='undefined'&&FUSED[k])k=FUSED[k].base||k;
+  return k==='soul'?'summoner':k==='dagger'?'assassin':k==='bow'||k==='xbow'?'archer':k==='fire'||k==='frost'||k==='storm'?'mage':'warrior'};
 R.p5Ready=function(cls){const A=CA(),a=A&&A.get(P5[cls]);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations.length>=4&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 const p5Clips=a=>{if(a._p5)return a._p5;const list=a.gltf.animations,used=new Set(),out={};
   // in place: every clip's hips keep the IDLE clip's ground position (a clip's own first frame can already be a metre off)
@@ -31,6 +32,8 @@ R.p5Hero=function(u){const cls=p5Class(u);if(!this.p5Ready(cls))return null;cons
   o.root=new T.Group();o.body=new T.Group();o.root.add(o.body);o.body.add(pivot);
   model.traverse(n=>{if(n.isBone)o.bones[n.name]=n;if(n.isMesh){n.castShadow=!!this.hi;n.receiveShadow=true;n.frustumCulled=false;
     if(this.fow){const paint=src=>this.cached('p5-'+src.uuid,()=>{const m=src.clone();if(m.isMeshStandardMaterial){m.envMap=this.envTex||null;m.envMapIntensity=.55}return this.fow(m,{key:'p5'})});n.material=Array.isArray(n.material)?n.material.map(paint):paint(n.material)}}});
+  // Mixamo rigs (the owner's heroes) name the chest and neck bones differently from Meshy's auto-rig; the bow pose asks for these
+  for(const [a,b] of[['Spine2','Spine02'],['Spine1','Spine01'],['Neck','neck']])if(o.bones[a]&&!o.bones[b])o.bones[b]=o.bones[a];
   // stand on the ring: centre the hips (not the bounding box, which arms and capes pull sideways)
   o.handR=o.bones.RightHand||null;o.handL=o.bones.LeftHand||null;
   o.mixer=new T.AnimationMixer(model);const clips=p5Clips(a);for(const k in clips)o.act[k]=o.mixer.clipAction(clips[k]);
@@ -63,9 +66,11 @@ R.p5WKeyFor=function(wk,t){const f=p5Fam(wk);return f?P5W[f][p5WBand(Math.min(4,
 // faces the ground in the bind pose) from the knuckles' middle.
 const P5GRIP={warrior:{R:{p:[-.0157,.0908,.0033],d:[.577,.052,.816]},L:{p:[.0157,.0898,.0033],d:[-.577,.052,.816]}},
   assassin:{R:{p:[-.67,9.24,-.19],d:[-.648,.192,.737]},L:{p:[.62,9.21,.33],d:[.671,.059,.739]}},
-  archer:{R:{p:[.62,11.86,-2],d:[-.751,.252,.61]},L:{p:[-.29,11.97,-.97],d:[.756,.232,.612]}},
-  mage:{R:{p:[-1.14,9.68,1.04],d:[-.701,.003,.713]},L:{p:[.63,10.05,.67],d:[.699,.008,.715]}},
-  summoner:{R:{p:[-1.14,9.68,1.04],d:[-.701,.003,.713]},L:{p:[.55,11.78,.37],d:[.885,.148,.441]}}};
+  // the owner's Celestial Archer and Celestial Mage (2026-11-21, Mixamo, metres) the same way; the Mage's hand is smaller, so the
+  // point sits a quarter of the knuckle distance toward the wrist and 1.7 cm toward the palm
+  archer:{R:{p:[-.0191,.0951,.0076],d:[.631,.168,.758]},L:{p:[.0194,.0904,.0067],d:[-.623,.22,.75]}},
+  mage:{R:{p:[-.0129,.08,-.0092],d:[-.285,.172,.943]},L:{p:[.0129,.0741,-.0094],d:[.275,.208,.939]}},
+  summoner:{R:{p:[-.0129,.08,-.0092],d:[-.285,.172,.943]},L:{p:[.0129,.0741,-.0094],d:[.275,.208,.939]}}};
 const p5Grip=(o,hand)=>{const G=P5GRIP[o.cls]||P5GRIP.warrior;return hand===o.handL?G.L:G.R};
 // fit a weapon group into the fist: grip point on the palm centre, handle along the fist axis
 // A bow needs its whole frame, not just the handle line: limbs along the fist axis (thumb end up), the back of the riser

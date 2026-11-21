@@ -33,3 +33,11 @@ cached URL; it does not add another icon atlas or playable model. The strict boo
 gate requires a successful image decode before entry. The task count includes
 every model in the manifest (currently 52 tasks with 21 models). Original
 generation PNG and browser screenshots remain outside Git.
+
+## Spirit tome sheets
+
+`moonfall-soul.webp` (6×1, three cells) holds the Spirit Tome's skills. `moonfall-soul2.webp` (6×3, 1374×687,
+WebP quality 88, 87 KB) holds the 15 skills of the five forged tomes (2026-11-21): ขุนพลวิญญาณ `fOM`, พรานวิญญาณ `fOR`
+and คัมภีร์วิญญาณเพลิง/เหมันต์/อัสนี `fOS_fire/frost/storm`, three cells each in that order. Both are rendered from the
+game's own models (spirit orb, soul tome, Lunar Construct, Dark Sentinel, Lunar Longbow) with three.js; no Meshy job
+or credit was used. Every key in `AW` must have its three cells in `skill-atlas.json` or the strict boot gate stops.
