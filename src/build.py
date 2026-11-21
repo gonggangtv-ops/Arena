@@ -14,8 +14,9 @@ VILLAGE+=[k for k in NATURE if k in _man]
 # Eclipse Reign (Phase 3) combat pack: boss, two enemies, three legendary weapons
 ECLIPSE=['celestial-overlord','dark-sentinel','lunar-construct','lunar-greatsword','eclipse-scythe','moon-staff']
 VILLAGE+=[k for k in ECLIPSE if k in _man]
-# Phase 5 Celestial Armory: five rigged class heroes (Arena Royale only; The Cursed Realm keeps its heroes)
-P5=['p5-warrior','p5-assassin','p5-archer','p5-mage','p5-summoner']
+# Phase 5 Celestial Armory: rigged class heroes (Arena Royale only; The Cursed Realm keeps its heroes)
+# the Summoner wears the Mage's model since 2026-11-21 (p5-heroes.js P5.summoner = 'p5-mage')
+P5=['p5-warrior','p5-assassin','p5-archer','p5-mage']
 VILLAGE+=[k for k in P5 if k in _man]
 # Phase 5 class weapons: normal / epic / legendary per class (Arena Royale only)
 P5W=[k for k in _man if k.startswith('p5w-')]

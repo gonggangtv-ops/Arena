@@ -464,67 +464,55 @@
    ]
   },
   "p5-archer": {
-   "name": "Celestial Armory Archer (Phase 5 class hero, Meshy auto-rig + 6 clips)",
-   "taskId": "01a1ea29-f264-7103-b4f9-07ea36446163",
-   "rigTaskId": "01a1ea5f-8a32-741d-97c5-20cf8bf6c0df",
-   "animationTaskId": "01a1ea60-7583-74fd-9996-19ddea969cf4",
+   "name": "Celestial Archer (owner, Meshy, Mixamo rig) - Archer class hero",
    "url": "assets/meshy/p5-archer.glb",
    "available": true,
    "rotationY": 0,
    "biome": "arena",
-   "taskType": "image-to-3d",
-   "verifiedTaskStatus": "SUCCEEDED",
    "rigged": true,
    "animations": [
     "Combat_Stance",
-    "Run_02",
-    "Side_Shot",
-    "Charged_Spell_Cast",
+    "Running",
+    "Crossbow_Shot",
+    "Spell_Cast",
     "Roll_Dodge",
-    "Dead"
-   ]
+    "Death_Backwards"
+   ],
+   "source": "owner upload 2026-11-21 (Meshy_AI_celestial_archer_t_pose_3d_20261120_animated_mixamo_All_animation): bones without the mixamorig: prefix; clips Combat_Stance (Walk_Fight_Back frame 0 turned 14 deg + breathing), Running, Crossbow_Shot (Rifle_Aim_Turn_Right frame 0 turned 20 deg + recoil), Spell_Cast (= mage_soell_cast_8), Roll_Dodge (Forward_Roll_and_Fire 0.35-1.8 s), Death_Backwards (= dying_backwards); the bow is drawn by p5BowPose"
   },
   "p5-mage": {
-   "name": "Celestial Armory Mage (Phase 5 class hero, Meshy auto-rig + 6 clips)",
-   "taskId": "01a1ea2a-0241-7761-8195-5f7a3dfa8178",
-   "rigTaskId": "01a1ea5f-9c69-74c4-b2d3-e5131b4e0058",
-   "animationTaskId": "01a1ea60-79f4-76ca-873c-3d4d70f1e9fc",
+   "name": "Celestial Mage (owner, Meshy, Mixamo rig) - Mage and Summoner class hero",
    "url": "assets/meshy/p5-mage.glb",
    "available": true,
    "rotationY": 0,
    "biome": "arena",
-   "taskType": "image-to-3d",
-   "verifiedTaskStatus": "SUCCEEDED",
    "rigged": true,
    "animations": [
     "Combat_Stance",
-    "Run_02",
-    "mage_soell_cast",
-    "Charged_Spell_Cast",
-    "Roll_Dodge",
-    "Dead"
-   ]
+    "Running",
+    "Staff_Attack",
+    "Spell_Cast",
+    "Sprint_Dodge",
+    "Death_Backwards"
+   ],
+   "source": "owner upload 2026-11-21 (Meshy_AI_A_full_body_female_Celestial_Mage_20261120_animated_mixamo_All_animation): bones without the mixamorig: prefix; clips Combat_Stance (mage_soell_cast_7 frame 0 turned 40 deg + breathing), Running, Staff_Attack (mage_soell_cast_7 0.5-1.75 s), Spell_Cast (mage_soell_cast_3 0.2-2.2 s), Sprint_Dodge (= Running), Death_Backwards (= dying_backwards); also the Summoner (p5-heroes P5.summoner)"
   },
   "p5-summoner": {
-   "name": "Celestial Armory Summoner (Phase 5 class hero, Meshy auto-rig + 6 clips)",
-   "taskId": "01a1ea2a-111b-728b-944d-985f0250481a",
-   "rigTaskId": "01a1ea5f-aebb-7272-8407-aa80112d5aed",
-   "animationTaskId": "01a1ea60-7e3c-73f2-aee7-6f0237b9ba4a",
-   "url": "assets/meshy/p5-summoner.glb",
+   "name": "Celestial Mage as the Summoner (alias of p5-mage.glb, kept for pages built before 2026-11-21)",
+   "url": "assets/meshy/p5-mage.glb",
    "available": true,
    "rotationY": 0,
    "biome": "arena",
-   "taskType": "image-to-3d",
-   "verifiedTaskStatus": "SUCCEEDED",
    "rigged": true,
    "animations": [
     "Combat_Stance",
-    "Run_02",
-    "mage_soell_cast_2",
-    "Charged_Spell_Cast_1",
-    "Roll_Dodge",
-    "Dead"
-   ]
+    "Running",
+    "Staff_Attack",
+    "Spell_Cast",
+    "Sprint_Dodge",
+    "Death_Backwards"
+   ],
+   "source": "same file as p5-mage; current builds load p5-mage once for both classes (p5-heroes P5.summoner), a cached older index.html still finds its p5-summoner key"
   },
   "p5w-w0-ironblade": {
    "name": "Ironblade (Celestial Armory normal weapon)",

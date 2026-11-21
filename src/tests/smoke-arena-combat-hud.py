@@ -165,7 +165,7 @@ try:
               const utilities=Object.keys(MoonfallUI.snapshot().atlas.utilities).map(key=>({key,painted:inspect(MoonfallUI.item(key))}));
               return {skills,utilities,loaded:MoonfallUI.snapshot().loadedIcons};
             }""")
-            assert len(art['skills']) == 66 and all(cell['painted'] for cell in art['skills']), art
+            assert len(art['skills']) == 81 and all(cell['painted'] for cell in art['skills']), art   # 27 weapons x 3 (five forged spirit tomes since 2026-11-21)
             assert len(art['utilities']) >= 18 and all(cell['painted'] for cell in art['utilities']), art
             assert art['loaded'] == len(art['skills'])+len(art['utilities'])
             page.evaluate("""() => {
@@ -255,7 +255,7 @@ try:
                           'seed': page.evaluate('WD.seed'), 'nativePotion': True, 'gameplayUnchangedByPainting': True,
                           'errors': errors, 'shaderErrors': shader_errors, 'programs': await_compile})
             page.context.close()
-            print('PASS '+name+': 66 spells/utilities, vitals/states, immutable paint, real QER/potion input', flush=True)
+            print('PASS '+name+': 81 spells/utilities, vitals/states, immutable paint, real QER/potion input', flush=True)
 
         page, errors, shader_errors = launch(browser, origin)
         page.locator('#arenaSettingsBtn').click();page.locator('#viewBtn').click()

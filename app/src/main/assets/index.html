@@ -119,7 +119,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <link rel="stylesheet" href="moonfall-menu.css" onerror="window.__moonfallCodeFailure='moonfall-menu.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-menu.css')">
 <link rel="stylesheet" href="moonfall-inventory.css" onerror="window.__moonfallCodeFailure='moonfall-inventory.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-inventory.css')">
 <link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
-<script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5-summoner", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion"]</script>
+<script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion"]</script>
 
 <style>/* Arena-only interface. The published Moonfall/Cursed presentation stays independent. */
 :root{--arena-menu-art:url('assets/ui/arena-citadel.webp')}
@@ -551,10 +551,11 @@ const CREEPS={
   guardian:{name:'ผู้พิทักษ์คริสตัล',hp:2700,dmg:62,armor:5,spd:118,r:42,atkT:1.5,range:86,xp:320,col:'#6a7ab0',leash:220},
   boss:{name:'มังกรเพลิง',hp:9500,dmg:110,armor:7,spd:150,r:66,atkT:1.6,range:122,xp:1100,col:'#a83a1a',leash:360,dragon:true},
   // night only: the dead rise and hunt every hero they can smell
-  zombie:{name:'ซอมบี้',hp:420,dmg:24,armor:2,spd:150,r:24,atkT:1.1,range:62,xp:70,col:'#6f8f5a',zombie:1,kk:'Skeleton_Minion'},
-  zrunner:{name:'ซอมบี้วิ่งไว',hp:300,dmg:20,armor:1,spd:205,r:22,atkT:.8,range:58,xp:60,col:'#8aa070',zombie:1,kk:'Skeleton_Rogue'},
-  zbrute:{name:'ซอมบี้ยักษ์',hp:1300,dmg:46,armor:5,spd:132,r:34,atkT:1.5,range:84,xp:180,col:'#5a7048',zombie:1,kk:'Skeleton_Warrior',big:1},
-  zlord:{name:'ราชาซอมบี้',hp:2600,dmg:58,armor:6,spd:140,r:38,atkT:1.4,range:92,xp:420,col:'#4a6a3a',zombie:1,kk:'Skeleton_Mage',big:1,lord:1}
+  // (owner 2026-11-21: much tougher — more HP and bite, rotting bites, runners lunge, brutes slam, the king raises the dead)
+  zombie:{name:'ซอมบี้',hp:640,dmg:34,armor:3,spd:162,r:24,atkT:1.05,range:62,xp:80,col:'#6f8f5a',zombie:1,kk:'Skeleton_Minion'},
+  zrunner:{name:'ซอมบี้วิ่งไว',hp:460,dmg:28,armor:2,spd:222,r:22,atkT:.75,range:58,xp:70,col:'#8aa070',zombie:1,kk:'Skeleton_Rogue'},
+  zbrute:{name:'ซอมบี้ยักษ์',hp:2200,dmg:70,armor:6,spd:138,r:34,atkT:1.45,range:84,xp:220,col:'#5a7048',zombie:1,kk:'Skeleton_Warrior',big:1},
+  zlord:{name:'ราชาซอมบี้',hp:4600,dmg:88,armor:8,spd:146,r:38,atkT:1.35,range:92,xp:520,col:'#4a6a3a',zombie:1,kk:'Skeleton_Mage',big:1,lord:1}
 };
 const ZK=['zombie','zrunner','zbrute','zlord'];
 const CAMP_KINDS={small:['goblin','goblin','goblin','goblin','goblin'],medium:['wolf','wolf','wolf'],large:['ogre','wolf','wolf'],ancient:['golem','ogre'],
@@ -1390,11 +1391,19 @@ function hostNewGame(players,seed,cfg){
   return seed;
 }
 function zTime(){return .55+.45*ARENA.f}
-function nextTarget(){const p={r:PHASES[zone.ph].r*ARENA.f};
-  for(let k=0;k<60;k++){const maxOff=Math.max(0,zone.r-p.r)*.55;const a=Math.random()*Math.PI*2,o=rand(0,maxOff);let tx=zone.x+Math.cos(a)*o,ty=zone.y+Math.sin(a)*o;
-    const lim=Math.max(0,7000-p.r*.85),dc=Math.hypot(tx-CX,ty-CY);if(dc>lim){tx=CX+(tx-CX)/dc*lim;ty=CY+(ty-CY)/dc*lim}
-    if(p.r<1270&&(!walkable(tx,ty,40)||inCastleYard({x:tx,y:ty})&&p.r<300))continue;zone.tx=tx;zone.ty=ty;zone.tr=p.r;return}
-  zone.tx=zone.x;zone.ty=zone.y;zone.tr=p.r}
+// The storm closes on a random spot (owner 2026-11-21: every game it ended near the middle of the map). The host draws the final
+// point once, anywhere on open land in the valley; each next circle lies inside the current one and still holds that point (with a
+// tenth of its radius to spare), so the circles drift toward it phase by phase. Clients only ever see the circles (snapshot z).
+function zoneEnd(){const M=ARENA.r*.68;
+  for(let k=0;k<240;k++){const a=Math.random()*Math.PI*2,d=Math.max(0,Math.min(M,bndR(a)-1500))*Math.sqrt(Math.random()),x=ARENA.x+Math.cos(a)*d,y=ARENA.y+Math.sin(a)*d,p={x,y};
+    if(walkable(x,y,60)&&!inWater(x,y)&&!inCastleYard(p)&&!inDG(p,300))return p}
+  return{x:ARENA.x,y:ARENA.y}}
+function nextTarget(){const r=PHASES[zone.ph].r*ARENA.f;if(!zone.end)zone.end=zoneEnd();const F=zone.end,room=Math.max(0,zone.r-r),m=r*.9;let c=null;
+  for(let k=0;k<70;k++){const a=Math.random()*Math.PI*2,o=m*Math.sqrt(Math.random()),tx=F.x+Math.cos(a)*o,ty=F.y+Math.sin(a)*o;
+    if(Math.hypot(tx-zone.x,ty-zone.y)>room)continue;c={x:tx,y:ty};
+    if(r<1270&&(!walkable(tx,ty,40)||inCastleYard(c)&&r<300))continue;break}
+  if(!c){const dx=F.x-zone.x,dy=F.y-zone.y,d=Math.hypot(dx,dy),k=d>room?room/d:1;c={x:zone.x+dx*k,y:zone.y+dy*k}}
+  zone.tx=c.x;zone.ty=c.y;zone.tr=r}
 
 // ===================== EVENTS =====================
 function emit(ev){applyEvent(ev);if(net.mode==='host')netQueue(ev)}
@@ -1447,12 +1456,12 @@ function gainXp(u,x){
     fxTextFor(u.x,u.y-70,'LEVEL '+u.lvl,'#ffd35a',1.3,isHuman(u)?[u.id]:[]);fxE('lvl',{id:u.id,x:u.x|0,y:u.y|0});
     if(isHuman(u))emit({t:'s',n:'lvl',x:u.x|0,y:u.y|0,g:1,v:[u.id]});else botLearn(u)}
   if(u.lvl>=MAXL)u.xp=0}
-function heal(u,a){u.hp=Math.min(u.maxHp,u.hp+a)}
+function heal(u,a){if(u.rotT>0)a*=.5;u.hp=Math.min(u.maxHp,u.hp+a)}   // a zombie's rot halves healing
 
 // ===================== COMBAT (host) =====================
 function addFury(u){if(!u||!u.hero||u.dead)return;u.fury=Math.min(FURY_MAX,(u.fury||0)+1);u.furyT=FURY_T}
 function dealDamage(t,amt,type,src,quiet,crit){
-  if(t.dead||t.reviveT>0||amt<=0)return 0;if(CURSED){amt=curDmg(t,amt,type,src,quiet);if(amt<=0)return 0}
+  if(t.dead||t.reviveT>0||amt<=0)return 0;if(CURSED){amt=curDmg(t,amt,type,src,quiet);if(amt<=0)return 0}if(t.statT>0&&t.stat>0)amt*=1+.015*t.stat;   // storm static
   let k=1;if(type==='p')k=1-armorRed(t.armorV);else if(type==='m')k=1-t.mr;if(t.hero&&src&&src.hero&&src!==t)k*=PVP_K;
   let d=amt*k,ab=0;
   if(t.shieldHp>0){ab=Math.min(t.shieldHp,d);t.shieldHp-=ab;d-=ab}
@@ -1561,7 +1570,8 @@ function basic(u,ft){
   }else{const F=Wp.fused?Wp:null;let k,el=null;
     if(F){if(F.arch==='RS'){k=13;el=F.el}else if(F.arch==='RR')k=7;else{u.altE=!u.altE;el=u.altE&&F.el2?F.el2:F.el;k=BK[el]}}
     else k=u.wk==='fire'?1:u.wk==='frost'?3:u.wk==='xbow'?7:u.wk==='storm'?10:0;
-    const o={spd:u.pspd,r:k===0||k===7||k===13?8:k===1?12:11,dmg,type:Wp.magic?'m':'p',crit,kind:k,slow:Wp.chill?1:0,slowAmt:Wp.chill||0,life:(u.range+80)/u.pspd,el,elP:.45,basic:1};
+    const o={spd:u.pspd,r:k===0||k===7||k===13?8:k===1?12:11,dmg,type:Wp.magic?'m':'p',crit,kind:k,slow:Wp.chill?1:0,slowAmt:Wp.chill||0,life:(u.range+80)/u.pspd,el,elP:.45,basic:1,
+      st:!F&&(k===1||k===3||k===10)?u.wk:undefined};   // a staff's bolt leaves its element's status
     if(F&&F.arch==='RR'){o.dmg=dmg*.58;for(const s of[-1,1]){const a=Math.atan2(ny,nx)+s*.05;proj(u,Math.cos(a),Math.sin(a),o)}}   // twin crossbows: two bolts a shot
     else proj(u,nx,ny,o);
     sndAt(k===0||k===7||k===13?'shoot':k===1?'orb':k===10?'zap':'ice',u.x,u.y)}
@@ -1600,14 +1610,14 @@ function cast0(u,i,ap){
     case 'bow1':{face();proj(u,nx,ny,{spd:1300,r:12,dmg:V.dmg[li]+.4*A,type:'p',kind:5,root:V.root[li],life:rngS/1300});
       let mx=-nx,my=-ny;u.dash={vx:mx*1100,vy:my*1100,t:.26,hit:null};sndAt('dash',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(my,mx).toFixed(2)});break}
     case 'bow2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:260,dmg:V.dmg[li]+.15*A,type:'p',owner:u,kind:'rain',dot:3,tick:.3,slow:.6,slowAmt:.3});sndAt('rain',p.x,p.y);break}
-    case 'fire0':face();proj(u,nx,ny,{spd:820,r:18,dmg:V.dmg[li]*SA,type:'m',kind:2,boom:110,life:rngS/820});sndAt('orb',u.x,u.y);break;
+    case 'fire0':face();proj(u,nx,ny,{spd:820,r:18,dmg:V.dmg[li]*SA,type:'m',kind:2,boom:110,bkind:'boom',el:'fire',elP:1,life:rngS/820});sndAt('orb',u.x,u.y);break;
     case 'fire1':{u.castAnim=.4;for(const o of units){if(o.dead||!isEnemy(u,o))continue;const dd=dist(u,o);if(dd>230+o.r*.6)continue;dealDamage(o,V.dmg[li]*SA,'m',u);if(o.dead)continue;
-        o.burnT=3;o.burnDps=V.burn[li]*SA;o.burnSrc=u;if(!o.boss&&!o.golem){const kx=(o.x-u.x)/(dd||1),ky=(o.y-u.y)/(dd||1);o.kb={vx:kx*900,vy:ky*900,t:.28};o.dash=null}}
+        o.burnT=3;o.burnDps=V.burn[li]*SA;o.burnSrc=u;stAdd(u,o,'fire',2);if(!o.boss&&!o.golem){const kx=(o.x-u.x)/(dd||1),ky=(o.y-u.y)/(dd||1);o.kb={vx:kx*900,vy:ky*900,t:.28};o.dash=null}}
       aoe({x:u.x,y:u.y,r:230,dmg:0,owner:u,kind:'nova',fxOnly:true,vis:.45});sndAt('nova',u.x,u.y);emit({t:'k',a:5,x:u.x|0,y:u.y|0});break}
-    case 'fire2':{face();const tu=ft||tg.t;const lead=tu?{x:tg.x+(tu.mvx||0)*speedOf(tu)*.6,y:tg.y+(tu.mvy||0)*speedOf(tu)*.6}:tg;const p=clampTo(u,lead,rngS);aoe({x:p.x,y:p.y,r:V.r[li],dmg:V.dmg[li]*SA,type:'m',owner:u,delay:.85,kind:'meteor',big:true,burn:V.burn[li]*SA});sndAt('meteor',p.x,p.y);break}
-    case 'frost0':face();proj(u,nx,ny,{spd:1250,r:16,dmg:V.dmg[li]*SA,type:'m',kind:4,pierce:1,slow:2,slowAmt:.4,life:rngS/1250});sndAt('lance',u.x,u.y);break;
-    case 'frost1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:240,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'frost',root:V.root[li],slow:V.root[li]+2,slowAmt:.4});sndAt('frost',u.x,u.y);break;
-    case 'frost2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:330,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'blizz',dot:4,tick:.4,slow:.6,slowAmt:.5,endStun:V.stun[li]});sndAt('freeze',p.x,p.y);break}
+    case 'fire2':{face();const tu=ft||tg.t;const lead=tu?{x:tg.x+(tu.mvx||0)*speedOf(tu)*.6,y:tg.y+(tu.mvy||0)*speedOf(tu)*.6}:tg;const p=clampTo(u,lead,rngS);aoe({x:p.x,y:p.y,r:V.r[li],dmg:V.dmg[li]*SA,type:'m',owner:u,delay:.85,kind:'meteor',big:true,burn:V.burn[li]*SA,el:'fire',elP:1});sndAt('meteor',p.x,p.y);break}
+    case 'frost0':face();proj(u,nx,ny,{spd:1250,r:16,dmg:V.dmg[li]*SA,type:'m',kind:4,pierce:1,slow:2,slowAmt:.4,el:'frost',elP:1,life:rngS/1250});sndAt('lance',u.x,u.y);break;
+    case 'frost1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:240,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'frost',root:V.root[li],slow:V.root[li]+2,slowAmt:.4,el:'frost',elP:1});sndAt('frost',u.x,u.y);break;
+    case 'frost2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:330,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'blizz',dot:4,tick:.4,slow:.6,slowAmt:.5,endStun:V.stun[li],st:'frost'});sndAt('freeze',p.x,p.y);break}
     // ---- greatsword ----
     case 'gsword0':{face();u.atkAnim=.3;const ang=Math.atan2(ny,nx);aoe({x:u.x,y:u.y,r:rngS,len:rngS,ang,arc:.95,shape:'cone',dmg:V.dmg[li]+.9*A,type:'p',owner:u,kind:'crescent',slow:1.6,slowAmt:V.slow[li],vis:.4});sndAt('heavy',u.x,u.y);emit({t:'k',a:6,x:u.x|0,y:u.y|0});break}
     case 'gsword1':{u.castAnim=.4;u.spinT=Math.max(u.spinT,.35);u.spinTick=99;aoe({x:u.x,y:u.y,r:rngS,dmg:V.dmg[li]+.6*A,type:'p',owner:u,kind:'whirl',kb:V.kb,stun:.5,vis:.45});sndAt('spin',u.x,u.y);break}
@@ -1619,11 +1629,11 @@ function cast0(u,i,ap){
     // ---- lightning staff ----
     case 'storm0':{const t=ft&&dist(u,ft)<=rngS+40?ft:ap?tg.t:nearestEnemy(u,rngS,true);if(!t)return false;const d0=dist(u,t)||1;u.fx=(t.x-u.x)/d0;u.fy=(t.y-u.y)/d0;u.revealT=1.2;u.castAnim=.4;
       const hit=new Set(),pts=[[u.x|0,u.y|0]];let cur=t,dm=V.dmg[li]*SA;
-      for(let k=0;k<V.n[li]&&cur;k++){hit.add(cur);pts.push([cur.x|0,cur.y|0]);dealDamage(cur,dm,'m',u);if(!cur.dead)cur.stunT=Math.max(cur.stunT,.18);dm*=.8;
+      for(let k=0;k<V.n[li]&&cur;k++){hit.add(cur);pts.push([cur.x|0,cur.y|0]);dealDamage(cur,dm,'m',u);if(!cur.dead){cur.stunT=Math.max(cur.stunT,.18);stAdd(u,cur,'storm',2)}dm*=.8;
         let nb=null,bd=330;for(const o of units){if(o.dead||hit.has(o)||!isEnemy(u,o))continue;const dd=dist(cur,o);if(dd<bd){bd=dd;nb=o}}cur=nb}
       fxE('chain',{x:u.x|0,y:u.y|0,p:pts});sndAt('lance',t.x,t.y);break}
-    case 'storm1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:rngS,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'static',follow:u,followAll:true,dot:3,tick:.5,slow:.6,slowAmt:.35});sndAt('nova',u.x,u.y);break;
-    case 'storm2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:310,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'thunder',delay:.3,dot:1.6,tick:.32,endStun:V.stun[li]});sndAt('thunder',p.x,p.y);break}
+    case 'storm1':u.castAnim=.4;aoe({x:u.x,y:u.y,r:rngS,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'static',follow:u,followAll:true,dot:3,tick:.5,slow:.6,slowAmt:.35,st:'storm',stP:.5});sndAt('nova',u.x,u.y);break;
+    case 'storm2':{face();const p=clampTo(u,tg,rngS);aoe({x:p.x,y:p.y,r:310,dmg:V.dmg[li]*SA,type:'m',owner:u,kind:'thunder',delay:.3,dot:1.6,tick:.32,endStun:V.stun[li],st:'storm',stP:.6});sndAt('thunder',p.x,p.y);break}
     default:if(!FUSED[u.wk]||castF(u,i,li,V,A,SA,rngS,tg,nx,ny,d,ft,ap,face)===false)return false;
   }
   u.mp-=cost;u.cd[i]=s.cd[li]*cdMul(u);return true;
@@ -1633,12 +1643,33 @@ const ROOT_NO={fMM0:1,fMM2:1,fMR1:1,fMS_fire2:1,fMS_frost2:1,fMS_storm2:1};
 const EL=['fire','frost','storm'];
 const EL_BURST={fire:'nova',frost:'frost',storm:'whirl'},EL_FIELD={fire:'burn',frost:'blizz',storm:'static'},EL_DOT={fire:'burn',frost:'blizz',storm:'thunder'};
 // element riders on hits: fire burns, frost chills, storm arcs to a second enemy. k = strength (basic attacks ~.45, skills 1)
-function elemHit(src,o,el,k){if(!o||o.dead||!el||!src)return;k=k||1;const amp=1+spellAmp(src);
+function elemHit(src,o,el,k){if(!o||o.dead||!el||!src)return;k=k||1;const amp=1+spellAmp(src);stAdd(src,o,el,k>=.8?2:1);if(o.dead)return;
   if(el==='fire'){const dps=(10+1.1*src.lvl)*k*amp;if(o.burnT<=0||o.burnDps<dps){o.burnDps=dps;o.burnSrc=src}o.burnT=Math.max(o.burnT,2.5)}
   else if(el==='frost'){const T=1.1+.6*k,s=.16+.16*k;o.slowAmt=Math.max(o.slowT>T?o.slowAmt:0,s);o.slowT=Math.max(o.slowT,T)}
   else if(el==='storm'){if(Math.random()>.18+.42*k)return;let nb=null,bd=280;for(const q of units){if(q.dead||q===o||!isEnemy(src,q)||Math.abs(q.x-o.x)>bd)continue;const dd=dist(o,q);if(dd<bd){bd=dd;nb=q}}
     const dm=(8+1.6*src.lvl)*(.4+.6*k)*amp,tg=nb||o;dealDamage(tg,dm,'m',src,true);if(!tg.dead)tg.stunT=Math.max(tg.stunT,.12*k);
     if(nb)fxE('chain',{x:o.x|0,y:o.y|0,p:[[o.x|0,o.y|0],[nb.x|0,nb.y|0]]});else fxE('hit',{x:o.x|0,y:o.y|0,c:'#c8b4ff'})}}
+// ---- element statuses (owner 2026-11-21: mages felt weak, so every element now leaves a status that builds up) ----
+//  fire  เผาไหม้   up to 4 stacks, 3 s: each burns 0.5% of max HP a second on top of the flat burn
+//  frost หนาวเหน็บ up to 5 stacks, 2.6 s: 7% slow each; the 5th freezes the target solid (heroes .5 s, monsters 1.4 s, bosses .45 s)
+//                  with a burst of 3% max HP, and it cannot be frozen again for 6 s
+//  storm ไฟฟ้าสถิต up to 5 stacks, 4 s: the target takes 1.5% more damage per stack; the 5th overloads it (3% max HP, a short stun,
+//                  arcs to two enemies nearby) and the stacks reset
+// Basic hits add one stack, skills two (elemHit k>=.8), damage-over-time fields one per tick (aoe st, stP = chance). Big monsters measure the % against
+// a capped HP, and hero-vs-hero damage is still damped by PVP_K in dealDamage.
+const ST_HP=o=>o.hero?o.maxHp:Math.min(o.maxHp,o.boss||o.golem||o.ecl||o.lord?2400:3600);
+function stAdd(src,o,el,n){if(src&&src.pet&&src.owner)src=src.owner;if(!o||o.dead||!src||!el||o.reviveT>0)return;n=n||1;const H=[];if(isHuman(o))H.push(o.id);if(isHuman(src))H.push(src.id);
+  if(el==='fire'){o.ign=Math.min(4,(o.ignT>0?o.ign||0:0)+n);o.ignT=3;o.ignSrc=src}
+  else if(el==='frost'){if(o.frzImm>0)return;o.chill=Math.min(5,(o.chillT>0?o.chill||0:0)+n);o.chillT=2.6;o.slowAmt=Math.max(o.slowT>0?o.slowAmt:0,.07*o.chill);o.slowT=Math.max(o.slowT,1.2);
+    if(o.chill>=5){o.chill=0;o.chillT=0;const T=o.boss?.45:o.hero?.5:o.golem||o.ecl?.9:1.4;o.stunT=Math.max(o.stunT,T);o.frzImm=T+6;
+      fxE('freeze',{id:o.id,x:o.x|0,y:o.y|0});sndAt('freeze',o.x,o.y);if(H.length)fxTextFor(o.x,o.y-o.r-46,'❄ แช่แข็ง!','#bfefff',1.1,H);
+      dealDamage(o,ST_HP(o)*.03+6+.8*(src.lvl||1),'m',src,false)}}
+  else if(el==='storm'){o.stat=Math.min(5,(o.statT>0?o.stat||0:0)+n);o.statT=4;
+    if(o.stat>=5){o.stat=0;o.statT=0;const dm=ST_HP(o)*.03+6+.9*(src.lvl||1),pts=[[o.x|0,o.y|0]];let n2=0;
+      for(const q of units){if(n2>=2)break;if(q.dead||q===o||!isEnemy(src,q)||Math.abs(q.x-o.x)>300||dist(o,q)>300)continue;pts.push([q.x|0,q.y|0]);n2++;dealDamage(q,dm*.5,'m',src,true)}
+      fxE('chain',{x:o.x|0,y:o.y|0,p:pts.length>1?pts:[[o.x|0,o.y-120|0],[o.x|0,o.y|0]]});fxE('hit',{x:o.x|0,y:o.y|0,c:'#c8b4ff'});sndAt('zap',o.x,o.y);
+      if(H.length)fxTextFor(o.x,o.y-o.r-46,'⚡ ช็อต!','#d8c8ff',1.1,H);
+      dealDamage(o,dm,'m',src,false);if(!o.dead)o.stunT=Math.max(o.stunT,o.hero?.2:o.boss?.2:.6)}}}
 function castF(u,i,li,V,A,SA,rngS,tg,nx,ny,d,ft,ap,face){const F=WEAPONS[u.wk],e=F.el,ang=Math.atan2(ny,nx);
   switch(F.arch+i){
     // ---- 👑 twin royal swords ----
@@ -1957,10 +1988,20 @@ function botThink(u,dt){
   if(ai.detT>0){ai.detT-=dt;const s=ai.detS;const nx=-my*s,ny=mx*s;mx=nx*.9+mx*.3;my=ny*.9+my*.3}
   return{mx,my};
 }
+// camp monsters fight smarter once the match is under way (4:00+, owner 2026-11-21): trolls and golems slam the ground (stun),
+// wolves pounce on anyone keeping away, goblins throw knives
+const MOB_ACT={ogre:{cd:8,rng:190},golem:{cd:9,rng:230},guardian:{cd:9,rng:240},wolf:{cd:7,rng:420,min:150},goblin:{cd:4.5,rng:440,min:130}};
+function mobAct(u,t,d,dt){const A=MOB_ACT[u.kind];if(!A||u.ecl||u.boss||u.pet||gameT<240||u.stunT>0||u.busyT>0||u.dash)return;
+  u.actT=(u.actT===undefined?A.cd*.4:u.actT)-dt;if(u.actT>0||d>A.rng||d<(A.min||0))return;u.actT=A.cd*rand(.85,1.15);
+  const nx=(t.x-u.x)/(d||1),ny=(t.y-u.y)/(d||1);u.fx=nx;u.fy=ny;
+  if(u.kind==='wolf'){const sp=1100;u.dash={vx:nx*sp,vy:ny*sp,t:Math.min(d-30,380)/sp,dmg:u.atkDmg*1.2,stun:.3,hit:new Set(),stop:true};u.atkAnim=.3;
+    fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(ny,nx).toFixed(2)});sndAt('dash',u.x,u.y)}
+  else if(u.kind==='goblin'){proj(u,nx,ny,{spd:950,r:8,dmg:u.atkDmg*.9,type:'p',kind:0,life:(A.rng+60)/950});u.atkAnim=.3;sndAt('shoot',u.x,u.y)}
+  else{const og=u.kind==='ogre';u.busyT=.75;u.castAnim=.8;aoe({x:u.x,y:u.y,r:og?180:220,dmg:u.atkDmg*(og?1.3:1.5),type:'p',owner:u,delay:.55,kind:'slam',stun:og?.55:.7,big:true});sndAt('slam',u.x,u.y)}}
 function mobThink(u,dt){
-  let mx=0,my=0;const t=u.aggro,L=u.def.leash||420;const dh=dist(u,u.home);
+  let mx=0,my=0;const t=u.aggro,L=u.def.leash||420;const dh=dist(u,u.home);if(!u.boss&&u.busyT>0)u.busyT=Math.max(0,u.busyT-dt);
   if(t&&!t.dead&&dh<L&&dist(t,u.home)<L+120&&(!t.hidden||dist(u,t)<170)){
-    const d=dist(u,t),R=u.range+t.r;if(d>R-6){mx=(t.x-u.x)/d;my=(t.y-u.y)/d}
+    const d=dist(u,t),R=u.range+t.r;if(d>R-6){mx=(t.x-u.x)/d;my=(t.y-u.y)/d}mobAct(u,t,d,dt);
     u.fx=(t.x-u.x)/(d||1);u.fy=(t.y-u.y)/(d||1);
     if(d<R+6&&u.atkCd<=0&&u.stunT<=0&&!u.busyT){u.atkCd=u.atkCdBase;u.atkAnim=.3;const ang=Math.atan2(t.y-u.y,t.x-u.x);
       if(u.def.cleave){for(const o of units){if(o.dead||!isEnemy(u,o)||dist(u,o)>R+o.r)continue;let da=Math.abs(Math.atan2(o.y-u.y,o.x-u.x)-ang);if(da>Math.PI)da=Math.PI*2-da;if(da<1)dealDamage(o,u.atkDmg*(isNight()?1.4:1),'p',u)}}
@@ -1991,15 +2032,15 @@ function zSpot(){const ok=p=>walkable(p.x,p.y,34)&&!inWater(p.x,p.y)&&!houseAt(p
   if(WD.graves.length&&Math.random()<.4){const gs=WD.graves.filter(g=>inZone(g,200));if(gs.length){const g=gs[Math.floor(Math.random()*gs.length)];for(let t=0;t<12;t++){const a=Math.random()*6.3,d=rand(20,160);const p={x:g.x+Math.cos(a)*d,y:g.y+Math.sin(a)*d};if(ok(p))return p}}}
   const hs=units.filter(u=>u.hero&&!u.dead);if(!hs.length)return null;const h=hs[Math.floor(Math.random()*hs.length)];
   for(let t=0;t<16;t++){const a=Math.random()*6.3,d=rand(visionR()+120,visionR()+650);const p={x:h.x+Math.cos(a)*d,y:h.y+Math.sin(a)*d};if(ok(p)&&!units.some(o=>o.hero&&!o.dead&&dist(o,p)<visionR()))return p}return null}
-function spawnZombie(kind,p){const sc=1+Math.min(1.6,gameT/560);const u=mkZombie(zid++,kind,p.x,p.y,sc);addUnit(u);fxE('rise',{x:p.x|0,y:p.y|0,big:CREEPS[kind].big?1:0});sndAt('rise',p.x,p.y);return u}
+function spawnZombie(kind,p){const sc=1+Math.min(2.6,gameT/420);const u=mkZombie(zid++,kind,p.x,p.y,sc);u.atkDmg*=(1+.8*(sc-1))/sc;addUnit(u);fxE('rise',{x:p.x|0,y:p.y|0,big:CREEPS[kind].big?1:0});sndAt('rise',p.x,p.y);return u}
 function nightTick(dt){
-  if(zWave){zWave.t-=dt;if(zWave.t<=0&&zWave.left>0&&isNight()){zWave.t=rand(.35,.8);
-      const cap=Math.min(76,4+Math.round(alive*2.1));if(zAlive()<cap){const p=zSpot();if(p){const r=Math.random(),late=nightN>=2;
-        const kind=zWave.lord>0&&WD.graves.length?(zWave.lord--,'zlord'):r<(late?.18:.1)?'zbrute':r<.42?'zrunner':'zombie';spawnZombie(kind,p);zWave.left--}}}
+  if(zWave){zWave.t-=dt;if(zWave.t<=0&&zWave.left>0&&isNight()){zWave.t=rand(.28,.65);
+      const cap=Math.min(100,6+Math.round(alive*2.7));if(zAlive()<cap){const p=zSpot();if(p){const r=Math.random(),late=nightN>=2;
+        const kind=zWave.lord>0&&WD.graves.length?(zWave.lord--,'zlord'):r<(late?.26:.14)?'zbrute':r<.5?'zrunner':'zombie';spawnZombie(kind,p);zWave.left--}}}
     if(!isNight())zWave=null}
   // corpses of the dead stay a moment, then go
   if(units.some(u=>u.zombie&&u.dead&&gameT-(u.deadAt||0)>4)){units=units.filter(u=>!(u.zombie&&u.dead&&gameT-(u.deadAt||0)>4));UMAP=new Map(units.map(u=>[u.id,u]))}}
-function nightStart(){nightN++;zWave={t:2,left:Math.min(110,6+Math.round(alive*(2.2+.4*nightN))),lord:nightN>=2&&alive>=6?1:0};
+function nightStart(){nightN++;zWave={t:2,left:Math.min(150,10+Math.round(alive*(2.8+.6*nightN))),lord:nightN>=2?Math.min(3,nightN-1):0};
   emit({t:'a',s:'🌙 ค่ำแล้ว! ซอมบี้ออกล่า · มอนสเตอร์ดุร้ายขึ้น · ซ่อนในพุ่มหญ้าได้',d:4});emit({t:'f',s:'🧟 ซอมบี้ลุกขึ้นจากหลุม! ฆ่าแล้วสุ่มได้ไอเทม (SSR 1%)'})}
 function dawn(){for(const u of units)if(u.zombie&&!u.dead){u.dead=true;u.deadAt=gameT;fxE('dust',{id:u.id,x:u.x|0,y:u.y|0});fxE('die',{id:u.id,x:u.x|0,y:u.y|0})}
   emit({t:'f',s:'☀️ รุ่งเช้า ซอมบี้สลายเป็นผุยผง'})}
@@ -2011,20 +2052,30 @@ function zombieLoot(t,src){const x=t.x,y=t.y,r=Math.random(),H=isHuman(src)?[src
   else if(r<.31)dropItem({k:'p',x,y,b:0});else if(r<.45)dropItem({k:'p',x,y,b:1});else if(r<.50)dropItem({k:'p',x,y,b:2});else if(r<.55)dropItem({k:'p',x,y,b:3});
   else if(r<.62){const pool=ITEMS.filter(i=>i.id!=='potion'&&i.id!=='mana');dropItem({k:'i',x,y,it:pickW(pool).id})}
   if(t.lord){wpn(pickTier([0,0,55,45]));dropItem({k:'p',x:x+30,y,b:2});dropItem({k:'p',x:x-30,y,b:0});emit({t:'f',s:`👑 ${src.name} ปราบราชาซอมบี้!`})}}
+// a zombie's bite rots: 1% of max HP a second (+ a little more each night) for 4 s, refreshed by every bite, healing halved meanwhile
+function rotBite(z,t){if(!t.hero)return;t.rotT=4;t.rotDps=t.maxHp*.01+4+2*nightN;t.rotSrc=z}
+// the Zombie King calls three more of the dead out of the ground around it
+function raiseDead(u){const cap=Math.min(110,10+Math.round(alive*3));if(zAlive()>=cap)return;u.castAnim=1;sndAt('rise',u.x,u.y);emit({t:'k',a:4,x:u.x|0,y:u.y|0});
+  for(let i=0;i<3;i++){const a=Math.random()*6.28,d=rand(70,160),p={x:u.x+Math.cos(a)*d,y:u.y+Math.sin(a)*d};if(!walkable(p.x,p.y,30)||inWater(p.x,p.y)||houseAt(p))continue;
+    const z=spawnZombie(Math.random()<.3?'zrunner':'zombie',p);z.aggro=u.aggro}}
 function zombieThink(u,dt){
   if(u.rise>0){u.rise-=dt;return{mx:0,my:0}}
   u.zt=(u.zt||0)-dt;
-  if(u.zt<=0){u.zt=rand(.4,.75);let best=null,bd=1600;   // they smell the living; tall grass hides you unless they are close
-    for(const h of HEROES){if(h.dead||h.reviveT>0)continue;const d=dist(u,h);if(d>=bd||h.hidden&&d>190)continue;bd=d;best=h}
-    if(u.aggro&&!u.aggro.dead&&u.aggro.hero&&dist(u,u.aggro)<bd+150&&!(u.aggro.hidden&&dist(u,u.aggro)>190))best=u.aggro;
+  if(u.zt<=0){u.zt=rand(.35,.65);let best=null,bd=2000;   // they smell the living; tall grass hides you unless they are close
+    for(const h of HEROES){if(h.dead||h.reviveT>0)continue;const d=dist(u,h);if(d>=bd||h.hidden&&d>230)continue;bd=d;best=h}
+    if(u.aggro&&!u.aggro.dead&&u.aggro.hero&&dist(u,u.aggro)<bd+150&&!(u.aggro.hidden&&dist(u,u.aggro)>230))best=u.aggro;
     u.aggro=best;if(!best&&(!u.wx||Math.hypot(u.wx-u.x,u.wy-u.y)<90)){const a=Math.random()*6.3,r=rand(150,500);u.wx=u.x+Math.cos(a)*r;u.wy=u.y+Math.sin(a)*r;if(!walkable(u.wx,u.wy,30)){u.wx=zone.x;u.wy=zone.y}}}
   const t=u.aggro;let mx=0,my=0;
   if(t&&!t.dead){const d=dist(u,t),R=u.range+t.r;u.fx=(t.x-u.x)/(d||1);u.fy=(t.y-u.y)/(d||1);
     if(d>R-6){const v=navDir(u,t.x,t.y);mx=v.x;my=v.y}
     if(d<R+6&&u.atkCd<=0&&u.stunT<=0){u.atkCd=u.atkCdBase;u.atkAnim=.3;const ang=Math.atan2(t.y-u.y,t.x-u.x);
-      dealDamage(t,u.atkDmg*(u.lord?1:1),'p',u);if(!t.dead&&!t.hidden){t.slowT=Math.max(t.slowT,.8);t.slowAmt=Math.max(t.slowT>.8?t.slowAmt:0,.25)}
+      dealDamage(t,u.atkDmg,'p',u);if(!t.dead){if(!t.hidden){t.slowT=Math.max(t.slowT,.8);t.slowAmt=Math.max(t.slowT>.8?t.slowAmt:0,.25)}rotBite(u,t)}
       emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:'#9dff7a',k:4});if(u.big)sndAt('hit',u.x,u.y)}
-    if(u.lord&&u.stunT<=0){u.slT=(u.slT===undefined?5:u.slT)-dt;if(u.slT<=0&&d<300){u.slT=7;aoe({x:u.x,y:u.y,r:260,dmg:110*u.scale,type:'m',owner:u,delay:.6,kind:'slam',stun:.8,big:true,slow:2,slowAmt:.4});sndAt('slam',u.x,u.y);u.castAnim=.8}}}
+    if(u.lord&&u.stunT<=0){u.slT=(u.slT===undefined?5:u.slT)-dt;if(u.slT<=0&&d<300){u.slT=7;aoe({x:u.x,y:u.y,r:260,dmg:130*u.scale,type:'m',owner:u,delay:.6,kind:'slam',stun:.8,big:true,slow:2,slowAmt:.4});sndAt('slam',u.x,u.y);u.castAnim=.8}
+      u.rsT=(u.rsT===undefined?4:u.rsT)-dt;if(u.rsT<=0&&d<900){u.rsT=10;raiseDead(u)}}
+    if(u.stunT<=0&&!u.dash&&(u.kind==='zrunner'||u.kind==='zbrute')){u.zsT=(u.zsT===undefined?rand(1,3):u.zsT)-dt;
+      if(u.zsT<=0){if(u.kind==='zrunner'&&d>130&&d<380){u.zsT=rand(4.5,6);const sp=1050,nx=(t.x-u.x)/(d||1),ny=(t.y-u.y)/(d||1);u.dash={vx:nx*sp,vy:ny*sp,t:Math.min(d-25,360)/sp,dmg:u.atkDmg*1.1,stun:.2,hit:new Set(),stop:true};u.atkAnim=.3;fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(ny,nx).toFixed(2)})}
+        else if(u.kind==='zbrute'&&d<200){u.zsT=rand(6,8);u.castAnim=.8;aoe({x:u.x,y:u.y,r:200,dmg:u.atkDmg*1.3,type:'p',owner:u,delay:.55,kind:'slam',stun:.6,big:true});sndAt('slam',u.x,u.y)}}}}
   else if(u.wx){const v=dirTo(u,{x:u.wx,y:u.wy});mx=v.x*.45;my=v.y*.45}
   return{mx,my}}
 // camp monsters at night: harder hits and they charge anyone who walks too close to their camp
@@ -2050,9 +2101,19 @@ function zoneTick(dt){const P=PHASES[Math.min(zone.ph,PHASES.length-1)];if(zone.
     if(zone.t<=0){zone.ph++;if(zone.ph<PHASES.length){zone.st='wait';zone.t=PHASES[zone.ph].w*zTime();nextTarget()}else zone.st='done'}}}
 let warnN=false;
 function dayTick(){const n=isNight();const cyc=gameT%(DAY+NIGHT);if(!n&&cyc>DAY-15&&!warnN&&gameT>20){warnN=true;emit({t:'a',s:'🌙 อีก 15 วินาทีจะค่ำ — ซอมบี้กำลังจะลุกขึ้น! หาที่ซ่อนหรือเตรียมสู้',d:3.5})}if(n)warnN=false;if(n!==lastNight){lastNight=n;if(gameT>5){if(n)nightStart();else{emit({t:'a',s:'☀️ เช้าแล้ว',d:3});dawn()}emit({t:'s',n:n?'night':'day',x:0,y:0,g:1})}}}
-function campTick(){for(const c of WD.camps){if(c.deadAt<0||c.respawns>=c.maxRespawn)continue;const wait=c.tier==='boss'?240:75;
-  if(gameT-c.deadAt>wait&&!units.some(u=>u.hero&&!u.dead&&dist(u,c)<750)){const sc=1+Math.min(1.5,gameT/480);
-    for(const id of c.mem){const m=UMAP.get(id);if(!m)continue;setMobStats(m,sc*(c.sc||1));m.dead=false;m.x=m.home.x;m.y=m.home.y;m.aggro=null;m.stunT=0;m.rootT=0;m.slowT=0;m.burnT=0;m.kb=null}
+// Monsters grow with the match (owner 2026-11-21: tougher monsters, but not in the first minutes): x1 until 3:00, x2 at 8:00, x3.2 at 14:00,
+// x4 by 24:00. Living camps catch up every 6 s while nobody fights them (their health keeps its share); a camp that respawns comes back a
+// step ahead. Their bite grows slower than their health (x1 + 80% of the rise). The castle boss and the Overlord stop at x2.5.
+function mobPow(t){return 1+2.2*clamp((t-180)/660,0,1)+.8*clamp((t-840)/600,0,1)}
+const mobCap=m=>m.boss||m.ecl==='overlord'?2.5:9;
+function mobScale(m,k){const f=m.dead?1:m.hp/Math.max(1,m.maxHp);setMobStats(m,k);m.atkDmg*=(1+.8*(k-1))/k;m.hp=Math.max(1,m.maxHp*f)}
+let mobGrowT=0;
+function campTick(){const P=mobPow(gameT),grow=(mobGrowT-=1)<=0&&P>1;if(grow)mobGrowT=6;
+  for(const c of WD.camps){
+    if(c.deadAt<0){if(grow)for(const id of c.mem){const m=UMAP.get(id);if(!m||m.dead||m.aggro||m.pet)continue;const k=Math.min(mobCap(m),P*(c.sc||1));if(k>(m.scale||1)*1.03)mobScale(m,k)}continue}
+    if(c.respawns>=c.maxRespawn)continue;const wait=c.tier==='boss'?240:75;
+  if(gameT-c.deadAt>wait&&!units.some(u=>u.hero&&!u.dead&&dist(u,c)<750)){const sc=Math.max(1.15,P*1.1);
+    for(const id of c.mem){const m=UMAP.get(id);if(!m)continue;mobScale(m,Math.min(mobCap(m),sc*(c.sc||1)));m.dead=false;m.x=m.home.x;m.y=m.home.y;m.aggro=null;m.stunT=0;m.rootT=0;m.slowT=0;m.burnT=0;m.kb=null}
     c.deadAt=-1;c.respawns++;if(c.tier==='boss')emit({t:'f',s:'🐉 มังกรเพลิงกลับมาเฝ้าปราสาท!'})}}}
 let avgLvl=1,frameN=0,HEROES=[];
 function hitArea(a,u){if(a.shape==='line'){const ex=a.x+Math.cos(a.ang)*a.len,ey=a.y+Math.sin(a.ang)*a.len;return segDist(u,[a.x,a.y,ex,ey])<a.w/2+u.r*.5}
@@ -2066,12 +2127,18 @@ function hostUpdate(dt){
     u.atkCd-=dt;u.atkSlowT-=dt;u.stunT-=dt;u.slowT-=dt;u.buffT-=dt;u.hurtT-=dt;u.revealT-=dt;u.rootT-=dt;u.atkAnim-=dt;u.castAnim-=dt;for(let i=0;i<3;i++)u.cd[i]-=dt;
     if(u.shieldT>0){u.shieldT-=dt;if(u.shieldT<=0)u.shieldHp=0}if(u.asT>0)u.asT-=dt;if(u.furyT>0){u.furyT-=dt;if(u.furyT<=0)u.fury=0}if(u.invisT>0)u.invisT-=dt;
     if(u.hero){for(let i=0;i<4;i++)if(u.bcd[i]>0)u.bcd[i]-=dt;if(u.hotT>0){u.hotT-=dt;heal(u,u.hotV*dt)}if(u.motT>0){u.motT-=dt;u.mp=Math.min(u.maxMp,u.mp+u.motV*dt)}if(u.spdPT>0)u.spdPT-=dt}
-    if(u.burnT>0){u.burnT-=dt;dealDamage(u,u.burnDps*dt,'m',u.burnSrc&&!u.burnSrc.dead?u.burnSrc:null,true);if(u.dead)continue}
+    if(u.burnT>0){u.burnT-=dt;u._bn=(u._bn||0)+dealDamage(u,u.burnDps*dt,'m',u.burnSrc&&!u.burnSrc.dead?u.burnSrc:null,true);if(u.dead)continue}
+    if(u.ignT>0){u.ignT-=dt;u._bn=(u._bn||0)+dealDamage(u,ST_HP(u)*.005*(u.ign||0)*dt,'m',u.ignSrc&&!u.ignSrc.dead?u.ignSrc:null,true);if(u.ignT<=0)u.ign=0;if(u.dead)continue}
+    if(u.rotT>0){u.rotT-=dt;u._rn=(u._rn||0)+dealDamage(u,(u.rotDps||0)*dt,'pure',u.rotSrc&&!u.rotSrc.dead?u.rotSrc:null,true);if(u.dead)continue;
+      if(u._rn>=1&&(u._rnT=(u._rnT||0)-dt)<=0){u._rnT=.6;if(isHuman(u))fxTextFor(u.x+rand(-14,14),u.y-u.r-20,fmtN(u._rn),'#9dff6a',.7,[u.id],0,u.id,-1);u._rn=0}}
+    if(u.chillT>0){u.chillT-=dt;if(u.chillT<=0)u.chill=0}if(u.statT>0){u.statT-=dt;if(u.statT<=0)u.stat=0}if(u.frzImm>0)u.frzImm-=dt;
+    if(u._bn>0){u._bnT=(u._bnT||0)-dt;if(u._bnT<=0){u._bnT=.6;const s=u.ignT>0&&u.ignSrc?u.ignSrc:u.burnSrc,v=[];if(isHuman(u))v.push(u.id);if(s&&!s.dead&&isHuman(s))v.push(s.id);   // burn damage, shown every .6 s
+      if(v.length&&u._bn>=1)fxTextFor(u.x+rand(-14,14),u.y-u.r-20,fmtN(u._bn),'#ff9a3a',.7,v,0,u.id,s?s.id:-1);u._bn=0}}
     if(u.hero){
       {const zp=zoneXY(u);if(Math.hypot(zp.x-zone.x,zp.y-zone.y)>zone.r)dealDamage(u,u.maxHp*(.03+.02*zph)*dt,'pure',null,true)}
       dgPort(u,dt);
       if(u.dead)continue;
-      let hr=u.hpRegen;const ooc=gameT-u.lastDmgT;if(ooc>6)hr+=u.maxHp*.01;
+      let hr=u.hpRegen;const ooc=gameT-u.lastDmgT;if(ooc>6)hr+=u.maxHp*.01;if(u.rotT>0)hr*=.5;
       u.hp=Math.min(u.maxHp,u.hp+hr*dt);u.mp=Math.min(u.maxMp,u.mp+u.mpRegen*dt);
       for(const s of WD.shrines)if(Math.abs(u.x-s.x)<s.r&&dist(u,s)<s.r&&ooc>3){u.hp=Math.min(u.maxHp,u.hp+u.maxHp*.06*dt);u.mp=Math.min(u.maxMp,u.mp+u.maxMp*.06*dt);if(Math.random()<dt*5)burstE(u.x,u.y,'#8cffb0',3)}
       gainXp(u,3.2*dt*(1+.12*Math.max(0,avgLvl-u.lvl)));
@@ -2118,7 +2185,7 @@ function hostUpdate(dt){
       if(Math.abs(p.x-u.x)<u.r+p.r&&dist(p,u)<u.r+p.r){p.hit.add(u);
         if(p.basic)addFury(p.owner);if(!p.boom){dealDamage(u,p.dmg,p.crit?'pure':p.type,p.owner,false,p.crit);sndAt(p.crit?'crit':projHitSnd(p),u.x,u.y);
           if(!u.dead){if(p.slow){u.slowT=Math.max(u.slowT,p.slow);u.slowAmt=Math.max(u.slowT>p.slow?u.slowAmt:0,p.slowAmt)}if(p.root){u.rootT=Math.max(u.rootT,p.root);fxE('snare',{id:u.id,x:u.x|0,y:u.y|0})}
-            if(p.el)elemHit(p.owner,u,p.el,p.elP);if(p.kbF&&!u.boss&&!u.golem){const l=Math.hypot(p.vx,p.vy)||1;u.kb={vx:p.vx/l*p.kbF,vy:p.vy/l*p.kbF,t:.2};u.dash=null}}
+            if(p.el)elemHit(p.owner,u,p.el,p.elP);else if(p.st&&(!p.stP||Math.random()<p.stP))stAdd(p.owner,u,p.st,1);if(p.kbF&&!u.boss&&!u.golem){const l=Math.hypot(p.vx,p.vy)||1;u.kb={vx:p.vx/l*p.kbF,vy:p.vy/l*p.kbF,t:.2};u.dash=null}}
           if(p.kind===4)fxE('shatter',{x:u.x|0,y:u.y|0});else if(p.kind>=11)fxE('hit',{x:u.x|0,y:u.y|0,c:p.el?ELEM[p.el].c:p.kind===11?'#7ff0d8':'#ffb46a'})}
         if(!p.pierce){hitS=true;break}}}
     if(hitS||p.life<=0){p.dead=true;
@@ -2133,7 +2200,7 @@ function hostUpdate(dt){
     if(a.dot){a.dotT=(a.dotT||0)-dt;if(a.t-a.delay<a.dot){if(a.dotT<=0){a.dotT=a.tick;applyAoe(a)}}else{a.done=true;if(a.endStun){for(const u of units){if(u.dead||!isEnemy(a.owner,u)||!hitArea(a,u))continue;u.stunT=Math.max(u.stunT,a.endStun);fxE('freeze',{id:u.id,x:u.x|0,y:u.y|0})}fxE('shatter',{x:a.x|0,y:a.y|0,r:a.r});sndAt('freeze',a.x,a.y)}}continue}
     if(!a.done){a.done=true;if(!a.fxOnly)applyAoe(a);a.fxT=a.vis;
       if(a.big){emit({t:'k',a:a.kind==='meteor'?12:9,x:a.x|0,y:a.y|0});sndAt(a.kind==='meteor'?'boom':'quake',a.x,a.y)}
-      if(a.burn)fresh.push({x:a.x,y:a.y,r:a.r*.85,dmg:a.burn*.5,type:'m',owner:a.owner,kind:'burn',dot:3,tick:.5,t:0,delay:0,done:false,vis:.3,fxT:0})}
+      if(a.burn)fresh.push({x:a.x,y:a.y,r:a.r*.85,dmg:a.burn*.5,type:'m',owner:a.owner,kind:'burn',dot:3,tick:.5,t:0,delay:0,done:false,vis:.3,fxT:0,st:a.el==='fire'?'fire':undefined})}
     a.fxT-=dt;
   }
   aoes=aoes.filter(a=>!(a.done&&(a.dot?true:a.fxT<=0))).concat(fresh);
@@ -2141,7 +2208,7 @@ function hostUpdate(dt){
 function applyAoe(a){for(const u of units){if(u.dead||!isEnemy(a.owner,u))continue;
   if(hitArea(a,u)){dealDamage(u,a.dmg,a.type,a.owner,!!a.dot&&a.kind!=='rain'&&a.kind!=='blizz'&&a.kind!=='volley'&&a.kind!=='thunder');if(u.dead)continue;
     if(a.kb&&!u.boss&&!u.golem){const d=dist(a,u)||1;u.kb={vx:(u.x-a.x)/d*a.kb,vy:(u.y-a.y)/d*a.kb,t:.26};u.dash=null}if(a.stun)u.stunT=Math.max(u.stunT,a.stun);if(a.root)u.rootT=Math.max(u.rootT,a.root);if(a.slow){u.slowT=Math.max(u.slowT,a.slow);u.slowAmt=a.slowAmt||.4}
-    if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP)}}}
+    if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP);else if(a.st&&(!a.stP||Math.random()<a.stP))stAdd(a.owner,u,a.st,1)}}}
 
 // ===================== SHARED VISUAL UPDATE =====================
 const pushMass=u=>u.boss||u.golem?12:u.hero?(u.ctrl?6:3):u.big||u.lord?2:1;
@@ -2446,7 +2513,7 @@ function decEv(a){if(!Array.isArray(a))return a;switch(a[0]){
 // ---- snapshots ----
 const f1=v=>Math.round(v*10)/10;
 function uflags(o){return(o.dead?1:0)|(o.stunT>0?2:0)|(o.slowT>0?4:0)|(o.buffT>0||o.asT>0?8:0)|(o.hurtT>0?16:0)|(o.hidden?32:0)|(o.inBush?64:0)|(o.dash?128:0)|(o.rootT>0?256:0)|(o.reviveT>0?512:0)
-  |(o.atkAnim>0?1024:0)|(o.castAnim>0?2048:0)|(o.wet?4096:0)|(o.shieldHp>0?8192:0)|(o.spinT>0?16384:0)|(o.lotusT>0?32768:0)|(o.leap?65536:0)|(o.invisT>0?131072:0)|(o.burnT>0?262144:0)|(o.aegis?524288:0)|(o.kb?1048576:0)|(o.rise>0?2097152:0)|(o.spdPT>0?4194304:0)|(o.fuseT>0?8388608:0)}
+  |(o.atkAnim>0?1024:0)|(o.castAnim>0?2048:0)|(o.wet?4096:0)|(o.shieldHp>0?8192:0)|(o.spinT>0?16384:0)|(o.lotusT>0?32768:0)|(o.leap?65536:0)|(o.invisT>0?131072:0)|(o.burnT>0?262144:0)|(o.aegis?524288:0)|(o.kb?1048576:0)|(o.rise>0?2097152:0)|(o.spdPT>0?4194304:0)|(o.fuseT>0?8388608:0)|(o.ignT>0&&o.ign>=3?16777216:0)|(o.statT>0&&o.stat>0?33554432:0)|(o.rotT>0?67108864:0)}
 function heroRow(o){return[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp,o.lvl,o.wk?AW.indexOf(o.wk):-1,o.wt,o.at,o.kills,o.mp|0,o.maxMp,o.shieldHp|0,((o.wv|0)>>15)&3]}
 function selfRow(o){return[Math.round(o.xp),o.skl[0],o.skl[1],o.skl[2],o.pts,f1(Math.max(0,o.cd[0])),f1(Math.max(0,o.cd[1])),f1(Math.max(0,o.cd[2])),f1(o.armorV),Math.round(o.atkDmg),Math.round(o.spdB*100),Math.round(o.dmgB*100),Math.round(o.mr*100),f1(Math.max(0,o.shieldT)),
   o.bag[0],o.bag[1],o.bag[2],o.bag[3],f1(Math.max(0,o.bcd[0])),f1(Math.max(0,o.bcd[1])),f1(Math.max(0,o.bcd[2])),f1(Math.max(0,o.bcd[3])),f1(Math.max(0,o.spdPT)),o.wk2?AW.indexOf(o.wk2):-1,o.wt2,o.fury|0,o.gold|0,o.wv|0,o.wv2|0,o.xs|0,o.xl|0,f1(Math.max(0,o.xcd||0)),f1(Math.max(0,o.dgcd||0))]}
@@ -2483,7 +2550,7 @@ function clientStart(d){net.pendS=[];withLoading(()=>clientStart2(d))}
 function clientStart2(d){setupWorld(d.seed,d.cfg);if(view3D&&has3D()&&R3.ok)R3.sync();for(const h of d.heroes)addUnit(mkHero(h[0],h[1],h[3]?'remote':null,h[2],h[4]|0||h[0]));myId=d.you;alive=d.heroes.length;net.lastN=0;net.lastEv=0;enterPlay();const P=net.pendS||[];net.pendS=null;for(const q of P)applySnap(q)}
 function setFlags(u,fl){u.dead=!!(fl&1);u.stunT=fl&2?1:0;u.slowT=fl&4?1:0;u.buffT=fl&8?1:0;u.hurtT=fl&16?.1:0;u.hidden=!!(fl&32);u.inBush=!!(fl&64);u.dash=fl&128?{}:null;
   u.rootT=fl&256?1:0;u.reviveT=fl&512?1:0;if(fl&1024)u.atkAnim=Math.max(u.atkAnim,.2);if(fl&2048)u.castAnim=Math.max(u.castAnim,.3);u.wet=!!(fl&4096);
-  u.shieldHp=fl&8192?Math.max(1,u.shieldHp):0;u.spinT=fl&16384?1:0;u.lotusT=fl&32768?1:0;u.leap=fl&65536?(u.leap||{c:1}):null;u.invisT=fl&131072?1:0;u.burnT=fl&262144?1:0;u.aegis=!!(fl&524288);u.kb=fl&1048576?{}:null;u.rise=fl&2097152?1:0;u.spdPT=fl&4194304?1:0;u.fuseT=fl&8388608?1:0}
+  u.shieldHp=fl&8192?Math.max(1,u.shieldHp):0;u.spinT=fl&16384?1:0;u.lotusT=fl&32768?1:0;u.leap=fl&65536?(u.leap||{c:1}):null;u.invisT=fl&131072?1:0;u.burnT=fl&262144?1:0;u.aegis=!!(fl&524288);u.kb=fl&1048576?{}:null;u.rise=fl&2097152?1:0;u.spdPT=fl&4194304?1:0;u.fuseT=fl&8388608?1:0;u.ign=fl&16777216?3:0;u.ignT=u.ign?1:0;u.stat=fl&33554432?2:0;u.statT=u.stat?1:0;u.rotT=fl&67108864?1:0}
 function applySnap(d){
   if(d.n<=net.lastN)return;net.lastN=d.n;
   gameT=d.g;alive=d.a;const z=d.z;Object.assign(zone,{x:z[0],y:z[1],r:z[2],tx:z[3],ty:z[4],tr:z[5],st:['wait','shrink','done'][z[6]],t:z[7],ph:z[8]});
@@ -4079,6 +4146,9 @@ Object.assign(R3,{
       o.ice.visible=u.rootT>0;o.stars.visible=u.stunT>0;o.stars.rotation.y=T*5;o.bubble.visible=u.shieldHp>0;if(o.bubble.visible)o.bubble.material.opacity=.14+.06*Math.sin(T*6);
       if(u.burnT>0&&Math.random()<dt*20)this.sp(true,{x:u.x+rand(-14,14),y:o.gy+rand(10,70),z:u.y+rand(-14,14),vy:rand(40,90),l:.45,s:20,s1:5,c:'#ffd070',c2:'#ff3a10',sp:3});
       if(u.slowT>0&&Math.random()<dt*6)this.sp(true,{x:u.x+rand(-16,16),y:o.gy+rand(20,80),z:u.y+rand(-16,16),vy:-20,l:.8,s:8,s1:3,c:'#dff8ff',sp:4});
+      if(u.ignT>0&&u.ign>=3&&Math.random()<dt*24)this.sp(true,{x:u.x+rand(-22,22),y:o.gy+rand(20,110),z:u.y+rand(-22,22),vy:rand(80,150),l:.55,s:30,s1:6,c:'#ffc050',c2:'#ff2a08',sp:3});   // fire stacks: the target is ablaze
+      if(u.rotT>0&&Math.random()<dt*10)this.sp(true,{x:u.x+rand(-16,16),y:o.gy+rand(10,60),z:u.y+rand(-16,16),vy:rand(10,40),l:.7,s:14,s1:4,c:'#9dff6a',c2:'#2f5a1a',sp:3,a:.7});   // zombie rot
+      if(u.statT>0&&u.stat>0&&Math.random()<dt*16)this.sp(true,{x:u.x+rand(-18,18),y:o.gy+rand(20,100),z:u.y+rand(-18,18),vx:rand(-120,120),vy:rand(-30,110),vz:rand(-120,120),l:.16,s:11,s1:1,c:'#f4eeff',c2:'#9a7aff',sp:1});   // storm static crackles
       if(u.aegis&&Math.random()<dt*8)this.sp(true,{x:u.x+rand(-20,20),y:o.gy+rand(0,30),z:u.y+rand(-20,20),vy:rand(40,90),l:.8,s:8,s1:2,c:'#ffe27a',sp:1});
       if(u.hero&&o.wglow&&Math.random()<dt*(o.wt>=3?10:5)){const h=(o.wpnR||o.wpnL);if(h){h.getWorldPosition(this.v);this.sp(true,{x:this.v.x+rand(-6,6),y:this.v.y+rand(-4,14),z:this.v.z+rand(-6,6),vy:rand(10,40),l:.6,s:9,s1:2,c:o.wglow,sp:o.wk==='frost'?4:o.wk==='fire'?3:1})}}
       if(u.hero&&u.at===4&&Math.random()<dt*6)this.sp(true,{x:u.x+rand(-14,14),y:o.gy+rand(30,80),z:u.y+rand(-14,14),vy:40,l:.5,s:10,s1:2,c:'#ff8a2a',sp:3});
@@ -6254,13 +6324,14 @@ R.eclVis=function(a,Tm,dt,L){const gy=this.gY(a.x,a.y),pre=a.t<a.delay,k=pre?Mat
 // The heroes ride on the Quaternius hero hooks (o.qn) so the frame loop, death and outline code keep working;
 // whenever a class GLB is missing the old hero model is used.
 (function(){if(typeof R3==='undefined'||typeof CURSED==='undefined'||!CURSED)return;const T=THREE,R=R3;
-const P5={warrior:'p5-warrior',assassin:'p5-assassin',archer:'p5-archer',mage:'p5-mage',summoner:'p5-summoner'};
+// 2026-11-21: the Archer is the owner's Celestial Archer, and the owner's Celestial Mage plays both the Mage and the Summoner (one file)
+const P5={warrior:'p5-warrior',assassin:'p5-assassin',archer:'p5-archer',mage:'p5-mage',summoner:'p5-mage'};
 const P5C={order:['idle','run','attack','cast','dodge','death'],idle:/Combat_Stance|idle/i,run:/Run/i,attack:/Slash|Combo|Shot|Soell|mage_|Attack/i,cast:/Charged|Spin|Spell_Cast/i,dodge:/Roll|Dodge/i,death:/Dead|Death/i};
 const P5H=138;   // hero height in world units (Quaternius heroes are ~140)
 const CA=()=>window.CelestialAssets;
 // the Spirit Tome (summoner.js) is the Summoner; a fused weapon keeps the class of the weapon it was forged on
-const p5Class=u=>{let k=u&&u.wk;if(!k)return'warrior';if(k==='soul')return'summoner';if(typeof FUSED!=='undefined'&&FUSED[k])k=FUSED[k].base||k;
-  return k==='dagger'?'assassin':k==='bow'||k==='xbow'?'archer':k==='fire'||k==='frost'||k==='storm'?'mage':'warrior'};
+const p5Class=u=>{let k=u&&u.wk;if(!k)return'warrior';if(typeof FUSED!=='undefined'&&FUSED[k])k=FUSED[k].base||k;
+  return k==='soul'?'summoner':k==='dagger'?'assassin':k==='bow'||k==='xbow'?'archer':k==='fire'||k==='frost'||k==='storm'?'mage':'warrior'};
 R.p5Ready=function(cls){const A=CA(),a=A&&A.get(P5[cls]);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations.length>=4&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 const p5Clips=a=>{if(a._p5)return a._p5;const list=a.gltf.animations,used=new Set(),out={};
   // in place: every clip's hips keep the IDLE clip's ground position (a clip's own first frame can already be a metre off)
@@ -6280,6 +6351,8 @@ R.p5Hero=function(u){const cls=p5Class(u);if(!this.p5Ready(cls))return null;cons
   o.root=new T.Group();o.body=new T.Group();o.root.add(o.body);o.body.add(pivot);
   model.traverse(n=>{if(n.isBone)o.bones[n.name]=n;if(n.isMesh){n.castShadow=!!this.hi;n.receiveShadow=true;n.frustumCulled=false;
     if(this.fow){const paint=src=>this.cached('p5-'+src.uuid,()=>{const m=src.clone();if(m.isMeshStandardMaterial){m.envMap=this.envTex||null;m.envMapIntensity=.55}return this.fow(m,{key:'p5'})});n.material=Array.isArray(n.material)?n.material.map(paint):paint(n.material)}}});
+  // Mixamo rigs (the owner's heroes) name the chest and neck bones differently from Meshy's auto-rig; the bow pose asks for these
+  for(const [a,b] of[['Spine2','Spine02'],['Spine1','Spine01'],['Neck','neck']])if(o.bones[a]&&!o.bones[b])o.bones[b]=o.bones[a];
   // stand on the ring: centre the hips (not the bounding box, which arms and capes pull sideways)
   o.handR=o.bones.RightHand||null;o.handL=o.bones.LeftHand||null;
   o.mixer=new T.AnimationMixer(model);const clips=p5Clips(a);for(const k in clips)o.act[k]=o.mixer.clipAction(clips[k]);
@@ -6312,9 +6385,11 @@ R.p5WKeyFor=function(wk,t){const f=p5Fam(wk);return f?P5W[f][p5WBand(Math.min(4,
 // faces the ground in the bind pose) from the knuckles' middle.
 const P5GRIP={warrior:{R:{p:[-.0157,.0908,.0033],d:[.577,.052,.816]},L:{p:[.0157,.0898,.0033],d:[-.577,.052,.816]}},
   assassin:{R:{p:[-.67,9.24,-.19],d:[-.648,.192,.737]},L:{p:[.62,9.21,.33],d:[.671,.059,.739]}},
-  archer:{R:{p:[.62,11.86,-2],d:[-.751,.252,.61]},L:{p:[-.29,11.97,-.97],d:[.756,.232,.612]}},
-  mage:{R:{p:[-1.14,9.68,1.04],d:[-.701,.003,.713]},L:{p:[.63,10.05,.67],d:[.699,.008,.715]}},
-  summoner:{R:{p:[-1.14,9.68,1.04],d:[-.701,.003,.713]},L:{p:[.55,11.78,.37],d:[.885,.148,.441]}}};
+  // the owner's Celestial Archer and Celestial Mage (2026-11-21, Mixamo, metres) the same way; the Mage's hand is smaller, so the
+  // point sits a quarter of the knuckle distance toward the wrist and 1.7 cm toward the palm
+  archer:{R:{p:[-.0191,.0951,.0076],d:[.631,.168,.758]},L:{p:[.0194,.0904,.0067],d:[-.623,.22,.75]}},
+  mage:{R:{p:[-.0129,.08,-.0092],d:[-.285,.172,.943]},L:{p:[.0129,.0741,-.0094],d:[.275,.208,.939]}},
+  summoner:{R:{p:[-.0129,.08,-.0092],d:[-.285,.172,.943]},L:{p:[.0129,.0741,-.0094],d:[.275,.208,.939]}}};
 const p5Grip=(o,hand)=>{const G=P5GRIP[o.cls]||P5GRIP.warrior;return hand===o.handL?G.L:G.R};
 // fit a weapon group into the fist: grip point on the palm centre, handle along the fist axis
 // A bow needs its whole frame, not just the handle line: limbs along the fist axis (thumb end up), the back of the riser
@@ -6456,10 +6531,19 @@ window.P5_CLASS=p5Class;
 //  R  อัญเชิญผู้พิทักษ์จันทรา — a Lunar Guardian crashes down (slam + stun) and fights at your side
 // Spirits are host-authoritative mob units (pet:1) on the summoner's team. Their hits count as the summoner's,
 // so kill credit, PvP damping, weapon traits and runes all work unchanged. Clients learn them from the mob snapshot
-// row [..., -2, PK index, owner id] and drop them like any other summon when they leave the snapshot.
+// row [..., -2, PK index, owner id, element] and drop them like any other summon when they leave the snapshot.
+//
+// Fusion (owner 2026-11-21): the tome now forges with any other weapon family at 10:00, into five new tomes (arch 'SO', base 'soul',
+// so the hero stays the Summoner):
+//  📖 + melee  -> ⚜️ คัมภีร์ขุนพลวิญญาณ  spirit knights (melee, tough) · a charge order (every spirit dashes in and stuns) ·
+//                 the Spirit Warlord (a spectral Dark Sentinel; the summoner takes 8% less damage while it stands)
+//  📖 + ranged -> 🦅 คัมภีร์พรานวิญญาณ   hunter wisps (long range, piercing soul arrows) · a volley from every spirit that marks the
+//                 target (your spirits hit it harder) · a rain of soul arrows that leaves two more hunters behind
+//  📖 + staff  -> 🕯️💠🌌 คัมภีร์วิญญาณเพลิง/เหมันต์/อัสนี  the tome's kit with elemental spirits: half of their hits leave the
+//                 element's status (burn / chill and freeze / static and overload, b.js stAdd), an elemental lance and guardian
 (()=>{
 'use strict';
-const K='soul',PK=['swisp','swolf','sguard'];window.PK=PK;
+const K='soul',PK=['swisp','swolf','sguard','sknight','swarlord','shunter'];window.PK=PK;   // append only: the index travels in snapshots
 WEAPONS[K]={n:'คัมภีร์วิญญาณ',ic:'📖',melee:0,range:470,atkT:.95,dmg:.8,hp:60,armor:1,magic:1,pspd:860,mp:170,mpR:.7,col:'#8fe8ff',
   names:['ลูกแก้ววิญญาณ','ลูกแก้วดวงจันทร์','คัมภีร์ดวงวิญญาณ','คัมภีร์ปฐมกาล','คัมภีร์เทพอัญเชิญ SSR'],
   desc:'อาชีพ Summoner: อัญเชิญภูติยิงพลังวิญญาณ สั่งวิญญาณทั้งหมดรุมเป้าหมาย เรียกผู้พิทักษ์จันทรายักษ์ลงมาสู้ข้างกาย'};
@@ -6473,115 +6557,187 @@ SKV[K]=[{n:[2,2,2,2],wolf:[0,0,1,1],hp:[200,280,360,440],dmg:[18,25,32,40],t:[16
 SKA[K]=['self','unit','area'];
 const PDEF={swisp:{name:'ภูติวิญญาณ',hp:200,dmg:20,armor:1,spd:270,r:16,atkT:1.05,range:380,xp:6,col:'#8fe8ff'},
   swolf:{name:'หมาป่าวิญญาณ',hp:420,dmg:28,armor:3,spd:258,r:24,atkT:.85,range:62,xp:10,col:'#9fd0ff'},
-  sguard:{name:'ผู้พิทักษ์จันทรา',hp:2000,dmg:70,armor:8,spd:165,r:46,atkT:1.6,range:112,xp:30,col:'#b9a6ff',big:1}};
+  sguard:{name:'ผู้พิทักษ์จันทรา',hp:2000,dmg:70,armor:8,spd:165,r:46,atkT:1.6,range:112,xp:30,col:'#b9a6ff',big:1},
+  sknight:{name:'อัศวินวิญญาณ',hp:520,dmg:30,armor:3,spd:245,r:24,atkT:1.05,range:72,xp:8,col:'#a8c8ff',kk:'Skeleton_Warrior'},
+  swarlord:{name:'ขุนพลวิญญาณ',hp:2400,dmg:80,armor:7,spd:178,r:36,atkT:1.5,range:118,xp:30,col:'#7f9cff',big:1},
+  shunter:{name:'ภูติพราน',hp:170,dmg:22,armor:1,spd:285,r:15,atkT:.9,range:520,xp:6,col:'#d8ff9a'}};
 for(const k of PK)CREEPS[k]=Object.assign({pet:1},PDEF[k]);
-const MAXW=4;let pid=400000,purgeT=0;
+// ---- the five fused tomes ----
+const SOK=[];
+{const tn=b=>[b,b+'ชั้นสูง',b+'มหากาพย์',b+'ตำนาน',b+' SSR'],S4=(ic,n,cd,mp,rg)=>({ic,n,cd,mp,range:rg});
+  const add=(k,o)=>{o.names=tn(o.n);o.fused=1;o.arch='SO';o.base=K;WEAPONS[k]=o;FUSED[k]=o;FK.push(k);AW.push(k);SOK.push(k);SKA[k]=['self','unit','area']};
+  add('fOM',{n:'คัมภีร์ขุนพลวิญญาณ',ic:'⚜️',so:'M',melee:0,range:470,atkT:.95,dmg:.86,hp:170,armor:4,magic:1,pspd:860,mp:180,mpR:.7,col:'#a8c8ff',glow:'#7f9cff',
+    desc:'คัมภีร์วิญญาณหลอมกับอาวุธประชิด: อัญเชิญอัศวินวิญญาณถึกทน สั่งวิญญาณทั้งหมดพุ่งชนจนมึน เรียกขุนพลวิญญาณยักษ์ (ขณะขุนพลอยู่ ผู้ใช้รับดาเมจลดลง 8%)',rec:['O','M']});
+  SK.fOM=[S4('🛡️','กองทัพวิญญาณ',[14,13,12,11],[75,80,85,90],[0,0,0,0]),S4('📯','บัญชาบุกทะลวง',[10,9.5,9,8.5],[60,65,70,75],[640,660,680,700]),S4('⚜️','ขุนพลวิญญาณ',[75,65,55],[170,220,270],[600,640,680])];
+  SKV.fOM=[{n:[2,2,2,3],hp:[200,270,340,410],dmg:[17,24,31,38],t:[18,19,20,21]},{dmg:[70,110,150,190],buff:[.5,.6,.7,.8],t:4,stun:[.2,.25,.3,.35]},
+    {dmg:[200,300,400],stun:[1,1.2,1.4],r:[240,260,280],hp:[1700,2400,3100],gd:[48,70,92],t:[18,20,22],dr:.08}];
+  add('fOR',{n:'คัมภีร์พรานวิญญาณ',ic:'🦅',so:'R',melee:0,range:520,atkT:.9,dmg:.86,hp:60,magic:1,pspd:1000,crit:.1,critM:1.7,mp:170,mpR:.7,col:'#d8ff9a',glow:'#9dff6a',
+    desc:'คัมภีร์วิญญาณหลอมกับอาวุธยิงไกล: อัญเชิญภูติพรานยิงศรวิญญาณทะลุ สั่งวิญญาณทั้งหมดระดมยิงพร้อมตีตราเป้าหมาย ฝนศรวิญญาณที่ทิ้งภูติพรานไว้อีก 2 ตน',rec:['O','R']});
+  SK.fOR=[S4('🦅','ภูติพราน',[13,12,11,10],[70,75,80,85],[0,0,0,0]),S4('🎯','ห่าศรวิญญาณ',[9,8.5,8,7.5],[55,60,65,70],[680,700,720,740]),S4('🌧️','ฝนศรวิญญาณ',[70,60,50],[160,210,260],[700,720,740])];
+  SKV.fOR=[{n:[2,3,3,4],hp:[150,210,270,330],dmg:[14,20,26,32],t:[16,17,18,19]},{dmg:[70,105,140,175],mark:[.12,.16,.2,.24],t:5},
+    {dmg:[30,44,58],r:[280,300,320],n:[2,2,3],t:[14,16,18]}];
+  const EN={fire:'เพลิง',frost:'เหมันต์',storm:'อัสนี'},EI={fire:'🕯️',frost:'💠',storm:'🌌'},GN={fire:'อสูรเพลิง',frost:'ยักษ์น้ำแข็ง',storm:'ยักษ์อัสนี'};
+  for(const e of['fire','frost','storm']){const E=ELEM[e];
+    add('fOS_'+e,{n:'คัมภีร์วิญญาณ'+EN[e],ic:EI[e],so:'S',el:e,melee:0,range:480,atkT:.95,dmg:.84,hp:70,armor:1,magic:1,pspd:880,mp:190,mpR:.75,col:E.c,glow:E.c,
+      desc:`คัมภีร์วิญญาณหลอมกับคทา${E.n}: ภูติ หมาป่า และผู้พิทักษ์กลายเป็นธาตุ${E.n} ทุกการโจมตีของวิญญาณติดสถานะธาตุ หอกวิญญาณ${E.n} ผู้พิทักษ์${E.n}ถล่มพื้นที่`,rec:['O','S'],re:e});
+    SK['fOS_'+e]=[S4(E.ic,'อัญเชิญภูติ'+EN[e],[13,12,11,10],[70,75,80,85],[0,0,0,0]),S4('🔮','หอกวิญญาณ'+EN[e],[10,9.5,9,8.5],[55,60,65,70],[640,660,680,700]),S4(EI[e],GN[e],[75,65,55],[170,220,270],[600,640,680])];
+    SKV['fOS_'+e]=[{n:[2,2,2,2],wolf:[0,0,1,1],hp:[190,265,340,415],dmg:[16,23,30,37],t:[16,17,18,19]},{dmg:[70,110,150,190],buff:[.5,.6,.7,.8],t:4},
+      {dmg:[200,300,400],stun:[1,1.2,1.4],r:[250,270,290],hp:[1500,2200,2900],gd:[50,72,95],t:[18,20,22]}]}}
+SKA_F.SO={t:['self','unit','area'],r:[0,0,'V'],w:[0,0,0]};
+WCAT[K]='O';CATN.O='คัมภีร์วิญญาณ';
+const SO=k=>k===K||!!(k&&FUSED[k]&&FUSED[k].base===K);   // the tome itself or a tome forged from it
+const soEl=k=>k&&FUSED[k]&&FUSED[k].base===K&&FUSED[k].el||null,soKit=k=>k&&FUSED[k]&&FUSED[k].base===K?FUSED[k].so:'';
+// the tome + another family -> its fused tome (two tomes never fuse: the same weapon)
+{const _fk=fuseKey;fuseKey=function(a,b){const ca=WCAT[a],cb=WCAT[b];if(ca!=='O'&&cb!=='O')return _fk(a,b);if(!ca||!cb||a===b)return null;
+  const o=ca==='O'?b:a,c=WCAT[o];return c==='M'?'fOM':c==='R'?'fOR':c==='S'?'fOS_'+o:null}}
+const MAXW=4,MAXK=4,MAXH=5;let pid=400000,purgeT=0;
 function mkPet(id,kind,x,y,owner){const d=CREEPS[kind];const u=mkUnit({id,type:kind,kind,def:d,name:d.name,mob:true,pet:true,summon:1,camp:-1,owner,team:owner?owner.team:-1,
-    x,y,home:{x,y},big:!!d.big,golem:kind==='sguard'});setMobStats(u,1);u.tx=x;u.ty=y;
-  if(kind==='sguard'){u.ecl='construct';u.poise=0;u.busyT=0;u.blockT=0;u.elite=1}return u}
+    x,y,home:{x,y},big:!!d.big,golem:kind==='sguard'||kind==='swarlord'});setMobStats(u,1);u.tx=x;u.ty=y;
+  if(kind==='sguard'){u.ecl='construct';u.poise=0;u.busyT=0;u.blockT=0;u.elite=1}
+  else if(kind==='swarlord'){u.ecl='sentinel';u.poise=0;u.busyT=0;u.blockT=0;u.elite=1}
+  else if(kind==='sknight')u.undead=1;   // drawn as a spectral skeleton knight
+  return u}
 const petsOf=(o,kind)=>units.filter(u=>u.pet&&!u.dead&&u.owner===o&&(!kind||u.kind===kind));
 function dismiss(u,quiet){if(u.dead)return;u.hp=0;u.dead=true;u.deadAt=gameT;emit({t:'pd',id:u.id});fxE('die',{id:u.id,x:u.x|0,y:u.y|0});if(!quiet)fxE('soulgone',{x:u.x|0,y:u.y|0,pk:PK.indexOf(u.kind)})}
 function purge(){if(!units.some(u=>u.pet&&u.dead&&gameT-(u.deadAt||0)>2.5))return;units=units.filter(u=>!(u.pet&&u.dead&&gameT-(u.deadAt||0)>2.5));UMAP=new Map(units.map(u=>[u.id,u]))}
-function spawnPet(o,kind,x,y,hp,dmg,life,slot){let p={x,y};if(blockedAt(p,20)||houseAt(p)!==houseAt(o))p={x:o.x,y:o.y};
-  const u=mkPet(pid++,kind,p.x,p.y,o);u.maxHp=Math.round(hp);u.hp=u.maxHp;u.atkDmg=dmg;u.lifeT=life;u.slot=slot;u.rise=kind==='sguard'?.55:.25;u.fx=o.fx;u.fy=o.fy;addUnit(u);return u}
+function spawnPet(o,kind,x,y,hp,dmg,life,slot,el){let p={x,y};if(blockedAt(p,20)||houseAt(p)!==houseAt(o))p={x:o.x,y:o.y};
+  const u=mkPet(pid++,kind,p.x,p.y,o);u.maxHp=Math.round(hp);u.hp=u.maxHp;u.atkDmg=dmg;u.lifeT=life;u.slot=slot;u.pel=el||null;u.rise=kind==='sguard'||kind==='swarlord'?.55:.25;u.fx=o.fx;u.fy=o.fy;addUnit(u);return u}
+// keep at most n of the given kinds: the oldest go first
+function cull(u,kinds,n){const live=petsOf(u).filter(p=>kinds.includes(p.kind)).sort((a,b)=>a.lifeT-b.lifeT);for(let k=0;k<live.length-n;k++)dismiss(live[k])}
 // ---- skills ----
-const _c0=cast0;cast0=function(u,i,ap){if(u.wk!==K)return _c0(u,i,ap);
+const _c0=cast0;cast0=function(u,i,ap){if(!SO(u.wk))return _c0(u,i,ap);
   if(u.dead||u.stunT>0||u.dash||u.leap||u.kb||u.fuseT>0)return false;const L=u.skl[i];if(!L)return false;
-  const s=SK[K][i],li=L-1;if(u.cd[i]>0)return false;const cost=s.mp[li];
+  const W=u.wk,s=SK[W][i],li=L-1;if(u.cd[i]>0)return false;const cost=s.mp[li];
   if(u.mp<cost){if(isHuman(u))emit({t:'s',n:'nomana',x:0,y:0,g:1,v:[u.id]});return false}
-  const V=SKV[K][i],A=u.atkDmg,SA=(1+spellAmp(u))*SKILL_K,rngS=s.range[li]||400;purge();
+  const V=SKV[W][i],A=u.atkDmg,SA=(1+spellAmp(u))*SKILL_K,rngS=s.range[li]||400,kit=soKit(W),el=soEl(W);purge();
   if(ap&&!(Math.hypot(ap.x-u.x,ap.y-u.y)>8))ap=null;
   const ft=!isHuman(u)&&u.ai.tgt&&!u.ai.tgt.dead?u.ai.tgt:null;
   if(u.invisT>0){u.invisT=0;u.bsReady=true}
-  if(i===0){const n=V.n[li]+V.wolf[li],live=petsOf(u).filter(p=>p.kind!=='sguard').sort((a,b)=>a.lifeT-b.lifeT);
-    for(let k=0;k<live.length+n-MAXW;k++)dismiss(live[k]);
-    const hp=V.hp[li]+.05*u.maxHp,dmg=(V.dmg[li]+.32*A)*(1+spellAmp(u)),ids=[];
-    for(let k=0;k<n;k++){const wolf=k>=V.n[li],a=Math.atan2(u.fy,u.fx)+Math.PI+(k-(n-1)/2)*.9,d=wolf?70:90;
-      const p=spawnPet(u,wolf?'swolf':'swisp',u.x+Math.cos(a)*d,u.y+Math.sin(a)*d,wolf?hp*1.8:hp,wolf?dmg*1.35:dmg,V.t[li],k);ids.push(p.id)}
-    u.castAnim=.5;u.revealT=1.2;sndAt('orb',u.x,u.y);sndAt('shield',u.x,u.y);fxE('soulsum',{id:u.id,x:u.x|0,y:u.y|0,n})}
+  const amp=1+spellAmp(u),ring=(n,k)=>Math.atan2(u.fy,u.fx)+Math.PI+(k-(n-1)/2)*(n>3?.7:.9);
+  if(i===0){const ids=[];
+    if(kit==='M'){const n=V.n[li];cull(u,['sknight'],MAXK-n);const hp=V.hp[li]+.07*u.maxHp,dmg=(V.dmg[li]+.3*A)*amp;
+      for(let k=0;k<n;k++){const a=ring(n,k);ids.push(spawnPet(u,'sknight',u.x+Math.cos(a)*80,u.y+Math.sin(a)*80,hp,dmg,V.t[li],k).id)}}
+    else if(kit==='R'){const n=V.n[li];cull(u,['shunter'],MAXH-n);const hp=V.hp[li]+.04*u.maxHp,dmg=(V.dmg[li]+.28*A)*amp;
+      for(let k=0;k<n;k++){const a=ring(n,k);ids.push(spawnPet(u,'shunter',u.x+Math.cos(a)*95,u.y+Math.sin(a)*95,hp,dmg,V.t[li],k).id)}}
+    else{const n=V.n[li]+V.wolf[li];cull(u,['swisp','swolf'],MAXW-n);const hp=V.hp[li]+.05*u.maxHp,dmg=(V.dmg[li]+.32*A)*amp;
+      for(let k=0;k<n;k++){const wolf=k>=V.n[li],a=ring(n,k),d=wolf?70:90;
+        ids.push(spawnPet(u,wolf?'swolf':'swisp',u.x+Math.cos(a)*d,u.y+Math.sin(a)*d,wolf?hp*1.8:hp,wolf?dmg*1.35:dmg,V.t[li],k,el).id)}}
+    u.castAnim=.5;u.revealT=1.2;sndAt('orb',u.x,u.y);sndAt('shield',u.x,u.y);fxE('soulsum',{id:u.id,x:u.x|0,y:u.y|0,n:ids.length,c:el?ELEM[el].c:kit==='M'?'#a8c8ff':kit==='R'?'#d8ff9a':undefined})}
   else if(i===1){const t=ft&&dist(u,ft)<rngS+60?ft:ap?enemyNear(u,ap,rngS):nearestEnemy(u,rngS+40,true);if(!t||dist(u,t)>rngS+80)return false;
     const d=dist(u,t)||1,nx=(t.x-u.x)/d,ny=(t.y-u.y)/d;u.fx=nx;u.fy=ny;u.revealT=1.2;u.castAnim=.45;
-    proj(u,nx,ny,{spd:1250,r:16,dmg:V.dmg[li]*SA+.6*A,type:'m',kind:16,life:(rngS+120)/1250,big:1});
-    for(const p of petsOf(u)){p.focus=t;p.pbT=V.t;p.pbAmt=V.buff[li];p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.25);p.atkCd=Math.min(p.atkCd,.1)}
+    const lance={spd:1250,r:16,dmg:V.dmg[li]*SA+.6*A,type:'m',kind:16,life:(rngS+120)/1250,big:1};if(el){lance.el=el;lance.elP=1}if(kit==='R')lance.pierce=1;
+    proj(u,nx,ny,lance);
+    for(const p of petsOf(u)){p.focus=t;p.pbT=V.t;p.pbAmt=V.buff?V.buff[li]:.5;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.25);p.atkCd=Math.min(p.atkCd,.1);
+      const pd=dist(p,t)||1,px=(t.x-p.x)/pd,py=(t.y-p.y)/pd;
+      if(kit==='M'&&(p.kind==='sknight'||p.kind==='swarlord')&&pd>60&&!(p.rise>0)){const sp=1250;p.dash={vx:px*sp,vy:py*sp,t:Math.min(pd-30,540)/sp,dmg:p.atkDmg*1.2,stun:V.stun[li],hit:new Set(),stop:true};p.fx=px;p.fy=py;
+        fxE('dash',{id:p.id,x:p.x|0,y:p.y|0,a:+Math.atan2(py,px).toFixed(2)})}
+      else if(kit==='R'&&pd<760&&!(p.rise>0)){p.fx=px;p.fy=py;p.atkAnim=.3;for(const s2 of[-1,0,1]){const a=Math.atan2(py,px)+s2*.07;proj(p,Math.cos(a),Math.sin(a),{spd:1150,r:8,dmg:p.atkDmg*.8,type:'m',kind:16,life:(pd+160)/1150})}}}
+    if(kit==='R'){t.smarkO=u.id;t.smarkK=V.mark[li];t.smarkUntil=gameT+V.t;if(isHuman(u))fxTextFor(t.x,t.y-t.r-50,'🎯 ตีตรา','#d8ff9a',1,[u.id])}
     sndAt('blink',u.x,u.y);fxE('soulcmd',{id:u.id,x:u.x|0,y:u.y|0,x2:t.x|0,y2:t.y|0,tid:t.id})}
   else{const tg=ft?{x:ft.x,y:ft.y}:ap?ap:aim(u,rngS);const p=landSpot(u,clampTo(u,tg,rngS));const r=V.r[li];
-    for(const g of petsOf(u,'sguard'))dismiss(g);
     const d=Math.hypot(p.x-u.x,p.y-u.y)||1;u.fx=(p.x-u.x)/d;u.fy=(p.y-u.y)/d;u.castAnim=.6;u.revealT=1.5;
-    aoe({x:p.x,y:p.y,r,dmg:V.dmg[li]*SA+.8*A,type:'m',owner:u,delay:.5,kind:'slam',stun:V.stun[li],big:true});
-    const g=spawnPet(u,'sguard',p.x,p.y,V.hp[li]+.12*u.maxHp,(V.gd[li]+.45*A)*(1+spellAmp(u)),V.t[li],0);g.fx=u.fx;g.fy=u.fy;
-    sndAt('slam',p.x,p.y);sndAt('roar',p.x,p.y);fxE('soulgd',{id:g.id,x:p.x|0,y:p.y|0,r});emit({t:'k',a:8,x:p.x|0,y:p.y|0})}
+    if(kit==='R'){aoe({x:p.x,y:p.y,r,dmg:V.dmg[li]*SA+.22*A,type:'m',owner:u,kind:'rain',delay:.3,dot:3,tick:.3});
+      const hp=SKV.fOR[0].hp[Math.min(3,li+1)]+.04*u.maxHp,dmg=(SKV.fOR[0].dmg[Math.min(3,li+1)]+.28*A)*amp;cull(u,['shunter'],MAXH);
+      for(let k=0;k<V.n[li];k++){const a=Math.atan2(u.fy,u.fx)+Math.PI+(k-(V.n[li]-1)/2)*.9;spawnPet(u,'shunter',p.x+Math.cos(a)*r,p.y+Math.sin(a)*r,hp,dmg,V.t[li],k)}
+      sndAt('volley',p.x,p.y);fxE('soulcmd',{id:u.id,x:u.x|0,y:u.y|0,x2:p.x|0,y2:p.y|0})}
+    else{const big=kit==='M'?'swarlord':'sguard';for(const g of petsOf(u,big))dismiss(g);
+      const sl={x:p.x,y:p.y,r,dmg:V.dmg[li]*SA+.8*A,type:'m',owner:u,delay:.5,kind:'slam',stun:V.stun[li],big:true};
+      if(el){sl.el=el;sl.elP=1;sl.kind=el==='fire'?'meteor':el==='frost'?'frost':'thunder';if(el==='fire')sl.burn=(16+1.4*u.lvl)*(1+spellAmp(u))}
+      aoe(sl);
+      const g=spawnPet(u,big,p.x,p.y,V.hp[li]+.12*u.maxHp,(V.gd[li]+.45*A)*(1+spellAmp(u)),V.t[li],0,el);g.fx=u.fx;g.fy=u.fy;if(kit==='M'){u.wlord=g;u.wlordDR=V.dr}
+      sndAt('slam',p.x,p.y);sndAt('roar',p.x,p.y);fxE('soulgd',{id:g.id,x:p.x|0,y:p.y|0,r,c:el?ELEM[el].c:kit==='M'?'#7f9cff':undefined});emit({t:'k',a:8,x:p.x|0,y:p.y|0})}}
   u.cd[i]=s.cd[li]*cdMul(u);u.mp-=cost;return true};
 // ---- spirit AI ----
 function pick(u,O){let best=null,bs=1e9;const bt=O.ai&&O.ai.tgt&&!O.ai.tgt.dead&&isEnemy(O,O.ai.tgt)&&dist(O,O.ai.tgt)<720?O.ai.tgt:null;if(bt&&!isHuman(O))return bt;
   const lh=O.lastHit&&gameT-O.lastHit.time<5&&!O.lastHit.src.dead&&dist(O,O.lastHit.src)<720?O.lastHit.src:null;if(lh)return lh;
-  for(const o of units){if(o.dead||!isEnemy(O,o)||o.reviveT>0)continue;const dO=dist(O,o);if(dO>560)continue;
+  for(const o of units){if(o.dead||!isEnemy(O,o)||o.reviveT>0)continue;const dO=dist(O,o);if(dO>(u.kind==='shunter'?640:560))continue;
     let s;if(o.hero){if(!visibleTo(o,O))continue;s=dO}else if(o.pet)s=dO+120;else if(o.mob&&(o.aggro===O||o.aggro&&o.aggro.pet&&o.aggro.owner===O))s=dO+200;else continue;
     if(s<bs){bs=s;best=o}}
   return best}
+// melee sweep in front of a spirit: full damage on its target, 60% beside it
+function sweep(u,t,dmg,arc){const ang=Math.atan2(t.y-u.y,t.x-u.x);for(const o of units){if(o.dead||!isEnemy(u,o))continue;const dd=dist(u,o);if(dd>u.range+u.r+o.r)continue;
+  let da=Math.abs(Math.atan2(o.y-u.y,o.x-u.x)-ang);if(da>Math.PI)da=Math.PI*2-da;if(o===t||da<arc){dealDamage(o,o===t?dmg:dmg*.6,'p',u);if(u.pel&&!o.dead&&Math.random()<.5)stAdd(u,o,u.pel,1)}}}
 function attack(u,t){const buff=u.pbT>0,dmg=u.atkDmg*(buff?1+u.pbAmt:1)*(isNight()?1.1:1),d=dist(u,t)||1,nx=(t.x-u.x)/d,ny=(t.y-u.y)/d,ang=Math.atan2(ny,nx);
   u.atkCd=u.atkCdBase/(buff?1.35:1);u.atkAnim=.3;
-  if(u.kind==='swisp'){proj(u,nx,ny,{spd:900,r:9,dmg,type:'m',kind:16,life:(u.range+120)/900});return}
-  if(u.kind==='swolf'){dealDamage(t,dmg,'p',u);emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:'#9fe8ff',k:2});return}
-  eclCast(u,'basic',.7);emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:'#c9b6ff',k:1});
-  for(const o of units){if(o.dead||!isEnemy(u,o))continue;const dd=dist(u,o);if(dd>u.range+u.r+o.r)continue;let da=Math.abs(Math.atan2(o.y-u.y,o.x-u.x)-ang);if(da>Math.PI)da=Math.PI*2-da;
-    if(o===t||da<.9)dealDamage(o,o===t?dmg:dmg*.6,'p',u)}sndAt('hit',u.x,u.y)}
+  if(u.kind==='swisp'){proj(u,nx,ny,{spd:900,r:9,dmg,type:'m',kind:16,life:(u.range+120)/900,st:u.pel||undefined,stP:.5});return}
+  if(u.kind==='shunter'){proj(u,nx,ny,{spd:1150,r:8,dmg,type:'m',kind:16,pierce:1,life:(u.range+120)/1150});return}
+  if(u.kind==='swolf'){dealDamage(t,dmg,'p',u);if(u.pel&&!t.dead&&Math.random()<.5)stAdd(u,t,u.pel,1);emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:u.pel?ELEM[u.pel].c:'#9fe8ff',k:2});return}
+  if(u.kind==='sknight'){emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:'#a8c8ff',k:0});sweep(u,t,dmg,.8);sndAt('hit',u.x,u.y);return}
+  eclCast(u,u.kind==='swarlord'?'combo':'basic',.7);emit({t:'w',id:u.id,a:+ang.toFixed(2),r:u.range+u.r,c:u.pel?ELEM[u.pel].c:u.kind==='swarlord'?'#8fa8ff':'#c9b6ff',k:1});
+  sweep(u,t,dmg,.9);sndAt('hit',u.x,u.y)}
 function petThink(u,dt){const O=u.owner;
-  if(!O||O.dead||O.wk!==K||(u.lifeT-=dt)<=0){dismiss(u);return{mx:0,my:0}}
+  if(!O||O.dead||!SO(O.wk)||(u.lifeT-=dt)<=0){dismiss(u);return{mx:0,my:0}}
   if(u.rise>0){u.rise-=dt;return{mx:0,my:0}}if(u.pbT>0)u.pbT-=dt;
-  if(u.kind==='sguard'){u.busyT=Math.max(0,(u.busyT||0)-dt);u.slT=(u.slT===undefined?3:u.slT)-dt}
+  const big=u.kind==='sguard'||u.kind==='swarlord';
+  if(big){u.busyT=Math.max(0,(u.busyT||0)-dt);u.slT=(u.slT===undefined?3:u.slT)-dt}
   let t=u.focus&&!u.focus.dead&&u.focus.reviveT<=0&&dist(O,u.focus)<1100?u.focus:null;if(!t)u.focus=null;
   if(!t){u.pt=(u.pt||0)-dt;if(u.pt<=0||u.tgt&&u.tgt.dead){u.pt=.35;u.tgt=pick(u,O)}t=u.tgt&&!u.tgt.dead&&isEnemy(O,u.tgt)&&dist(O,u.tgt)<780?u.tgt:null}
   let mx=0,my=0;const fast=u.pbT>0?1.25:1;
   if(t){const d=dist(u,t),R=u.range+t.r;u.fx=(t.x-u.x)/(d||1);u.fy=(t.y-u.y)/(d||1);
     if(d>R-8){const v=navDir(u,t.x,t.y);mx=v.x*fast;my=v.y*fast}
     if(d<R+8&&u.atkCd<=0&&u.stunT<=0)attack(u,t);
-    if(u.kind==='sguard'&&u.slT<=0&&d<230&&u.stunT<=0){u.slT=7;eclCast(u,'slam',1);aoe({x:u.x,y:u.y,r:230,dmg:u.atkDmg*1.5,type:'p',owner:u,delay:.55,kind:'slam',stun:.6,big:true});sndAt('slam',u.x,u.y)}}
-  else{const back=Math.atan2(O.fy,O.fx)+Math.PI,a=back+((u.slot||0)-1)*.85,D=u.kind==='sguard'?150:u.kind==='swolf'?80:95,px=O.x+Math.cos(a)*D,py=O.y+Math.sin(a)*D,dd=Math.hypot(px-u.x,py-u.y);
+    if(big&&u.slT<=0&&d<230&&u.stunT<=0){u.slT=7;eclCast(u,'slam',1);const r=u.kind==='swarlord'?210:230;
+      aoe({x:u.x,y:u.y,r,dmg:u.atkDmg*1.5,type:'p',owner:u,delay:.55,kind:u.pel==='fire'?'nova':u.pel==='frost'?'frost':u.pel==='storm'?'thunder':'slam',stun:.6,big:true,st:u.pel||undefined,stP:.5});sndAt('slam',u.x,u.y)}}
+  else{const back=Math.atan2(O.fy,O.fx)+Math.PI,a=back+((u.slot||0)-1)*.85,D=big?150:u.kind==='swolf'||u.kind==='sknight'?80:95,px=O.x+Math.cos(a)*D,py=O.y+Math.sin(a)*D,dd=Math.hypot(px-u.x,py-u.y);
     if(dist(u,O)>1150&&!blockedAt({x:px,y:py},u.r)){u.x=px;u.y=py;fxE('soulgone',{x:px|0,y:py|0,pk:PK.indexOf(u.kind)})}
     else if(dd>28){const v=navDir(u,px,py),k=dd>220?1.1:Math.max(.3,dd/220);mx=v.x*k;my=v.y*k;u.fx=v.x;u.fy=v.y}}
-  if(u.kind==='swisp'){const m=Math.hypot(mx,my);if(m>1){mx/=m;my/=m}}
+  if(u.kind==='swisp'||u.kind==='shunter'){const m=Math.hypot(mx,my);if(m>1){mx/=m;my/=m}}
   return{mx:mx*fast,my:my*fast}}
-// the tome's basic attack is a soul bolt (projectile kind 16) instead of the default arrow
-const _b=basic;basic=function(u,ft){const n=projs.length,r=_b(u,ft);if(u.wk===K)for(let i=n;i<projs.length;i++)if(projs[i].owner===u&&!projs[i].kind){projs[i].kind=16;projs[i].r=11}return r};
+// the tome's basic attack is a soul bolt (projectile kind 16) instead of the default arrow; the elemental tomes keep their element's bolt
+const _b=basic;basic=function(u,ft){const n=projs.length,r=_b(u,ft);if(SO(u.wk))for(let i=n;i<projs.length;i++)if(projs[i].owner===u&&!projs[i].kind){projs[i].kind=16;projs[i].r=11}return r};
 const _mt=mobThink;mobThink=function(u,dt){return u.pet?petThink(u,dt):_mt(u,dt)};
 const _na=nightAggro;nightAggro=function(u){if(u.pet)return;return _na(u)};
-// spirits strike for their summoner: kill credit, PvP damping, traits and runes are the summoner's
-const _dd=dealDamage;dealDamage=function(t,amt,type,src,quiet,crit){if(src&&src.pet){const o=src.owner;src=o&&!o.dead?o:null}return _dd(t,amt,type,src,quiet,crit)};
+// spirits strike for their summoner: kill credit, PvP damping, traits and runes are the summoner's.
+// The hunt's mark makes your own spirits hit the marked foe harder; the Warlord shields its summoner.
+const _dd=dealDamage;dealDamage=function(t,amt,type,src,quiet,crit){
+  if(src&&src.pet){const o=src.owner;if(o&&t&&t.smarkO===o.id&&gameT<(t.smarkUntil||0))amt*=1+(t.smarkK||0);src=o&&!o.dead?o:null}
+  if(t&&t.wlord&&amt>0){if(!t.wlord.dead&&SO(t.wk))amt*=1-(t.wlordDR||0);else t.wlord=null}
+  return _dd(t,amt,type,src,quiet,crit)};
 const _k=kill;kill=function(t,src){if(t&&t.pet){if(!t.dead){t.hp=0;dismiss(t);sndAt('mdie',t.x,t.y)}return}return _k(t,src)};
 // bots never farm spirits as creeps
 const _bc=bestCreep;bestCreep=function(u,range){const P=units.filter(o=>o.pet&&!o.dead);for(const p of P)p.dead=true;try{return _bc(u,range)}finally{for(const p of P)p.dead=false}};
 const _ct=curTick;curTick=function(dt){_ct(dt);purgeT-=dt;if(purgeT<=0){purgeT=1;purge()}};
-// bots: wisps early, command when a spirit is up, the guardian on anything big
-const _ai=aiSkills;aiSkills=function(u,t,d,hpR){if(u.wk!==K)return _ai(u,t,d,hpR);
-  const can=i=>u.skl[i]>0&&u.cd[i]<=0&&u.mp>=SK[K][i].mp[u.skl[i]-1],rg=i=>SK[K][i].range[u.skl[i]-1],big=t.hero||t.golem||t.boss;
+// bots: spirits early, command when a spirit is up, the big one on anything big
+const _ai=aiSkills;aiSkills=function(u,t,d,hpR){if(!SO(u.wk))return _ai(u,t,d,hpR);const W=u.wk;
+  const can=i=>u.skl[i]>0&&u.cd[i]<=0&&u.mp>=SK[W][i].mp[u.skl[i]-1],rg=i=>SK[W][i].range[u.skl[i]-1],big=t.hero||t.golem||t.boss;
   if(can(2)&&(big||Math.random()<.08)&&d<rg(2)*.9&&!(t.hero&&t.hp/t.maxHp<.12))return cast(u,2);
-  if(can(0)&&d<720&&petsOf(u).filter(p=>p.kind!=='sguard').length<2)return cast(u,0);
+  if(can(0)&&d<720&&petsOf(u).filter(p=>p.kind!=='sguard'&&p.kind!=='swarlord').length<2)return cast(u,0);
   if(can(1)&&d<rg(1)*.95&&(petsOf(u).length||t.hero))return cast(u,1)};
-const _ae=aiEscape;aiEscape=function(u,t,d){if(u.wk===K){if(u.skl[0]&&u.cd[0]<=0&&d<300)cast(u,0);return}return _ae(u,t,d)};
-const _sa=skAim;skAim=function(u,i){const a=_sa(u,i);if(a&&u.wk===K&&i===2)a.r=SKV[K][2].r[u.skl[i]-1];return a};
-// ---- network: [..., -2, PK index, owner id] ----
-const _mr=mobRow;mobRow=function(o){if(o.pet){const r=[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp,-2,PK.indexOf(o.kind),o.owner?o.owner.id:-1];return r}return _mr(o)};
-const _as=applySnap;applySnap=function(d){if(d&&d.m)for(const r of d.m){if(r.length>10&&r[8]===-2&&PK[r[9]]&&!UMAP.get(r[0])){const o=UMAP.get(r[10]);addUnit(mkPet(r[0],PK[r[9]],r[1],r[2],o||null))}}return _as(d)};
+const _ae=aiEscape;aiEscape=function(u,t,d){if(SO(u.wk)){if(u.skl[0]&&u.cd[0]<=0&&d<300)cast(u,0);return}return _ae(u,t,d)};
+const _sa=skAim;skAim=function(u,i){const a=_sa(u,i);if(a&&SO(u.wk)&&i===2)a.r=SKV[u.wk][2].r[u.skl[i]-1];return a};
+// ---- network: [..., -2, PK index, owner id, element (0 none, 1 fire, 2 frost, 3 storm)] ----
+const _mr=mobRow;mobRow=function(o){if(o.pet)return[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp,-2,PK.indexOf(o.kind),o.owner?o.owner.id:-1,o.pel?EL.indexOf(o.pel)+1:0];return _mr(o)};
+const _as=applySnap;applySnap=function(d){if(d&&d.m)for(const r of d.m){if(r.length>10&&r[8]===-2&&PK[r[9]]&&!UMAP.get(r[0])){const o=UMAP.get(r[10]);const p=mkPet(r[0],PK[r[9]],r[1],r[2],o||null);p.pel=EL[(r[11]|0)-1]||null;addUnit(p)}}return _as(d)};
 // clients stop receiving dead mobs: this tells them the spirit is gone right away
 const _aev=applyEvent;applyEvent=function(e){if(e&&e.t==='pd'){const u=UMAP.get(e.id);if(u){u.dead=true;u.hp=0}return}return _aev.apply(this,arguments)};
-// ---- the codex card ----
+// the HUD's weapon glyph: a tome has none (its emoji is drawn instead)
+if(typeof wpIco==='function'){const _wi=wpIco;wpIco=function(me){if(me&&SO(me.wk))return null;return _wi(me)}}
+// ---- the codex card and the fusion recipes ----
 try{const el=document.createElement('div');el.className='wcard';const d=WEAPONS[K];
   el.innerHTML=`<div class="ic">${d.ic}</div><b>${d.n}</b><small>${d.desc}</small><div class="sks">${SK[K].map(s=>`<span title="${s.n}">${s.ic}</span>`).join(' ')}</div>`;$('codex').appendChild(el)}catch(e){}
-window.SUMMONER={K,PK,petsOf};
+try{const G=$('fuseGrid'),M='🗡️🪓🔪⚔️',R='🏹🎯';
+  for(const k of SOK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';el.style.borderColor=hexA(F.glow,.55);
+    const rc=F.so==='M'?`📖 คัมภีร์วิญญาณ + ${M} ประชิด`:F.so==='R'?`📖 คัมภีร์วิญญาณ + ${R} ยิงไกล`:`📖 คัมภีร์วิญญาณ + ${WEAPONS[F.el].ic} ${WEAPONS[F.el].n}`;
+    el.innerHTML=`<div class="fh2"><span class="ic">${F.ic}</span><div><b>${F.n}</b><div class="rc">${rc}</div></div></div><small>${F.desc}</small><div class="sks">${SK[k].map((s,i)=>`<span>${s.ic} ${['Q','E','R'][i]} · ${s.n}</span>`).join('')}</div>`;G.appendChild(el)}}catch(e){}
+window.SUMMONER={K,PK,petsOf,SO,SOK};
 })();
 
 // ===================== SUMMONER · render (Claude, 2026-11-18 · Arena Royale only) =====================
 // Spirits: wisps are glowing soul orbs with rings and a trail; the spirit wolf and the Lunar Guardian reuse the wolf and
 // rigged Lunar Construct models, re-coloured into translucent spectral copies. Soul bolts are projectile kind 16.
 // The tome itself: the Meshy orb / tome / grimoire when they are loaded (p5-heroes.js), otherwise a small procedural orb.
+// 2026-11-21: the fused tomes' spirits — spectral skeleton knights, the Spirit Warlord (a spectral Dark Sentinel), green-gold hunter wisps —
+// and the elemental tomes' spirits take their element's colour (fire / frost / storm).
 (()=>{
 if(typeof R3==='undefined')return;const R=R3,T=THREE,CYAN='#7fe8ff',VIO='#a98bff';
 if(typeof KK_FOR!=='undefined')KK_FOR.soul='Mage';
 if(typeof QN_MOB!=='undefined'&&QN_MOB.wolf)QN_MOB.swolf=QN_MOB.wolf;
 // the tome on the ground / in a non-class hero's hand
-const _w=R.weapon;R.weapon=function(wk,tier){if(wk!=='soul')return _w.call(this,wk,tier);const G=this.G,g=new T.Group(),t=Math.max(0,tier|0),c=TIERS[t].c;
+const SOF=k=>k==='soul'||!!(k&&typeof FUSED!=='undefined'&&FUSED[k]&&FUSED[k].base==='soul');
+const petCol=u=>u.pel&&typeof ELEM!=='undefined'&&ELEM[u.pel]?ELEM[u.pel].c:({sguard:VIO,swarlord:'#7f9cff',sknight:'#7f9cff',shunter:'#d8ff9a'})[u.kind]||CYAN;
+const _w=R.weapon;R.weapon=function(wk,tier){if(!SOF(wk))return _w.call(this,wk,tier);const G=this.G,g=new T.Group(),t=Math.max(0,tier|0),F=wk!=='soul'?FUSED[wk]:null,c=F?F.glow:TIERS[t].c;
   this.mesh(G.cyl,this.std('#2a2440',.6,.3),0,10,0,2.4,20,2.4,g);this.mesh(G.sph,this.std('#c9c3e8',.3,.9),0,1,0,3.2,3.2,3.2,g);
-  this.mesh(G.sph,this.glowM(t>=2?VIO:CYAN,.9),0,27,0,7+t,7+t,7+t,g);this.mesh(G.sph,this.bas('#f2ffff'),0,27,0,3.4,3.4,3.4,g);
+  this.mesh(G.sph,this.glowM(F?F.col:t>=2?VIO:CYAN,.9),0,27,0,7+t,7+t,7+t,g);this.mesh(G.sph,this.bas('#f2ffff'),0,27,0,3.4,3.4,3.4,g);
   for(const r of[0,1.1]){const q=this.mesh(G.torus,this.glowM(c,.6),0,27,0,10+t,10+t,10+t,g);q.rotation.set(r,r*.6,0)}
   const tip=new T.Object3D();tip.position.y=27;g.add(tip);g.userData.tip=tip;g.userData.glow=c;return g};
 // translucent spectral copy of a creature's materials (fog-of-war shader kept)
@@ -6589,21 +6745,21 @@ R.spiritify=function(root,col){if(!root)return;const C=new T.Color(col);root.tra
   const f=m=>this.cached('spirit-'+col+m.uuid,()=>{const c=m.clone();c.onBeforeCompile=m.onBeforeCompile;c.customProgramCacheKey=m.customProgramCacheKey;
     c.transparent=true;c.opacity=.82;if(c.emissive){c.emissive=C.clone();c.emissiveMap=null;c.emissiveIntensity=.65}if(c.color)c.color=c.color.clone().lerp(C,.5);return c});
   n.material=Array.isArray(n.material)?n.material.map(f):f(n.material)})};
-R.soulWisp=function(u){const G=this.G,root=new T.Group(),body=new T.Group();root.add(body);
-  const o={kind:'wisp',wisp:1,root,body,u};o.core=this.mesh(G.sph,this.bas('#effeff'),0,42,0,5,5,5,body);
-  o.shell=this.mesh(G.sph,this.glowM(CYAN,.55),0,42,0,11,11,11,body);o.halo=this.mesh(G.sph,this.glowM('#3fa8ff',.18),0,42,0,19,19,19,body);
-  o.rings=[0,1.2].map(r=>{const q=this.mesh(G.torus,this.glowM(VIO,.7),0,42,0,13,13,13,body);q.rotation.set(r,r*.7,0);return q});
+R.soulWisp=function(u){const G=this.G,root=new T.Group(),body=new T.Group();root.add(body);const c=petCol(u),hunt=u.kind==='shunter';
+  const o={kind:'wisp',wisp:1,root,body,u,wcol:c};o.core=this.mesh(G.sph,this.bas('#effeff'),0,42,0,5,5,5,body);
+  o.shell=this.mesh(G.sph,this.glowM(c,.55),0,42,0,11,11,11,body);o.halo=this.mesh(G.sph,this.glowM(c===CYAN?'#3fa8ff':c,.18),0,42,0,19,19,19,body);
+  o.rings=[0,1.2].map(r=>{const q=this.mesh(G.torus,this.glowM(hunt?'#ffe27a':u.pel?'#ffffff':VIO,.7),0,42,0,13,13,13,body);q.rotation.set(r,r*.7,0);return q});
   o.lx=u.x;o.ly=u.y;o.rot=Math.atan2(u.fx,u.fy);o.walk=0;o.mvK=0;o.atkPh=0;this.addStatus(o,u);this.scene.add(root);this.objs.set(u.id,o);return o};
 const _of=R.objFor;R.objFor=function(u){if(!u.pet||this.objs.get(u.id))return _of.call(this,u);
-  if(u.kind==='swisp')return this.soulWisp(u);let o;
+  if(u.kind==='swisp'||u.kind==='shunter')return this.soulWisp(u);let o;
   if(u.kind==='swolf'){u.kind='wolf';try{o=_of.call(this,u)}finally{u.kind='swolf'}}else o=_of.call(this,u);
-  if(o){const me=typeof ME==='function'?ME():null,foe=me&&u.team!==me.team,col=u.kind==='sguard'?VIO:CYAN;try{this.spiritify(o.pose||o.body,col)}catch(e){}
+  if(o){const me=typeof ME==='function'?ME():null,foe=me&&u.team!==me.team,col=petCol(u);try{this.spiritify(o.pose||o.body,col)}catch(e){}
     const rm=this.glowM(foe?'#ff5a6a':col,.55).clone();o.petRing=this.mesh(this.G.ring,rm,0,3,0,u.r+16,1,u.r+16,o.root);o.petRing.userData.ownMat=1;o.petCol=col}
   return o};
 const _ab=R.animBig;R.animBig=function(o,u,Tm){if(!o.wisp)return _ab.call(this,o,u,Tm);
   const k=u.atkAnim>0?1.35:1,b=Math.sin(Tm*3+u.id)*6;o.body.position.y=b;o.core.scale.setScalar(5*k*(1+Math.sin(Tm*14)*.08));o.shell.scale.setScalar(11*k);
   o.rings[0].rotation.z=Tm*3;o.rings[1].rotation.x=Tm*2.4;
-  if(Math.random()<.55)this.sp(true,{x:u.x+rand(-5,5),y:o.gy+42+b,z:u.y+rand(-5,5),vy:rand(5,30),l:.5,s:12,s1:2,c:CYAN,c2:VIO,sp:3,a:.75})};
+  if(Math.random()<.55)this.sp(true,{x:u.x+rand(-5,5),y:o.gy+42+b,z:u.y+rand(-5,5),vy:rand(5,30),l:.5,s:12,s1:2,c:o.wcol||CYAN,c2:u.kind==='shunter'?'#ffe27a':VIO,sp:u.pel==='fire'?3:u.pel==='frost'?4:3,a:.75})};
 // soul bolts
 const _pn=R.projNew;R.projNew=function(p,y,ang,Tm){if(p.kind!==16)return _pn.call(this,p,y,ang,Tm);const G=this.G;
   const o=this.get('soulP',()=>{const g=new T.Group();this.mesh(G.sph,this.glowM(CYAN,.85),0,0,0,1,1,1,g);this.mesh(G.sph,this.bas('#f2ffff'),0,0,0,.5,.5,.5,g);
@@ -6614,25 +6770,43 @@ const _pn=R.projNew;R.projNew=function(p,y,ang,Tm){if(p.kind!==16)return _pn.cal
 const near=(x,y)=>{const L=typeof listener==='function'?listener():null;return !L||Math.hypot(x-L.x,y-L.y)<(typeof visionR==='function'?visionR():1100)+200};
 R.soulFx=function(e){if(!near(e.x,e.y))return;const gy=this.gY(e.x,e.y),v3=(t,o)=>this.v3&&this.v3(t,Object.assign({x:e.x,y:e.y},o));
   const puff=(x,y,n,c,up)=>{for(let i=0;i<n;i++){const a=Math.random()*6.28,s=rand(20,90);this.sp(true,{x:x+Math.cos(a)*s*.3,y:this.gY(x,y)+rand(10,60),z:y+Math.sin(a)*s*.3,vx:Math.cos(a)*s,vy:rand(40,up||160),vz:Math.sin(a)*s,l:rand(.5,.9),s:rand(14,26),s1:3,c,c2:VIO,sp:3,a:.85})}};
-  if(e.k==='soulsum'){puff(e.x,e.y,this.hi?34:16,CYAN,220);v3('vortex',{r:40,r1:110,h:210,c:CYAN,c2:'#efffff',life:.9,spin:9,k1:1,k2:1,a:.8});v3('shock',{r:20,r1:150,c:CYAN,c2:VIO,life:.6,h:90,ease:1});
-    v3('flare',{r:60,r1:170,c:CYAN,c2:'#ffffff',life:.35,height:60});if(this.hi&&this.flash)this.flash(e.x,gy+80,e.y,CYAN,2600,420,.35)}
+  if(e.k==='soulsum'){const C=e.c||CYAN;puff(e.x,e.y,this.hi?34:16,C,220);v3('vortex',{r:40,r1:110,h:210,c:C,c2:'#efffff',life:.9,spin:9,k1:1,k2:1,a:.8});v3('shock',{r:20,r1:150,c:C,c2:VIO,life:.6,h:90,ease:1});
+    v3('flare',{r:60,r1:170,c:C,c2:'#ffffff',life:.35,height:60});if(this.hi&&this.flash)this.flash(e.x,gy+80,e.y,C,2600,420,.35)}
   else if(e.k==='soulcmd'){const g2=this.gY(e.x2,e.y2);if(this.bolt)this.bolt(e.x,gy+60,e.y,e.x2,g2+50,e.y2,CYAN,.22,3);
     v3('flare',{x:e.x2,y:e.y2,r:50,r1:140,c:VIO,c2:'#ffffff',life:.3,height:50});v3('shock',{x:e.x2,y:e.y2,r:10,r1:110,c:VIO,c2:CYAN,life:.45,h:70,ease:1});puff(e.x2,e.y2,this.hi?16:8,VIO,120)}
-  else if(e.k==='soulgd'){const r=e.r||250;v3('beam',{r:26,r1:60,h:1200,c:VIO,c2:'#f4eeff',life:.9,spin:3,a:.7});v3('shock',{r:r*.15,r1:r,c:VIO,c2:CYAN,life:.6,h:150,ease:1,delay:.45});
-    v3('crack',{r,r1:r,c:VIO,c2:'#ffffff',life:1.6,height:3,k1:7,delay:.45});v3('flare',{r:90,r1:260,c:VIO,c2:'#ffffff',life:.4,height:60,delay:.45});
-    for(let j=0;j<(this.hi?12:6);j++){const an=j/12*6.28,d=r*rand(.5,.95);v3('spike',{x:e.x+Math.cos(an)*d,y:e.y+Math.sin(an)*d,r:rand(8,14),h:rand(60,130),angle:an,tilt:rand(.15,.45),c:VIO,c2:CYAN,life:1.2,delay:.47,height:-4})}
+  else if(e.k==='soulgd'){const r=e.r||250,C=e.c||VIO;v3('beam',{r:26,r1:60,h:1200,c:C,c2:'#f4eeff',life:.9,spin:3,a:.7});v3('shock',{r:r*.15,r1:r,c:C,c2:CYAN,life:.6,h:150,ease:1,delay:.45});
+    v3('crack',{r,r1:r,c:C,c2:'#ffffff',life:1.6,height:3,k1:7,delay:.45});v3('flare',{r:90,r1:260,c:C,c2:'#ffffff',life:.4,height:60,delay:.45});
+    for(let j=0;j<(this.hi?12:6);j++){const an=j/12*6.28,d=r*rand(.5,.95);v3('spike',{x:e.x+Math.cos(an)*d,y:e.y+Math.sin(an)*d,r:rand(8,14),h:rand(60,130),angle:an,tilt:rand(.15,.45),c:C,c2:CYAN,life:1.2,delay:.47,height:-4})}
     if(this.v3Debris)setTimeout(()=>{try{this.v3Debris({x:e.x,y:e.y,r:r*.35,n:this.hi?12:5,c:'#5a5470',up:480,speed:300})}catch(err){}},450);
-    puff(e.x,e.y,this.hi?40:18,VIO,260);if(this.hi&&this.flash)this.flash(e.x,gy+120,e.y,VIO,3000,r*3,.5)}
+    puff(e.x,e.y,this.hi?40:18,C,260);if(this.hi&&this.flash)this.flash(e.x,gy+120,e.y,C,3000,r*3,.5)}
   else if(e.k==='soulgone'){puff(e.x,e.y,this.hi?14:7,e.pk===2?VIO:CYAN,140);v3('flare',{r:30,r1:80,c:CYAN,c2:'#ffffff',life:.25,height:40})}};
 const _df=R.doFx;R.doFx=function(e,me,L){if(e&&typeof e.k==='string'&&e.k.slice(0,4)==='soul'){try{this.soulFx(e)}catch(err){}return}return _df.call(this,e,me,L)};
 // spectral shimmer on the wolf and the guardian
 const _fx=R.fxExtra;R.fxExtra=function(Tm,dt,me,L){const r=_fx.call(this,Tm,dt,me,L);
-  try{for(const u of units){if(!u.pet||u.dead||u.kind==='swisp')continue;const o=this.objs.get(u.id);if(!o||!o.root.visible)continue;
+  try{for(const u of units){if(!u.pet||u.dead||u.kind==='swisp'||u.kind==='shunter')continue;const o=this.objs.get(u.id);if(!o||!o.root.visible)continue;
     if(o.petRing)o.petRing.material.opacity=.35+.2*Math.sin(Tm*4+u.id);
-    if(Math.random()<dt*(u.kind==='sguard'?26:12))this.sp(true,{x:u.x+rand(-u.r,u.r),y:o.gy+rand(10,u.kind==='sguard'?180:50),z:u.y+rand(-u.r,u.r),vy:rand(20,60),l:.7,s:rand(10,20),s1:2,c:o.petCol||CYAN,c2:'#ffffff',sp:3,a:.6})}}catch(e){}
+    const bg=u.kind==='sguard'||u.kind==='swarlord';if(Math.random()<dt*(bg?26:12))this.sp(true,{x:u.x+rand(-u.r,u.r),y:o.gy+rand(10,bg?180:50),z:u.y+rand(-u.r,u.r),vy:rand(20,60),l:.7,s:rand(10,20),s1:2,c:o.petCol||CYAN,c2:'#ffffff',sp:3,a:.6})}}catch(e){}
   return r};
 // 2D view: a puff where spirits arrive and leave
 if(typeof applyEvent==='function'){const _ae=applyEvent;applyEvent=function(e){if(e&&e.t==='fx'&&typeof e.k==='string'&&e.k.slice(0,4)==='soul'&&typeof burst==='function'&&!(view3D&&R.ok))burst(e.x,e.y,e.k==='soulgd'?VIO:CYAN,e.k==='soulgd'?40:16);return _ae.apply(this,arguments)}}
+// spirit knights (the Legion tome): the Quaternius soldier the zombies use, jogging, with a sword and a shield and real sword swings
+if(typeof QN_Z!=='undefined')QN_Z.sknight={tint:'#c8d8ff',s:1.06};
+if(typeof R.qnZombie==='function'){const f=R.qnZombie;R.qnZombie=function(u){if(!u||u.kind!=='sknight')return f.call(this,u);
+  u.kind='zrunner';let o;try{o=f.call(this,u)}finally{u.kind='sknight'}if(!o)return o;
+  try{const B=o.bones,P={t:2,em:['#7f9cff',.45],gem:'#a8c8ff',glow:'#a8c8ff'};if(B.handslotr)this.qnW('sword',P,B.handslotr);if(B.armslotl||B.handslotl)this.qnW('shield',{t:2,em:['#7f9cff',.3],face:'#a8c8ff'},B.armslotl||B.handslotl);this.qnGrip(o,1,0);
+    const c=this.qnClip&&this.qnClip('hero',o.bones,'Idle_Loop');if(c){o.act.Idle_Loop=o.mixer.clipAction(c);o.idleA.stop();o.idleA=o.act.Idle_Loop;o.idleA.play()}
+    if(o.aura){o.aura.material=this.glowM('#7f9cff',.22);o.aura.userData.ownMat=1}}catch(e){}
+  return o}}
+if(typeof R.qnZomAnim==='function'){const f=R.qnZomAnim;R.qnZomAnim=function(o,u,T,dt,mv){if(!u||u.kind!=='sknight')return f.call(this,o,u,T,dt,mv);
+  if(o.dying){o.dying=false;for(const k in o.act)o.act[k].stop();o.idleA.play();o.walkA.play()}
+  if(u.rise>0&&!o.rose){o.rose=true;const a=o.act.LayToIdle;if(a){for(const k in o.act)if(o.act[k]!==a)o.act[k].setEffectiveWeight(0);a.reset();a.setLoop(THREE.LoopOnce,1);a.clampWhenFinished=true;a.timeScale=1.6;a.setEffectiveWeight(1);a.play();o.riseA=a}}
+  if(o.riseA){if(u.rise>0||o.riseA.isRunning()){o.mixer.update(dt);return}o.riseA.stop();o.riseA=null}
+  const k=o.mvK;o.walkA.setEffectiveWeight(k);o.idleA.setEffectiveWeight(1-k);o.walkA.timeScale=clamp((mv||0)/240,.6,1.6);
+  if(u.atkAnim>o.lastAtk+.05)this.qnPlay(o,'slashA',.42,6);else if(u.hurtT>o.lastHurt+.02&&!o.ov)this.qnPlay(o,'hit',.28,2);
+  o.lastAtk=u.atkAnim||0;o.lastHurt=u.hurtT||0;this.qnOv(o,dt);o.mixer.update(dt);if(o.aura)o.aura.material.opacity=.2+.1*Math.sin(T*3+u.id)}}
+// the old KayKit / Quaternius hero models know only the base families: a forged tome arms like the tome itself
+for(const k of['kkArm','qnArm']){const f=R[k];if(typeof f!=='function')continue;R[k]=function(o,u){if(u&&u.wk&&u.wk!=='soul'&&SOF(u.wk)){const w=u.wk;u.wk='soul';try{return f.call(this,o,u)}finally{u.wk=w;if(o)o.wk=w}}return f.apply(this,arguments)}}
+if(typeof R.p5Arm==='function'){const f=R.p5Arm;R.p5Arm=function(o,u){const r=f.apply(this,arguments);if(o&&u&&u.wk&&u.wk!=='soul'&&SOF(u.wk))o.wglowC=FUSED[u.wk].glow;return r}}
 })();
 
 /* Arena Royale · image quality pass (Claude, 2026-11-18). Render only.
