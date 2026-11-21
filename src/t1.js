@@ -8,7 +8,11 @@ const REG={N:['อาณาจักรล่มสลาย','ป่าต้�
   tw:[0,0,0,0,0],tq:[0,0,0,0],aw:null,cur:-1,mats:new Map(),
   w(x,y,o){if(!this.nz){this.nz=makeNoise(mulberry32(77),2400);this.nz2=makeNoise(mulberry32(91),1700)}
     const dx=x-CX,dy=y-CY,d=Math.hypot(dx,dy)+(this.nz(x,y)-.5)*1300,a=Math.atan2(dy,dx)+(this.nz2(x,y)-.5)*1.1,kc=clamp((3300-d)/700,0,1);let s=0;
-    for(let i=0;i<4;i++){const c=Math.max(0,Math.cos(a+2.356-i*1.5708)),c2=c*c,v=c2*c2*c2*c2*c;o[i+1]=v;s+=v}s=s||1;for(let i=1;i<5;i++)o[i]=o[i]/s*(1-kc);o[0]=kc;return o},
+    for(let i=0;i<4;i++){const c=Math.max(0,Math.cos(a+2.356-i*1.5708)),c2=c*c,v=c2*c2*c2*c2*c;o[i+1]=v;s+=v}s=s||1;for(let i=1;i<5;i++)o[i]=o[i]/s*(1-kc);o[0]=kc;
+    // Arena Royale: the Old Town above the waterfall (a.js WD.city) belongs to the Fallen Kingdom, fading out over its rim
+    const C=typeof WD!=='undefined'&&WD&&WD.city;if(C){const ex=x-C.x,ey=y-C.y;if(ex*ex+ey*ey<C.R2){const u=ex*C.lx+ey*C.ly,v=ex*C.ox+ey*C.oy,e=Math.max(citySB(C,u,v),-v-300),k=1-smooth01(e/600);
+      if(k>0){for(let i=1;i<5;i++)o[i]*=1-k;o[0]=o[0]*(1-k)+k}}}
+    return o},
   at(x,y){const o=this.w(x,y,this.tw);let b=0;for(let i=1;i<5;i++)if(o[i]>o[b])b=i;return b},
   mix(x,y,q){q=q||this.tq;const o=this.w(x,y,this.tw);q[0]=q[1]=q[2]=q[3]=0;for(let i=0;i<5;i++){const g=this.G[i],k=o[i];q[0]+=g[0]*k;q[1]+=g[1]*k;q[2]+=g[2]*k;q[3]+=g[3]*k}return q},
   objCol(c,x,z){if(!this.oc){this.oc=new THREE.Color();this.ot=this.OBJ.map(o=>new THREE.Color(o[0]))}const i=this.at(x,z);return this.oc.set(c).lerp(this.ot[i],this.OBJ[i][1])},
@@ -50,7 +54,7 @@ function regMob(u){if(u.boss)return;const D=inDG(u.home),g=D?0:REG.at(u.home.x,u
   u.elite=!u.golem&&!u.zombie&&!D&&(Math.imul(u.id+7,2654435761)>>>0)%100<9;if(u.elite){hp*=2.3;dm*=1.35;u.r*=1.18}
   u.maxHp=Math.round(u.maxHp*hp);u.hp=u.maxHp;u.atkDmg*=dm;u.spdBase*=sp;u.name=(u.elite?'★ ':'')+u.def.name+(g>0?' '+REG.ADJ[g]:'')}
 // ---- coins ----
-const COIN={goblin:6,wolf:10,ogre:22,golem:45,guardian:80,boss:400,zombie:8,zrunner:7,zbrute:22,zlord:70};
+const COIN={goblin:6,wolf:10,ogre:22,golem:45,guardian:80,magma:85,boss:400,zombie:8,zrunner:7,zbrute:22,zlord:70};
 function coinKill(t,src){if(!src||!src.hero||src===t)return;let c;
   if(t.hero){if(!isEnemy(src,t))return;c=50+Math.round((t.gold||0)*.35);t.gold=Math.round((t.gold||0)*.65)}
   else{c=(COIN[t.kind]||6)*(.6+.4*(t.scale||1));if(t.elite)c*=3;if(t.rg===4)c*=1.6;else if(t.rg===0)c*=1.25;if(wvT(src.wv)===6)c*=1.25;c=Math.max(1,Math.round(c));if(t.elite)dropItem({k:'c',x:t.x,y:t.y,n:1})}
@@ -87,7 +91,7 @@ function castSpecial(u,ap){if(!u)return false;const S=SPX[u.xs|0];if(!S||u.dead|
   let p=ap||(S.k==='meteor'?aim(u,650):{x:u.x+u.fx*460,y:u.y+u.fy*460});
   switch(S.k){
     case 'blink':{const q=landSpot(u,clampTo(u,p,520));burstE(u.x,u.y,'#b08aff',18);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(q.y-u.y,q.x-u.x).toFixed(2)});u.x=q.x;u.y=q.y;u.dash=null;burstE(u.x,u.y,'#b08aff',18);sndAt('dash',u.x,u.y);break}
-    case 'heal':u.hotT=3;u.hotV=u.maxHp*[.28,.36,.44][L]/3;u.slowT=0;fxE('potion',{id:u.id,x:u.x|0,y:u.y|0,c:'#9dffb0'});sndAt('potion',u.x,u.y);break;
+    case 'heal':u.hotT=3;u.hotP=1;u.hotV=u.maxHp*[.28,.36,.44][L]/3;u.slowT=0;fxE('potion',{id:u.id,x:u.x|0,y:u.y|0,c:'#9dffb0'});sndAt('potion',u.x,u.y);break;
     case 'rage':u.asT=6;u.asAmt=Math.max(u.asAmt||0,[.35,.45,.55][L]);u.rageT=6;u.buffT=Math.max(u.buffT||0,6);sndAt('cry',u.x,u.y);fxE('cry',{id:u.id,x:u.x|0,y:u.y|0,r:200});break;
     case 'meteor':{p=clampTo(u,p,700);aoe({x:p.x,y:p.y,r:230,dmg:(120+24*u.lvl)*M*(1+spellAmp(u)),type:'m',owner:u,delay:.85,kind:'meteor',big:true,burn:(8+u.lvl)*M});sndAt('meteor',p.x,p.y);u.castAnim=.4;break}
     case 'ward':u.shieldHp=Math.max(u.shieldHp,u.maxHp*[.22,.3,.38][L]);u.shieldT=5;sndAt('shield',u.x,u.y);fxE('shield',{id:u.id,x:u.x|0,y:u.y|0});break;

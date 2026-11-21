@@ -26,7 +26,8 @@
     if(big){this.pillar(a.x,a.y,r,c,.7);const n=this.hi?6:3;for(let i=0;i<n;i++){const an=Math.random()*6.283,d=rand(r*.15,r*.85),bx=a.x+Math.cos(an)*d,bz=a.y+Math.sin(an)*d;this.bolt(bx+rand(-60,60),gy+820,bz+rand(-60,60),bx,this.gY(bx,bz),bz,c,rand(.16,.34),4)}
       for(let i=0;i<(this.hi?26:10);i++){const an=Math.random()*6.283,d=rand(0,r*.9);this.sp(true,{x:a.x+Math.cos(an)*d,y:gy+6,z:a.y+Math.sin(an)*d,vx:rand(-20,20),vy:rand(90,300),vz:rand(-20,20),l:rand(.8,1.7),s:rand(7,13),s1:1,c,sp:1,dr:.3})}}};
   // rune circle under every telegraphed / lingering skill area
-  P.aoeVis=function(a,T,dt,L){_aoe.call(this,a,T,dt,L);const S=this.runeSeen||(this.runeSeen=new Map()),key=a.x+'_'+a.y+'_'+a.kind,now=performance.now()/1000,e=S.get(key);
+  P.aoeVis=function(a,T,dt,L){_aoe.call(this,a,T,dt,L);if(this.fireOwn&&(this.fireOwn(a)||a.kind==='burn'))return;   // Arena Royale: no rune circle under the fire layer's meteors, blasts and burning ground
+    const S=this.runeSeen||(this.runeSeen=new Map()),key=a.x+'_'+a.y+'_'+a.kind,now=performance.now()/1000,e=S.get(key);
     if(e===undefined||(a.dot&&now>e)){const pre=a.t<a.delay,life=a.dot?2.4:Math.max(.3,a.delay-a.t)+.25;if(pre&&a.delay-a.t<.2&&!a.dot){S.set(key,now+3);return}
       S.set(key,now+life-.3);this.decal({x:a.x,y:a.y,r:(a.r||160)*.98,c:FX_COL[a.kind]||AOE_COL[a.kind]||'#ffffff',life,tex:'rune',spin:a.dot?.5:-.9,a:a.dot?.5:.7,fade:.3});if(S.size>80){for(const [k2,v] of S)if(now>v+6)S.delete(k2)}}};
   // ---- class look: cape, plate pieces and helm coloured by the weapon line; more pieces as the armour tier rises ----

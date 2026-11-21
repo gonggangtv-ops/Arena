@@ -58,6 +58,7 @@
     const p=profiles[key]?.[slot];if(!p||!near(at.x,at.y))return;
     const style=p.style,r=Math.max(20,o.r||90),c=o.c||p.c,c2=o.c2||p.c2,a=o.angle||0,life=o.life||.8;
     if(o.mark!==false)claim(key,slot,o.u);
+    if(P.firePulse&&P.firePulse(style,at,o,{r,c,c2,el:p.element}))return;   // arena-vfx-fire.js draws the meteor and the fireball as real things
     if(P.v3Pulse)try{P.v3Pulse(style,at,o,{r,c,c2,a,len:o.len,el:p.element,el2:p.element2,u:o.u});}catch(e){}   // 3D layer (arena-vfx-3d.js)
     if(o.phase==='windup'){rune(at,r,c,c2,Math.max(.2,o.delay||.5),-.45);send('ring',at,{r:r*.94,r1:r,height:4,c,c2,life:o.delay||.5,width:.015,a:.38});return;}
     if(style==='dash'||style==='spear'||style==='bladewave'||style==='icelance'){
@@ -139,7 +140,7 @@
     // (the client replaces projectile objects on each incoming snapshot).
     if(clock>=(P._avTrailAt||0)){P._avTrailAt=clock+(P.avReduced?.1:P.avHi?.035:.065);
       let n=0;for(const p of projs){if(n++>=48)break;if(!near(p.x,p.y))continue;const el=p.el||(p.kind===1||p.kind===2||p.kind===8||p.kind===14?'fire':p.kind===3||p.kind===4?'frost':p.kind===10?'storm':null),c=el?ELEM[el].c:p.kind===11?'#7ff0d8':'#c9efef',c2=el==='fire'?'#ffe5a0':el==='storm'?'#f1dcff':'#efffff',a=Math.atan2(p.vy,p.vx),big=[2,4,6,11,12,14,15].includes(p.kind);
-        send('streak',p,{height:42,r:big?75:34,width:big?5:2.5,angle:a,c,c2,life:.18,a:.7});
+        if(!(P.fireOwnP&&P.fireOwnP(p)))send('streak',p,{height:42,r:big?75:34,width:big?5:2.5,angle:a,c,c2,life:.18,a:.7});
         if(big)send('ember',p,{height:42,r:p.kind===14?36:14,r1:2,c,c2,life:.25,a:.45});
         if(p.kind===4||p.kind===12&&p.el==='frost')send('shard',p,{height:40,r:4,r1:13,c,c2,life:.3,vy:-20,angle:a,a:.7});
       }

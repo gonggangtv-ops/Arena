@@ -208,7 +208,7 @@
         hx(R,KIND.mist,{x:s.x+Math.cos(an)*d,y:s.y+Math.sin(an)*d,h:rr(20,70),r:s.r*.12,r1:s.r*.3,life:1.1,c:FROSTC[0],c2:FROSTC[1],vx:-Math.sin(an)*s.r*1.1,vz:Math.cos(an)*s.r*1.1,drag:1.2,gain:.85})}}}
     a.seqs=a.seqs.filter(s=>s.t<s.d);
     // fire projectiles: burning core + smoke in flight
-    if(typeof projs!=='undefined')for(const p of projs){const el=p.el||(p.kind===1||p.kind===2||p.kind===8||p.kind===14?'fire':null);if(el!=='fire'||!listenerNear(p.x,p.y,80))continue;
+    if(typeof projs!=='undefined')for(const p of projs){const el=p.el||(p.kind===1||p.kind===2||p.kind===8||p.kind===14?'fire':null);if(el!=='fire'||!listenerNear(p.x,p.y,80)||R.fireOwnP&&R.fireOwnP(p))continue;
       let st=seenProj.get(p);if(!st){st={t:0};seenProj.set(p,st)}st.t-=dt;const big=p.kind===2||p.kind===14,r=big?34:20;
       hx(R,KIND.flame,{x:p.x,y:p.y,h:42,r,r1:r*1.05,life:.1,c:FIREC[0],c2:FIREC[1],gain:1});
       if(st.t<=0){st.t=a.q.high?.045:.09;hx(R,KIND.smoke,{x:p.x,y:p.y,h:46,r:r*.5,r1:r*1.8,life:.9,c:'#383331',vy:40,drag:1,gain:.55});hx(R,KIND.fire,{x:p.x,y:p.y,h:42,r:r*.45,r1:r*.9,life:.3,c:FIREC[0],c2:FIREC[1],drag:2})}}

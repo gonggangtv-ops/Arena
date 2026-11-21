@@ -241,7 +241,7 @@
   const BIG={2:['fire',30],4:['frost',22],6:[null,24],11:[null,22],12:[null,24],14:['fire',46],15:[null,26]};
   function frame(T,dt){if(!P._v3)return;clock+=Math.min(.1,Math.max(0,dt));
     if(typeof projs!=='undefined'&&clock>=trailAt){trailAt=clock+(red()?.12:hi()?.045:.075);let n=0;
-      for(const p of projs){const b=BIG[p.kind];if(!b||!near(p.x,p.y))continue;if(n++>=(hi()?16:8))break;const el=p.el||b[0],cc=el?EL[el]:['#c9f2ff','#ffffff'];
+      for(const p of projs){const b=BIG[p.kind];if(!b||!near(p.x,p.y)||P.fireOwnP&&P.fireOwnP(p))continue;if(n++>=(hi()?16:8))break;const el=p.el||b[0],cc=el?EL[el]:['#c9f2ff','#ffffff'];
         orb(p,b[1]*.8,b[1],cc[0],cc[1],.12,42,{a:.9});if(hi()&&p.kind===14)flare(p,b[1]*3,cc[0],cc[1],.12,42)}}
     if(typeof units==='undefined')return;
     for(const u of units){if(!u.hero||u.dead||!near(u.x,u.y))continue;if(typeof unitVisibleTo==='function'&&typeof ME==='function'&&!unitVisibleTo(u,ME(),typeof listener==='function'?listener():null))continue;

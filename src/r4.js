@@ -263,7 +263,8 @@ Object.assign(R3,{
       case 'shatter':{const r=e.r||40;for(let i=0;i<(e.r?40:14);i++){const a=Math.random()*6.283,d=Math.random()*r;this.sp(true,{x:e.x+Math.cos(a)*d,y:gy(e.x,e.y)+rand(10,40),z:e.y+Math.sin(a)*d,vx:Math.cos(a)*rand(60,200),vy:rand(60,200),vz:Math.sin(a)*rand(60,200),l:rand(.4,.8),s:12,s1:4,c:'#dff8ff',sp:7,vr:6,g:500})}if(e.r)this.ring(e.x,e.y,20,e.r,'#bfeeff',.5);break}
       case 'freeze':break;
     }},
-  aoeVis(a,T,dt,L){const gy=this.gY(a.x,a.y),col=AOE_COL[a.kind]||'#ffffff';const pre=a.t<a.delay;const key=a.x+'_'+a.y+'_'+a.kind;
+  aoeVis(a,T,dt,L){if(this.fireOwn&&this.fireOwn(a))return;   // Arena Royale: arena-vfx-fire.js draws meteors and fire blasts
+    const gy=this.gY(a.x,a.y),col=AOE_COL[a.kind]||'#ffffff';const pre=a.t<a.delay;const key=a.x+'_'+a.y+'_'+a.kind;
     const pick=(o)=>{const d=this.get('ad',()=>{const m=new THREE.Mesh(this.G.plane,new THREE.MeshBasicMaterial({transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,blending:THREE.AdditiveBlending}));m.renderOrder=1;m.userData.ownMat=1;return m});
       d.material.map=this.tex(o.tex);d.material.color.set(o.c);d.material.opacity=o.a;d.position.set(o.x,gy+2.6+(this.pool.ad.used%6)*.25,o.y);d.rotation.y=o.rot||0;d.scale.set(o.sx,1,o.sz||o.sx);return d};
     if(a.shape==='line'){const L2=a.len||600,wd=a.w||160;const cx=a.x+Math.cos(a.ang)*L2/2,cy=a.y+Math.sin(a.ang)*L2/2;
@@ -313,7 +314,7 @@ Object.assign(R3,{
       if(p.kind===0||p.kind===5){const a=this.get(p.kind===5?'snarr':'arrow',()=>{const g=new THREE.Group();const s=this.mesh(G.cyl,this.std('#d8c8a0',.7,0),0,0,0,1.3,34,1.3,g);s.rotation.x=Math.PI/2;const tp=this.mesh(G.cone4,this.std('#c8d0d8',.3,.8),0,0,19,3,8,3,g);tp.rotation.x=Math.PI/2;
           for(const r of[0,Math.PI/2])this.mesh(G.box,this.bas(p.kind===5?'#7aff6a':'#f0f0f0'),0,0,-14,r?.6:6,r?6:.6,6,g);return g});a.position.set(p.x,y,p.y);a.rotation.y=ang;
         if(Math.random()<.6)this.sp(true,{x:p.x,y,z:p.y,l:.18,s:8,s1:2,c:p.kind===5?'#8aff7a':'#ffffff',sp:0,a:.6})}
-      else if(p.kind===1||p.kind===2){const big=p.kind===2;const b=this.get(big?'fball':'orb',()=>{const g=new THREE.Group();this.mesh(G.sph,this.glowM('#ff8a2a',.9),0,0,0,1,1,1,g);this.mesh(G.sph,this.bas('#fff4d8'),0,0,0,.55,.55,.55,g);return g});
+      else if(p.kind===1||p.kind===2){if(this.fireOwnP&&this.fireOwnP(p))continue;const big=p.kind===2;const b=this.get(big?'fball':'orb',()=>{const g=new THREE.Group();this.mesh(G.sph,this.glowM('#ff8a2a',.9),0,0,0,1,1,1,g);this.mesh(G.sph,this.bas('#fff4d8'),0,0,0,.55,.55,.55,g);return g});
         b.position.set(p.x,y,p.y);b.scale.setScalar((p.r||12)*(1+Math.sin(T*30)*.08));const n=big?3:1;for(let i=0;i<n;i++)this.sp(true,{x:p.x+rand(-6,6),y:y+rand(-6,6),z:p.y+rand(-6,6),vx:rand(-30,30),vy:rand(20,70),vz:rand(-30,30),l:big?.5:.3,s:big?40:22,s1:6,c:'#ffd070',c2:'#ff3a10',sp:3});
         if(big&&Math.random()<.5)this.sp(false,{x:p.x,y,z:p.y,vy:40,l:.9,s:24,s1:60,c:'#3a3230',a:.4,sp:2})}
       else{const lance=p.kind===4;const b=this.get(lance?'lance':'fbolt',()=>{const g=new THREE.Group();if(lance){const c=this.mesh(G.oct,this.std('#dff8ff',.05,.2,{emissive:'#6ad0ff',emissiveIntensity:1.1}),0,0,0,8,8,34,g);this.mesh(G.oct,this.glowM('#9fe8ff',.5),0,0,-8,12,12,40,g)}else{this.mesh(G.oct,this.glowM('#9fe8ff',.9),0,0,0,9,9,9,g);this.mesh(G.sph,this.bas('#ffffff'),0,0,0,4,4,4,g)}return g});
@@ -324,7 +325,7 @@ Object.assign(R3,{
       m.position.set(s.x,this.gY(s.x,s.y)+30*k-6,s.y);m.scale.set(14,60*k+1,14);m.rotation.set(Math.sin(s.x)*.25,s.y,Math.cos(s.y)*.25)}
     // waterfall mist, chimney smoke, torch fire, fountain spray (only near the camera)
     const acc=(k,r)=>{this.emitAcc[k]=(this.emitAcc[k]||0)+dt*r;const n=Math.floor(this.emitAcc[k]);this.emitAcc[k]-=n;return n};
-    const F=this.fallsBase;if(F&&L&&Math.hypot(F.x-L.x,F.y-L.y)<1500){for(let i=acc('mist',22);i>0;i--){const s=rand(-70,70);this.sp(false,{x:F.x+F.px*s,y:WL+rand(0,20),z:F.y+F.py*s,vx:rand(-30,30),vy:rand(20,70),vz:rand(-30,30),l:rand(1.2,2),s:40,s1:120,c:'#f0f8ff',a:.35,sp:2,dr:.6})}}
+    const F=this.fallsBase;if(F&&L&&Math.hypot(F.x-L.x,F.y-L.y)<1500){const cm=!!WD.city;for(let i=acc('mist',cm?14:22);i>0;i--){const s=rand(-70,70);this.sp(false,{x:F.x+F.px*s,y:WL+rand(0,20),z:F.y+F.py*s,vx:rand(-30,30),vy:rand(20,70),vz:rand(-30,30),l:rand(1.2,2),s:cm?30:40,s1:cm?95:120,c:'#f0f8ff',a:cm?.17:.35,sp:2,dr:.6})}}
     if(L){if(isNight()||true)for(const r of this.roofs){if(Math.abs(r.smoke.x-L.x)>1100||Math.abs(r.smoke.z-L.y)>800)continue;if(Math.random()<dt*2.5)this.sp(false,{x:r.smoke.x,y:r.smoke.y,z:r.smoke.z,vx:rand(10,30),vy:rand(30,50),vz:rand(-10,10),l:3,s:16,s1:70,c:'#c8c4c0',a:.3,sp:2,dr:.2})}
       for(const t of this.torches){if(Math.abs(t.x-L.x)>1100||Math.abs(t.z-L.y)>800)continue;if(Math.random()<dt*14)this.sp(true,{x:t.x+rand(-3,3),y:t.y,z:t.z+rand(-3,3),vy:rand(40,80),l:.45,s:18,s1:4,c:'#ffd070',c2:'#ff3a10',sp:3})}
       for(const f of this.fountains){if(Math.abs(f.x-L.x)>1100||Math.abs(f.y-L.y)>800)continue;for(let i=acc('ft'+f.x,30);i>0;i--){const a=Math.random()*6.283;this.sp(true,{x:f.x,y:86,z:f.y,vx:Math.cos(a)*rand(30,60),vy:rand(90,140),vz:Math.sin(a)*rand(30,60),l:1,s:6,s1:3,c:'#cfefff',a:.7,sp:11,g:260,dr:0})}}}

@@ -299,18 +299,18 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     this.staticGlow=this.glowSet(this.glows);S.add(this.staticGlow);
     this.initFX();
   },
-  buildTerrain(){const St=50,x0=-1700,x1=WORLD+1700,n=Math.round((x1-x0)/St)+1;const N=n*n;const pos=new Float32Array(N*3),col=new Float32Array(N*3),reg=new Float32Array(N*4),rq=[0,0,0,0];const C=this.col;
+  buildTerrain(){const St=50,x0=-1700,x1=WORLD+1700,n=Math.round((x1-x0)/St)+1;const N=n*n;const pos=new Float32Array(N*3),col=new Float32Array(N*3),reg=new Float32Array(N*4),rq=[0,0,0,0],bas=new Float32Array(N);const C=this.col;
     const W1=new THREE.Color('#e8f0c8'),E1=new THREE.Color('#9fd0d8'),F1=new THREE.Color('#9aa880'),M1=new THREE.Color('#c0c8a0');const nz=WD.noise,mN=makeNoise(mulberry32(5),900);
-    for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=x0+i*St,y=x0+j*St,k=j*n+i;const h=this.hAt(x,y);pos[k*3]=x;pos[k*3+1]=h;pos[k*3+2]=y;
-      const dk=direK(x,y),fo=clamp((nz(x,y)-.46)/.12,0,1),m=mN(x,y);C.copy(W1).lerp(E1,dk);C.lerp(F1,fo*.6);C.multiplyScalar(.92+m*.16);if(h>40)C.lerp(M1,clamp((h-40)/300,0,1));col[k*3]=C.r;col[k*3+1]=C.g;col[k*3+2]=C.b;if(MOON){REG.mix(x,y,rq);reg[k*4]=rq[0];reg[k*4+1]=rq[1];reg[k*4+2]=rq[2];reg[k*4+3]=rq[3]}}
+    for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=x0+i*St,y=x0+j*St,k=j*n+i;const h=this.hAt(x,y),hb=WD.city?cityBase(x,y):0;bas[k]=hb+(WD.city?Math.round(cityRock(x,y)*8)*1000:0);pos[k*3]=x;pos[k*3+1]=h;pos[k*3+2]=y;
+      const dk=direK(x,y),fo=clamp((nz(x,y)-.46)/.12,0,1),m=mN(x,y);C.copy(W1).lerp(E1,dk);C.lerp(F1,fo*.6);C.multiplyScalar(.92+m*.16);if(h-hb>40)C.lerp(M1,clamp((h-hb-40)/300,0,1));col[k*3]=C.r;col[k*3+1]=C.g;col[k*3+2]=C.b;if(MOON){REG.mix(x,y,rq);reg[k*4]=rq[0];reg[k*4+1]=rq[1];reg[k*4+2]=rq[2];reg[k*4+3]=rq[3]}}
     const idx=new Uint32Array((n-1)*(n-1)*6);let o=0;for(let j=0;j<n-1;j++)for(let i=0;i<n-1;i++){const a=j*n+i,b=a+1,c=a+n,d=c+1;if(Math.abs(pos[a*3+1]-pos[d*3+1])<Math.abs(pos[b*3+1]-pos[c*3+1])){idx[o++]=a;idx[o++]=c;idx[o++]=d;idx[o++]=a;idx[o++]=d;idx[o++]=b}else{idx[o++]=a;idx[o++]=c;idx[o++]=b;idx[o++]=b;idx[o++]=c;idx[o++]=d}}
-    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));g.setAttribute('aReg',new THREE.BufferAttribute(reg,4));g.setIndex(new THREE.BufferAttribute(idx,1));g.computeVertexNormals();
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));g.setAttribute('aReg',new THREE.BufferAttribute(reg,4));g.setAttribute('aBase',new THREE.BufferAttribute(bas,1));g.setIndex(new THREE.BufferAttribute(idx,1));g.computeVertexNormals();
     const spl=this.ctex(paintMasks(.1024),false,false);spl.flipY=false;spl.minFilter=THREE.LinearFilter;spl.generateMipmaps=false;
     const tu={tGrass:{value:this.tex('grass')},tDirt:{value:this.tex('dirt')},tCob:{value:this.tex('cobble')},tRock:{value:this.tex('rock')},tSand:{value:this.tex('sand')},uSplat:{value:spl},uZoneN:this.U.zoneN};
     const m=new THREE.MeshLambertMaterial({vertexColors:true});
-    this.fow(m,{key:'terr'+(this.hi?'h':'l')+(MOON?'c':''),cut:true,uniforms:tu,
-      vert:vs=>'varying vec3 vWN;attribute vec4 aReg;varying vec4 vReg;\n'+vs.replace('#include <beginnormal_vertex>','#include <beginnormal_vertex>\nvWN=normalize(objectNormal);vReg=aReg;'),
-      frag:fs=>zlines('uniform sampler2D tGrass,tDirt,tCob,tRock,tSand,uSplat;varying vec3 vWN;varying vec4 vReg;\n'+fs.replace('#include <color_fragment>',`vec3 tBump=vec3(0.);
+    this.fow(m,{key:'terr'+(this.hi?'h':'l')+(MOON?'c':'')+'b',cut:true,uniforms:tu,
+      vert:vs=>'varying vec3 vWN;attribute vec4 aReg;varying vec4 vReg;attribute float aBase;varying float vBase;varying float vRock;\n'+vs.replace('#include <beginnormal_vertex>','#include <beginnormal_vertex>\nvWN=normalize(objectNormal);vReg=aReg;vRock=floor(aBase/1000.+.5)/8.;vBase=aBase-floor(aBase/1000.+.5)*1000.;'),
+      frag:fs=>zlines('uniform sampler2D tGrass,tDirt,tCob,tRock,tSand,uSplat;varying vec3 vWN;varying vec4 vReg;varying float vBase;varying float vRock;\n'+fs.replace('#include <color_fragment>',`vec3 tBump=vec3(0.);
         {vec2 w=vFowW;vec4 sp=texture2D(uSplat,w/${WORLD.toFixed(1)});
          ${this.hi?'vec3 g1=texture2D(tGrass,w*.0046).rgb,g2=texture2D(tGrass,w*.0012+.37).rgb;vec3 c=mix(g1,g2,.42)*vColor.rgb*1.05;':'vec3 c=texture2D(tGrass,w*.0046).rgb*vColor.rgb*1.05;'}
          c=mix(c,vec3(dot(c,vec3(.3,.59,.11)))*vReg.rgb,vReg.a);
@@ -318,7 +318,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
          c=mix(c,texture2D(tCob,w*.0072).rgb,sp.g);
          float wt=smoothstep(-.8,-6.,vWY);vec3 sd=texture2D(tSand,w*.0052).rgb;c=mix(c,sd*mix(1.,.5,smoothstep(-6.,-20.,vWY)),wt);
          ${this.hi?'vec3 an=abs(normalize(vWN));an=pow(an,vec3(4.));an/=an.x+an.y+an.z;vec3 rk=texture2D(tRock,vec2(w.y,vWY)*.0028).rgb*an.x+texture2D(tRock,w*.0028).rgb*an.y+texture2D(tRock,vec2(w.x,vWY)*.0028).rgb*an.z;':'vec3 rk=texture2D(tRock,(w+vec2(0.,vWY*.6))*.0028).rgb;'}
-         float k=clamp(max(1.-smoothstep(.62,.86,vWN.y),smoothstep(28.,190.,vWY)*.88),0.,1.);float gk=smoothstep(.75,.95,vWN.y)*(1.-smoothstep(260.,520.,vWY));k=k*(1.-gk*.75);c=mix(c,rk,k);
+         float k=clamp(max(max(1.-smoothstep(.62,.86,vWN.y),smoothstep(28.,190.,vWY-vBase)*.88),vRock),0.,1.);float gk=smoothstep(.75,.95,vWN.y)*(1.-smoothstep(260.,520.,vWY-vBase));k=k*(1.-gk*.75);c=mix(c,rk,k);
          float sn=smoothstep(960.,1150.,vWY+texture2D(uDetail,w*.002).r*240.)*smoothstep(.42,.7,vWN.y);c=mix(c,vec3(.92,.95,1.)*(.85+.15*texture2D(tRock,w*.004).r),sn);
          {float mv=texture2D(uDetail,w*.00021).r,dv=texture2D(uDetail,w*.00013+.31).r;c*=mix(.86,1.1,mv);c=mix(c,c*vec3(1.13,1.05,.78),smoothstep(.55,.8,dv)*.45*(1.-k)*(1.-wt));
           c*=mix(.8,1.,smoothstep(.55,.92,vWN.y));
@@ -334,7 +334,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const t=new THREE.Mesh(g,m);t.receiveShadow=true;t.userData.ownMat=1;this.scene.add(t);this.terrain=t;
     // grass density map for the dynamic ground cover (0 = none)
     {const gt=WD.tg,n2=gt.n,M=Math.round(WORLD*.025),md=paintMasks(.025).getContext('2d').getImageData(0,0,M,M).data;const dens=new Uint8Array(n2*n2);
-      for(let j=0;j<n2;j++)for(let i=0;i<n2;i++){const k=j*n2+i,h=gt.hg[k];if(h>20||h<-1.5||gt.blk[k]){continue}const mi=(Math.floor(j/n2*M)*M+Math.floor(i/n2*M))*4;const road=md[mi]/255,cob=md[mi+1]/255,fld=md[mi+2]/255;
+      for(let j=0;j<n2;j++)for(let i=0;i<n2;i++){const k=j*n2+i,h=gt.hg[k]-(WD.city?cityBase((i+.5)*gt.C,(j+.5)*gt.C):0);if(h>20||h<-1.5||gt.blk[k]){continue}const mi=(Math.floor(j/n2*M)*M+Math.floor(i/n2*M))*4;const road=md[mi]/255,cob=md[mi+1]/255,fld=md[mi+2]/255;
         dens[k]=Math.round(255*clamp(1-road*1.6-cob*2-fld*2,0,1))}
       for(const h0 of WD.houses){const hs=h0.al||h0;for(let y=hs.y;y<hs.y+hs.h;y+=20)for(let x=hs.x;x<hs.x+hs.w;x+=20){const i=Math.floor(x/gt.C),j=Math.floor(y/gt.C);if(i>=0&&j>=0&&i<n2&&j<n2)dens[j*n2+i]=0}}
       for(let j=0;j<n2;j++)for(let i=0;i<n2;i++){const k=j*n2+i;if(dens[k]&&caveK((i+.5)*gt.C,(j+.5)*gt.C)>0)dens[k]=0}
@@ -356,7 +356,8 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const wgeo=new THREE.BufferGeometry();wgeo.setAttribute('position',new THREE.Float32BufferAttribute(wq,3));const wuv=[];for(let i=0;i<wq.length;i+=3)wuv.push(wq[i]/WORLD,wq[i+2]/WORLD);wgeo.setAttribute('uv',new THREE.Float32BufferAttribute(wuv,2));wgeo.computeVertexNormals();
     const w=new THREE.Mesh(wgeo,m);w.position.set(0,WL,0);w.renderOrder=2;w.receiveShadow=true;w.userData.ownMat=1;S.add(w);this.water=w;
     // waterfall
-    const F=WD.wf;if(F){const ox=-F.nx,oy=-F.ny,px=-F.ny,py=F.nx;const pts=[],uv=[],idx=[];const nv=16,nu=6,wd=170;
+    const F=WD.wf;if(F&&WD.city){const ox=-F.nx,oy=-F.ny;this.fallsBase={x:F.x-ox*190,y:F.y-oy*190,px:-F.ny,py:F.nx}}   // Arena Royale: the owner's waterfall model (arena-city.js), mist at its foot
+    else if(F){const ox=-F.nx,oy=-F.ny,px=-F.ny,py=F.nx;const pts=[],uv=[],idx=[];const nv=16,nu=6,wd=170;
       const outC=h=>{let lo=-45,hi=15;for(let i=0;i<20;i++){const m=(lo+hi)/2;if(330*smooth01((m+45)/60)<h)lo=m;else hi=m}return lo};
       for(let v=0;v<=nv;v++){const t=v/nv;const h=lerp(345,WL,t);const out=Math.min(outC(Math.min(h,329))-30,26-t*60)+Math.sin(t*Math.PI)*-6;for(let u=0;u<=nu;u++){const s=(u/nu-.5)*wd*(1+t*.3);pts.push(F.x+ox*out+px*s,h,F.y+oy*out+py*s);uv.push(u/nu,t*2.2)}}
       for(let v=0;v<nv;v++)for(let u=0;u<nu;u++){const a=v*(nu+1)+u,b=a+1,c2=a+nu+1,d=c2+1;idx.push(a,c2,b,b,c2,d)}
@@ -394,6 +395,9 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const dimC=(c,k)=>'#'+new THREE.Color(c).multiplyScalar(k).getHexString();
     this.treeMats=[leafM,pineM,magicM].concat(cards?[cardM,needM]:[]);
     const tr=WD.trees;this.trees=tr;this.treeHidden=new Uint8Array(tr.length);this.treeParts=tr.map(()=>[]);tr.forEach((t,i)=>t._i=i);
+    // Arena Royale (owner 2026-11-21): every tree in the Cursed Forest (REG land 1) is the gnarled leafless moon tree (moonfall-village.js
+    // deadTrees), whatever kind it was; the other kinds below only draw the trees outside that land
+    const DT=this.deadOn&&this.deadOn()?(t=>REG.at(t.x,t.y)===1):null,tl=DT?tr.filter(t=>!DT(t)):tr;
     const reg=(t,im,i)=>{if(t._i!==undefined)this.treeParts[t._i].push([im,i])};const RT=t=>mulberry32(Math.floor(t.x*7+t.y));
     const TH=t=>(t.v===2?70:t.v===5?54:t.v===6?44:t.v===1?40:38)*t.h;
     // Arena Royale: birches become the owner's Meshy Verdant Solitude tree (moonfall-village.js) when it is loaded
@@ -403,16 +407,16 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     // ...and pines become the owner's Meshy pine (moonfall-village.js pineTrees) when it is loaded
     const PM=this.pineOn&&this.pineOn()?(t=>t.v===0||t.v===4):(()=>false);
     // trunks
-    this.instC(G.cylT,bark,tr.filter(t=>t.v!==2&&!PM(t)),(t,add)=>{const R=RT(t),th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,t.v===1||t.v===6?11:t.v===5?7:8,th,t.v===1||t.v===6?11:8,0,R()*6,0,t.v===3?'#8a7aa8':t.v===5?'#5a4048':'#ffffff')},true);
-    this.instC(G.cylT,birch,tr.filter(t=>t.v===2&&!MT(t)),(t,add)=>{const th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,6,th,6,0,t.x,0,'#ffffff')},true);
+    this.instC(G.cylT,bark,tl.filter(t=>t.v!==2&&!PM(t)),(t,add)=>{const R=RT(t),th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,t.v===1||t.v===6?11:t.v===5?7:8,th,t.v===1||t.v===6?11:8,0,R()*6,0,t.v===3?'#8a7aa8':t.v===5?'#5a4048':'#ffffff')},true);
+    this.instC(G.cylT,birch,tl.filter(t=>t.v===2&&!MT(t)),(t,add)=>{const th=TH(t),b=this.gY(t.x,t.y);add(t.x,b+th/2,t.y,6,th,6,0,t.x,0,'#ffffff')},true);
     // pines (valley + dark) as stacked cones
     const PINE=TF?['#3f9e4c','#4aaa56','#389348','#52b05a']:['#3a7a3c','#457f40','#356a34','#4a8844'],DPINE=TF?['#2f8a80','#36968a','#2a7c76']:['#2a5a54','#2f6458','#264a48'];
-    const pines=tr.filter(t=>(t.v===0||t.v===4)&&!PM(t)),TIERS_P=[[1,1.05,.4],[.78,.95,.95],[.52,.85,1.45],[.28,.6,1.85]];
+    const pines=tl.filter(t=>(t.v===0||t.v===4)&&!PM(t)),TIERS_P=[[1,1.05,.4],[.78,.95,.95],[.52,.85,1.45],[.28,.6,1.85]];
     this.instC(CONE,pineM,pines,(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),P=t.v===0?PINE:DPINE,k=cards?.82:1;for(const q of TIERS_P)add(t.x,b+th+cr*q[2]-(TF?cr*q[1]*.25:0),t.y,cr*q[0]*k*(TF?1.12:1),cr*q[1]*(TF?.82:1),cr*q[0]*k*(TF?1.12:1),0,R()*6,0,cards?dimC(P[Math.floor(R()*P.length)],.85):P[Math.floor(R()*P.length)])},true,reg);
     if(cards)this.instC(G.pineRing,needM,pines,(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),P=t.v===0?PINE:DPINE;for(const q of TIERS_P){R();add(t.x,b+th+cr*q[2]-cr*q[1]*.2,t.y,cr*q[0]*1.28,cr*q[1]*.95,cr*q[0]*1.28,0,R()*6,0,P[Math.floor(R()*P.length)])}},true,reg);
     // oak / birch / willow / magic / dead canopies from noisy blobs
     const OAK=TF?['#62b83c','#70c446','#58aa36','#7ccc4e']:['#5a8a3c','#6a9a44','#4f7f36','#76a24c'],BIR=TF?['#a6d454','#b4dc60','#98c84c']:['#9ac45a','#a8cc64','#8ab84e'],MAG=TF?['#3aa49c','#7a62c0','#3a86c0','#a466b8']:['#3ac8c0','#9a6ae8','#4aa8f0','#d07ae0'],DEAD=['#6a3a5e','#7a4a4e','#5a3a6a'],WIL=['#7aa84c','#86b056'];
-    for(let bi=0;bi<3;bi++){const canL=tr.filter(t=>(t.v===1||t.v===2||t.v===6||t.v===5)&&!MT(t)&&(Math.floor(t.x+t.y)%3===bi));
+    for(let bi=0;bi<3;bi++){const canL=tl.filter(t=>(t.v===1||t.v===2||t.v===6||t.v===5)&&!MT(t)&&(Math.floor(t.x+t.y)%3===bi));
       const canP=(t,add)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);
         if(t.v===1)for(const q of[[0,.5,0,.86,.68],[-.4,.86,.12,.6,.5],[.42,.8,-.18,.56,.48],[0,1.08,.1,.5,.42]])add(t.x+cr*q[0],b+th+cr*q[1],t.y+cr*q[2],cr*q[3],cr*q[4],cr*q[3],R(),R()*6,0,OAK[Math.floor(R()*OAK.length)]);
         else if(t.v===2)for(const q of[[0,.2,0,.5,.62],[.18,.75,.1,.42,.5],[-.12,1.15,0,.32,.42]])add(t.x+cr*q[0],b+th+cr*q[1]-20,t.y+cr*q[2],cr*q[3],cr*q[4],cr*q[3],R(),R()*6,0,BIR[Math.floor(R()*BIR.length)]);
@@ -423,20 +427,21 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
         this.instC(G.leafc[bi],cardM,canL,(t,add)=>canP(t,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>add(x,y,z,sx*1.14,sy*1.1,sz*1.14,rx,ry,rz,c)),true,reg)}
       else this.instC(G.blob[bi],leafM,canL,canP,true,reg)}
     // boughs reaching from the trunk top into oak canopies
-    if(cards)this.instC(G.cylT,bark,tr.filter(t=>t.v===1),(t,add)=>{const R=mulberry32(Math.floor(t.x*13+t.y*7)),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);
+    if(cards)this.instC(G.cylT,bark,tl.filter(t=>t.v===1),(t,add)=>{const R=mulberry32(Math.floor(t.x*13+t.y*7)),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);
       for(let k=0;k<3;k++){const a=k/3*6.283+R(),tl=.55+R()*.35,len=cr*(.62+R()*.25),dx=Math.sin(tl)*Math.cos(a),dy=Math.cos(tl),dz=Math.sin(tl)*Math.sin(a);
         add(t.x+dx*len*.5,b+th*.82+dy*len*.5,t.y+dz*len*.5,5,len,5,0,-a,-tl,null)}},true,reg);
     // enchanted trees: a full leafy crown in one glowing hue per tree
-    if(this.verdantOn&&this.verdantOn())this.verdantTrees(tr.filter(t=>MT0(t)&&!MG(t)),reg);
-    if(this.mangoOn&&this.mangoOn())this.mangoTrees(tr.filter(MG),reg);
-    if(this.pineOn&&this.pineOn())this.pineTrees(tr.filter(PM),reg);
-    {const mg=tr.filter(t=>t.v===3),magP=(t,add,k)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),c=MAG[Math.floor(R()*MAG.length)];
+    if(this.verdantOn&&this.verdantOn())this.verdantTrees(tl.filter(t=>MT0(t)&&!MG(t)),reg);
+    if(this.mangoOn&&this.mangoOn())this.mangoTrees(tl.filter(MG),reg);
+    if(this.pineOn&&this.pineOn())this.pineTrees(tl.filter(PM),reg);
+    if(DT)this.deadTrees(tr.filter(DT),reg);
+    {const mg=tl.filter(t=>t.v===3),magP=(t,add,k)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),c=MAG[Math.floor(R()*MAG.length)];
         for(const q of[[0,.5,0,.8,.64],[-.38,.84,.12,.56,.48],[.4,.78,-.16,.52,.46],[0,1.06,.08,.46,.4]])add(t.x+cr*q[0],b+th+cr*q[1],t.y+cr*q[2],cr*q[3]*k,cr*q[4]*k,cr*q[3]*k,R(),R()*6,0,c)};
       this.instC(BLOB(1),magicM,mg,(t,add)=>magP(t,add,cards?.72:1),true,reg);
       if(cards){const magC=this.windMat(new THREE.MeshStandardMaterial({map:this.tex('leafc'),alphaTest:.42,roughness:.8,metalness:0,emissive:'#3a6a78',emissiveMap:this.tex('leafc'),emissiveIntensity:.7}),'MC',.05);this.treeMats.push(magC);
         this.instC(G.leafc[1],magC,mg,(t,add)=>magP(t,add,1.14),true,reg)}}
-    if(!TF)this.instC(G.openCyl,willowM,tr.filter(t=>t.v===6),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);add(t.x,b+th+cr*.32-cr*.42,t.y,cr*.9,cr*.95,cr*.9,0,t.x,0,'#8f9c80')},true,reg);
-    this.instC(this.cylg(.5,1,1,5),bark,tr.filter(t=>t.v===5),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);for(const s of[-1,1])add(t.x+s*cr*.24,b+th*.82,t.y,3,cr*.72,3,0,0,s*.95,'#5a4048')},true);
+    if(!TF)this.instC(G.openCyl,willowM,tl.filter(t=>t.v===6),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);add(t.x,b+th+cr*.32-cr*.42,t.y,cr*.9,cr*.95,cr*.9,0,t.x,0,'#8f9c80')},true,reg);
+    this.instC(this.cylg(.5,1,1,5),bark,tl.filter(t=>t.v===5),(t,add)=>{const th=TH(t),cr=t.cr,b=this.gY(t.x,t.y);for(const s of[-1,1])add(t.x+s*cr*.24,b+th*.82,t.y,3,cr*.72,3,0,0,s*.95,'#5a4048')},true);
     // mountain pines (no shadows, bigger chunks)
     if(!(this.pineMtrees&&this.pineMtrees(WD.mtrees))){this.instC(G.cylT,bark,WD.mtrees,(t,add)=>{add(t.x,t.h+20*t.s,t.y,9*t.s,40*t.s,9*t.s,0,t.x,0,'#ffffff')},false,null,2500);
     this.instC(CONE,pineM,WD.mtrees,(t,add)=>{const R=mulberry32(Math.floor(t.x*3+t.y)),P=t.v===0?PINE:DPINE,cr=62*t.s,th=40*t.s;for(const q of[[1,1.1,.42],[.72,1,1],[.45,.85,1.5]])add(t.x,t.h+th+cr*q[2],t.y,cr*q[0],cr*q[1],cr*q[0],0,R()*6,0,P[Math.floor(R()*P.length)])},true,null,2500)}

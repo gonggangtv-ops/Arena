@@ -126,6 +126,8 @@ const CREEPS={
   ogre:{name:'โทรลล์ภูเขา',hp:950,dmg:36,armor:3,spd:150,r:34,atkT:1.5,range:80,xp:130,col:'#7a8a9a',cleave:true},
   golem:{name:'โกเลมหินผา',hp:2100,dmg:55,armor:5,spd:120,r:40,atkT:1.6,range:84,xp:240,col:'#8a8478'},
   guardian:{name:'ผู้พิทักษ์คริสตัล',hp:2700,dmg:62,armor:5,spd:118,r:42,atkT:1.5,range:86,xp:320,col:'#6a7ab0',leash:220},
+  // Arena Royale (owner 2026-11-21): the Magma Titan, the owner's fire golem, haunts the Ashen Wastes; its blows set heroes alight
+  magma:{name:'ไททันลาวา',hp:2900,dmg:62,armor:5,spd:120,r:42,atkT:1.5,range:88,xp:340,col:'#c8461a',leash:320,fire:1},
   boss:{name:'มังกรเพลิง',hp:9500,dmg:110,armor:7,spd:150,r:66,atkT:1.6,range:122,xp:1100,col:'#a83a1a',leash:360,dragon:true},
   // night only: the dead rise and hunt every hero they can smell
   // (owner 2026-11-21: much tougher — more HP and bite, rotting bites, runners lunge, brutes slam, the king raises the dead)
@@ -137,7 +139,7 @@ const CREEPS={
 const ZK=['zombie','zrunner','zbrute','zlord'];
 const CAMP_KINDS={small:['goblin','goblin','goblin','goblin','goblin'],medium:['wolf','wolf','wolf'],large:['ogre','wolf','wolf'],ancient:['golem','ogre'],
   castle:['ogre','ogre','wolf'],keep:['golem','ogre','ogre'],dgA:['zombie','zombie','zrunner','zrunner'],dgB:['zbrute','zombie','zombie'],dgC:['golem','zrunner','zrunner'],dgD:['zbrute','zbrute','zrunner'],vault:['zlord','zbrute','zbrute']};
-const CREEP_REQ={goblin:1,wolf:3,ogre:6,golem:9,guardian:10,boss:13};
+const CREEP_REQ={goblin:1,wolf:3,ogre:6,golem:9,guardian:10,magma:10,boss:13};
 const ITEMS=[
   {id:'potion',ic:'🧪',name:'ยาฟื้นพลัง',w:4},
   {id:'mana',ic:'💧',name:'ยามานา',w:3},
@@ -150,12 +152,15 @@ const ITEMS=[
 ];
 const ITEM_BY={};ITEMS.forEach(i=>ITEM_BY[i.id]=i);
 // backpack: potions are stored and drunk with the HUD buttons (or from the bag panel)
-const BAG=[{k:'hp',ic:'🧪',n:'ยาเลือด',d:'ฟื้นเลือด 40% ใน 3 วิ',max:9,cd:4},{k:'mp',ic:'💧',n:'ยามานา',d:'ฟื้นมานา 50% ใน 2 วิ',max:9,cd:4},
-  {k:'big',ic:'⚗️',n:'ยาฟื้นฟูใหญ่',d:'ฟื้นเลือดและมานาเต็ม',max:3,cd:10},{k:'spd',ic:'🍃',n:'ยาเร่งฝีเท้า',d:'วิ่งเร็วขึ้น 35% นาน 6 วิ',max:3,cd:12}];
+const BAG=[{k:'hp',ic:'🧪',n:'ยาเลือด',d:'ฟื้นเลือด 40% ใน 3 วิ (โดนตีอยู่ ½)',max:9,cd:4},{k:'mp',ic:'💧',n:'ยามานา',d:'ฟื้นมานา 50% ใน 2 วิ (โดนตีอยู่ ½)',max:9,cd:4},
+  {k:'big',ic:'⚗️',n:'ยาฟื้นฟูใหญ่',d:'ฟื้นเลือดและมานาเต็ม (โดนตีอยู่ ½)',max:3,cd:10},{k:'spd',ic:'🍃',n:'ยาเร่งฝีเท้า',d:'วิ่งเร็วขึ้น 35% นาน 6 วิ',max:3,cd:12}];
 const BAG_BY={};BAG.forEach((b,i)=>{b.i=i;BAG_BY[b.k]=b});
 const LOOKS=[{n:'แดง',c:'#b8322e'},{n:'น้ำเงิน',c:'#2e5cb8'},{n:'เขียว',c:'#2f8a46'},{n:'ม่วง',c:'#7a3ab8'},{n:'ทอง',c:'#c8961e'},{n:'ดำ',c:'#2c2c34'},{n:'ขาว',c:'#e4e0d4'},{n:'ชมพู',c:'#d0507a'}];
 // map is four times the area of v0.7 (MS = side scale) and holds 32 heroes
-const MS=2,WORLD=20000,CX=10000,CY=10000,MAXL=18,TOTAL_HEROES=32,MAX_HUMANS=32,DAY=150,NIGHT=100,WL=-5;
+// Arena Royale (owner 2026-11-21, ARX = index only): the map grows north by one step, an old town on a plateau above the waterfall.
+// The world square is 22000 there with the valley moved 2000 south (CY) to make room; The Cursed Realm and classic keep 20000.
+const ARX=CURSED&&!MOON;
+const MS=2,WORLD=ARX?22000:20000,CX=WORLD/2,CY=ARX?12000:10000,MAXL=18,TOTAL_HEROES=32,MAX_HUMANS=32,DAY=150,NIGHT=100,WL=-5;
 const PHASES=[{w:165,s:84,r:6600},{w:110,s:70,r:4900},{w:88,s:62,r:3500},{w:72,s:55,r:2400},{w:60,s:47,r:1520},{w:50,s:39,r:840},{w:38,s:30,r:360},{w:28,s:28,r:0}];
 const BOT_NAMES=['พายุ','ไฟป่า','เงามืด','สายฟ้า','หมาป่า','นินจา','ทอร์นาโด','เพชฌฆาต','มังกร','ฟีนิกซ์','อสุรา','กระทิง','พยัคฆ์','ราชสีห์','ภูตพราย','นาคา','อัศวินดำ','จิ้งจอก','เหยี่ยว','พรานป่า',
   'ครุฑ','หนุมาน','ยักษ์ทมิฬ','เทพธิดา','จอมขมังเวทย์','นักดาบเงา','ราชันย์','อินทรี','เสือดำ','สิงห์ทอง','วายุ','อัคนี','ธารา','ปฐพี','จันทรา','สุริยา','เพลิงนรก','น้ำแข็ง','ม้าศึก','แมงป่อง'];
@@ -417,12 +422,53 @@ function cliffH(x,y){const g=WD.cg2;if(!g)return 0;const i=Math.floor(x/g.C),j=M
   for(const c of g.cells[j*g.n+i]){const dx=x-c.x,dy=y-c.y,d2=dx*dx+dy*dy;if(d2>=c.r*c.r)continue;const d=Math.sqrt(d2)/c.r;const k=d<.5?1:1-smooth01((d-.5)/.5);const v=c.h*k*(.9+.2*WD.nD(x,y));if(v>h)h=v}return h}
 function caveK(x,y){let k=0;for(const c of WD.caves){if(Math.abs(x-c.x)>c.R+340||Math.abs(y-c.y)>c.R+340)continue;
   const d=Math.min(Math.hypot(x-c.x,y-c.y)-c.R,segDist({x,y},[c.mx,c.my,c.x,c.y])-c.w);if(d<34){const kk=d<=0?1:1-d/34;if(kk>k)k=kk}}return k}
+// ===================== Arena Royale: the Old Town above the waterfall (owner 2026-11-21 · index only, WD.city) =====================
+// The valley climbs one step past the waterfall: a cliff CITY_P high runs along the valley's north edge (the edge is one smooth arc
+// there), the owner's waterfall pours off it into the pool, and a stairway on each side climbs to a walled old town on the plateau.
+// Frame: x,y = the waterfall on the valley's edge, u across (lx,ly), v outward (ox,oy); o = outsideD (distance past the edge).
+// Walking: plateau and stair ramps are walkable at their own height (cityBase); the rule elsewhere is unchanged (above 22 = rock).
+const CITY_P=210,CITY_OF=60,CITY_SU=640,CITY_SH=105,CITY_SB=-380;
+// signed distance to the plateau's sides and back (< 0 inside), rounded back corners
+function citySB(C,u,v){const hw=C.hw+C.sw*Math.sin(v*.0026+C.p3),vb=C.dep+110*Math.sin(u*.0019+C.p1)+60*Math.sin(u*.0043+C.p2),R=520,au=Math.abs(u);
+  const du=au-(hw-R),dv=v-(vb-R);return du>0&&dv>0?Math.hypot(du,dv)-R:Math.max(au-hw,v-vb)}
+// the two stairways (u = ±CITY_SU): 0..1 up a ramp, -2 on a ramp's side wall, -1 elsewhere
+function cityStair(u,o){if(o<CITY_SB-10||o>CITY_OF+30)return -1;const du=Math.abs(Math.abs(u)-CITY_SU);
+  if(du<=CITY_SH)return clamp((o-CITY_SB)/(CITY_OF+10-CITY_SB),0,1);return du<=CITY_SH+40&&o>CITY_SB+50?-2:-1}
+// the town's ground (h0 = the valley / mountain height already there); null where the town changes nothing
+function cityH(C,x,y,o,h0){const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2||o<CITY_SB-60)return null;
+  const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,e=citySB(C,u,v);if(e>1300)return null;
+  const s=cityStair(u,o),ramp=CITY_P*clamp((o-CITY_SB)/(CITY_OF+10-CITY_SB),0,1);if(s>=0)return ramp;
+  const fr=CITY_P*smooth01((o+50)/(CITY_OF+50));   // the cliff face: 0 at its foot, CITY_P at its top
+  if(e<=0){if(o>=CITY_OF)return CITY_P+(C.nz(x,y)-.5)*4;return Math.max(h0,fr,s===-2?ramp+50:0)}
+  // the rim: rock rising from the plateau's edge into the mountains, its spurs running a little way into the valley
+  const k=o<-50?smooth01((o+420)/370):1,rim=(o<CITY_OF?fr:CITY_P)*(1-smooth01((e-650)/550))+(560+260*C.nr(x,y))*smooth01(e/320)*(1-smooth01((e-760)/540));
+  return Math.max(h0,rim*k)}
+// the height a hero walks at here (0 = the valley rule)
+function cityBase(x,y){const C=WD&&WD.city;if(!C)return 0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return 0;
+  const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,o=outsideD(x,y),s=cityStair(u,o);if(s>=0)return CITY_P*s;
+  return o>=CITY_OF&&citySB(C,u,v)<=0?CITY_P:0}
+// on the town (plateau, stairways or the waterfall's foot), m = extra margin; world gen keeps its scatter out of here
+function cityIn(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
+  const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,o=outsideD(x,y);
+  if(o>=CITY_OF-m-40&&citySB(C,u,v)<=m)return true;
+  if(o>CITY_SB-40-m&&o<CITY_OF+40&&Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+40+m)return true;
+  return o>-280-m&&o<CITY_OF+40&&Math.abs(u)<240+m}
+// how much the ground here is the town's rock (the cliff face, the stairways' side walls, the rim), 0..1, for the terrain shader
+function cityRock(x,y){const C=WD&&WD.city;if(!C)return 0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return 0;
+  const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,o=outsideD(x,y),s=cityStair(u,o);if(s>=0)return 0;if(s===-2)return 1;const e=citySB(C,u,v);
+  if(e<=0)return o<CITY_OF+5&&o>-70?smooth01((o+70)/40)*(1-smooth01((o-CITY_OF+5)/10)):0;return smooth01(e/60)*(o>-420?1:0)}
+// the stairways and the waterfall's foot only (rocks may line the rest of the cliff's foot)
+function cityPath(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
+  const u=dx*C.lx+dy*C.ly,o=outsideD(x,y);if(o>CITY_SB-40-m&&o<CITY_OF+40&&Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+40+m)return true;return o>-280-m&&o<CITY_OF+40&&Math.abs(u)<240+m}
+// town frame -> world
+function cityXY(C,u,v){return{x:C.x+u*C.lx+v*C.ox,y:C.y+u*C.ly+v*C.oy}}
 function terrH(x,y,noCave){
   let h=0;const o=outsideD(x,y);
   if(o>-90){const k=clamp((o+90)/1750,0,1);h=Math.pow(k,1.25)*(1050+950*WD.nM(x,y))+(o>0?Math.min(1,o/350)*230*(1-Math.abs(2*WD.nR(x,y)-1)):0)}
-  const F=WD.wf;if(F){const dx=x-F.x,dy=y-F.y;const lat=Math.abs(-dx*F.ny+dy*F.nx),out=-(dx*F.nx+dy*F.ny);
+  const Cy=WD.city,F=Cy?null:WD.wf;if(F){const dx=x-F.x,dy=y-F.y;const lat=Math.abs(-dx*F.ny+dy*F.nx),out=-(dx*F.nx+dy*F.ny);
     if(lat<320&&out>-70&&out<420){const lk=1-smooth01((lat-160)/160);const v=lk*(330*smooth01((out+45)/60))+lk*Math.max(0,out-20)*.5;if(v>h)h=v}}
   const ch=cliffH(x,y);if(ch>h)h=ch;
+  if(Cy){const c=cityH(Cy,x,y,o,h);if(c!==null)h=c}
   if(!noCave){const ck=caveK(x,y);if(ck>0)h*=1-ck}
   const D=WD.dg;if(D){const ex=Math.max(D.x-x,x-(D.x+D.w),0),ey=Math.max(D.y-y,y-(D.y+D.h),0),dd=Math.hypot(ex,ey);if(dd<=0)return 0;if(dd<1100){const k=smooth01(dd/1100);h=Math.max(190,lerp(190,h,k))}}
   if(h<60){const rd=Math.abs(riverD(x,y));if(rd<400){const hw=riverHW(y);if(rd<hw+34){const bed=-14*smooth01((hw+30-rd)/70)-6*smooth01((hw-40-rd)/Math.max(30,hw-40))-(MOON?0:12*smooth01((hw-80-rd)/Math.max(40,hw-80)));if(bed<h)h=bed}}
@@ -437,7 +483,7 @@ function edt2(g,n){const f=new Float64Array(n),d=new Float64Array(n),v=new Int32
   for(let x=0;x<n;x++){for(let y=0;y<n;y++)f[y]=g[y*n+x];edt1(f,d,v,z,n);for(let y=0;y<n;y++)g[y*n+x]=d[y]}
   for(let y=0;y<n;y++){const o=y*n;for(let x=0;x<n;x++)f[x]=g[o+x];edt1(f,d,v,z,n);for(let x=0;x<n;x++)g[o+x]=d[x]}}
 function buildTerrain(w){const C=25,n=Math.round(WORLD/C),N=n*n;const hg=new Float32Array(N),blk=new Uint8Array(N),sol=new Uint8Array(N);
-  for(let j=0;j<n;j++){const y=(j+.5)*C;for(let i=0;i<n;i++){const x=(i+.5)*C,k=j*n+i;const h=terrH(x,y);hg[k]=h;const s=h>22;sol[k]=s?1:0;blk[k]=(s||(h<-12&&(lakeD(x,y)<-150||poolD(x,y)<-70)))?1:0}}
+  for(let j=0;j<n;j++){const y=(j+.5)*C;for(let i=0;i<n;i++){const x=(i+.5)*C,k=j*n+i;const h=terrH(x,y);hg[k]=h;const s=h>(w.city?cityBase(x,y):0)+22;sol[k]=s?1:0;blk[k]=(s||(h<-12&&(lakeD(x,y)<-150||poolD(x,y)<-70)))?1:0}}
   const a=new Float64Array(N),b=new Float64Array(N);for(let k=0;k<N;k++){a[k]=blk[k]?0:1e20;b[k]=blk[k]?1e20:0}
   edt2(a,n);edt2(b,n);const sdf=new Float32Array(N);for(let k=0;k<N;k++)sdf[k]=blk[k]?-(Math.sqrt(b[k])-.5)*C:(Math.sqrt(a[k])-.5)*C;
   w.tg={C,n,hg,blk,sol,sdf}}
@@ -477,6 +523,11 @@ function genWorld(seed){
   // ---- waterfall pool, river and lake ----
   const aw=-Math.PI/2+sr(-.22,.22),rbw=bndR(aw);const Pb={x:CX+Math.cos(aw)*rbw,y:CY+Math.sin(aw)*rbw};const inw={x:-Math.cos(aw),y:-Math.sin(aw)};
   w.wf={x:Pb.x,y:Pb.y,a:aw,nx:inw.x,ny:inw.y};w.pool={x:Pb.x+inw.x*175,y:Pb.y+inw.y*175,R:150};
+  // Arena Royale (owner 2026-11-21): the Old Town above the waterfall. The valley's edge becomes one smooth arc across the town's front
+  if(ARX){for(let i=0;i<720;i++){const a=i/720*Math.PI*2,da=Math.abs(Math.atan2(Math.sin(a-aw),Math.cos(a-aw))),k=1-smooth01((da-.26)/.14);if(k>0)BND[i]=lerp(BND[i],rbw,k)}
+    const ox=Math.cos(aw),oy=Math.sin(aw);
+    w.city={x:Pb.x,y:Pb.y,a:aw,ox,oy,lx:-oy,ly:ox,rb:rbw,hw:sr(1780,1920),dep:sr(1800,1960),sw:sr(40,90),p1:sr(0,6.3),p2:sr(0,6.3),p3:sr(0,6.3),
+      nz:makeNoise(SR,340),nr:makeNoise(SR,520),R2:4700*4700,props:[],lamps:[],paint:[],name:'นครเก่าเหนือน้ำตก'}}
   const Lk={x:CX+sr(-1895,-700),y:CY+sr(3500,4400),R:sr(740,840),p1:sr(0,6.3),p2:sr(0,6.3)};w.lake=Lk;
   {const P0=w.pool,y0=P0.y,y1=Lk.y,st=4,n=Math.ceil((y1-y0)/st)+1;const xs=new Float32Array(n),il=new Float32Array(n);
     const A1=sr(540,700),A2=sr(140,210),f1=sr(1.7,2.4),f2=sr(3.6,4.8),q1=sr(0,6.3),q2=sr(0,6.3);
@@ -565,6 +616,32 @@ function genWorld(seed){
       V=Object.assign({x:p.x,y:p.y},s)}
     if(V){V.dire=isDire(V.x,V.y);V.id=w.villages.length;w.villages.push(V)}}
   const ROOF={tudor:['#a8462e','#8a3a2a','#3e5f8a','#9a6a32','#6e4a2a','#a85a3a'],lake:['#3a6a8a','#2e5a7a','#4a7a9a'],witch:['#4a2f6e','#3a2a54','#5e2a4a','#2e3a5a'],cabin:['#5a4a32','#6a5236','#4a3a26'],stone:['#6a4a3a','#7a5a4a','#4a5a6a']};
+  // one house: walls with a doorway on the side facing its street, loot, chests and crates (villages and the Old Town)
+  const addHouse=(h,side,V,vi)=>{
+    h.side=side;h.dire=V.dire;h.v=vi;h.style=V.style;const pal=ROOF[V.style];h.roof=pal[Math.floor(SR()*pal.length)];h.roofA=1;h.id=w.houses.length;h.seed=Math.floor(SR()*1e6);
+    if(CURSED&&!MOON){const f=houseFit(h,side);if(f){h.al={x:h.x,y:h.y,w:h.w,h:h.h};h.mk=f.key;h.x=f.x;h.y=f.y;h.w=f.w;h.h=f.h;h.dl=f.dl}}
+    const T=16,G=86;const sides={t:[h.x,h.y,h.w,T],b:[h.x,h.y+h.h-T,h.w,T],l:[h.x,h.y,T,h.h],r:[h.x+h.w-T,h.y,T,h.h]};
+    for(const s of['t','b','l','r']){const [x,y,ww,hh2]=sides[s];
+      if(s!==side){w.walls.push({x,y,w:ww,h:hh2,house:h.id});continue}
+      const dm=(lo,len)=>clamp(lo+len/2+(h.dl||0),lo+T+G/2+6,lo+len-T-G/2-6);
+      if(s==='t'||s==='b'){const m=dm(x,ww);w.walls.push({x,y,w:m-G/2-x,h:hh2,house:h.id},{x:m+G/2,y,w:x+ww-(m+G/2),h:hh2,house:h.id});h.door={x:m,y:y+hh2/2}}
+      else{const m=dm(y,hh2);w.walls.push({x,y,w:ww,h:m-G/2-y,house:h.id},{x,y:m+G/2,w:ww,h:y+hh2-(m+G/2),house:h.id});h.door={x:x+ww/2,y:m}}}
+    const nx=side==='r'?1:side==='l'?-1:0,ny=side==='b'?1:side==='t'?-1:0;
+    h.out={x:h.door.x+nx*55,y:h.door.y+ny*55};h.inn={x:h.door.x-nx*55,y:h.door.y-ny*55};
+    w.lanterns.push({x:h.out.x+(ny?52:0),y:h.out.y+(nx?52:0),dire:V.dire,small:1});
+    const ip=()=>({x:sr(h.x+45,h.x+h.w-45),y:sr(h.y+45,h.y+h.h-45)});
+    const p1=ip();w.items.push({id:iid++,k:'w',x:p1.x,y:p1.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([42,36,19,3],SR),house:h.id});
+    if(SR()<.5){const p2=ip();w.items.push({id:iid++,k:'c',x:p2.x,y:p2.y,n:1+(SR()<.3?1:0),house:h.id})}
+    if(SR()<.4){const p3=ip();w.items.push({id:iid++,k:'r',x:p3.x,y:p3.y,tier:pickTier([34,34,22,10,0],SR),house:h.id})}
+    if(SR()<.3){const p4=ip();w.items.push({id:iid++,k:'i',x:p4.x,y:p4.y,it:pickW(ITEMS,SR).id,house:h.id})}
+    {const back=side==='t'?'b':side==='b'?'t':side==='l'?'r':'l',nb=h.w*h.h>62000&&SR()<.5?2:1;
+      for(let q=0;q<nb;q++){const f=nb===1?sr(.3,.7):q?sr(.68,.85):sr(.15,.32);let bx,by;
+        if(back==='t'||back==='b'){bx=lerp(h.x+60,h.x+h.w-60,f);by=back==='t'?h.y+T+26:h.y+h.h-T-26}else{by=lerp(h.y+60,h.y+h.h-60,f);bx=back==='l'?h.x+T+26:h.x+h.w-T-26}
+        w.boxes.push({id:w.boxes.length,x:bx,y:by,a:Math.atan2(h.door.y-by,h.door.x-bx),house:h.id});w.rocks.push({x:bx,y:by,r:18,prop:1})}}
+    const HA=h.al||h,corners=[[HA.x-24,HA.y+26],[HA.x+HA.w+24,HA.y+26],[HA.x-24,HA.y+HA.h-26],[HA.x+HA.w+24,HA.y+HA.h-26]];
+    let np=0;for(const c of corners){if(np>=2)break;if(Math.hypot(c[0]-h.out.x,c[1]-h.out.y)<90||SR()<.35)continue;const t=SR()<.5?'barrel':'crate';w.props.push({x:c[0],y:c[1],t});w.rocks.push({x:c[0],y:c[1],r:15,prop:1});np++}
+
+    w.houses.push(h)};
   w.villages.forEach((V,vi)=>{
     if(V.plaza){w.fountains.push({x:V.x,y:V.y,r:62});w.solids.push({x:V.x,y:V.y,r:62,t:'fountain'})}
     else{w.wells.push({x:V.x,y:V.y,r:34});w.solids.push({x:V.x,y:V.y,r:34,t:'well'})}
@@ -579,29 +656,7 @@ function genWorld(seed){
       if(w.houses.some(o=>{const q=o.al||o;return !(h.x>q.x+q.w+70||h.x+h.w<q.x-70||h.y>q.y+q.h+70||h.y+h.h<q.y-70)}))continue;
       if(Math.hypot(cx-V.x,cy-V.y)<(V.plaza?210:170)+(CURSED?70:0)+Math.max(hw,hh)/2)continue;
       const dx=V.x-cx,dy=V.y-cy;const side=Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'b':'t');
-      h.side=side;h.dire=V.dire;h.v=vi;h.style=V.style;const pal=ROOF[V.style];h.roof=pal[Math.floor(SR()*pal.length)];h.roofA=1;h.id=w.houses.length;h.seed=Math.floor(SR()*1e6);
-      if(CURSED&&!MOON){const f=houseFit(h,side);if(f){h.al={x:h.x,y:h.y,w:h.w,h:h.h};h.mk=f.key;h.x=f.x;h.y=f.y;h.w=f.w;h.h=f.h;h.dl=f.dl}}
-      const T=16,G=86;const sides={t:[h.x,h.y,h.w,T],b:[h.x,h.y+h.h-T,h.w,T],l:[h.x,h.y,T,h.h],r:[h.x+h.w-T,h.y,T,h.h]};
-      for(const s of['t','b','l','r']){const [x,y,ww,hh2]=sides[s];
-        if(s!==side){w.walls.push({x,y,w:ww,h:hh2,house:h.id});continue}
-        const dm=(lo,len)=>clamp(lo+len/2+(h.dl||0),lo+T+G/2+6,lo+len-T-G/2-6);
-        if(s==='t'||s==='b'){const m=dm(x,ww);w.walls.push({x,y,w:m-G/2-x,h:hh2,house:h.id},{x:m+G/2,y,w:x+ww-(m+G/2),h:hh2,house:h.id});h.door={x:m,y:y+hh2/2}}
-        else{const m=dm(y,hh2);w.walls.push({x,y,w:ww,h:m-G/2-y,house:h.id},{x,y:m+G/2,w:ww,h:y+hh2-(m+G/2),house:h.id});h.door={x:x+ww/2,y:m}}}
-      const nx=side==='r'?1:side==='l'?-1:0,ny=side==='b'?1:side==='t'?-1:0;
-      h.out={x:h.door.x+nx*55,y:h.door.y+ny*55};h.inn={x:h.door.x-nx*55,y:h.door.y-ny*55};
-      w.lanterns.push({x:h.out.x+(ny?52:0),y:h.out.y+(nx?52:0),dire:V.dire,small:1});
-      const ip=()=>({x:sr(h.x+45,h.x+h.w-45),y:sr(h.y+45,h.y+h.h-45)});
-      const p1=ip();w.items.push({id:iid++,k:'w',x:p1.x,y:p1.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([42,36,19,3],SR),house:h.id});
-      if(SR()<.5){const p2=ip();w.items.push({id:iid++,k:'c',x:p2.x,y:p2.y,n:1+(SR()<.3?1:0),house:h.id})}
-      if(SR()<.4){const p3=ip();w.items.push({id:iid++,k:'r',x:p3.x,y:p3.y,tier:pickTier([34,34,22,10,0],SR),house:h.id})}
-      if(SR()<.3){const p4=ip();w.items.push({id:iid++,k:'i',x:p4.x,y:p4.y,it:pickW(ITEMS,SR).id,house:h.id})}
-      {const back=side==='t'?'b':side==='b'?'t':side==='l'?'r':'l',nb=h.w*h.h>62000&&SR()<.5?2:1;
-        for(let q=0;q<nb;q++){const f=nb===1?sr(.3,.7):q?sr(.68,.85):sr(.15,.32);let bx,by;
-          if(back==='t'||back==='b'){bx=lerp(h.x+60,h.x+h.w-60,f);by=back==='t'?h.y+T+26:h.y+h.h-T-26}else{by=lerp(h.y+60,h.y+h.h-60,f);bx=back==='l'?h.x+T+26:h.x+h.w-T-26}
-          w.boxes.push({id:w.boxes.length,x:bx,y:by,a:Math.atan2(h.door.y-by,h.door.x-bx),house:h.id});w.rocks.push({x:bx,y:by,r:18,prop:1})}}
-      const HA=h.al||h,corners=[[HA.x-24,HA.y+26],[HA.x+HA.w+24,HA.y+26],[HA.x-24,HA.y+HA.h-26],[HA.x+HA.w+24,HA.y+HA.h-26]];
-      let np=0;for(const c of corners){if(np>=2)break;if(Math.hypot(c[0]-h.out.x,c[1]-h.out.y)<90||SR()<.35)continue;const t=SR()<.5?'barrel':'crate';w.props.push({x:c[0],y:c[1],t});w.rocks.push({x:c[0],y:c[1],r:15,prop:1});np++}
-      w.houses.push(h);placed++}
+      addHouse(h,side,V,vi);placed++}
     // village extras
     if(V.plaza){for(let k=0;k<4;k++){const a=k/4*Math.PI*2+.78+sr(-.2,.2);const p={x:V.x+Math.cos(a)*250,y:V.y+Math.sin(a)*250};if(w.houses.some(h=>inRect(p,h.al||h,50)))continue;
       const st={x:p.x,y:p.y,a:a+Math.PI/2,c:['#c83a3a','#3a6ac8','#e0a020','#3a9a5a'][k]};w.stalls.push(st);w.solids.push({x:p.x,y:p.y,r:34,t:'stall'})}
@@ -629,11 +684,81 @@ function genWorld(seed){
     w.cliffs.push(cl);k++}
   {const C=400,n=Math.ceil(WORLD/C);const cells=Array.from({length:n*n},()=>[]);for(const cl of w.cliffs)for(const c of cl.parts){for(let j=Math.max(0,Math.floor((c.y-c.r)/C));j<=Math.min(n-1,Math.floor((c.y+c.r)/C));j++)for(let i=Math.max(0,Math.floor((c.x-c.r)/C));i<=Math.min(n-1,Math.floor((c.x+c.r)/C));i++)cells[j*n+i].push(c)}w.cg2={C,n,cells}}
   buildTerrain(w);
+  // ---- Arena Royale: the Old Town (owner 2026-11-21). Pieces (rendered by arena-city.js from WD.city.props), streets (cobble paint),
+  // lamps, collision, loot and its garrison. Models face the valley (+z toward it); sizes are world units (h = height, w = width) ----
+  if(w.city){const C=w.city,P=(u,v)=>cityXY(C,u,v),face=Math.atan2(-C.ox,-C.oy),VP=C.dep*.44,VT=C.dep-340;
+    const vAt=o=>Math.sqrt(Math.max(0,(C.rb+o)**2-CITY_SU**2))-C.rb;   // v of a stairway's centre line at distance o past the edge
+    const prop=(k,u,v,o)=>{const q=Object.assign(P(u,v),{k,a:face},o||{});C.props.push(q);return q};
+    const solid=(q,r)=>w.solids.push({x:q.x,y:q.y,r,t:'city'});
+    const line=(u0,v0,u1,v1,wd)=>{const a=P(u0,v0),b=P(u1,v1);C.paint.push([a.x,a.y,b.x,b.y,wd]);return[a.x,a.y,b.x,b.y,wd]};
+    const disc=(u,v,r)=>{const q=P(u,v);C.paint.push([q.x,q.y,r])};
+    // the waterfall, its rocky foot either side of the pool
+    prop('city-waterfall',0,-45,{h:CITY_P+125,y0:WL-12});for(const sg of[-1,1])solid(P(sg*150,-160),48);
+    // two stairways and a temple gate at the top of each (the arch is the way in)
+    const v0=vAt(CITY_SB),v1=vAt(CITY_OF+10),gv=v1+125;C.gates=[];
+    for(const sg of[-1,1]){prop('moon-stairs',sg*CITY_SU,(v0+v1)/2,{w:2*CITY_SH+28,h:CITY_P+6,d:v1-v0,y0:-3});
+      prop('temple-gate',sg*CITY_SU,gv,{w:440});C.gates.push(P(sg*CITY_SU,gv));
+      for(const [du,r] of[[112,36],[160,40],[204,26]])for(const s2 of[-1,1])solid(P(sg*CITY_SU+s2*du,gv),r)}
+    // the town wall along the cliff top (gaps for the gates and the waterfall), corner towers at its ends
+    {const rw=C.rb+CITY_OF+42;for(const [s0,s1] of[[-C.hw+270,-CITY_SU-255],[-CITY_SU+255,-210],[210,CITY_SU-255],[CITY_SU+255,C.hw-270]]){const L=s1-s0;if(L<120)continue;
+      const n=Math.max(1,Math.round(L/270)),st=L/n;
+      for(let i=0;i<n;i++){const sm=s0+(i+.5)*st,an=C.a+sm/rw,x=CX+Math.cos(an)*rw,y=CY+Math.sin(an)*rw,tx=-Math.sin(an),ty=Math.cos(an);
+        C.props.push({k:'modular-wall',x,y,a:Math.atan2(-Math.cos(an),-Math.sin(an)),w:st+8,h:150,d:44});
+        for(let t=-st/2+20;t<=st/2-19;t+=38)solid({x:x+tx*t,y:y+ty*t},23)}}
+      for(const sg of[-1,1]){const an=C.a+sg*(C.hw-270)/rw,x=CX+Math.cos(an)*rw,y=CY+Math.sin(an)*rw;C.props.push({k:'wall-corner',x,y,a:Math.atan2(-Math.cos(an),-Math.sin(an))+(sg<0?-Math.PI/2:0),w:170,h:150,d:170});solid({x,y},70)}}
+    // streets: gate -> plaza (two), plaza -> temple, the cross street, the plaza, the temple court, the gate aprons
+    const ST=[line(-CITY_SU,gv+90,-120,VP-200,170),line(CITY_SU,gv+90,120,VP-200,170),line(0,VP,0,VT-140,170),line(-C.hw+420,VP+40,C.hw-420,VP+40,130)];
+    disc(0,VP,410);disc(0,VT-150,300);for(const sg of[-1,1]){disc(sg*CITY_SU,gv+40,190);line(sg*CITY_SU,v0+20,sg*CITY_SU,v1+20,2*CITY_SH+10)}   // stone under the stairs too
+    // the plaza: the moon circle, knight statues on plinths round it; guardian statues on the temple approach and north of the plaza
+    prop('moon-arena',0,VP,{w:600,h:13,d:582,dy:-4});
+    for(const th of[1.13,2.01,4.27,5.15]){const q=prop('city-knight',Math.cos(th)*470,VP+Math.sin(th)*470,{h:176,plinth:1});q.a=Math.atan2(Math.cos(th)*C.lx+Math.sin(th)*C.ox,Math.cos(th)*C.ly+Math.sin(th)*C.oy);solid(q,40)}
+    for(const [u,v] of[[-270,VT-320],[270,VT-320],[-330,240],[330,240]])solid(prop('guardian-statue',u,v,{h:250}),56);   // the temple approach, and over the falls looking out on the valley
+    // the old temple: a broken colonnade at the head of the town, two smaller ruined halls in the north quarters
+    const ruin=(u,v,W,turn)=>{const q=prop('ruin-arch',u,v,{w:W});q.a+=turn||0;const cx=Math.cos(q.a),cy=-Math.sin(q.a);
+      for(const [f,r] of[[.46,32],[.36,22],[.2,22]])for(const s2 of[-1,1])solid({x:q.x+cx*W*f*s2,y:q.y+cy*W*f*s2},r)};
+    ruin(0,VT,560);ruin(-C.hw*.58,C.dep-640,450,.45);ruin(C.hw*.58,C.dep-640,450,-.45);
+    // street lamps (the owner's lamp pillars), never on a statue, a gate or another lamp
+    const taken=q=>w.solids.some(o=>Math.hypot(o.x-q.x,o.y-q.y)<o.r+70)||C.gates.some(g=>Math.hypot(g.x-q.x,g.y-q.y)<260);
+    const lamp=q=>{if(!cityIn(q.x,q.y,-40)||taken(q))return;C.lamps.push(q);C.props.push({k:'city-pillar',x:q.x,y:q.y,a:face,h:190});solid(q,24)};
+    for(const sg of ST){const L=Math.hypot(sg[2]-sg[0],sg[3]-sg[1]),ux=(sg[2]-sg[0])/L,uy=(sg[3]-sg[1])/L,n=Math.floor(L/240);
+      for(let i=1;i<n;i++){const t=i*240,off=(i%2?1:-1)*(sg[4]/2+40);lamp({x:sg[0]+ux*t-uy*off,y:sg[1]+uy*t+ux*off})}}
+    for(let k=0;k<8;k++){const th=k/8*Math.PI*2+.39,q=P(Math.cos(th)*470,VP+Math.sin(th)*470);lamp(q)}
+    // houses in the four quarters (the Fallen Kingdom's cottage), doors toward the plaza, a path to the nearest street
+    {const pz=P(0,VP),V={x:pz.x,y:pz.y,dire:false,style:'stone'},spots=[[-C.hw*.62,VP*.62],[C.hw*.62,VP*.62],[-C.hw*.6,VP+430],[C.hw*.6,VP+430],[-C.hw*.3,VP+560],[C.hw*.3,VP+560],[-C.hw*.84,VP+120],[C.hw*.84,VP+120],[-C.hw*.36,VP*.5],[C.hw*.36,VP*.5]];
+      const segD=(q,sg)=>segDist(q,sg);let n=0;
+      for(const [su,sv] of spots){for(let t=0;t<40;t++){const c=P(su+sr(-170,170),sv+sr(-140,140)),hw=sr(240,300),hh=sr(200,240),h={x:c.x-hw/2,y:c.y-hh/2,w:hw,h:hh};
+        const cs=[[h.x,h.y],[h.x+hw,h.y],[h.x,h.y+hh],[h.x+hw,h.y+hh]];if(cs.some(q=>!cityIn(q[0],q[1],-110)||cityBase(q[0],q[1])<CITY_P-1))continue;
+        if(ST.some(sg=>segD(c,sg)<sg[4]/2+Math.max(hw,hh)/2+40)||Math.hypot(c.x-pz.x,c.y-pz.y)<560)continue;
+        if(w.solids.some(o=>o.x>h.x-o.r-60&&o.x<h.x+hw+o.r+60&&o.y>h.y-o.r-60&&o.y<h.y+hh+o.r+60))continue;
+        if(w.houses.some(o=>{const q=o.al||o;return !(h.x>q.x+q.w+90||h.x+hw<q.x-90||h.y>q.y+q.h+90||h.y+hh<q.y-90)}))continue;
+        const dx=pz.x-c.x,dy=pz.y-c.y,side=Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'b':'t');addHouse(h,side,V,-1);
+        const hs=w.houses[w.houses.length-1];let best=null,bd=1e9;for(const sg of ST){const L2=(sg[2]-sg[0])**2+(sg[3]-sg[1])**2,t2=clamp(((hs.out.x-sg[0])*(sg[2]-sg[0])+(hs.out.y-sg[1])*(sg[3]-sg[1]))/L2,0,1),q={x:sg[0]+(sg[2]-sg[0])*t2,y:sg[1]+(sg[3]-sg[1])*t2},d=dist(q,hs.out);if(d<bd){bd=d;best=q}}
+        if(best)C.paint.push([hs.out.x,hs.out.y,best.x,best.y,70]);n++;break}}C.houses=n;
+      // free ground in the quarters: off the streets, clear of houses, statues, lamps and each other
+      const open=(q,m)=>cityIn(q.x,q.y,-m)&&cityBase(q.x,q.y)>=CITY_P-1&&!ST.some(sg=>segD(q,sg)<sg[4]/2+m)&&Math.hypot(q.x-pz.x,q.y-pz.y)>480+m&&
+        !w.solids.some(o=>Math.hypot(o.x-q.x,o.y-q.y)<o.r+m)&&!w.houses.some(h=>inRect(q,h.al||h,m))&&!w.trees.some(t=>Math.hypot(t.x-q.x,t.y-q.y)<t.r+m);
+      // broken stretches of old wall standing about the quarters (cover)
+      for(let k=0,t=0;k<7&&t<400;t++){const q=P(sr(-C.hw+300,C.hw-300),sr(260,C.dep-260));if(!open(q,170))continue;const an=sr(0,Math.PI),len=sr(200,280),tx=Math.cos(an),ty=Math.sin(an);
+        if(!open({x:q.x+tx*len/2,y:q.y+ty*len/2},60)||!open({x:q.x-tx*len/2,y:q.y-ty*len/2},60))continue;
+        C.props.push({k:'modular-wall',x:q.x,y:q.y,a:Math.atan2(-ty,tx),w:len,h:sr(110,150),d:40});for(let d=-len/2+20;d<=len/2-19;d+=38)solid({x:q.x+tx*d,y:q.y+ty*d},22);k++}
+      // garden trees (the Fallen Kingdom's tree, felling works)
+      for(let k=0,t=0;k<9&&t<500;t++){const q=P(sr(-C.hw+260,C.hw-260),sr(240,C.dep-220));if(!open(q,130))continue;w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,76),v:2,ph:sr(0,6),h:sr(.85,1.1)});k++}}
+    // loot: chests on the plaza and behind the temple, the temple's relics, potions at the gates and on the plaza
+    const box=(u,v)=>{const q=P(u,v);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1})};
+    box(-150,VP);box(150,VP);box(-150,VT+150);box(150,VT+150);
+    {const q=P(0,VT+120);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(0,VT+200);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,40,45,15],SR)})}
+    for(const [u,v,it] of[[-60,VP-120,'potion'],[60,VP-120,'potion'],[0,VP+130,'mana'],[-CITY_SU,gv+150,'potion'],[CITY_SU,gv+150,'potion']]){const q=P(u,v);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
+    for(const [u,v] of[[-C.hw*.45,VP+40],[C.hw*.45,VP+40],[0,VT-60]]){const q=P(u,v);w.items.push({id:iid++,k:'c',x:q.x,y:q.y,n:2,gold:SR()<.5})}
+    // the garrison: three Dark Sentinels hold the temple court (eclipse.js kind, rich loot)
+    {const g=P(0,VT-230),camp={id:w.camps.length,x:g.x,y:g.y,tier:'citywatch',mem:[],maxRespawn:2,sc:1.15,rich:1};
+      for(let i=0;i<3;i++){const q=P((i-1)*95,VT-230+(i===1?-50:0)),m={id:mid++,x:q.x,y:q.y,kind:'sentinel',camp:camp.id,sc:1.15,rich:1};w.mobs.push(m);camp.mem.push(m.id)}w.camps.push(camp)}
+    // how far the town reaches from the valley's centre (the storm's first circle covers it)
+    C.far=0;for(const [u,v] of[[-C.hw,C.dep],[C.hw,C.dep],[0,C.dep+120],[-C.hw,0],[C.hw,0]]){const q=P(u,v);C.far=Math.max(C.far,Math.hypot(q.x-CX,q.y-CY))}}
   // ---- shrines ----
   const inCastle=(p,m)=>p.x>CS.x-m&&p.x<CS.x+CS.w+m&&p.y>CS.y-m&&p.y<CS.y+CS.h+m;
   const caveNear=(p,m)=>w.caves.some(c=>Math.hypot(p.x-c.x,p.y-c.y)<c.R+m||segDist(p,[c.mx,c.my,c.x,c.y])<c.w+m);
   for(let tries=0;tries<4000&&w.shrines.length<10;tries++){const wantDire=w.shrines.length%2===1;const p={x:sr(800,WORLD-800),y:sr(800,WORLD-800)};
-    if(isDire(p.x,p.y)!==wantDire||inDG(p,300)||!walkable(p.x,p.y,200)||nearPOI(p,300)||inCastle(p,500)||caveNear(p,300))continue;if(w.villages.some(v=>dist(p,v)<v.r+450))continue;
+    if(isDire(p.x,p.y)!==wantDire||inDG(p,300)||!walkable(p.x,p.y,200)||nearPOI(p,300)||inCastle(p,500)||caveNear(p,300)||cityIn(p.x,p.y,300))continue;if(w.villages.some(v=>dist(p,v)<v.r+450))continue;
     if(w.shrines.some(s=>dist(p,s)<2200))continue;w.shrines.push({x:p.x,y:p.y,r:150,dire:wantDire})}
   // ---- roads ----
   const crosses=(a,b)=>{const s1=Math.sign(riverD(a.x,a.y)),s2=Math.sign(riverD(b.x,b.y));if(Math.abs(riverD(a.x,a.y))<1e4&&Math.abs(riverD(b.x,b.y))<1e4&&s1!==s2)return true;
@@ -648,14 +773,14 @@ function genWorld(seed){
   {const vs=w.villages.filter(v=>!crosses(v,CS.out));const v=nearestOn(CS.out,vs.length?vs:ends.map(b=>b.d));if(v)road(CS.out,v,70)}
   for(const s of w.shrines){const vs=w.villages.filter(v=>!crosses(v,s));const v=nearestOn(s,vs);if(v&&dist(v,s)<6300)road(s,v,46)}
   for(const c of w.caves){const vs=w.villages.filter(v=>!crosses(v,{x:c.mx,y:c.my}));const v=nearestOn({x:c.mx,y:c.my},vs);if(v&&dist(v,{x:c.mx,y:c.my})<5200&&SR()<.6)road({x:c.mx,y:c.my},v,40)}
-  for(const h of w.houses){const v=w.villages[h.v];w.paths.push([v.x,v.y,h.out.x,h.out.y,44])}
+  for(const h of w.houses){const v=w.villages[h.v];if(v)w.paths.push([v.x,v.y,h.out.x,h.out.y,44])}   // Old Town houses (v -1) open onto its own streets
   const pathNear=(p,m)=>{for(const q of w.paths)if(segDist(p,q)<m+q[4]/2)return true;return false};
-  const free=(p,m)=>{if(inDG(p,m+60))return false;if(!walkable(p.x,p.y,m+12))return false;if(Math.abs(riverD(p.x,p.y))<riverHW(p.y)+m)return false;if(lakeD(p.x,p.y)<m||poolD(p.x,p.y)<m+40)return false;
+  const free=(p,m)=>{if(inDG(p,m+60))return false;if(!walkable(p.x,p.y,m+12))return false;if(cityIn(p.x,p.y,m+60))return false;if(Math.abs(riverD(p.x,p.y))<riverHW(p.y)+m)return false;if(lakeD(p.x,p.y)<m||poolD(p.x,p.y)<m+40)return false;
     for(const v of w.villages)if(dist(p,v)<v.r+m)return false;if(caveNear(p,m))return false;if(inCastle(p,m+30))return false;for(const s of w.shrines)if(dist(p,s)<s.r+m)return false;
     for(const f of w.fields)if(Math.abs(p.x-f.x)<f.w*.6+m&&Math.abs(p.y-f.y)<f.h*.6+m)return false;return true};
   // ---- rocks: scattered boulders, mountain foot, cave walls, cliff edges ----
   for(let k=0,t=0;k<220&&t<3600;t++){const p={x:sr(400,WORLD-400),y:sr(400,WORLD-400),r:sr(28,60)};if(!free(p,60)||pathNear(p,55)||w.rocks.some(r=>dist(r,p)<r.r+p.r+60))continue;w.rocks.push(p);k++}
-  for(let a=0;a<Math.PI*2;a+=.0085){if(SR()<.55)continue;const rb=bndR(a);const d=rb-sr(-10,40);const p={x:CX+Math.cos(a)*d,y:CY+Math.sin(a)*d,r:sr(40,90),edge:1};if(caveNear(p,40)||poolD(p.x,p.y)<60)continue;w.rocks.push(p)}
+  for(let a=0;a<Math.PI*2;a+=.0085){if(SR()<.55)continue;const rb=bndR(a);const d=rb-sr(-10,40);const p={x:CX+Math.cos(a)*d,y:CY+Math.sin(a)*d,r:sr(40,90),edge:1};if(caveNear(p,40)||poolD(p.x,p.y)<60||cityPath(p.x,p.y,70))continue;w.rocks.push(p)}
   for(const cl of w.cliffs)for(const c of cl.parts)for(let a=0;a<6.28;a+=.5){if(SR()<.4)continue;const p={x:c.x+Math.cos(a)*c.r*.72,y:c.y+Math.sin(a)*c.r*.72,r:sr(30,55),cliff:1};if(sdfAt(p.x,p.y)>p.r*.6)continue;w.rocks.push(p)}
   for(const c of w.caves){for(let a=0;a<6.28;a+=.32){const p={x:c.x+Math.cos(a)*(c.R+10),y:c.y+Math.sin(a)*(c.R+10),r:sr(36,58),cave:c.id};const da=Math.abs(Math.atan2(Math.sin(a-c.gap),Math.cos(a-c.gap)));if(da<.42)continue;w.rocks.push(p)}
     const px=-Math.sin(c.gap),py=Math.cos(c.gap);
@@ -688,7 +813,7 @@ function genWorld(seed){
     const t={x:p.x,y:p.y,r:22,cr:sr(72,96),v:2,mg:1,ph:sr(0,6),h:sr(.9,1.15)};w.trees.push(t);tgrid[Math.floor(p.y/TS)*gw+Math.floor(p.x/TS)].push(t);mN++}}
   // decorative pines on the mountain slopes (no collision)
   for(let k=0;k<33000&&w.mtrees.length<5200;k++){const a=sr(0,6.283),d=bndR(a)+sr(20,1000);const x=CX+Math.cos(a)*d,y=CY+Math.sin(a)*d;const o=d-bndR(a);
-    const hh=terrH(x,y);if(hh>720||hh<20)continue;if(caveK(x,y)>0||inDG({x,y},1150))continue;if(w.noise(x,y)<.38&&SR()<.6)continue;if(SR()<o/1300)continue;
+    const hh=terrH(x,y);if(hh>720||hh<20)continue;if(caveK(x,y)>0||inDG({x,y},1150)||cityIn(x,y,240))continue;if(w.noise(x,y)<.38&&SR()<.6)continue;if(SR()<o/1300)continue;
     w.mtrees.push({x,y,h:hh,s:sr(.9,1.5)*(1-hh/1600),v:SR()<.25?4:0,ph:sr(0,6)})}
   // bushes
   for(let k=0;k<9600&&w.bushes.length<(MOON?620:0);k++){   // Arena Royale: no berry bushes (owner 2026-11-18), tall grass still hides
@@ -698,16 +823,16 @@ function genWorld(seed){
   // tall-grass meadows: big patches to hide in (inside one you are hidden, like in a bush)
   {const ring=(p,r)=>{for(let a=0;a<6.28;a+=1.05){const x=p.x+Math.cos(a)*r,y=p.y+Math.sin(a)*r;if(!walkable(x,y,6)||inWater(x,y))return false}return true};
    for(let k=0;k<14000&&w.tgrass.length<280;k++){const p={x:sr(400,WORLD-400),y:sr(400,WORLD-400),r:sr(85,150)};
-    if(!free(p,40)||!ring(p,p.r*.85)||pathNear(p,p.r*.55)||w.houses.some(h=>inRect(p,h.al||h,p.r+30))||rockNear(p,p.r*.6)||!tFree(p,p.r*.5))continue;
+    if(!free(p,40)||cityIn(p.x,p.y,p.r)||!ring(p,p.r*.85)||pathNear(p,p.r*.55)||w.houses.some(h=>inRect(p,h.al||h,p.r+30))||rockNear(p,p.r*.6)||!tFree(p,p.r*.5))continue;
     if(w.bushes.some(b=>dist(b,p)<b.r+p.r+20)||w.tgrass.some(b=>dist(b,p)<b.r+p.r+160))continue;p.s=SR();w.tgrass.push(p)}}
   // glowing mushrooms, crystals, grass, flowers, reeds, lilies
   for(let k=0;k<5600&&w.mush.length<880;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300)};if(!free(p,0))continue;const rg=MOON?REG.at(p.x,p.y):-1,dire=MOON?rg===1||rg===4:isDire(p.x,p.y);if(!dire&&SR()<.85)continue;
     const near=w.trees.length?tFree(p,20):true;if(!near)continue;w.mush.push({x:p.x,y:p.y,c:rg===1?(SR()<.55?'#8dff7a':'#e8ff7a'):SR()<.55?'#6ff7ff':'#ff7ae6',s:sr(5,9)})}
   for(let k=0;k<3600&&w.crystals.length<20+180;k++){const p={x:sr(300,WORLD-300),y:sr(300,WORLD-300)};const rg=MOON?REG.at(p.x,p.y):-1;if(!free(p,40)||(MOON?rg<2:!isDire(p.x,p.y)))continue;w.crystals.push({x:p.x,y:p.y,c:rg===3?(SR()<.5?'#ff7a2a':'#ffb347'):rg===2?(SR()<.5?'#9fe8ff':'#dff6ff'):rg===4?(SR()<.5?'#c58aff':'#8a5aff'):SR()<.5?'#7ff3ff':'#c58aff',s:sr(9,14)})}
-  for(let k=0;k<64000&&w.grass.length<20800;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,8)||inWater(p.x,p.y)||heightAt(p.x,p.y)<-3)continue;
+  for(let k=0;k<64000&&w.grass.length<20800;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,8)||inWater(p.x,p.y)||heightAt(p.x,p.y)<-3||cityIn(p.x,p.y,0))continue;
     if(w.villages.some(v=>v.plaza&&dist(p,v)<220))continue;if(w.houses.some(h=>inRect(p,h.al||h,4)))continue;if(inCastle(p,-30))continue;if(pathNear(p,-6))continue;
     w.grass.push({x:p.x,y:p.y,s:sr(.7,1.35),c:SR(),d:isDire(p.x,p.y)?1:0})}
-  for(let k=0;k<28000&&w.flowers.length<6000;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,6)||inWater(p.x,p.y))continue;const meadow=w.noise(p.x,p.y)<.42||w.villages.some(v=>dist(p,v)<v.r);if(!meadow&&SR()<.7)continue;
+  for(let k=0;k<28000&&w.flowers.length<6000;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,6)||inWater(p.x,p.y)||cityIn(p.x,p.y,0))continue;const meadow=w.noise(p.x,p.y)<.42||w.villages.some(v=>dist(p,v)<v.r);if(!meadow&&SR()<.7)continue;
     if(w.houses.some(h=>inRect(p,h.al||h,2))||pathNear(p,-4)||inCastle(p,0))continue;w.flowers.push({x:p.x,y:p.y,c:SR(),d:isDire(p.x,p.y)?1:0})}
   for(let k=0;k<9900&&w.reeds.length<1400;k++){const y=sr(RIV.y0,RIV.y1);const hw=riverHW(y);const side=SR()<.5?-1:1;const off=hw+sr(-14,28);const i=clamp(Math.round((y-RIV.y0)/RIV.st),0,RIV.n-1);const x=RIV.xs[i]+side*off/RIV.il[i];
     if(onBridge(x,y)||!walkable(x,y,0))continue;w.reeds.push({x,y,s:sr(.8,1.3)})}
@@ -731,6 +856,11 @@ function genWorld(seed){
       const camp={id:w.camps.length,x:p.x,y:p.y,tier,mem:[],maxRespawn:99};const kinds=CAMP_KINDS[tier];
       kinds.forEach((kd,i)=>{const a=i/kinds.length*6.28+sr(0,1);const m={id:mid++,x:p.x+Math.cos(a)*(kinds.length>1?58:0),y:p.y+Math.sin(a)*(kinds.length>1?58:0),kind:kd,camp:camp.id};w.mobs.push(m);camp.mem.push(m.id)});
       w.camps.push(camp);break}}
+  // ---- Arena Royale (owner 2026-11-21): lone Magma Titans in the Ashen Wastes (REG land 3), far apart, away from roads and villages ----
+  if(CURSED&&!MOON){let n=0;for(let t=0;t<4000&&n<4;t++){const a=sr(.15,1.45),d=sr(3400,7200),p={x:CX+Math.cos(a)*d,y:CY+Math.sin(a)*d};
+      if(REG.at(p.x,p.y)!==3||!free(p,240)||pathNear(p,110)||blockedGen(p,90)||inCastle(p,320)||w.villages.some(v=>dist(v,p)<v.r+520))continue;
+      if(w.camps.some(c=>dist(c,p)<(c.tier==='magma'?2000:640)))continue;
+      const camp={id:w.camps.length,x:p.x,y:p.y,tier:'magma',mem:[],maxRespawn:99},m={id:mid++,x:p.x,y:p.y,kind:'magma',camp:camp.id};w.mobs.push(m);camp.mem.push(m.id);w.camps.push(camp);n++}}
   // ---- graveyards: tombstones where the dead rise first when night falls ----
   {const gv=w.villages.find(v=>v.key==='grave');const tryG=p=>{if(!free(p,170)||pathNear(p,80)||w.graves.some(g=>dist(g,p)<2000)||w.camps.some(c=>dist(c,p)<520)||blockedGen(p,120))return false;
       const g={x:p.x,y:p.y,r:180,st:[]};for(let i=0;i<14&&g.st.length<9;i++){const a=sr(0,6.3),d=sr(40,150);const q={x:p.x+Math.cos(a)*d,y:p.y+Math.sin(a)*d};if(g.st.some(o=>dist(o,q)<52))continue;g.st.push({x:q.x,y:q.y,a:sr(-.35,.35),t:Math.floor(SR()*3)});w.rocks.push({x:q.x,y:q.y,r:13,prop:1})}
@@ -793,7 +923,7 @@ const autoSize=n=>n<=6?'S':n<=16?'M':'L';
 // ts = team size (1 free-for-all, 2 duo, 4 squad); n is rounded up to whole teams
 function normCfg(c){c=c||{};const ts=[1,2,4].indexOf(c.ts|0)>=0?c.ts|0:1;let n=clamp((c.n|0)||TOTAL_HEROES,2,TOTAL_HEROES);n=Math.min(TOTAL_HEROES,Math.ceil(n/ts)*ts);if(n/ts<2)n=ts*2;
   return{n,size:SIZE_F[c.size]?c.size:autoSize(n),ts}}
-function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:9400*f,f};if(cfg.size==='L'){if(cfg.ts>1)teamKit(seed,items);return}
+function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:(cfg.size==='L'&&WD&&WD.city?Math.max(9400,WD.city.far+250):9400)*f,f};   // a full match's first circle covers the Old Town (index)if(cfg.size==='L'){if(cfg.ts>1)teamKit(seed,items);return}
   let s=((seed|0)^0x5bd1e995^(cfg.n*7919))>>>0;const R=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
   const r0=ARENA.r,ok=(p,m)=>walkable(p.x,p.y,m)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h.al||h,30))&&!inCastleYard(p);
   // centre somewhere in the walkable heart of the valley, so the whole start circle is playable
@@ -868,6 +998,8 @@ function paintMasks(S){const n=Math.round(WORLD*S),m=document.createElement('can
   for(const p of WD.paths){const w=p[4]||64;c.strokeStyle='rgba(255,0,0,.45)';c.lineWidth=w*1.45*S;c.beginPath();c.moveTo(p[0]*S,p[1]*S);c.lineTo(p[2]*S,p[3]*S);c.stroke();c.strokeStyle='rgba(255,0,0,.6)';c.lineWidth=w*.9*S;c.stroke()}
   for(const v of WD.villages){const R=(CURSED&&v.r?v.r*.97:v.plaza?235:140)*S;const g=c.createRadialGradient(v.x*S,v.y*S,R*.6,v.x*S,v.y*S,R);g.addColorStop(0,'rgba(0,255,0,1)');if(CURSED)g.addColorStop(.86,'rgba(0,255,0,1)');g.addColorStop(1,'rgba(0,255,0,0)');c.fillStyle=g;c.fillRect((v.x*S-R),(v.y*S-R),R*2,R*2)}
   if(WD.dg){const D=WD.dg;c.fillStyle='rgb(0,255,0)';c.fillRect(D.x*S,D.y*S,D.w*S,D.h*S)}
+  if(WD.city)for(const q of WD.city.paint){if(q.length===3){const g=c.createRadialGradient(q[0]*S,q[1]*S,q[2]*S*.75,q[0]*S,q[1]*S,q[2]*S);g.addColorStop(0,'rgba(0,255,0,1)');g.addColorStop(1,'rgba(0,255,0,0)');c.fillStyle=g;c.fillRect((q[0]-q[2])*S,(q[1]-q[2])*S,q[2]*2*S,q[2]*2*S)}
+    else{c.strokeStyle='rgba(0,255,0,.95)';c.lineWidth=q[4]*S;c.beginPath();c.moveTo(q[0]*S,q[1]*S);c.lineTo(q[2]*S,q[3]*S);c.stroke()}}
   {const C=WD.castle;c.fillStyle='rgb(0,255,0)';c.fillRect(C.x*S,C.y*S,C.w*S,C.h*S);c.strokeStyle='rgba(0,255,0,.9)';c.lineWidth=150*S;c.beginPath();c.moveTo(C.gate.x*S,C.gate.y*S);c.lineTo(C.out.x*S,C.out.y*S);c.stroke()}
   for(const s of WD.shrines){c.fillStyle='rgba(0,255,0,.85)';c.beginPath();c.arc(s.x*S,s.y*S,92*S,0,7);c.fill()}
   for(const cv of WD.caves){c.fillStyle='rgba(255,0,0,.9)';c.beginPath();c.arc(cv.x*S,cv.y*S,(cv.R+30)*S,0,7);c.fill();c.strokeStyle='rgba(255,0,0,.9)';c.lineWidth=(cv.w*2+40)*S;c.beginPath();c.moveTo(cv.mx*S,cv.my*S);c.lineTo(cv.x*S,cv.y*S);c.stroke()}
@@ -879,7 +1011,7 @@ function buildGround(S){
   const md=paintMasks(S).getContext('2d').getImageData(0,0,n,n).data;
   const img=c.createImageData(n,n),D=img.data;const Nb=makeNoise(mulberry32(91),240),Nd=makeNoise(mulberry32(17),55);const nz=WD.noise,e=Math.max(30,1/S);
   for(let py=0;py<n;py++){const y=(py+.5)/S;for(let px=0;px<n;px++){const x=(px+.5)/S,i=(py*n+px)*4;
-    const h=heightAt(x,y);const k=Nb(x,y)*.65+Nd(x,y)*.35;let r,gg,b;
+    const h=heightAt(x,y)-(WD.city?cityBase(x,y):0);const k=Nb(x,y)*.65+Nd(x,y)*.35;let r,gg,b;
     if(h>18){const hx=heightAt(x+e,y)-heightAt(x-e,y),hy=heightAt(x,y+e)-heightAt(x,y-e);const sh=clamp(1-(hx+hy)/e*.22,.5,1.4);
       const rk=clamp((h-60)/380,0,1);r=lerp(70,118,rk)+k*22;gg=lerp(104,112,rk)+k*20;b=lerp(54,106,rk)+k*18;
       if(h>1000){const s=clamp((h-1000)/180,0,1);r=lerp(r,236,s);gg=lerp(gg,240,s);b=lerp(b,248,s)}r*=sh;gg*=sh;b*=sh}

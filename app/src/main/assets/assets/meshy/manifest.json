@@ -823,6 +823,30 @@
     "Hit_Reaction_1",
     "dying_backwards"
    ]
+  },
+  "city-waterfall": {
+   "name": "Cascading Serenity (owner, Meshy) - the waterfall that pours off the Old Town's cliff",
+   "url": "assets/meshy/city-waterfall.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "source": "owner upload 2026-11-21 (Meshy_AI_Cascading_Serenity_1121023256_texture), 6.9M -> 39k tris"
+  },
+  "city-pillar": {
+   "name": "Ancient celestial lamp pillar (owner, Meshy, old_towe.zip) - the Old Town's street lamps",
+   "url": "assets/meshy/city-pillar.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "source": "owner upload 2026-11-21 (old_towe.zip: Meshy_AI_ONE_ancient_celestial_1118112809)"
+  },
+  "city-knight": {
+   "name": "Dark celestial knight (owner, Meshy, old_towe.zip) - the Old Town's knight statues",
+   "url": "assets/meshy/city-knight.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "source": "owner upload 2026-11-21 (old_towe.zip: Meshy_AI_ONE_full_body_dark_ce_1118112841), 20k -> 7k tris"
   }
  },
  "warrior": {
