@@ -78,11 +78,11 @@
       polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3,fog:false}));o.renderOrder=2;o.userData.ownMat=1;return o});
     m.material.map=tex;m.material.color.set(c);m.material.opacity=Math.min(1,a*(R.hi?1:.55));m.position.set(x,R.gY(x,z)+3+(R.pool[pool].used%8)*.22,z);m.rotation.set(0,rot,0);m.scale.set(r*2,1,r*2);return m}
   const sigil=o=>add(Object.assign({k:'sg',t:0,life:1,fi:.12,fo:.5,spin:.4,rot:rnd()*TAU,c:'#bfe6ff',a:.9,r:100,r1:1},o));
-  const cracks=(x,z,r,life)=>add({k:'ck',x,z,r,t:0,life:life||2.6,rot:rnd()*TAU});
+  const cracks=(x,z,r,life,a)=>add({k:'ck',x,z,r,t:0,life:life||2.6,rot:rnd()*TAU,a:a||1});
   function stepSigil(R,f,dt){f.t+=dt;if(f.t>f.life)return false;f.rot+=f.spin*dt;const a=f.a*Math.min(sat(f.t/f.fi),sat((f.life-f.t)/f.fo));
     deck(R,'qvsig',Q.G.sigil,f.x,f.z,f.r*(1+(f.r1-1)*eio(f.t/f.life)),f.rot,f.c,a);return true}
   function stepCracks(R,f,dt){f.t+=dt;if(f.t>f.life)return false;const g=eio(f.t/.2),a=sat(f.t/.04)*sat((f.life-f.t)/(f.life*.65));
-    deck(R,'qvcrk',Q.G.cracks,f.x,f.z,f.r*(.55+.45*g),f.rot,'#a8dcff',a);return true}
+    deck(R,'qvcrk',Q.G.cracks,f.x,f.z,f.r*(.55+.45*g),f.rot,'#a8dcff',a*f.a);return true}
 
   // ---------------- crystals ----------------
   function orient(q,dir,lean,yaw){V1.set(Math.cos(dir)*Math.sin(lean),Math.cos(lean),Math.sin(dir)*Math.sin(lean));Q1.setFromUnitVectors(UP,V1);Q2.setFromAxisAngle(UP,yaw);return q.copy(Q1).multiply(Q2)}
@@ -164,8 +164,8 @@
       if(s.wind===undefined)s.wind=rnd()*TAU;s.ct=(s.ct||0)-dt;
       if(live>.5&&s.ct<=0){s.ct=rr(.07,.12)/qd(R);const an=rnd()*TAU,d=a.r*Math.sqrt(rnd())*.92;comet({x:a.x+Math.cos(an)*d,z:a.y+Math.sin(an)*d,dur:rr(.3,.42),s:rr(60,84),hh:rr(700,900),from:s.wind,small:1})}},
     qprison(R,a,s,k,pre,Tm){if(!pre)return;deck(R,'qvsig',Q.G.sigil,a.x,a.y,a.r*(1.45-.35*k),Tm*2.6,'#cfe8ff',.35+.6*k);tele(R,a,'#bfe6ff',.3+.3*k,a.x,a.y,a.r*2*(1.2-.2*k))},
-    qwinter(R,a,s,k,pre,Tm){if(!pre)return;deck(R,'qvsig',Q.G.sigil,a.x,a.y,a.r*1.02,Tm*.22,'#bfe6ff',.22+.6*k);deck(R,'qvsig',Q.G.sigil,a.x,a.y,a.r*.42,-Tm*.7,'#e8f6ff',.3+.5*k);
-      for(const b of warmCircles(a))deck(R,'qvsig',Q.G.sigil,b.x,b.y,b.r*1.15,-Tm*1.5,'#ffd58a',.55+.25*Math.sin(Tm*6))}};
+    qwinter(R,a,s,k,pre,Tm){if(!pre)return;deck(R,'qvsig',Q.G.sigil,a.x,a.y,a.r*1.02,Tm*.22,'#9fd4ff',.14+.38*k);deck(R,'qvsig',Q.G.sigil,a.x,a.y,a.r*.42,-Tm*.7,'#cfeaff',.2+.35*k);
+      for(const b of warmCircles(a))deck(R,'qvsig',Q.G.sigil,b.x,b.y,b.r*1.15,-Tm*1.5,'#ffc870',.4+.2*Math.sin(Tm*6))}};
   const BOOM={
     qslash(R,a){const ang=a.ang||0,len=a.len||a.r,arc=(a.arc||.85)*1.5,n=N(R,6),gy=R.gY(a.x,a.y);
       for(let i=0;i<n;i++){const f=i/Math.max(1,n-1),aa=ang+(f-.5)*arc,d=len*rr(.5,.85),h=rr(70,110);spike({x:a.x+Math.cos(aa)*d,z:a.y+Math.sin(aa)*d,h,dir:aa,lean:rr(.4,.6),del:f*.07,life:.5+f*.07,glow:.45,puff:i%2===0})}
@@ -186,8 +186,8 @@
       for(const [f,n0] of[[.2,5],[.38,9],[.56,12],[.74,15],[.9,17]]){const n=N(R,n0),o=rnd()*TAU;
         for(let i=0;i<n;i++){const an=o+i/n*TAU+rr(-.12,.12),d=a.r*f*rr(.9,1.08),x=a.x+Math.cos(an)*d,z=a.y+Math.sin(an)*d;if(!ok(x,z))continue;
           spike({x,z,h:rr(200,320)*(1.15-.3*f),dir:an,lean:rr(.18,.34),del:f*.5+rr(0,.06),life:1.5+f*.6+rr(0,.25),glow:.6,puff:i%3===0})}}
-      cracks(a.x,a.y,620,3.6);for(let i=0;i<N(R,4);i++){const an=rnd()*TAU,d=a.r*rr(.35,.7),x=a.x+Math.cos(an)*d,z=a.y+Math.sin(an)*d;if(ok(x,z))cracks(x,z,rr(260,360),3.2)}
-      sigil({x:a.x,z:a.y,r:a.r*1.02,life:1.4,a:1,spin:1,fo:1});sparks(R,a.x,gy+80,a.y,1.8,N(R,30));if(R.flash)R.flash(a.x,gy+220,a.y,'#9fd8ff',1000,a.r*2.2,.45)}};
+      cracks(a.x,a.y,620,3.6,.6);for(let i=0;i<N(R,4);i++){const an=rnd()*TAU,d=a.r*rr(.35,.7),x=a.x+Math.cos(an)*d,z=a.y+Math.sin(an)*d;if(ok(x,z))cracks(x,z,rr(260,360),3.2,.6)}
+      sigil({x:a.x,z:a.y,r:a.r*1.02,life:1.4,a:.6,spin:1,fo:1,c:'#9fd4ff'});sparks(R,a.x,gy+80,a.y,1.8,N(R,30));if(R.flash)R.flash(a.x,gy+220,a.y,'#9fd8ff',1000,a.r*2.2,.45)}};
   function blizzEnd(R,s){const n=N(R,10);for(let i=0;i<n;i++){const an=rnd()*TAU,d=s.r*Math.sqrt(rnd())*.85;spike({x:s.x+Math.cos(an)*d,z:s.y+Math.sin(an)*d,h:rr(140,230),dir:an,lean:rr(.05,.35),del:rr(0,.15),life:rr(.9,1.3),glow:.5})}
     cracks(s.x,s.y,s.r*1.2,2.6);R.ring(s.x,s.y,20,s.r*1.4,'#e8f6ff',.6);if(R.flash)R.flash(s.x,R.gY(s.x,s.y)+150,s.y,'#8fd0ff',600,s.r*3,.3)}
 
