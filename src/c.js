@@ -601,7 +601,7 @@ function drawMinimap(me,s,my0){
   ctx.strokeStyle='#d7a0ff';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(mx+zone.x*k,my+zone.y*k,Math.max(.5,zone.r*k),0,7);ctx.stroke();
   if(zone.st!=='done'){ctx.strokeStyle='#fff';ctx.setLineDash([3,3]);ctx.beginPath();ctx.arc(mx+zone.tx*k,my+zone.ty*k,Math.max(.5,zone.tr*k),0,7);ctx.stroke();ctx.setLineDash([])}
   ctx.font=`${9*s}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
-  for(const sh of WD.shrines)ctx.fillText('✨',mx+sh.x*k,my+sh.y*k);{const C=WD.castle;ctx.fillText('🏰',mx+C.cx*k,my+C.cy*k)}if(WD.dg)for(const e of WD.dg.ents)ctx.fillText('⛓️',mx+e.x*k,my+e.y*k);
+  for(const sh of WD.shrines)ctx.fillText('✨',mx+sh.x*k,my+sh.y*k);{const C=WD.castle;ctx.fillText('🏰',mx+C.cx*k,my+C.cy*k)}if(WD.fort&&WD.fort.castle){const F=WD.fort.castle;ctx.fillText('❄️',mx+F.x*k,my+F.y*k)}if(WD.dg)for(const e of WD.dg.ents)ctx.fillText('⛓️',mx+e.x*k,my+e.y*k);
   for(const c of WD.caves)if(discovered.has(c.id))ctx.fillText('🕳️',mx+c.x*k,my+c.y*k);
   for(const g of WD.graves)if(isNight())ctx.fillText('🪦',mx+g.x*k,my+g.y*k);
   for(const u of units){if(u.dead||u===me)continue;

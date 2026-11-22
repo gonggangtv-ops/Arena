@@ -31,6 +31,12 @@ if arena and all(k in _man for k in HOUSES):VILLAGE=[k for k in VILLAGE if k not
 CITY_NEW=['city-pillar','city-knight']
 CITY=['moon-dead-tree','temple-gate','moon-stairs','modular-wall','wall-corner','ruin-arch','guardian-statue','moon-arena']+CITY_NEW
 if arena:VILLAGE+=[k for k in CITY if k in _man and k not in VILLAGE]
+# Arena Royale (owner 2026-11-22): the Snow Queen's fort. The owner's rigged Ice Queen and Frostwing Scepter, the Moonfall brazier, and
+# the owner's Blender castle 'snow-castle' once it is in the manifest (until then arena-frost.js builds an ice palace). Arena-only models
+# are skipped by The Cursed Realm.
+FORT_NEW=['ice-queen','frost-scepter','snow-castle']
+FORT=FORT_NEW+['brazier']
+if arena:VILLAGE+=[k for k in FORT if k in _man and k not in VILLAGE]
 sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()
 game_files=['a.js','gi.js','b.js','c.js','r3.js','r4.js','r5.js','r6.js','r7.js','r8.js','r9.js','r10.js','r11.js','r12.js','t1.js','d.js']
 # Arena's visual layer must install before d.js initializes the renderer.
@@ -40,7 +46,8 @@ if arena:game_files[-1:-1]=['arena-vfx-tex.js','arena-vfx-runtime.js','arena-vfx
 # so its own aoe kinds are drawn by eclipse-fx.js and everything else still reaches the arena layer.
 if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js','p5-heroes.js']
 if arena:game_files[-1:-1]=['summoner.js','summoner-fx.js']   # fifth class: the Spirit Tome (Arena Royale only)
-if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-vfx-fire.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js','arena-falls.js']
+if arena:game_files[-1:-1]=['snow-queen.js']   # the Snow Queen, boss of the ice castle (Arena Royale only; an Eclipse-style boss)
+if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-vfx-fire.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js','arena-falls.js','arena-frost.js']
 if arena:game_files.extend(['arena-menu.js','arena-hud.js','arena-vitals.js','arena-combat-controls.js'])
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in game_files)
 js='const CURSED='+('true' if sys_on else 'false')+';const MOON='+('true' if cur else 'false')+';\n'+js
@@ -72,7 +79,7 @@ if sys_on:
     sh=sh.replace('<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>',loading)
     sh=re.sub(r'(<button[^>]*id="(?:soloBtn|qmBtn|hostBtn|joinBtn|lobbyStart|moonfallBtn)"[^>]*)(>)',r'\1 disabled\2',sh)
     if arena:sh=sh.replace('</head>','<script>window.CELESTIAL_KEYS='+repr(VILLAGE).replace("'",'"')+'</script>\n'+arena_style+'</head>',1)
-    else:sh=sh.replace('</head>','<script>window.CELESTIAL_SKIP='+repr(NATURE+P5+P5W+HOUSES+CITY_NEW).replace("'",'"')+'</script>\n</head>',1)  # Moonfall has no meadow dressing
+    else:sh=sh.replace('</head>','<script>window.CELESTIAL_SKIP='+repr(NATURE+P5+P5W+HOUSES+CITY_NEW+FORT_NEW).replace("'",'"')+'</script>\n</head>',1)  # Moonfall has no meadow dressing
     sh=sh.replace('<!--TURN-->','<!--TURN-->\n'+'\n'.join("<script src=\"%s\" onerror=\"moonfallCodeFailure('%s')\"></script>"%(f,f) for f in MOON),1)
 def critical_libs(text):
     if sys_on:

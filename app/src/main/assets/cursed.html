@@ -119,7 +119,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <link rel="stylesheet" href="moonfall-menu.css" onerror="window.__moonfallCodeFailure='moonfall-menu.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-menu.css')">
 <link rel="stylesheet" href="moonfall-inventory.css" onerror="window.__moonfallCodeFailure='moonfall-inventory.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-inventory.css')">
 <link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
-<script>window.CELESTIAL_SKIP=["mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "city-pillar", "city-knight"]</script>
+<script>window.CELESTIAL_SKIP=["mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "city-pillar", "city-knight", "ice-queen", "frost-scepter", "snow-castle"]</script>
 </head>
 <body>
 <div id="safe"></div>
@@ -713,24 +713,57 @@ function cityH(C,x,y,o,h0){const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2||o<CITY_S
   const k=o<-50?smooth01((o+420)/370):1,rim=(o<CITY_OF?fr:CITY_P)*(1-smooth01((e-650)/550))+(560+260*C.nr(x,y))*smooth01(e/320)*(1-smooth01((e-760)/540));
   return Math.max(h0,rim*k)}
 // the height a hero walks at here (0 = the valley rule)
-function cityBase(x,y){const C=WD&&WD.city;if(!C)return 0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return 0;
+function townBase(x,y){const C=WD&&WD.city;if(!C)return 0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return 0;
   const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,o=outsideD(x,y),s=cityStair(u,o);if(s>=0)return CITY_P*s;
   return o>=CITY_OF&&citySB(C,u,v)<=0?CITY_P:0}
 // on the town (plateau, stairways or the waterfall's foot), m = extra margin; world gen keeps its scatter out of here
-function cityIn(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
+function townIn(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
   const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,o=outsideD(x,y);
   if(o>=CITY_OF-m-40&&citySB(C,u,v)<=m)return true;
   if(o>CITY_SB-40-m&&o<CITY_OF+40&&Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+40+m)return true;
   return o>-280-m&&o<CITY_OF+40&&Math.abs(u)<240+m}
 // how much the ground here is the town's rock (the cliff face, the stairways' side walls, the rim), 0..1, for the terrain shader
-function cityRock(x,y){const C=WD&&WD.city;if(!C)return 0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return 0;
+function townRock(x,y){const C=WD&&WD.city;if(!C)return 0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return 0;
   const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,o=outsideD(x,y),s=cityStair(u,o);if(s>=0)return 0;if(s===-2)return 1;const e=citySB(C,u,v);
   if(e<=0)return o<CITY_OF+5&&o>-70?smooth01((o+70)/40)*(1-smooth01((o-CITY_OF+5)/10)):0;return smooth01(e/60)*(o>-420?1:0)}
 // the stairways and the waterfall's foot only (rocks may line the rest of the cliff's foot)
-function cityPath(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
+function townPath(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
   const u=dx*C.lx+dy*C.ly,o=outsideD(x,y);if(o>CITY_SB-40-m&&o<CITY_OF+40&&Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+40+m)return true;return o>-280-m&&o<CITY_OF+40&&Math.abs(u)<240+m}
 // town frame -> world
 function cityXY(C,u,v){return{x:C.x+u*C.lx+v*C.ox,y:C.y+u*C.ly+v*C.oy}}
+// Arena Royale (owner 2026-11-22): the Snow Queen's castle on a plateau one step up out of the Frozen Sanctuary, east of the Old
+// Town; one wide stairway climbs to it from the valley. Fort frame like the town's (u along the cliff, v out of the valley, cityXY
+// works on it). The castle stands at the back (FORT_VC), the queen's court in front of it (FORT_VA). arena-frost.js draws it,
+// snow-queen.js is the boss.
+const FORT_P=240,FORT_OF=60,FORT_SH=150,FORT_SB=-430,FORT_VA=640,FORT_VC=1380,FORT_CW=900,FORT_CD=560;
+// signed distance to the plateau's sides and back (< 0 inside), rounded back corners
+function fortSB(F,u,v){const hw=F.hw+F.sw*Math.sin(v*.003+F.p3),vb=F.dep+90*Math.sin(u*.0021+F.p1),R=420,au=Math.abs(u);
+  const du=au-(hw-R),dv=v-(vb-R);return du>0&&dv>0?Math.hypot(du,dv)-R:Math.max(au-hw,v-vb)}
+// the stairway (u = 0): 0..1 up its ramp, -2 on its side walls, -1 elsewhere
+function fortStair(u,o){if(o<FORT_SB-10||o>FORT_OF+30)return -1;const du=Math.abs(u);
+  if(du<=FORT_SH)return clamp((o-FORT_SB)/(FORT_OF+10-FORT_SB),0,1);return du<=FORT_SH+40&&o>FORT_SB+50?-2:-1}
+// the fort's ground (h0 = what is already there: the valley, the mountains, the Old Town's rim); null where it changes nothing
+function fortH(F,x,y,o,h0){const dx=x-F.x,dy=y-F.y;if(dx*dx+dy*dy>F.R2||o<FORT_SB-60)return null;
+  const u=dx*F.lx+dy*F.ly,v=dx*F.ox+dy*F.oy,e=fortSB(F,u,v);if(e>1100)return null;
+  const s=fortStair(u,o),ramp=FORT_P*clamp((o-FORT_SB)/(FORT_OF+10-FORT_SB),0,1);if(s>=0)return ramp;
+  const fr=FORT_P*smooth01((o+50)/(FORT_OF+50));
+  if(e<=0){if(o>=FORT_OF)return FORT_P+(F.nz(x,y)-.5)*5;return Math.max(h0,fr,s===-2?ramp+50:0)}
+  const k=o<-50?smooth01((o+420)/370):1,rim=(o<FORT_OF?fr:FORT_P)*(1-smooth01((e-600)/500))+(620+300*F.nr(x,y))*smooth01(e/300)*(1-smooth01((e-700)/400));
+  return Math.max(h0,rim*k)}
+const fortUV=(F,x,y)=>{const dx=x-F.x,dy=y-F.y;return dx*dx+dy*dy>F.R2?null:[dx*F.lx+dy*F.ly,dx*F.ox+dy*F.oy]};
+function fortBase(x,y){const F=WD&&WD.fort;if(!F)return 0;const q=fortUV(F,x,y);if(!q)return 0;const o=outsideD(x,y),s=fortStair(q[0],o);if(s>=0)return FORT_P*s;
+  return o>=FORT_OF&&fortSB(F,q[0],q[1])<=0?FORT_P:0}
+function fortIn(x,y,m){const F=WD&&WD.fort;if(!F)return false;m=m||0;const q=fortUV(F,x,y);if(!q)return false;const o=outsideD(x,y);
+  if(o>=FORT_OF-m-40&&fortSB(F,q[0],q[1])<=m)return true;return o>FORT_SB-40-m&&o<FORT_OF+40&&Math.abs(q[0])<FORT_SH+40+m}
+function fortRock(x,y){const F=WD&&WD.fort;if(!F)return 0;const q=fortUV(F,x,y);if(!q)return 0;const o=outsideD(x,y),s=fortStair(q[0],o);if(s>=0)return 0;if(s===-2)return 1;
+  const e=fortSB(F,q[0],q[1]);if(e<=0)return o<FORT_OF+5&&o>-70?smooth01((o+70)/40)*(1-smooth01((o-FORT_OF+5)/10)):0;return smooth01(e/60)*(o>-420?1:0)}
+function fortPath(x,y,m){const F=WD&&WD.fort;if(!F)return false;m=m||0;const q=fortUV(F,x,y);if(!q)return false;const o=outsideD(x,y);
+  return o>FORT_SB-40-m&&o<FORT_OF+40&&Math.abs(q[0])<FORT_SH+40+m}
+// the raised places (the Old Town, the Snow Queen's fort): the walking height, on it (world gen keeps its scatter off), rock, paths
+function cityBase(x,y){return townBase(x,y)||fortBase(x,y)}
+function cityIn(x,y,m){return townIn(x,y,m)||fortIn(x,y,m)}
+function cityRock(x,y){return Math.max(townRock(x,y),fortRock(x,y))}
+function cityPath(x,y,m){return townPath(x,y,m)||fortPath(x,y,m)}
 // the falls (owner 2026-11-21, round 2): a spring pool on the plateau feeds a channel to the brink (CITY_FB, CITY_FW wide); the water
 // leaves the brink at the pool's level CITY_PW, falls in a parabola clear of a recessed rock face and lands in a plunge basin that
 // joins the valley's pool. Town frame (u along the cliff, v out of the valley). arena-falls.js draws it from these.
@@ -752,6 +785,7 @@ function terrH(x,y,noCave){
     if(lat<320&&out>-70&&out<420){const lk=1-smooth01((lat-160)/160);const v=lk*(330*smooth01((out+45)/60))+lk*Math.max(0,out-20)*.5;if(v>h)h=v}}
   const ch=cliffH(x,y);if(ch>h)h=ch;
   if(Cy){const c=cityH(Cy,x,y,o,h);if(c!==null)h=c}
+  const Fo=WD.fort;if(Fo){const c=fortH(Fo,x,y,o,h);if(c!==null)h=c}
   if(!noCave){const ck=caveK(x,y);if(ck>0)h*=1-ck}
   const D=WD.dg;if(D){const ex=Math.max(D.x-x,x-(D.x+D.w),0),ey=Math.max(D.y-y,y-(D.y+D.h),0),dd=Math.hypot(ex,ey);if(dd<=0)return 0;if(dd<1100){const k=smooth01(dd/1100);h=Math.max(190,lerp(190,h,k))}}
   if(h<60){const rd=Math.abs(riverD(x,y));if(rd<400){const hw=riverHW(y);if(rd<hw+34){const bed=-14*smooth01((hw+30-rd)/70)-6*smooth01((hw-40-rd)/Math.max(30,hw-40))-(MOON?0:12*smooth01((hw-80-rd)/Math.max(40,hw-80)));if(bed<h)h=bed}}
@@ -810,7 +844,13 @@ function genWorld(seed){
   if(ARX){for(let i=0;i<720;i++){const a=i/720*Math.PI*2,da=Math.abs(Math.atan2(Math.sin(a-aw),Math.cos(a-aw))),k=1-smooth01((da-.26)/.14);if(k>0)BND[i]=lerp(BND[i],rbw,k)}
     const ox=Math.cos(aw),oy=Math.sin(aw);
     w.city={x:Pb.x,y:Pb.y,a:aw,ox,oy,lx:-oy,ly:ox,rb:rbw,hw:sr(1780,1920),dep:sr(1800,1960),sw:sr(40,90),p1:sr(0,6.3),p2:sr(0,6.3),p3:sr(0,6.3),
-      nz:makeNoise(SR,340),nr:makeNoise(SR,520),R2:4700*4700,props:[],lamps:[],paint:[],name:'นครเก่าเหนือน้ำตก'}}
+      nz:makeNoise(SR,340),nr:makeNoise(SR,520),R2:4700*4700,props:[],lamps:[],paint:[],name:'นครเก่าเหนือน้ำตก'};
+    // the Snow Queen's fort (owner 2026-11-22): a step up out of the Frozen Sanctuary 29-32 degrees east of the town (its rim has faded
+    // out by then), the valley's edge one smooth arc across its front too
+    const af=aw+sr(.5,.55),rf0=bndR(af);for(let i=0;i<720;i++){const a=i/720*Math.PI*2,da=Math.abs(Math.atan2(Math.sin(a-af),Math.cos(a-af))),k=1-smooth01((da-.17)/.1);if(k>0)BND[i]=lerp(BND[i],rf0,k)}
+    const rf=bndR(af),fx=Math.cos(af),fy=Math.sin(af);
+    w.fort={x:CX+fx*rf,y:CY+fy*rf,a:af,ox:fx,oy:fy,lx:-fy,ly:fx,rb:rf,hw:sr(900,980),dep:sr(1790,1900),sw:sr(30,60),p1:sr(0,6.3),p3:sr(0,6.3),
+      nz:makeNoise(SR,300),nr:makeNoise(SR,480),R2:3700*3700,props:[],crystals:[],braziers:[],paint:[],name:'ปราสาทราชินีหิมะ'}}
   const Lk={x:CX+sr(-1895,-700),y:CY+sr(3500,4400),R:sr(740,840),p1:sr(0,6.3),p2:sr(0,6.3)};w.lake=Lk;
   {const P0=w.pool,y0=P0.y,y1=Lk.y,st=4,n=Math.ceil((y1-y0)/st)+1;const xs=new Float32Array(n),il=new Float32Array(n);
     const A1=sr(540,700),A2=sr(140,210),f1=sr(1.7,2.4),f2=sr(3.6,4.8),q1=sr(0,6.3),q2=sr(0,6.3);
@@ -961,7 +1001,7 @@ function genWorld(seed){
   const town=w.villages.find(v=>v.main);if(town){let by=null,bd=1e9;for(let y=RIV.y0+300;y<RIV.y1-300;y+=20){const d=Math.hypot(riverX(y)-town.x,y-town.y);if(d<bd){bd=d;by=y}}if(by!==null){const b=addBridge(by);if(b)b.big=1}}
   for(const f of[.08,.18,.28,.38,.48,.58,.68,.78,.88,.95])addBridge(lerp(RIV.y0,RIV.y1,f));
   // ---- outcrops: rocky hills inside the valley ----
-  for(let k=0,t=0;k<34&&t<2800;t++){const p={x:sr(1000,WORLD-1000),y:sr(1000,WORLD-1000)};if(outsideD(p.x,p.y)>-520||nearPOI(p,380))continue;
+  for(let k=0,t=0;k<34&&t<2800;t++){const p={x:sr(1000,WORLD-1000),y:sr(1000,WORLD-1000)};if(outsideD(p.x,p.y)>-520||nearPOI(p,380)||fortIn(p.x,p.y,420))continue;
     if(w.villages.some(v=>dist(p,v)<v.r+520)||w.cliffs.some(c=>dist(p,c)<900)||(Math.abs(p.x-CS.cx)<CS.w/2+700&&Math.abs(p.y-CS.cy)<CS.h/2+700))continue;
     const cl={x:p.x,y:p.y,parts:[]};const nb=3+Math.floor(SR()*3);for(let i=0;i<nb;i++){const a=sr(0,6.3),d=i?sr(80,170):0;cl.parts.push({x:p.x+Math.cos(a)*d,y:p.y+Math.sin(a)*d,r:sr(95,175),h:sr(150,260)})}
     w.cliffs.push(cl);k++}
@@ -1049,6 +1089,42 @@ function genWorld(seed){
       for(let i=0;i<3;i++){const q=P((i-1)*95,VT-230+(i===1?-50:0)),m={id:mid++,x:q.x,y:q.y,kind:'sentinel',camp:camp.id,sc:1.15,rich:1};w.mobs.push(m);camp.mem.push(m.id)}w.camps.push(camp)}
     // how far the town reaches from the valley's centre (the storm's first circle covers it)
     C.far=0;for(const [u,v] of[[-C.hw,C.dep],[C.hw,C.dep],[0,C.dep+120],[-C.hw,0],[C.hw,0]]){const q=P(u,v);C.far=Math.max(C.far,Math.hypot(q.x-CX,q.y-CY))}}
+  // ---- Arena Royale: the Snow Queen's fort (owner 2026-11-22). The castle at the back (the owner's Blender castle 'snow-castle' once it is
+  // in the manifest, an ice palace drawn by arena-frost.js until then: both fill the same footprint, FORT_CW x FORT_CD, gate toward the
+  // valley), the queen's court in front of it, ice crystals, frozen braziers, guardians and snow pines; collision, loot and the queen ----
+  if(w.fort){const F=w.fort,P=(u,v)=>cityXY(F,u,v),face=Math.atan2(-F.ox,-F.oy);
+    const prop=(k,u,v,o)=>{const q=Object.assign(P(u,v),{k,a:face},o||{});F.props.push(q);return q};
+    const solid=(q,r)=>w.solids.push({x:q.x,y:q.y,r,t:'fort'});
+    // paving (the court, the way from the stair head, the castle's apron): no grass or meadow dressing there
+    {const d=(u,v,r)=>{const q=P(u,v);F.paint.push([q.x,q.y,r])},l=(u0,v0,u1,v1,wd)=>{const a=P(u0,v0),b=P(u1,v1);F.paint.push([a.x,a.y,b.x,b.y,wd])};
+      d(0,FORT_VA,500);d(0,FORT_VC-FORT_CD/2-40,330);l(0,FORT_OF,0,FORT_VA-300,330);l(-FORT_CW/2,FORT_VC-FORT_CD/2-60,FORT_CW/2,FORT_VC-FORT_CD/2-60,160)}
+    // the castle: solid over its whole footprint (towers at the four corners)
+    F.castle=prop('snow-castle',0,FORT_VC,{w:FORT_CW,d:FORT_CD});
+    for(let u=-FORT_CW/2+70;u<=FORT_CW/2-70+1;u+=(FORT_CW-140)/6)for(let v=FORT_VC-FORT_CD/2+70;v<=FORT_VC+FORT_CD/2-70+1;v+=(FORT_CD-140)/4)solid(P(u,v),82);
+    for(const su of[-1,1])for(const sv of[-1,1])solid(P(su*FORT_CW/2,FORT_VC+sv*FORT_CD/2),92);
+    // guardians at the head of the stairway and either side of the gate, braziers round the court
+    for(const sg of[-1,1]){solid(prop('guardian-statue',sg*(FORT_SH+95),150,{h:230,ice:1}),52);solid(prop('guardian-statue',sg*210,FORT_VC-FORT_CD/2-90,{h:250,ice:1}),52)}
+    for(let i=0;i<4;i++){const a=(i+.5)/4*Math.PI*2,q=P(Math.cos(a)*470,FORT_VA+Math.sin(a)*400);F.braziers.push(q);solid(q,26)}
+    // ice crystal clusters along the plateau's sides and back corners and either side of the stair head (the big ones are solid)
+    for(let k=0,t=0;k<16&&t<400;t++){const u=sr(-F.hw+90,F.hw-90),v=sr(120,F.dep-80),au=Math.abs(u);
+      if(au<F.hw-330&&v<FORT_VC+FORT_CD/2+60)continue;if(Math.abs(u)<FORT_CW/2+120&&Math.abs(v-FORT_VC)<FORT_CD/2+120)continue;
+      const q=P(u,v);if(fortSB(F,u,v)>-70||F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<220))continue;
+      const c=Object.assign(q,{r:sr(46,82),n:4+Math.floor(SR()*4),a:sr(0,6.3),h:sr(150,260)});F.crystals.push(c);if(c.r>60)solid(c,c.r*.7);k++}
+    for(const sg of[-1,1]){const q=Object.assign(P(sg*(FORT_SH+60),FORT_OF+8),{r:44,n:4,a:sr(0,6.3),h:sr(130,170)});F.crystals.push(q)}
+    // snow pines on the plateau's flanks, behind the castle
+    for(let k=0,t=0;k<14&&t<300;t++){const u=sr(-F.hw+120,F.hw-120),v=sr(220,F.dep-120),au=Math.abs(u);if(au<F.hw-300&&v<F.dep-260)continue;
+      if(Math.abs(u)<FORT_CW/2+90&&Math.abs(v-FORT_VC)<FORT_CD/2+90)continue;const q=P(u,v);if(fortSB(F,u,v)>-90)continue;
+      if(F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<c.r+70)||w.trees.some(t=>Math.abs(t.x-q.x)<120&&Math.abs(t.y-q.y)<120))continue;
+      w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,78),v:2,ph:sr(0,6),h:sr(.9,1.15)});k++}
+    // loot: two chests and gold by the castle gate, a tier-3 weapon and a rune behind the queen, potions at the stair head
+    for(const sg of[-1,1]){const q=P(sg*330,FORT_VC-FORT_CD/2-110);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1});
+      const c=P(sg*420,FORT_VC-FORT_CD/2-150);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
+    {const q=P(-70,FORT_VA+330);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(70,FORT_VA+330);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,35,45,20],SR)})}
+    for(const [u,it] of[[-90,'potion'],[90,'mana']]){const q=P(u,190);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
+    // the Snow Queen (snow-queen.js): alone on her court, no respawn
+    {const g=P(0,FORT_VA+170),camp={id:w.camps.length,x:g.x,y:g.y,tier:'icethrone',mem:[],maxRespawn:0,sc:1,rich:1};
+      const m={id:mid++,x:g.x,y:g.y,kind:'snowqueen',camp:camp.id,sc:1,rich:1};w.mobs.push(m);camp.mem.push(m.id);w.camps.push(camp);F.queen=m.id;F.home={x:g.x,y:g.y}}
+    F.far=0;for(const [u,v] of[[-F.hw,F.dep],[F.hw,F.dep],[0,F.dep+120]]){const q=P(u,v);F.far=Math.max(F.far,Math.hypot(q.x-CX,q.y-CY))}}
   // ---- shrines ----
   const inCastle=(p,m)=>p.x>CS.x-m&&p.x<CS.x+CS.w+m&&p.y>CS.y-m&&p.y<CS.y+CS.h+m;
   const caveNear=(p,m)=>w.caves.some(c=>Math.hypot(p.x-c.x,p.y-c.y)<c.R+m||segDist(p,[c.mx,c.my,c.x,c.y])<c.w+m);
@@ -1218,7 +1294,7 @@ const autoSize=n=>n<=6?'S':n<=16?'M':'L';
 // ts = team size (1 free-for-all, 2 duo, 4 squad); n is rounded up to whole teams
 function normCfg(c){c=c||{};const ts=[1,2,4].indexOf(c.ts|0)>=0?c.ts|0:1;let n=clamp((c.n|0)||TOTAL_HEROES,2,TOTAL_HEROES);n=Math.min(TOTAL_HEROES,Math.ceil(n/ts)*ts);if(n/ts<2)n=ts*2;
   return{n,size:SIZE_F[c.size]?c.size:autoSize(n),ts}}
-function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:(cfg.size==='L'&&WD&&WD.city?Math.max(9400,WD.city.far+250):9400)*f,f};   // a full match's first circle covers the Old Town (index)if(cfg.size==='L'){if(cfg.ts>1)teamKit(seed,items);return}
+function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:(cfg.size==='L'&&WD&&WD.city?Math.max(9400,WD.city.far+250,WD.fort?WD.fort.far+250:0):9400)*f,f};   // a full match's first circle covers the Old Town and the Snow Queen's fort (index)if(cfg.size==='L'){if(cfg.ts>1)teamKit(seed,items);return}
   let s=((seed|0)^0x5bd1e995^(cfg.n*7919))>>>0;const R=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
   const r0=ARENA.r,ok=(p,m)=>walkable(p.x,p.y,m)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h.al||h,30))&&!inCastleYard(p);
   // centre somewhere in the walkable heart of the valley, so the whole start circle is playable
@@ -1293,7 +1369,7 @@ function paintMasks(S){const n=Math.round(WORLD*S),m=document.createElement('can
   for(const p of WD.paths){const w=p[4]||64;c.strokeStyle='rgba(255,0,0,.45)';c.lineWidth=w*1.45*S;c.beginPath();c.moveTo(p[0]*S,p[1]*S);c.lineTo(p[2]*S,p[3]*S);c.stroke();c.strokeStyle='rgba(255,0,0,.6)';c.lineWidth=w*.9*S;c.stroke()}
   for(const v of WD.villages){const R=(CURSED&&v.r?v.r*.97:v.plaza?235:140)*S;const g=c.createRadialGradient(v.x*S,v.y*S,R*.6,v.x*S,v.y*S,R);g.addColorStop(0,'rgba(0,255,0,1)');if(CURSED)g.addColorStop(.86,'rgba(0,255,0,1)');g.addColorStop(1,'rgba(0,255,0,0)');c.fillStyle=g;c.fillRect((v.x*S-R),(v.y*S-R),R*2,R*2)}
   if(WD.dg){const D=WD.dg;c.fillStyle='rgb(0,255,0)';c.fillRect(D.x*S,D.y*S,D.w*S,D.h*S)}
-  if(WD.city)for(const q of WD.city.paint){if(q.length===3){const g=c.createRadialGradient(q[0]*S,q[1]*S,q[2]*S*.75,q[0]*S,q[1]*S,q[2]*S);g.addColorStop(0,'rgba(0,255,0,1)');g.addColorStop(1,'rgba(0,255,0,0)');c.fillStyle=g;c.fillRect((q[0]-q[2])*S,(q[1]-q[2])*S,q[2]*2*S,q[2]*2*S)}
+  for(const P0 of[WD.city,WD.fort])if(P0&&P0.paint)for(const q of P0.paint){if(q.length===3){const g=c.createRadialGradient(q[0]*S,q[1]*S,q[2]*S*.75,q[0]*S,q[1]*S,q[2]*S);g.addColorStop(0,'rgba(0,255,0,1)');g.addColorStop(1,'rgba(0,255,0,0)');c.fillStyle=g;c.fillRect((q[0]-q[2])*S,(q[1]-q[2])*S,q[2]*2*S,q[2]*2*S)}
     else{c.strokeStyle='rgba(0,255,0,.95)';c.lineWidth=q[4]*S;c.beginPath();c.moveTo(q[0]*S,q[1]*S);c.lineTo(q[2]*S,q[3]*S);c.stroke()}}
   {const C=WD.castle;c.fillStyle='rgb(0,255,0)';c.fillRect(C.x*S,C.y*S,C.w*S,C.h*S);c.strokeStyle='rgba(0,255,0,.9)';c.lineWidth=150*S;c.beginPath();c.moveTo(C.gate.x*S,C.gate.y*S);c.lineTo(C.out.x*S,C.out.y*S);c.stroke()}
   for(const s of WD.shrines){c.fillStyle='rgba(0,255,0,.85)';c.beginPath();c.arc(s.x*S,s.y*S,92*S,0,7);c.fill()}
@@ -2221,7 +2297,7 @@ function hostUpdate(dt){
 function applyAoe(a){for(const u of units){if(u.dead||!isEnemy(a.owner,u))continue;
   if(hitArea(a,u)){dealDamage(u,a.dmg,a.type,a.owner,!!a.dot&&a.kind!=='rain'&&a.kind!=='blizz'&&a.kind!=='volley'&&a.kind!=='thunder');if(u.dead)continue;
     if(a.kb&&!u.boss&&!u.golem){const d=dist(a,u)||1;u.kb={vx:(u.x-a.x)/d*a.kb,vy:(u.y-a.y)/d*a.kb,t:.26};u.dash=null}if(a.stun)u.stunT=Math.max(u.stunT,a.stun);if(a.root)u.rootT=Math.max(u.rootT,a.root);if(a.slow){u.slowT=Math.max(u.slowT,a.slow);u.slowAmt=a.slowAmt||.4}
-    if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP);else if(a.st&&(!a.stP||Math.random()<a.stP))stAdd(a.owner,u,a.st,1)}}}
+    if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP);else if(a.st&&(!a.stP||Math.random()<a.stP))stAdd(a.owner,u,a.st,a.stN||1)}}}
 
 // ===================== SHARED VISUAL UPDATE =====================
 const pushMass=u=>u.boss||u.golem?12:u.hero?(u.ctrl?6:3):u.big||u.lord?2:1;
@@ -2856,7 +2932,7 @@ function drawMinimap(me,s,my0){
   ctx.strokeStyle='#d7a0ff';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(mx+zone.x*k,my+zone.y*k,Math.max(.5,zone.r*k),0,7);ctx.stroke();
   if(zone.st!=='done'){ctx.strokeStyle='#fff';ctx.setLineDash([3,3]);ctx.beginPath();ctx.arc(mx+zone.tx*k,my+zone.ty*k,Math.max(.5,zone.tr*k),0,7);ctx.stroke();ctx.setLineDash([])}
   ctx.font=`${9*s}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
-  for(const sh of WD.shrines)ctx.fillText('✨',mx+sh.x*k,my+sh.y*k);{const C=WD.castle;ctx.fillText('🏰',mx+C.cx*k,my+C.cy*k)}if(WD.dg)for(const e of WD.dg.ents)ctx.fillText('⛓️',mx+e.x*k,my+e.y*k);
+  for(const sh of WD.shrines)ctx.fillText('✨',mx+sh.x*k,my+sh.y*k);{const C=WD.castle;ctx.fillText('🏰',mx+C.cx*k,my+C.cy*k)}if(WD.fort&&WD.fort.castle){const F=WD.fort.castle;ctx.fillText('❄️',mx+F.x*k,my+F.y*k)}if(WD.dg)for(const e of WD.dg.ents)ctx.fillText('⛓️',mx+e.x*k,my+e.y*k);
   for(const c of WD.caves)if(discovered.has(c.id))ctx.fillText('🕳️',mx+c.x*k,my+c.y*k);
   for(const g of WD.graves)if(isNight())ctx.fillText('🪦',mx+g.x*k,my+g.y*k);
   for(const u of units){if(u.dead||u===me)continue;
@@ -5184,6 +5260,10 @@ const ECL_KINDS=['mslash','eburst','crain','vcage','ueclipse','usafe','hstrike',
 AOE_KINDS.push(...ECL_KINDS);
 Object.assign(AOE_COL,{mslash:'#9fd0ff',eburst:'#b08aff',crain:'#cfe4ff',vcage:'#a070ff',ueclipse:'#6a4aff',usafe:'#fff2b0',hstrike:'#ffcf8a',gslam:'#9fd0ff',lscythe:'#c08aff',lslash:'#bfe8ff',lburst:'#a8b8ff'});
 const EK=['overlord','sentinel','construct'];
+// other Eclipse-style bosses plug in here (Arena Royale's Snow Queen, snow-queen.js): {detect, wake(u), lose(u), act(u,t,d,R,dt)}.
+// They get the Overlord's boss treatment: boss stats and phases, no stagger, regen only after a while out of combat.
+const ECL_EXT={};
+const eclBoss=u=>!!u&&(u.ecl==='overlord'||!!ECL_EXT[u.ecl]);
 Object.assign(CREEPS,{
   overlord:{name:'Celestial Overlord · จอมราชันย์สุริยคราส',hp:16000,dmg:120,armor:8,spd:140,r:64,atkT:1.6,range:120,xp:1600,col:'#4a5a9a',leash:900,ecl:'overlord'},
   sentinel:{name:'Dark Sentinel · ผู้เฝ้ายามทมิฬ',hp:1500,dmg:46,armor:5,spd:172,r:28,atkT:1.25,range:82,xp:210,col:'#3a3f55',leash:560,ecl:'sentinel'},
@@ -5216,7 +5296,7 @@ function eclWorld(w){if(!CURSED)return;
 // ---- units ----
 function eclInit(u){const d=u.def;u.ecl=d.ecl;u.elite=u.elite||d.ecl!=='sentinel';u.golem=d.ecl!=='sentinel';u.big=1;
   u.ecT=0;u.busyT=0;u.poise=0;u.blockT=0;u.blkCd=3;u.combo=null;u.patrol=null;u.summons=u.summons||[];
-  if(d.ecl==='overlord'){const sc=u.scale||1;u.maxHp=Math.round(d.hp*sc);u.hp=u.maxHp;u.atkDmg=d.dmg*sc;u.armorV=d.armor;u.spdBase=d.spd;u.r=d.r;u.name=d.name;u.ph=0;u.cds={};u.mr=.25}}
+  if(d.ecl==='overlord'||ECL_EXT[d.ecl]){const sc=u.scale||1;u.maxHp=Math.round(d.hp*sc);u.hp=u.maxHp;u.atkDmg=d.dmg*sc;u.armorV=d.armor;u.spdBase=d.spd;u.r=d.r;u.name=d.name;u.ph=0;u.cds={};u.mr=.25}}
 {const _mk=mkMob;mkMob=function(m){const u=_mk(m);if(u.def&&u.def.ecl){eclInit(u);if(m.summon){u.summon=1;u.camp=-1}}return u}}
 {const _sms=setMobStats;setMobStats=function(u,sc){_sms(u,sc);if(u.ecl)eclInit(u)}}
 let eclSid=300000;
@@ -5241,7 +5321,7 @@ function eclEv(e){const u=UMAP.get(e.id);
   if(t&&t.ecl&&src&&src!==t&&amt>0&&!t.dead){const ang=Math.atan2(src.y-t.y,src.x-t.x),fa=Math.atan2(t.fy,t.fx);let da=Math.abs(ang-fa);if(da>Math.PI)da=Math.PI*2-da;
     if(t.ecl==='sentinel'&&t.blockT>0&&da<1.25){amt*=.25;if(!quiet&&Math.random()<.5)fxE('shield',{id:t.id,x:t.x|0,y:t.y|0})}
     else if(t.ecl==='construct'&&da>2.1){amt*=1.6;crit=true;if(!quiet&&gameT-(t._wpT||0)>.6){t._wpT=gameT;fxTextFor(t.x,t.y-t.r-40,'จุดอ่อน!','#9fe8ff',.9,src.hero&&isHuman(src)?[src.id]:[])}}
-    if(t.ecl!=='overlord'){t.poise+=amt;const P=t.ecl==='sentinel'?t.maxHp*.22:t.maxHp*.3;if(t.poise>P&&t.stunT<=0){t.poise=0;t.stunT=t.ecl==='sentinel'?.9:1.2;t.combo=null;t.busyT=0;t.blockT=0;emit({t:'ec',k:'stg',id:t.id})}}}
+    if(!eclBoss(t)){t.poise+=amt;const P=t.ecl==='sentinel'?t.maxHp*.22:t.maxHp*.3;if(t.poise>P&&t.stunT<=0){t.poise=0;t.stunT=t.ecl==='sentinel'?.9:1.2;t.combo=null;t.busyT=0;t.blockT=0;emit({t:'ec',k:'stg',id:t.id})}}}
   return _dd(t,amt,type,src,quiet,crit)}}
 
 // ---- AI ----
@@ -5251,8 +5331,9 @@ function eclThink(u,dt){
   if(u.blockT>0)u.blockT-=dt;if(u.busyT>0)u.busyT-=dt;if(u.blkCd>0)u.blkCd-=dt;if(u.ecT>0)u.ecT-=dt;u.poise=Math.max(0,u.poise-u.maxHp*.04*dt);
   const L=u.def.leash||500,dh=Math.hypot(u.x-u.home.x,u.y-u.home.y);
   // detect: these hunt on sight (the old camps only woke up when hit)
-  if(!u.aggro||u.aggro.dead){u.aggro=null;const h=eclHeroNear(u,u.ecl==='overlord'?560:u.ecl==='sentinel'?400:300);
-    if(h&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L){u.aggro=h;if(u.ecl==='overlord'){sndAt('roar',u.x,u.y);emit({t:'f',s:'☾ Celestial Overlord ตื่นจากแท่นสุริยคราส!'});emit({t:'k',a:10,x:u.x|0,y:u.y|0})}}}
+  const X=ECL_EXT[u.ecl];
+  if(!u.aggro||u.aggro.dead){u.aggro=null;const h=eclHeroNear(u,X?X.detect:u.ecl==='overlord'?560:u.ecl==='sentinel'?400:300);
+    if(h&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L){u.aggro=h;if(u.ecl==='overlord'){sndAt('roar',u.x,u.y);emit({t:'f',s:'☾ Celestial Overlord ตื่นจากแท่นสุริยคราส!'});emit({t:'k',a:10,x:u.x|0,y:u.y|0})}else if(X&&X.wake)X.wake(u)}}
   // a target that ran off: switch to whoever is still fighting inside the arena before giving up
   const ok=h=>h&&!h.dead&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L+140&&(!h.hidden||Math.hypot(h.x-u.x,h.y-u.y)<170);
   if(u.aggro&&!ok(u.aggro)){let nb=null,bd=1e9;for(const h of units){if(!h.hero||h.reviveT>0||!ok(h))continue;const d=Math.hypot(h.x-u.x,h.y-u.y);if(d<bd&&d<L){bd=d;nb=h}}if(nb)u.aggro=nb}
@@ -5260,14 +5341,14 @@ function eclThink(u,dt){
   if(t&&!t.dead&&dh<L&&Math.hypot(t.x-u.home.x,t.y-u.home.y)<L+140&&(!t.hidden||Math.hypot(t.x-u.x,t.y-u.y)<170)){
     const d=Math.hypot(t.x-u.x,t.y-u.y)||1;u.fx=(t.x-u.x)/d;u.fy=(t.y-u.y)/d;const R=u.range+t.r;
     if(d>R-8&&u.busyT<=0&&!u.combo){mx=u.fx;my=u.fy}
-    if(u.stunT<=0){if(u.ecl==='overlord')overlordAct(u,t,d,R,dt);else if(u.ecl==='sentinel')sentinelAct(u,t,d,R,dt);else constructAct(u,t,d,R,dt)}
+    if(u.stunT<=0){if(X)X.act(u,t,d,R,dt);else if(u.ecl==='overlord')overlordAct(u,t,d,R,dt);else if(u.ecl==='sentinel')sentinelAct(u,t,d,R,dt);else constructAct(u,t,d,R,dt)}
   }else{
-    if(u.aggro&&u.ecl==='overlord'&&u.hp<u.maxHp)emit({t:'f',s:'☾ Celestial Overlord กลับสู่แท่นบูชาและฟื้นพลัง'});
+    if(u.aggro&&u.ecl==='overlord'&&u.hp<u.maxHp)emit({t:'f',s:'☾ Celestial Overlord กลับสู่แท่นบูชาและฟื้นพลัง'});else if(u.aggro&&X&&X.lose&&u.hp<u.maxHp)X.lose(u);
     u.aggro=null;u.combo=null;u.blockT=0;
     if(dh>30){mx=(u.home.x-u.x)/dh;my=(u.home.y-u.y)/dh}else if(u.ecl==='sentinel'){ // patrol a loop around the camp
       if(!u.patrol||Math.hypot(u.x-u.patrol.x,u.y-u.patrol.y)<24||(u.patrol.t-=dt)<0){const a=Math.random()*6.283,rr=60+Math.random()*130;u.patrol={x:u.home.x+Math.cos(a)*rr,y:u.home.y+Math.sin(a)*rr,t:6}}}
     if(u.patrol&&u.ecl==='sentinel'&&dh<=220){const px=u.patrol.x-u.x,py=u.patrol.y-u.y,pl=Math.hypot(px,py)||1;mx=px/pl*.42;my=py/pl*.42;u.fx=px/pl;u.fy=py/pl}
-    if(u.ecl!=='overlord'||u.idleT>4)u.hp=Math.min(u.maxHp,u.hp+u.maxHp*(u.ecl==='overlord'?.05:.25)*dt);if(u.ecl==='overlord'&&u.hp>=u.maxHp)u.ph=0}
+    if(!eclBoss(u)||u.idleT>4)u.hp=Math.min(u.maxHp,u.hp+u.maxHp*(eclBoss(u)?.05:.25)*dt);if(eclBoss(u)&&u.hp>=u.maxHp)u.ph=0}
   if(u.busyT>0){mx*=.15;my*=.15}if(u.blockT>0){mx*=.35;my*=.35}
   return{mx,my}}
 {const _mt=mobThink;mobThink=function(u,dt){return u.ecl?eclThink(u,dt):_mt(u,dt)}}
@@ -5327,7 +5408,8 @@ function lgProc(u,lg,ft){const ang=Math.atan2(u.fy,u.fx),dmg=u.atkDmg;
 // (hover, lean, lunge, rise-and-slam, block, stagger) and fall back to the stone golem builder until their GLB is loaded.
 // VFX quality: 0 low (mobile/auto) · 1 medium (high without post) · 2 high (post + bloom).
 (function(){const T=THREE,R=R3;
-const ECM={overlord:{key:'celestial-overlord',H:300},sentinel:{key:'dark-sentinel',H:152},construct:{key:'lunar-construct',H:205}};
+const ECM={overlord:{key:'celestial-overlord',H:300},sentinel:{key:'dark-sentinel',H:152},construct:{key:'lunar-construct',H:205},
+  queen:{key:'ice-queen',H:250}};   // Arena Royale's Snow Queen (snow-queen.js): the owner's rigged Ice Queen
 const ECLSET=new Set(ECL_KINDS);
 const LGW=[null,{rz:Math.PI,grip:.13,len:1.3},{rz:1.08,grip:.1,len:1.35},{rz:0,grip:.34,len:1.25}];
 const CA=()=>window.CelestialAssets;
@@ -5348,7 +5430,8 @@ R.lgModel=function(lg){const L=LEG[lg],W=LGW[lg];if(!this.eclReady(L.key))return
 const ECLIP={
   sentinel:{order:['idle','walk','attack','block','hit','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Triple_Combo|Combo|Attack/i,block:/Parry|Block/i,hit:/Hit_Reaction|Hit/i,death:/Dead|Death|Dying/i},
   construct:{order:['idle','walk','attack','slam','hit','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Hammer|Swing/i,slam:/Ground_Slam|Slam/i,hit:/Hit_Reaction|Hit/i,death:/Knock_Down|Dead|Death/i},
-  overlord:{order:['idle','walk','attack','cast','slam','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Judgment|Sword/i,cast:/Spell|Cast/i,slam:/Ground_Slam|Slam/i,death:/Dead|Death/i}};
+  overlord:{order:['idle','walk','attack','cast','slam','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Judgment|Sword/i,cast:/Spell|Cast/i,slam:/Ground_Slam|Slam/i,death:/Dead|Death/i},
+  queen:{order:['idle','walk','attack','cast','slam','death'],idle:/Combat_Stance/i,walk:/Walking/i,attack:/Scepter_Strike/i,cast:/Spell_Cast/i,slam:/Frost_Nova/i,death:/Death/i}};
 R.eclSkReady=function(ecl){const A=CA(),a=A&&A.get(ECM[ecl].key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations&&a.gltf.animations.length>=2&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 // in-place clips: the game moves the unit, so the hip bone keeps only its height
 const eclClips=(a,ecl)=>{if(a._eclClips)return a._eclClips;const C=ECLIP[ecl],list=a.gltf.animations,used=new Set(),out={};
@@ -5367,14 +5450,21 @@ R.eclSkModel=function(o,u,M){const a=CA().get(M.key),model=AR_GLTF.SkeletonUtils
   o.hand=null;model.traverse(n=>{if(n.isBone&&/^(mixamorig[:_]?)?RightHand$/i.test(n.name))o.hand=n});o.pivot=pivot;try{this.eclArm(o)}catch(e){o.wpnPending=0}
   if(o.act.idle)o.act.idle.play();if(o.act.walk){o.act.walk.play();o.act.walk.setEffectiveWeight(0)}(this._eclSk||(this._eclSk=new Set())).add(o);return pivot};
 // the creatures were generated empty-handed: they carry the legendary weapon models in the rigged right hand
-const ECW={overlord:{lg:1,len:.62},sentinel:{lg:2,len:.72},construct:{lg:3,len:.62}};
-R.eclArm=function(o){const W=ECW[o.ecl];o.wpnPending=0;if(!W||!o.hand)return;const mod=this.lgModel(W.lg);if(!mod){o.wpnPending=1;return}
+const ECW={overlord:{lg:1,len:.62},sentinel:{lg:2,len:.72},construct:{lg:3,len:.62},
+  queen:{key:'frost-scepter',grip:.36,len:.66,c:'#bfeaff',p:[-.0129,.08,-.0092],d:[-.285,.172,.943]}};   // Mixamo hand: palm centre and fist axis (the Mage's)
+// a weapon model by key (not one of the legendaries): grip point at the origin, tip along +Y
+R.eclWModel=function(W){if(!this.eclReady(W.key))return null;const parts=this.celestialAsset(W.key),s=CA().get(W.key).inspection.size;
+  const g0=new T.Group();for(const p of parts){const m=new T.Mesh(p.geo,p.mat);m.scale.set(s[0],s[1],s[2]);m.castShadow=!!this.hi;g0.add(m)}
+  const r=new T.Group();r.add(g0);if(W.rz)r.rotation.z=W.rz;r.updateMatrixWorld(true);const bb=new T.Box3().setFromObject(r),Lm=bb.max.y-bb.min.y;
+  r.position.set(-(bb.min.x+bb.max.x)/2,-(bb.min.y+Lm*W.grip),-(bb.min.z+bb.max.z)/2);const w=new T.Group();w.add(r);
+  const tip=new T.Object3D();tip.position.y=Lm*(1-W.grip)*.92;w.add(tip);return{g:w,L:Lm,tip}};
+R.eclArm=function(o){const W=ECW[o.ecl];o.wpnPending=0;if(!W||!o.hand)return;const mod=W.key?this.eclWModel(W):this.lgModel(W.lg);if(!mod){o.wpnPending=1;return}
   o.pivot.updateMatrixWorld(true);const ws=new T.Vector3();o.hand.getWorldScale(ws);const h=new T.Group();h.add(mod.g);
-  h.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3(0,0,1));h.scale.setScalar(o.H*W.len/(mod.L*Math.max(1e-6,ws.x)));
-  o.hand.add(h);o.wpn=h;o.wpnTip=mod.tip;o.wpnC=LEG[W.lg].c};
+  h.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),W.d?new T.Vector3().fromArray(W.d).normalize():new T.Vector3(0,0,1));if(W.p)h.position.fromArray(W.p);h.scale.setScalar(o.H*W.len/(mod.L*Math.max(1e-6,ws.x)));
+  o.hand.add(h);o.wpn=h;o.wpnTip=mod.tip;o.wpnC=W.key?W.c:LEG[W.lg].c};
 R.eclPlay=function(o,key,dur){const act=o.act[key];if(!act)return;if(o.overlay&&o.overlay!==act)o.overlay.fadeOut(.12);const c=act.getClip().duration;
   act.reset().setLoop(T.LoopOnce,1);act.clampWhenFinished=true;act.timeScale=dur?clamp(c/Math.max(.3,dur),.7,2.4):1;act.setEffectiveWeight(1).fadeIn(.1).play();o.overlay=act;o.overlayT=c/act.timeScale};
-R.eclAnimSk=function(o,u,Tm,dt){if(o.wpnPending&&this.eclReady(LEG[ECW[o.ecl].lg].key))try{this.eclArm(o)}catch(e){o.wpnPending=0}if(o.dying){o.dying=0;o.mixer.stopAllAction();o.overlay=null;if(o.act.idle)o.act.idle.reset().play();if(o.act.walk)o.act.walk.reset().play()}
+R.eclAnimSk=function(o,u,Tm,dt){if(o.wpnPending){const W=ECW[o.ecl];if(this.eclReady(W.key||LEG[W.lg].key))try{this.eclArm(o)}catch(e){o.wpnPending=0}}if(o.dying){o.dying=0;o.mixer.stopAllAction();o.overlay=null;if(o.act.idle)o.act.idle.reset().play();if(o.act.walk)o.act.walk.reset().play()}
   const A=u.ecA;if(A&&A!==o.lastA){o.lastA=A;const n=A.n,C=o.act;
     const k=n==='basic'||n==='combo'||n==='heavy'||n==='slash'?'attack':n==='slam'||n==='burst'||n==='phase'||n==='summon'?(C.slam?'slam':C.cast?'cast':'attack'):n==='ultimate'||n==='cage'||n==='rain'?(C.cast?'cast':C.slam?'slam':'attack'):n==='block'?'block':n==='stagger'?'hit':null;
     if(k&&C[k])this.eclPlay(o,k,k==='hit'||k==='block'?0:A.d)}
@@ -5398,7 +5488,8 @@ R.eclAnim=function(o,u,Tm){const dt=Math.min(.1,Math.max(0,Tm-(o.lt||Tm)));o.lt=
   if((o.fallback&&this.eclReady(ECM[o.ecl].key)||!o.sk&&this.eclSkReady(o.ecl))&&!o.swap){o.swap=1;this.scene.remove(o.root);this.objs.delete(u.id);return}  // rebuilt next frame with the real model
   if(o.sk){this.eclAnimSk(o,u,Tm,dt);const P=o.pose;let y=0;if(o.ecl==='overlord'){y=10+Math.sin(Tm*1.3)*5;if(o.halo){o.halo.rotation.z=Tm*.6;o.halo2.rotation.z=-Tm*.4;o.halo.material.opacity=.35+.25*(u.ph===2?1:u.ph===1?.75:.5)+.1*Math.sin(Tm*3)}}
     P.position.set(0,y,0);P.rotation.set(0,0,0);P.scale.set(1,1,1);if(o.shield)o.shield.visible=false;if(o.core)o.core.material.opacity=.55+.35*Math.sin(Tm*4);
-    if(o.ecl==='overlord'&&Math.random()<dt*(4+8*fxQ(this))){const a=Math.random()*6.283;this.sp(true,{x:u.x+Math.cos(a)*rnd(40,120),y:o.gy+rnd(40,o.H),z:u.y+Math.sin(a)*rnd(40,120),vy:rnd(10,40),l:1.2,s:10,s1:2,c:u.ph===2?'#b08aff':'#9fc4ff',sp:1})}return}
+    if(o.ecl==='overlord'&&Math.random()<dt*(4+8*fxQ(this))){const a=Math.random()*6.283;this.sp(true,{x:u.x+Math.cos(a)*rnd(40,120),y:o.gy+rnd(40,o.H),z:u.y+Math.sin(a)*rnd(40,120),vy:rnd(10,40),l:1.2,s:10,s1:2,c:u.ph===2?'#b08aff':'#9fc4ff',sp:1})}
+    if(o.ecl==='queen'&&Math.random()<dt*(5+9*fxQ(this))){const a=Math.random()*6.283;this.sp(true,{x:u.x+Math.cos(a)*rnd(30,110),y:o.gy+rnd(20,o.H*.9),z:u.y+Math.sin(a)*rnd(30,110),vx:rnd(-20,20),vy:rnd(-30,10),vz:rnd(-20,20),l:1.6,s:8,s1:2,c:u.ph===2?'#ffffff':'#cfefff',sp:1})}return}
   const P=o.pose,H=o.H,k=o.mvK,ph=o.walk*.6;let y=Math.abs(Math.sin(ph))*4*k+Math.sin(Tm*1.6+u.id)*1.2,rx=0,rz=Math.sin(ph)*.045*k,z=0,sc=1+Math.sin(Tm*1.7+u.id)*.012;
   if(o.ecl==='overlord'){y+=16+Math.sin(Tm*1.3)*7;if(o.halo){o.halo.rotation.z=Tm*.6;o.halo2.rotation.z=-Tm*.4;const f=u.ph===2?1:u.ph===1?.75:.5;o.halo.material.opacity=.35+.25*f+.1*Math.sin(Tm*3)}}
   const A=u.ecA;if(A&&A.t>0){A.t-=dt;const p=1-Math.max(0,A.t)/A.d;
@@ -5415,13 +5506,13 @@ R.eclAnim=function(o,u,Tm){const dt=Math.min(.1,Math.max(0,Tm-(o.lt||Tm)));o.lt=
   const q=fxQ(this);if(o.ecl==='overlord'&&Math.random()<dt*(4+8*q)){const a=Math.random()*6.283;this.sp(true,{x:u.x+Math.cos(a)*rnd(40,120),y:o.gy+rnd(40,H),z:u.y+Math.sin(a)*rnd(40,120),vy:rnd(10,40),l:1.2,s:10,s1:2,c:u.ph===2?'#b08aff':'#9fc4ff',sp:1})}};
 
 // ---- HP bar height for the new silhouettes (the generic golem height is far too low for a 300-unit boss)
-R.eclTop=u=>u.ecl==='overlord'?345:u.ecl==='construct'?225:172;
+R.eclTop=u=>u.ecl==='overlord'?345:u.ecl==='construct'?225:u.ecl==='queen'?300:172;
 
 // ---- events from the host ----
 R.eclEvent=function(e,u){if(!this.ok||!this.PA||!this.scene)return;const gy=this.gY?this.gY(e.x||(u&&u.x)||0,e.y||(u&&u.y)||0):0,q=QK[fxQ(this)];
   if(e.k==='sum'){this.ring(e.x,e.y,20,190,'#a070ff',.8);for(let i=0;i<40*q;i++){const a=Math.random()*6.283;this.sp(true,{x:e.x+Math.cos(a)*60,y:gy+10,z:e.y+Math.sin(a)*60,vy:rnd(120,360),l:.8,s:22,s1:4,c:'#c8a8ff',c2:'#4a2aa8',sp:1})}}
-  else if(e.k==='ph'&&u){this.ring(u.x,u.y,30,520,'#b08aff',1);this.ring(u.x,u.y,20,300,'#ffffff',.5);this.eclFlash(e.p===2?'#3a1a6a':'#1a2a5a',.5)}
-  else if(e.k==='die'){this.ring(e.x,e.y,40,900,'#cfe0ff',1.4);this.ring(e.x,e.y,30,520,'#a070ff',1);for(let i=0;i<120*q;i++){const a=Math.random()*6.283,v=rnd(150,700);this.sp(true,{x:e.x,y:gy+80,z:e.y,vx:Math.cos(a)*v,vy:rnd(100,600),vz:Math.sin(a)*v,l:rnd(.8,1.6),s:30,s1:4,c:'#e0ecff',c2:'#6a4aff',sp:1,g:300,dr:.8})}this.eclFlash('#cfe0ff',.45)}
+  else if(e.k==='ph'&&u){const q=u.ecl==='queen';this.ring(u.x,u.y,30,520,q?'#bfeaff':'#b08aff',1);this.ring(u.x,u.y,20,300,'#ffffff',.5);this.eclFlash(q?(e.p===2?'#cfefff':'#8fc8ff'):e.p===2?'#3a1a6a':'#1a2a5a',q?.35:.5)}
+  else if(e.k==='die'){const c2=e.q?'#7fd0ff':'#6a4aff';this.ring(e.x,e.y,40,900,'#cfe0ff',1.4);this.ring(e.x,e.y,30,520,e.q?'#bfeaff':'#a070ff',1);for(let i=0;i<120*q;i++){const a=Math.random()*6.283,v=rnd(150,700);this.sp(true,{x:e.x,y:gy+80,z:e.y,vx:Math.cos(a)*v,vy:rnd(100,600),vz:Math.sin(a)*v,l:rnd(.8,1.6),s:30,s1:4,c:'#e0ecff',c2,sp:1,g:300,dr:.8})}this.eclFlash(e.q?'#e8f6ff':'#cfe0ff',.45)}
   else if(e.k==='stg'&&u){for(let i=0;i<16*q;i++)this.sp(true,{x:u.x+rnd(-20,20),y:gy+rnd(40,120),z:u.y+rnd(-20,20),vx:rnd(-160,160),vy:rnd(60,200),vz:rnd(-160,160),l:.45,s:12,s1:2,c:'#ffe8a0',sp:1,g:400})}};
 
 // ---- DOM: boss bar + eclipse darkening (pointer-events none: never blocks touch controls) ----
@@ -5437,16 +5528,18 @@ let D=null;const dom=()=>{if(D)return D;const st=document.createElement('style')
   const dk=document.createElement('div');dk.id='eclDark';const fl=document.createElement('div');fl.id='eclFlash';document.body.append(dk,fl,b);
   D={b,n:b.querySelector('.n'),f:b.querySelector('.f'),lag:b.querySelector('.lag'),dk,fl};return D};
 R.eclFlash=function(c,a){if(typeof document==='undefined')return;const d=dom();d.fl.style.transition='none';d.fl.style.background=c;d.fl.style.opacity=a;requestAnimationFrame(()=>{d.fl.style.transition='opacity .9s';d.fl.style.opacity=0})};
-R.eclHud=function(me,L,dt){const F=me||L;if(!F||typeof document==='undefined')return;let b=null,bd=1e9;const cl=typeof net!=='undefined'&&net.mode==='client';for(const u of units){if(u.ecl!=='overlord'||u.dead||(cl&&!u.inSnap))continue;const d=Math.hypot(u.x-F.x,u.y-F.y);if(d<bd){bd=d;b=u}}
+const BOSSUI={overlord:{t:'☾ CELESTIAL OVERLORD',ph:['PHASE I','PHASE II · ECLIPSE','PHASE III · TOTALITY'],bg:'linear-gradient(90deg,#5a3ad8,#9fb8ff)'},
+  queen:{t:'❄ SNOW QUEEN · ราชินีหิมะ',ph:['PHASE I','PHASE II · BLIZZARD','PHASE III · ETERNAL WINTER'],bg:'linear-gradient(90deg,#3a8ad8,#e8f6ff)'}};
+R.eclHud=function(me,L,dt){const F=me||L;if(!F||typeof document==='undefined')return;let b=null,bd=1e9;const cl=typeof net!=='undefined'&&net.mode==='client';for(const u of units){if(!BOSSUI[u.ecl]||u.dead||(cl&&!u.inSnap))continue;const d=Math.hypot(u.x-F.x,u.y-F.y);if(d<bd){bd=d;b=u}}
   const show=!!b&&bd<1600&&(b.hp<b.maxHp-1||bd<720);this._eclBossShown=show;if(!show&&!D)return;const d=dom();d.b.style.opacity=show?1:0;
   if(show){const r=Math.max(0,b.hp/b.maxHp),ph=r>.7?0:r>.35?1:2,w=(r*100).toFixed(1)+'%';d.f.style.width=w;d.lag.style.width=w;
-    const t='☾ CELESTIAL OVERLORD <b>· '+['PHASE I','PHASE II · ECLIPSE','PHASE III · TOTALITY'][ph]+'</b> · '+fmtN(b.hp)+' / '+fmtN(b.maxHp);if(d.n._t!==t){d.n._t=t;d.n.innerHTML=t}}
+    const U=BOSSUI[b.ecl],t=U.t+' <b>· '+U.ph[ph]+'</b> · '+fmtN(b.hp)+' / '+fmtN(b.maxHp);if(d.n._t!==t){d.n._t=t;d.n.innerHTML=t}if(d.f._bg!==U.bg){d.f._bg=U.bg;d.f.style.background=U.bg}}
   // Ultimate Eclipse darkens the sky while it charges
   let dark=0;for(const a of aoes)if(a.kind==='ueclipse'&&Math.hypot(a.x-F.x,a.y-F.y)<a.r+600)dark=Math.max(dark,a.t<a.delay?Math.min(1,a.t/a.delay)*.85:Math.max(0,a.fxT||0));
   this._eclDk=lerp(this._eclDk||0,dark,Math.min(1,dt*6));d.dk.style.opacity=this._eclDk.toFixed(3)};
 
 // the boss bar replaces the generic top-centre enemy frame while it is up (no stacked bars)
-if(typeof drawTarget==='function'){const _dt=drawTarget;let _t0=0;drawTarget=function(me,s,fr){const now=performance.now(),dt=Math.min(.1,(now-(_t0||now))/1000);_t0=now;try{R.eclHud(me,(typeof listener==='function'&&listener())||me,dt)}catch(e){}const u=UMAP.get(TGT.id);if(u&&u.ecl==='overlord'&&R._eclBossShown)return;return _dt.apply(this,arguments)}}
+if(typeof drawTarget==='function'){const _dt=drawTarget;let _t0=0;drawTarget=function(me,s,fr){const now=performance.now(),dt=Math.min(.1,(now-(_t0||now))/1000);_t0=now;try{R.eclHud(me,(typeof listener==='function'&&listener())||me,dt)}catch(e){}const u=UMAP.get(TGT.id);if(u&&BOSSUI[u.ecl]&&R._eclBossShown)return;return _dt.apply(this,arguments)}}
 // ---- the altar (decor only: rune disc, eclipse ring, orbiting obsidian shards) ----
 R.eclAltar=function(Tm){const A=WD&&WD.eclAltar;if(!A){return}
   if(this._eclW!==WD){this._eclW=WD;if(this._eclAlt)this.scene.remove(this._eclAlt);const g=new T.Group(),gy=this.gY(A.x,A.y);g.position.set(A.x,gy,A.y);

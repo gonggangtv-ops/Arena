@@ -36,6 +36,6 @@
   const _bp=P.buildProps;P.buildProps=function(){const r=_bp.apply(this,arguments);try{this.buildCity()}catch(e){warn('build',e)}return r};
   // the town's name, once per visit
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);try{const C=WD&&WD.city;if(!C||!L||typeof state==='undefined'||state!=='play')return r;
-      const inC=cityIn(L.x,L.y,-120)&&cityBase(L.x,L.y)>CITY_P-1;if(inC&&!this._inCity&&typeof gameT!=='undefined'&&gameT>3)announce={txt:'🏛️ '+C.name+' — ซากเมืองหลวงของอาณาจักร · ผู้เฝ้ายามทมิฬเฝ้าวิหาร',t:3.4};
+      const inC=townIn(L.x,L.y,-120)&&townBase(L.x,L.y)>CITY_P-1;if(inC&&!this._inCity&&typeof gameT!=='undefined'&&gameT>3)announce={txt:'🏛️ '+C.name+' — ซากเมืองหลวงของอาณาจักร · ผู้เฝ้ายามทมิฬเฝ้าวิหาร',t:3.4};
       this._inCity=inC}catch(e){warn('fx',e)}return r};
 })();

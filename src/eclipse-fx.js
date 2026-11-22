@@ -3,7 +3,8 @@
 // (hover, lean, lunge, rise-and-slam, block, stagger) and fall back to the stone golem builder until their GLB is loaded.
 // VFX quality: 0 low (mobile/auto) · 1 medium (high without post) · 2 high (post + bloom).
 (function(){const T=THREE,R=R3;
-const ECM={overlord:{key:'celestial-overlord',H:300},sentinel:{key:'dark-sentinel',H:152},construct:{key:'lunar-construct',H:205}};
+const ECM={overlord:{key:'celestial-overlord',H:300},sentinel:{key:'dark-sentinel',H:152},construct:{key:'lunar-construct',H:205},
+  queen:{key:'ice-queen',H:250}};   // Arena Royale's Snow Queen (snow-queen.js): the owner's rigged Ice Queen
 const ECLSET=new Set(ECL_KINDS);
 const LGW=[null,{rz:Math.PI,grip:.13,len:1.3},{rz:1.08,grip:.1,len:1.35},{rz:0,grip:.34,len:1.25}];
 const CA=()=>window.CelestialAssets;
@@ -24,7 +25,8 @@ R.lgModel=function(lg){const L=LEG[lg],W=LGW[lg];if(!this.eclReady(L.key))return
 const ECLIP={
   sentinel:{order:['idle','walk','attack','block','hit','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Triple_Combo|Combo|Attack/i,block:/Parry|Block/i,hit:/Hit_Reaction|Hit/i,death:/Dead|Death|Dying/i},
   construct:{order:['idle','walk','attack','slam','hit','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Hammer|Swing/i,slam:/Ground_Slam|Slam/i,hit:/Hit_Reaction|Hit/i,death:/Knock_Down|Dead|Death/i},
-  overlord:{order:['idle','walk','attack','cast','slam','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Judgment|Sword/i,cast:/Spell|Cast/i,slam:/Ground_Slam|Slam/i,death:/Dead|Death/i}};
+  overlord:{order:['idle','walk','attack','cast','slam','death'],idle:/Combat_Stance|idle/i,walk:/walk/i,attack:/Judgment|Sword/i,cast:/Spell|Cast/i,slam:/Ground_Slam|Slam/i,death:/Dead|Death/i},
+  queen:{order:['idle','walk','attack','cast','slam','death'],idle:/Combat_Stance/i,walk:/Walking/i,attack:/Scepter_Strike/i,cast:/Spell_Cast/i,slam:/Frost_Nova/i,death:/Death/i}};
 R.eclSkReady=function(ecl){const A=CA(),a=A&&A.get(ECM[ecl].key);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations&&a.gltf.animations.length>=2&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 // in-place clips: the game moves the unit, so the hip bone keeps only its height
 const eclClips=(a,ecl)=>{if(a._eclClips)return a._eclClips;const C=ECLIP[ecl],list=a.gltf.animations,used=new Set(),out={};
@@ -43,14 +45,21 @@ R.eclSkModel=function(o,u,M){const a=CA().get(M.key),model=AR_GLTF.SkeletonUtils
   o.hand=null;model.traverse(n=>{if(n.isBone&&/^(mixamorig[:_]?)?RightHand$/i.test(n.name))o.hand=n});o.pivot=pivot;try{this.eclArm(o)}catch(e){o.wpnPending=0}
   if(o.act.idle)o.act.idle.play();if(o.act.walk){o.act.walk.play();o.act.walk.setEffectiveWeight(0)}(this._eclSk||(this._eclSk=new Set())).add(o);return pivot};
 // the creatures were generated empty-handed: they carry the legendary weapon models in the rigged right hand
-const ECW={overlord:{lg:1,len:.62},sentinel:{lg:2,len:.72},construct:{lg:3,len:.62}};
-R.eclArm=function(o){const W=ECW[o.ecl];o.wpnPending=0;if(!W||!o.hand)return;const mod=this.lgModel(W.lg);if(!mod){o.wpnPending=1;return}
+const ECW={overlord:{lg:1,len:.62},sentinel:{lg:2,len:.72},construct:{lg:3,len:.62},
+  queen:{key:'frost-scepter',grip:.36,len:.66,c:'#bfeaff',p:[-.0129,.08,-.0092],d:[-.285,.172,.943]}};   // Mixamo hand: palm centre and fist axis (the Mage's)
+// a weapon model by key (not one of the legendaries): grip point at the origin, tip along +Y
+R.eclWModel=function(W){if(!this.eclReady(W.key))return null;const parts=this.celestialAsset(W.key),s=CA().get(W.key).inspection.size;
+  const g0=new T.Group();for(const p of parts){const m=new T.Mesh(p.geo,p.mat);m.scale.set(s[0],s[1],s[2]);m.castShadow=!!this.hi;g0.add(m)}
+  const r=new T.Group();r.add(g0);if(W.rz)r.rotation.z=W.rz;r.updateMatrixWorld(true);const bb=new T.Box3().setFromObject(r),Lm=bb.max.y-bb.min.y;
+  r.position.set(-(bb.min.x+bb.max.x)/2,-(bb.min.y+Lm*W.grip),-(bb.min.z+bb.max.z)/2);const w=new T.Group();w.add(r);
+  const tip=new T.Object3D();tip.position.y=Lm*(1-W.grip)*.92;w.add(tip);return{g:w,L:Lm,tip}};
+R.eclArm=function(o){const W=ECW[o.ecl];o.wpnPending=0;if(!W||!o.hand)return;const mod=W.key?this.eclWModel(W):this.lgModel(W.lg);if(!mod){o.wpnPending=1;return}
   o.pivot.updateMatrixWorld(true);const ws=new T.Vector3();o.hand.getWorldScale(ws);const h=new T.Group();h.add(mod.g);
-  h.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3(0,0,1));h.scale.setScalar(o.H*W.len/(mod.L*Math.max(1e-6,ws.x)));
-  o.hand.add(h);o.wpn=h;o.wpnTip=mod.tip;o.wpnC=LEG[W.lg].c};
+  h.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),W.d?new T.Vector3().fromArray(W.d).normalize():new T.Vector3(0,0,1));if(W.p)h.position.fromArray(W.p);h.scale.setScalar(o.H*W.len/(mod.L*Math.max(1e-6,ws.x)));
+  o.hand.add(h);o.wpn=h;o.wpnTip=mod.tip;o.wpnC=W.key?W.c:LEG[W.lg].c};
 R.eclPlay=function(o,key,dur){const act=o.act[key];if(!act)return;if(o.overlay&&o.overlay!==act)o.overlay.fadeOut(.12);const c=act.getClip().duration;
   act.reset().setLoop(T.LoopOnce,1);act.clampWhenFinished=true;act.timeScale=dur?clamp(c/Math.max(.3,dur),.7,2.4):1;act.setEffectiveWeight(1).fadeIn(.1).play();o.overlay=act;o.overlayT=c/act.timeScale};
-R.eclAnimSk=function(o,u,Tm,dt){if(o.wpnPending&&this.eclReady(LEG[ECW[o.ecl].lg].key))try{this.eclArm(o)}catch(e){o.wpnPending=0}if(o.dying){o.dying=0;o.mixer.stopAllAction();o.overlay=null;if(o.act.idle)o.act.idle.reset().play();if(o.act.walk)o.act.walk.reset().play()}
+R.eclAnimSk=function(o,u,Tm,dt){if(o.wpnPending){const W=ECW[o.ecl];if(this.eclReady(W.key||LEG[W.lg].key))try{this.eclArm(o)}catch(e){o.wpnPending=0}}if(o.dying){o.dying=0;o.mixer.stopAllAction();o.overlay=null;if(o.act.idle)o.act.idle.reset().play();if(o.act.walk)o.act.walk.reset().play()}
   const A=u.ecA;if(A&&A!==o.lastA){o.lastA=A;const n=A.n,C=o.act;
     const k=n==='basic'||n==='combo'||n==='heavy'||n==='slash'?'attack':n==='slam'||n==='burst'||n==='phase'||n==='summon'?(C.slam?'slam':C.cast?'cast':'attack'):n==='ultimate'||n==='cage'||n==='rain'?(C.cast?'cast':C.slam?'slam':'attack'):n==='block'?'block':n==='stagger'?'hit':null;
     if(k&&C[k])this.eclPlay(o,k,k==='hit'||k==='block'?0:A.d)}
@@ -74,7 +83,8 @@ R.eclAnim=function(o,u,Tm){const dt=Math.min(.1,Math.max(0,Tm-(o.lt||Tm)));o.lt=
   if((o.fallback&&this.eclReady(ECM[o.ecl].key)||!o.sk&&this.eclSkReady(o.ecl))&&!o.swap){o.swap=1;this.scene.remove(o.root);this.objs.delete(u.id);return}  // rebuilt next frame with the real model
   if(o.sk){this.eclAnimSk(o,u,Tm,dt);const P=o.pose;let y=0;if(o.ecl==='overlord'){y=10+Math.sin(Tm*1.3)*5;if(o.halo){o.halo.rotation.z=Tm*.6;o.halo2.rotation.z=-Tm*.4;o.halo.material.opacity=.35+.25*(u.ph===2?1:u.ph===1?.75:.5)+.1*Math.sin(Tm*3)}}
     P.position.set(0,y,0);P.rotation.set(0,0,0);P.scale.set(1,1,1);if(o.shield)o.shield.visible=false;if(o.core)o.core.material.opacity=.55+.35*Math.sin(Tm*4);
-    if(o.ecl==='overlord'&&Math.random()<dt*(4+8*fxQ(this))){const a=Math.random()*6.283;this.sp(true,{x:u.x+Math.cos(a)*rnd(40,120),y:o.gy+rnd(40,o.H),z:u.y+Math.sin(a)*rnd(40,120),vy:rnd(10,40),l:1.2,s:10,s1:2,c:u.ph===2?'#b08aff':'#9fc4ff',sp:1})}return}
+    if(o.ecl==='overlord'&&Math.random()<dt*(4+8*fxQ(this))){const a=Math.random()*6.283;this.sp(true,{x:u.x+Math.cos(a)*rnd(40,120),y:o.gy+rnd(40,o.H),z:u.y+Math.sin(a)*rnd(40,120),vy:rnd(10,40),l:1.2,s:10,s1:2,c:u.ph===2?'#b08aff':'#9fc4ff',sp:1})}
+    if(o.ecl==='queen'&&Math.random()<dt*(5+9*fxQ(this))){const a=Math.random()*6.283;this.sp(true,{x:u.x+Math.cos(a)*rnd(30,110),y:o.gy+rnd(20,o.H*.9),z:u.y+Math.sin(a)*rnd(30,110),vx:rnd(-20,20),vy:rnd(-30,10),vz:rnd(-20,20),l:1.6,s:8,s1:2,c:u.ph===2?'#ffffff':'#cfefff',sp:1})}return}
   const P=o.pose,H=o.H,k=o.mvK,ph=o.walk*.6;let y=Math.abs(Math.sin(ph))*4*k+Math.sin(Tm*1.6+u.id)*1.2,rx=0,rz=Math.sin(ph)*.045*k,z=0,sc=1+Math.sin(Tm*1.7+u.id)*.012;
   if(o.ecl==='overlord'){y+=16+Math.sin(Tm*1.3)*7;if(o.halo){o.halo.rotation.z=Tm*.6;o.halo2.rotation.z=-Tm*.4;const f=u.ph===2?1:u.ph===1?.75:.5;o.halo.material.opacity=.35+.25*f+.1*Math.sin(Tm*3)}}
   const A=u.ecA;if(A&&A.t>0){A.t-=dt;const p=1-Math.max(0,A.t)/A.d;
@@ -91,13 +101,13 @@ R.eclAnim=function(o,u,Tm){const dt=Math.min(.1,Math.max(0,Tm-(o.lt||Tm)));o.lt=
   const q=fxQ(this);if(o.ecl==='overlord'&&Math.random()<dt*(4+8*q)){const a=Math.random()*6.283;this.sp(true,{x:u.x+Math.cos(a)*rnd(40,120),y:o.gy+rnd(40,H),z:u.y+Math.sin(a)*rnd(40,120),vy:rnd(10,40),l:1.2,s:10,s1:2,c:u.ph===2?'#b08aff':'#9fc4ff',sp:1})}};
 
 // ---- HP bar height for the new silhouettes (the generic golem height is far too low for a 300-unit boss)
-R.eclTop=u=>u.ecl==='overlord'?345:u.ecl==='construct'?225:172;
+R.eclTop=u=>u.ecl==='overlord'?345:u.ecl==='construct'?225:u.ecl==='queen'?300:172;
 
 // ---- events from the host ----
 R.eclEvent=function(e,u){if(!this.ok||!this.PA||!this.scene)return;const gy=this.gY?this.gY(e.x||(u&&u.x)||0,e.y||(u&&u.y)||0):0,q=QK[fxQ(this)];
   if(e.k==='sum'){this.ring(e.x,e.y,20,190,'#a070ff',.8);for(let i=0;i<40*q;i++){const a=Math.random()*6.283;this.sp(true,{x:e.x+Math.cos(a)*60,y:gy+10,z:e.y+Math.sin(a)*60,vy:rnd(120,360),l:.8,s:22,s1:4,c:'#c8a8ff',c2:'#4a2aa8',sp:1})}}
-  else if(e.k==='ph'&&u){this.ring(u.x,u.y,30,520,'#b08aff',1);this.ring(u.x,u.y,20,300,'#ffffff',.5);this.eclFlash(e.p===2?'#3a1a6a':'#1a2a5a',.5)}
-  else if(e.k==='die'){this.ring(e.x,e.y,40,900,'#cfe0ff',1.4);this.ring(e.x,e.y,30,520,'#a070ff',1);for(let i=0;i<120*q;i++){const a=Math.random()*6.283,v=rnd(150,700);this.sp(true,{x:e.x,y:gy+80,z:e.y,vx:Math.cos(a)*v,vy:rnd(100,600),vz:Math.sin(a)*v,l:rnd(.8,1.6),s:30,s1:4,c:'#e0ecff',c2:'#6a4aff',sp:1,g:300,dr:.8})}this.eclFlash('#cfe0ff',.45)}
+  else if(e.k==='ph'&&u){const q=u.ecl==='queen';this.ring(u.x,u.y,30,520,q?'#bfeaff':'#b08aff',1);this.ring(u.x,u.y,20,300,'#ffffff',.5);this.eclFlash(q?(e.p===2?'#cfefff':'#8fc8ff'):e.p===2?'#3a1a6a':'#1a2a5a',q?.35:.5)}
+  else if(e.k==='die'){const c2=e.q?'#7fd0ff':'#6a4aff';this.ring(e.x,e.y,40,900,'#cfe0ff',1.4);this.ring(e.x,e.y,30,520,e.q?'#bfeaff':'#a070ff',1);for(let i=0;i<120*q;i++){const a=Math.random()*6.283,v=rnd(150,700);this.sp(true,{x:e.x,y:gy+80,z:e.y,vx:Math.cos(a)*v,vy:rnd(100,600),vz:Math.sin(a)*v,l:rnd(.8,1.6),s:30,s1:4,c:'#e0ecff',c2,sp:1,g:300,dr:.8})}this.eclFlash(e.q?'#e8f6ff':'#cfe0ff',.45)}
   else if(e.k==='stg'&&u){for(let i=0;i<16*q;i++)this.sp(true,{x:u.x+rnd(-20,20),y:gy+rnd(40,120),z:u.y+rnd(-20,20),vx:rnd(-160,160),vy:rnd(60,200),vz:rnd(-160,160),l:.45,s:12,s1:2,c:'#ffe8a0',sp:1,g:400})}};
 
 // ---- DOM: boss bar + eclipse darkening (pointer-events none: never blocks touch controls) ----
@@ -113,16 +123,18 @@ let D=null;const dom=()=>{if(D)return D;const st=document.createElement('style')
   const dk=document.createElement('div');dk.id='eclDark';const fl=document.createElement('div');fl.id='eclFlash';document.body.append(dk,fl,b);
   D={b,n:b.querySelector('.n'),f:b.querySelector('.f'),lag:b.querySelector('.lag'),dk,fl};return D};
 R.eclFlash=function(c,a){if(typeof document==='undefined')return;const d=dom();d.fl.style.transition='none';d.fl.style.background=c;d.fl.style.opacity=a;requestAnimationFrame(()=>{d.fl.style.transition='opacity .9s';d.fl.style.opacity=0})};
-R.eclHud=function(me,L,dt){const F=me||L;if(!F||typeof document==='undefined')return;let b=null,bd=1e9;const cl=typeof net!=='undefined'&&net.mode==='client';for(const u of units){if(u.ecl!=='overlord'||u.dead||(cl&&!u.inSnap))continue;const d=Math.hypot(u.x-F.x,u.y-F.y);if(d<bd){bd=d;b=u}}
+const BOSSUI={overlord:{t:'☾ CELESTIAL OVERLORD',ph:['PHASE I','PHASE II · ECLIPSE','PHASE III · TOTALITY'],bg:'linear-gradient(90deg,#5a3ad8,#9fb8ff)'},
+  queen:{t:'❄ SNOW QUEEN · ราชินีหิมะ',ph:['PHASE I','PHASE II · BLIZZARD','PHASE III · ETERNAL WINTER'],bg:'linear-gradient(90deg,#3a8ad8,#e8f6ff)'}};
+R.eclHud=function(me,L,dt){const F=me||L;if(!F||typeof document==='undefined')return;let b=null,bd=1e9;const cl=typeof net!=='undefined'&&net.mode==='client';for(const u of units){if(!BOSSUI[u.ecl]||u.dead||(cl&&!u.inSnap))continue;const d=Math.hypot(u.x-F.x,u.y-F.y);if(d<bd){bd=d;b=u}}
   const show=!!b&&bd<1600&&(b.hp<b.maxHp-1||bd<720);this._eclBossShown=show;if(!show&&!D)return;const d=dom();d.b.style.opacity=show?1:0;
   if(show){const r=Math.max(0,b.hp/b.maxHp),ph=r>.7?0:r>.35?1:2,w=(r*100).toFixed(1)+'%';d.f.style.width=w;d.lag.style.width=w;
-    const t='☾ CELESTIAL OVERLORD <b>· '+['PHASE I','PHASE II · ECLIPSE','PHASE III · TOTALITY'][ph]+'</b> · '+fmtN(b.hp)+' / '+fmtN(b.maxHp);if(d.n._t!==t){d.n._t=t;d.n.innerHTML=t}}
+    const U=BOSSUI[b.ecl],t=U.t+' <b>· '+U.ph[ph]+'</b> · '+fmtN(b.hp)+' / '+fmtN(b.maxHp);if(d.n._t!==t){d.n._t=t;d.n.innerHTML=t}if(d.f._bg!==U.bg){d.f._bg=U.bg;d.f.style.background=U.bg}}
   // Ultimate Eclipse darkens the sky while it charges
   let dark=0;for(const a of aoes)if(a.kind==='ueclipse'&&Math.hypot(a.x-F.x,a.y-F.y)<a.r+600)dark=Math.max(dark,a.t<a.delay?Math.min(1,a.t/a.delay)*.85:Math.max(0,a.fxT||0));
   this._eclDk=lerp(this._eclDk||0,dark,Math.min(1,dt*6));d.dk.style.opacity=this._eclDk.toFixed(3)};
 
 // the boss bar replaces the generic top-centre enemy frame while it is up (no stacked bars)
-if(typeof drawTarget==='function'){const _dt=drawTarget;let _t0=0;drawTarget=function(me,s,fr){const now=performance.now(),dt=Math.min(.1,(now-(_t0||now))/1000);_t0=now;try{R.eclHud(me,(typeof listener==='function'&&listener())||me,dt)}catch(e){}const u=UMAP.get(TGT.id);if(u&&u.ecl==='overlord'&&R._eclBossShown)return;return _dt.apply(this,arguments)}}
+if(typeof drawTarget==='function'){const _dt=drawTarget;let _t0=0;drawTarget=function(me,s,fr){const now=performance.now(),dt=Math.min(.1,(now-(_t0||now))/1000);_t0=now;try{R.eclHud(me,(typeof listener==='function'&&listener())||me,dt)}catch(e){}const u=UMAP.get(TGT.id);if(u&&BOSSUI[u.ecl]&&R._eclBossShown)return;return _dt.apply(this,arguments)}}
 // ---- the altar (decor only: rune disc, eclipse ring, orbiting obsidian shards) ----
 R.eclAltar=function(Tm){const A=WD&&WD.eclAltar;if(!A){return}
   if(this._eclW!==WD){this._eclW=WD;if(this._eclAlt)this.scene.remove(this._eclAlt);const g=new T.Group(),gy=this.gY(A.x,A.y);g.position.set(A.x,gy,A.y);
