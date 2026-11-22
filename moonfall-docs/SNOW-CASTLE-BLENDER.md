@@ -84,11 +84,10 @@
     "source": "Blender script moonfall-docs/blender/snow_castle.py (9.0 x 5.6 m footprint, gate +Z)"
    }
    ```
-   `src/build.py` ใส่ `snow-castle` เข้า `CELESTIAL_KEYS` ของ index เองเมื่อมีใน manifest และ cursed ข้ามให้แล้ว (`FORT_NEW`) — ไม่ต้องแก้ build.py
-6. build ทั้งสองโหมด: `cd src && python3 build.py && python3 build.py cursed` แล้วก๊อป `index.html` `cursed.html` ไป `app/src/main/assets/`
+   `src/build.py` ใส่ `snow-castle` เข้า `CELESTIAL_KEYS` ของ index เองเมื่อมีใน manifest (`FORT_NEW`) — ไม่ต้องแก้ build.py
+6. build: `cd src && python3 build.py` แล้วก๊อป `index.html` ไป `app/src/main/assets/` (ไม่ต้อง build/ทดสอบ `cursed.html` — เจ้าของสั่งเลิกดูแลแล้ว 2026-11-23)
 7. ทดสอบผ่าน http server (ไม่ใช่ file://): เข้าเกม index → ใน console `R3.fortModel` ต้องเป็น `'snow-castle'` (ถ้าเป็น `'palace'` = ยังใช้ปราสาทชั่วคราว)
    เดินไปที่ไอคอน ❄️ บนมินิแมพ: ปราสาทต้องตั้งบนที่ราบพอดี ไม่ลอย/ไม่จม ประตูหันไปทางบันได, ฮีโร่ชนขอบปราสาทพอดีกับตัวโมเดล, ไม่มี error ใน console
-   และเปิด `cursed.html` ต้องเริ่มเกมได้ตามเดิม
 8. เขียน `HANDOFF.md` + บรรทัดใน README "มีอะไรใหม่" แล้วเปิด PR เข้า `main`
 
 ## 6. checklist ส่งงาน
@@ -97,4 +96,4 @@
 - [ ] origin กลางกรอบที่พื้น, ฐานล่างสุดที่ Z = 0, ประตูหันทาง −Y ใน Blender (= +Z ใน glTF)
 - [ ] ทุกชิ้นอยู่ในกรอบ 9.0 × 5.6 m (หอมุมอยู่ที่มุมกรอบ)
 - [ ] ไม่มีวัสดุโปร่งแสง (Alpha Blend), ไม่มีกล้อง/ไฟ/animation
-- [ ] manifest อยู่ใต้ `"assets"`, build ทั้ง index/cursed, `R3.fortModel === 'snow-castle'`, cursed เล่นได้, HANDOFF + README
+- [ ] manifest อยู่ใต้ `"assets"`, build index, `R3.fortModel === 'snow-castle'`, ไม่มี error ใน console, HANDOFF + README
