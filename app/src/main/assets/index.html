@@ -9817,7 +9817,7 @@ void main(){vec2 q=vUv*2.-1.;float r=length(q);if(r>1.)discard;float a;vec3 col;
   // ---------------- ground marks: the Blender sigil and fractures (additive, tinted) ----------------
   function deck(R,pool,tex,x,z,r,rot,c,a){if(!(a>.004))return;const m=R.get(pool,()=>{const o=new T.Mesh(R.G.plane,new T.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,blending:T.AdditiveBlending,
       polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3,fog:false}));o.renderOrder=2;o.userData.ownMat=1;return o});
-    m.material.map=tex;m.material.color.set(c);m.material.opacity=Math.min(1,a);m.position.set(x,R.gY(x,z)+3+(R.pool[pool].used%8)*.22,z);m.rotation.set(0,rot,0);m.scale.set(r*2,1,r*2);return m}
+    m.material.map=tex;m.material.color.set(c);m.material.opacity=Math.min(1,a*(R.hi?1:.55));m.position.set(x,R.gY(x,z)+3+(R.pool[pool].used%8)*.22,z);m.rotation.set(0,rot,0);m.scale.set(r*2,1,r*2);return m}
   const sigil=o=>add(Object.assign({k:'sg',t:0,life:1,fi:.12,fo:.5,spin:.4,rot:rnd()*TAU,c:'#bfe6ff',a:.9,r:100,r1:1},o));
   const cracks=(x,z,r,life)=>add({k:'ck',x,z,r,t:0,life:life||2.6,rot:rnd()*TAU});
   function stepSigil(R,f,dt){f.t+=dt;if(f.t>f.life)return false;f.rot+=f.spin*dt;const a=f.a*Math.min(sat(f.t/f.fi),sat((f.life-f.t)/f.fo));
