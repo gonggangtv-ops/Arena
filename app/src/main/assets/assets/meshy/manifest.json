@@ -866,6 +866,16 @@
    "rigged": false,
    "animations": [],
    "source": "owner upload 2026-11-22 (Meshy_AI_Frostwing_Scepter): 13.9k -> 4.2k tris, 512 base / 256 normal JPEG, the base colour doubles as a cold emissive map (the ice glows)"
+  },
+  "queen-vfx": {
+   "name": "Snow Queen VFX (Claude, Blender) - ice spike clusters, shard, ice tomb, crystal wing, frost sigil and ice-fracture textures",
+   "url": "assets/meshy/queen-vfx.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": false,
+   "animations": [],
+   "source": "Blender script moonfall-docs/blender/queen_vfx.py (procedural, seeded; textures rendered with Cycles)"
   }
  },
  "warrior": {
