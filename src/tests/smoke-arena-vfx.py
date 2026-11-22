@@ -337,15 +337,7 @@ def main():
                     'shaderErrors': shader_errors, 'screenshots': shots})
                 page.context.close()
                 print('PASS '+label+': all 63 real casts, unchanged combat, native input, bounded GPU resources', flush=True)
-            if not args.baseline_only:
-                page, errors, shader_errors = fresh(browser, 'low')
-                snapshot = boot(page, url+'/cursed.html')
-                assert page.evaluate('MOON===true&&!window.ArenaVFX')
-                page.evaluate('R3.frame(1/30)')
-                assert not errors and not shader_errors, (errors, shader_errors)
-                report['cursedCompatibility'] = {'boot': snapshot, 'realStart': True,
-                    'vfxModuleAbsent': True, 'errors': errors, 'shaderErrors': shader_errors}
-                page.context.close()
+            # cursed.html is no longer maintained (owner 2026-11-23), so it is no longer opened here
             browser.close()
     finally:
         server.shutdown()
