@@ -417,7 +417,7 @@ function poolD(x,y){const P=WD.pool;return Math.hypot(x-P.x,y-P.y)-P.R}
 function direK(x,y){const R=RIV;if(!R)return 0;let d;if(y<R.y0)d=x-WD.pool.x;else if(y>R.y1)d=x-WD.lake.x-150;else{d=riverD(x,y);if(y>R.y1-500){const k=(y-(R.y1-500))/500;d=lerp(d,x-WD.lake.x-150,smooth01(k))}}return smooth01(.5+d/700)}
 function isDire(x,y){const R=RIV;if(!R)return false;if(y<R.y0)return x>WD.pool.x;if(y>R.y1)return x>WD.lake.x+150;return riverD(x,y)>0}
 function onBridge(x,y){for(const br of WD.bridges){const dx=x-br.x,dy=y-br.y;const al=dx*br.ax+dy*br.ay,ac=-dx*br.ay+dy*br.ax;if(Math.abs(al)<br.len/2&&Math.abs(ac)<br.wid/2)return br}return null}
-function inWater(x,y){if(onBridge(x,y))return false;return Math.abs(riverD(x,y))<riverHW(y)||lakeD(x,y)<0||poolD(x,y)<0}
+function inWater(x,y){if(onBridge(x,y))return false;return Math.abs(riverD(x,y))<riverHW(y)||lakeD(x,y)<0||poolD(x,y)<0||cityWater(x,y)}
 function cliffH(x,y){const g=WD.cg2;if(!g)return 0;const i=Math.floor(x/g.C),j=Math.floor(y/g.C);if(i<0||j<0||i>=g.n||j>=g.n)return 0;let h=0;
   for(const c of g.cells[j*g.n+i]){const dx=x-c.x,dy=y-c.y,d2=dx*dx+dy*dy;if(d2>=c.r*c.r)continue;const d=Math.sqrt(d2)/c.r;const k=d<.5?1:1-smooth01((d-.5)/.5);const v=c.h*k*(.9+.2*WD.nD(x,y));if(v>h)h=v}return h}
 function caveK(x,y){let k=0;for(const c of WD.caves){if(Math.abs(x-c.x)>c.R+340||Math.abs(y-c.y)>c.R+340)continue;
@@ -439,7 +439,10 @@ function cityH(C,x,y,o,h0){const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2||o<CITY_S
   const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,e=citySB(C,u,v);if(e>1300)return null;
   const s=cityStair(u,o),ramp=CITY_P*clamp((o-CITY_SB)/(CITY_OF+10-CITY_SB),0,1);if(s>=0)return ramp;
   const fr=CITY_P*smooth01((o+50)/(CITY_OF+50));   // the cliff face: 0 at its foot, CITY_P at its top
-  if(e<=0){if(o>=CITY_OF)return CITY_P+(C.nz(x,y)-.5)*4;return Math.max(h0,fr,s===-2?ramp+50:0)}
+  if(e<=0){if(o>=CITY_OF){const p=CITY_P+(C.nz(x,y)-.5)*4;return cityPondU(u,v)<18?Math.min(p,cityPondBed(u,v)):p}
+    // behind the falls the face is steeper and set back, the channel runs on over the brink; the plunge basin at its foot
+    let f=fr;const kl=1-smooth01((Math.abs(u)-CITY_FW/2-10)/70);if(kl>0){f=lerp(fr,CITY_P*smooth01((o+10)/60),kl);if(cityPondU(u,v)<18)f=Math.min(f,cityPondBed(u,v))}
+    let r=Math.max(h0,f,s===-2?ramp+50:0);const b=cityBasin(u,v);if(b<0)r=Math.min(r,WL-3-11*smooth01(-b/30));return r}
   // the rim: rock rising from the plateau's edge into the mountains, its spurs running a little way into the valley
   const k=o<-50?smooth01((o+420)/370):1,rim=(o<CITY_OF?fr:CITY_P)*(1-smooth01((e-650)/550))+(560+260*C.nr(x,y))*smooth01(e/320)*(1-smooth01((e-760)/540));
   return Math.max(h0,rim*k)}
@@ -462,6 +465,20 @@ function cityPath(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=
   const u=dx*C.lx+dy*C.ly,o=outsideD(x,y);if(o>CITY_SB-40-m&&o<CITY_OF+40&&Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+40+m)return true;return o>-280-m&&o<CITY_OF+40&&Math.abs(u)<240+m}
 // town frame -> world
 function cityXY(C,u,v){return{x:C.x+u*C.lx+v*C.ox,y:C.y+u*C.ly+v*C.oy}}
+// the falls (owner 2026-11-21, round 2): a spring pool on the plateau feeds a channel to the brink (CITY_FB, CITY_FW wide); the water
+// leaves the brink at the pool's level CITY_PW, falls in a parabola clear of a recessed rock face and lands in a plunge basin that
+// joins the valley's pool. Town frame (u along the cliff, v out of the valley). arena-falls.js draws it from these.
+const CITY_PW=CITY_P-5,CITY_PV=215,CITY_PRU=230,CITY_PRV=140,CITY_FW=190,CITY_FB=44;
+// the spring pool and its channel to the brink, < 0 on the water
+function cityPondU(u,v){const e=(Math.hypot(u/CITY_PRU,(v-CITY_PV)/CITY_PRV)-1)*CITY_PRV,ch=Math.max(Math.abs(u)-CITY_FW/2,CITY_FB-v,v-CITY_PV);return Math.min(e,ch)}
+// its bed: shelving banks round the pool, a flat-bottomed channel running on over the brink (the cliff takes over as it drops)
+function cityPondBed(u,v){const e=(Math.hypot(u/CITY_PRU,(v-CITY_PV)/CITY_PRV)-1)*CITY_PRV,cs=Math.abs(u)-CITY_FW/2;
+  const bank=CITY_PW+3-15*smooth01((12-e)/70);return v>CITY_FB-30&&v<CITY_PV?Math.min(bank,CITY_PW-6+9*smooth01((cs+14)/14)):bank}
+// the plunge basin at the cliff's foot under the falls, < 0 inside
+function cityBasin(u,v){return (Math.hypot(u/(CITY_FW/2+70),(v+40)/55)-1)*55}
+// on the town's water (the spring pool, its channel, the plunge basin): heroes wade there, nothing grows
+function cityWater(x,y){const C=WD&&WD.city;if(!C)return false;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
+  const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy;return cityPondU(u,v)<-4||cityBasin(u,v)<-8}
 function terrH(x,y,noCave){
   let h=0;const o=outsideD(x,y);
   if(o>-90){const k=clamp((o+90)/1750,0,1);h=Math.pow(k,1.25)*(1050+950*WD.nM(x,y))+(o>0?Math.min(1,o/350)*230*(1-Math.abs(2*WD.nR(x,y)-1)):0)}
@@ -693,7 +710,13 @@ function genWorld(seed){
     const line=(u0,v0,u1,v1,wd)=>{const a=P(u0,v0),b=P(u1,v1);C.paint.push([a.x,a.y,b.x,b.y,wd]);return[a.x,a.y,b.x,b.y,wd]};
     const disc=(u,v,r)=>{const q=P(u,v);C.paint.push([q.x,q.y,r])};
     // the waterfall, its rocky foot either side of the pool
-    prop('city-waterfall',0,-45,{h:CITY_P+125,y0:WL-12});for(const sg of[-1,1])solid(P(sg*150,-160),48);
+    // the falls (drawn by arena-falls.js): rocks frame the brink, the face and the basin; the ones on walkable ground are solid
+    C.rocks=[];for(const sg of[-1,1]){const rk=(u,v,r,o)=>{const q=Object.assign(P(sg*u,v),{r,a:sr(0,6.3)},o||{});C.rocks.push(q);return q};
+      solid(rk(CITY_FW/2+42,54,44,{dy:-16,hy:1.05}),38);rk(CITY_FW/2+60,6,56,{hy:1.15,dy:-18});
+      solid(rk(CITY_FW/2+90,-58,48,{dy:-14,hy:.95}),40);solid(rk(150,-160,48,{dy:-12,hy:.9}),46);rk(sr(40,80),sr(-92,-72),sr(15,20),{dy:-9,hy:.8})}
+    // the rest of the cliff face is rock too: boulders set into it along the town's front (not on the stairways, decor only)
+    for(let u=-C.hw+240;u<C.hw-240;u+=sr(105,150)){if(Math.abs(u)<CITY_FW/2+160||Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+95)continue;
+      const o=sr(-18,24),an=C.a+u/C.rb,R=C.rb+o,r=sr(44,66);C.rocks.push({x:CX+Math.cos(an)*R,y:CY+Math.sin(an)*R,r,a:sr(0,6.3),hy:sr(1.05,1.45),dy:-r*.32})}
     // two stairways and a temple gate at the top of each (the arch is the way in)
     const v0=vAt(CITY_SB),v1=vAt(CITY_OF+10),gv=v1+125;C.gates=[];
     for(const sg of[-1,1]){prop('moon-stairs',sg*CITY_SU,(v0+v1)/2,{w:2*CITY_SH+28,h:CITY_P+6,d:v1-v0,y0:-3});
@@ -718,7 +741,8 @@ function genWorld(seed){
       for(const [f,r] of[[.46,32],[.36,22],[.2,22]])for(const s2 of[-1,1])solid({x:q.x+cx*W*f*s2,y:q.y+cy*W*f*s2},r)};
     ruin(0,VT,560);ruin(-C.hw*.58,C.dep-640,450,.45);ruin(C.hw*.58,C.dep-640,450,-.45);
     // street lamps (the owner's lamp pillars), never on a statue, a gate or another lamp
-    const taken=q=>w.solids.some(o=>Math.hypot(o.x-q.x,o.y-q.y)<o.r+70)||C.gates.some(g=>Math.hypot(g.x-q.x,g.y-q.y)<260);
+    const pondNear=(q,m)=>{const dx=q.x-C.x,dy=q.y-C.y;return cityPondU(dx*C.lx+dy*C.ly,dx*C.ox+dy*C.oy)<m};
+    const taken=q=>w.solids.some(o=>Math.hypot(o.x-q.x,o.y-q.y)<o.r+70)||C.gates.some(g=>Math.hypot(g.x-q.x,g.y-q.y)<260)||pondNear(q,60);
     const lamp=q=>{if(!cityIn(q.x,q.y,-40)||taken(q))return;C.lamps.push(q);C.props.push({k:'city-pillar',x:q.x,y:q.y,a:face,h:190});solid(q,24)};
     for(const sg of ST){const L=Math.hypot(sg[2]-sg[0],sg[3]-sg[1]),ux=(sg[2]-sg[0])/L,uy=(sg[3]-sg[1])/L,n=Math.floor(L/240);
       for(let i=1;i<n;i++){const t=i*240,off=(i%2?1:-1)*(sg[4]/2+40);lamp({x:sg[0]+ux*t-uy*off,y:sg[1]+uy*t+ux*off})}}
@@ -727,7 +751,7 @@ function genWorld(seed){
     {const pz=P(0,VP),V={x:pz.x,y:pz.y,dire:false,style:'stone'},spots=[[-C.hw*.62,VP*.62],[C.hw*.62,VP*.62],[-C.hw*.6,VP+430],[C.hw*.6,VP+430],[-C.hw*.3,VP+560],[C.hw*.3,VP+560],[-C.hw*.84,VP+120],[C.hw*.84,VP+120],[-C.hw*.36,VP*.5],[C.hw*.36,VP*.5]];
       const segD=(q,sg)=>segDist(q,sg);let n=0;
       for(const [su,sv] of spots){for(let t=0;t<40;t++){const c=P(su+sr(-170,170),sv+sr(-140,140)),hw=sr(240,300),hh=sr(200,240),h={x:c.x-hw/2,y:c.y-hh/2,w:hw,h:hh};
-        const cs=[[h.x,h.y],[h.x+hw,h.y],[h.x,h.y+hh],[h.x+hw,h.y+hh]];if(cs.some(q=>!cityIn(q[0],q[1],-110)||cityBase(q[0],q[1])<CITY_P-1))continue;
+        const cs=[[h.x,h.y],[h.x+hw,h.y],[h.x,h.y+hh],[h.x+hw,h.y+hh]];if(cs.some(q=>!cityIn(q[0],q[1],-110)||cityBase(q[0],q[1])<CITY_P-1)||pondNear(c,Math.max(hw,hh)/2+90))continue;
         if(ST.some(sg=>segD(c,sg)<sg[4]/2+Math.max(hw,hh)/2+40)||Math.hypot(c.x-pz.x,c.y-pz.y)<560)continue;
         if(w.solids.some(o=>o.x>h.x-o.r-60&&o.x<h.x+hw+o.r+60&&o.y>h.y-o.r-60&&o.y<h.y+hh+o.r+60))continue;
         if(w.houses.some(o=>{const q=o.al||o;return !(h.x>q.x+q.w+90||h.x+hw<q.x-90||h.y>q.y+q.h+90||h.y+hh<q.y-90)}))continue;
@@ -735,7 +759,7 @@ function genWorld(seed){
         const hs=w.houses[w.houses.length-1];let best=null,bd=1e9;for(const sg of ST){const L2=(sg[2]-sg[0])**2+(sg[3]-sg[1])**2,t2=clamp(((hs.out.x-sg[0])*(sg[2]-sg[0])+(hs.out.y-sg[1])*(sg[3]-sg[1]))/L2,0,1),q={x:sg[0]+(sg[2]-sg[0])*t2,y:sg[1]+(sg[3]-sg[1])*t2},d=dist(q,hs.out);if(d<bd){bd=d;best=q}}
         if(best)C.paint.push([hs.out.x,hs.out.y,best.x,best.y,70]);n++;break}}C.houses=n;
       // free ground in the quarters: off the streets, clear of houses, statues, lamps and each other
-      const open=(q,m)=>cityIn(q.x,q.y,-m)&&cityBase(q.x,q.y)>=CITY_P-1&&!ST.some(sg=>segD(q,sg)<sg[4]/2+m)&&Math.hypot(q.x-pz.x,q.y-pz.y)>480+m&&
+      const open=(q,m)=>cityIn(q.x,q.y,-m)&&cityBase(q.x,q.y)>=CITY_P-1&&!pondNear(q,m+40)&&!ST.some(sg=>segD(q,sg)<sg[4]/2+m)&&Math.hypot(q.x-pz.x,q.y-pz.y)>480+m&&
         !w.solids.some(o=>Math.hypot(o.x-q.x,o.y-q.y)<o.r+m)&&!w.houses.some(h=>inRect(q,h.al||h,m))&&!w.trees.some(t=>Math.hypot(t.x-q.x,t.y-q.y)<t.r+m);
       // broken stretches of old wall standing about the quarters (cover)
       for(let k=0,t=0;k<7&&t<400;t++){const q=P(sr(-C.hw+300,C.hw-300),sr(260,C.dep-260));if(!open(q,170))continue;const an=sr(0,Math.PI),len=sr(200,280),tx=Math.cos(an),ty=Math.sin(an);
@@ -743,6 +767,11 @@ function genWorld(seed){
         C.props.push({k:'modular-wall',x:q.x,y:q.y,a:Math.atan2(-ty,tx),w:len,h:sr(110,150),d:40});for(let d=-len/2+20;d<=len/2-19;d+=38)solid({x:q.x+tx*d,y:q.y+ty*d},22);k++}
       // garden trees (the Fallen Kingdom's tree, felling works)
       for(let k=0,t=0;k<9&&t<500;t++){const q=P(sr(-C.hw+260,C.hw-260),sr(240,C.dep-220));if(!open(q,130))continue;w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,76),v:2,ph:sr(0,6),h:sr(.85,1.1)});k++}}
+    // reeds along the spring pool's banks (not by the channel), lily pads on its still north half
+    for(let k=0,t=0;k<26&&t<300;t++){const an=sr(0,Math.PI*2),q=P(Math.cos(an)*(CITY_PRU-sr(4,22)),CITY_PV+Math.sin(an)*(CITY_PRV-sr(4,20)));
+      const dx=q.x-C.x,dy=q.y-C.y,u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy;if(v<CITY_PV-70&&Math.abs(u)<CITY_FW/2+60)continue;w.reeds.push({x:q.x,y:q.y,s:sr(.85,1.3)});k++}C.nReed=w.reeds.length;
+    for(let k=0,t=0;k<5&&t<200;t++){const q=P(sr(-CITY_PRU+60,CITY_PRU-60),sr(CITY_PV+5,CITY_PV+CITY_PRV-35));const dx=q.x-C.x,dy=q.y-C.y;
+      if(cityPondU(dx*C.lx+dy*C.ly,dx*C.ox+dy*C.oy)>-38||w.lilies.some(l=>Math.hypot(l.x-q.x,l.y-q.y)<44))continue;w.lilies.push({x:q.x,y:q.y,s:sr(.6,.9),a:sr(0,6.3),f:SR()<.4,wl:CITY_PW});k++}C.nLily=w.lilies.length;
     // loot: chests on the plaza and behind the temple, the temple's relics, potions at the gates and on the plaza
     const box=(u,v)=>{const q=P(u,v);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1})};
     box(-150,VP);box(150,VP);box(-150,VT+150);box(150,VT+150);
@@ -834,9 +863,9 @@ function genWorld(seed){
     w.grass.push({x:p.x,y:p.y,s:sr(.7,1.35),c:SR(),d:isDire(p.x,p.y)?1:0})}
   for(let k=0;k<28000&&w.flowers.length<6000;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,6)||inWater(p.x,p.y)||cityIn(p.x,p.y,0))continue;const meadow=w.noise(p.x,p.y)<.42||w.villages.some(v=>dist(p,v)<v.r);if(!meadow&&SR()<.7)continue;
     if(w.houses.some(h=>inRect(p,h.al||h,2))||pathNear(p,-4)||inCastle(p,0))continue;w.flowers.push({x:p.x,y:p.y,c:SR(),d:isDire(p.x,p.y)?1:0})}
-  for(let k=0;k<9900&&w.reeds.length<1400;k++){const y=sr(RIV.y0,RIV.y1);const hw=riverHW(y);const side=SR()<.5?-1:1;const off=hw+sr(-14,28);const i=clamp(Math.round((y-RIV.y0)/RIV.st),0,RIV.n-1);const x=RIV.xs[i]+side*off/RIV.il[i];
+  for(let k=0;k<9900&&w.reeds.length-(w.city&&w.city.nReed||0)<1400;k++){const y=sr(RIV.y0,RIV.y1);const hw=riverHW(y);const side=SR()<.5?-1:1;const off=hw+sr(-14,28);const i=clamp(Math.round((y-RIV.y0)/RIV.st),0,RIV.n-1);const x=RIV.xs[i]+side*off/RIV.il[i];
     if(onBridge(x,y)||!walkable(x,y,0))continue;w.reeds.push({x,y,s:sr(.8,1.3)})}
-  for(let k=0;k<400;k++){const a=sr(0,6.3),d=Lk.R+sr(-120,30);const x=Lk.x+Math.cos(a)*d,y=Lk.y+Math.sin(a)*d;const ld=lakeD(x,y);if(ld>-20&&ld<20)w.reeds.push({x,y,s:sr(.8,1.3)});else if(ld<-60&&w.lilies.length<70)w.lilies.push({x,y,s:sr(.8,1.3),a:sr(0,6.3),f:SR()<.3})}
+  for(let k=0;k<400;k++){const a=sr(0,6.3),d=Lk.R+sr(-120,30);const x=Lk.x+Math.cos(a)*d,y=Lk.y+Math.sin(a)*d;const ld=lakeD(x,y);if(ld>-20&&ld<20)w.reeds.push({x,y,s:sr(.8,1.3)});else if(ld<-60&&w.lilies.length-(w.city&&w.city.nLily||0)<70)w.lilies.push({x,y,s:sr(.8,1.3),a:sr(0,6.3),f:SR()<.3})}
   // fences around fields
   for(const f of w.fields){const ca=Math.cos(f.a),sa=Math.sin(f.a);const cs=[[-1,-1],[1,-1],[1,1],[-1,1]].map(q=>({x:f.x+(q[0]*f.w/2+q[0]*20)*ca-(q[1]*f.h/2+q[1]*20)*sa,y:f.y+(q[0]*f.w/2+q[0]*20)*sa+(q[1]*f.h/2+q[1]*20)*ca}));
     for(let i=0;i<4;i++){if(i===2)continue;w.fences.push([cs[i].x,cs[i].y,cs[(i+1)%4].x,cs[(i+1)%4].y])}}

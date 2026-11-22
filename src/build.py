@@ -26,8 +26,9 @@ HOUSES=['house-timber','house-candle','house-potion']
 if arena and all(k in _man for k in HOUSES):VILLAGE=[k for k in VILLAGE if k not in ('house-cottage','house-long','house-witch')]+HOUSES
 # Arena Royale (owner 2026-11-21): the Cursed Forest's leafless trees and the Old Town above the waterfall. The town is built from the
 # owner's Moonfall pieces (old_towe.zip: the same exports as The Cursed Realm's walls, gates, stairs, colonnade and statue, plus the
-# lamp pillar and the knight) and the owner's waterfall. The three new models are Arena-only; The Cursed Realm skips them.
-CITY_NEW=['city-waterfall','city-pillar','city-knight']
+# lamp pillar and the knight). The two new models are Arena-only; The Cursed Realm skips them. (Round 2, owner: the waterfall
+# model read as a faceted blob from the game's camera; it is gone, the falls are procedural: arena-falls.js.)
+CITY_NEW=['city-pillar','city-knight']
 CITY=['moon-dead-tree','temple-gate','moon-stairs','modular-wall','wall-corner','ruin-arch','guardian-statue','moon-arena']+CITY_NEW
 if arena:VILLAGE+=[k for k in CITY if k in _man and k not in VILLAGE]
 sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()
@@ -39,7 +40,7 @@ if arena:game_files[-1:-1]=['arena-vfx-tex.js','arena-vfx-runtime.js','arena-vfx
 # so its own aoe kinds are drawn by eclipse-fx.js and everything else still reaches the arena layer.
 if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js','p5-heroes.js']
 if arena:game_files[-1:-1]=['summoner.js','summoner-fx.js']   # fifth class: the Spirit Tome (Arena Royale only)
-if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-vfx-fire.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js']
+if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-vfx-fire.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js','arena-falls.js']
 if arena:game_files.extend(['arena-menu.js','arena-hud.js','arena-vitals.js','arena-combat-controls.js'])
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in game_files)
 js='const CURSED='+('true' if sys_on else 'false')+';const MOON='+('true' if cur else 'false')+';\n'+js

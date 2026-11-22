@@ -1,7 +1,7 @@
 // ===================== 3D RENDERER v5: realistic fairy-tale valley =====================
 const FOWFRAG=`
 #ifdef CUTAWAY
-{vec2 cd=vFowW-uFowC;float ax=abs(cd.x);if(cd.y>25.0&&ax<170.0){float lim=cd.y*1.48-26.0+ax*.9;if(vWY>lim){float hn=fract(sin(dot(floor(gl_FragCoord.xy),vec2(12.9898,78.233)))*43758.5453);if(hn<smoothstep(0.0,30.0,vWY-lim)*smoothstep(170.0,110.0,ax))discard;}}}
+{vec2 cd=vFowW-uFowC;float ax=abs(cd.x);if(cd.y>25.0&&ax<170.0){float lim=uFowH+cd.y*1.48-26.0+ax*.9;if(vWY>lim){float hn=fract(sin(dot(floor(gl_FragCoord.xy),vec2(12.9898,78.233)))*43758.5453);if(hn<smoothstep(0.0,30.0,vWY-lim)*smoothstep(170.0,110.0,ax))discard;}}}
 #endif
 {float fd=distance(vFowW,uFowC);float fk=smoothstep(uFowR-280.0,uFowR+40.0,fd);
  float zd=distance(vFowW,uZone.xy);float zk=smoothstep(uZone.z-10.0,uZone.z+10.0,zd);
@@ -25,7 +25,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       r.outputColorSpace=THREE.SRGBColorSpace;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;r.shadowMap.enabled=true;
       this.cam=new THREE.PerspectiveCamera(44,W/H,30,14000);
       this.v=new THREE.Vector3();this.dummy=new THREE.Object3D();this.col=new THREE.Color();this.c1=new THREE.Color();this.c2=new THREE.Color();
-      this.U={fowC:{value:new THREE.Vector2(CX,CY)},fowR:{value:860},fowDark:{value:.42},zone:{value:new THREE.Vector3(CX,CY,99999)},zoneN:{value:new THREE.Vector3(CX,CY,-1)},time:{value:0},detail:{value:this.detailTex()},cloud:{value:1}};
+      this.U={fowC:{value:new THREE.Vector2(CX,CY)},fowH:{value:0},fowR:{value:860},fowDark:{value:.42},zone:{value:new THREE.Vector3(CX,CY,99999)},zoneN:{value:new THREE.Vector3(CX,CY,-1)},time:{value:0},detail:{value:this.detailTex()},cloud:{value:1}};
       const G=this.G={sph:new THREE.SphereGeometry(1,18,12),sphLo:new THREE.SphereGeometry(1,9,6),half:new THREE.SphereGeometry(1,16,8,0,Math.PI*2,0,Math.PI/2),
         cyl:new THREE.CylinderGeometry(1,1,1,12),cyl6:new THREE.CylinderGeometry(1,1,1,6),cylT:new THREE.CylinderGeometry(.62,1,1,9),cone:new THREE.ConeGeometry(1,1,12),cone4:new THREE.ConeGeometry(1,1,4),cone6:new THREE.ConeGeometry(1,1,7),
         box:new THREE.BoxGeometry(1,1,1),oct:new THREE.OctahedronGeometry(1),ico:new THREE.IcosahedronGeometry(1,0),ico1:new THREE.IcosahedronGeometry(1,1),ico2:new THREE.IcosahedronGeometry(1,2),dod:new THREE.DodecahedronGeometry(1),
@@ -57,10 +57,10 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
   lathe(key,pts,seg){let g=this.geoC.get('L'+key);if(!g){g=new THREE.LatheGeometry(pts.map(p=>new THREE.Vector2(p[0],p[1])),seg||16);this.geoC.set('L'+key,g);this.cachedGeos.add(g)}return g},
   fow(m,o){const U=this.U;o=o||{};
     m.onBeforeCompile=sh=>{
-      Object.assign(sh.uniforms,{uFowC:U.fowC,uFowR:U.fowR,uFowDark:U.fowDark,uZone:U.zone,uTime:U.time,uDetail:U.detail,uCloud:U.cloud},o.uniforms||{});
+      Object.assign(sh.uniforms,{uFowC:U.fowC,uFowH:U.fowH,uFowR:U.fowR,uFowDark:U.fowDark,uZone:U.zone,uTime:U.time,uDetail:U.detail,uCloud:U.cloud},o.uniforms||{});
       let vs='varying vec2 vFowW;varying float vWY;uniform float uTime;\n'+sh.vertexShader.replace('#include <project_vertex>','#include <project_vertex>\n{vec4 fw=vec4(transformed,1.0);\n#ifdef USE_INSTANCING\nfw=instanceMatrix*fw;\n#endif\nfw=modelMatrix*fw;vFowW=fw.xz;vWY=fw.y;}');
       if(o.vert)vs=o.vert(vs);sh.vertexShader=vs;
-      let fs='uniform vec2 uFowC;uniform float uFowR;uniform float uFowDark;uniform vec3 uZone;uniform float uTime;uniform float uCloud;uniform sampler2D uDetail;varying vec2 vFowW;varying float vWY;\n'+(o.cut?'#define CUTAWAY\n':'')+sh.fragmentShader;
+      let fs='uniform vec2 uFowC;uniform float uFowH;uniform float uFowR;uniform float uFowDark;uniform vec3 uZone;uniform float uTime;uniform float uCloud;uniform sampler2D uDetail;varying vec2 vFowW;varying float vWY;\n'+(o.cut?'#define CUTAWAY\n':'')+sh.fragmentShader;
       if(o.frag)fs=o.frag(fs);sh.fragmentShader=fs.replace('#include <tonemapping_fragment>',FOWFRAG+'\n#include <tonemapping_fragment>')};
     m.customProgramCacheKey=()=>'f7'+(o.key||'')+(o.cut?'c':'');return m},
   cached(k,f){let m=this.mats.get(k);if(!m){m=f();this.mats.set(k,m)}return m},
@@ -356,7 +356,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const wgeo=new THREE.BufferGeometry();wgeo.setAttribute('position',new THREE.Float32BufferAttribute(wq,3));const wuv=[];for(let i=0;i<wq.length;i+=3)wuv.push(wq[i]/WORLD,wq[i+2]/WORLD);wgeo.setAttribute('uv',new THREE.Float32BufferAttribute(wuv,2));wgeo.computeVertexNormals();
     const w=new THREE.Mesh(wgeo,m);w.position.set(0,WL,0);w.renderOrder=2;w.receiveShadow=true;w.userData.ownMat=1;S.add(w);this.water=w;
     // waterfall
-    const F=WD.wf;if(F&&WD.city){const ox=-F.nx,oy=-F.ny;this.fallsBase={x:F.x-ox*190,y:F.y-oy*190,px:-F.ny,py:F.nx}}   // Arena Royale: the owner's waterfall model (arena-city.js), mist at its foot
+    const F=WD.wf;if(F&&WD.city)this.fallsBase=null;   // Arena Royale: the Old Town's falls and their spray are arena-falls.js
     else if(F){const ox=-F.nx,oy=-F.ny,px=-F.ny,py=F.nx;const pts=[],uv=[],idx=[];const nv=16,nu=6,wd=170;
       const outC=h=>{let lo=-45,hi=15;for(let i=0;i<20;i++){const m=(lo+hi)/2;if(330*smooth01((m+45)/60)<h)lo=m;else hi=m}return lo};
       for(let v=0;v<=nv;v++){const t=v/nv;const h=lerp(345,WL,t);const out=Math.min(outC(Math.min(h,329))-30,26-t*60)+Math.sin(t*Math.PI)*-6;for(let u=0;u<=nu;u++){const s=(u/nu-.5)*wd*(1+t*.3);pts.push(F.x+ox*out+px*s,h,F.y+oy*out+py*s);uv.push(u/nu,t*2.2)}}
@@ -367,8 +367,8 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       const ft2=ft.clone();ft2.needsUpdate=true;ft2.repeat.set(1.6,1);this.falls2=ft2;const w2=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:ft2,color:'#ffffff',transparent:true,opacity:.45,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));w2.renderOrder=4;w2.userData.ownMat=1;S.add(w2);
       this.fallsBase={x:F.x-ox*60,y:F.y-oy*60,px,py}}
     // lily pads & reeds
-    const lp=this.instC(G_cyl(this),this.std('#3f7a34',.7,0),WD.lilies,(l,add)=>add(l.x,WL+.6,l.y,16*l.s,.8,16*l.s,0,l.a,0,null),false);
-    this.instC(this.G.sph,this.std('#ffb8d0',.5,0),WD.lilies.filter(l=>l.f),(l,add)=>add(l.x+5,WL+3,l.y+3,5,3,5,0,0,0,null),false);
+    const lp=this.instC(G_cyl(this),this.std('#3f7a34',.7,0),WD.lilies,(l,add)=>add(l.x,(l.wl===undefined?WL:l.wl)+.6,l.y,16*l.s,.8,16*l.s,0,l.a,0,null),false);
+    this.instC(this.G.sph,this.std('#ffb8d0',.5,0),WD.lilies.filter(l=>l.f),(l,add)=>add(l.x+5,(l.wl===undefined?WL:l.wl)+3,l.y+3,5,3,5,0,0,0,null),false);
     const rm=this.std('#7a8a42',.8,0),rh=this.std('#5a3a20',.9,0);
     this.instC(this.cylg(.6,1,1,5),rm,WD.reeds,(r,add)=>{const b=this.gY(r.x,r.y);for(let k=0;k<3;k++){const a=k*2.1+r.x,h=(34+k*9)*r.s;add(r.x+Math.cos(a)*7,b+h/2,r.y+Math.sin(a)*7,2,h,2,Math.cos(a)*.15,0,Math.sin(a)*.15,null)}},false);
     this.instC(this.cylg(1,1,1,6),rh,WD.reeds,(r,add)=>{const b=this.gY(r.x,r.y);const a=r.x;add(r.x+Math.cos(a)*7,b+42*r.s,r.y+Math.sin(a)*7,3.2,12,3.2,0,0,0,null)},false)},
