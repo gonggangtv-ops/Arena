@@ -7,6 +7,15 @@
 
 ---
 
+## 2026-11-23 · Claude · เลิกดูแล cursed.html (เจ้าของสั่ง)
+- เจ้าของสั่ง (2026-11-23 00:30): "ตอนนี้เราเลิกยุ่งกับ cursed.html ไปเลยนะ"
+- `AGENTS.md`: ข้อ 0 ใหม่ (ทำงานเฉพาะ `index.html` · ไม่ build/ทดสอบ/แก้ cursed · `cursed.html` ที่ deploy ค้างไว้ที่เวอร์ชันของ PR #47 อย่า build ทับ · ไฟล์ร่วมแก้ได้ตามที่ index ต้องการ) · ข้อ 3 (ระบบ/ฉากใหม่ทำเฉพาะ index) · การทดสอบขั้นต่ำ (build/เปิด index) · รายชื่อไฟล์ celestial/moonfall ที่ index ใช้จริง
+- `src/README.md`: build เฉพาะ index · README: บรรทัด "เลิกพัฒนา The Cursed Realm"
+- `src/tests/`: เอาเคสที่เปิด `cursed.html` ออกจาก `smoke-arena-refresh.py` `smoke-arena-combat-hud.py` `smoke-arena-vfx.py` · `smoke-ui-ux.py` `smoke-cinematic-ui.py` (Moonfall UI ของ cursed) เลิกใช้ ไม่ได้ลบไฟล์
+- ไม่ได้แตะ: `build.py` (ยัง build cursed ได้), `pages.yml` (ยัง deploy `cursed.html` ตัวเดิม ลิงก์ยังเปิดได้), โค้ดที่มีเงื่อนไข `CURSED`/`MOON`
+- ทดสอบ: `py_compile` สคริปต์ที่แก้ · `smoke-arena-refresh.py` (index เท่านั้น) ผ่าน
+- ค้าง: ถ้าจะเอา `cursed.html` ออกจากเว็บด้วย ต้องแก้ `pages.yml` (รอเจ้าของสั่ง)
+
 ## 2026-11-23 · Claude · ปราสาทราชินีหิมะ: ทางขึ้นจากวิหารน้ำแข็ง + บอสราชินีหิมะ + สเปกปราสาท Blender ให้ Codex (index เท่านั้น)
 - เจ้าของสั่ง (2026-11-22 23:23 แนบภาพหน้าผาหิมะ + `Meshy_AI_Ice_Queen_No_Cloak_20261120_ราชินีหิมะ.glb` + `Meshy_AI_Frostwing_Scepter.glb`):
   "ทางตรงนี้ปรับให้มีทางขึ้นได้ ซึ่งจะมีปราสาทหิมะน้ำแข็ง และบอสราชินีหิมะ ใช้ไฟล์ที่3เป็นบอสและไฟล์ที่2 เป็นอาวุธของ boss และฉันอยากได้คำสั่งที่จะไปสั่งให้ codex สร้างปราสาทหิมะ ในblender"
