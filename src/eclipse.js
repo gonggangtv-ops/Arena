@@ -6,6 +6,10 @@ const ECL_KINDS=['mslash','eburst','crain','vcage','ueclipse','usafe','hstrike',
 AOE_KINDS.push(...ECL_KINDS);
 Object.assign(AOE_COL,{mslash:'#9fd0ff',eburst:'#b08aff',crain:'#cfe4ff',vcage:'#a070ff',ueclipse:'#6a4aff',usafe:'#fff2b0',hstrike:'#ffcf8a',gslam:'#9fd0ff',lscythe:'#c08aff',lslash:'#bfe8ff',lburst:'#a8b8ff'});
 const EK=['overlord','sentinel','construct'];
+// other Eclipse-style bosses plug in here (Arena Royale's Snow Queen, snow-queen.js): {detect, wake(u), lose(u), act(u,t,d,R,dt)}.
+// They get the Overlord's boss treatment: boss stats and phases, no stagger, regen only after a while out of combat.
+const ECL_EXT={};
+const eclBoss=u=>!!u&&(u.ecl==='overlord'||!!ECL_EXT[u.ecl]);
 Object.assign(CREEPS,{
   overlord:{name:'Celestial Overlord · จอมราชันย์สุริยคราส',hp:16000,dmg:120,armor:8,spd:140,r:64,atkT:1.6,range:120,xp:1600,col:'#4a5a9a',leash:900,ecl:'overlord'},
   sentinel:{name:'Dark Sentinel · ผู้เฝ้ายามทมิฬ',hp:1500,dmg:46,armor:5,spd:172,r:28,atkT:1.25,range:82,xp:210,col:'#3a3f55',leash:560,ecl:'sentinel'},
@@ -38,7 +42,7 @@ function eclWorld(w){if(!CURSED)return;
 // ---- units ----
 function eclInit(u){const d=u.def;u.ecl=d.ecl;u.elite=u.elite||d.ecl!=='sentinel';u.golem=d.ecl!=='sentinel';u.big=1;
   u.ecT=0;u.busyT=0;u.poise=0;u.blockT=0;u.blkCd=3;u.combo=null;u.patrol=null;u.summons=u.summons||[];
-  if(d.ecl==='overlord'){const sc=u.scale||1;u.maxHp=Math.round(d.hp*sc);u.hp=u.maxHp;u.atkDmg=d.dmg*sc;u.armorV=d.armor;u.spdBase=d.spd;u.r=d.r;u.name=d.name;u.ph=0;u.cds={};u.mr=.25}}
+  if(d.ecl==='overlord'||ECL_EXT[d.ecl]){const sc=u.scale||1;u.maxHp=Math.round(d.hp*sc);u.hp=u.maxHp;u.atkDmg=d.dmg*sc;u.armorV=d.armor;u.spdBase=d.spd;u.r=d.r;u.name=d.name;u.ph=0;u.cds={};u.mr=.25}}
 {const _mk=mkMob;mkMob=function(m){const u=_mk(m);if(u.def&&u.def.ecl){eclInit(u);if(m.summon){u.summon=1;u.camp=-1}}return u}}
 {const _sms=setMobStats;setMobStats=function(u,sc){_sms(u,sc);if(u.ecl)eclInit(u)}}
 let eclSid=300000;
@@ -63,7 +67,7 @@ function eclEv(e){const u=UMAP.get(e.id);
   if(t&&t.ecl&&src&&src!==t&&amt>0&&!t.dead){const ang=Math.atan2(src.y-t.y,src.x-t.x),fa=Math.atan2(t.fy,t.fx);let da=Math.abs(ang-fa);if(da>Math.PI)da=Math.PI*2-da;
     if(t.ecl==='sentinel'&&t.blockT>0&&da<1.25){amt*=.25;if(!quiet&&Math.random()<.5)fxE('shield',{id:t.id,x:t.x|0,y:t.y|0})}
     else if(t.ecl==='construct'&&da>2.1){amt*=1.6;crit=true;if(!quiet&&gameT-(t._wpT||0)>.6){t._wpT=gameT;fxTextFor(t.x,t.y-t.r-40,'จุดอ่อน!','#9fe8ff',.9,src.hero&&isHuman(src)?[src.id]:[])}}
-    if(t.ecl!=='overlord'){t.poise+=amt;const P=t.ecl==='sentinel'?t.maxHp*.22:t.maxHp*.3;if(t.poise>P&&t.stunT<=0){t.poise=0;t.stunT=t.ecl==='sentinel'?.9:1.2;t.combo=null;t.busyT=0;t.blockT=0;emit({t:'ec',k:'stg',id:t.id})}}}
+    if(!eclBoss(t)){t.poise+=amt;const P=t.ecl==='sentinel'?t.maxHp*.22:t.maxHp*.3;if(t.poise>P&&t.stunT<=0){t.poise=0;t.stunT=t.ecl==='sentinel'?.9:1.2;t.combo=null;t.busyT=0;t.blockT=0;emit({t:'ec',k:'stg',id:t.id})}}}
   return _dd(t,amt,type,src,quiet,crit)}}
 
 // ---- AI ----
@@ -73,8 +77,9 @@ function eclThink(u,dt){
   if(u.blockT>0)u.blockT-=dt;if(u.busyT>0)u.busyT-=dt;if(u.blkCd>0)u.blkCd-=dt;if(u.ecT>0)u.ecT-=dt;u.poise=Math.max(0,u.poise-u.maxHp*.04*dt);
   const L=u.def.leash||500,dh=Math.hypot(u.x-u.home.x,u.y-u.home.y);
   // detect: these hunt on sight (the old camps only woke up when hit)
-  if(!u.aggro||u.aggro.dead){u.aggro=null;const h=eclHeroNear(u,u.ecl==='overlord'?560:u.ecl==='sentinel'?400:300);
-    if(h&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L){u.aggro=h;if(u.ecl==='overlord'){sndAt('roar',u.x,u.y);emit({t:'f',s:'☾ Celestial Overlord ตื่นจากแท่นสุริยคราส!'});emit({t:'k',a:10,x:u.x|0,y:u.y|0})}}}
+  const X=ECL_EXT[u.ecl];
+  if(!u.aggro||u.aggro.dead){u.aggro=null;const h=eclHeroNear(u,X?X.detect:u.ecl==='overlord'?560:u.ecl==='sentinel'?400:300);
+    if(h&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L){u.aggro=h;if(u.ecl==='overlord'){sndAt('roar',u.x,u.y);emit({t:'f',s:'☾ Celestial Overlord ตื่นจากแท่นสุริยคราส!'});emit({t:'k',a:10,x:u.x|0,y:u.y|0})}else if(X&&X.wake)X.wake(u)}}
   // a target that ran off: switch to whoever is still fighting inside the arena before giving up
   const ok=h=>h&&!h.dead&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L+140&&(!h.hidden||Math.hypot(h.x-u.x,h.y-u.y)<170);
   if(u.aggro&&!ok(u.aggro)){let nb=null,bd=1e9;for(const h of units){if(!h.hero||h.reviveT>0||!ok(h))continue;const d=Math.hypot(h.x-u.x,h.y-u.y);if(d<bd&&d<L){bd=d;nb=h}}if(nb)u.aggro=nb}
@@ -82,14 +87,14 @@ function eclThink(u,dt){
   if(t&&!t.dead&&dh<L&&Math.hypot(t.x-u.home.x,t.y-u.home.y)<L+140&&(!t.hidden||Math.hypot(t.x-u.x,t.y-u.y)<170)){
     const d=Math.hypot(t.x-u.x,t.y-u.y)||1;u.fx=(t.x-u.x)/d;u.fy=(t.y-u.y)/d;const R=u.range+t.r;
     if(d>R-8&&u.busyT<=0&&!u.combo){mx=u.fx;my=u.fy}
-    if(u.stunT<=0){if(u.ecl==='overlord')overlordAct(u,t,d,R,dt);else if(u.ecl==='sentinel')sentinelAct(u,t,d,R,dt);else constructAct(u,t,d,R,dt)}
+    if(u.stunT<=0){if(X)X.act(u,t,d,R,dt);else if(u.ecl==='overlord')overlordAct(u,t,d,R,dt);else if(u.ecl==='sentinel')sentinelAct(u,t,d,R,dt);else constructAct(u,t,d,R,dt)}
   }else{
-    if(u.aggro&&u.ecl==='overlord'&&u.hp<u.maxHp)emit({t:'f',s:'☾ Celestial Overlord กลับสู่แท่นบูชาและฟื้นพลัง'});
+    if(u.aggro&&u.ecl==='overlord'&&u.hp<u.maxHp)emit({t:'f',s:'☾ Celestial Overlord กลับสู่แท่นบูชาและฟื้นพลัง'});else if(u.aggro&&X&&X.lose&&u.hp<u.maxHp)X.lose(u);
     u.aggro=null;u.combo=null;u.blockT=0;
     if(dh>30){mx=(u.home.x-u.x)/dh;my=(u.home.y-u.y)/dh}else if(u.ecl==='sentinel'){ // patrol a loop around the camp
       if(!u.patrol||Math.hypot(u.x-u.patrol.x,u.y-u.patrol.y)<24||(u.patrol.t-=dt)<0){const a=Math.random()*6.283,rr=60+Math.random()*130;u.patrol={x:u.home.x+Math.cos(a)*rr,y:u.home.y+Math.sin(a)*rr,t:6}}}
     if(u.patrol&&u.ecl==='sentinel'&&dh<=220){const px=u.patrol.x-u.x,py=u.patrol.y-u.y,pl=Math.hypot(px,py)||1;mx=px/pl*.42;my=py/pl*.42;u.fx=px/pl;u.fy=py/pl}
-    if(u.ecl!=='overlord'||u.idleT>4)u.hp=Math.min(u.maxHp,u.hp+u.maxHp*(u.ecl==='overlord'?.05:.25)*dt);if(u.ecl==='overlord'&&u.hp>=u.maxHp)u.ph=0}
+    if(!eclBoss(u)||u.idleT>4)u.hp=Math.min(u.maxHp,u.hp+u.maxHp*(eclBoss(u)?.05:.25)*dt);if(eclBoss(u)&&u.hp>=u.maxHp)u.ph=0}
   if(u.busyT>0){mx*=.15;my*=.15}if(u.blockT>0){mx*=.35;my*=.35}
   return{mx,my}}
 {const _mt=mobThink;mobThink=function(u,dt){return u.ecl?eclThink(u,dt):_mt(u,dt)}}

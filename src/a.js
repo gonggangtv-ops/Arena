@@ -447,24 +447,57 @@ function cityH(C,x,y,o,h0){const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2||o<CITY_S
   const k=o<-50?smooth01((o+420)/370):1,rim=(o<CITY_OF?fr:CITY_P)*(1-smooth01((e-650)/550))+(560+260*C.nr(x,y))*smooth01(e/320)*(1-smooth01((e-760)/540));
   return Math.max(h0,rim*k)}
 // the height a hero walks at here (0 = the valley rule)
-function cityBase(x,y){const C=WD&&WD.city;if(!C)return 0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return 0;
+function townBase(x,y){const C=WD&&WD.city;if(!C)return 0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return 0;
   const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,o=outsideD(x,y),s=cityStair(u,o);if(s>=0)return CITY_P*s;
   return o>=CITY_OF&&citySB(C,u,v)<=0?CITY_P:0}
 // on the town (plateau, stairways or the waterfall's foot), m = extra margin; world gen keeps its scatter out of here
-function cityIn(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
+function townIn(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
   const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,o=outsideD(x,y);
   if(o>=CITY_OF-m-40&&citySB(C,u,v)<=m)return true;
   if(o>CITY_SB-40-m&&o<CITY_OF+40&&Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+40+m)return true;
   return o>-280-m&&o<CITY_OF+40&&Math.abs(u)<240+m}
 // how much the ground here is the town's rock (the cliff face, the stairways' side walls, the rim), 0..1, for the terrain shader
-function cityRock(x,y){const C=WD&&WD.city;if(!C)return 0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return 0;
+function townRock(x,y){const C=WD&&WD.city;if(!C)return 0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return 0;
   const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,o=outsideD(x,y),s=cityStair(u,o);if(s>=0)return 0;if(s===-2)return 1;const e=citySB(C,u,v);
   if(e<=0)return o<CITY_OF+5&&o>-70?smooth01((o+70)/40)*(1-smooth01((o-CITY_OF+5)/10)):0;return smooth01(e/60)*(o>-420?1:0)}
 // the stairways and the waterfall's foot only (rocks may line the rest of the cliff's foot)
-function cityPath(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
+function townPath(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
   const u=dx*C.lx+dy*C.ly,o=outsideD(x,y);if(o>CITY_SB-40-m&&o<CITY_OF+40&&Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+40+m)return true;return o>-280-m&&o<CITY_OF+40&&Math.abs(u)<240+m}
 // town frame -> world
 function cityXY(C,u,v){return{x:C.x+u*C.lx+v*C.ox,y:C.y+u*C.ly+v*C.oy}}
+// Arena Royale (owner 2026-11-22): the Snow Queen's castle on a plateau one step up out of the Frozen Sanctuary, east of the Old
+// Town; one wide stairway climbs to it from the valley. Fort frame like the town's (u along the cliff, v out of the valley, cityXY
+// works on it). The castle stands at the back (FORT_VC), the queen's court in front of it (FORT_VA). arena-frost.js draws it,
+// snow-queen.js is the boss.
+const FORT_P=240,FORT_OF=60,FORT_SH=150,FORT_SB=-430,FORT_VA=640,FORT_VC=1380,FORT_CW=900,FORT_CD=560;
+// signed distance to the plateau's sides and back (< 0 inside), rounded back corners
+function fortSB(F,u,v){const hw=F.hw+F.sw*Math.sin(v*.003+F.p3),vb=F.dep+90*Math.sin(u*.0021+F.p1),R=420,au=Math.abs(u);
+  const du=au-(hw-R),dv=v-(vb-R);return du>0&&dv>0?Math.hypot(du,dv)-R:Math.max(au-hw,v-vb)}
+// the stairway (u = 0): 0..1 up its ramp, -2 on its side walls, -1 elsewhere
+function fortStair(u,o){if(o<FORT_SB-10||o>FORT_OF+30)return -1;const du=Math.abs(u);
+  if(du<=FORT_SH)return clamp((o-FORT_SB)/(FORT_OF+10-FORT_SB),0,1);return du<=FORT_SH+40&&o>FORT_SB+50?-2:-1}
+// the fort's ground (h0 = what is already there: the valley, the mountains, the Old Town's rim); null where it changes nothing
+function fortH(F,x,y,o,h0){const dx=x-F.x,dy=y-F.y;if(dx*dx+dy*dy>F.R2||o<FORT_SB-60)return null;
+  const u=dx*F.lx+dy*F.ly,v=dx*F.ox+dy*F.oy,e=fortSB(F,u,v);if(e>1100)return null;
+  const s=fortStair(u,o),ramp=FORT_P*clamp((o-FORT_SB)/(FORT_OF+10-FORT_SB),0,1);if(s>=0)return ramp;
+  const fr=FORT_P*smooth01((o+50)/(FORT_OF+50));
+  if(e<=0){if(o>=FORT_OF)return FORT_P+(F.nz(x,y)-.5)*5;return Math.max(h0,fr,s===-2?ramp+50:0)}
+  const k=o<-50?smooth01((o+420)/370):1,rim=(o<FORT_OF?fr:FORT_P)*(1-smooth01((e-600)/500))+(620+300*F.nr(x,y))*smooth01(e/300)*(1-smooth01((e-700)/400));
+  return Math.max(h0,rim*k)}
+const fortUV=(F,x,y)=>{const dx=x-F.x,dy=y-F.y;return dx*dx+dy*dy>F.R2?null:[dx*F.lx+dy*F.ly,dx*F.ox+dy*F.oy]};
+function fortBase(x,y){const F=WD&&WD.fort;if(!F)return 0;const q=fortUV(F,x,y);if(!q)return 0;const o=outsideD(x,y),s=fortStair(q[0],o);if(s>=0)return FORT_P*s;
+  return o>=FORT_OF&&fortSB(F,q[0],q[1])<=0?FORT_P:0}
+function fortIn(x,y,m){const F=WD&&WD.fort;if(!F)return false;m=m||0;const q=fortUV(F,x,y);if(!q)return false;const o=outsideD(x,y);
+  if(o>=FORT_OF-m-40&&fortSB(F,q[0],q[1])<=m)return true;return o>FORT_SB-40-m&&o<FORT_OF+40&&Math.abs(q[0])<FORT_SH+40+m}
+function fortRock(x,y){const F=WD&&WD.fort;if(!F)return 0;const q=fortUV(F,x,y);if(!q)return 0;const o=outsideD(x,y),s=fortStair(q[0],o);if(s>=0)return 0;if(s===-2)return 1;
+  const e=fortSB(F,q[0],q[1]);if(e<=0)return o<FORT_OF+5&&o>-70?smooth01((o+70)/40)*(1-smooth01((o-FORT_OF+5)/10)):0;return smooth01(e/60)*(o>-420?1:0)}
+function fortPath(x,y,m){const F=WD&&WD.fort;if(!F)return false;m=m||0;const q=fortUV(F,x,y);if(!q)return false;const o=outsideD(x,y);
+  return o>FORT_SB-40-m&&o<FORT_OF+40&&Math.abs(q[0])<FORT_SH+40+m}
+// the raised places (the Old Town, the Snow Queen's fort): the walking height, on it (world gen keeps its scatter off), rock, paths
+function cityBase(x,y){return townBase(x,y)||fortBase(x,y)}
+function cityIn(x,y,m){return townIn(x,y,m)||fortIn(x,y,m)}
+function cityRock(x,y){return Math.max(townRock(x,y),fortRock(x,y))}
+function cityPath(x,y,m){return townPath(x,y,m)||fortPath(x,y,m)}
 // the falls (owner 2026-11-21, round 2): a spring pool on the plateau feeds a channel to the brink (CITY_FB, CITY_FW wide); the water
 // leaves the brink at the pool's level CITY_PW, falls in a parabola clear of a recessed rock face and lands in a plunge basin that
 // joins the valley's pool. Town frame (u along the cliff, v out of the valley). arena-falls.js draws it from these.
@@ -486,6 +519,7 @@ function terrH(x,y,noCave){
     if(lat<320&&out>-70&&out<420){const lk=1-smooth01((lat-160)/160);const v=lk*(330*smooth01((out+45)/60))+lk*Math.max(0,out-20)*.5;if(v>h)h=v}}
   const ch=cliffH(x,y);if(ch>h)h=ch;
   if(Cy){const c=cityH(Cy,x,y,o,h);if(c!==null)h=c}
+  const Fo=WD.fort;if(Fo){const c=fortH(Fo,x,y,o,h);if(c!==null)h=c}
   if(!noCave){const ck=caveK(x,y);if(ck>0)h*=1-ck}
   const D=WD.dg;if(D){const ex=Math.max(D.x-x,x-(D.x+D.w),0),ey=Math.max(D.y-y,y-(D.y+D.h),0),dd=Math.hypot(ex,ey);if(dd<=0)return 0;if(dd<1100){const k=smooth01(dd/1100);h=Math.max(190,lerp(190,h,k))}}
   if(h<60){const rd=Math.abs(riverD(x,y));if(rd<400){const hw=riverHW(y);if(rd<hw+34){const bed=-14*smooth01((hw+30-rd)/70)-6*smooth01((hw-40-rd)/Math.max(30,hw-40))-(MOON?0:12*smooth01((hw-80-rd)/Math.max(40,hw-80)));if(bed<h)h=bed}}
@@ -544,7 +578,13 @@ function genWorld(seed){
   if(ARX){for(let i=0;i<720;i++){const a=i/720*Math.PI*2,da=Math.abs(Math.atan2(Math.sin(a-aw),Math.cos(a-aw))),k=1-smooth01((da-.26)/.14);if(k>0)BND[i]=lerp(BND[i],rbw,k)}
     const ox=Math.cos(aw),oy=Math.sin(aw);
     w.city={x:Pb.x,y:Pb.y,a:aw,ox,oy,lx:-oy,ly:ox,rb:rbw,hw:sr(1780,1920),dep:sr(1800,1960),sw:sr(40,90),p1:sr(0,6.3),p2:sr(0,6.3),p3:sr(0,6.3),
-      nz:makeNoise(SR,340),nr:makeNoise(SR,520),R2:4700*4700,props:[],lamps:[],paint:[],name:'นครเก่าเหนือน้ำตก'}}
+      nz:makeNoise(SR,340),nr:makeNoise(SR,520),R2:4700*4700,props:[],lamps:[],paint:[],name:'นครเก่าเหนือน้ำตก'};
+    // the Snow Queen's fort (owner 2026-11-22): a step up out of the Frozen Sanctuary 29-32 degrees east of the town (its rim has faded
+    // out by then), the valley's edge one smooth arc across its front too
+    const af=aw+sr(.5,.55),rf0=bndR(af);for(let i=0;i<720;i++){const a=i/720*Math.PI*2,da=Math.abs(Math.atan2(Math.sin(a-af),Math.cos(a-af))),k=1-smooth01((da-.17)/.1);if(k>0)BND[i]=lerp(BND[i],rf0,k)}
+    const rf=bndR(af),fx=Math.cos(af),fy=Math.sin(af);
+    w.fort={x:CX+fx*rf,y:CY+fy*rf,a:af,ox:fx,oy:fy,lx:-fy,ly:fx,rb:rf,hw:sr(900,980),dep:sr(1790,1900),sw:sr(30,60),p1:sr(0,6.3),p3:sr(0,6.3),
+      nz:makeNoise(SR,300),nr:makeNoise(SR,480),R2:3700*3700,props:[],crystals:[],braziers:[],paint:[],name:'ปราสาทราชินีหิมะ'}}
   const Lk={x:CX+sr(-1895,-700),y:CY+sr(3500,4400),R:sr(740,840),p1:sr(0,6.3),p2:sr(0,6.3)};w.lake=Lk;
   {const P0=w.pool,y0=P0.y,y1=Lk.y,st=4,n=Math.ceil((y1-y0)/st)+1;const xs=new Float32Array(n),il=new Float32Array(n);
     const A1=sr(540,700),A2=sr(140,210),f1=sr(1.7,2.4),f2=sr(3.6,4.8),q1=sr(0,6.3),q2=sr(0,6.3);
@@ -695,7 +735,7 @@ function genWorld(seed){
   const town=w.villages.find(v=>v.main);if(town){let by=null,bd=1e9;for(let y=RIV.y0+300;y<RIV.y1-300;y+=20){const d=Math.hypot(riverX(y)-town.x,y-town.y);if(d<bd){bd=d;by=y}}if(by!==null){const b=addBridge(by);if(b)b.big=1}}
   for(const f of[.08,.18,.28,.38,.48,.58,.68,.78,.88,.95])addBridge(lerp(RIV.y0,RIV.y1,f));
   // ---- outcrops: rocky hills inside the valley ----
-  for(let k=0,t=0;k<34&&t<2800;t++){const p={x:sr(1000,WORLD-1000),y:sr(1000,WORLD-1000)};if(outsideD(p.x,p.y)>-520||nearPOI(p,380))continue;
+  for(let k=0,t=0;k<34&&t<2800;t++){const p={x:sr(1000,WORLD-1000),y:sr(1000,WORLD-1000)};if(outsideD(p.x,p.y)>-520||nearPOI(p,380)||fortIn(p.x,p.y,420))continue;
     if(w.villages.some(v=>dist(p,v)<v.r+520)||w.cliffs.some(c=>dist(p,c)<900)||(Math.abs(p.x-CS.cx)<CS.w/2+700&&Math.abs(p.y-CS.cy)<CS.h/2+700))continue;
     const cl={x:p.x,y:p.y,parts:[]};const nb=3+Math.floor(SR()*3);for(let i=0;i<nb;i++){const a=sr(0,6.3),d=i?sr(80,170):0;cl.parts.push({x:p.x+Math.cos(a)*d,y:p.y+Math.sin(a)*d,r:sr(95,175),h:sr(150,260)})}
     w.cliffs.push(cl);k++}
@@ -783,6 +823,42 @@ function genWorld(seed){
       for(let i=0;i<3;i++){const q=P((i-1)*95,VT-230+(i===1?-50:0)),m={id:mid++,x:q.x,y:q.y,kind:'sentinel',camp:camp.id,sc:1.15,rich:1};w.mobs.push(m);camp.mem.push(m.id)}w.camps.push(camp)}
     // how far the town reaches from the valley's centre (the storm's first circle covers it)
     C.far=0;for(const [u,v] of[[-C.hw,C.dep],[C.hw,C.dep],[0,C.dep+120],[-C.hw,0],[C.hw,0]]){const q=P(u,v);C.far=Math.max(C.far,Math.hypot(q.x-CX,q.y-CY))}}
+  // ---- Arena Royale: the Snow Queen's fort (owner 2026-11-22). The castle at the back (the owner's Blender castle 'snow-castle' once it is
+  // in the manifest, an ice palace drawn by arena-frost.js until then: both fill the same footprint, FORT_CW x FORT_CD, gate toward the
+  // valley), the queen's court in front of it, ice crystals, frozen braziers, guardians and snow pines; collision, loot and the queen ----
+  if(w.fort){const F=w.fort,P=(u,v)=>cityXY(F,u,v),face=Math.atan2(-F.ox,-F.oy);
+    const prop=(k,u,v,o)=>{const q=Object.assign(P(u,v),{k,a:face},o||{});F.props.push(q);return q};
+    const solid=(q,r)=>w.solids.push({x:q.x,y:q.y,r,t:'fort'});
+    // paving (the court, the way from the stair head, the castle's apron): no grass or meadow dressing there
+    {const d=(u,v,r)=>{const q=P(u,v);F.paint.push([q.x,q.y,r])},l=(u0,v0,u1,v1,wd)=>{const a=P(u0,v0),b=P(u1,v1);F.paint.push([a.x,a.y,b.x,b.y,wd])};
+      d(0,FORT_VA,500);d(0,FORT_VC-FORT_CD/2-40,330);l(0,FORT_OF,0,FORT_VA-300,330);l(-FORT_CW/2,FORT_VC-FORT_CD/2-60,FORT_CW/2,FORT_VC-FORT_CD/2-60,160)}
+    // the castle: solid over its whole footprint (towers at the four corners)
+    F.castle=prop('snow-castle',0,FORT_VC,{w:FORT_CW,d:FORT_CD});
+    for(let u=-FORT_CW/2+70;u<=FORT_CW/2-70+1;u+=(FORT_CW-140)/6)for(let v=FORT_VC-FORT_CD/2+70;v<=FORT_VC+FORT_CD/2-70+1;v+=(FORT_CD-140)/4)solid(P(u,v),82);
+    for(const su of[-1,1])for(const sv of[-1,1])solid(P(su*FORT_CW/2,FORT_VC+sv*FORT_CD/2),92);
+    // guardians at the head of the stairway and either side of the gate, braziers round the court
+    for(const sg of[-1,1]){solid(prop('guardian-statue',sg*(FORT_SH+95),150,{h:230,ice:1}),52);solid(prop('guardian-statue',sg*210,FORT_VC-FORT_CD/2-90,{h:250,ice:1}),52)}
+    for(let i=0;i<4;i++){const a=(i+.5)/4*Math.PI*2,q=P(Math.cos(a)*470,FORT_VA+Math.sin(a)*400);F.braziers.push(q);solid(q,26)}
+    // ice crystal clusters along the plateau's sides and back corners and either side of the stair head (the big ones are solid)
+    for(let k=0,t=0;k<16&&t<400;t++){const u=sr(-F.hw+90,F.hw-90),v=sr(120,F.dep-80),au=Math.abs(u);
+      if(au<F.hw-330&&v<FORT_VC+FORT_CD/2+60)continue;if(Math.abs(u)<FORT_CW/2+120&&Math.abs(v-FORT_VC)<FORT_CD/2+120)continue;
+      const q=P(u,v);if(fortSB(F,u,v)>-70||F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<220))continue;
+      const c=Object.assign(q,{r:sr(46,82),n:4+Math.floor(SR()*4),a:sr(0,6.3),h:sr(150,260)});F.crystals.push(c);if(c.r>60)solid(c,c.r*.7);k++}
+    for(const sg of[-1,1]){const q=Object.assign(P(sg*(FORT_SH+60),FORT_OF+8),{r:44,n:4,a:sr(0,6.3),h:sr(130,170)});F.crystals.push(q)}
+    // snow pines on the plateau's flanks, behind the castle
+    for(let k=0,t=0;k<14&&t<300;t++){const u=sr(-F.hw+120,F.hw-120),v=sr(220,F.dep-120),au=Math.abs(u);if(au<F.hw-300&&v<F.dep-260)continue;
+      if(Math.abs(u)<FORT_CW/2+90&&Math.abs(v-FORT_VC)<FORT_CD/2+90)continue;const q=P(u,v);if(fortSB(F,u,v)>-90)continue;
+      if(F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<c.r+70)||w.trees.some(t=>Math.abs(t.x-q.x)<120&&Math.abs(t.y-q.y)<120))continue;
+      w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,78),v:2,ph:sr(0,6),h:sr(.9,1.15)});k++}
+    // loot: two chests and gold by the castle gate, a tier-3 weapon and a rune behind the queen, potions at the stair head
+    for(const sg of[-1,1]){const q=P(sg*330,FORT_VC-FORT_CD/2-110);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1});
+      const c=P(sg*420,FORT_VC-FORT_CD/2-150);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
+    {const q=P(-70,FORT_VA+330);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(70,FORT_VA+330);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,35,45,20],SR)})}
+    for(const [u,it] of[[-90,'potion'],[90,'mana']]){const q=P(u,190);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
+    // the Snow Queen (snow-queen.js): alone on her court, no respawn
+    {const g=P(0,FORT_VA+170),camp={id:w.camps.length,x:g.x,y:g.y,tier:'icethrone',mem:[],maxRespawn:0,sc:1,rich:1};
+      const m={id:mid++,x:g.x,y:g.y,kind:'snowqueen',camp:camp.id,sc:1,rich:1};w.mobs.push(m);camp.mem.push(m.id);w.camps.push(camp);F.queen=m.id;F.home={x:g.x,y:g.y}}
+    F.far=0;for(const [u,v] of[[-F.hw,F.dep],[F.hw,F.dep],[0,F.dep+120]]){const q=P(u,v);F.far=Math.max(F.far,Math.hypot(q.x-CX,q.y-CY))}}
   // ---- shrines ----
   const inCastle=(p,m)=>p.x>CS.x-m&&p.x<CS.x+CS.w+m&&p.y>CS.y-m&&p.y<CS.y+CS.h+m;
   const caveNear=(p,m)=>w.caves.some(c=>Math.hypot(p.x-c.x,p.y-c.y)<c.R+m||segDist(p,[c.mx,c.my,c.x,c.y])<c.w+m);
@@ -952,7 +1028,7 @@ const autoSize=n=>n<=6?'S':n<=16?'M':'L';
 // ts = team size (1 free-for-all, 2 duo, 4 squad); n is rounded up to whole teams
 function normCfg(c){c=c||{};const ts=[1,2,4].indexOf(c.ts|0)>=0?c.ts|0:1;let n=clamp((c.n|0)||TOTAL_HEROES,2,TOTAL_HEROES);n=Math.min(TOTAL_HEROES,Math.ceil(n/ts)*ts);if(n/ts<2)n=ts*2;
   return{n,size:SIZE_F[c.size]?c.size:autoSize(n),ts}}
-function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:(cfg.size==='L'&&WD&&WD.city?Math.max(9400,WD.city.far+250):9400)*f,f};   // a full match's first circle covers the Old Town (index)if(cfg.size==='L'){if(cfg.ts>1)teamKit(seed,items);return}
+function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:(cfg.size==='L'&&WD&&WD.city?Math.max(9400,WD.city.far+250,WD.fort?WD.fort.far+250:0):9400)*f,f};   // a full match's first circle covers the Old Town and the Snow Queen's fort (index)if(cfg.size==='L'){if(cfg.ts>1)teamKit(seed,items);return}
   let s=((seed|0)^0x5bd1e995^(cfg.n*7919))>>>0;const R=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
   const r0=ARENA.r,ok=(p,m)=>walkable(p.x,p.y,m)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h.al||h,30))&&!inCastleYard(p);
   // centre somewhere in the walkable heart of the valley, so the whole start circle is playable
@@ -1027,7 +1103,7 @@ function paintMasks(S){const n=Math.round(WORLD*S),m=document.createElement('can
   for(const p of WD.paths){const w=p[4]||64;c.strokeStyle='rgba(255,0,0,.45)';c.lineWidth=w*1.45*S;c.beginPath();c.moveTo(p[0]*S,p[1]*S);c.lineTo(p[2]*S,p[3]*S);c.stroke();c.strokeStyle='rgba(255,0,0,.6)';c.lineWidth=w*.9*S;c.stroke()}
   for(const v of WD.villages){const R=(CURSED&&v.r?v.r*.97:v.plaza?235:140)*S;const g=c.createRadialGradient(v.x*S,v.y*S,R*.6,v.x*S,v.y*S,R);g.addColorStop(0,'rgba(0,255,0,1)');if(CURSED)g.addColorStop(.86,'rgba(0,255,0,1)');g.addColorStop(1,'rgba(0,255,0,0)');c.fillStyle=g;c.fillRect((v.x*S-R),(v.y*S-R),R*2,R*2)}
   if(WD.dg){const D=WD.dg;c.fillStyle='rgb(0,255,0)';c.fillRect(D.x*S,D.y*S,D.w*S,D.h*S)}
-  if(WD.city)for(const q of WD.city.paint){if(q.length===3){const g=c.createRadialGradient(q[0]*S,q[1]*S,q[2]*S*.75,q[0]*S,q[1]*S,q[2]*S);g.addColorStop(0,'rgba(0,255,0,1)');g.addColorStop(1,'rgba(0,255,0,0)');c.fillStyle=g;c.fillRect((q[0]-q[2])*S,(q[1]-q[2])*S,q[2]*2*S,q[2]*2*S)}
+  for(const P0 of[WD.city,WD.fort])if(P0&&P0.paint)for(const q of P0.paint){if(q.length===3){const g=c.createRadialGradient(q[0]*S,q[1]*S,q[2]*S*.75,q[0]*S,q[1]*S,q[2]*S);g.addColorStop(0,'rgba(0,255,0,1)');g.addColorStop(1,'rgba(0,255,0,0)');c.fillStyle=g;c.fillRect((q[0]-q[2])*S,(q[1]-q[2])*S,q[2]*2*S,q[2]*2*S)}
     else{c.strokeStyle='rgba(0,255,0,.95)';c.lineWidth=q[4]*S;c.beginPath();c.moveTo(q[0]*S,q[1]*S);c.lineTo(q[2]*S,q[3]*S);c.stroke()}}
   {const C=WD.castle;c.fillStyle='rgb(0,255,0)';c.fillRect(C.x*S,C.y*S,C.w*S,C.h*S);c.strokeStyle='rgba(0,255,0,.9)';c.lineWidth=150*S;c.beginPath();c.moveTo(C.gate.x*S,C.gate.y*S);c.lineTo(C.out.x*S,C.out.y*S);c.stroke()}
   for(const s of WD.shrines){c.fillStyle='rgba(0,255,0,.85)';c.beginPath();c.arc(s.x*S,s.y*S,92*S,0,7);c.fill()}

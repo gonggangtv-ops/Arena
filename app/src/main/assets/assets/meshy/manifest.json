@@ -839,6 +839,33 @@
    "rotationY": 0,
    "biome": "arena",
    "source": "owner upload 2026-11-21 (old_towe.zip: Meshy_AI_ONE_full_body_dark_ce_1118112841), 20k -> 7k tris"
+  },
+  "ice-queen": {
+   "name": "Snow Queen (owner, Meshy, Mixamo rig) - boss of the ice castle on the Frozen Sanctuary's plateau",
+   "url": "assets/meshy/ice-queen.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Walking",
+    "Scepter_Strike",
+    "Spell_Cast",
+    "Frost_Nova",
+    "Death_Backwards"
+   ],
+   "source": "owner upload 2026-11-22 (Meshy_AI_Ice_Queen_No_Cloak_20261120, 15 Mixamo clips): bones without the mixamorig: prefix; clips Combat_Stance (mage_soell_cast_7 frame 0 turned 40 deg + breathing), Walking, Scepter_Strike (mage_soell_cast_4 0.35-1.5 s), Spell_Cast (mage_soell_cast 0.3-1.75 s), Frost_Nova (mage_soell_cast_1 0.45-2.7 s), Death_Backwards (dying_backwards); textures 1024/512 JPEG"
+  },
+  "frost-scepter": {
+   "name": "Frostwing Scepter (owner, Meshy) - the Snow Queen's weapon",
+   "url": "assets/meshy/frost-scepter.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": false,
+   "animations": [],
+   "source": "owner upload 2026-11-22 (Meshy_AI_Frostwing_Scepter): 13.9k -> 4.2k tris, 512 base / 256 normal JPEG, the base colour doubles as a cold emissive map (the ice glows)"
   }
  },
  "warrior": {
