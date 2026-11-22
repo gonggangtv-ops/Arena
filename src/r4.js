@@ -356,7 +356,7 @@ Object.assign(R3,{
   menuFrame(dt){this.kkLoad();if(window.__noMenu)return;$('gl').style.visibility='visible';if(!this.menuReady){if(!this.menuQueued){this.menuQueued=1;this.menuSeed=Math.floor(Math.random()*1e9);setTimeout(()=>{if(state!=='menu'&&state!=='lobby')return;try{setupWorld(this.menuSeed);this.buildWorld();this.menuReady=1}catch(e){console.warn(e)}},700)}return}
     if(this.world!==WD){this.menuReady=0;this.menuQueued=0;return}
     this.t+=dt;const T=this.t;const V=WD.villages.find(v=>v.main)||{x:CX,y:CY};const a=T*.05;const px=V.x+Math.cos(a)*900,py=V.y+Math.sin(a)*500;
-    this.U.fowC.value.set(px,py);this.U.fowR.value=99999;this.U.time.value=T;this.U.zone.value.set(CX,CY,99999);this.U.zoneN.value.z=-1;if(this.zoneWall)this.zoneWall.visible=false;this.U.cloud.value=1;
+    this.U.fowC.value.set(px,py);this.U.fowH.value=0;this.U.fowR.value=99999;this.U.time.value=T;this.U.zone.value.set(CX,CY,99999);this.U.zoneN.value.z=-1;if(this.zoneWall)this.zoneWall.visible=false;this.U.cloud.value=1;
     this.cam.position.set(px,700,py+600);this.cam.lookAt(px,0,py);this.sun.position.set(px-600,1300,py+420);this.sun.target.position.set(px,0,py);
     this.updateGround(px,py);this.stepP(this.PA,dt);this.stepP(this.PB,dt);for(const m of this.mills)m.hub.rotation.z+=dt*m.sp;this.draw()},
   frame(dt){
@@ -380,7 +380,7 @@ Object.assign(R3,{
     this.staticGlow.material.uniforms.k.value=lerp(1.25,.45,dk);this.staticGlow.material.uniforms.scale.value=H*this.renderer.getPixelRatio()/2;
     const night=1-dk;this.winMat.emissiveIntensity=night*1.6+du*.6;this.lampMat.emissiveIntensity=.3+night*1.8;
     if(this.bloom)this.bloom.strength=lerp(.62,.22,dk);this.stepBoxes(dt);
-    const U=this.U;U.fowC.value.set(L.x,L.y);U.fowR.value=visionR();U.fowDark.value=lerp(.3,.46,dk);U.zone.value.set(zone.x,zone.y,Math.max(1,zone.r));U.time.value=T;U.cloud.value=dk;
+    const U=this.U;U.fowC.value.set(L.x,L.y);U.fowH.value=cityBase(L.x,L.y);U.fowR.value=visionR();U.fowDark.value=lerp(.3,.46,dk);U.zone.value.set(zone.x,zone.y,Math.max(1,zone.r));U.time.value=T;U.cloud.value=dk;
     for(const r of this.roofs){const h=r.h;const occ=L.x>h.x-60&&L.x<h.x+h.w+60&&L.y<h.y+40&&h.y-L.y<260;r.occ=lerp(r.occ===undefined?1:r.occ,occ?.18:1,Math.min(1,dt*6));const a=Math.min(h.roofA,r.occ);r.g.visible=a>.03;for(const m of r.mats){m.opacity=a;m.depthWrite=a>.95}}
     for(const d of this.domes){d.dm.visible=d.c.roofA>.5}
     for(const s of this.shrines){s.orb.position.y=58+Math.sin(T*2+s.s.x)*6;s.orb.rotation.y=T}

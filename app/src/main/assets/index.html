@@ -119,7 +119,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <link rel="stylesheet" href="moonfall-menu.css" onerror="window.__moonfallCodeFailure='moonfall-menu.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-menu.css')">
 <link rel="stylesheet" href="moonfall-inventory.css" onerror="window.__moonfallCodeFailure='moonfall-inventory.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-inventory.css')">
 <link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
-<script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "moon-dead-tree", "temple-gate", "moon-stairs", "modular-wall", "wall-corner", "ruin-arch", "guardian-statue", "moon-arena", "city-waterfall", "city-pillar", "city-knight"]</script>
+<script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "moon-dead-tree", "temple-gate", "moon-stairs", "modular-wall", "wall-corner", "ruin-arch", "guardian-statue", "moon-arena", "city-pillar", "city-knight"]</script>
 
 <style>/* Arena-only interface. The published Moonfall/Cursed presentation stays independent. */
 :root{--arena-menu-art:url('assets/ui/arena-citadel.webp')}
@@ -840,7 +840,7 @@ function poolD(x,y){const P=WD.pool;return Math.hypot(x-P.x,y-P.y)-P.R}
 function direK(x,y){const R=RIV;if(!R)return 0;let d;if(y<R.y0)d=x-WD.pool.x;else if(y>R.y1)d=x-WD.lake.x-150;else{d=riverD(x,y);if(y>R.y1-500){const k=(y-(R.y1-500))/500;d=lerp(d,x-WD.lake.x-150,smooth01(k))}}return smooth01(.5+d/700)}
 function isDire(x,y){const R=RIV;if(!R)return false;if(y<R.y0)return x>WD.pool.x;if(y>R.y1)return x>WD.lake.x+150;return riverD(x,y)>0}
 function onBridge(x,y){for(const br of WD.bridges){const dx=x-br.x,dy=y-br.y;const al=dx*br.ax+dy*br.ay,ac=-dx*br.ay+dy*br.ax;if(Math.abs(al)<br.len/2&&Math.abs(ac)<br.wid/2)return br}return null}
-function inWater(x,y){if(onBridge(x,y))return false;return Math.abs(riverD(x,y))<riverHW(y)||lakeD(x,y)<0||poolD(x,y)<0}
+function inWater(x,y){if(onBridge(x,y))return false;return Math.abs(riverD(x,y))<riverHW(y)||lakeD(x,y)<0||poolD(x,y)<0||cityWater(x,y)}
 function cliffH(x,y){const g=WD.cg2;if(!g)return 0;const i=Math.floor(x/g.C),j=Math.floor(y/g.C);if(i<0||j<0||i>=g.n||j>=g.n)return 0;let h=0;
   for(const c of g.cells[j*g.n+i]){const dx=x-c.x,dy=y-c.y,d2=dx*dx+dy*dy;if(d2>=c.r*c.r)continue;const d=Math.sqrt(d2)/c.r;const k=d<.5?1:1-smooth01((d-.5)/.5);const v=c.h*k*(.9+.2*WD.nD(x,y));if(v>h)h=v}return h}
 function caveK(x,y){let k=0;for(const c of WD.caves){if(Math.abs(x-c.x)>c.R+340||Math.abs(y-c.y)>c.R+340)continue;
@@ -862,7 +862,10 @@ function cityH(C,x,y,o,h0){const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2||o<CITY_S
   const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy,e=citySB(C,u,v);if(e>1300)return null;
   const s=cityStair(u,o),ramp=CITY_P*clamp((o-CITY_SB)/(CITY_OF+10-CITY_SB),0,1);if(s>=0)return ramp;
   const fr=CITY_P*smooth01((o+50)/(CITY_OF+50));   // the cliff face: 0 at its foot, CITY_P at its top
-  if(e<=0){if(o>=CITY_OF)return CITY_P+(C.nz(x,y)-.5)*4;return Math.max(h0,fr,s===-2?ramp+50:0)}
+  if(e<=0){if(o>=CITY_OF){const p=CITY_P+(C.nz(x,y)-.5)*4;return cityPondU(u,v)<18?Math.min(p,cityPondBed(u,v)):p}
+    // behind the falls the face is steeper and set back, the channel runs on over the brink; the plunge basin at its foot
+    let f=fr;const kl=1-smooth01((Math.abs(u)-CITY_FW/2-10)/70);if(kl>0){f=lerp(fr,CITY_P*smooth01((o+10)/60),kl);if(cityPondU(u,v)<18)f=Math.min(f,cityPondBed(u,v))}
+    let r=Math.max(h0,f,s===-2?ramp+50:0);const b=cityBasin(u,v);if(b<0)r=Math.min(r,WL-3-11*smooth01(-b/30));return r}
   // the rim: rock rising from the plateau's edge into the mountains, its spurs running a little way into the valley
   const k=o<-50?smooth01((o+420)/370):1,rim=(o<CITY_OF?fr:CITY_P)*(1-smooth01((e-650)/550))+(560+260*C.nr(x,y))*smooth01(e/320)*(1-smooth01((e-760)/540));
   return Math.max(h0,rim*k)}
@@ -885,6 +888,20 @@ function cityPath(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=
   const u=dx*C.lx+dy*C.ly,o=outsideD(x,y);if(o>CITY_SB-40-m&&o<CITY_OF+40&&Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+40+m)return true;return o>-280-m&&o<CITY_OF+40&&Math.abs(u)<240+m}
 // town frame -> world
 function cityXY(C,u,v){return{x:C.x+u*C.lx+v*C.ox,y:C.y+u*C.ly+v*C.oy}}
+// the falls (owner 2026-11-21, round 2): a spring pool on the plateau feeds a channel to the brink (CITY_FB, CITY_FW wide); the water
+// leaves the brink at the pool's level CITY_PW, falls in a parabola clear of a recessed rock face and lands in a plunge basin that
+// joins the valley's pool. Town frame (u along the cliff, v out of the valley). arena-falls.js draws it from these.
+const CITY_PW=CITY_P-5,CITY_PV=215,CITY_PRU=230,CITY_PRV=140,CITY_FW=190,CITY_FB=44;
+// the spring pool and its channel to the brink, < 0 on the water
+function cityPondU(u,v){const e=(Math.hypot(u/CITY_PRU,(v-CITY_PV)/CITY_PRV)-1)*CITY_PRV,ch=Math.max(Math.abs(u)-CITY_FW/2,CITY_FB-v,v-CITY_PV);return Math.min(e,ch)}
+// its bed: shelving banks round the pool, a flat-bottomed channel running on over the brink (the cliff takes over as it drops)
+function cityPondBed(u,v){const e=(Math.hypot(u/CITY_PRU,(v-CITY_PV)/CITY_PRV)-1)*CITY_PRV,cs=Math.abs(u)-CITY_FW/2;
+  const bank=CITY_PW+3-15*smooth01((12-e)/70);return v>CITY_FB-30&&v<CITY_PV?Math.min(bank,CITY_PW-6+9*smooth01((cs+14)/14)):bank}
+// the plunge basin at the cliff's foot under the falls, < 0 inside
+function cityBasin(u,v){return (Math.hypot(u/(CITY_FW/2+70),(v+40)/55)-1)*55}
+// on the town's water (the spring pool, its channel, the plunge basin): heroes wade there, nothing grows
+function cityWater(x,y){const C=WD&&WD.city;if(!C)return false;const dx=x-C.x,dy=y-C.y;if(dx*dx+dy*dy>C.R2)return false;
+  const u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy;return cityPondU(u,v)<-4||cityBasin(u,v)<-8}
 function terrH(x,y,noCave){
   let h=0;const o=outsideD(x,y);
   if(o>-90){const k=clamp((o+90)/1750,0,1);h=Math.pow(k,1.25)*(1050+950*WD.nM(x,y))+(o>0?Math.min(1,o/350)*230*(1-Math.abs(2*WD.nR(x,y)-1)):0)}
@@ -1116,7 +1133,13 @@ function genWorld(seed){
     const line=(u0,v0,u1,v1,wd)=>{const a=P(u0,v0),b=P(u1,v1);C.paint.push([a.x,a.y,b.x,b.y,wd]);return[a.x,a.y,b.x,b.y,wd]};
     const disc=(u,v,r)=>{const q=P(u,v);C.paint.push([q.x,q.y,r])};
     // the waterfall, its rocky foot either side of the pool
-    prop('city-waterfall',0,-45,{h:CITY_P+125,y0:WL-12});for(const sg of[-1,1])solid(P(sg*150,-160),48);
+    // the falls (drawn by arena-falls.js): rocks frame the brink, the face and the basin; the ones on walkable ground are solid
+    C.rocks=[];for(const sg of[-1,1]){const rk=(u,v,r,o)=>{const q=Object.assign(P(sg*u,v),{r,a:sr(0,6.3)},o||{});C.rocks.push(q);return q};
+      solid(rk(CITY_FW/2+42,54,44,{dy:-16,hy:1.05}),38);rk(CITY_FW/2+60,6,56,{hy:1.15,dy:-18});
+      solid(rk(CITY_FW/2+90,-58,48,{dy:-14,hy:.95}),40);solid(rk(150,-160,48,{dy:-12,hy:.9}),46);rk(sr(40,80),sr(-92,-72),sr(15,20),{dy:-9,hy:.8})}
+    // the rest of the cliff face is rock too: boulders set into it along the town's front (not on the stairways, decor only)
+    for(let u=-C.hw+240;u<C.hw-240;u+=sr(105,150)){if(Math.abs(u)<CITY_FW/2+160||Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+95)continue;
+      const o=sr(-18,24),an=C.a+u/C.rb,R=C.rb+o,r=sr(44,66);C.rocks.push({x:CX+Math.cos(an)*R,y:CY+Math.sin(an)*R,r,a:sr(0,6.3),hy:sr(1.05,1.45),dy:-r*.32})}
     // two stairways and a temple gate at the top of each (the arch is the way in)
     const v0=vAt(CITY_SB),v1=vAt(CITY_OF+10),gv=v1+125;C.gates=[];
     for(const sg of[-1,1]){prop('moon-stairs',sg*CITY_SU,(v0+v1)/2,{w:2*CITY_SH+28,h:CITY_P+6,d:v1-v0,y0:-3});
@@ -1141,7 +1164,8 @@ function genWorld(seed){
       for(const [f,r] of[[.46,32],[.36,22],[.2,22]])for(const s2 of[-1,1])solid({x:q.x+cx*W*f*s2,y:q.y+cy*W*f*s2},r)};
     ruin(0,VT,560);ruin(-C.hw*.58,C.dep-640,450,.45);ruin(C.hw*.58,C.dep-640,450,-.45);
     // street lamps (the owner's lamp pillars), never on a statue, a gate or another lamp
-    const taken=q=>w.solids.some(o=>Math.hypot(o.x-q.x,o.y-q.y)<o.r+70)||C.gates.some(g=>Math.hypot(g.x-q.x,g.y-q.y)<260);
+    const pondNear=(q,m)=>{const dx=q.x-C.x,dy=q.y-C.y;return cityPondU(dx*C.lx+dy*C.ly,dx*C.ox+dy*C.oy)<m};
+    const taken=q=>w.solids.some(o=>Math.hypot(o.x-q.x,o.y-q.y)<o.r+70)||C.gates.some(g=>Math.hypot(g.x-q.x,g.y-q.y)<260)||pondNear(q,60);
     const lamp=q=>{if(!cityIn(q.x,q.y,-40)||taken(q))return;C.lamps.push(q);C.props.push({k:'city-pillar',x:q.x,y:q.y,a:face,h:190});solid(q,24)};
     for(const sg of ST){const L=Math.hypot(sg[2]-sg[0],sg[3]-sg[1]),ux=(sg[2]-sg[0])/L,uy=(sg[3]-sg[1])/L,n=Math.floor(L/240);
       for(let i=1;i<n;i++){const t=i*240,off=(i%2?1:-1)*(sg[4]/2+40);lamp({x:sg[0]+ux*t-uy*off,y:sg[1]+uy*t+ux*off})}}
@@ -1150,7 +1174,7 @@ function genWorld(seed){
     {const pz=P(0,VP),V={x:pz.x,y:pz.y,dire:false,style:'stone'},spots=[[-C.hw*.62,VP*.62],[C.hw*.62,VP*.62],[-C.hw*.6,VP+430],[C.hw*.6,VP+430],[-C.hw*.3,VP+560],[C.hw*.3,VP+560],[-C.hw*.84,VP+120],[C.hw*.84,VP+120],[-C.hw*.36,VP*.5],[C.hw*.36,VP*.5]];
       const segD=(q,sg)=>segDist(q,sg);let n=0;
       for(const [su,sv] of spots){for(let t=0;t<40;t++){const c=P(su+sr(-170,170),sv+sr(-140,140)),hw=sr(240,300),hh=sr(200,240),h={x:c.x-hw/2,y:c.y-hh/2,w:hw,h:hh};
-        const cs=[[h.x,h.y],[h.x+hw,h.y],[h.x,h.y+hh],[h.x+hw,h.y+hh]];if(cs.some(q=>!cityIn(q[0],q[1],-110)||cityBase(q[0],q[1])<CITY_P-1))continue;
+        const cs=[[h.x,h.y],[h.x+hw,h.y],[h.x,h.y+hh],[h.x+hw,h.y+hh]];if(cs.some(q=>!cityIn(q[0],q[1],-110)||cityBase(q[0],q[1])<CITY_P-1)||pondNear(c,Math.max(hw,hh)/2+90))continue;
         if(ST.some(sg=>segD(c,sg)<sg[4]/2+Math.max(hw,hh)/2+40)||Math.hypot(c.x-pz.x,c.y-pz.y)<560)continue;
         if(w.solids.some(o=>o.x>h.x-o.r-60&&o.x<h.x+hw+o.r+60&&o.y>h.y-o.r-60&&o.y<h.y+hh+o.r+60))continue;
         if(w.houses.some(o=>{const q=o.al||o;return !(h.x>q.x+q.w+90||h.x+hw<q.x-90||h.y>q.y+q.h+90||h.y+hh<q.y-90)}))continue;
@@ -1158,7 +1182,7 @@ function genWorld(seed){
         const hs=w.houses[w.houses.length-1];let best=null,bd=1e9;for(const sg of ST){const L2=(sg[2]-sg[0])**2+(sg[3]-sg[1])**2,t2=clamp(((hs.out.x-sg[0])*(sg[2]-sg[0])+(hs.out.y-sg[1])*(sg[3]-sg[1]))/L2,0,1),q={x:sg[0]+(sg[2]-sg[0])*t2,y:sg[1]+(sg[3]-sg[1])*t2},d=dist(q,hs.out);if(d<bd){bd=d;best=q}}
         if(best)C.paint.push([hs.out.x,hs.out.y,best.x,best.y,70]);n++;break}}C.houses=n;
       // free ground in the quarters: off the streets, clear of houses, statues, lamps and each other
-      const open=(q,m)=>cityIn(q.x,q.y,-m)&&cityBase(q.x,q.y)>=CITY_P-1&&!ST.some(sg=>segD(q,sg)<sg[4]/2+m)&&Math.hypot(q.x-pz.x,q.y-pz.y)>480+m&&
+      const open=(q,m)=>cityIn(q.x,q.y,-m)&&cityBase(q.x,q.y)>=CITY_P-1&&!pondNear(q,m+40)&&!ST.some(sg=>segD(q,sg)<sg[4]/2+m)&&Math.hypot(q.x-pz.x,q.y-pz.y)>480+m&&
         !w.solids.some(o=>Math.hypot(o.x-q.x,o.y-q.y)<o.r+m)&&!w.houses.some(h=>inRect(q,h.al||h,m))&&!w.trees.some(t=>Math.hypot(t.x-q.x,t.y-q.y)<t.r+m);
       // broken stretches of old wall standing about the quarters (cover)
       for(let k=0,t=0;k<7&&t<400;t++){const q=P(sr(-C.hw+300,C.hw-300),sr(260,C.dep-260));if(!open(q,170))continue;const an=sr(0,Math.PI),len=sr(200,280),tx=Math.cos(an),ty=Math.sin(an);
@@ -1166,6 +1190,11 @@ function genWorld(seed){
         C.props.push({k:'modular-wall',x:q.x,y:q.y,a:Math.atan2(-ty,tx),w:len,h:sr(110,150),d:40});for(let d=-len/2+20;d<=len/2-19;d+=38)solid({x:q.x+tx*d,y:q.y+ty*d},22);k++}
       // garden trees (the Fallen Kingdom's tree, felling works)
       for(let k=0,t=0;k<9&&t<500;t++){const q=P(sr(-C.hw+260,C.hw-260),sr(240,C.dep-220));if(!open(q,130))continue;w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,76),v:2,ph:sr(0,6),h:sr(.85,1.1)});k++}}
+    // reeds along the spring pool's banks (not by the channel), lily pads on its still north half
+    for(let k=0,t=0;k<26&&t<300;t++){const an=sr(0,Math.PI*2),q=P(Math.cos(an)*(CITY_PRU-sr(4,22)),CITY_PV+Math.sin(an)*(CITY_PRV-sr(4,20)));
+      const dx=q.x-C.x,dy=q.y-C.y,u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy;if(v<CITY_PV-70&&Math.abs(u)<CITY_FW/2+60)continue;w.reeds.push({x:q.x,y:q.y,s:sr(.85,1.3)});k++}C.nReed=w.reeds.length;
+    for(let k=0,t=0;k<5&&t<200;t++){const q=P(sr(-CITY_PRU+60,CITY_PRU-60),sr(CITY_PV+5,CITY_PV+CITY_PRV-35));const dx=q.x-C.x,dy=q.y-C.y;
+      if(cityPondU(dx*C.lx+dy*C.ly,dx*C.ox+dy*C.oy)>-38||w.lilies.some(l=>Math.hypot(l.x-q.x,l.y-q.y)<44))continue;w.lilies.push({x:q.x,y:q.y,s:sr(.6,.9),a:sr(0,6.3),f:SR()<.4,wl:CITY_PW});k++}C.nLily=w.lilies.length;
     // loot: chests on the plaza and behind the temple, the temple's relics, potions at the gates and on the plaza
     const box=(u,v)=>{const q=P(u,v);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1})};
     box(-150,VP);box(150,VP);box(-150,VT+150);box(150,VT+150);
@@ -1257,9 +1286,9 @@ function genWorld(seed){
     w.grass.push({x:p.x,y:p.y,s:sr(.7,1.35),c:SR(),d:isDire(p.x,p.y)?1:0})}
   for(let k=0;k<28000&&w.flowers.length<6000;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};if(inDG(p,40)||!walkable(p.x,p.y,6)||inWater(p.x,p.y)||cityIn(p.x,p.y,0))continue;const meadow=w.noise(p.x,p.y)<.42||w.villages.some(v=>dist(p,v)<v.r);if(!meadow&&SR()<.7)continue;
     if(w.houses.some(h=>inRect(p,h.al||h,2))||pathNear(p,-4)||inCastle(p,0))continue;w.flowers.push({x:p.x,y:p.y,c:SR(),d:isDire(p.x,p.y)?1:0})}
-  for(let k=0;k<9900&&w.reeds.length<1400;k++){const y=sr(RIV.y0,RIV.y1);const hw=riverHW(y);const side=SR()<.5?-1:1;const off=hw+sr(-14,28);const i=clamp(Math.round((y-RIV.y0)/RIV.st),0,RIV.n-1);const x=RIV.xs[i]+side*off/RIV.il[i];
+  for(let k=0;k<9900&&w.reeds.length-(w.city&&w.city.nReed||0)<1400;k++){const y=sr(RIV.y0,RIV.y1);const hw=riverHW(y);const side=SR()<.5?-1:1;const off=hw+sr(-14,28);const i=clamp(Math.round((y-RIV.y0)/RIV.st),0,RIV.n-1);const x=RIV.xs[i]+side*off/RIV.il[i];
     if(onBridge(x,y)||!walkable(x,y,0))continue;w.reeds.push({x,y,s:sr(.8,1.3)})}
-  for(let k=0;k<400;k++){const a=sr(0,6.3),d=Lk.R+sr(-120,30);const x=Lk.x+Math.cos(a)*d,y=Lk.y+Math.sin(a)*d;const ld=lakeD(x,y);if(ld>-20&&ld<20)w.reeds.push({x,y,s:sr(.8,1.3)});else if(ld<-60&&w.lilies.length<70)w.lilies.push({x,y,s:sr(.8,1.3),a:sr(0,6.3),f:SR()<.3})}
+  for(let k=0;k<400;k++){const a=sr(0,6.3),d=Lk.R+sr(-120,30);const x=Lk.x+Math.cos(a)*d,y=Lk.y+Math.sin(a)*d;const ld=lakeD(x,y);if(ld>-20&&ld<20)w.reeds.push({x,y,s:sr(.8,1.3)});else if(ld<-60&&w.lilies.length-(w.city&&w.city.nLily||0)<70)w.lilies.push({x,y,s:sr(.8,1.3),a:sr(0,6.3),f:SR()<.3})}
   // fences around fields
   for(const f of w.fields){const ca=Math.cos(f.a),sa=Math.sin(f.a);const cs=[[-1,-1],[1,-1],[1,1],[-1,1]].map(q=>({x:f.x+(q[0]*f.w/2+q[0]*20)*ca-(q[1]*f.h/2+q[1]*20)*sa,y:f.y+(q[0]*f.w/2+q[0]*20)*sa+(q[1]*f.h/2+q[1]*20)*ca}));
     for(let i=0;i<4;i++){if(i===2)continue;w.fences.push([cs[i].x,cs[i].y,cs[(i+1)%4].x,cs[(i+1)%4].y])}}
@@ -3238,7 +3267,7 @@ if(!PeerT.ok()&&window.claude&&typeof window.claude.use==='function'){window.cla
 // ===================== 3D RENDERER v5: realistic fairy-tale valley =====================
 const FOWFRAG=`
 #ifdef CUTAWAY
-{vec2 cd=vFowW-uFowC;float ax=abs(cd.x);if(cd.y>25.0&&ax<170.0){float lim=cd.y*1.48-26.0+ax*.9;if(vWY>lim){float hn=fract(sin(dot(floor(gl_FragCoord.xy),vec2(12.9898,78.233)))*43758.5453);if(hn<smoothstep(0.0,30.0,vWY-lim)*smoothstep(170.0,110.0,ax))discard;}}}
+{vec2 cd=vFowW-uFowC;float ax=abs(cd.x);if(cd.y>25.0&&ax<170.0){float lim=uFowH+cd.y*1.48-26.0+ax*.9;if(vWY>lim){float hn=fract(sin(dot(floor(gl_FragCoord.xy),vec2(12.9898,78.233)))*43758.5453);if(hn<smoothstep(0.0,30.0,vWY-lim)*smoothstep(170.0,110.0,ax))discard;}}}
 #endif
 {float fd=distance(vFowW,uFowC);float fk=smoothstep(uFowR-280.0,uFowR+40.0,fd);
  float zd=distance(vFowW,uZone.xy);float zk=smoothstep(uZone.z-10.0,uZone.z+10.0,zd);
@@ -3262,7 +3291,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       r.outputColorSpace=THREE.SRGBColorSpace;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;r.shadowMap.enabled=true;
       this.cam=new THREE.PerspectiveCamera(44,W/H,30,14000);
       this.v=new THREE.Vector3();this.dummy=new THREE.Object3D();this.col=new THREE.Color();this.c1=new THREE.Color();this.c2=new THREE.Color();
-      this.U={fowC:{value:new THREE.Vector2(CX,CY)},fowR:{value:860},fowDark:{value:.42},zone:{value:new THREE.Vector3(CX,CY,99999)},zoneN:{value:new THREE.Vector3(CX,CY,-1)},time:{value:0},detail:{value:this.detailTex()},cloud:{value:1}};
+      this.U={fowC:{value:new THREE.Vector2(CX,CY)},fowH:{value:0},fowR:{value:860},fowDark:{value:.42},zone:{value:new THREE.Vector3(CX,CY,99999)},zoneN:{value:new THREE.Vector3(CX,CY,-1)},time:{value:0},detail:{value:this.detailTex()},cloud:{value:1}};
       const G=this.G={sph:new THREE.SphereGeometry(1,18,12),sphLo:new THREE.SphereGeometry(1,9,6),half:new THREE.SphereGeometry(1,16,8,0,Math.PI*2,0,Math.PI/2),
         cyl:new THREE.CylinderGeometry(1,1,1,12),cyl6:new THREE.CylinderGeometry(1,1,1,6),cylT:new THREE.CylinderGeometry(.62,1,1,9),cone:new THREE.ConeGeometry(1,1,12),cone4:new THREE.ConeGeometry(1,1,4),cone6:new THREE.ConeGeometry(1,1,7),
         box:new THREE.BoxGeometry(1,1,1),oct:new THREE.OctahedronGeometry(1),ico:new THREE.IcosahedronGeometry(1,0),ico1:new THREE.IcosahedronGeometry(1,1),ico2:new THREE.IcosahedronGeometry(1,2),dod:new THREE.DodecahedronGeometry(1),
@@ -3294,10 +3323,10 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
   lathe(key,pts,seg){let g=this.geoC.get('L'+key);if(!g){g=new THREE.LatheGeometry(pts.map(p=>new THREE.Vector2(p[0],p[1])),seg||16);this.geoC.set('L'+key,g);this.cachedGeos.add(g)}return g},
   fow(m,o){const U=this.U;o=o||{};
     m.onBeforeCompile=sh=>{
-      Object.assign(sh.uniforms,{uFowC:U.fowC,uFowR:U.fowR,uFowDark:U.fowDark,uZone:U.zone,uTime:U.time,uDetail:U.detail,uCloud:U.cloud},o.uniforms||{});
+      Object.assign(sh.uniforms,{uFowC:U.fowC,uFowH:U.fowH,uFowR:U.fowR,uFowDark:U.fowDark,uZone:U.zone,uTime:U.time,uDetail:U.detail,uCloud:U.cloud},o.uniforms||{});
       let vs='varying vec2 vFowW;varying float vWY;uniform float uTime;\n'+sh.vertexShader.replace('#include <project_vertex>','#include <project_vertex>\n{vec4 fw=vec4(transformed,1.0);\n#ifdef USE_INSTANCING\nfw=instanceMatrix*fw;\n#endif\nfw=modelMatrix*fw;vFowW=fw.xz;vWY=fw.y;}');
       if(o.vert)vs=o.vert(vs);sh.vertexShader=vs;
-      let fs='uniform vec2 uFowC;uniform float uFowR;uniform float uFowDark;uniform vec3 uZone;uniform float uTime;uniform float uCloud;uniform sampler2D uDetail;varying vec2 vFowW;varying float vWY;\n'+(o.cut?'#define CUTAWAY\n':'')+sh.fragmentShader;
+      let fs='uniform vec2 uFowC;uniform float uFowH;uniform float uFowR;uniform float uFowDark;uniform vec3 uZone;uniform float uTime;uniform float uCloud;uniform sampler2D uDetail;varying vec2 vFowW;varying float vWY;\n'+(o.cut?'#define CUTAWAY\n':'')+sh.fragmentShader;
       if(o.frag)fs=o.frag(fs);sh.fragmentShader=fs.replace('#include <tonemapping_fragment>',FOWFRAG+'\n#include <tonemapping_fragment>')};
     m.customProgramCacheKey=()=>'f7'+(o.key||'')+(o.cut?'c':'');return m},
   cached(k,f){let m=this.mats.get(k);if(!m){m=f();this.mats.set(k,m)}return m},
@@ -3593,7 +3622,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const wgeo=new THREE.BufferGeometry();wgeo.setAttribute('position',new THREE.Float32BufferAttribute(wq,3));const wuv=[];for(let i=0;i<wq.length;i+=3)wuv.push(wq[i]/WORLD,wq[i+2]/WORLD);wgeo.setAttribute('uv',new THREE.Float32BufferAttribute(wuv,2));wgeo.computeVertexNormals();
     const w=new THREE.Mesh(wgeo,m);w.position.set(0,WL,0);w.renderOrder=2;w.receiveShadow=true;w.userData.ownMat=1;S.add(w);this.water=w;
     // waterfall
-    const F=WD.wf;if(F&&WD.city){const ox=-F.nx,oy=-F.ny;this.fallsBase={x:F.x-ox*190,y:F.y-oy*190,px:-F.ny,py:F.nx}}   // Arena Royale: the owner's waterfall model (arena-city.js), mist at its foot
+    const F=WD.wf;if(F&&WD.city)this.fallsBase=null;   // Arena Royale: the Old Town's falls and their spray are arena-falls.js
     else if(F){const ox=-F.nx,oy=-F.ny,px=-F.ny,py=F.nx;const pts=[],uv=[],idx=[];const nv=16,nu=6,wd=170;
       const outC=h=>{let lo=-45,hi=15;for(let i=0;i<20;i++){const m=(lo+hi)/2;if(330*smooth01((m+45)/60)<h)lo=m;else hi=m}return lo};
       for(let v=0;v<=nv;v++){const t=v/nv;const h=lerp(345,WL,t);const out=Math.min(outC(Math.min(h,329))-30,26-t*60)+Math.sin(t*Math.PI)*-6;for(let u=0;u<=nu;u++){const s=(u/nu-.5)*wd*(1+t*.3);pts.push(F.x+ox*out+px*s,h,F.y+oy*out+py*s);uv.push(u/nu,t*2.2)}}
@@ -3604,8 +3633,8 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
       const ft2=ft.clone();ft2.needsUpdate=true;ft2.repeat.set(1.6,1);this.falls2=ft2;const w2=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:ft2,color:'#ffffff',transparent:true,opacity:.45,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));w2.renderOrder=4;w2.userData.ownMat=1;S.add(w2);
       this.fallsBase={x:F.x-ox*60,y:F.y-oy*60,px,py}}
     // lily pads & reeds
-    const lp=this.instC(G_cyl(this),this.std('#3f7a34',.7,0),WD.lilies,(l,add)=>add(l.x,WL+.6,l.y,16*l.s,.8,16*l.s,0,l.a,0,null),false);
-    this.instC(this.G.sph,this.std('#ffb8d0',.5,0),WD.lilies.filter(l=>l.f),(l,add)=>add(l.x+5,WL+3,l.y+3,5,3,5,0,0,0,null),false);
+    const lp=this.instC(G_cyl(this),this.std('#3f7a34',.7,0),WD.lilies,(l,add)=>add(l.x,(l.wl===undefined?WL:l.wl)+.6,l.y,16*l.s,.8,16*l.s,0,l.a,0,null),false);
+    this.instC(this.G.sph,this.std('#ffb8d0',.5,0),WD.lilies.filter(l=>l.f),(l,add)=>add(l.x+5,(l.wl===undefined?WL:l.wl)+3,l.y+3,5,3,5,0,0,0,null),false);
     const rm=this.std('#7a8a42',.8,0),rh=this.std('#5a3a20',.9,0);
     this.instC(this.cylg(.6,1,1,5),rm,WD.reeds,(r,add)=>{const b=this.gY(r.x,r.y);for(let k=0;k<3;k++){const a=k*2.1+r.x,h=(34+k*9)*r.s;add(r.x+Math.cos(a)*7,b+h/2,r.y+Math.sin(a)*7,2,h,2,Math.cos(a)*.15,0,Math.sin(a)*.15,null)}},false);
     this.instC(this.cylg(1,1,1,6),rh,WD.reeds,(r,add)=>{const b=this.gY(r.x,r.y);const a=r.x;add(r.x+Math.cos(a)*7,b+42*r.s,r.y+Math.sin(a)*7,3.2,12,3.2,0,0,0,null)},false)},
@@ -4241,7 +4270,7 @@ Object.assign(R3,{
   menuFrame(dt){this.kkLoad();if(window.__noMenu)return;$('gl').style.visibility='visible';if(!this.menuReady){if(!this.menuQueued){this.menuQueued=1;this.menuSeed=Math.floor(Math.random()*1e9);setTimeout(()=>{if(state!=='menu'&&state!=='lobby')return;try{setupWorld(this.menuSeed);this.buildWorld();this.menuReady=1}catch(e){console.warn(e)}},700)}return}
     if(this.world!==WD){this.menuReady=0;this.menuQueued=0;return}
     this.t+=dt;const T=this.t;const V=WD.villages.find(v=>v.main)||{x:CX,y:CY};const a=T*.05;const px=V.x+Math.cos(a)*900,py=V.y+Math.sin(a)*500;
-    this.U.fowC.value.set(px,py);this.U.fowR.value=99999;this.U.time.value=T;this.U.zone.value.set(CX,CY,99999);this.U.zoneN.value.z=-1;if(this.zoneWall)this.zoneWall.visible=false;this.U.cloud.value=1;
+    this.U.fowC.value.set(px,py);this.U.fowH.value=0;this.U.fowR.value=99999;this.U.time.value=T;this.U.zone.value.set(CX,CY,99999);this.U.zoneN.value.z=-1;if(this.zoneWall)this.zoneWall.visible=false;this.U.cloud.value=1;
     this.cam.position.set(px,700,py+600);this.cam.lookAt(px,0,py);this.sun.position.set(px-600,1300,py+420);this.sun.target.position.set(px,0,py);
     this.updateGround(px,py);this.stepP(this.PA,dt);this.stepP(this.PB,dt);for(const m of this.mills)m.hub.rotation.z+=dt*m.sp;this.draw()},
   frame(dt){
@@ -4265,7 +4294,7 @@ Object.assign(R3,{
     this.staticGlow.material.uniforms.k.value=lerp(1.25,.45,dk);this.staticGlow.material.uniforms.scale.value=H*this.renderer.getPixelRatio()/2;
     const night=1-dk;this.winMat.emissiveIntensity=night*1.6+du*.6;this.lampMat.emissiveIntensity=.3+night*1.8;
     if(this.bloom)this.bloom.strength=lerp(.62,.22,dk);this.stepBoxes(dt);
-    const U=this.U;U.fowC.value.set(L.x,L.y);U.fowR.value=visionR();U.fowDark.value=lerp(.3,.46,dk);U.zone.value.set(zone.x,zone.y,Math.max(1,zone.r));U.time.value=T;U.cloud.value=dk;
+    const U=this.U;U.fowC.value.set(L.x,L.y);U.fowH.value=cityBase(L.x,L.y);U.fowR.value=visionR();U.fowDark.value=lerp(.3,.46,dk);U.zone.value.set(zone.x,zone.y,Math.max(1,zone.r));U.time.value=T;U.cloud.value=dk;
     for(const r of this.roofs){const h=r.h;const occ=L.x>h.x-60&&L.x<h.x+h.w+60&&L.y<h.y+40&&h.y-L.y<260;r.occ=lerp(r.occ===undefined?1:r.occ,occ?.18:1,Math.min(1,dt*6));const a=Math.min(h.roofA,r.occ);r.g.visible=a>.03;for(const m of r.mats){m.opacity=a;m.depthWrite=a>.95}}
     for(const d of this.domes){d.dm.visible=d.c.roofA>.5}
     for(const s of this.shrines){s.orb.position.y=58+Math.sin(T*2+s.s.x)*6;s.orb.rotation.y=T}
@@ -9247,13 +9276,13 @@ void main(){float a=texture2D(map,vUv).a*vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,
 })();
 
 /* Arena Royale · the Old Town above the waterfall (Claude, 2026-11-21 · index only). Render only.
- * World gen (a.js WD.city) lays the town out on the plateau one step above the valley's north edge: the owner's waterfall pouring
- * off the cliff into the pool, a stairway either side climbing to a temple gate, the town wall along the cliff top with corner
+ * World gen (a.js WD.city) lays the town out on the plateau one step above the valley's north edge: the falls pouring off the cliff
+ * into the pool (drawn by arena-falls.js, framed here by the owner's wide rock), a stairway either side climbing to a temple gate, the town wall along the cliff top with corner
  * towers, streets of cobble from the gates to a plaza (the moon circle, four knight statues on plinths), guardian statues on the
  * temple approach, a broken colonnade at the head of the town and two ruined halls, the owner's lamp pillars along every street,
- * cottages in the quarters. Every piece is one of the owner's models (old_towe.zip, the waterfall GLB), instanced through the
- * same path as the rest of the scenery (R3.celestialAsset / instC), lit and shadowed like it.
- * The waterfall model's painted water is brought to life here: its blue and white texels get falling streaks and a little glow.
+ * cottages in the quarters. Every piece is one of the owner's models (old_towe.zip), instanced through the same path as the rest
+ * of the scenery (R3.celestialAsset / instC), lit and shadowed like it. (Round 2: the waterfall GLB read as a faceted blob from the
+ * game's camera; the falls are procedural now, arena-falls.js.)
  * Entering the town shows its name once per visit. Collision, loot and the garrison are world gen's (a.js). */
 (()=>{
   'use strict';
@@ -9261,23 +9290,9 @@ void main(){float a=texture2D(map,vUv).a*vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,
   const P=R3,T=THREE,A=()=>window.CelestialAssets;
   const warn=(k,e)=>{if(!P['_cityE'+k]){P['_cityE'+k]=1;console.warn('city',k,e)}};
   const loaded=k=>{const a=A()&&A().get(k);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.size)};
-  // the waterfall model's water: blue and white texels fall in streaks (world height scrolls the shared noise downward)
-  function waterfall(m){if(!m||m.userData.cityWf)return;m.userData.cityWf=1;const ob=m.onBeforeCompile,ck=m.customProgramCacheKey;
-    const U={uWfN:{value:window.ArenaVFXTex?ArenaVFXTex.texture:null},uWfT:P.U.time};
-    m.onBeforeCompile=function(sh,rd){if(ob)ob.call(this,sh,rd);try{if(!U.uWfN.value)return;Object.assign(sh.uniforms,U);let f=sh.fragmentShader;
-        if(f.indexOf('#include <map_fragment>')<0||f.indexOf('vFowW')<0)return;
-        f=f.replace('void main() {','uniform sampler2D uWfN;uniform float uWfT;\nvoid main() {\n  float wfG=0.;');
-        f=f.replace('#include <map_fragment>',`#include <map_fragment>
-  {vec3 c0=diffuseColor.rgb;float bl=smoothstep(.03,.15,c0.b-max(c0.r,c0.g*.94)),wh=smoothstep(.7,.88,min(c0.r,min(c0.g,c0.b)))*smoothstep(-.02,.05,c0.b-c0.r);
-   float wa=clamp(bl+wh,0.,1.);if(wa>.01){vec2 q=vec2((vFowW.x+vFowW.y)*.011,vWY*.0065+uWfT*.9);
-     float n=texture2D(uWfN,q).r*.6+texture2D(uWfN,q*vec2(1.9,1.4)+vec2(.31,uWfT*.55)).a*.4,st=smoothstep(.42,.78,n),fo=smoothstep(.62,.9,texture2D(uWfN,q*vec2(3.1,2.2)+vec2(.7,uWfT*1.3)).r);
-     diffuseColor.rgb=mix(c0,c0*.8+vec3(.22,.3,.34)*st+vec3(.28)*fo,wa*.75);wfG=wa*(st*.18+fo*.22);}}`);
-        f=f.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\n  totalEmissiveRadiance+=vec3(.5,.62,.7)*wfG;');
-        sh.fragmentShader=f}catch(e){warn('wf',e)}};
-    m.customProgramCacheKey=function(){return (ck?ck.call(this):'')+'|cwf'};m.needsUpdate=true}
   // one model over its pieces: size from the piece (h = height, w = width, d = depth; the rest keeps the model's proportions)
   function place(R,key,list,o){if(!list.length||!loaded(key))return 0;const s=A().get(key).inspection.size,parts=R.celestialAsset(key);if(!parts)return 0;
-    for(const p of parts){if(key==='city-waterfall')for(const m of Array.isArray(p.mat)?p.mat:[p.mat])waterfall(m);
+    for(const p of parts){
       R.instC(p.geo,p.mat,list,(q,add)=>{const k=q.h?q.h/s[1]:q.w?q.w/s[0]:1,sx=q.w||s[0]*k,sy=q.h||s[1]*k,sz=q.d||s[2]*k;
         const y=q.y0!==undefined?q.y0:R.gY(q.x,q.y)+(q.dy||0)+(q.plinth?34:0);add(q.x,y,q.y,sx,sy,sz,0,q.a,0,null)},o&&o.shadow!==false,null,o&&o.csz)}
     return list.length}
@@ -9286,6 +9301,9 @@ void main(){float a=texture2D(map,vUv).a*vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,
     const n={};for(const [k,list] of by)n[k]=place(this,k,list,{csz:2600});
     // stone plinths under the knight statues
     const kn=by.get('city-knight')||[];if(kn.length){const m=this.tstd('rock','#8f8a84',.92,0);this.instC(this.G.box,m,kn,(q,add)=>{const g=this.gY(q.x,q.y);add(q.x,g+15,q.y,92,34,92,0,q.a,0,null)},true)}
+    // the rocks framing the falls (world gen's places; the owner's wide rock, mossy boulders until it loads)
+    if(C.rocks&&C.rocks.length&&this.natInst){const k=this.mfProp('wide-rock')?'wide-rock':'mossy-boulder';
+      this.natInst(k,C.rocks,(q,s)=>{const W=q.r*2.25,f=W/Math.max(s[0],s[2]);return[s[0]*f,s[1]*f*(q.hy||1.1),s[2]*f]})}
     // the lamp pillars' glowing stones
     for(const q of C.lamps)this.glows.push([q.x,this.gY(q.x,q.y)+182,q.y,'#ffd27a',210]);
     // the moon circle glows faintly at night like the rest of the lamps
@@ -9297,6 +9315,158 @@ void main(){float a=texture2D(map,vUv).a*vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);try{const C=WD&&WD.city;if(!C||!L||typeof state==='undefined'||state!=='play')return r;
       const inC=cityIn(L.x,L.y,-120)&&cityBase(L.x,L.y)>CITY_P-1;if(inC&&!this._inCity&&typeof gameT!=='undefined'&&gameT>3)announce={txt:'🏛️ '+C.name+' — ซากเมืองหลวงของอาณาจักร · ผู้เฝ้ายามทมิฬเฝ้าวิหาร',t:3.4};
       this._inCity=inC}catch(e){warn('fx',e)}return r};
+})();
+
+/* Arena Royale · the Old Town's waterfall (Claude, 2026-11-21 · index only). Render only.
+ * Owner, round 2: the waterfall model read as a faceted blob of blue and leaves from the game's camera and made no sense. The falls
+ * are now built here from world gen's shape (a.js CITY_PW / CITY_PV / CITY_PRU / CITY_PRV / CITY_FW / CITY_FB, cityPondU, cityBasin):
+ *  - the spring pool on the plateau: clear water over a shelving bed, a spring welling up in its still north half, the current
+ *    drawing into the channel and pulling out into long glassy streaks as it speeds up to the lip;
+ *  - the curtain: a sheet falling in a parabola off the brink, glassy at the lip, breaking into white streaks that stretch as the
+ *    water speeds up, ragged at the sides, dissolving into spray at the foot, with a thinner veil in front of it;
+ *  - the plunge: churning white water on the line where the curtain strikes, foam lace and broken ripples spreading over the basin;
+ *  - spray and mist rising and drifting from the plunge (GPU-animated billboards: no per-frame CPU work).
+ * The water surfaces are the game's own materials (lit by the sun and sky, fog of war, cloud shadows, storm tint through R3.fow);
+ * the rocks framing the falls are the owner's wide rock (arena-city.js). Collision, wading and the rocks' places are world gen's. */
+(()=>{
+  'use strict';
+  if(typeof R3==='undefined'||typeof THREE==='undefined'||(typeof MOON!=='undefined'&&MOON))return;
+  const P=R3,T=THREE;
+  const warn=(k,e)=>{if(!P['_fallsE'+k]){P['_fallsE'+k]=1;console.warn('falls',k,e)}};
+  const f1=x=>(+x).toFixed(2);
+  const DROP=CITY_PW-WL,LAND=76,AF=LAND/Math.sqrt(DROP),W0=CITY_FW-14,W1=CITY_FW+56,IMPV=CITY_FB-LAND-4;
+  // the curtain's path: depth d below the brink -> (v, height); outward normal in the (v, y) plane
+  const fallV=d=>CITY_FB-AF*Math.sqrt(d),fallN=d=>{const a=AF/(2*Math.sqrt(Math.max(d,.5))),l=Math.hypot(1,a);return[-1/l,a/l]};
+  const noiseTex=R=>window.ArenaVFXTex&&ArenaVFXTex.texture||R.U.detail.value;
+  // shared GLSL: the town frame (world xz -> u, v) and the pool's shape (same numbers as a.js)
+  const FRAME=`uniform vec4 uCF;uniform vec2 uCO;uniform sampler2D uFN;
+vec2 cityUV(vec2 w){vec2 d=w-uCF.xy;return vec2(dot(d,uCF.zw),dot(d,uCO));}
+float pondSD(vec2 p){float e=(length(vec2(p.x/${f1(CITY_PRU)},(p.y-${f1(CITY_PV)})/${f1(CITY_PRV)}))-1.)*${f1(CITY_PRV)};
+  float ch=max(max(abs(p.x)-${f1(CITY_FW/2)},${f1(CITY_FB)}-p.y),p.y-${f1(CITY_PV)});return min(e,ch);}
+`;
+  const frameU=(R,C)=>({uCF:{value:new T.Vector4(C.x,C.y,C.lx,C.ly)},uCO:{value:new T.Vector2(C.ox,C.oy)},uFN:{value:noiseTex(R)},uLitK:P._fallsLit});
+  P._fallsLit={value:1};
+  // a water material in the game's style (the valley water's settings), patched by 'frag'
+  function waterMat(R,key,o,frag,vert){
+    const base=R.hi?new T.MeshStandardMaterial(Object.assign({color:'#2a6a80',roughness:.14,metalness:0,transparent:true,envMap:R.envTex,envMapIntensity:.38,depthWrite:false},o))
+      :new T.MeshPhongMaterial(Object.assign({color:'#2a6a80',shininess:80,specular:'#a0c8d8',transparent:true,depthWrite:false},R.lamOpts(o)));
+    return R.fow(base,{key,uniforms:frameU(R,WD.city),vert,frag:fs=>fs.replace('void main() {','uniform float uLitK;\n'+FRAME+'void main() {\n  float fallW=0.;').replace('#include <map_fragment>','#include <map_fragment>\n'+frag)
+      .replace('#include <roughnessmap_fragment>','#include <roughnessmap_fragment>\n  roughnessFactor=mix(roughnessFactor,.82,fallW);')
+      .replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\n  totalEmissiveRadiance+=diffuseColor.rgb*fallW*.16*uLitK;')})}
+
+  // ---- the spring pool and its channel: still and clear, a spring welling up, the current quickening to the brink ----
+  const POND=`{vec2 p=cityUV(vFowW);float sd=pondSD(p),dp=clamp(-sd/64.,0.,1.);
+  float nearB=smoothstep(${f1(CITY_FB+150)},${f1(CITY_FB+4)},p.y);
+  // the current: toward the middle of the brink, quickening into the channel; a gentle outflow from the spring
+  vec2 sp=p-vec2(0.,${f1(CITY_PV+45)});float sr=length(sp);
+  vec2 fl=normalize(vec2(-p.x*.7,${f1(CITY_FB-30)}-p.y))*mix(7.,62.,nearB)+sp/max(sr,1.)*14.*exp(-sr/90.);
+  float ph=fract(uTime*.22),w0=1.-abs(1.-2.*ph);vec2 b=p/170.;
+  float n=texture2D(uFN,b-fl*ph*4.5/170.).r*w0+texture2D(uFN,b*1.13-fl*fract(ph+.5)*4.5/170.+.5).r*(1.-w0);
+  float n2=texture2D(uFN,p/61.-fl*ph*4.5/61.+.21).a*w0+texture2D(uFN,p/61.-fl*fract(ph+.5)*4.5/61.+.71).a*(1.-w0);
+  vec3 c=mix(vec3(.11,.25,.22),vec3(.018,.07,.095),smoothstep(.0,.75,dp));
+  c+=vec3(.36,.46,.46)*smoothstep(.58,.86,n*.6+n2*.4)*(.06+.22*nearB);                                 // drifting streaks
+  float rg=sin(sr*.24-uTime*2.1+n2*5.);c+=vec3(.26,.36,.38)*pow(max(rg,0.),5.)*exp(-sr/38.)*.45;      // the spring welling up
+  // the channel: the water draws out into long glassy streaks as it speeds up to the brink, a bright lip right at the edge
+  float ch=smoothstep(${f1(CITY_FB+110)},${f1(CITY_FB+8)},p.y)*(1.-smoothstep(${f1(CITY_FW/2-30)},${f1(CITY_FW/2+4)},abs(p.x)));
+  float spd=mix(30.,95.,smoothstep(${f1(CITY_FB+110)},${f1(CITY_FB)},p.y));
+  float sk=texture2D(uFN,vec2(p.x/26.,p.y/150.+uTime*spd/150.)).b*.6+texture2D(uFN,vec2(p.x/11.+.3,p.y/90.+uTime*spd/90.)).r*.4;
+  c=mix(c,vec3(.03,.1,.12)+vec3(.5,.6,.62)*pow(smoothstep(.45,.95,sk),2.),ch*.85);
+  float lip=smoothstep(${f1(CITY_FB+9)},${f1(CITY_FB+1)},p.y)*ch;
+  float shore=1.-smoothstep(0.,10.,-sd);
+  c=mix(c,vec3(.8,.88,.9),clamp(lip*smoothstep(.35,.85,sk)*.55+shore*.32*(.4+.6*n),0.,1.));
+  fallW=lip*.5;diffuseColor.rgb=c;diffuseColor.a=mix(.4,.93,smoothstep(.0,.5,dp))*(1.-smoothstep(-6.,2.,sd));diffuseColor.a=max(diffuseColor.a,ch*.9*step(sd,0.));}`;
+  function pondMesh(R,C){const pos=[],uv=[],idx=[],St=10,u0=-CITY_PRU-24,u1=CITY_PRU+24,v0=CITY_FB,v1=CITY_PV+CITY_PRV+24,nu=Math.ceil((u1-u0)/St),nv=Math.ceil((v1-v0)/St),id=new Int32Array((nu+1)*(nv+1)).fill(-1);
+    const vert=(i,j)=>{const k=j*(nu+1)+i;if(id[k]<0){const u=u0+i*(u1-u0)/nu,v=v0+j*(v1-v0)/nv,q=cityXY(C,u,v);id[k]=pos.length/3;pos.push(q.x,CITY_PW,q.y);uv.push(q.x/WORLD,q.y/WORLD)}return id[k]};
+    for(let j=0;j<nv;j++)for(let i=0;i<nu;i++){let wet=false;for(const [a,b] of[[0,0],[1,0],[0,1],[1,1],[.5,.5]])if(cityPondU(u0+(i+a)*(u1-u0)/nu,v0+(j+b)*(v1-v0)/nv)<9)wet=true;if(!wet)continue;
+      const a=vert(i,j),b=vert(i+1,j),c=vert(i,j+1),d=vert(i+1,j+1);idx.push(a,b,c,b,d,c)}
+    const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();
+    const n=g.attributes.normal;for(let i=0;i<n.count;i++)n.setXYZ(i,0,1,0);
+    const m=waterMat(R,'cpond',R.waterN?{normalMap:R.waterN,normalScale:new T.Vector2(.32,.32)}:{},POND);
+    const me=new T.Mesh(g,m);me.renderOrder=2;me.receiveShadow=true;me.userData.ownMat=1;return me}
+
+  // ---- the curtain: two sheets (the fall, a veil in front), aF = (across -1..1, depth below the brink, layer) ----
+  const CURT=`{float s=vFall.x,d=vFall.y,L=vFall.z,t=d/${f1(DROP)},tt=sqrt(d);float wd=mix(${f1(W0)},${f1(W1)},t);
+  vec2 q=vec2(s*wd*.5/58.+L*.37,tt*.23-uTime*(.66+L*.14));
+  float n1=texture2D(uFN,q*vec2(1.,.5)).r,n2=texture2D(uFN,q*vec2(2.6,1.)+vec2(.21,-uTime*.21)).a,n3=texture2D(uFN,q*vec2(5.4,1.7)+vec2(.63,.1)).r;
+  float st=n1*.5+n2*.32+n3*.18,vn=texture2D(uFN,q*vec2(4.2,.16)+vec2(.11,-uTime*.1)).b;
+  float aer=smoothstep(.0,.05,t+(st-.5)*.06);
+  vec3 glass=vec3(.06,.16,.18)+vec3(.5,.6,.62)*pow(smoothstep(.45,.95,vn*.55+st*.45),2.);
+  vec3 foam=mix(vec3(.34,.43,.48),vec3(.87,.93,.96),smoothstep(.24,.7,st))*(.76+.4*vn);
+  vec3 c=mix(glass,foam,aer);
+  float a=mix(.9,.5+.46*smoothstep(.2,.62,st),aer);
+  a*=smoothstep(1.02,.56,abs(s)+(n2-.5)*.5+(n3-.5)*.25);
+  a*=1.-smoothstep(.8,1.,t+(n1-.5)*.22);
+  if(L>.5){a*=.38*smoothstep(.05,.2,t);c=mix(c,vec3(.93,.97,1.),.55);}
+  fallW=aer;diffuseColor.rgb=c;diffuseColor.a=a;}`;
+  function curtainMesh(R,C){const NU=26,NV=30,pos=[],att=[],idx=[];
+    for(let L=0;L<2;L++){const o0=pos.length/3;
+      for(let j=0;j<=NV;j++){const t=j/NV,d=DROP*Math.pow(t,1.55)+.001,v=fallV(d),y=CITY_PW-d,nm=fallN(d),off=L?6+5*t:0,wd=W0+(W1-W0)*t;
+        for(let i=0;i<=NU;i++){const s=-1+2*i/NU,q=cityXY(C,s*wd/2,v+nm[0]*off);pos.push(q.x,y+nm[1]*off,q.y);att.push(s,d,L)}}
+      for(let j=0;j<NV;j++)for(let i=0;i<NU;i++){const a=o0+j*(NU+1)+i,b=a+1,c=a+NU+1,e=c+1;idx.push(a,c,b,b,c,e)}}
+    const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('aF',new T.Float32BufferAttribute(att,3));g.setIndex(idx);g.computeVertexNormals();
+    const m=waterMat(R,'cfall',{side:T.DoubleSide,color:'#ffffff'},CURT,vs=>'attribute vec3 aF;varying vec3 vFall;\n'+vs.replace('#include <begin_vertex>','#include <begin_vertex>\n  vFall=aF;'));
+    const fs0=m.onBeforeCompile;m.onBeforeCompile=function(sh,rd){fs0.call(this,sh,rd);sh.fragmentShader='varying vec3 vFall;\n'+sh.fragmentShader};
+    const me=new T.Mesh(g,m);me.renderOrder=3;me.receiveShadow=true;me.userData.ownMat=1;return me}
+
+  // ---- the plunge: white water on the strike line, foam lace and rings running out over the basin (aW: on water 0..1) ----
+  const FOAM=`{vec2 p=cityUV(vFowW);vec2 rel=vec2(p.x*.55,p.y-(${f1(IMPV)}));float r=length(rel);vec2 dir=rel/max(r,1.);
+  float strike=exp(-pow((p.y-(${f1(IMPV)}))/16.,2.))*(1.-smoothstep(${f1(W1/2-30)},${f1(W1/2+24)},abs(p.x)));
+  vec2 fl=dir*mix(46.,10.,smoothstep(0.,150.,r));float ph=fract(uTime*.31),w0=1.-abs(1.-2.*ph);
+  vec2 b=p/95.;float lace=texture2D(uFN,b-fl*ph*3.2/95.).g*w0+texture2D(uFN,b*1.21-fl*fract(ph+.5)*3.2/95.+.37).g*(1.-w0);
+  float n=texture2D(uFN,p/70.-fl*ph*3.2/70.).r*w0+texture2D(uFN,p/70.-fl*fract(ph+.5)*3.2/70.+.5).r*(1.-w0);
+  float near=1.-smoothstep(30.,175.,r);
+  float f=strike*(.75+.45*n)+(1.-smoothstep(.015,.075,lace))*near*(.35+.5*n)+smoothstep(.55,.8,n)*near*.35;
+  float rg=pow(max(0.,sin(r*.12-uTime*2.5+n*6.)),8.)*(1.-smoothstep(50.,200.,r))*.14;
+  fallW=1.;diffuseColor.rgb=vec3(.85,.91,.94);diffuseColor.a=clamp(f+rg,0.,1.)*.92*vFoamW;}`;
+  function foamMesh(R,C){const pos=[],aw=[],idx=[],St=12,u0=-W1/2-110,u1=W1/2+110,v0=IMPV-130,v1=CITY_FB-20,nu=Math.ceil((u1-u0)/St),nv=Math.ceil((v1-v0)/St);
+    for(let j=0;j<=nv;j++)for(let i=0;i<=nu;i++){const u=u0+i*(u1-u0)/nu,v=v0+j*(v1-v0)/nv,q=cityXY(C,u,v),h=heightAt(q.x,q.y);pos.push(q.x,WL+.9,q.y);aw.push(clamp((WL-.5-h)/3,0,1))}
+    for(let j=0;j<nv;j++)for(let i=0;i<nu;i++){const a=j*(nu+1)+i,b=a+1,c=a+nu+1,e=c+1;if(aw[a]+aw[b]+aw[c]+aw[e]<=0)continue;idx.push(a,b,c,b,e,c)}
+    const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('aW',new T.Float32BufferAttribute(aw,1));g.setIndex(idx);g.computeVertexNormals();
+    const n=g.attributes.normal;for(let i=0;i<n.count;i++)n.setXYZ(i,0,1,0);
+    const m=waterMat(R,'cfoam',{color:'#ffffff',roughness:.7,envMapIntensity:.15,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4},FOAM,vs=>'attribute float aW;varying float vFoamW;\n'+vs.replace('#include <begin_vertex>','#include <begin_vertex>\n  vFoamW=aW;'));
+    const fs0=m.onBeforeCompile;m.onBeforeCompile=function(sh,rd){fs0.call(this,sh,rd);sh.fragmentShader='varying float vFoamW;\n'+sh.fragmentShader};
+    const me=new T.Mesh(g,m);me.renderOrder=4;me.receiveShadow=true;me.userData.ownMat=1;return me}
+
+  // ---- spray and mist: aS = (across -1..1, phase, size, kind: 0 mist, 1 droplets thrown up and falling back) ----
+  function mistMesh(R,C){const lo=!R.hi,NM=lo?22:44,ND=lo?14:30,N=NM+ND,base=new T.PlaneGeometry(1,1),g=new T.InstancedBufferGeometry();
+    g.index=base.index;g.setAttribute('position',base.attributes.position);g.setAttribute('uv',base.attributes.uv);
+    const a=new Float32Array(N*4);let s=0x5eed1;const rnd=()=>{s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff};
+    for(let i=0;i<N;i++){const k=i<NM?0:1;a[i*4]=rnd()*2-1;a[i*4+1]=rnd();a[i*4+2]=k?.8+rnd()*.5:.75+rnd()*.55;a[i*4+3]=k}
+    g.setAttribute('aS',new T.InstancedBufferAttribute(a,4));g.instanceCount=N;
+    const U=Object.assign(T.UniformsUtils.clone(T.UniformsLib.fog),frameU(R,C),{uTime:R.U.time,uLit:{value:new T.Color(1,1,1)},uFowC:R.U.fowC,uFowR:R.U.fowR,uK:{value:new T.Vector3(W1,IMPV,WL)}});
+    const m=new T.ShaderMaterial({uniforms:U,transparent:true,depthWrite:false,fog:true,
+      vertexShader:`attribute vec4 aS;uniform float uTime;uniform vec4 uCF;uniform vec2 uCO;uniform vec3 uK;varying vec2 vUv;varying float vA,vK,vS;varying vec2 vW;
+#include <fog_pars_vertex>
+void main(){float k=aS.w,sd=aS.y,life=k<.5?mix(3.4,5.6,fract(sd*7.31)):mix(.9,1.5,fract(sd*5.17)),age=fract(uTime/life+sd),u,v,y,sz,a;
+ if(k<.5){u=aS.x*uK.x*.5*(.72+.6*age);v=uK.y+6.-age*(22.+44.*fract(sd*3.7));y=uK.z+5.+age*(48.+84.*fract(sd*9.1));sz=mix(34.,150.,sqrt(age))*aS.z;
+   a=smoothstep(0.,.16,age)*(1.-smoothstep(.42,1.,age))*.26;}
+ else{float tt=age*life,vy=95.+75.*fract(sd*4.3),vo=26.+46.*fract(sd*6.7);u=aS.x*uK.x*.48+(fract(sd*2.9)-.5)*34.*tt;v=uK.y-vo*tt;y=uK.z+3.+vy*tt-165.*tt*tt;
+   sz=(9.+11.*fract(sd*8.3))*aS.z;a=(1.-smoothstep(.62,1.,age))*.55*step(uK.z+1.,y);y=max(y,uK.z);}
+ vec3 c=vec3(uCF.x+u*uCF.z+v*uCO.x,y,uCF.y+u*uCF.w+v*uCO.y);vW=c.xz;vA=a;vK=k;vS=sd;vUv=uv;
+ vec4 mvPosition=viewMatrix*vec4(c,1.);mvPosition.xy+=position.xy*sz;gl_Position=projectionMatrix*mvPosition;
+#include <fog_vertex>
+}`,
+      fragmentShader:`uniform sampler2D uFN;uniform vec3 uLit;uniform vec2 uFowC;uniform float uFowR;uniform float uTime;varying vec2 vUv;varying float vA,vK,vS;varying vec2 vW;
+#include <fog_pars_fragment>
+void main(){vec2 q=vUv*2.-1.;float r=length(q);if(r>1.)discard;float a;vec3 col;
+ if(vK<.5){float n=texture2D(uFN,vUv*.55+vec2(vS*3.1,vS*1.7-uTime*.03)).r;a=vA*pow(1.-r,1.5)*(.35+.9*n);col=vec3(.86,.92,.98);}
+ else{a=vA*(1.-smoothstep(.25,1.,r));col=vec3(.95,.98,1.);}
+ a*=1.-smoothstep(uFowR*.85,uFowR*1.05,distance(vW,uFowC));if(a<.004)discard;
+ gl_FragColor=vec4(col*uLit,a);
+#include <tonemapping_fragment>
+#include <colorspace_fragment>
+#include <fog_fragment>
+}`});
+    const me=new T.Mesh(g,m);me.frustumCulled=false;me.renderOrder=5;me.userData.ownMat=1;me.userData.fallsMist=U;return me}
+
+  P.buildFalls=function(){const C=WD&&WD.city;this.fallsMist=null;if(!C||typeof cityPondU!=='function')return;
+    for(const [k,f] of[['pond',pondMesh],['curtain',curtainMesh],['foam',foamMesh],['mist',mistMesh]]){try{const m=f(this,C);this.scene.add(m);if(k==='mist')this.fallsMist=m.userData.fallsMist}catch(e){warn(k,e)}}};
+  // built with the town's props
+  const _bp=P.buildProps;P.buildProps=function(){const r=_bp.apply(this,arguments);try{this.buildFalls()}catch(e){warn('build',e)}return r};
+  // the spray takes the scene's light (day / night / dusk), the white water glows a little less at night
+  const _fx=P.fxExtra;P.fxExtra=function(){const r=_fx.apply(this,arguments);try{const U=this.fallsMist;if(U&&this.hemi&&this.sun){const h=this.hemi,s=this.sun,c=U.uLit.value;
+      c.setRGB(h.color.r*h.intensity*.55+s.color.r*s.intensity*.16,h.color.g*h.intensity*.55+s.color.g*s.intensity*.16,h.color.b*h.intensity*.55+s.color.b*s.intensity*.16);
+      P._fallsLit.value=Math.min(1,(c.r+c.g+c.b)/3)}}catch(e){warn('fx',e)}return r};
 })();
 
 // ===================== SETTINGS: view + graphics quality =====================
