@@ -105,11 +105,11 @@
       if(near&&dt>0){for(const b of F.braziers){if(Math.random()>dt*9)continue;const y=this.gY(b.x,b.y)+92;this.sp(true,{x:b.x+(Math.random()-.5)*16,y,z:b.y+(Math.random()-.5)*16,vy:60+Math.random()*60,l:.7,s:22,s1:4,c:'#bff2ff',c2:'#3a8ad8',sp:1})}}
       // Eternal Winter: driven snow pulled toward the queen while it charges, frost at the screen's edges, a white burst at the end
       let fr=0;for(const a of aoes){if(a.kind!=='qwinter')continue;const d=Math.hypot(a.x-L.x,a.y-L.y);if(d>a.r+900)continue;
-        const k=a.t<a.delay?a.t/a.delay:0;fr=Math.max(fr,a.t<a.delay?k*.75:Math.max(0,a.fxT||0)/(a.vis||1));
+        const k=a.t<a.delay?a.t/a.delay:0;fr=Math.max(fr,a.t<a.delay?k*.5:Math.max(0,a.fxT||0)/(a.vis||1)*.6);
         if(a.t<a.delay&&Math.random()<dt*60){const an=Math.random()*6.283,rr=a.r*(.35+.65*Math.random()),x=a.x+Math.cos(an)*rr,z=a.y+Math.sin(an)*rr;
           this.sp(true,{x,y:this.gY(x,z)+20+Math.random()*160,z,vx:(a.x-x)*.9,vy:-10,vz:(a.y-z)*.9,l:1.1,s:14,s1:3,c:'#ffffff',sp:1})}
         // clients rebuild their areas every snapshot: the burst is remembered by place, not on the area
-        if(a.t>=a.delay){const B=this._fortBursts||(this._fortBursts=new Map()),key=(a.x|0)+','+(a.y|0),now=performance.now();if(!(now-(B.get(key)||-1e9)<4000)){B.set(key,now);this.ring(a.x,a.y,40,a.r,'#e8f6ff',1.2);this.ring(a.x,a.y,30,a.r*.55,'#ffffff',.8);if(this.eclFlash)this.eclFlash('#ffffff',.5)}}}
+        if(a.t>=a.delay){const B=this._fortBursts||(this._fortBursts=new Map()),key=(a.x|0)+','+(a.y|0),now=performance.now();if(!(now-(B.get(key)||-1e9)<4000)){B.set(key,now);this.ring(a.x,a.y,40,a.r,'#e8f6ff',1.2);this.ring(a.x,a.y,30,a.r*.55,'#ffffff',.8);if(this.eclFlash)this.eclFlash('#e8f6ff',.3)}}}
       const D=fr>0||frost?frostDom():null;if(D){this._fortFr=(this._fortFr||0)+(fr-(this._fortFr||0))*Math.min(1,dt*5);D.style.opacity=this._fortFr.toFixed(3)}}
     catch(e){warn('fx',e)}return r};
 })();

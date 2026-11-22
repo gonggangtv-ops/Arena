@@ -883,7 +883,7 @@ function hostUpdate(dt){
   aoes=aoes.filter(a=>!(a.done&&(a.dot?true:a.fxT<=0))).concat(fresh);
 }
 function applyAoe(a){for(const u of units){if(u.dead||!isEnemy(a.owner,u))continue;
-  if(hitArea(a,u)){dealDamage(u,a.dmg,a.type,a.owner,!!a.dot&&a.kind!=='rain'&&a.kind!=='blizz'&&a.kind!=='volley'&&a.kind!=='thunder');if(u.dead)continue;
+  if(hitArea(a,u)){dealDamage(u,a.dmg,a.type,a.owner,!!a.dot&&a.kind!=='rain'&&a.kind!=='blizz'&&a.kind!=='qblizz'&&a.kind!=='volley'&&a.kind!=='thunder');if(u.dead)continue;
     if(a.kb&&!u.boss&&!u.golem){const d=dist(a,u)||1;u.kb={vx:(u.x-a.x)/d*a.kb,vy:(u.y-a.y)/d*a.kb,t:.26};u.dash=null}if(a.stun)u.stunT=Math.max(u.stunT,a.stun);if(a.root)u.rootT=Math.max(u.rootT,a.root);if(a.slow){u.slowT=Math.max(u.slowT,a.slow);u.slowAmt=a.slowAmt||.4}
     if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP);else if(a.st&&(!a.stP||Math.random()<a.stP))stAdd(a.owner,u,a.st,a.stN||1)}}}
 
