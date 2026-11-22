@@ -270,14 +270,7 @@ try:
         assert not errors and not shader_errors, (errors, shader_errors)
         cases.append({'case': 'arena-2d', **two_d, 'errors': errors, 'shaderErrors': shader_errors})
         page.context.close();print('PASS Arena 2D: original view handler, HUD paint and unchanged actor state', flush=True)
-
-        page, errors, shader_errors = launch(browser, origin, document='cursed.html')
-        assert page.evaluate('MOON&&typeof ArenaVitals==="undefined"&&!document.body.classList.contains("arena-combat-hud")')
-        start(page);page.evaluate('R3.frame(1/60)')
-        assert page.evaluate('state==="play"&&!!ME()&&!ME().dead')
-        assert not errors and not shader_errors, (errors, shader_errors)
-        cases.append({'case': 'cursed-isolated-start', 'arenaHUDAbsent': True, 'errors': errors, 'shaderErrors': shader_errors})
-        page.context.close();print('PASS Cursed: isolated from Arena HUD, real Solo start', flush=True)
+        # cursed.html is no longer maintained (owner 2026-11-23), so it is no longer opened here
         browser.close()
 finally:
     server.shutdown();server.server_close()

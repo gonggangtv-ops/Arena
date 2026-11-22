@@ -6,20 +6,22 @@
 ## โครงสร้าง
 - `src/` — **ซอร์สจริง** แก้ที่นี่เท่านั้น
   - `a.js` ข้อมูล/แผนที่ · `b.js` ระบบเกม (host) · `c.js` ออนไลน์+HUD · `r3`–`r12.js` ภาพ 3D · `t1.js` ระบบ Cursed Realm · `d.js` เมนู/ตั้งค่า
-  - `celestial-*`, `moonfall-*` = ชั้น Moonfall (โหลดเฉพาะ `cursed.html`)
+  - `celestial-*`, `moonfall-*` = ไฟล์แยกที่ก๊อปไป `app/src/main/assets/` ตรงๆ (ไม่ได้รวมใน html) · index ใช้ `celestial-assets.js` `celestial-theme.css` `moonfall-village/ui/menu/inventory/loading` · `celestial-render.js` `moonfall-collision-data/environment/biome.js` ใช้แค่ cursed
   - `build.py` รวมไฟล์ (ตัวแปร `CURSED` = ระบบเกมใหม่, `MOON` = ฉาก Moonfall):
     - `python3 build.py` → `index.html` **Arena Royale**: ระบบทั้งหมดของ Cursed Realm (เหรียญ ร้านค้า อาวุธสุ่มลักษณะ/รูน สกิลพิเศษ หลบ/ป้องกัน 5 ภูมิภาค UI/เมนู/หน้าโหลด) + ฉากเดิม + บ้าน Meshy (CURSED=true, MOON=false)
-    - `python3 build.py cursed` → `cursed.html` **The Cursed Realm**: ระบบเดียวกัน + ฉาก Moonfall (CURSED=true, MOON=true)
+    - `python3 build.py cursed` → `cursed.html` **The Cursed Realm**: ระบบเดียวกัน + ฉาก Moonfall (CURSED=true, MOON=true) — **เลิกดูแลแล้ว ไม่ต้อง build** (ข้อ 0)
     - `python3 build.py classic` → `classic.html` เกมเดิม v2.5 ไว้อ้างอิง (ไม่ deploy)
 - `app/src/main/assets/` — ไฟล์ที่ deploy (HTML ที่ build แล้ว, lib, `assets/meshy/*.glb`, `assets/ui/*`, เพลง)
 - `moonfall-docs/` — รายงาน สคริปต์ทดสอบ และวิธีย่อโมเดล
 - `.github/workflows/pages.yml` — push ขึ้น `main` แล้ว deploy ไป branch `gh-pages` อัตโนมัติ (ก๊อปไฟล์ทีละชื่อ: เพิ่มไฟล์ใหม่ต้องเพิ่มในนี้ด้วย)
 
 ## กติกาสำคัญ
-0. **เจ้าของสั่ง 2026-11-17: หยุดพัฒนา `cursed.html` ชั่วคราว — งานใหม่ทั้งหมดเน้น `index.html`** (cursed ยัง build/deploy ตามเดิม แค่ไม่ต้องเพิ่มฟีเจอร์/ฉาก/ทดสอบเชิงลึก ขอแค่ build ผ่านและเปิดเล่นได้)
+0. **เจ้าของสั่ง 2026-11-23: เลิกยุ่งกับ `cursed.html` ไปเลย — ทำงานเฉพาะ `index.html` (Arena Royale)** ไม่ต้อง build `cursed` ไม่ต้องทดสอบ ไม่ต้องแก้ให้เข้ากับ cursed
+   · `app/src/main/assets/cursed.html` ที่ deploy อยู่ค้างไว้ที่เวอร์ชันสุดท้าย (PR #47) อย่า build ทับ · ไฟล์ร่วม (manifest, `celestial-assets.js`, `moonfall-*`, โมเดล) แก้ได้ตามที่ index ต้องการ ไม่ต้องเช็กว่า cursed ยังเปิดได้
+   (แทนคำสั่ง 2026-11-17 ที่ให้หยุดพัฒนา cursed ชั่วคราวแต่ยัง build ผ่านและเปิดเล่นได้)
 1. **ห้ามแก้หรือเปิด PR เข้า `gh-pages`** มันถูกเขียนทับทุกครั้งที่ deploy — PR ต้อง base = `main`
 2. **ห้ามแก้ `index.html` / `cursed.html` ที่ build แล้วตรงๆ** แก้ใน `src/` แล้ว build ใหม่ และก๊อปไป `app/src/main/assets/`
-3. ระบบเกม/UI ใหม่ต้องใช้ได้ทั้ง `index.html` และ `cursed.html` (ใช้เงื่อนไข `CURSED`) · อะไรที่เป็น**ฉาก** (พื้น ต้นไม้ หิน แสง หมอก ของตกแต่ง) ใช้เงื่อนไข `MOON` — index ใช้ฉากเดิม, cursed ใช้ฉาก Moonfall (เจ้าของสั่ง 2026-11-17) · โมเดลบ้าน/แผงตลาดใช้ทั้งสองเกม
+3. ระบบเกม/UI/ฉากใหม่ทำสำหรับ `index.html` เท่านั้น (index = `CURSED=true`, `MOON=false`) · เงื่อนไข `CURSED`/`MOON` ที่มีอยู่แล้วในโค้ดปล่อยไว้ได้ ไม่ต้องรื้อ และไม่ต้องเพิ่มใหม่เพื่อ cursed
 4. ทำงานใน branch ของตัวเอง: `codex/<เรื่อง>` หรือ `claude/<เรื่อง>` แล้วเปิด PR เข้า `main` · branch สั้น merge บ่อย
 5. ก่อนเริ่ม: `git pull` main และดูว่าอีกตัวกำลังแก้ไฟล์ไหน (ดู `HANDOFF.md` ส่วน "กำลังทำ") — อย่าแก้ไฟล์เดียวกันพร้อมกัน
 6. จบงาน: เขียนบันทึกใน `HANDOFF.md` (ทำอะไร, ไฟล์ที่แตะ, ทดสอบอะไร, อะไรค้าง) ในคอมมิตเดียวกัน
@@ -28,8 +30,9 @@
 9. การใช้เครดิต Meshy ต้องบอกเจ้าของก่อนทุกครั้ง
 
 ## การทดสอบขั้นต่ำก่อน merge
-- `node --check` ไฟล์ JS ที่แก้ และ build ผ่านทั้ง 2 โหมด
-- เปิด `cursed.html` ผ่าน http server (ไม่ใช่ file://) เริ่มเกมได้ ไม่มี error ใน console
+- `node --check` ไฟล์ JS ที่แก้ และ `python3 build.py` (index) ผ่าน
+- เปิด `index.html` ผ่าน http server (ไม่ใช่ file://) เริ่มเกมได้ ไม่มี error ใน console
+- สคริปต์ใน `src/tests/` ทดสอบเฉพาะ index (`smoke-arena-refresh.py` `smoke-arena-combat-hud.py` `smoke-arena-vfx*.py`) · `smoke-ui-ux.py` และ `smoke-cinematic-ui.py` เป็นของ cursed (Moonfall UI) เลิกใช้แล้ว ไม่ต้องรัน
 - ถ้าแตะระบบเกม/ออนไลน์: เล่นจนจบ 1 แมตช์ (บอท) และทดสอบ 2 เครื่อง (host/client) ถ้าทำได้
 
 ## ข้อควรรู้

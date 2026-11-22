@@ -321,17 +321,7 @@ try:
                         'diagnostics': visit.clean()})
         visit.context.close()
         print('PASS corrupt required art: error locks admission and real retry recovers', flush=True)
-
-        visit = Visit(browser, address)
-        visit.open('cursed.html')
-        boot_state = visit.ready()
-        assert visit.page.evaluate('CURSED&&MOON')
-        assert visit.page.locator('#arenaSettings').count() == 0
-        started = enter_arena(visit)
-        results.append({'case': 'cursed-start-only', 'boot': boot_state, 'game': started,
-                        'diagnostics': visit.clean()})
-        visit.context.close()
-        print('PASS Cursed Realm: real assets, compile and start', flush=True)
+        # cursed.html is no longer maintained (owner 2026-11-23), so it is no longer opened here
         browser.close()
 finally:
     service.shutdown()
