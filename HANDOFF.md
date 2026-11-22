@@ -25,7 +25,10 @@
 - `snow-queen.js`: kind ใหม่ `qslash qlance qshard qnova qblizz qprison` (+ `qwinter` เดิม) แทน `lslash/frost/crain/blizz` — kind ใช้แค่วาด; `b.js` ใส่ `qblizz` ในรายการ dot ที่ไม่ quiet เหมือน `blizz` เดิม เพื่อให้ดาเมจ/ผลภูมิภาคเหมือนเดิมทุกอย่าง
 - `build.py`: `queen-vfx` ใน `FORT_NEW`, `queen-vfx.js` หลัง `arena-frost.js` · manifest `queen-vfx` ใต้ `"assets"`
 - ทดสอบ
-  - TESTS
+  - ชุด VFX ของฮีโร่เทียบกับ build ของ main (4520c3a): desktop-high ยิงจริง 63 ครั้ง ทุกเส้นทางภาพ ผล combat/network เท่า baseline · native input, RNG purity, pool stress ผ่าน ไม่มี error/shader error
+    (captures ค้าง 180 วิบน swiftshader เหมือน PR ก่อน) · mobile-low ผ่าน (memory drift +1 geo/+2 tex/+1 prog เท่ากับ main) · codex smoke (refresh) ผ่าน 3 ข้อ (strict art gate รวม `queen-vfx`) · บอทแมตช์ index จบไม่มี error
+  - scratch harness (`h7/qshow.py`, `qclip.py`): บังคับราชินีร่ายทีละสกิลผ่านกล้องเกม ทั้ง high และ low — ทุกสกิล + มงกุฎ ปีก ตาย ไม่มี error/shader error · ปรับความสว่าง 3 รอบ (รอบแรกผลึกขาวจ้า/บลูมกลบจอ → ลด emissive, สีน้ำแข็งเข้มขึ้น, ลดละอองขาว/แสงวาบ)
+  - Blender: รันสคริปต์ซ้ำได้ mesh เดิมทุก byte · ยังไม่ได้ลองบนมือถือจริง
 
 ## 2026-11-23 · Claude · เลิกดูแล cursed.html (เจ้าของสั่ง)
 - เจ้าของสั่ง (2026-11-23 00:30): "ตอนนี้เราเลิกยุ่งกับ cursed.html ไปเลยนะ"
