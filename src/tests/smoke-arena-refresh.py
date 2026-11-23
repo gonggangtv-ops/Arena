@@ -243,6 +243,10 @@ try:
                 MoonfallUI.snapshot().state==='loaded'&&document.fonts.status==='loaded';
             }""", polling=100)
             assert held, 'The required Arena illustration was not requested'
+            assert page.title() == 'MuzCruor'
+            loading_heading = page.locator('#loading').get_by_role('heading', name='MuzCruor', exact=True)
+            assert loading_heading.is_visible()
+            loading_heading.locator('img[src$="muzcruor-mark.webp"]').wait_for(state='visible')
             assert page.locator('#loading').is_visible() and page.locator('#soloBtn').is_disabled()
             locked = page.evaluate("""() => {
               document.getElementById('soloBtn').click();hostStartMatch();enterPlay();quickMatch();hostRoom();joinRoom('BLOCK','');
@@ -258,7 +262,7 @@ try:
             boot_state = visit.ready()
             assert boot_state['moody'] and boot_state['gfxQ'] == 'auto', boot_state
             page.wait_for_function("document.getElementById('menu').dataset.arenaMenu", polling=100)
-            heading = page.locator('#menu').get_by_role('heading', name='Arena Royale', exact=True)
+            heading = page.locator('#menu').get_by_role('heading', name='MuzCruor', exact=True)
             assert heading.is_visible()
             heading.locator('img').wait_for(state='visible')
             primary = fits(page, '#soloBtn', target=True)

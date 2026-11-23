@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#080b16">
-<title>Arena Royale</title>
+<title>MuzCruor</title>
 <style>
 :root{color-scheme:dark;--bg:#0c0a08;--panel:#1c1712;--line:#5a4a2a;--gold:#e6c25a;--ink:#f2ead8;--mute:#b8a888;--bad:#ff7a7a}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-family:system-ui,-apple-system,"Noto Sans Thai","Segoe UI",sans-serif;color:var(--ink)}
@@ -122,10 +122,9 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "moon-dead-tree", "temple-gate", "moon-stairs", "modular-wall", "wall-corner", "ruin-arch", "guardian-statue", "moon-arena", "city-pillar", "city-knight", "ice-queen", "frost-scepter", "snow-stairs", "queen-vfx", "brazier"]</script>
 
 <style>@font-face{font-family:'Arena Cinzel';src:url('assets/ui/arena-cinzel.woff') format('woff');font-weight:700;font-display:swap}
-:root{--arena-wordmark-art:url('assets/ui/arena-royale-mark.webp')}
-.arena-wordmark{position:relative;display:grid;align-content:center;width:min(100%,445px);aspect-ratio:1188/665;margin:0;font:700 clamp(42px,6vw,85px)/.91 'Arena Cinzel',Georgia,serif;letter-spacing:-.045em;text-align:center}
+:root{--arena-wordmark-art:url('assets/ui/muzcruor-mark.webp')}
+.arena-wordmark{position:relative;display:grid;align-content:center;width:min(100%,445px);aspect-ratio:1344/437;margin:0;font:700 clamp(30px,5.2vw,72px)/1 'Arena Cinzel',Georgia,serif;letter-spacing:-.045em;text-align:center}
 .arena-wordmark span{display:block;color:#e9e6f2;text-shadow:0 4px 16px #080814}
-.arena-wordmark span+span{font-size:.91em;color:#e5bc82}
 .arena-wordmark img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;visibility:hidden;filter:drop-shadow(0 5px 14px #070610c7)}
 .arena-wordmark-ready img{visibility:visible}
 .arena-wordmark-ready span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
@@ -160,12 +159,12 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
   #loading.arena-load{--gate-x:62%;align-items:flex-end;padding:28px max(24px,env(safe-area-inset-right)) max(46px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left))}
   .arena-load-art{background-size:auto 100%;background-position:80% center}
   .arena-load-backdrop::after{background:linear-gradient(0deg,#080912 4%,#0a0b17e8 25%,#0c0d1a83 58%,#0a09163b 81%)}
-  .arena-load .arena-wordmark{font-size:clamp(39px,12.8vw,67px)}
+  .arena-load .arena-wordmark{font-size:clamp(30px,10.8vw,59px)}
 }
 @media(max-height:510px) and (orientation:landscape){
   #loading.arena-load{padding-top:16px;padding-bottom:16px}
   .arena-load-card{width:min(365px,48vw)}
-  .arena-load .arena-wordmark{max-width:62vh;font-size:clamp(32px,9.8vh,50px)}
+  .arena-load .arena-wordmark{max-width:77vh;font-size:clamp(28px,9.5vh,47px)}
   .arena-load-rule{margin:20px 0 13px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -185,7 +184,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 #menu[data-arena-menu] .moonfall-menu-scenery{background-image:linear-gradient(90deg,#080b10 0%,#080b10ee 20%,#080b10ae 36%,#080b1024 58%,transparent 80%),linear-gradient(0deg,#080b10 0%,#080b1033 30%,transparent 75%,#080b1040),var(--arena-menu-art);background-position:center,center,74% center;background-size:cover;background-repeat:no-repeat}
 #menu[data-arena-menu] .moonfall-menu-content{width:min(500px,43vw);gap:9px}
 #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:13px}
-#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{width:min(94%,416px);font-size:clamp(42px,5.4vw,79px);line-height:.9;letter-spacing:-.045em}
+#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{width:min(100%,452px);font-size:clamp(30px,5.2vw,71px);line-height:1;letter-spacing:-.045em}
 #menu[data-arena-menu] .moonfall-menu-title .anime-kicker{color:#c1b8a6;letter-spacing:.28em;font-size:9px;margin:0 0 2px;padding:0;min-height:18px}
 #menu[data-arena-menu] .moonfall-menu-chapter{margin-top:22px;font-size:9px;letter-spacing:.27em;color:#b9a684}
 #menu[data-arena-menu] .moonfall-menu-chapter::before{width:28px;background:linear-gradient(90deg,#a98a4e55,#d0b27c)}
@@ -264,7 +263,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
   #menu[data-arena-menu]{padding:clamp(96px,14vh,130px) max(23px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(23px,env(safe-area-inset-left))}
   #menu[data-arena-menu] .moonfall-menu-content{width:100%;gap:8px}
   #menu[data-arena-menu] .moonfall-menu-scenery{background-image:linear-gradient(0deg,#080b10 16%,#080b10ef 38%,#080b1033 75%,#080b1033),linear-gradient(90deg,#080b1088,transparent 90%),var(--arena-menu-art);background-size:cover,cover,auto 72vh;background-position:center,center,82% top}
-  #menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(42px,11vw,68px)}
+  #menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(30px,10.8vw,62px)}
   #menu[data-arena-menu] .moonfall-menu-title .anime-kicker{font-size:8px;letter-spacing:.23em;margin-bottom:18px}
   #menu[data-arena-menu] .moonfall-menu-chapter{margin-top:19px;font-size:8px;letter-spacing:.2em}
   #menu[data-arena-menu] .moonfall-menu-title .sub{font-size:11px;margin-top:10px;max-width:305px;line-height:1.8}
@@ -292,7 +291,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
   #menu[data-arena-menu]{padding-top:max(15px,env(safe-area-inset-top));padding-bottom:max(15px,env(safe-area-inset-bottom));padding-left:max(26px,env(safe-area-inset-left))}
   #menu[data-arena-menu] .moonfall-menu-scenery{background-position:center,center,74% top}
   #menu[data-arena-menu] .moonfall-menu-content{width:min(430px,53vw);gap:6px}
-  #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:4px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{width:min(100%,54vh);font-size:clamp(30px,8vh,43px)}
+  #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:4px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{width:min(100%,77vh);font-size:clamp(28px,9vh,45px)}
   #menu[data-arena-menu] .moonfall-menu-title .anime-kicker{font-size:7px;margin-bottom:10px;letter-spacing:.23em}#menu[data-arena-menu] .moonfall-menu-chapter{margin-top:11px;font-size:7px}#menu[data-arena-menu] .moonfall-menu-title .sub{font-size:9px;margin-top:7px;line-height:1.6;max-width:none}
   #menu[data-arena-menu] .moonfall-play-actions .go{min-height:54px;padding:8px 11px;gap:9px}#menu[data-arena-menu] .moonfall-play-actions #soloBtn{min-height:60px;padding:10px 17px}
   #menu[data-arena-menu] #soloBtn .arena-action-name{font-size:16px}#menu[data-arena-menu] #soloBtn .arena-action-description{font-size:9px}#menu[data-arena-menu] #soloBtn>svg{width:27px;height:27px}
@@ -363,7 +362,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <canvas id="c"></canvas>
 <div id="menu" class="ov">
   <div class="anime-kicker">BATTLE ROYALE · DARK FANTASY</div>
-  <h1>Arena Royale</h1>
+  <h1>MuzCruor</h1>
   <div class="sub">32 ผู้กล้า ล่ามอนสเตอร์ เก็บเหรียญ หนึ่งผู้รอดชีวิต</div>
   <div class="codex" id="codex"></div>
   <div class="row">
@@ -455,7 +454,10 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     <div class="arena-load-embers"></div>
   </div>
   <div class="arena-load-card">
-    <h1 class="arena-wordmark" id="arenaLoadWordmark" aria-label="Arena Royale"><span>ARENA</span><span>ROYALE</span></h1>
+    <h1 class="arena-wordmark" id="arenaLoadWordmark" aria-label="MuzCruor">
+      <span>MuzCruor</span>
+      <img src="assets/ui/muzcruor-mark.webp" alt="" width="1344" height="437" decoding="async">
+    </h1>
     <div class="arena-load-rule" aria-hidden="true"></div>
     <h2 id="moonfallLoadTitle">กำลังเปิดประตูสนาม</h2>
     <p id="moonfallLoadStatus" role="status" aria-live="polite">กำลังตรวจสอบไฟล์เกม…</p>
@@ -11163,13 +11165,17 @@ window.installArenaMenuUX=function(){
     const icon=key=>{const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.35');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[key]);svg.appendChild(path);return svg;};
     const title=menu.querySelector('.moonfall-menu-title');
     const wordmark=title.querySelector('h1');
-    wordmark.classList.add('arena-wordmark');wordmark.setAttribute('aria-label','Arena Royale');
-    wordmark.replaceChildren(make('span','','ARENA'),make('span','','ROYALE'));
-    for(const mark of [wordmark,document.getElementById('arenaLoadWordmark')]){
-      if(!mark)continue;
-      const art=new Image(1188,665);art.alt='';art.decoding='async';art.src='assets/ui/arena-royale-mark.webp';
-      mark.append(art);
-      art.decode().then(()=>mark.classList.add('arena-wordmark-ready'),()=>art.remove());
+    const name=document.title;
+    wordmark.classList.add('arena-wordmark');wordmark.setAttribute('aria-label',name);
+    wordmark.replaceChildren(make('span','',name));
+    const loadingMark=document.getElementById('arenaLoadWordmark');
+    const image=loadingMark?.querySelector('img');
+    if(image){
+      wordmark.append(image.cloneNode());
+      for(const mark of [wordmark,loadingMark]){
+        const art=mark.querySelector('img');
+        art.decode().then(()=>mark.classList.add('arena-wordmark-ready'),()=>art.remove());
+      }
     }
     title.querySelector('.moonfall-menu-crest')?.remove();
     title.querySelector('.anime-kicker').textContent='BATTLE ROYALE';

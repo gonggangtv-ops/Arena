@@ -3,7 +3,7 @@
 สร้างไฟล์เกมจากโฟลเดอร์นี้ แล้วก๊อปไปที่ `app/src/main/assets/`:
 
 ```sh
-python3 build.py          # -> index.html  (Arena Royale)
+python3 build.py          # -> index.html  (MuzCruor)
 cp index.html ../app/src/main/assets/
 ```
 

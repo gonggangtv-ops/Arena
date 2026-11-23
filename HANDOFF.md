@@ -7,6 +7,12 @@
 
 ---
 
+## 2026-11-23 · Codex · เปลี่ยนชื่อเกมเป็น MuzCruor
+
+- ใช้ชื่อ **MuzCruor** บนแท็บเบราว์เซอร์ หน้าโหลด เมนู และเว็บที่ build แบบ artifact พร้อมโลโก้เงิน–ทองตราคราส `muzcruor-mark.webp` และตัวอักษรสำรอง Cinzel · `src/build.py`, `arena-loading.html/css`, `arena-menu.js/css`
+- ชื่อแอป Android แสดง MuzCruor และ workflow แบบกดเองตั้งชื่อไฟล์ `MuzCruor.apk` · `strings.xml`, `build-apk.yml`, README
+- ตรวจ build index/artifact, `node --check`, ขนาดและความโปร่งใสของโลโก้ และชื่อแอปจาก manifest/ทรัพยากร Android · Chrome ผ่าน HTTP ทดสอบแท็บเกม หน้าโหลด เมนู และเริ่มแมตช์บนเดสก์ท็อปกับมือถือจำลอง · ทดสอบข้อความสำรองเมื่อโหลดโลโก้ไม่สำเร็จ · ยังไม่ได้สร้าง APK · branch `codex/muzcruor` ต่อจากงานภาพอาวุธและกรอบข้อความ
+
 ## 2026-11-23 · Codex · โลโก้ตราคราส ภาพอาวุธ และกรอบข้อความ
 
 - ใช้ `arena-royale-mark.webp` เป็นโลโก้พื้นโปร่งใสของหน้าโหลดและเมนู มีแสงกวาดเฉพาะโลโก้และรองรับ reduced motion หัวข้อ Arena Royale อ่านได้ด้วยโปรแกรมอ่านหน้าจอและแสดงข้อความได้ระหว่างรอภาพ · `arena-loading.html/css`, `arena-menu.js/css`

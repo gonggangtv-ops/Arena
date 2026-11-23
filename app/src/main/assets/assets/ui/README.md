@@ -46,10 +46,10 @@ requires all three cells in `skill-atlas.json` to pass the boot gate.
 `arena-eclipse.webp` is the 1672×941 illustrated citadel used on the loading
 screen and main menu. CSS supplies the moving camera, fog, gate light and
 embers. `arena-cinzel.woff` is a subset of the Cinzel Bold typeface for the
-fallback Arena Royale wordmark. See [the font license](cinzel-OFL.txt).
+fallback MuzCruor wordmark. See [the font license](cinzel-OFL.txt).
 
 
-`arena-royale-mark.webp` is the transparent silver-and-gold crest used on the
+`muzcruor-mark.webp` is the transparent silver-and-gold crest used on the
 boot screen and menu. `arena-armory.webp` contains the weapon portraits
 rendered from the game's 3D models, plus the unarmed emblem. The 6×5 grid uses
 144-pixel cells indexed by `weaponPortraits` in `skill-atlas.json`.

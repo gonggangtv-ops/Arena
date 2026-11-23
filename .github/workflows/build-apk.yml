@@ -31,17 +31,17 @@ jobs:
         run: gradle assembleDebug --no-daemon
 
       - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk ArenaRoyale.apk
+        run: cp app/build/outputs/apk/debug/app-debug.apk MuzCruor.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ArenaRoyale-apk
-          path: ArenaRoyale.apk
+          name: MuzCruor-apk
+          path: MuzCruor.apk
 
       - name: Publish to Releases (download from your phone)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
-          name: Arena Royale (ล่าสุด)
-          files: ArenaRoyale.apk
+          name: MuzCruor (ล่าสุด)
+          files: MuzCruor.apk
           make_latest: true
