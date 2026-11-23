@@ -119,7 +119,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <link rel="stylesheet" href="moonfall-menu.css" onerror="window.__moonfallCodeFailure='moonfall-menu.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-menu.css')">
 <link rel="stylesheet" href="moonfall-inventory.css" onerror="window.__moonfallCodeFailure='moonfall-inventory.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-inventory.css')">
 <link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
-<script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "moon-dead-tree", "temple-gate", "moon-stairs", "modular-wall", "wall-corner", "ruin-arch", "guardian-statue", "moon-arena", "city-pillar", "city-knight", "ice-queen", "frost-scepter", "snow-castle", "queen-vfx", "brazier"]</script>
+<script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "moon-dead-tree", "temple-gate", "moon-stairs", "modular-wall", "wall-corner", "ruin-arch", "guardian-statue", "moon-arena", "city-pillar", "city-knight", "ice-queen", "frost-scepter", "snow-castle", "snow-stairs", "queen-vfx", "brazier"]</script>
 
 <style>/* Arena-only interface. The published Moonfall/Cursed presentation stays independent. */
 :root{--arena-menu-art:url('assets/ui/arena-citadel.webp')}
@@ -888,11 +888,18 @@ function townPath(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=
   const u=dx*C.lx+dy*C.ly,o=outsideD(x,y);if(o>CITY_SB-40-m&&o<CITY_OF+40&&Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+40+m)return true;return o>-280-m&&o<CITY_OF+40&&Math.abs(u)<240+m}
 // town frame -> world
 function cityXY(C,u,v){return{x:C.x+u*C.lx+v*C.ox,y:C.y+u*C.ly+v*C.oy}}
-// Arena Royale (owner 2026-11-22): the Snow Queen's castle on a plateau one step up out of the Frozen Sanctuary, east of the Old
-// Town; one wide stairway climbs to it from the valley. Fort frame like the town's (u along the cliff, v out of the valley, cityXY
-// works on it). The castle stands at the back (FORT_VC), the queen's court in front of it (FORT_VA). arena-frost.js draws it,
-// snow-queen.js is the boss.
-const FORT_P=240,FORT_OF=60,FORT_SH=150,FORT_SB=-430,FORT_VA=640,FORT_VC=1380,FORT_CW=900,FORT_CD=560;
+// Frozen Sanctuary. Castle-local X/Y in snow_castle.py map to u and v - FORT_VC at 100 units per metre.
+const FORT_P=240,FORT_OF=60,FORT_SH=150,FORT_SB=-430,FORT_VC=1060,FORT_CW=1560,FORT_CD=1100;
+const FORT_FLOOR=30,FORT_GATE=FORT_VC-477;
+const FORT_WALLS=[[-445,415,445,415,150,444],[-92,341,92,341,76,72]];
+const FORT_PIERS=[];
+for(const s of[-1,1]){
+  FORT_WALLS.push([s*263,-477,s*672,-477,62,217],[s*672,-477,s*672,409,57,208],[s*672,415,s*411,415,72,278]);
+  FORT_PIERS.push([s*670,-417,88,515],[s*670,411,88,631],[s*259,-476,53,532],[s*491,432,81,718]);
+}
+function fortHall(p){const F=WD&&WD.fort,q=F&&fortUV(F,p.x,p.y);
+  return !!q&&Math.abs(q[0])<640&&q[1]>FORT_GATE&&q[1]<FORT_VC+350;
+}
 // signed distance to the plateau's sides and back (< 0 inside), rounded back corners
 function fortSB(F,u,v){const hw=F.hw+F.sw*Math.sin(v*.003+F.p3),vb=F.dep+90*Math.sin(u*.0021+F.p1),R=420,au=Math.abs(u);
   const du=au-(hw-R),dv=v-(vb-R);return du>0&&dv>0?Math.hypot(du,dv)-R:Math.max(au-hw,v-vb)}
@@ -902,9 +909,16 @@ function fortStair(u,o){if(o<FORT_SB-10||o>FORT_OF+30)return -1;const du=Math.ab
 // the fort's ground (h0 = what is already there: the valley, the mountains, the Old Town's rim); null where it changes nothing
 function fortH(F,x,y,o,h0){const dx=x-F.x,dy=y-F.y;if(dx*dx+dy*dy>F.R2||o<FORT_SB-60)return null;
   const u=dx*F.lx+dy*F.ly,v=dx*F.ox+dy*F.oy,e=fortSB(F,u,v);if(e>1100)return null;
-  const s=fortStair(u,o),ramp=FORT_P*clamp((o-FORT_SB)/(FORT_OF+10-FORT_SB),0,1);if(s>=0)return ramp;
+  // Grade the shoulders under the rails too. The surrounding 50-unit terrain cells
+  // then meet the steps without cutting through their treads.
+  if(Math.abs(u)<=FORT_SH+80&&v>=FORT_SB-70&&v<=FORT_OF+80)
+    return FORT_P*clamp((v-FORT_SB)/(FORT_OF+10-FORT_SB),0,1);
   const fr=FORT_P*smooth01((o+50)/(FORT_OF+50));
-  if(e<=0){if(o>=FORT_OF)return FORT_P+(F.nz(x,y)-.5)*5;return Math.max(h0,fr,s===-2?ramp+50:0)}
+  if(e<=0){if(o>=FORT_OF){
+      // Extend the level terrain past the slab so terrain triangles cannot clip the ice floor.
+      const flat=Math.max(Math.abs(u)-FORT_CW/2,Math.abs(v-FORT_VC)-FORT_CD/2);
+      return FORT_P+(F.nz(x,y)-.5)*5*smooth01((flat-60)/130);
+    }return Math.max(h0,fr)}
   const k=o<-50?smooth01((o+420)/370):1,rim=(o<FORT_OF?fr:FORT_P)*(1-smooth01((e-600)/500))+(620+300*F.nr(x,y))*smooth01(e/300)*(1-smooth01((e-700)/400));
   return Math.max(h0,rim*k)}
 const fortUV=(F,x,y)=>{const dx=x-F.x,dy=y-F.y;return dx*dx+dy*dy>F.R2?null:[dx*F.lx+dy*F.ly,dx*F.ox+dy*F.oy]};
@@ -1006,7 +1020,7 @@ function genWorld(seed){
     // out by then), the valley's edge one smooth arc across its front too
     const af=aw+sr(.5,.55),rf0=bndR(af);for(let i=0;i<720;i++){const a=i/720*Math.PI*2,da=Math.abs(Math.atan2(Math.sin(a-af),Math.cos(a-af))),k=1-smooth01((da-.17)/.1);if(k>0)BND[i]=lerp(BND[i],rf0,k)}
     const rf=bndR(af),fx=Math.cos(af),fy=Math.sin(af);
-    w.fort={x:CX+fx*rf,y:CY+fy*rf,a:af,ox:fx,oy:fy,lx:-fy,ly:fx,rb:rf,hw:sr(900,980),dep:sr(1790,1900),sw:sr(30,60),p1:sr(0,6.3),p3:sr(0,6.3),
+    w.fort={x:CX+fx*rf,y:CY+fy*rf,a:af,ox:fx,oy:fy,lx:-fy,ly:fx,rb:rf,hw:sr(985,1060),dep:sr(1840,1950),sw:sr(30,60),p1:sr(0,6.3),p3:sr(0,6.3),
       nz:makeNoise(SR,300),nr:makeNoise(SR,480),R2:3700*3700,props:[],crystals:[],braziers:[],paint:[],name:'ปราสาทราชินีหิมะ'}}
   const Lk={x:CX+sr(-1895,-700),y:CY+sr(3500,4400),R:sr(740,840),p1:sr(0,6.3),p2:sr(0,6.3)};w.lake=Lk;
   {const P0=w.pool,y0=P0.y,y1=Lk.y,st=4,n=Math.ceil((y1-y0)/st)+1;const xs=new Float32Array(n),il=new Float32Array(n);
@@ -1246,22 +1260,27 @@ function genWorld(seed){
       for(let i=0;i<3;i++){const q=P((i-1)*95,VT-230+(i===1?-50:0)),m={id:mid++,x:q.x,y:q.y,kind:'sentinel',camp:camp.id,sc:1.15,rich:1};w.mobs.push(m);camp.mem.push(m.id)}w.camps.push(camp)}
     // how far the town reaches from the valley's centre (the storm's first circle covers it)
     C.far=0;for(const [u,v] of[[-C.hw,C.dep],[C.hw,C.dep],[0,C.dep+120],[-C.hw,0],[C.hw,0]]){const q=P(u,v);C.far=Math.max(C.far,Math.hypot(q.x-CX,q.y-CY))}}
-  // ---- Arena Royale: the Snow Queen's fort (owner 2026-11-22). The castle at the back (the owner's Blender castle 'snow-castle' once it is
-  // in the manifest, an ice palace drawn by arena-frost.js until then: both fill the same footprint, FORT_CW x FORT_CD, gate toward the
-  // valley), the queen's court in front of it, ice crystals, frozen braziers, guardians and snow pines; collision, loot and the queen ----
+  // ---- Frozen Sanctuary: approach, perimeter collision and the Snow Queen's throne hall ----
   if(w.fort){const F=w.fort,P=(u,v)=>cityXY(F,u,v),face=Math.atan2(-F.ox,-F.oy);
     const prop=(k,u,v,o)=>{const q=Object.assign(P(u,v),{k,a:face},o||{});F.props.push(q);return q};
     const solid=(q,r)=>w.solids.push({x:q.x,y:q.y,r,t:'fort'});
-    // paving (the court, the way from the stair head, the castle's apron): no grass or meadow dressing there
-    {const d=(u,v,r)=>{const q=P(u,v);F.paint.push([q.x,q.y,r])},l=(u0,v0,u1,v1,wd)=>{const a=P(u0,v0),b=P(u1,v1);F.paint.push([a.x,a.y,b.x,b.y,wd])};
-      d(0,FORT_VA,500);d(0,FORT_VC-FORT_CD/2-40,330);l(0,FORT_OF,0,FORT_VA-300,330);l(-FORT_CW/2,FORT_VC-FORT_CD/2-60,FORT_CW/2,FORT_VC-FORT_CD/2-60,160)}
-    // the castle: solid over its whole footprint (towers at the four corners)
+    const wall=(u,v,endU,endV,width)=>{
+      const r=width/2,n=Math.max(1,Math.ceil(Math.hypot(endU-u,endV-v)/r));
+      for(let i=0;i<=n;i++)solid(P(lerp(u,endU,i/n),lerp(v,endV,i/n)),r);
+    };
+    for(const [u,v,endU,endV,width] of FORT_WALLS)wall(u,FORT_VC+v,endU,FORT_VC+endV,width);
+    for(const [u,v,r] of FORT_PIERS)solid(P(u,FORT_VC+v),r);
+    for(const s of[-1,1])wall(s*140,FORT_SB+20,s*140,FORT_OF+4,30);
+    // Pave the footprint and axis from the stair landing through the gate.
+    const stripe=(u,v,w,d,r)=>{const a=P(u,v),b=P(w,d);F.paint.push([a.x,a.y,b.x,b.y,r])};
+    stripe(0,FORT_SB-25,0,FORT_GATE,445);
+    for(const u of [-515,0,515])stripe(u,FORT_VC-507,u,FORT_VC+507,630);
     F.castle=prop('snow-castle',0,FORT_VC,{w:FORT_CW,d:FORT_CD});
-    for(let u=-FORT_CW/2+70;u<=FORT_CW/2-70+1;u+=(FORT_CW-140)/6)for(let v=FORT_VC-FORT_CD/2+70;v<=FORT_VC+FORT_CD/2-70+1;v+=(FORT_CD-140)/4)solid(P(u,v),82);
-    for(const su of[-1,1])for(const sv of[-1,1])solid(P(su*FORT_CW/2,FORT_VC+sv*FORT_CD/2),92);
-    // guardians at the head of the stairway and either side of the gate, braziers round the court
-    for(const sg of[-1,1]){solid(prop('guardian-statue',sg*(FORT_SH+95),150,{h:230,ice:1}),52);solid(prop('guardian-statue',sg*210,FORT_VC-FORT_CD/2-90,{h:250,ice:1}),52)}
-    for(let i=0;i<4;i++){const a=(i+.5)/4*Math.PI*2,q=P(Math.cos(a)*470,FORT_VA+Math.sin(a)*400);F.braziers.push(q);solid(q,26)}
+    F.safes=[-375,375].map(u=>({...P(u,FORT_VC-55),r:155}));
+    for(const s of[-1,1]){
+      solid(prop('guardian-statue', s*250,150,{h:230,ice:1}),52);
+      for(const v of [310,FORT_VC+260]){const q=P(s*(v===310?201:554),v);F.braziers.push(q);solid(q,26)}
+    }
     // ice crystal clusters along the plateau's sides and back corners and either side of the stair head (the big ones are solid)
     for(let k=0,t=0;k<16&&t<400;t++){const u=sr(-F.hw+90,F.hw-90),v=sr(120,F.dep-80),au=Math.abs(u);
       if(au<F.hw-330&&v<FORT_VC+FORT_CD/2+60)continue;if(Math.abs(u)<FORT_CW/2+120&&Math.abs(v-FORT_VC)<FORT_CD/2+120)continue;
@@ -1274,12 +1293,12 @@ function genWorld(seed){
       if(F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<c.r+70)||w.trees.some(t=>Math.abs(t.x-q.x)<120&&Math.abs(t.y-q.y)<120))continue;
       w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,78),v:2,ph:sr(0,6),h:sr(.9,1.15)});k++}
     // loot: two chests and gold by the castle gate, a tier-3 weapon and a rune behind the queen, potions at the stair head
-    for(const sg of[-1,1]){const q=P(sg*330,FORT_VC-FORT_CD/2-110);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1});
-      const c=P(sg*420,FORT_VC-FORT_CD/2-150);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
-    {const q=P(-70,FORT_VA+330);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(70,FORT_VA+330);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,35,45,20],SR)})}
+    for(const sg of[-1,1]){const q=P(sg*325,FORT_GATE-142);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1});
+      const c=P(sg*370,FORT_GATE-176);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
+    {const q=P(-226,FORT_VC+255);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(226,FORT_VC+255);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,35,45,20],SR)})}
     for(const [u,it] of[[-90,'potion'],[90,'mana']]){const q=P(u,190);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
-    // the Snow Queen (snow-queen.js): alone on her court, no respawn
-    {const g=P(0,FORT_VA+170),camp={id:w.camps.length,x:g.x,y:g.y,tier:'icethrone',mem:[],maxRespawn:0,sc:1,rich:1};
+    // the Snow Queen (snow-queen.js): inside the throne hall, facing the entrance, no respawn
+    {const g=P(0,FORT_VC+225),camp={id:w.camps.length,x:g.x,y:g.y,tier:'icethrone',mem:[],maxRespawn:0,sc:1,rich:1};
       const m={id:mid++,x:g.x,y:g.y,kind:'snowqueen',camp:camp.id,sc:1,rich:1};w.mobs.push(m);camp.mem.push(m.id);w.camps.push(camp);F.queen=m.id;F.home={x:g.x,y:g.y}}
     F.far=0;for(const [u,v] of[[-F.hw,F.dep],[F.hw,F.dep],[0,F.dep+120]]){const q=P(u,v);F.far=Math.max(F.far,Math.hypot(q.x-CX,q.y-CY))}}
   // ---- shrines ----
@@ -6288,20 +6307,20 @@ function eclEv(e){const u=UMAP.get(e.id);
   return _dd(t,amt,type,src,quiet,crit)}}
 
 // ---- AI ----
-const eclHeroNear=(u,R)=>{let best=null,bd=R;for(const h of units){if(!h.hero||h.dead||h.reviveT>0)continue;const d=Math.hypot(h.x-u.x,h.y-u.y);if(d<bd&&(!h.hidden||d<170)){bd=d;best=h}}return best};
+const eclHeroNear=(u,R,allowed)=>{let best=null,bd=R;for(const h of units){if(!h.hero||h.dead||h.reviveT>0||(allowed&&!allowed(h)))continue;const d=Math.hypot(h.x-u.x,h.y-u.y);if(d<bd&&(!h.hidden||d<170)){bd=d;best=h}}return best};
 function eclCast(u,n,d){u.busyT=Math.max(u.busyT,d);emit({t:'ec',k:'cast',id:u.id,n,d})}
 function eclThink(u,dt){
   if(u.blockT>0)u.blockT-=dt;if(u.busyT>0)u.busyT-=dt;if(u.blkCd>0)u.blkCd-=dt;if(u.ecT>0)u.ecT-=dt;u.poise=Math.max(0,u.poise-u.maxHp*.04*dt);
   const L=u.def.leash||500,dh=Math.hypot(u.x-u.home.x,u.y-u.home.y);
   // detect: these hunt on sight (the old camps only woke up when hit)
   const X=ECL_EXT[u.ecl];
-  if(!u.aggro||u.aggro.dead){u.aggro=null;const h=eclHeroNear(u,X?X.detect:u.ecl==='overlord'?560:u.ecl==='sentinel'?400:300);
+  if(!u.aggro||u.aggro.dead){u.aggro=null;const h=eclHeroNear(u,X?X.detect:u.ecl==='overlord'?560:u.ecl==='sentinel'?400:300,X?.target);
     if(h&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L){u.aggro=h;if(u.ecl==='overlord'){sndAt('roar',u.x,u.y);emit({t:'f',s:'☾ Celestial Overlord ตื่นจากแท่นสุริยคราส!'});emit({t:'k',a:10,x:u.x|0,y:u.y|0})}else if(X&&X.wake)X.wake(u)}}
   // a target that ran off: switch to whoever is still fighting inside the arena before giving up
-  const ok=h=>h&&!h.dead&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L+140&&(!h.hidden||Math.hypot(h.x-u.x,h.y-u.y)<170);
+  const ok=h=>h&&!h.dead&&(!X?.target||X.target(h))&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L+140&&(!h.hidden||Math.hypot(h.x-u.x,h.y-u.y)<170);
   if(u.aggro&&!ok(u.aggro)){let nb=null,bd=1e9;for(const h of units){if(!h.hero||h.reviveT>0||!ok(h))continue;const d=Math.hypot(h.x-u.x,h.y-u.y);if(d<bd&&d<L){bd=d;nb=h}}if(nb)u.aggro=nb}
   const t=u.aggro;let mx=0,my=0;if(t)u.idleT=0;else u.idleT=(u.idleT||0)+dt;
-  if(t&&!t.dead&&dh<L&&Math.hypot(t.x-u.home.x,t.y-u.home.y)<L+140&&(!t.hidden||Math.hypot(t.x-u.x,t.y-u.y)<170)){
+  if(dh<L&&ok(t)){
     const d=Math.hypot(t.x-u.x,t.y-u.y)||1;u.fx=(t.x-u.x)/d;u.fy=(t.y-u.y)/d;const R=u.range+t.r;
     if(d>R-8&&u.busyT<=0&&!u.combo){mx=u.fx;my=u.fy}
     if(u.stunT<=0){if(X)X.act(u,t,d,R,dt);else if(u.ecl==='overlord')overlordAct(u,t,d,R,dt);else if(u.ecl==='sentinel')sentinelAct(u,t,d,R,dt);else constructAct(u,t,d,R,dt)}
@@ -7094,7 +7113,7 @@ if(typeof R.p5Arm==='function'){const f=R.p5Arm;R.p5Arm=function(o,u){const r=f.
 // owner's Frostwing Scepter) and her boss bar, arena-frost.js her court and her Eternal Winter.
 //  Phase I   (100–70%) scepter thrusts that chill · Ice Lance (ice spikes erupt in a line toward the target) · Shard Rain
 //  Phase II  (70–35%)  + Frost Nova (roots, two chill stacks) · Blizzard (the frost staff's storm of falling ice spears, ends in a freeze)
-//  Phase III (< 35%)   + Ice Prison (the target is frozen solid) · Eternal Winter (the whole court freezes; only two warm circles are safe)
+//  Phase III (< 35%)   + Ice Prison (the target is frozen solid) · Eternal Winter (the throne hall freezes; two marked warm circles are safe)
 // Death: a tier-4 frost staff, two runes, gold and a tome.
 if(typeof CREEPS!=='undefined'&&typeof ECL_EXT!=='undefined'){
 Object.assign(CREEPS,{snowqueen:{name:'Snow Queen · ราชินีหิมะ',hp:14000,dmg:110,armor:7,spd:150,r:46,atkT:1.5,range:150,xp:1500,col:'#bfe6ff',leash:860,ecl:'queen'}});
@@ -7103,11 +7122,6 @@ AOE_KINDS.push('qwinter','qslash','qlance','qshard','qnova','qblizz','qprison');
 Object.assign(AOE_COL,{qwinter:'#e8f6ff',qslash:'#bfe8ff',qlance:'#9fd8ff',qshard:'#cfe4ff',qnova:'#bfeaff',qblizz:'#e8f6ff',qprison:'#bfe6ff'});
 // cooldowns (s) per phase; the basic thrust runs on the mob attack timer
 const QV=[{lance:7,shards:10},{lance:6,shards:9,nova:11,blizz:14},{lance:5,shards:8,nova:9,blizz:12,prison:13,winter:30}];
-const qRand=(a,b)=>a+Math.random()*(b-a);
-// a spot on the same ground as the queen (the plateau), d away from her, for her warm circles
-function qSafeSpot(u,a0,d){const base=cityBase(u.x,u.y);for(let i=0;i<14;i++){const a=a0+(i%2?1:-1)*Math.ceil(i/2)*.42,x=u.x+Math.cos(a)*d,y=u.y+Math.sin(a)*d;
-    if(walkable(x,y,60)&&Math.abs(cityBase(x,y)-base)<30&&!blockedAt({x,y},40))return{x,y}}
-  const F=WD&&WD.fort;return F&&F.home?{x:F.home.x+Math.cos(a0)*160,y:F.home.y+Math.sin(a0)*160}:{x:u.x,y:u.y}}
 function queenAct(u,t,d,R,dt){const hr=u.hp/u.maxHp,ph=hr>.7?0:hr>.35?1:2;
   if(ph>(u.ph|0)){u.ph=ph;u.cds=ph===2?{winter:8,prison:4,nova:2}:{blizz:3};eclCast(u,'phase',1.6);u.stunT=0;emit({t:'ec',k:'ph',id:u.id,p:ph});emit({t:'k',a:12,x:u.x|0,y:u.y|0});sndAt('freeze',u.x,u.y);
     emit({t:'a',s:ph===1?'❄ ราชินีหิมะพิโรธ — พายุหิมะกำลังมา!':'❄ ฤดูหนาวนิรันดร์ใกล้มาถึง — เตรียมหาวงไฟอุ่น!',d:3});
@@ -7116,7 +7130,7 @@ function queenAct(u,t,d,R,dt){const hr=u.hp/u.maxHp,ph=hr>.7?0:hr>.35?1:2;
   if(u.busyT>0)return;const ready=k=>C[k]&&!(cd[k]>0),use=k=>{cd[k]=C[k]};
   const dmg=u.atkDmg,ang=Math.atan2(t.y-u.y,t.x-u.x),fast=u.ph===2?.85:1;
   // Eternal Winter: the court freezes over; two warm circles on her ground are the only shelter
-  if(ready('winter')){use('winter');eclCast(u,'ultimate',3.6);const a0=Math.random()*6.283,S=[0,1].map(i=>{const p=qSafeSpot(u,a0+i*Math.PI+qRand(-.35,.35),qRand(380,520));return{x:p.x,y:p.y,r:155}});
+  if(ready('winter')){use('winter');eclCast(u,'ultimate',3.6);const S=WD.fort.safes;
     aoe({x:u.x,y:u.y,r:1150,dmg:dmg*3.6,type:'m',owner:u,delay:3.4,kind:'qwinter',safes:S,st:'frost',stN:5,big:true,vis:1.2});
     for(const s of S)aoe({x:s.x,y:s.y,r:s.r,dmg:0,type:'m',owner:u,delay:3.4,kind:'usafe',fxOnly:true,vis:.6});
     emit({t:'a',s:'❄ ฤดูหนาวนิรันดร์ — วิ่งเข้าวงไฟอุ่น!',d:3});sndAt('freeze',u.x,u.y);return}
@@ -7127,7 +7141,7 @@ function queenAct(u,t,d,R,dt){const hr=u.hp/u.maxHp,ph=hr>.7?0:hr>.35?1:2;
   // Frost Nova: arms flung wide, the ice bursts out of the ground all round her
   if(ready('nova')&&d<330){use('nova');eclCast(u,'burst',1.3);aoe({x:u.x,y:u.y,r:360,dmg:dmg*1.5,type:'m',owner:u,delay:1,kind:'qnova',root:1.1,slow:2.2,slowAmt:.45,st:'frost',stN:2,vis:.6,big:true});return}
   // Shard Rain: the scepter raised to the sky, ice crystals fall on everyone near her
-  if(ready('shards')&&d<900){use('shards');eclCast(u,'rain',1.3);const tg=units.filter(h=>h.hero&&!h.dead&&Math.hypot(h.x-u.x,h.y-u.y)<900);
+  if(ready('shards')&&d<900){use('shards');eclCast(u,'rain',1.3);const tg=units.filter(h=>h.hero&&!h.dead&&fortHall(h)&&Math.hypot(h.x-u.x,h.y-u.y)<900);
     for(let i=0;i<(u.ph===2?10:u.ph===1?8:6);i++){const h=tg[i%Math.max(1,tg.length)]||t,rr=Math.random()*220,a=Math.random()*6.283;aoe({x:h.x+Math.cos(a)*rr,y:h.y+Math.sin(a)*rr,r:95,dmg:dmg*.95,type:'m',owner:u,delay:.85+i*.16,kind:'qshard',st:'frost',vis:.35})}return}
   // Ice Lance: a thrust of the scepter, ice spikes erupt one after another along the line toward the target
   if(ready('lance')&&d<760&&d>160){use('lance');eclCast(u,'slash',1);const cx=Math.cos(ang),cy=Math.sin(ang);
@@ -7135,11 +7149,11 @@ function queenAct(u,t,d,R,dt){const hr=u.hp/u.maxHp,ph=hr>.7?0:hr>.35?1:2;
   // the scepter thrust: an ice-blue arc in front of her, chills what it hits
   if(d<R+12&&u.atkCd<=0){u.atkCd=u.atkCdBase*fast;eclCast(u,'basic',.55);
     aoe({x:u.x,y:u.y,r:R+60,len:R+60,ang,arc:.85,shape:'cone',dmg:dmg,type:'p',owner:u,delay:.3,kind:'qslash',st:'frost',vis:.35})}}
-ECL_EXT.queen={detect:620,act:queenAct,
+ECL_EXT.queen={detect:680,target:fortHall,act:queenAct,
   wake(u){sndAt('freeze',u.x,u.y);emit({t:'f',s:'❄ ราชินีหิมะตื่นจากบัลลังก์น้ำแข็ง!'});emit({t:'a',s:'❄ SNOW QUEEN · ราชินีหิมะ',d:2.4});emit({t:'k',a:8,x:u.x|0,y:u.y|0})},
   lose(u){emit({t:'f',s:'❄ ราชินีหิมะกลับสู่บัลลังก์และฟื้นพลัง'})}};
 // Eternal Winter spares whoever stands in one of its warm circles
-{const _ha=hitArea;hitArea=function(a,u){if(a.safes){for(const s of a.safes)if(Math.hypot(u.x-s.x,u.y-s.y)<s.r)return false}return _ha(a,u)}}
+{const _ha=hitArea;hitArea=function(a,u){if(a.kind==='qwinter'&&!fortHall(u))return false;if(a.safes){for(const s of a.safes)if(Math.hypot(u.x-s.x,u.y-s.y)<s.r)return false}return _ha(a,u)}}
 // death: the court's treasure
 {const _k=kill;kill=function(t,src){const r=_k.apply(this,arguments);
   if(t&&t.ecl==='queen'){emit({t:'f',s:'❄ ราชินีหิมะถูกโค่นแล้ว! สมบัติแห่งบัลลังก์น้ำแข็งร่วงลงบนลาน'});emit({t:'k',a:16,x:t.x|0,y:t.y|0});emit({t:'ec',k:'die',id:t.id,x:t.x|0,y:t.y|0,q:1});
@@ -9154,9 +9168,9 @@ radiance*=regIbl;
   function classify(key,m){if(/^terr/.test(key)||key==='p5'||key==='moon-warrior'||key==='ecl-sk'||key==='win')return null;
     if(!(m&&(m.isMeshStandardMaterial||m.isMeshLambertMaterial||m.isMeshPhongMaterial)))return null;
     if(key==='water')return'water';if(/^wind[GFTH]$/.test(key))return'grass';
-    if(key==='moon-asset')return'build';if(/^wind/.test(key)||key==='stumpcut')return'flora';return'tint'}
+    if(key==='fortmcut')return'glacier';if(key==='moon-asset')return'build';if(/^wind/.test(key)||key==='stumpcut')return'flora';return'tint'}
   function regionEdit(sh,kind){if(sh.skinning&&kind!=='flora')return;bind(sh);const F=sh.fragmentShader;if(F.indexOf('#include <normal_fragment_maps>')<0||F.indexOf('vFowW')<0)return;
-    let code=kind==='water'?WATER:kind==='build'?BUILD:kind==='grass'?FLORA('.92','.25'):kind==='flora'?FLORA('.9','1.0'):FLORA('.55','.6');
+    let code=kind==='water'?WATER:kind==='build'?BUILD:kind==='grass'?FLORA('.92','.25'):kind==='flora'?FLORA('.9','1.0'):kind==='glacier'?FLORA('.42','.15'):FLORA('.55','.6');
     let f=DECL+F.replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\n'+code).replace('#include <lights_fragment_maps>',IBLK);
     if(kind!=='water')f=f.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance=totalEmissiveRadiance*regEmK+regEm;');
     else if(f.indexOf('#include <roughnessmap_fragment>')>=0)f=f.replace('#include <lights_physical_fragment>','roughnessFactor=mix(roughnessFactor,.32,regIce);\n#include <lights_physical_fragment>');
@@ -9626,19 +9640,9 @@ void main(){vec2 q=vUv*2.-1.;float r=length(q);if(r>1.)discard;float a;vec3 col;
       P._fallsLit.value=Math.min(1,(c.r+c.g+c.b)/3)}}catch(e){warn('fx',e)}return r};
 })();
 
-/* Arena Royale · the Snow Queen's fort (Claude, 2026-11-22 · index only). Render only.
- * World gen (a.js WD.fort) raises a plateau one step up out of the Frozen Sanctuary, east of the Old Town, with one wide stairway
- * from the valley; the queen (snow-queen.js, drawn by eclipse-fx.js) holds the court in front of her castle. Drawn here:
- *  - the castle: the owner's Blender castle ('snow-castle', fitted to world gen's footprint FORT_CW x FORT_CD, gate toward the valley)
- *    as soon as it is in the manifest; until then an ice palace built from simple solids (pale stone walls and merlons, four round
- *    towers and two keep towers under ice-crystal roofs, a gatehouse with a glowing door, the keep and its crystal spire). The regions
- *    module settles snow on its upward faces like every other prop in the Sanctuary;
- *  - the stairway: 28 stone steps up the ramp between two balustrades;
- *  - the court: the moon circle iced over, frozen braziers burning blue, ice-tinted guardians at the stair head and the gate;
- *  - ice crystal clusters (faceted, glossy, a cold inner glow);
- *  - Eternal Winter (the queen's ultimate, aoe 'qwinter'): the air fills with driven snow toward her, frost closes in at the edges of
- *    the screen while it charges, then the court bursts white. Its two warm circles are eclipse-fx's 'usafe'.
- * Entering the plateau shows the castle's name once per visit. Collision, loot and the queen are world gen's and snow-queen.js'. */
+/* Frozen Sanctuary presentation. World generation owns the climb and the castle collision.
+ * The Blender staircase fits the terrain ramp, and the open palace encloses the Snow Queen's throne hall.
+ * Regional snow and the cutaway shader apply to the palace, including during Eternal Winter. */
 (()=>{
   'use strict';
   if(typeof R3==='undefined'||typeof THREE==='undefined'||(typeof MOON!=='undefined'&&MOON))return;
@@ -9651,8 +9655,6 @@ void main(){vec2 q=vUv*2.-1.;float r=length(q);if(r>1.)discard;float a;vec3 col;
       return R.fow(new T.MeshStandardMaterial(Object.assign({roughness:.86,metalness:0,envMap:R.envTex,envMapIntensity:.7},p)),{key:'fortcut',cut:true})}return R.fow(new T.MeshLambertMaterial(p),{key:'fortcut',cut:true})});
   const iceM=R=>R.cached('fort-ice',()=>R.fow(R.hi?new T.MeshStandardMaterial({color:'#bfe4ff',roughness:.1,metalness:.05,envMap:R.envTex,envMapIntensity:1.5,flatShading:true,emissive:'#2c6a9e',emissiveIntensity:.42,transparent:true,opacity:.9})
       :new T.MeshLambertMaterial({color:'#bfe4ff',flatShading:true,emissive:'#2c6a9e',emissiveIntensity:.42,transparent:true,opacity:.9}),{key:'fortice'}));
-  const glowM=R=>R.cached('fort-door',()=>R.fow(R.hi?new T.MeshStandardMaterial({color:'#0b2236',roughness:.5,metalness:0,emissive:'#7fe4ff',emissiveIntensity:1.1})
-      :new T.MeshLambertMaterial({color:'#0b2236',emissive:'#7fe4ff',emissiveIntensity:1.1}),{key:'fortglow'}));
   // ---- one geometry per material from many solids (local frame: x across, y up, z toward the valley); UVs from position ----
   function merged(parts){let n=0;const list=parts.map(([g,m])=>{const c=g.index?g.toNonIndexed():g.clone();c.applyMatrix4(m);n+=c.attributes.position.count;return c});
     const pos=new Float32Array(n*3),nor=new Float32Array(n*3),uv=new Float32Array(n*2);let o=0;
@@ -9661,55 +9663,47 @@ void main(){vec2 q=vUv*2.-1.;float r=length(q);if(r>1.)discard;float a;vec3 col;
         if(ny>.6){uv[k]=x/220;uv[k+1]=z/220}else if(nx>nz){uv[k]=z/220;uv[k+1]=y/220}else{uv[k]=x/220;uv[k+1]=y/220}}
       o+=g.attributes.position.count;g.dispose()}
     const out=new T.BufferGeometry();out.setAttribute('position',new T.BufferAttribute(pos,3));out.setAttribute('normal',new T.BufferAttribute(nor,3));out.setAttribute('uv',new T.BufferAttribute(uv,2));out.computeBoundingSphere();return out}
-  const M4=(x,y,z,sx,sy,sz,ry,rx)=>new T.Matrix4().compose(new T.Vector3(x,y,z),new T.Quaternion().setFromEuler(new T.Euler(rx||0,ry||0,0,'YXZ')),new T.Vector3(sx,sy,sz));
-  // ---- the ice palace (until the owner's Blender castle is in): W x D footprint, gate at +z ----
-  function palace(R,W,D){const G=R.G,S=[],I=[],L=[],hw=W/2,hd=D/2,b=36,wallH=200;
-    const box=(arr,x,y,z,sx,sy,sz,ry)=>arr.push([G.box,M4(x,y,z,sx,sy,sz,ry)]);
-    const tower=(x,z,r,h,roofR,roofH)=>{S.push([G.cyl,M4(x,b+h/2,z,r,h,r)]);S.push([G.cyl,M4(x,b+h+6,z,r*1.12,12,r*1.12)]);
-      I.push([G.cone6,M4(x,b+h+12+roofH/2,z,roofR,roofH,roofR)]);for(let k=0;k<3;k++){const a=k/3*Math.PI*2+.5;L.push([G.box,M4(x+Math.sin(a)*r*.98,b+h*(.45+k*.12),z+Math.cos(a)*r*.98,10,34,6,a)])}};
-    box(S,0,b/2,0,W+20,b,D+20);                                         // plinth
-    box(S,0,b/2-10,hd+34,280,b-12,70);box(S,0,(b-24)/2,hd+64,240,b-24,40);  // steps up to the gate
-    box(S,0,b+wallH/2,-hd+22,W-40,wallH,44);for(const s of[-1,1]){box(S,s*(hw-22),b+wallH/2,0,44,wallH,D-60);box(S,s*(hw*.5+65),b+wallH/2,hd-22,hw-130,wallH,44)}
-    // merlons along every wall top
-    for(let x=-hw+50;x<=hw-50;x+=50){box(S,x,b+wallH+15,-hd+22,26,30,48);if(Math.abs(x)>140)box(S,x,b+wallH+15,hd-22,26,30,48)}
-    for(const s of[-1,1])for(let z=-hd+70;z<=hd-70;z+=50)box(S,s*(hw-22),b+wallH+15,z,48,30,26);
-    // gatehouse: two square towers, a lintel, the glowing door
-    for(const s of[-1,1]){box(S,s*150,b+150,hd-14,84,300,88);box(S,s*150,b+318,hd-14,96,18,100);I.push([G.cone4,M4(s*150,b+380,hd-14,70,120,70,Math.PI/4)])}
-    box(S,0,b+232,hd-14,220,56,64);box(L,0,b+105,hd-8,190,210,8);
-    // the four corner towers and the keep with its two front towers and the crystal spire
-    for(const sx of[-1,1])for(const sz of[-1,1])tower(sx*hw,sz*hd,78,330,98,210);
-    box(S,0,b+165,-70,400,330,280);for(const s of[-1,1])L.push([G.box,M4(s*110,b+220,70,14,60,6)]);L.push([G.box,M4(0,b+250,71,22,80,6)]);
-    I.push([G.cone4,M4(0,b+330+85,-70,300,170,240,Math.PI/4)]);
-    for(const s of[-1,1])tower(s*210,60,56,420,70,170);
-    I.push([G.cyl6,M4(0,b+330+130,-70,48,260,48)]);I.push([G.cone6,M4(0,b+330+260+80,-70,48,160,48)]);
-    for(const [x,z,s] of[[-60,-150,.7],[70,-160,.6],[0,-200,.5]]){I.push([G.cyl6,M4(x,b+330+70*s,z,26*s,140*s,26*s)]);I.push([G.cone6,M4(x,b+330+140*s+40*s,z,26*s,80*s,26*s)])}
-    return{stone:merged(S),ice:merged(I),glow:merged(L)}}
+  // Keep the passage and hall open even if the asset registry has no model.
+  function palaceFallback(R,F,face){
+    const m=stoneM(R),ice=iceM(R),at=(u,v)=>cityXY(F,u,FORT_VC+v);
+    for(const [u,v,w,d,width,height] of FORT_WALLS){
+      const p=at((u+w)/2,(v+d)/2),angle=face+Math.atan2(d-v,w-u);
+      R.mesh(R.G.box,m,p.x,FORT_P+height/2,p.y,Math.hypot(w-u,d-v),height,width,R.scene,true).rotation.y=angle;
+    }
+    for(const [u,v,r,height] of FORT_PIERS){
+      const p=at(u,v),h=height*.63;
+      R.mesh(R.G.cyl,m,p.x,FORT_P+h/2,p.y,r,h,r,R.scene,true);
+      R.mesh(R.G.cone6,ice,p.x,FORT_P+(h+height)/2,p.y,r*.9,height-h,r*.9,R.scene,true);
+    }
+  }
   // ---- crystal geometry: a hexagonal prism with a pointed tip, base at y = 0, 1 tall ----
   function crystalGeo(){const prism=new T.CylinderGeometry(1,1.08,.72,6,1).translate(0,.36,0),tip=new T.ConeGeometry(1,.28,6,1).translate(0,.86,0);
     const g=merged([[prism,new T.Matrix4()],[tip,new T.Matrix4()]]);prism.dispose();tip.dispose();return g}
-  // ---- props: the castle model, guardians (ice-tinted), the court circle, braziers ----
+  // ---- props: the palace, staircase, ice-tinted guardians and braziers ----
   // 'ice': tinted cold; 'cut': see-through when a hero walks behind it (the castle)
-  function remat(R,m,mode){return R.cached('fort-'+mode+'-'+m.uuid,()=>{const c=m.clone();if(mode==='ice'){if(c.color)c.color.multiply(new T.Color('#cfe6ff'));if('emissive' in c){c.emissive=new T.Color('#16324e');c.emissiveIntensity=.6}}
+  function remat(R,m,mode){return R.cached('fort-'+mode+'-'+m.uuid,()=>{const c=m.clone();if(mode==='cut'&&R.hi&&c.isMeshStandardMaterial){c.envMap=R.envTex;c.envMapIntensity=.75}if(mode==='ice'){if(c.color)c.color.multiply(new T.Color('#cfe6ff'));if('emissive' in c){c.emissive=new T.Color('#16324e');c.emissiveIntensity=.6}}
       return R.fow(c,mode==='cut'?{key:'fortmcut',cut:true}:{key:'forttint'})})}
   function place(R,key,list,fit,mode){if(!list.length||!loaded(key))return 0;const s=A().get(key).inspection.size,parts=R.celestialAsset(key);if(!parts)return 0;
     for(const p of parts){const mat=mode?(Array.isArray(p.mat)?p.mat.map(m=>remat(R,m,mode)):remat(R,p.mat,mode)):p.mat;
       R.instC(p.geo,mat,list,(q,add)=>{const f=fit(q,s);add(q.x,(q.y0!==undefined?q.y0:R.gY(q.x,q.y))+(q.dy||0),q.y,f[0],f[1],f[2],0,q.a,0,null)},true,null,2600)}
     return list.length}
   P.buildFort=function(){const F=WD&&WD.fort;if(!F)return;const R=this,face=Math.atan2(-F.ox,-F.oy),P2=(u,v)=>cityXY(F,u,v);
-    // the castle: the owner's model when it is in, the ice palace until then
-    const C=F.castle,cy=this.gY(C.x,C.y);
-    if(loaded('snow-castle')){place(this,'snow-castle',[Object.assign({},C,{dy:-20})],(q,s)=>{const k=Math.min(FORT_CW/s[0],FORT_CD/s[2]);return[s[0]*k,s[1]*k,s[2]*k]},'cut');this.fortModel='snow-castle'}   // its foundation sinks 20 into the ground
-    else{const pal=palace(this,FORT_CW,FORT_CD);for(const [g,m,sh] of[[pal.stone,stoneM(this),true],[pal.ice,iceM(this),true],[pal.glow,glowM(this),false]]){
-        const me=new T.Mesh(g,m);me.position.set(C.x,cy-4,C.y);me.rotation.y=face;me.castShadow=!!this.hi&&sh;me.receiveShadow=true;this.scene.add(me)}this.fortModel='palace'}
-    // the stairway: stone steps up the ramp, balustrades either side
-    {const N=28,v0=FORT_SB,v1=FORT_OF+10,dv=(v1-v0)/N,st=this.inst(this.G.box,stoneM(this),N,true);
-      for(let i=0;i<N;i++){const vm=v0+(i+.5)*dv,q=P2(0,vm),top=FORT_P*(i+1)/N+1;this.setI(st,i,q.x,top-20,q.y,2*FORT_SH-30,40,dv+.6,0,face,0)}st.instanceMatrix.needsUpdate=true;st.computeBoundingSphere();
-      const len=Math.hypot(v1-v0,FORT_P),pitch=Math.atan2(FORT_P,v1-v0);
-      for(const s of[-1,1]){const q=P2(s*(FORT_SH-4),(v0+v1)/2),me=new T.Mesh(this.G.box,stoneM(this));me.position.set(q.x,FORT_P/2+22,q.y);me.quaternion.setFromEuler(new T.Euler(pitch,face,0,'YXZ'));
-        me.scale.set(40,56,len+20);me.castShadow=!!this.hi;me.receiveShadow=true;this.scene.add(me);
-        for(const [v,h] of[[v0-6,70],[v1+8,90]]){const p=P2(s*(FORT_SH-4),v),y=FORT_P*clamp((v-v0)/(v1-v0),0,1);this.mesh(this.G.box,stoneM(this),p.x,y+h/2,p.y,54,h,54,this.scene,!!this.hi).rotation.y=face}}}
-    // the court: the moon circle iced over; guardians; braziers burning blue
-    {const q=P2(0,FORT_VA);place(this,'moon-arena',[Object.assign(q,{a:face,dy:-4})],(qq,s)=>{const k=820/Math.max(s[0],s[2]);return[s[0]*k,13,s[2]*k]},'ice')}
+    // The models are authored at 1 m = 100 game units, aligned along the same valley axis.
+    const metres=(q,size)=>size.map(d=>d*100);
+    const C=Object.assign({},F.castle,{y0:FORT_P-FORT_FLOOR});
+    if(place(this,'snow-castle',[C],metres,'cut'))this.fortModel='snow-castle';
+    else{palaceFallback(R,F,face);this.fortModel='palace'}
+    const start=FORT_SB,end=FORT_OF+10,steps=Object.assign(P2(0,(start+end)/2),{a:face,y0:0});
+    if(place(this,'snow-stairs',[steps],metres,'cut'))this.fortStairModel='snow-stairs';
+    else{
+      this.fortStairModel='ramp';
+      const n=28,dv=(end-start)/n,st=R.inst(R.G.box,stoneM(R),n,true);
+      for(let i=0;i<n;i++){
+        const q=P2(0,start+(i+.5)*dv),top=FORT_P*(i+1)/n;
+        R.setI(st,i,q.x,top-20,q.y,2*FORT_SH,40,dv+.6,0,face,0);
+      }
+      st.instanceMatrix.needsUpdate=true;st.computeBoundingSphere();
+    }
     const by=new Map();for(const q of F.props){if(q.k==='snow-castle')continue;if(!by.has(q.k))by.set(q.k,[]);by.get(q.k).push(q)}
     for(const [k,list] of by)place(this,k,list,(q,s)=>{const f=q.h?q.h/s[1]:1;return[s[0]*f,s[1]*f,s[2]*f]},list[0].ice?'ice':null);
     if(F.braziers.length){if(loaded('brazier'))place(this,'brazier',F.braziers.map(b=>Object.assign({},b,{a:face})),(q,s)=>{const f=90/s[1];return[s[0]*f,90,s[2]*f]},'ice');
@@ -9718,8 +9712,6 @@ void main(){vec2 q=vUv*2.-1.;float r=length(q);if(r>1.)discard;float a;vec3 col;
     // ice crystal clusters: n faceted crystals leaning out of a common root
     {const geo=crystalGeo(),list=[];for(const c of F.crystals){const n=c.n,h0=hash(c.x,c.y);for(let i=0;i<n;i++){const hh=hash(c.x+i*7.1,c.y-i*3.3),a=c.a+i/n*Math.PI*2+hh,d=i?c.r*(.25+.45*hh):0;
         list.push({x:c.x+Math.cos(a)*d,y:c.y+Math.sin(a)*d,h:c.h*(i?.45+.5*hash(c.y+i,c.x):1),r:c.r*(i?.16+.12*hh:.24),tx:i?Math.cos(a)*(.25+.35*h0):0,tz:i?Math.sin(a)*(.25+.35*h0):0,ry:hh*6.28})}}
-      const pal=this.fortModel==='palace'&&F.castle;if(pal){const C2=F.castle;for(const [u,v,h] of[[-FORT_CW/2-40,FORT_VC-FORT_CD/2-50,170],[FORT_CW/2+40,FORT_VC-FORT_CD/2-50,190],[-FORT_CW/2-30,FORT_VC+FORT_CD/2+30,150],[FORT_CW/2+30,FORT_VC+FORT_CD/2+30,160]]){const q=P2(u,v);
-        for(let i=0;i<4;i++){const a=i*1.7+u*.01;list.push({x:q.x+Math.cos(a)*(i?34:0),y:q.y+Math.sin(a)*(i?34:0),h:h*(i?.55:1),r:i?18:28,tx:i?Math.cos(a)*.4:0,tz:i?Math.sin(a)*.4:0,ry:a})}}}
       this.instC(geo,iceM(this),list,(c,add)=>add(c.x,this.gY(c.x,c.y)-8,c.y,c.r,c.h,c.r,c.tz,c.ry,-c.tx,null),!!this.hi,null,2600)}};
   // built with the rest of the props
   const _bp=P.buildProps;P.buildProps=function(){const r=_bp.apply(this,arguments);try{this.buildFort()}catch(e){warn('build',e)}return r};
@@ -9728,7 +9720,7 @@ void main(){vec2 q=vUv*2.-1.;float r=length(q);if(r>1.)discard;float a;vec3 col;
     frost.style.cssText='position:fixed;inset:0;z-index:6;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,#ffffff00 38%,#d8f0ffcc 80%,#ffffffee 100%);mix-blend-mode:screen';
     document.body.appendChild(frost);return frost};
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);try{const F=WD&&WD.fort;if(!F||!L||typeof state==='undefined'||state!=='play')return r;
-      const inF=fortIn(L.x,L.y,-120)&&fortBase(L.x,L.y)>FORT_P-1;if(inF&&!this._inFort&&typeof gameT!=='undefined'&&gameT>3)announce={txt:'❄️ '+F.name+' — ราชินีหิมะรอผู้กล้าอยู่บนลานบัลลังก์น้ำแข็ง',t:3.4};this._inFort=inF;
+      const inF=fortIn(L.x,L.y,-120)&&fortBase(L.x,L.y)>FORT_P-1;if(inF&&!this._inFort&&typeof gameT!=='undefined'&&gameT>3)announce={txt:'❄️ '+F.name+' — ราชินีหิมะประทับอยู่ในท้องพระโรง',t:3.4};this._inFort=inF;
       const near=Math.hypot(L.x-F.x,L.y-F.y)<4200;
       if(near&&dt>0){for(const b of F.braziers){if(Math.random()>dt*9)continue;const y=this.gY(b.x,b.y)+92;this.sp(true,{x:b.x+(Math.random()-.5)*16,y,z:b.y+(Math.random()-.5)*16,vy:60+Math.random()*60,l:.7,s:22,s1:4,c:'#bff2ff',c2:'#3a8ad8',sp:1})}}
       // Eternal Winter: driven snow pulled toward the queen while it charges, frost at the screen's edges, a white burst at the end

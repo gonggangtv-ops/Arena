@@ -31,10 +31,8 @@ if arena and all(k in _man for k in HOUSES):VILLAGE=[k for k in VILLAGE if k not
 CITY_NEW=['city-pillar','city-knight']
 CITY=['moon-dead-tree','temple-gate','moon-stairs','modular-wall','wall-corner','ruin-arch','guardian-statue','moon-arena']+CITY_NEW
 if arena:VILLAGE+=[k for k in CITY if k in _man and k not in VILLAGE]
-# Arena Royale (owner 2026-11-22): the Snow Queen's fort. The owner's rigged Ice Queen and Frostwing Scepter, the Moonfall brazier, and
-# the owner's Blender castle 'snow-castle' once it is in the manifest (until then arena-frost.js builds an ice palace). Arena-only models
-# are skipped by The Cursed Realm.
-FORT_NEW=['ice-queen','frost-scepter','snow-castle','queen-vfx']
+# Frozen Sanctuary: the Queen, her scepter, her Blender palace and staircase, and her combat effects.
+FORT_NEW=['ice-queen','frost-scepter','snow-castle','snow-stairs','queen-vfx']
 FORT=FORT_NEW+['brazier']
 if arena:VILLAGE+=[k for k in FORT if k in _man and k not in VILLAGE]
 sh=open(os.path.join(D,'shell.html'),encoding='utf-8').read()

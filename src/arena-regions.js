@@ -120,9 +120,9 @@ radiance*=regIbl;
   function classify(key,m){if(/^terr/.test(key)||key==='p5'||key==='moon-warrior'||key==='ecl-sk'||key==='win')return null;
     if(!(m&&(m.isMeshStandardMaterial||m.isMeshLambertMaterial||m.isMeshPhongMaterial)))return null;
     if(key==='water')return'water';if(/^wind[GFTH]$/.test(key))return'grass';
-    if(key==='moon-asset')return'build';if(/^wind/.test(key)||key==='stumpcut')return'flora';return'tint'}
+    if(key==='fortmcut')return'glacier';if(key==='moon-asset')return'build';if(/^wind/.test(key)||key==='stumpcut')return'flora';return'tint'}
   function regionEdit(sh,kind){if(sh.skinning&&kind!=='flora')return;bind(sh);const F=sh.fragmentShader;if(F.indexOf('#include <normal_fragment_maps>')<0||F.indexOf('vFowW')<0)return;
-    let code=kind==='water'?WATER:kind==='build'?BUILD:kind==='grass'?FLORA('.92','.25'):kind==='flora'?FLORA('.9','1.0'):FLORA('.55','.6');
+    let code=kind==='water'?WATER:kind==='build'?BUILD:kind==='grass'?FLORA('.92','.25'):kind==='flora'?FLORA('.9','1.0'):kind==='glacier'?FLORA('.42','.15'):FLORA('.55','.6');
     let f=DECL+F.replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\n'+code).replace('#include <lights_fragment_maps>',IBLK);
     if(kind!=='water')f=f.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance=totalEmissiveRadiance*regEmK+regEm;');
     else if(f.indexOf('#include <roughnessmap_fragment>')>=0)f=f.replace('#include <lights_physical_fragment>','roughnessFactor=mix(roughnessFactor,.32,regIce);\n#include <lights_physical_fragment>');
