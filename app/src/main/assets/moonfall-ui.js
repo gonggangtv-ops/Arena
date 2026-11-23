@@ -22,7 +22,7 @@ window.installMoonfallUI=function(){
   function showHeldSkill(me,held){
     const info=arenaSkillDetails(me,held.i);
     const add=(tag,text,style)=>{
-      const el=document.createElement(tag);el.textContent=text;if(style)el.className=style;hint.appendChild(el);
+      const el=document.createElement(tag);el.textContent=window.ArenaLanguage?.text(text)??text;if(style)el.className=style;hint.appendChild(el);
     };
     hint.dataset.hold='';
     hint.replaceChildren();

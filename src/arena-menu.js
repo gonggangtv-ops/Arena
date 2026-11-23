@@ -12,6 +12,7 @@ window.installArenaMenuUX=function(){
       sword:'M6 3 20 17l-3 3L3 6V3h3Zm4 11-7 7m0-5 5 5m8-11 5-7v5l-7 8m2 0 5 5m0-5-5 5',
       people:'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9v-2a7 7 0 0 1 14 0v2m0-16a4 4 0 0 1 0 8m3 3a6 6 0 0 1 3 5',
       gate:'M4 21V7l8-4 8 4v14M2 21h20M8 21V11h8v10M4 7h16M10 7V4m4 3V4',
+      globe:'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM2 12h20M12 2c5 6 5 14 0 20-5-6-5-14 0-20Z',
       gear:'m9 3 1 3h4l1-3 3 2-1 3 2 3 3 1v4l-3 1-2 3 1 3-3 2-1-3h-4l-1 3-3-2 1-3-2-3-3-1v-4l3-1 2-3-1-3 3-2Zm3 7a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z',
       forge:'m4 3 10 10m-4-9 4-2 7 7-2 4-9-9Zm3 11-8 8-3-3 8-8m3 9h7m-5-3h5',
       picture:'M3 5h18v14H3V5Zm0 10 5-5 5 5 3-3 5 5M16 8h.01',
@@ -67,7 +68,14 @@ window.installArenaMenuUX=function(){
     const open=make('button','arena-menu-tool');open.id='arenaSettingsBtn';open.type='button';
     open.append(icon('gear'),make('span','','ตั้งค่า'));open.setAttribute('aria-haspopup','dialog');open.setAttribute('aria-controls','arenaSettings');open.setAttribute('aria-expanded','false');
     const forge=document.getElementById('fuseBtn');forge.className='arena-menu-tool';forge.replaceChildren(icon('forge'),make('span','','สูตรหลอมอาวุธ'));
-    utilities.append(open,forge);menu.querySelector('.moonfall-play-actions').after(utilities);
+    const nextLanguage=ArenaLanguage.language==='th'?'en':'th';
+    const language=make('button','arena-menu-tool',nextLanguage==='en'?'English':'ภาษาไทย');
+    language.prepend(icon('globe'));
+    language.id='arenaLanguageBtn';language.type='button';language.lang=nextLanguage;
+    language.setAttribute('translate','no');
+    language.setAttribute('aria-label',nextLanguage==='en'?'Switch to English':'เปลี่ยนเป็นภาษาไทย');
+    language.onclick=()=>ArenaLanguage.select(nextLanguage);
+    utilities.append(open,forge,language);menu.querySelector('.moonfall-play-actions').after(utilities);
 
     const dialog=make('dialog','arena-settings');dialog.id='arenaSettings';dialog.setAttribute('aria-labelledby','arenaSettingsTitle');
     const header=make('header','arena-settings-header'),headingCopy=make('div');
@@ -119,7 +127,7 @@ window.installArenaMenuUX=function(){
     const qualityObserver=new MutationObserver(syncAvailability);qualityObserver.observe(document.getElementById('qBtn'),{attributes:true,attributeFilter:['class']});syncAvailability();
     // Translate the published setting's label without replacing syncTone/onclick.
     const toneButton=document.getElementById('toneBtn');
-    const syncToneLabel=()=>{const label='ภาพ: '+(moody?'ซิเนมาติก':'เป็นกลาง');if(toneButton.textContent!==label)toneButton.textContent=label;};
+    const syncToneLabel=()=>{const label=ArenaLanguage.text('ภาพ: '+(moody?'ซิเนมาติก':'เป็นกลาง'));if(toneButton.textContent!==label)toneButton.textContent=label;};
     const toneObserver=new MutationObserver(syncToneLabel);toneObserver.observe(toneButton,{childList:true,characterData:true,subtree:true});syncToneLabel();
     const orientation=matchMedia('(max-width:600px)');const syncOrientation=()=>tabs.setAttribute('aria-orientation',orientation.matches?'horizontal':'vertical');orientation.addEventListener('change',syncOrientation);syncOrientation();
     setTab(0,false);

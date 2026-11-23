@@ -130,7 +130,7 @@ window.installArenaVitals=function(){
     const limit=UI.mute.x-30;if(x+w>limit)w=limit-x;if(w<120*s)return;
     const y=7,h=12*s,by=y+15*s,alpha=clamp(TGT.t/.5,0,1),v=values(u),rel=relation(u,me),key=rel==='ally'?'ally':u.boss?'boss':u.hero?'enemy':u.zombie?'zombie':'mob';
     ctx.save();ctx.globalAlpha=alpha;ctx.lineJoin='round';
-    const name=u.name+(u.hero?`  Lv.${u.lvl}`:'');text(name,x+w/2,y+6*s,w-8*s,11*s,rel==='ally'?'#cbe7ff':u.boss?'#f0d6a4':'#eec2c1','center');
+    const name=arenaDisplayName(u)+(u.hero?`  Lv.${u.lvl}`:'');text(name,x+w/2,y+6*s,w-8*s,11*s,rel==='ally'?'#cbe7ff':u.boss?'#f0d6a4':'#eec2c1','center');
     const edge=h*.76;ctx.beginPath();ctx.moveTo(x-edge,by+h/2);ctx.lineTo(x,by-3*s);ctx.lineTo(x+w,by-3*s);ctx.lineTo(x+w+edge,by+h/2);ctx.lineTo(x+w,by+h+3*s);ctx.lineTo(x,by+h+3*s);ctx.closePath();ctx.fillStyle='#05090fe8';ctx.fill();ctx.strokeStyle=u.boss?GOLD:'#8993a28c';ctx.lineWidth=1.1*s;ctx.stroke();
     frameRail(x,by,w,h,v.hpRatio,key,v.shieldRatio,0);
     const label=v.dead?'กำจัดแล้ว':`${fmtN(Math.ceil(u.hp))} / ${fmtN(u.maxHp)} (${Math.round(v.hpRatio*100)}%)`;
@@ -150,7 +150,7 @@ window.installArenaVitals=function(){
       paint('portrait',x,y+h+sc,w,3*sc);paint('mana',x,y+h+sc,w*v.mpRatio,3*sc);
       const tier=u.wk?TIERS[clamp(u.wt|0,0,4)].c:GOLD;ctx.fillStyle=tier;ctx.fillRect(x,y-2*sc,Math.min(15*sc,w*.23),Math.max(1,sc));
       badge(x-10*sc,y+h*.67,8.3*sc,u.lvl,sc);
-      const name=String(u.name||''),size=10.5*sc;ctx.font=`600 ${size}px system-ui,sans-serif`;
+      const name=arenaDisplayName(u),size=10.5*sc;ctx.font=`600 ${size}px system-ui,sans-serif`;
       const nameW=Math.min(150*sc,ctx.measureText(name).width),icon=11.5*sc,total=nameW+icon+3*sc;
       art(u.wk,px-total/2+icon/2,y-10.5*sc,icon/2);
       text(name,px-total/2+icon+3*sc,y-9.7*sc,nameW,size,rel==='self'?'#f4e6c6':rel==='ally'?'#cce8ff':'#f4c6cc','left');

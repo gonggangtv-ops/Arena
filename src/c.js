@@ -122,7 +122,13 @@ const RoomT={kind:'room',api:null,g:null,ch:new Map(),me:null,budget:3500,rate:1
     try{this.me&&this.me.r.leave()}catch(e){}for(const c of this.ch.values())try{c.r.leave()}catch(e){}try{this.g&&this.g.leave()}catch(e){}this.g=null;this.me=null;this.ch=new Map()}};
 const mpTransport=()=>PeerT.ok()?PeerT:RoomT.ok()?RoomT:null;
 const mpSupported=()=>!!mpTransport();
-function myName(){return($('pname').value.trim()||'ผู้เล่น').slice(0,12)}
+function arenaDisplayName(u){
+  return u.hero&&isHuman(u)&&window.ArenaLanguage?ArenaLanguage.literal(u.name):u.name;
+}
+function resultName(u){
+  return isHuman(u)?u.name:window.ArenaLanguage?.text(u.name)??u.name;
+}
+function myName(){return($('pname').value.trim()||(window.ArenaLanguage?.text('ผู้เล่น')||'ผู้เล่น')).slice(0,12)}
 function netSend(m){if(net.tr)net.tr.toHost(m)}
 function leaveNet(){const t=net.tr;net.tr=null;net.mode='solo';net.jw=false;net.inputs={};net.spec={};net.cl={};if(t)t.close()}
 // shared host callbacks (private room and quick-match lobby)
@@ -137,7 +143,7 @@ function hostHandlers(onTaken){let opened=false;return{
 function hostRoom(retry){
   const T=mpTransport();if(!T){menuMsg(MP_HINT);return}
   leaveNet();net.qm=false;net.tr=T;net.mode='host';net.code=randCode();net.chat=[];
-  if(!retry){net.rname=cleanName($('rname').value)||myName()+' ห้อง';net.pw=$('rpw').value.trim().slice(0,12);net.pub=$('rpub').checked;net.lock=!!net.pw}
+  if(!retry){net.rname=cleanName($('rname').value)||myName()+(window.ArenaLanguage?.text(' ห้อง')||' ห้อง');net.pw=$('rpw').value.trim().slice(0,12);net.pub=$('rpub').checked;net.lock=!!net.pw}
   menuMsg('กำลังสร้างห้อง…','#9fb6b8');
   T.host(T.kind==='peer'?NET_PREFIX+net.code:net.code,hostHandlers(()=>{if((retry||0)<4)hostRoom((retry||0)+1);else{menuMsg('สร้างห้องไม่สำเร็จ ลองอีกครั้ง');leaveNet();showMenu()}}))}
 // ---- quick match: find strangers to play with ----
@@ -221,8 +227,15 @@ function cfgText(c,hum){const g=normCfg(cfgGame(c,Math.max(2,hum))),sz=c.size===
 function hostChat(n,k,s,sys){const m={n:String(n).slice(0,12),k:k|0,s:String(s).slice(0,80),y:sys?1:0};chatAdd(m);if(net.tr)for(const cid in net.cl)net.tr.send(cid,{t:'ch',m})}
 function chatAdd(m){net.chat.push(m);if(net.chat.length>40)net.chat.splice(0,net.chat.length-40);renderChat()}
 function chatClean(m){return m&&typeof m==='object'?{n:String(m.n||'').slice(0,12),k:clamp(m.k|0,0,LOOKS.length-1),s:cleanMsg(m.s),y:m.y?1:0}:null}
+function lobbySystemText(message){
+  if(window.ArenaLanguage?.language!=='en')return message;
+  for(const [suffix,english] of [[' เข้าห้อง',' joined the room'],[' ออกจากห้อง',' left the room'],[' ถูกเชิญออก',' was removed']]){
+    if(message.endsWith(suffix))return message.slice(0,-suffix.length)+english;
+  }
+  return ArenaLanguage.text(message);
+}
 function renderChat(){const L=$('chatLog');if(!L)return;const atEnd=L.scrollHeight-L.scrollTop-L.clientHeight<30;
-  L.innerHTML=net.chat.map(m=>m.y?`<div class="sy">• ${escapeHtml(m.s)}</div>`:`<div><span class="nm" style="color:${LOOKS[clamp(m.k|0,0,7)].c}">${escapeHtml(m.n)}</span><span class="tx">${escapeHtml(m.s)}</span></div>`).join('')||'<div class="sy">ยังไม่มีข้อความ · ทักทายกันได้เลย</div>';
+  L.innerHTML=net.chat.map(m=>m.y?`<div class="sy" translate="no">• ${escapeHtml(lobbySystemText(m.s))}</div>`:`<div><span translate="no" class="nm" style="color:${LOOKS[clamp(m.k|0,0,7)].c}">${escapeHtml(m.n)}</span><span translate="no" class="tx">${escapeHtml(m.s)}</span></div>`).join('')||'<div class="sy">ยังไม่มีข้อความ · ทักทายกันได้เลย</div>';
   if(atEnd)L.scrollTop=L.scrollHeight}
 function sendChat(){const i=$('chatIn'),t=cleanMsg(i.value);if(!t)return;i.value='';
   if(net.mode==='host')hostChat(myName(),chosenLook,t);else if(net.mode==='client')netSend({t:'ch',s:t})}
@@ -467,7 +480,7 @@ function drawBars(px,py,u,me,sc){
     ctx.fillStyle='#0b1830';ctx.fillRect(x,y+bh+1*sc,bw,3.5*sc);ctx.fillStyle='#4a8cff';ctx.fillRect(x,y+bh+1*sc,bw*clamp(u.mp/Math.max(1,u.maxMp),0,1),3.5*sc);
     ctx.fillStyle='#1b1410';ctx.beginPath();ctx.arc(x-10*sc,y+bh*.7,9.5*sc,0,7);ctx.fill();ctx.strokeStyle='#c9a94a';ctx.lineWidth=1.5;ctx.stroke();
     ctx.fillStyle='#ffe9a8';ctx.font=`bold ${10*sc}px sans-serif`;ctx.textAlign='center';ctx.fillText(u.lvl,x-10*sc,y+bh*.7+3.6*sc);
-    const nm=(u.wk?WEAPONS[u.wk].ic+' ':'')+u.name;ctx.font=`bold ${11*sc}px system-ui,sans-serif`;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.75)';ctx.strokeText(nm,px,y-5*sc);ctx.fillStyle=u===me?'#c8ffc8':ally?'#cfe6ff':'#ffd6d6';ctx.fillText(nm,px,y-5*sc);
+    const nm=(u.wk?WEAPONS[u.wk].ic+' ':'')+arenaDisplayName(u);ctx.font=`bold ${11*sc}px system-ui,sans-serif`;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.75)';ctx.strokeText(nm,px,y-5*sc);ctx.fillStyle=u===me?'#c8ffc8':ally?'#cfe6ff':'#ffd6d6';ctx.fillText(nm,px,y-5*sc);
     if(u.aegis){ctx.font=`${12*sc}px sans-serif`;ctx.fillText('⚜️',x+bw+10*sc,y+bh+2*sc)}}
   else if(u.r>33){ctx.font=`bold ${10*sc}px system-ui,sans-serif`;ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(u.name,px,y-4*sc);ctx.fillStyle='#ffd9a8';ctx.fillText(u.name,px,y-4*sc)}
 }
@@ -514,7 +527,7 @@ function drawHUD(){
   drawTarget(me,s,fr);drawCombo(s);drawFury(me,s);
   if(scrFl.a>0){ctx.save();ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.1,W/2,H/2,Math.max(W,H)*.7);g.addColorStop(0,hexA(scrFl.c,0));g.addColorStop(1,hexA(scrFl.c,scrFl.a));ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.restore()}
   ctx.fillStyle='rgba(0,0,0,.5)';ctx.beginPath();ctx.arc(UI.mute.x,UI.mute.y,18,0,7);ctx.fill();ctx.font='17px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(['🔊','🔉','🔇'][AU.mode],UI.mute.x,UI.mute.y+1);ctx.textBaseline='alphabetic';
-  if(net.mode!=='solo'){ctx.textAlign='right';ctx.font=`${11*s}px system-ui,sans-serif`;ctx.fillStyle='#bfe3ff';ctx.fillText(net.qm?'🌐 จับคู่ด่วน':`🌐 ${net.rname||'ห้อง '+net.code}`,UI.mute.x-26,UI.mute.y+4)}
+  if(net.mode!=='solo'){ctx.textAlign='right';ctx.font=`${11*s}px system-ui,sans-serif`;ctx.fillStyle='#bfe3ff';ctx.fillText(net.qm?'🌐 จับคู่ด่วน':`🌐 ${net.rname?(window.ArenaLanguage?.literal(net.rname)||net.rname):'ห้อง '+net.code}`,UI.mute.x-26,UI.mute.y+4)}
   if(ARX)drawArenaFeed(s);else{
   ctx.textAlign='right';ctx.font=`${12*s}px system-ui,sans-serif`;
   // kill feed stays right of the clock / zone / fusion column: long lines shrink, then get cut with …
@@ -523,7 +536,7 @@ function drawHUD(){
     if(w>fmax){fs=Math.max(9.5*s,fs*fmax/w);ctx.font=`${fs}px system-ui,sans-serif`;w=ctx.measureText(t).width;if(w>fmax){while(t.length>4&&ctx.measureText(t+'…').width>fmax)t=t.slice(0,-1);t+='…';w=ctx.measureText(t).width}}
     ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(W-SAFE.r-8-w-14,y-13*s,w+14,17*s);ctx.fillStyle=f.hl?'#ffe27a':'#fff';ctx.fillText(t,W-SAFE.r-15,y)});ctx.globalAlpha=1;}
   UI.swap=null;
-  if(me.dead){if(spectate!==null&&!gameOver){const t=UMAP.get(spectate);if(t){const st=`👁 กำลังดู ${t.name} · แตะจอเพื่อเปลี่ยน`;if(ARX)arenaNotice(st,W/2,H-24,W*.7,s,{size:13,tone:'muted'});else{ctx.textAlign='center';ctx.font=`bold ${14*s}px system-ui,sans-serif`;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(st,W/2,H-24);ctx.fillStyle='#bfe3ff';ctx.fillText(st,W/2,H-24)}}}
+  if(me.dead){if(spectate!==null&&!gameOver){const t=UMAP.get(spectate);if(t){const st=`👁 กำลังดู ${arenaDisplayName(t)} · แตะจอเพื่อเปลี่ยน`;if(ARX)arenaNotice(st,W/2,H-24,W*.7,s,{size:13,tone:'muted'});else{ctx.textAlign='center';ctx.font=`bold ${14*s}px system-ui,sans-serif`;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(st,W/2,H-24);ctx.fillStyle='#bfe3ff';ctx.fillText(st,W/2,H-24)}}}
     if(me.reviveT>0){if(ARX)arenaNotice('⚜️ กำลังฟื้นคืนชีพ…',W/2,H*.4,W*.7,s);else{ctx.textAlign='center';ctx.font=`bold ${22*s}px system-ui,sans-serif`;ctx.fillStyle='#ffe27a';ctx.fillText('⚜️ กำลังฟื้นคืนชีพ…',W/2,H*.4)}}
     drawAnnounce(s);ctx.restore();return}
   {const zp=zoneXY(me);if(Math.hypot(zp.x-zone.x,zp.y-zone.y)>zone.r){const t=zp===me?'อยู่นอกวง! รีบกลับเข้าวง':'ทางขึ้นคุกใต้ดินอยู่นอกวง! รีบขึ้นไป';if(ARX)arenaNotice(t,W/2,H*.2,W*.65,s,{tone:'danger',size:14});else{ctx.textAlign='center';ctx.font=`bold ${17*s}px system-ui,sans-serif`;ctx.globalAlpha=.6+.4*Math.sin(performance.now()/125);ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(t,W/2,H*.22);ctx.fillStyle='#ff6a6a';ctx.fillText(t,W/2,H*.22);ctx.globalAlpha=1;}
@@ -546,7 +559,7 @@ function edgeArrow(a,col,txt,al,s){const R=Math.min(W,H)*.4,x=W/2+Math.cos(a)*R*
   if(txt){ctx.globalAlpha=al;ctx.font=`bold ${10.5*s}px system-ui,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';const lx=clamp(x-Math.cos(a)*30*s,SAFE.l+50*s,W-SAFE.r-50*s),ly=clamp(y-Math.sin(a)*22*s,48*s,H-40*s);
     ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.75)';ctx.strokeText(txt,lx,ly);ctx.fillStyle=col;ctx.fillText(txt,lx,ly);ctx.textBaseline='alphabetic'}ctx.globalAlpha=1}
 function drawSense(me,s){if(gameOver)return;const vr=visionR();
-  if(MC.ts>1)for(const u of units){if(!allyOf(u,me)||u.dead)continue;const d=Math.hypot(u.x-me.x,u.y-me.y);if(d<vr*.8)continue;edgeArrow(Math.atan2(u.y-me.y,u.x-me.x),'#6ab8ff',`${u.name} ${Math.round(d/40)}ม.`,.9,s)}
+  if(MC.ts>1)for(const u of units){if(!allyOf(u,me)||u.dead)continue;const d=Math.hypot(u.x-me.x,u.y-me.y);if(d<vr*.8)continue;edgeArrow(Math.atan2(u.y-me.y,u.x-me.x),'#6ab8ff',`${arenaDisplayName(u)} ${Math.round(d/40)}ม.`,.9,s)}
   let fe=null,fd=vr*2.2;for(const u of units){if(!u.hero||u===me||u.dead||allyOf(u,me)||u.hidden)continue;const d=Math.hypot(u.x-me.x,u.y-me.y);if(d<vr+40||d>fd)continue;fd=d;fe=u}
   if(fe){const p=.45+.35*Math.sin(performance.now()/180);edgeArrow(Math.atan2(fe.y-me.y,fe.x-me.x),'#ff6a5a','👣',p,s)}
   if(isNight()){let z=null,zd=900;for(const u of units){if(!u.zombie||u.dead||net.mode==='client'&&!u.inSnap)continue;const d=Math.hypot(u.x-me.x,u.y-me.y);if(d<vr*.85||d>zd)continue;zd=d;z=u}
@@ -648,7 +661,7 @@ function drawFrame(me,s){const x0=SAFE.l+6,y0=5,w=clamp(W*.3,196*s,270*s),h=52*s
 function drawTarget(me,s,fr){if(TGT.t<=0)return;const u=UMAP.get(TGT.id),L=listener()||me;if(!u||u===me||(!u.dead&&L&&!unitVisibleTo(u,me,L)))return;
   let tw=clamp(W*.3,180*s,310*s),tx=Math.max(W/2-tw/2,fr.x+fr.w+12*s);const lim=UI.mute.x-30;if(tx+tw>lim)tw=lim-tx;if(tw<120*s)return;
   const y=7,bh=12*s,by=y+15*s,f=u.dead?0:clamp(u.hp/u.maxHp,0,1),al=clamp(TGT.t/.5,0,1),ally=u.hero&&allyOf(u,me);ctx.save();ctx.globalAlpha=al;ctx.lineJoin='round';
-  const nm=u.name+(u.hero?`  Lv.${u.lvl}`:'');ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.font=`bold ${11.5*s}px system-ui,sans-serif`;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.8)';ctx.strokeText(nm,tx+tw/2,y+10*s);ctx.fillStyle=ally?'#bfe0ff':'#ff8f84';ctx.fillText(nm,tx+tw/2,y+10*s);
+  const nm=arenaDisplayName(u)+(u.hero?`  Lv.${u.lvl}`:'');ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.font=`bold ${11.5*s}px system-ui,sans-serif`;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.8)';ctx.strokeText(nm,tx+tw/2,y+10*s);ctx.fillStyle=ally?'#bfe0ff':'#ff8f84';ctx.fillText(nm,tx+tw/2,y+10*s);
   const e=bh*.9;ctx.fillStyle='rgba(0,0,0,.75)';ctx.beginPath();ctx.moveTo(tx-e,by+bh/2);ctx.lineTo(tx,by-2);ctx.lineTo(tx+tw,by-2);ctx.lineTo(tx+tw+e,by+bh/2);ctx.lineTo(tx+tw,by+bh+2);ctx.lineTo(tx,by+bh+2);ctx.closePath();ctx.fill();ctx.strokeStyle='rgba(160,168,180,.75)';ctx.lineWidth=1.3;ctx.stroke();
   const g=ctx.createLinearGradient(0,by,0,by+bh);g.addColorStop(0,ally?'#58a8f0':'#e2484c');g.addColorStop(1,ally?'#1c4c9a':'#7c141a');ctx.fillStyle=g;ctx.fillRect(tx,by,tw*f,bh);ctx.fillStyle='rgba(255,255,255,.16)';ctx.fillRect(tx,by,tw*f,bh*.35);
   const t=u.dead?'กำจัดแล้ว':`${fmtN(Math.ceil(u.hp))} / ${fmtN(u.maxHp)} (${Math.round(f*100)}%)`;ctx.font=`bold ${9.5*s}px system-ui,sans-serif`;ctx.textBaseline='middle';ctx.lineWidth=2.5;ctx.strokeStyle='rgba(0,0,0,.65)';ctx.strokeText(t,tx+tw/2,by+bh/2+.5);ctx.fillStyle='#fff';ctx.fillText(t,tx+tw/2,by+bh/2+.5);ctx.restore()}
@@ -726,8 +739,9 @@ function showSearch(note){state='lobby';showOnly('lobby');renderLobby();$('lobby
 function renderLobby(){const host=net.mode==='host',search=net.mode==='search',qm=net.qm&&!search,room=!qm&&!search;
   $('lobbySpin').classList.toggle('hidden',!search);$('lobbyCode').classList.toggle('hidden',search);
   $('lobbyCode').textContent=qm?'⏱ '+qmLeft():net.code;
+  $('lobbyTitle').translate=!(room&&net.rname);
   $('lobbyTitle').textContent=room?(net.lock?'🔒 ':'')+(net.rname||'ห้อง '+net.code):qm?'⚡ ดวลผู้เล่นจริง':'';
-  const plRow=(p,i)=>`<div class="pl"><span class="dot" style="background:${LOOKS[clamp(p.look|0,0,7)].c}"></span>${escapeHtml(p.name)}${i===0?' 👑':''}${host&&room&&i>0&&p.ctrl?`<button class="kick" data-k="${escapeHtml(p.ctrl)}" title="เชิญออก" aria-label="เชิญ ${escapeHtml(p.name)} ออกจากห้อง">✕</button>`:''}</div>`;
+  const plRow=(p,i)=>`<div class="pl"><span class="dot" style="background:${LOOKS[clamp(p.look|0,0,7)].c}"></span><span id="roomPlayer-${i}" translate="no">${escapeHtml(p.name)}</span>${i===0?' 👑':''}${host&&room&&i>0&&p.ctrl?`<button class="kick" data-k="${escapeHtml(p.ctrl)}" title="เชิญออก" aria-label="เชิญออก" aria-describedby="roomPlayer-${i}">✕</button>`:''}</div>`;
   const ts=room?(net.cfg.ts||1):1;const myI=host?0:(net.youI|0),myT=net.lobby[myI]?net.lobby[myI].team|0:-1;
   if(search)$('lobbyList').innerHTML='';
   else if(ts>1){const N=nTeams();let h='<div class="teams">';
@@ -757,8 +771,8 @@ function hostBusy(){return net.mode==='host'&&!gameOver&&Object.keys(net.cl).len
 function endButtons(){const b=$('againBtn'),hostLive=hostBusy();b.disabled=hostLive;
   b.textContent=hostLive?'รอเกมจบก่อน (คุณเป็นโฮสต์)':net.qm?'⚡ จับคู่ใหม่':net.mode==='host'?'กลับห้อง':net.mode==='client'?'รอในห้อง':'กลับเมนู';
   $('endMenu').classList.toggle('hidden',hostLive||!(net.qm||net.mode!=='solo'))}
-function showFinal(e){const w=UMAP.get(e.w);$('endTitle').textContent='🏁 จบเกม';const tw=e.wt!==undefined&&MC.ts>1?units.filter(u=>u.hero&&u.team===e.wt).map(u=>u.name):null;
-  $('endStats').innerHTML=tw?`ทีมผู้ชนะ <b>${escapeHtml(tw.join(', '))}</b>`:`ผู้ชนะคือ <b>${escapeHtml(w?w.name:'-')}</b>`;$('watchBtn').classList.add('hidden');
+function showFinal(e){const w=UMAP.get(e.w);$('endTitle').textContent='🏁 จบเกม';const tw=e.wt!==undefined&&MC.ts>1?units.filter(u=>u.hero&&u.team===e.wt).map(resultName):null;
+  $('endStats').innerHTML=tw?`ทีมผู้ชนะ <b translate="no">${escapeHtml(tw.join(', '))}</b>`:`ผู้ชนะคือ <b translate="no">${escapeHtml(w?resultName(w):'-')}</b>`;$('watchBtn').classList.add('hidden');
   endButtons();showOnly('end')}
 $('watchBtn').onclick=()=>{AU.play('click');showOnly(null);const al=units.filter(u=>u.hero&&!u.dead);spectate=al.length?al[0].id:null;if(net.mode==='client'&&spectate)netSend({t:'spec',id:spectate})};
 $('againBtn').onclick=()=>{AU.play('click');if(hostBusy())return;if(net.qm){quickMatch();return}if(net.mode==='host'){state='lobby';if(net.tr)net.tr.setState('lobby');pushLobby();showLobby()}else if(net.mode==='client'){state='lobby';showLobby()}else showMenu()};
@@ -802,7 +816,7 @@ $('credList').innerHTML=CREDITS.map(([h,L])=>`<h4>${h}</h4>`+L.map(([t,a,l,u])=>
 $('credBtn').onclick=()=>{AU.init();AU.play('click');$('credOv').classList.remove('hidden')};
 $('credBack').onclick=()=>{AU.play('click');$('credOv').classList.add('hidden')};
 $('fuseBack').onclick=()=>{AU.play('click');$('fuseOv').classList.add('hidden')};
-$('pname').value=lsGet('ar_name','ผู้เล่น'+Math.floor(rand(10,99)));$('pname').addEventListener('change',()=>lsSet('ar_name',$('pname').value.trim()));
+$('pname').value=lsGet('ar_name',(window.ArenaLanguage?.text('ผู้เล่น')||'ผู้เล่น')+Math.floor(rand(10,99)));$('pname').addEventListener('change',()=>lsSet('ar_name',$('pname').value.trim()));
 $('soloBtn').onclick=()=>{AU.init();AU.play('click');leaveNet();net.qm=false;hostStartMatch()};
 $('qmBtn').onclick=()=>{AU.init();AU.play('click');lsSet('ar_name',myName());quickMatch()};
 $('endMenu').onclick=()=>{AU.play('click');if(hostBusy())return;net.qmTok=(net.qmTok||0)+1;leaveNet();net.qm=false;showMenu()};
@@ -838,8 +852,8 @@ function renderRooms(){const box=$('roomList');
   if(!roomRows.length){box.innerHTML='<div class="empty">ยังไม่มีห้องที่เปิดให้เห็นตอนนี้<br>สร้างห้องของคุณเองทางขวา แล้วให้เพื่อนกดเข้าจากรายการนี้</div>';return}
   box.innerHTML=roomRows.map((r,i)=>{const old=r.v!==VER,can=!old&&r.st==='lobby';
     const chip=old?'<span class="chip f">คนละเวอร์ชัน</span>':r.st==='play'?'<span class="chip p">กำลังเล่น</span>':r.st==='full'?'<span class="chip f">เต็ม</span>':'<span class="chip l">รอผู้เล่น</span>';
-    return `<div class="room"><div class="ri"><b>${r.lock?'🔒 ':''}${escapeHtml(r.name)}${chip}</b><small>⚔️ ${TS_N[r.ts]} · 👑 ${escapeHtml(r.host||'-')} · 👥 ${r.n}/${r.max} · 🤖 ${r.fill?'บอทเติมครบ '+r.fill:'ไม่มีบอท'} · 🗺️ ${r.size==='A'?'อัตโนมัติ':SIZE_N[r.size]} · #${r.c}</small></div>`+
-      (r.lock&&can?`<input class="pw" data-pw="${i}" maxlength="12" placeholder="รหัสผ่าน" aria-label="รหัสผ่านห้อง ${escapeHtml(r.name)}">`:'')+
+    return `<div class="room"><div class="ri"><b>${r.lock?'🔒 ':''}<span id="listedRoom-${i}" translate="no">${escapeHtml(r.name)}</span>${chip}</b><small>⚔️ ${TS_N[r.ts]} · 👑 <span translate="no">${escapeHtml(r.host||'-')}</span> · 👥 ${r.n}/${r.max} · 🤖 ${r.fill?'บอทเติมครบ '+r.fill:'ไม่มีบอท'} · 🗺️ ${r.size==='A'?'อัตโนมัติ':SIZE_N[r.size]} · #${r.c}</small></div>`+
+      (r.lock&&can?`<input class="pw" data-pw="${i}" aria-describedby="listedRoom-${i}" maxlength="12" placeholder="รหัสผ่าน" aria-label="รหัสผ่านห้อง">`:'')+
       `<button class="go small" data-j="${i}" ${can?'':'disabled'}>เข้า</button></div>`}).join('')}
 $('roomList').addEventListener('click',e=>{const b=e.target.closest('[data-j]');if(!b||b.disabled)return;const r=roomRows[+b.dataset.j];if(!r)return;AU.init();AU.play('click');
   const pi=$('roomList').querySelector(`[data-pw="${b.dataset.j}"]`);const pw=pi?pi.value.trim():'';if(r.lock&&!pw){menuMsg('ห้องนี้ล็อกไว้ ใส่รหัสผ่านก่อน');pi&&pi.focus();return}
@@ -851,7 +865,7 @@ $('lobbyStart').onclick=()=>{AU.play('click');hostStartMatch()};
 $('lobbyLeave').onclick=()=>{AU.play('click');net.qmTok=(net.qmTok||0)+1;leaveNet();net.qm=false;showMenu()};
 $('copyLink').onclick=()=>{const v=$('inviteLink').value;const done=()=>{$('copyLink').textContent='คัดลอกแล้ว ✓';setTimeout(()=>$('copyLink').textContent='คัดลอกลิงก์',1500)};
   try{navigator.clipboard.writeText(v).then(done,()=>{$('inviteLink').select();done()})}catch(e){$('inviteLink').select();done()}};
-function syncMpButtons(){const ok=mpSupported();$('hostBtn').disabled=!ok;$('joinBtn').disabled=!ok;$('qmBtn').disabled=!ok;listRooms(true);if(!ok)menuMsg(MP_HINT,'#9fb6b8');else if($('menuMsg').textContent===MP_HINT)menuMsg('')}
+function syncMpButtons(){const ok=mpSupported();$('hostBtn').disabled=!ok;$('joinBtn').disabled=!ok;$('qmBtn').disabled=!ok;listRooms(true);if(!ok)menuMsg(MP_HINT,'#9fb6b8');else if($('menuMsg').textContent===(window.ArenaLanguage?.text(MP_HINT)||MP_HINT))menuMsg('')}
 syncMpButtons();
 {const q=new URLSearchParams(location.search);const rc=(q.get('room')||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(rc.length===5){$('code').value=rc;roomsCtx=true;showMenu();menuMsg('ได้รับลิงก์เชิญห้อง '+rc+' · ใส่ชื่อแล้วกด "เข้าห้อง"','#ffe27a')}}
 // heartbeat: WebRTC can take a long time to notice a vanished peer

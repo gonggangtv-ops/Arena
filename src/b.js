@@ -99,7 +99,7 @@ function applyEvent(e){
       }
       if(ARX&&(e.k==='fusing'||e.k==='fuse'))arenaForgeEvent(e);
       fxq.push(e);break;
-    case 'f':feedList.unshift({txt:e.s,t:6,hl:e.v&&e.v.includes(myId)});if(feedList.length>5)feedList.pop();break;
+    case 'f':feedList.unshift({txt:window.ArenaLanguage?.feed(e.s,units)??e.s,t:6,hl:e.v&&e.v.includes(myId)});if(feedList.length>5)feedList.pop();break;
     case 'a':if(!e.v||e.v.includes(myId))announce={txt:e.s,t:e.d||2.5};break;
     case 'ir':items=items.filter(i=>i.id!==e.id);break;
     case 'ia':if(!items.some(i=>i.id===e.it.id))items.push(e.it);break;

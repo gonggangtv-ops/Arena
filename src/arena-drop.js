@@ -107,7 +107,7 @@ DROP.draw=function(){const c=this.el,dpr=Math.min(2,window.devicePixelRatio||1),
   if(typeof MINI!=='undefined'&&MINI)x.drawImage(MINI,mx,my,S,S);x.save();x.beginPath();x.rect(mx,my,S,S);x.arc(X(zone.x),Y(zone.y),zone.r*k,0,6.2832,true);x.fillStyle='#030409b8';x.fill('evenodd');x.restore();
   x.strokeStyle='#c9a0ff';x.lineWidth=2;x.beginPath();x.arc(X(zone.x),Y(zone.y),zone.r*k,0,6.2832);x.stroke();
   x.strokeStyle='#d6b45e';x.lineWidth=1.5;x.strokeRect(mx-1.5,my-1.5,S+3,S+3);
-  const lab=(t,px,py,sz,col,bold)=>{x.font=(bold?'700 ':'500 ')+sz+'px system-ui,sans-serif';x.textAlign='center';x.textBaseline='middle';x.lineWidth=3;x.strokeStyle='#000c';x.strokeText(t,px,py);x.fillStyle=col;x.fillText(t,px,py)};
+  const lab=(t,px,py,sz,col,bold)=>{t=ArenaLanguage.text(t);x.font=(bold?'700 ':'500 ')+sz+'px system-ui,sans-serif';x.textAlign='center';x.textBaseline='middle';x.lineWidth=3;x.strokeStyle='#000c';x.strokeText(t,px,py);x.fillStyle=col;x.fillText(t,px,py)};
   const fs=clamp(S/62,9,13);
   // lands
   if(typeof REG!=='undefined')for(const g of this.regions())lab((REG.IC[g.r]||'')+' '+REG.N[g.r],X(g.x),Y(g.y),fs+3,'#ffffff9a',true);
@@ -123,7 +123,7 @@ DROP.draw=function(){const c=this.el,dpr=Math.min(2,window.devicePixelRatio||1),
   const pin=(px,py,col,txt)=>{const b=Math.sin(T*4)*2;x.save();x.translate(px,py);x.strokeStyle=col;x.lineWidth=2;for(let i=0;i<2;i++){const q=((T*.9+i*.5)%1);x.globalAlpha=1-q;x.beginPath();x.arc(0,0,6+q*22,0,6.2832);x.stroke()}x.globalAlpha=1;
     x.fillStyle=col;x.beginPath();x.moveTo(0,-2+b);x.bezierCurveTo(-9,-14+b,-9,-26+b,0,-26+b);x.bezierCurveTo(9,-26+b,9,-14+b,0,-2+b);x.fill();x.fillStyle='#000a';x.beginPath();x.arc(0,-18+b,3.4,0,6.2832);x.fill();x.restore();if(txt)lab(txt,px,py-36,fs,col,true)};
   const me=ME(),mates=net.mode==='client'?this.mates:MC.ts>1&&me?[...this.picks].filter(([id])=>{const u=UMAP.get(id);return id!==myId&&u&&isHuman(u)&&u.team===me.team}).map(([id,p])=>[id,p.x,p.y]):[];
-  for(const q of mates){const u=UMAP.get(q[0]);pin(X(q[1]),Y(q[2]),'#6fb6ff',u?u.name:'')}
+  for(const q of mates){const u=UMAP.get(q[0]);pin(X(q[1]),Y(q[2]),'#6fb6ff',u?arenaDisplayName(u):'')}
   if(this.mine)pin(X(this.mine.x),Y(this.mine.y),'#ffd35a','จุดของคุณ');
   // side panel
   const px=w-P-sr,pw=P;let y=Math.max(14,(h-Math.min(h-20,330))/2);
