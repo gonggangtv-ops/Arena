@@ -867,16 +867,6 @@
    "animations": [],
    "source": "owner upload 2026-11-22 (Meshy_AI_Frostwing_Scepter): 13.9k -> 4.2k tris, 512 base / 256 normal JPEG, the base colour doubles as a cold emissive map (the ice glows)"
   },
-  "snow-castle": {
-   "name": "Snow Castle (Codex, Blender) - the Snow Queen's walkable glacier palace and throne hall",
-   "url": "assets/meshy/snow-castle.glb",
-   "available": true,
-   "rotationY": 0,
-   "biome": "arena",
-   "rigged": false,
-   "animations": [],
-   "source": "Blender script moonfall-docs/blender/snow_castle.py (15.6 x 11.0 m, gate +Z, open throne hall)"
-  },
   "snow-stairs": {
    "name": "Frozen Stair (Codex, Blender) - the glacier palace's 28-step ascent from the valley",
    "url": "assets/meshy/snow-stairs.glb",

@@ -465,18 +465,11 @@ function townPath(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=
   const u=dx*C.lx+dy*C.ly,o=outsideD(x,y);if(o>CITY_SB-40-m&&o<CITY_OF+40&&Math.abs(Math.abs(u)-CITY_SU)<CITY_SH+40+m)return true;return o>-280-m&&o<CITY_OF+40&&Math.abs(u)<240+m}
 // town frame -> world
 function cityXY(C,u,v){return{x:C.x+u*C.lx+v*C.ox,y:C.y+u*C.ly+v*C.oy}}
-// Frozen Sanctuary. Castle-local X/Y in snow_castle.py map to u and v - FORT_VC at 100 units per metre.
-const FORT_P=240,FORT_OF=60,FORT_SH=150,FORT_SB=-430,FORT_VC=1060,FORT_CW=1560,FORT_CD=1100;
-const FORT_FLOOR=30,FORT_GATE=FORT_VC-477;
-const FORT_WALLS=[[-445,415,445,415,150,444],[-92,341,92,341,76,72]];
-const FORT_PIERS=[];
-for(const s of[-1,1]){
-  FORT_WALLS.push([s*263,-477,s*672,-477,62,217],[s*672,-477,s*672,409,57,208],[s*672,415,s*411,415,72,278]);
-  FORT_PIERS.push([s*670,-417,88,515],[s*670,411,88,631],[s*259,-476,53,532],[s*491,432,81,718]);
-}
-function fortHall(p){const F=WD&&WD.fort,q=F&&fortUV(F,p.x,p.y);
-  return !!q&&Math.abs(q[0])<640&&q[1]>FORT_GATE&&q[1]<FORT_VC+350;
-}
+// Arena Royale (owner 2026-11-22): the Snow Queen's castle on a plateau one step up out of the Frozen Sanctuary, east of the Old
+// Town; one wide stairway climbs to it from the valley. Fort frame like the town's (u along the cliff, v out of the valley, cityXY
+// works on it). The castle stands at the back (FORT_VC), the queen's court in front of it (FORT_VA). arena-frost.js draws it,
+// snow-queen.js is the boss.
+const FORT_P=240,FORT_OF=60,FORT_SH=150,FORT_SB=-430,FORT_VA=640,FORT_VC=1380,FORT_CW=900,FORT_CD=560;
 // signed distance to the plateau's sides and back (< 0 inside), rounded back corners
 function fortSB(F,u,v){const hw=F.hw+F.sw*Math.sin(v*.003+F.p3),vb=F.dep+90*Math.sin(u*.0021+F.p1),R=420,au=Math.abs(u);
   const du=au-(hw-R),dv=v-(vb-R);return du>0&&dv>0?Math.hypot(du,dv)-R:Math.max(au-hw,v-vb)}
@@ -491,11 +484,7 @@ function fortH(F,x,y,o,h0){const dx=x-F.x,dy=y-F.y;if(dx*dx+dy*dy>F.R2||o<FORT_S
   if(Math.abs(u)<=FORT_SH+80&&v>=FORT_SB-70&&v<=FORT_OF+80)
     return FORT_P*clamp((v-FORT_SB)/(FORT_OF+10-FORT_SB),0,1);
   const fr=FORT_P*smooth01((o+50)/(FORT_OF+50));
-  if(e<=0){if(o>=FORT_OF){
-      // Extend the level terrain past the slab so terrain triangles cannot clip the ice floor.
-      const flat=Math.max(Math.abs(u)-FORT_CW/2,Math.abs(v-FORT_VC)-FORT_CD/2);
-      return FORT_P+(F.nz(x,y)-.5)*5*smooth01((flat-60)/130);
-    }return Math.max(h0,fr)}
+  if(e<=0){if(o>=FORT_OF)return FORT_P+(F.nz(x,y)-.5)*5;return Math.max(h0,fr)}
   const k=o<-50?smooth01((o+420)/370):1,rim=(o<FORT_OF?fr:FORT_P)*(1-smooth01((e-600)/500))+(620+300*F.nr(x,y))*smooth01(e/300)*(1-smooth01((e-700)/400));
   return Math.max(h0,rim*k)}
 const fortUV=(F,x,y)=>{const dx=x-F.x,dy=y-F.y;return dx*dx+dy*dy>F.R2?null:[dx*F.lx+dy*F.ly,dx*F.ox+dy*F.oy]};
@@ -597,7 +586,7 @@ function genWorld(seed){
     // out by then), the valley's edge one smooth arc across its front too
     const af=aw+sr(.5,.55),rf0=bndR(af);for(let i=0;i<720;i++){const a=i/720*Math.PI*2,da=Math.abs(Math.atan2(Math.sin(a-af),Math.cos(a-af))),k=1-smooth01((da-.17)/.1);if(k>0)BND[i]=lerp(BND[i],rf0,k)}
     const rf=bndR(af),fx=Math.cos(af),fy=Math.sin(af);
-    w.fort={x:CX+fx*rf,y:CY+fy*rf,a:af,ox:fx,oy:fy,lx:-fy,ly:fx,rb:rf,hw:sr(985,1060),dep:sr(1840,1950),sw:sr(30,60),p1:sr(0,6.3),p3:sr(0,6.3),
+    w.fort={x:CX+fx*rf,y:CY+fy*rf,a:af,ox:fx,oy:fy,lx:-fy,ly:fx,rb:rf,hw:sr(900,980),dep:sr(1790,1900),sw:sr(30,60),p1:sr(0,6.3),p3:sr(0,6.3),
       nz:makeNoise(SR,300),nr:makeNoise(SR,480),R2:3700*3700,props:[],crystals:[],braziers:[],paint:[],name:'ปราสาทราชินีหิมะ'}}
   const Lk={x:CX+sr(-1895,-700),y:CY+sr(3500,4400),R:sr(740,840),p1:sr(0,6.3),p2:sr(0,6.3)};w.lake=Lk;
   {const P0=w.pool,y0=P0.y,y1=Lk.y,st=4,n=Math.ceil((y1-y0)/st)+1;const xs=new Float32Array(n),il=new Float32Array(n);
@@ -838,27 +827,24 @@ function genWorld(seed){
       for(let i=0;i<3;i++){const q=P((i-1)*95,VT-230+(i===1?-50:0)),m={id:mid++,x:q.x,y:q.y,kind:'sentinel',camp:camp.id,sc:1.15,rich:1};w.mobs.push(m);camp.mem.push(m.id)}w.camps.push(camp)}
     // how far the town reaches from the valley's centre (the storm's first circle covers it)
     C.far=0;for(const [u,v] of[[-C.hw,C.dep],[C.hw,C.dep],[0,C.dep+120],[-C.hw,0],[C.hw,0]]){const q=P(u,v);C.far=Math.max(C.far,Math.hypot(q.x-CX,q.y-CY))}}
-  // ---- Frozen Sanctuary: approach, perimeter collision and the Snow Queen's throne hall ----
+  // ---- Frozen Sanctuary: the closed palace, the Queen's front court, and the stairway ----
   if(w.fort){const F=w.fort,P=(u,v)=>cityXY(F,u,v),face=Math.atan2(-F.ox,-F.oy);
     const prop=(k,u,v,o)=>{const q=Object.assign(P(u,v),{k,a:face},o||{});F.props.push(q);return q};
     const solid=(q,r)=>w.solids.push({x:q.x,y:q.y,r,t:'fort'});
-    const wall=(u,v,endU,endV,width)=>{
-      const r=width/2,n=Math.max(1,Math.ceil(Math.hypot(endU-u,endV-v)/r));
-      for(let i=0;i<=n;i++)solid(P(lerp(u,endU,i/n),lerp(v,endV,i/n)),r);
-    };
-    for(const [u,v,endU,endV,width] of FORT_WALLS)wall(u,FORT_VC+v,endU,FORT_VC+endV,width);
-    for(const [u,v,r] of FORT_PIERS)solid(P(u,FORT_VC+v),r);
-    for(const s of[-1,1])wall(s*140,FORT_SB+20,s*140,FORT_OF+4,30);
-    // Pave the footprint and axis from the stair landing through the gate.
-    const stripe=(u,v,w,d,r)=>{const a=P(u,v),b=P(w,d);F.paint.push([a.x,a.y,b.x,b.y,r])};
-    stripe(0,FORT_SB-25,0,FORT_GATE,445);
-    for(const u of [-515,0,515])stripe(u,FORT_VC-507,u,FORT_VC+507,630);
+    // Match the Blender rails, leaving the centre of the stairway clear.
+    const railStart=FORT_SB+20,railEnd=FORT_OF+4,railRadius=15;
+    const steps=Math.ceil((railEnd-railStart)/railRadius);
+    for(const s of[-1,1])for(let i=0;i<=steps;i++)solid(P(s*140,lerp(railStart,railEnd,i/steps)),railRadius);
+    // paving (the court, the way from the stair head, the castle's apron): no grass or meadow dressing there
+    {const d=(u,v,r)=>{const q=P(u,v);F.paint.push([q.x,q.y,r])},l=(u0,v0,u1,v1,wd)=>{const a=P(u0,v0),b=P(u1,v1);F.paint.push([a.x,a.y,b.x,b.y,wd])};
+      l(0,FORT_SB-25,0,FORT_OF+10,445);d(0,FORT_VA,500);d(0,FORT_VC-FORT_CD/2-40,330);l(0,FORT_OF,0,FORT_VA-300,330);l(-FORT_CW/2,FORT_VC-FORT_CD/2-60,FORT_CW/2,FORT_VC-FORT_CD/2-60,160)}
+    // the castle: solid over its whole footprint (towers at the four corners)
     F.castle=prop('snow-castle',0,FORT_VC,{w:FORT_CW,d:FORT_CD});
-    F.safes=[-375,375].map(u=>({...P(u,FORT_VC-55),r:155}));
-    for(const s of[-1,1]){
-      solid(prop('guardian-statue', s*250,150,{h:230,ice:1}),52);
-      for(const v of [310,FORT_VC+260]){const q=P(s*(v===310?201:554),v);F.braziers.push(q);solid(q,26)}
-    }
+    for(let u=-FORT_CW/2+70;u<=FORT_CW/2-70+1;u+=(FORT_CW-140)/6)for(let v=FORT_VC-FORT_CD/2+70;v<=FORT_VC+FORT_CD/2-70+1;v+=(FORT_CD-140)/4)solid(P(u,v),82);
+    for(const su of[-1,1])for(const sv of[-1,1])solid(P(su*FORT_CW/2,FORT_VC+sv*FORT_CD/2),92);
+    // guardians at the head of the stairway and either side of the gate, braziers round the court
+    for(const sg of[-1,1]){solid(prop('guardian-statue',sg*250,150,{h:230,ice:1}),52);solid(prop('guardian-statue',sg*210,FORT_VC-FORT_CD/2-90,{h:250,ice:1}),52)}
+    for(let i=0;i<4;i++){const a=(i+.5)/4*Math.PI*2,q=P(Math.cos(a)*470,FORT_VA+Math.sin(a)*400);F.braziers.push(q);solid(q,26)}
     // ice crystal clusters along the plateau's sides and back corners and either side of the stair head (the big ones are solid)
     for(let k=0,t=0;k<16&&t<400;t++){const u=sr(-F.hw+90,F.hw-90),v=sr(120,F.dep-80),au=Math.abs(u);
       if(au<F.hw-330&&v<FORT_VC+FORT_CD/2+60)continue;if(Math.abs(u)<FORT_CW/2+120&&Math.abs(v-FORT_VC)<FORT_CD/2+120)continue;
@@ -871,12 +857,12 @@ function genWorld(seed){
       if(F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<c.r+70)||w.trees.some(t=>Math.abs(t.x-q.x)<120&&Math.abs(t.y-q.y)<120))continue;
       w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,78),v:2,ph:sr(0,6),h:sr(.9,1.15)});k++}
     // loot: two chests and gold by the castle gate, a tier-3 weapon and a rune behind the queen, potions at the stair head
-    for(const sg of[-1,1]){const q=P(sg*325,FORT_GATE-142);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1});
-      const c=P(sg*370,FORT_GATE-176);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
-    {const q=P(-226,FORT_VC+255);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(226,FORT_VC+255);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,35,45,20],SR)})}
+    for(const sg of[-1,1]){const q=P(sg*330,FORT_VC-FORT_CD/2-110);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1});
+      const c=P(sg*420,FORT_VC-FORT_CD/2-150);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
+    {const q=P(-70,FORT_VA+330);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(70,FORT_VA+330);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,35,45,20],SR)})}
     for(const [u,it] of[[-90,'potion'],[90,'mana']]){const q=P(u,190);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
-    // the Snow Queen (snow-queen.js): inside the throne hall, facing the entrance, no respawn
-    {const g=P(0,FORT_VC+225),camp={id:w.camps.length,x:g.x,y:g.y,tier:'icethrone',mem:[],maxRespawn:0,sc:1,rich:1};
+    // the Snow Queen (snow-queen.js): alone on her court, no respawn
+    {const g=P(0,FORT_VA+170),camp={id:w.camps.length,x:g.x,y:g.y,tier:'icethrone',mem:[],maxRespawn:0,sc:1,rich:1};
       const m={id:mid++,x:g.x,y:g.y,kind:'snowqueen',camp:camp.id,sc:1,rich:1};w.mobs.push(m);camp.mem.push(m.id);w.camps.push(camp);F.queen=m.id;F.home={x:g.x,y:g.y}}
     F.far=0;for(const [u,v] of[[-F.hw,F.dep],[F.hw,F.dep],[0,F.dep+120]]){const q=P(u,v);F.far=Math.max(F.far,Math.hypot(q.x-CX,q.y-CY))}}
   // ---- shrines ----

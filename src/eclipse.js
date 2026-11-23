@@ -71,20 +71,20 @@ function eclEv(e){const u=UMAP.get(e.id);
   return _dd(t,amt,type,src,quiet,crit)}}
 
 // ---- AI ----
-const eclHeroNear=(u,R,allowed)=>{let best=null,bd=R;for(const h of units){if(!h.hero||h.dead||h.reviveT>0||(allowed&&!allowed(h)))continue;const d=Math.hypot(h.x-u.x,h.y-u.y);if(d<bd&&(!h.hidden||d<170)){bd=d;best=h}}return best};
+const eclHeroNear=(u,R)=>{let best=null,bd=R;for(const h of units){if(!h.hero||h.dead||h.reviveT>0)continue;const d=Math.hypot(h.x-u.x,h.y-u.y);if(d<bd&&(!h.hidden||d<170)){bd=d;best=h}}return best};
 function eclCast(u,n,d){u.busyT=Math.max(u.busyT,d);emit({t:'ec',k:'cast',id:u.id,n,d})}
 function eclThink(u,dt){
   if(u.blockT>0)u.blockT-=dt;if(u.busyT>0)u.busyT-=dt;if(u.blkCd>0)u.blkCd-=dt;if(u.ecT>0)u.ecT-=dt;u.poise=Math.max(0,u.poise-u.maxHp*.04*dt);
   const L=u.def.leash||500,dh=Math.hypot(u.x-u.home.x,u.y-u.home.y);
   // detect: these hunt on sight (the old camps only woke up when hit)
   const X=ECL_EXT[u.ecl];
-  if(!u.aggro||u.aggro.dead){u.aggro=null;const h=eclHeroNear(u,X?X.detect:u.ecl==='overlord'?560:u.ecl==='sentinel'?400:300,X?.target);
+  if(!u.aggro||u.aggro.dead){u.aggro=null;const h=eclHeroNear(u,X?X.detect:u.ecl==='overlord'?560:u.ecl==='sentinel'?400:300);
     if(h&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L){u.aggro=h;if(u.ecl==='overlord'){sndAt('roar',u.x,u.y);emit({t:'f',s:'☾ Celestial Overlord ตื่นจากแท่นสุริยคราส!'});emit({t:'k',a:10,x:u.x|0,y:u.y|0})}else if(X&&X.wake)X.wake(u)}}
   // a target that ran off: switch to whoever is still fighting inside the arena before giving up
-  const ok=h=>h&&!h.dead&&(!X?.target||X.target(h))&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L+140&&(!h.hidden||Math.hypot(h.x-u.x,h.y-u.y)<170);
+  const ok=h=>h&&!h.dead&&Math.hypot(h.x-u.home.x,h.y-u.home.y)<L+140&&(!h.hidden||Math.hypot(h.x-u.x,h.y-u.y)<170);
   if(u.aggro&&!ok(u.aggro)){let nb=null,bd=1e9;for(const h of units){if(!h.hero||h.reviveT>0||!ok(h))continue;const d=Math.hypot(h.x-u.x,h.y-u.y);if(d<bd&&d<L){bd=d;nb=h}}if(nb)u.aggro=nb}
   const t=u.aggro;let mx=0,my=0;if(t)u.idleT=0;else u.idleT=(u.idleT||0)+dt;
-  if(dh<L&&ok(t)){
+  if(t&&!t.dead&&dh<L&&Math.hypot(t.x-u.home.x,t.y-u.home.y)<L+140&&(!t.hidden||Math.hypot(t.x-u.x,t.y-u.y)<170)){
     const d=Math.hypot(t.x-u.x,t.y-u.y)||1;u.fx=(t.x-u.x)/d;u.fy=(t.y-u.y)/d;const R=u.range+t.r;
     if(d>R-8&&u.busyT<=0&&!u.combo){mx=u.fx;my=u.fy}
     if(u.stunT<=0){if(X)X.act(u,t,d,R,dt);else if(u.ecl==='overlord')overlordAct(u,t,d,R,dt);else if(u.ecl==='sentinel')sentinelAct(u,t,d,R,dt);else constructAct(u,t,d,R,dt)}
