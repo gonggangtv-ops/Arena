@@ -50,6 +50,7 @@ fallback MuzCruor wordmark. See [the font license](cinzel-OFL.txt).
 
 
 `muzcruor-mark.webp` is the transparent silver-and-gold crest used on the
-boot screen and menu. `arena-armory.webp` contains the weapon portraits
-rendered from the game's 3D models, plus the unarmed emblem. The 6×5 grid uses
-144-pixel cells indexed by `weaponPortraits` in `skill-atlas.json`.
+boot screen and menu. `arena-armory.webp` contains 27 generated dark-fantasy
+weapon illustrations and the unarmed icon for the HUD, pickups, and weapon
+guides. The 6×5 grid uses 144-pixel cells indexed by `weaponPortraits` in
+`skill-atlas.json`.

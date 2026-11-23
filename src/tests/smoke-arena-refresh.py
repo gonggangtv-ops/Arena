@@ -262,6 +262,8 @@ try:
             boot_state = visit.ready()
             assert boot_state['moody'] and boot_state['gfxQ'] == 'auto', boot_state
             page.wait_for_function("document.getElementById('menu').dataset.arenaMenu", polling=100)
+            assert page.locator('#menu .moonfall-cloak, #menu #looks').count() == 0
+            assert page.locator('#pname').is_editable()
             heading = page.locator('#menu').get_by_role('heading', name='MuzCruor', exact=True)
             assert heading.is_visible()
             heading.locator('img').wait_for(state='visible')

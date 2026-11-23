@@ -31,7 +31,7 @@
 #menu[data-arena-menu] .moonfall-play-actions .go:focus-visible{outline:2px solid #f7e2b3;outline-offset:4px}
 #menu[data-arena-menu] .moonfall-start-hint{font-size:9px;color:#94a0ae}
 #menu[data-arena-menu] .moonfall-identity{border-color:#b4ab9733;padding-bottom:11px;margin-bottom:0}
-#menu[data-arena-menu] #pname,#menu[data-arena-menu] .moonfall-cloak>summary{background:#10151bcc;border-color:#9a9c9b3d;color:#d8dcd9}
+#menu[data-arena-menu] #pname{background:#10151bcc;border-color:#9a9c9b3d;color:#d8dcd9}
 .arena-menu-utilities{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
 #menu[data-arena-menu] .arena-menu-tool{display:flex;align-items:center;justify-content:flex-start;gap:9px;min-height:44px;padding:5px 0;border:0;background:transparent;color:#c8bea8;font:500 13px/1.5 system-ui,sans-serif;cursor:pointer}
 .arena-menu-tool>svg{width:18px;height:18px;color:#b6a27e;flex:none}

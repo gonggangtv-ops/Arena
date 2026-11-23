@@ -40,6 +40,7 @@ window.installArenaMenuUX=function(){
     title.querySelector('.sub').textContent='32 ผู้กล้า · เก็บอาวุธ ปลดปล่อยสกิล · เหลือเพียงตำนานเดียว';
     const legend=menu.querySelector('.moonfall-menu-legend');
     if(legend)legend.remove();
+    menu.querySelector('.moonfall-cloak')?.remove();
     for(const [id,graphic,label,description] of [
       ['soloBtn','sword','เข้าสู่สนาม','เล่นคนเดียว · ฝึกฝนกับบอท'],
       ['qmBtn','people','จับคู่ด่วน','ออนไลน์ · ผู้เล่นจริง'],
