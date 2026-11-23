@@ -78,7 +78,7 @@ window.installArenaMenuUX=function(){
     const controls=make('div','arena-controls-guide');
     controls.append(make('h4','','คีย์ลัดและสัมผัส'));
     const keys=make('dl');
-    for(const [key,detail] of [['W A S D','เคลื่อนที่'],['Q · E · R','สกิลอาวุธ (PC กดค้างเล็ง ปล่อยร่าย)'],['Shift','พุ่ง (คูลดาวน์ยาว)'],['K · คลิกขวา','กลิ้งหลบ (อมตะชั่วครู่)'],['V','สกิลพิเศษ'],['B · P','กระเป๋า · ร้านค้า'],['มือถือ','จอยซ้ายเดิน · กดค้างสกิลแล้วลากเพื่อเล็ง']])keys.append(make('dt','',key),make('dd','',detail));
+    for(const [key,detail] of [['W A S D','เคลื่อนที่'],['Q · E · R','สกิลอาวุธ (PC กดค้างเล็ง ปล่อยร่าย)'],['Shift','พุ่งหลบ (ปุ่ม 💨 ข้างปุ่มโจมตี)'],['V','สกิลพิเศษ'],['B','กระเป๋า'],['P · 🛒','ร้านค้า (ต้องยืนใกล้พ่อค้าในหมู่บ้าน)'],['มือถือ','จอยซ้ายเดิน · กดค้างสกิลแล้วลากเพื่อเล็ง']])keys.append(make('dt','',key),make('dd','',detail));
     controls.appendChild(keys);groups[1].panel.appendChild(controls);
     rowFor(groups[2],'sndBtn','เพลงและเอฟเฟกต์','แตะเพื่อสลับเสียงทั้งหมด · เฉพาะเอฟเฟกต์ · ปิดเสียง');
     const credits=document.getElementById('credBtn');credits.className='arena-settings-credits';credits.addEventListener('click',()=>dialog.close(),true);groups[2].panel.appendChild(credits);

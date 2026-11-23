@@ -144,6 +144,7 @@ def boot(page, url):
     page.locator('#soloBtn').click(no_wait_after=True)
     page.wait_for_function('state==="play"&&document.getElementById("loading").classList.contains("hidden")',
                            polling=100)
+    page.evaluate('window.__game&&__game.skipDrop&&__game.skipDrop()')   # end the sky-drop (arena-drop.js freezes the host while players pick)
     assert page.evaluate('!!R3.qn&&!R3.qn.mobOnly')
     return page.evaluate('MoonfallLoading.snapshot()')
 

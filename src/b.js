@@ -146,10 +146,16 @@ function dealDamage(t,amt,type,src,quiet,crit){
 function dropItem(it){it.id=nextItemId++;if(CURSED&&it.k==='w'&&it.wv==null)it.wv=wvRoll(it.tier);items.push(it);bcast({t:'ia',it})}
 function removeItem(it){items=items.filter(i=>i!==it);bcast({t:'ir',id:it.id})}
 // castle and dungeon guards drop real loot, so camps there are worth farming (rich 2 = dungeon, better odds)
+// owner 2026-11-23: weapons and armour come from monsters and chests rather than the open ground, so every camp monster can drop gear
+// (big ones and elites more often, harder lands better tiers); summons, pets and Eclipse units keep their own loot
+function mobGear(t){if(t.ecl||t.summon||t.pet||t.boss)return;const big=t.kind==='ogre'||t.kind==='golem'||t.big,k=(big?1.7:1)*(t.elite?1.6:1),r=Math.random(),R=()=>({x:t.x+rand(-28,28),y:t.y+rand(-28,28)});
+  const hard=(t.rg|0)>=3||t.elite;
+  if(r<.075*k)dropItem(Object.assign({k:'w',wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier(hard?[8,34,40,16,2]:[30,40,24,6])},R()));
+  else if(r<.14*k)dropItem(Object.assign({k:'r',tier:pickTier(hard?[0,24,42,28,6]:[30,36,24,10,0])},R()))}
 function richLoot(t,src){const x=t.x,y=t.y,g=t.rich===2?1.35:1,r=Math.random(),R=()=>({x:x+rand(-24,24),y:y+rand(-24,24)});
   if(t.lord){dropItem(Object.assign({k:'w',wk:WK[Math.floor(Math.random()*WK.length)],tier:Math.random()<.18?4:3},R()));dropItem(Object.assign({k:'c',n:3,gold:true},R()));emit({t:'f',s:`👑 ${src&&src.hero?src.name:'ใครบางคน'} ปราบผู้คุมคุกใต้ดิน!`})}
-  if(r<.13*g)dropItem(Object.assign({k:'w',wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([0,45,40,14,t.rich===2?1:0])},R()));
-  else if(r<.24*g)dropItem(Object.assign({k:'r',tier:pickTier([0,30,45,22,3])},R()));
+  if(r<.2*g)dropItem(Object.assign({k:'w',wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([0,45,40,14,t.rich===2?1:0])},R()));   // 2026-11-23: .13 -> .2
+  else if(r<.36*g)dropItem(Object.assign({k:'r',tier:pickTier([0,30,45,22,3])},R()));                                                    // .24 -> .36
   else if(r<.6)dropItem(Object.assign({k:'c',n:1+(Math.random()<.3?1:0)},R()));
   else if(r<.8)dropItem(Object.assign({k:'p',b:Math.random()<.6?0:1},R()))}
 // stairways between the valley and the dungeon (people only; bots stay up top)
@@ -173,7 +179,7 @@ function kill(t,src){
     else if(t.kind==='guardian'){dropItem({k:'c',x:t.x,y:t.y,n:2,gold:true});emit({t:'a',s:'💎 ผู้พิทักษ์คริสตัลพ่ายแพ้!',v:src&&isHuman(src)?[src.id]:[]})}
     else if(t.kind==='magma'){dropItem({k:'c',x:t.x,y:t.y,n:2,gold:true});if(Math.random()<.5)dropItem({k:'r',x:t.x+50,y:t.y,tier:pickTier([0,30,45,22,3])});emit({t:'a',s:'🌋 ไททันลาวาพ่ายแพ้!',v:src&&isHuman(src)?[src.id]:[]})}
     else if(t.rich)richLoot(t,src);
-    else if(Math.random()<(t.kind==='golem'||t.kind==='ogre'?.6:.3))dropItem({k:'c',x:t.x,y:t.y,n:1});
+    else{mobGear(t);if(Math.random()<(t.kind==='golem'||t.kind==='ogre'?.6:.3))dropItem({k:'c',x:t.x,y:t.y,n:1})}
     const c=WD.camps[t.camp];if(c&&c.mem.every(id=>{const m=UMAP.get(id);return !m||m.dead}))c.deadAt=gameT;
     return}
   const killer=src&&src.hero&&isEnemy(src,t)?src:(t.lastHit&&gameT-t.lastHit.time<8&&!t.lastHit.src.dead?t.lastHit.src:null);
@@ -434,16 +440,17 @@ function equipArmor(u,it){it.dead=true;removeItem(it);
 function pickSwap(u,id){if(!u||u.dead||u.fuseT>0)return;const it=items.find(i=>i.id===id&&!i.dead);if(!it||dist(u,it)>u.r+60)return;if(it.k==='w')equipWeapon(u,it);else if(it.k==='r')equipArmor(u,it)}
 function swapCandidate(u){if(!u||u.dead||!u.wk)return null;let best=null,bd=1e9;for(const it of items){if(it.dead||it.k!=='w'||(it.wk===u.wk||it.wk===u.wk2)&&!(CURSED&&it.wk===u.wk&&it.tier>=u.wt&&itWV(it)!==(u.wv|0)))continue;const d=dist(u,it);if(d>u.r+52||d>=bd)continue;best=it;bd=d}return best}
 // ---- house chests: press to open, BOX_RATE chance of loot ----
-const BOX_RATE=.2;
+const BOX_RATE=.68;   // 2026-11-23: was .2 — chests are a main source of gear now
 function boxNear(u){if(!u||u.dead)return null;let best=null,bd=1e9;for(const b of boxes){if(b.open||Math.abs(b.x-u.x)>110||Math.abs(b.y-u.y)>110)continue;const d=dist(u,b);if(d>u.r+62||d>=bd)continue;
     const h=WD.houses[b.house];if(h&&!inRect(u,h,0))continue;best=b;bd=d}return best}
 function openBox(u,id){const b=boxes[id];if(!b||b.open||!u||u.dead||dist(u,b)>u.r+70)return;const h=WD.houses[b.house];if(h&&!inRect(u,h,4))return;
   b.open=true;const ok=Math.random()<BOX_RATE;const fx=b.x+Math.cos(b.a)*34,fy=b.y+Math.sin(b.a)*34;
   fxE('box',{id,x:b.x|0,y:b.y|0,ok:ok?1:0});sndAt(ok?'chest':'pick',b.x,b.y);const H=isHuman(u)?[u.id]:null;
-  if(ok){const r=Math.random();
-    if(r<.5)dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([10,40,38,12])});
-    else if(r<.85)dropItem({k:'r',x:fx,y:fy,tier:pickTier([0,25,40,30,5])});
+  if(ok){const r=Math.random(),sx=-Math.sin(b.a)*30,sy=Math.cos(b.a)*30;
+    if(r<.48)dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([6,36,38,18,2])});
+    else if(r<.84)dropItem({k:'r',x:fx,y:fy,tier:pickTier([0,22,40,30,8])});
     else dropItem({k:'c',x:fx,y:fy,n:2,gold:true});
+    if(Math.random()<.35){const q=Math.random();if(q<.5)dropItem({k:'p',x:fx+sx,y:fy+sy,b:Math.random()<.6?0:1});else if(q<.8)dropItem({k:'c',x:fx+sx,y:fy+sy,n:1});else dropItem({k:'r',x:fx+sx,y:fy+sy,tier:pickTier([20,40,30,10,0])})}
     if(H)fxTextFor(b.x,b.y-46,'✨ เจอของ!','#ffe27a',1.5,H,1)}
   else if(H)fxTextFor(b.x,b.y-46,'📦 ว่างเปล่า…','#c8c0b0',1.3,H)}
 function tryPickup(u){
@@ -725,7 +732,7 @@ function dawn(){for(const u of units)if(u.zombie&&!u.dead){u.dead=true;u.deadAt=
 function zombieLoot(t,src){const x=t.x,y=t.y,r=Math.random(),H=isHuman(src)?[src.id]:[];
   const wpn=tier=>dropItem({k:'w',x:x+rand(-20,20),y:y+rand(-20,20),wk:WK[Math.floor(Math.random()*WK.length)],tier});
   if(r<.01){wpn(4);emit({t:'a',s:'🌈 SSR!! อาวุธระดับเทพหล่นจากซอมบี้',d:3,v:H});emit({t:'f',s:`🌈 ${src.name} ได้อาวุธ SSR จากซอมบี้!`});fxE('ssr',{x:x|0,y:y|0})}
-  else if(r<.06){if(Math.random()<.6)wpn(pickTier([0,0,70,30]));else dropItem({k:'r',x,y,tier:pickTier([0,0,55,40,5])})}
+  else if(r<.09){if(Math.random()<.6)wpn(pickTier([0,0,70,30]));else dropItem({k:'r',x,y,tier:pickTier([0,0,55,40,5])})}   // 2026-11-23: .06 -> .09
   else if(r<.31)dropItem({k:'p',x,y,b:0});else if(r<.45)dropItem({k:'p',x,y,b:1});else if(r<.50)dropItem({k:'p',x,y,b:2});else if(r<.55)dropItem({k:'p',x,y,b:3});
   else if(r<.62){const pool=ITEMS.filter(i=>i.id!=='potion'&&i.id!=='mana');dropItem({k:'i',x,y,it:pickW(pool).id})}
   if(t.lord){wpn(pickTier([0,0,55,45]));dropItem({k:'p',x:x+30,y,b:2});dropItem({k:'p',x:x-30,y,b:0});emit({t:'f',s:`👑 ${src.name} ปราบราชาซอมบี้!`})}}
@@ -891,7 +898,8 @@ function applyAoe(a){for(const u of units){if(u.dead||!isEnemy(a.owner,u))contin
     if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP);else if(a.st&&(!a.stP||Math.random()<a.stP))stAdd(a.owner,u,a.st,a.stN||1)}}}
 
 // ===================== SHARED VISUAL UPDATE =====================
-const pushMass=u=>u.boss||u.golem?12:u.hero?(u.ctrl?6:3):u.big||u.lord?2:1;
+// a player walking into a bot or a monster keeps going (owner 2026-11-23: bots shoved the player back in melee); arena-bots.js stops melee bots leaning in
+const pushMass=u=>u.boss||u.golem?12:u.hero?(u.ctrl?10:3):u.big||u.lord?2:1;
 function fxUpdate(dt){AU.tick(dt);
   for(const p of parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.92;if(!p.line)p.vy*=.92;p.life-=dt}parts=parts.filter(p=>p.life>0);
   for(const t of texts){t.y-=(t.dm?30:38)*dt;if(t.vx){t.x+=t.vx*dt;t.vx*=Math.pow(.05,dt)}t.life-=dt}if(scrFl.a>0)scrFl.a=Math.max(0,scrFl.a-dt*1.6);texts=texts.filter(t=>t.life>0);

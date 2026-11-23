@@ -366,7 +366,7 @@ Object.assign(R3,{
     this.t+=dt;const T=this.t,me=ME(),L=listener()||me;if(!L)return;const G=this.G;
     const k=1-Math.pow(.0008,dt);this.tx=this.tx?lerp(this.tx,L.x,k):L.x;this.ty=this.ty?lerp(this.ty,L.y,k):L.y;if(Math.hypot(this.tx-L.x,this.ty-L.y)>900){this.tx=L.x;this.ty=L.y}
     const gyL=Math.max(this.gY(this.tx,this.ty),-8);this.ly=this.ly===undefined?gyL:lerp(this.ly,gyL,1-Math.pow(.02,dt));
-    const D=(camNear?.76:1)*1060*(W/H<1.6?1.16:1),el=camNear?1.04:1.0;const sx=(Math.random()-.5)*shakeA,sy=(Math.random()-.5)*shakeA;
+    const D=(camNear?.76:1)*1060*(W/H<1.6?1.16:1)*(this.camK||1),el=camNear?1.04:1.0;/* camK: arena-drop.js pulls the camera far out for the sky drop */const sx=(Math.random()-.5)*shakeA,sy=(Math.random()-.5)*shakeA;
     this.cam.position.set(this.tx+sx,this.ly+Math.sin(el)*D+sy,this.ty+Math.cos(el)*D);this.cam.lookAt(this.tx+sx,this.ly,this.ty);
     // day / night / dusk
     const dk=this.dayK(),du=this.duskK(),inCave=WD.caves.some(c=>dist(L,c)<c.R+6)||inDG(L);

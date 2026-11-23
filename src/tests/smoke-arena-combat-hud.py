@@ -138,6 +138,7 @@ def start(page, *, mobile=False):
       hostNewGame=function(players,seed,cfg){return original(players,719243,cfg);};}""")
     (page.locator('#soloBtn').tap if mobile else page.locator('#soloBtn').click)()
     page.wait_for_function("state==='play'&&document.getElementById('loading').classList.contains('hidden')", polling=100)
+    page.evaluate("window.__game&&__game.skipDrop&&__game.skipDrop()")   # the sky-drop landing map (arena-drop.js) would cover the HUD
 
 
 def screenshot(page, name):

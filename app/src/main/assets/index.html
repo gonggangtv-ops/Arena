@@ -1126,12 +1126,13 @@ function genWorld(seed){
     const ip=()=>({x:sr(h.x+45,h.x+h.w-45),y:sr(h.y+45,h.y+h.h-45)});
     const p1=ip();w.items.push({id:iid++,k:'w',x:p1.x,y:p1.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([42,36,19,3],SR),house:h.id});
     if(SR()<.5){const p2=ip();w.items.push({id:iid++,k:'c',x:p2.x,y:p2.y,n:1+(SR()<.3?1:0),house:h.id})}
-    if(SR()<.4){const p3=ip();w.items.push({id:iid++,k:'r',x:p3.x,y:p3.y,tier:pickTier([34,34,22,10,0],SR),house:h.id})}
+    if(SR()<.35){const p5=ip();w.items.push({id:iid++,k:'w',x:p5.x,y:p5.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([30,40,24,6],SR),house:h.id})}   // owner 2026-11-23: loot lives in houses
+    if(SR()<.65){const p3=ip();w.items.push({id:iid++,k:'r',x:p3.x,y:p3.y,tier:pickTier([34,34,22,10,0],SR),house:h.id})}
     if(SR()<.3){const p4=ip();w.items.push({id:iid++,k:'i',x:p4.x,y:p4.y,it:pickW(ITEMS,SR).id,house:h.id})}
     {const back=side==='t'?'b':side==='b'?'t':side==='l'?'r':'l',nb=h.w*h.h>62000&&SR()<.5?2:1;
       for(let q=0;q<nb;q++){const f=nb===1?sr(.3,.7):q?sr(.68,.85):sr(.15,.32);let bx,by;
         if(back==='t'||back==='b'){bx=lerp(h.x+60,h.x+h.w-60,f);by=back==='t'?h.y+T+26:h.y+h.h-T-26}else{by=lerp(h.y+60,h.y+h.h-60,f);bx=back==='l'?h.x+T+26:h.x+h.w-T-26}
-        w.boxes.push({id:w.boxes.length,x:bx,y:by,a:Math.atan2(h.door.y-by,h.door.x-bx),house:h.id});w.rocks.push({x:bx,y:by,r:18,prop:1})}}
+        w.boxes.push({id:w.boxes.length,x:bx,y:by,a:Math.atan2(h.door.y-by,h.door.x-bx),house:h.id});w.rocks.push({x:bx,y:by,r:26,prop:1})}}
     const HA=h.al||h,corners=[[HA.x-24,HA.y+26],[HA.x+HA.w+24,HA.y+26],[HA.x-24,HA.y+HA.h-26],[HA.x+HA.w+24,HA.y+HA.h-26]];
     let np=0;for(const c of corners){if(np>=2)break;if(Math.hypot(c[0]-h.out.x,c[1]-h.out.y)<90||SR()<.35)continue;const t=SR()<.5?'barrel':'crate';w.props.push({x:c[0],y:c[1],t});w.rocks.push({x:c[0],y:c[1],r:15,prop:1});np++}
 
@@ -1250,7 +1251,7 @@ function genWorld(seed){
     for(let k=0,t=0;k<5&&t<200;t++){const q=P(sr(-CITY_PRU+60,CITY_PRU-60),sr(CITY_PV+5,CITY_PV+CITY_PRV-35));const dx=q.x-C.x,dy=q.y-C.y;
       if(cityPondU(dx*C.lx+dy*C.ly,dx*C.ox+dy*C.oy)>-38||w.lilies.some(l=>Math.hypot(l.x-q.x,l.y-q.y)<44))continue;w.lilies.push({x:q.x,y:q.y,s:sr(.6,.9),a:sr(0,6.3),f:SR()<.4,wl:CITY_PW});k++}C.nLily=w.lilies.length;
     // loot: chests on the plaza and behind the temple, the temple's relics, potions at the gates and on the plaza
-    const box=(u,v)=>{const q=P(u,v);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1})};
+    const box=(u,v)=>{const q=P(u,v);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1})};
     box(-150,VP);box(150,VP);box(-150,VT+150);box(150,VT+150);
     {const q=P(0,VT+120);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(0,VT+200);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,40,45,15],SR)})}
     for(const [u,v,it] of[[-60,VP-120,'potion'],[60,VP-120,'potion'],[0,VP+130,'mana'],[-CITY_SU,gv+150,'potion'],[CITY_SU,gv+150,'potion']]){const q=P(u,v);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
@@ -1293,7 +1294,7 @@ function genWorld(seed){
       if(F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<c.r+70)||w.trees.some(t=>Math.abs(t.x-q.x)<120&&Math.abs(t.y-q.y)<120))continue;
       w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,78),v:2,ph:sr(0,6),h:sr(.9,1.15)});k++}
     // loot: two chests and gold by the castle gate, a tier-3 weapon and a rune behind the queen, potions at the stair head
-    for(const sg of[-1,1]){const q=P(sg*325,FORT_GATE-142);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1});
+    for(const sg of[-1,1]){const q=P(sg*325,FORT_GATE-142);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1});
       const c=P(sg*370,FORT_GATE-176);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
     {const q=P(-226,FORT_VC+255);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(226,FORT_VC+255);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,35,45,20],SR)})}
     for(const [u,it] of[[-90,'potion'],[90,'mana']]){const q=P(u,190);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
@@ -1391,8 +1392,15 @@ function genWorld(seed){
   const blockedGen=(p,r)=>{for(const o of w.rocks)if(Math.abs(o.x-p.x)<o.r+r&&dist(p,o)<o.r+r)return true;for(const o of w.solids)if(dist(p,o)<o.r+r)return true;for(const t of w.trees)if(Math.abs(t.x-p.x)<t.r+r&&dist(p,t)<t.r+r)return true;for(const q of w.walls)if(circRect(p.x,p.y,r,q))return true;return false};
   const outSpot=m=>{for(let k=0;k<120;k++){const p={x:sr(m,WORLD-m),y:sr(m,WORLD-m)};if(!free(p,0)||blockedGen(p,30)||w.houses.some(h=>inRect(p,h.al||h,10)))continue;return p}return{x:town?town.x+sr(-120,120):CX,y:town?town.y+sr(160,240):CY}};
   for(let k=0;k<176;k++){const p=outSpot(300);w.items.push({id:iid++,k:'c',x:p.x,y:p.y,n:1+(SR()<.25?1:0)})}
-  for(let k=0;k<104;k++){const p=outSpot(300);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([64,28,8,0],SR)})}
-  for(let k=0;k<120;k++){const p=outSpot(300);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:pickTier([50,32,14,4,0],SR)})}
+  // ---- village merchants (owner 2026-11-23: buying — potions, level books, special skills, reforging — happens only at an NPC in a
+  // village): one per village, beside a market stall and facing the square; arena-npc.js draws them and gates the shop ----
+  w.npcs=[];for(const V of w.villages){let pos=null;const ok=p=>walkable(p.x,p.y,14)&&!cityIn(p.x,p.y,40)&&Math.abs(riverD(p.x,p.y))>riverHW(p.y)+20&&lakeD(p.x,p.y)>20&&poolD(p.x,p.y)>50&&!blockedGen(p,34)&&!w.houses.some(h=>inRect(p,h.al||h,24));   // free() keeps out of villages, so not that
+    for(const st of(w.stalls||[]).filter(q=>Math.hypot(q.x-V.x,q.y-V.y)<V.r)){for(const sd of[1,-1]){const p={x:st.x-Math.sin(st.a)*sd*82,y:st.y+Math.cos(st.a)*sd*82};if(ok(p)){pos=p;break}}if(pos)break}
+    for(let k=0;k<80&&!pos;k++){const a=sr(0,6.283),d=sr(130,340);const p={x:V.x+Math.cos(a)*d,y:V.y+Math.sin(a)*d};if(ok(p))pos=p}
+    if(pos)w.npcs.push({id:w.npcs.length,x:Math.round(pos.x),y:Math.round(pos.y),a:Math.atan2(V.y-pos.y,V.x-pos.x),v:V.id,name:V.name})}
+  // owner 2026-11-23: weapons and armour rarely lie on the open ground (was 104 + 120) — search the houses, kill monsters, open chests
+  for(let k=0;k<28;k++){const p=outSpot(300);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([64,28,8,0],SR)})}
+  for(let k=0;k<30;k++){const p=outSpot(300);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:pickTier([50,32,14,4,0],SR)})}
   for(let k=0;k<136;k++){const p=outSpot(300);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:pickW(ITEMS,SR).id})}
   for(const V of w.villages)for(const it of['potion','potion','mana']){const a=sr(0,6.3),rr=V.plaza?120:82;w.items.push({id:iid++,k:'i',x:V.x+Math.cos(a)*rr,y:V.y+Math.sin(a)*rr,it})}
   // ---- neutral creep camps ----
@@ -1422,7 +1430,7 @@ function genWorld(seed){
       for(let k=0;k<3;k++){const p=spot(lo,hi,g.b0,g.b1);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([0,35,45,20],SR)})}
       for(let k=0;k<2;k++){const p=spot(lo,hi,g.b0,g.b1);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:pickTier([0,25,45,27,3],SR)})}
       for(let k=0;k<2;k++){const p=spot(lo,hi,g.b0,g.b1);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:pickW(ITEMS,SR).id})}
-      for(let k=0;k<3;k++){const p=spot(lo,hi,g.b0,g.b1);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:18,prop:1})}}
+      for(let k=0;k<3;k++){const p=spot(lo,hi,g.b0,g.b1);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:26,prop:1})}}
     camp(spot(-C.LH*.3,C.LH*.3,C.DP*.12,C.DP*.24),'castle',1.2);
     for(let k=0;k<3;k++){const p=spot(-C.LH*.3,C.LH*.3,C.DP*.12,C.DP*.4);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:k?'potion':'mana'})}}
   // ---- dungeon contents: undead camps that come back, loot in every room, a vault behind the warden ----
@@ -1435,14 +1443,14 @@ function genWorld(seed){
         for(let k=0;k<4;k++){const p=spot(R,120);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:k===0&&SR()<.45?4:3})}
         for(let k=0;k<2;k++){const p=spot(R,120);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:SR()<.4?4:3})}
         {const p=spot(R,120);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:'tome'})}
-        for(let k=0;k<4;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:18,prop:1})}
+        for(let k=0;k<4;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:26,prop:1})}
         continue}
       camp(R,R.role,1.35);
       for(let k=0;k<2;k++){const p=spot(R,110);w.items.push({id:iid++,k:'c',x:p.x,y:p.y,n:1+(SR()<.5?1:0)})}
       {const p=spot(R,110);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([0,30,50,20],SR)})}
       {const p=spot(R,110);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:pickTier([0,25,45,27,3],SR)})}
       {const p=spot(R,110);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:pickW(ITEMS,SR).id})}
-      for(let k=0;k<2;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:18,prop:1})}}
+      for(let k=0;k<2;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:26,prop:1})}}
     // two stairways down, far apart in the valley; each has a way back in the entry hall
     for(let t=0;t<6000&&D.ents.length<2;t++){const p={x:sr(1500,WORLD-1500),y:sr(1500,WORLD-1500)};if(outsideD(p.x,p.y)>-900||!free(p,150)||blockedGen(p,110)||pathNear(p,70)||inCastle(p,450))continue;
       if(w.villages.some(v=>dist(p,v)<v.r+300)||w.camps.some(c=>dist(c,p)<450)||w.shrines.some(s=>dist(s,p)<500)||w.graves.some(g=>dist(g,p)<400))continue;if(D.ents.some(e=>dist(e,p)<(t<3000?7000:4500)))continue;
@@ -1450,15 +1458,13 @@ function genWorld(seed){
     if(!D.ents.length){const v=w.villages.find(q=>q.main)||{x:CX,y:CY};D.ents.push({id:0,x:v.x+420,y:v.y+420,r:62})}
     {const nearE=g=>D.ents.some(e=>Math.abs(e.x-g.x)<170&&dist(e,g)<170);w.grass=w.grass.filter(g=>!nearE(g));w.flowers=w.flowers.filter(g=>!nearE(g));w.mush=w.mush.filter(g=>!nearE(g));w.bushes=w.bushes.filter(g=>!D.ents.some(e=>dist(e,g)<170+g.r));w.tgrass=w.tgrass.filter(g=>!D.ents.some(e=>dist(e,g)<170+g.r))}
     const E=D.entry;D.ents.forEach((e,i)=>{const n=D.ents.length,px=E.cx+(n>1?(i?260:-260):0),py=E.cy+170;D.ports.push({x:px,y:py,r:62,to:{x:e.x,y:e.y+150},ent:i});e.to={x:D.arrive.x+(n>1?(i?80:-80):0),y:D.arrive.y}})}
-  // ---- spawn points, each with two different starter weapons nearby ----
+  // ---- spawn points (where bots stand in balance sims; a real match drops everyone in from the sky, arena-drop.js) ----
   for(let i=0;i<TOTAL_HEROES;i++){let best=null,bs=-1e9;const a0=i/TOTAL_HEROES*Math.PI*2+sr(-.15,.15);
     for(let k=0;k<160;k++){const a=a0+sr(-.25,.25)*(1+k/60),f=sr(.42,.82);const rb=bndR(a);const p={x:CX+Math.cos(a)*rb*f,y:CY+Math.sin(a)*rb*f};
       if(!free(p,60)||blockedGen(p,40)||w.houses.some(h=>inRect(p,h.al||h,40)))continue;let sc=1e9;for(const s of w.spawns)sc=Math.min(sc,dist(p,s)-1000);for(const c of w.camps)if(dist(p,c)<450)sc-=600;for(const g of w.graves)if(dist(p,g)<520)sc-=600;
       if(sc>=0){best=p;break}if(sc>bs){bs=sc;best=p}}
     if(!best)best={x:CX+sr(-300,300),y:CY+sr(-300,300)};w.spawns.push(best);
-    const k1=Math.floor(SR()*WK.length);let k2=Math.floor(SR()*(WK.length-1));if(k2>=k1)k2++;const a1=sr(0,6.3);
-    for(const [wk,ang] of[[WK[k1],a1],[WK[k2],a1+Math.PI]]){let q=null;for(let t=0;t<40;t++){const a=ang+t*.7,d=sr(120,190);const p={x:best.x+Math.cos(a)*d,y:best.y+Math.sin(a)*d};if(free(p,0)&&!blockedGen(p,26)&&!w.houses.some(h=>inRect(p,h.al||h,10))){q=p;break}}
-      if(q)w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk,tier:0})}}
+    }   // owner 2026-11-23: no starter weapons by the spawn points — everyone drops in from the sky and searches houses (arena-drop.js)
   SR=Math.random;
   return w;
 }
@@ -1470,7 +1476,7 @@ const autoSize=n=>n<=6?'S':n<=16?'M':'L';
 // ts = team size (1 free-for-all, 2 duo, 4 squad); n is rounded up to whole teams
 function normCfg(c){c=c||{};const ts=[1,2,4].indexOf(c.ts|0)>=0?c.ts|0:1;let n=clamp((c.n|0)||TOTAL_HEROES,2,TOTAL_HEROES);n=Math.min(TOTAL_HEROES,Math.ceil(n/ts)*ts);if(n/ts<2)n=ts*2;
   return{n,size:SIZE_F[c.size]?c.size:autoSize(n),ts}}
-function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:(cfg.size==='L'&&WD&&WD.city?Math.max(9400,WD.city.far+250,WD.fort?WD.fort.far+250:0):9400)*f,f};   // a full match's first circle covers the Old Town and the Snow Queen's fort (index)if(cfg.size==='L'){if(cfg.ts>1)teamKit(seed,items);return}
+function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:(cfg.size==='L'&&WD&&WD.city?Math.max(9400,WD.city.far+250,WD.fort?WD.fort.far+250:0):9400)*f,f};   // a full match's first circle covers the Old Town and the Snow Queen's fort (index)if(cfg.size==='L')return;   // no squad starter kits either (2026-11-23)
   let s=((seed|0)^0x5bd1e995^(cfg.n*7919))>>>0;const R=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
   const r0=ARENA.r,ok=(p,m)=>walkable(p.x,p.y,m)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h.al||h,30))&&!inCastleYard(p);
   // centre somewhere in the walkable heart of the valley, so the whole start circle is playable
@@ -1734,10 +1740,16 @@ function dealDamage(t,amt,type,src,quiet,crit){
 function dropItem(it){it.id=nextItemId++;if(CURSED&&it.k==='w'&&it.wv==null)it.wv=wvRoll(it.tier);items.push(it);bcast({t:'ia',it})}
 function removeItem(it){items=items.filter(i=>i!==it);bcast({t:'ir',id:it.id})}
 // castle and dungeon guards drop real loot, so camps there are worth farming (rich 2 = dungeon, better odds)
+// owner 2026-11-23: weapons and armour come from monsters and chests rather than the open ground, so every camp monster can drop gear
+// (big ones and elites more often, harder lands better tiers); summons, pets and Eclipse units keep their own loot
+function mobGear(t){if(t.ecl||t.summon||t.pet||t.boss)return;const big=t.kind==='ogre'||t.kind==='golem'||t.big,k=(big?1.7:1)*(t.elite?1.6:1),r=Math.random(),R=()=>({x:t.x+rand(-28,28),y:t.y+rand(-28,28)});
+  const hard=(t.rg|0)>=3||t.elite;
+  if(r<.075*k)dropItem(Object.assign({k:'w',wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier(hard?[8,34,40,16,2]:[30,40,24,6])},R()));
+  else if(r<.14*k)dropItem(Object.assign({k:'r',tier:pickTier(hard?[0,24,42,28,6]:[30,36,24,10,0])},R()))}
 function richLoot(t,src){const x=t.x,y=t.y,g=t.rich===2?1.35:1,r=Math.random(),R=()=>({x:x+rand(-24,24),y:y+rand(-24,24)});
   if(t.lord){dropItem(Object.assign({k:'w',wk:WK[Math.floor(Math.random()*WK.length)],tier:Math.random()<.18?4:3},R()));dropItem(Object.assign({k:'c',n:3,gold:true},R()));emit({t:'f',s:`👑 ${src&&src.hero?src.name:'ใครบางคน'} ปราบผู้คุมคุกใต้ดิน!`})}
-  if(r<.13*g)dropItem(Object.assign({k:'w',wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([0,45,40,14,t.rich===2?1:0])},R()));
-  else if(r<.24*g)dropItem(Object.assign({k:'r',tier:pickTier([0,30,45,22,3])},R()));
+  if(r<.2*g)dropItem(Object.assign({k:'w',wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([0,45,40,14,t.rich===2?1:0])},R()));   // 2026-11-23: .13 -> .2
+  else if(r<.36*g)dropItem(Object.assign({k:'r',tier:pickTier([0,30,45,22,3])},R()));                                                    // .24 -> .36
   else if(r<.6)dropItem(Object.assign({k:'c',n:1+(Math.random()<.3?1:0)},R()));
   else if(r<.8)dropItem(Object.assign({k:'p',b:Math.random()<.6?0:1},R()))}
 // stairways between the valley and the dungeon (people only; bots stay up top)
@@ -1761,7 +1773,7 @@ function kill(t,src){
     else if(t.kind==='guardian'){dropItem({k:'c',x:t.x,y:t.y,n:2,gold:true});emit({t:'a',s:'💎 ผู้พิทักษ์คริสตัลพ่ายแพ้!',v:src&&isHuman(src)?[src.id]:[]})}
     else if(t.kind==='magma'){dropItem({k:'c',x:t.x,y:t.y,n:2,gold:true});if(Math.random()<.5)dropItem({k:'r',x:t.x+50,y:t.y,tier:pickTier([0,30,45,22,3])});emit({t:'a',s:'🌋 ไททันลาวาพ่ายแพ้!',v:src&&isHuman(src)?[src.id]:[]})}
     else if(t.rich)richLoot(t,src);
-    else if(Math.random()<(t.kind==='golem'||t.kind==='ogre'?.6:.3))dropItem({k:'c',x:t.x,y:t.y,n:1});
+    else{mobGear(t);if(Math.random()<(t.kind==='golem'||t.kind==='ogre'?.6:.3))dropItem({k:'c',x:t.x,y:t.y,n:1})}
     const c=WD.camps[t.camp];if(c&&c.mem.every(id=>{const m=UMAP.get(id);return !m||m.dead}))c.deadAt=gameT;
     return}
   const killer=src&&src.hero&&isEnemy(src,t)?src:(t.lastHit&&gameT-t.lastHit.time<8&&!t.lastHit.src.dead?t.lastHit.src:null);
@@ -2022,16 +2034,17 @@ function equipArmor(u,it){it.dead=true;removeItem(it);
 function pickSwap(u,id){if(!u||u.dead||u.fuseT>0)return;const it=items.find(i=>i.id===id&&!i.dead);if(!it||dist(u,it)>u.r+60)return;if(it.k==='w')equipWeapon(u,it);else if(it.k==='r')equipArmor(u,it)}
 function swapCandidate(u){if(!u||u.dead||!u.wk)return null;let best=null,bd=1e9;for(const it of items){if(it.dead||it.k!=='w'||(it.wk===u.wk||it.wk===u.wk2)&&!(CURSED&&it.wk===u.wk&&it.tier>=u.wt&&itWV(it)!==(u.wv|0)))continue;const d=dist(u,it);if(d>u.r+52||d>=bd)continue;best=it;bd=d}return best}
 // ---- house chests: press to open, BOX_RATE chance of loot ----
-const BOX_RATE=.2;
+const BOX_RATE=.68;   // 2026-11-23: was .2 — chests are a main source of gear now
 function boxNear(u){if(!u||u.dead)return null;let best=null,bd=1e9;for(const b of boxes){if(b.open||Math.abs(b.x-u.x)>110||Math.abs(b.y-u.y)>110)continue;const d=dist(u,b);if(d>u.r+62||d>=bd)continue;
     const h=WD.houses[b.house];if(h&&!inRect(u,h,0))continue;best=b;bd=d}return best}
 function openBox(u,id){const b=boxes[id];if(!b||b.open||!u||u.dead||dist(u,b)>u.r+70)return;const h=WD.houses[b.house];if(h&&!inRect(u,h,4))return;
   b.open=true;const ok=Math.random()<BOX_RATE;const fx=b.x+Math.cos(b.a)*34,fy=b.y+Math.sin(b.a)*34;
   fxE('box',{id,x:b.x|0,y:b.y|0,ok:ok?1:0});sndAt(ok?'chest':'pick',b.x,b.y);const H=isHuman(u)?[u.id]:null;
-  if(ok){const r=Math.random();
-    if(r<.5)dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([10,40,38,12])});
-    else if(r<.85)dropItem({k:'r',x:fx,y:fy,tier:pickTier([0,25,40,30,5])});
+  if(ok){const r=Math.random(),sx=-Math.sin(b.a)*30,sy=Math.cos(b.a)*30;
+    if(r<.48)dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([6,36,38,18,2])});
+    else if(r<.84)dropItem({k:'r',x:fx,y:fy,tier:pickTier([0,22,40,30,8])});
     else dropItem({k:'c',x:fx,y:fy,n:2,gold:true});
+    if(Math.random()<.35){const q=Math.random();if(q<.5)dropItem({k:'p',x:fx+sx,y:fy+sy,b:Math.random()<.6?0:1});else if(q<.8)dropItem({k:'c',x:fx+sx,y:fy+sy,n:1});else dropItem({k:'r',x:fx+sx,y:fy+sy,tier:pickTier([20,40,30,10,0])})}
     if(H)fxTextFor(b.x,b.y-46,'✨ เจอของ!','#ffe27a',1.5,H,1)}
   else if(H)fxTextFor(b.x,b.y-46,'📦 ว่างเปล่า…','#c8c0b0',1.3,H)}
 function tryPickup(u){
@@ -2313,7 +2326,7 @@ function dawn(){for(const u of units)if(u.zombie&&!u.dead){u.dead=true;u.deadAt=
 function zombieLoot(t,src){const x=t.x,y=t.y,r=Math.random(),H=isHuman(src)?[src.id]:[];
   const wpn=tier=>dropItem({k:'w',x:x+rand(-20,20),y:y+rand(-20,20),wk:WK[Math.floor(Math.random()*WK.length)],tier});
   if(r<.01){wpn(4);emit({t:'a',s:'🌈 SSR!! อาวุธระดับเทพหล่นจากซอมบี้',d:3,v:H});emit({t:'f',s:`🌈 ${src.name} ได้อาวุธ SSR จากซอมบี้!`});fxE('ssr',{x:x|0,y:y|0})}
-  else if(r<.06){if(Math.random()<.6)wpn(pickTier([0,0,70,30]));else dropItem({k:'r',x,y,tier:pickTier([0,0,55,40,5])})}
+  else if(r<.09){if(Math.random()<.6)wpn(pickTier([0,0,70,30]));else dropItem({k:'r',x,y,tier:pickTier([0,0,55,40,5])})}   // 2026-11-23: .06 -> .09
   else if(r<.31)dropItem({k:'p',x,y,b:0});else if(r<.45)dropItem({k:'p',x,y,b:1});else if(r<.50)dropItem({k:'p',x,y,b:2});else if(r<.55)dropItem({k:'p',x,y,b:3});
   else if(r<.62){const pool=ITEMS.filter(i=>i.id!=='potion'&&i.id!=='mana');dropItem({k:'i',x,y,it:pickW(pool).id})}
   if(t.lord){wpn(pickTier([0,0,55,45]));dropItem({k:'p',x:x+30,y,b:2});dropItem({k:'p',x:x-30,y,b:0});emit({t:'f',s:`👑 ${src.name} ปราบราชาซอมบี้!`})}}
@@ -2479,7 +2492,8 @@ function applyAoe(a){for(const u of units){if(u.dead||!isEnemy(a.owner,u))contin
     if(a.el&&a.dmg>0)elemHit(a.owner,u,a.el,a.elP);else if(a.st&&(!a.stP||Math.random()<a.stP))stAdd(a.owner,u,a.st,a.stN||1)}}}
 
 // ===================== SHARED VISUAL UPDATE =====================
-const pushMass=u=>u.boss||u.golem?12:u.hero?(u.ctrl?6:3):u.big||u.lord?2:1;
+// a player walking into a bot or a monster keeps going (owner 2026-11-23: bots shoved the player back in melee); arena-bots.js stops melee bots leaning in
+const pushMass=u=>u.boss||u.golem?12:u.hero?(u.ctrl?10:3):u.big||u.lord?2:1;
 function fxUpdate(dt){AU.tick(dt);
   for(const p of parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.92;if(!p.line)p.vy*=.92;p.life-=dt}parts=parts.filter(p=>p.life>0);
   for(const t of texts){t.y-=(t.dm?30:38)*dt;if(t.vx){t.x+=t.vx*dt;t.vx*=Math.pow(.05,dt)}t.life-=dt}if(scrFl.a>0)scrFl.a=Math.max(0,scrFl.a-dt*1.6);texts=texts.filter(t=>t.life>0);
@@ -4378,7 +4392,7 @@ Object.assign(R3,{
     this.t+=dt;const T=this.t,me=ME(),L=listener()||me;if(!L)return;const G=this.G;
     const k=1-Math.pow(.0008,dt);this.tx=this.tx?lerp(this.tx,L.x,k):L.x;this.ty=this.ty?lerp(this.ty,L.y,k):L.y;if(Math.hypot(this.tx-L.x,this.ty-L.y)>900){this.tx=L.x;this.ty=L.y}
     const gyL=Math.max(this.gY(this.tx,this.ty),-8);this.ly=this.ly===undefined?gyL:lerp(this.ly,gyL,1-Math.pow(.02,dt));
-    const D=(camNear?.76:1)*1060*(W/H<1.6?1.16:1),el=camNear?1.04:1.0;const sx=(Math.random()-.5)*shakeA,sy=(Math.random()-.5)*shakeA;
+    const D=(camNear?.76:1)*1060*(W/H<1.6?1.16:1)*(this.camK||1),el=camNear?1.04:1.0;/* camK: arena-drop.js pulls the camera far out for the sky drop */const sx=(Math.random()-.5)*shakeA,sy=(Math.random()-.5)*shakeA;
     this.cam.position.set(this.tx+sx,this.ly+Math.sin(el)*D+sy,this.ty+Math.cos(el)*D);this.cam.lookAt(this.tx+sx,this.ly,this.ty);
     // day / night / dusk
     const dk=this.dayK(),du=this.duskK(),inCave=WD.caves.some(c=>dist(L,c)<c.R+6)||inDG(L);
@@ -6627,9 +6641,10 @@ const P5C={order:['idle','run','attack','cast','dodge','death'],idle:/Combat_Sta
 const P5H=138;   // hero height in world units (Quaternius heroes are ~140)
 const CA=()=>window.CelestialAssets;
 // the Spirit Tome (summoner.js) is the Summoner; a fused weapon keeps the class of the weapon it was forged on
-const p5Class=u=>{let k=u&&u.wk;if(!k)return'warrior';if(typeof FUSED!=='undefined'&&FUSED[k])k=FUSED[k].base||k;
+// owner 2026-11-23: a hero without a weapon is an ordinary villager (the Quaternius peasant in r8.js) until the first weapon is picked up
+const p5Class=u=>{let k=u&&u.wk;if(!k)return null;if(typeof FUSED!=='undefined'&&FUSED[k])k=FUSED[k].base||k;
   return k==='soul'?'summoner':k==='dagger'?'assassin':k==='bow'||k==='xbow'?'archer':k==='fire'||k==='frost'||k==='storm'?'mage':'warrior'};
-R.p5Ready=function(cls){const A=CA(),a=A&&A.get(P5[cls]);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations.length>=4&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
+R.p5Ready=function(cls){if(!cls)return false;const A=CA(),a=A&&A.get(P5[cls]);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations.length>=4&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 const p5Clips=a=>{if(a._p5)return a._p5;const list=a.gltf.animations,used=new Set(),out={};
   // in place: every clip's hips keep the IDLE clip's ground position (a clip's own first frame can already be a metre off)
   const hipT=c=>c&&c.tracks.find(t=>/\.position$/.test(t.name)&&/hips|pelvis|root/i.test(t.name)),ref=hipT(list.find(c=>/Combat_Stance|idle/i.test(c.name))||list[0]);
@@ -9979,16 +9994,15 @@ void main(){vec2 q=vUv*2.-1.;float r=length(q);if(r>1.)discard;float a;vec3 col;
 //  · pace      heroes and creeps walk slower, basic attacks come a little slower, fury adds less attack speed, bolts fly slower (same range)
 //  · movement  velocity eases in and out (b.js calls feelMove) instead of snapping to full speed
 //  · melee     a hero's swing and a creep's/zombie's bite land on a HIT FRAME after the wind-up, tested against where the target is THEN
-//              (cone in front of the attacker) — step out, circle a big one or roll and it whiffs; a stun breaks a creep's wind-up
-//  · roll      K / right click / the 🌀 button: a short eased roll with i-frames (the 45 s Shift dash stays), buffered for a moment,
-//              cancels your own wind-up; rolling through a hit still gives the perfect-dodge critical (t1.js tpsGuard)
+//              (cone in front of the attacker) — step out, circle a big one or dash and it whiffs; a stun breaks a creep's wind-up
+//  · (2026-11-23 the owner took the dodge roll out again — the Shift dash, now beside the attack button, is the one dodge)
 //  · creeps    no more than 2 (zombies 3) wind up on one hero at once, the rest wait their turn; packs spread around you instead of
 //              queueing; wolves, goblins and runners hit and step back, and hop aside from bolts and telegraphed blasts;
 //              big ones flash ❗ to the hero they wind up on
-//  · bots      roll out of telegraphed blasts, some creep swings and some bolts
+//  · bots      step out of telegraphed blasts, some creep swings and some bolts (u.ai.dodge, steered in arena-bots.js)
 //  · aim       PC: hold Q/E/R (1/2/3) to see the skill's shape at the mouse, release to cast, right click cancels;
 //              touch: the dragged aim snaps gently onto a nearby enemy
-// Host-authoritative like the rest of the sim; a client sends {t:'rl'} for the roll and keeps its own cooldown display.
+// Host-authoritative like the rest of the sim.
 // Every number lives in FEEL below.
 const FEEL={
   heroSpd:182,                       // HB.spd was 205
@@ -9998,15 +10012,13 @@ const FEEL={
   heroWind:[.11,.17,.07,.09],        // melee hit frame by SWING_K style: sword, heavy, stab, fists
   heroWindMove:.45,                  // move speed while winding up a swing
   accHero:13,decHero:17,accMob:9,accBig:6,
-  rollCd:4.5,rollCdBot:6,rollT:.3,rollD:250,rollI:.26,rollBuf:.22,
   mobWind:.28,mobWindWolf:.22,mobWindBig:.4,mobWindBoss:.5,zWind:.3,zWindBig:.42,
   reach:26,reachBig:12,              // a creep's swing lunges this far past its attack range
   turn:3.2,                          // rad/s a creep can turn while winding up
   tokens:2,tokensZ:3,
   dodge:{wolf:.32,goblin:.38,zrunner:.22,zombie:.06,ogre:.08},
   dodgeCd:{wolf:2.4,goblin:2.2,zrunner:3,zombie:5,ogre:5},
-  backOff:{wolf:1,goblin:1,zrunner:1},
-  cl:0,bk:null,btn:null,btnCd:null};
+  backOff:{wolf:1,goblin:1,zrunner:1}};
 if(typeof HB!=='undefined'&&typeof CREEPS!=='undefined'&&typeof basic==='function'){
 // ---- pace ----
 HB.spd=FEEL.heroSpd;
@@ -10018,23 +10030,14 @@ const angD=(a,b)=>{let d=a-b;return Math.atan2(Math.sin(d),Math.cos(d))};
 const FW_N=new Map(),ENG_N=new Map(),REACT=[];
 // ---- movement: eased velocity (called by b.js hostUpdate for every unit) ----
 var feelMove=function(u,m,dt){
-  const D=u.dash;if(D&&D.roll){const k=clamp(D.t/D.T,0,1),s=D.v0*(.25+.75*k);D.vx=D.nx*s;D.vy=D.ny*s}
   if(u.stunT>0||u.rootT>0||u.leap||u.kb||u.fw){u._vx=0;u._vy=0;return u.fw?{mx:0,my:0}:m}
   let tx=m.mx||0,ty=m.my||0;if(u.fwh){tx*=FEEL.heroWindMove;ty*=FEEL.heroWindMove}
   const cx=u._vx||0,cy=u._vy||0,up=tx*tx+ty*ty>=cx*cx+cy*cy;
   const k=u.hero?(up?FEEL.accHero:FEEL.decHero):(u.big||u.r>=34?FEEL.accBig:FEEL.accMob)*(up?1:1.4);
   const a=1-Math.exp(-k*dt);let vx=cx+(tx-cx)*a,vy=cy+(ty-cy)*a;if(!tx&&!ty&&vx*vx+vy*vy<.0016){vx=0;vy=0}
   u._vx=vx;u._vy=vy;return{mx:vx,my:vy}};
-// ---- roll ----
-function feelRoll(u,dx,dy,again){
-  if(!u||u.dead||!u.hero||u.rlcd>0)return false;
-  if(u.stunT>0||u.rootT>0||u.leap||u.kb||u.fuseT>0||u.dash){if(!again)u.rlBuf={t:FEEL.rollBuf,x:dx,y:dy};return false}
-  let l=Math.hypot(dx,dy);if(l<.2){dx=u.fx;dy=u.fy;l=Math.hypot(dx,dy)||1}dx/=l;dy/=l;
-  if(u.fwh){u.fwh=null;u.atkCd=Math.min(u.atkCd,.12)}
-  const T=FEEL.rollT,v0=FEEL.rollD/(T*.625);
-  u.dash={vx:dx*v0,vy:dy*v0,t:T,T,v0,nx:dx,ny:dy,hit:null,roll:1};u.rollT=Math.max(u.rollT||0,FEEL.rollI);u.pdg=0;
-  u.rlcd=isHuman(u)?FEEL.rollCd:FEEL.rollCdBot;u.rlBuf=null;u.fx=dx;u.fy=dy;u._vx=dx*.5;u._vy=dy*.5;
-  sndAt('dash',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(dy,dx).toFixed(2)});return true}
+// a bot sees a hit coming and steps out of it for a moment (arena-bots.js steers it)
+function feelStep(u,dx,dy,t){if(!u||u.dead||!u.ai||isHuman(u))return;const l=Math.hypot(dx,dy)||1;u.ai.dodge={x:dx/l,y:dy/l,t:t||.45}}
 function feelHop(u,dx,dy){if(u.dead||u.stunT>0||u.rootT>0||u.dash||u.fw||u.leap||u.kb)return;const l=Math.hypot(dx,dy)||1;u.dash={vx:dx/l*820,vy:dy/l*820,t:.19,hit:null};u.dgT=gameT}
 const canHop=u=>{const p=FEEL.dodge[u.kind];return p&&u.mob&&!u.boss&&!u.ecl&&!u.pet&&!u.summon&&!(u.rise>0)&&gameT-(u.dgT||-9)>=FEEL.dodgeCd[u.kind]?p:0};
 // ---- hero melee: wind-up, then the original swing at the hit frame ----
@@ -10050,18 +10053,18 @@ const canHop=u=>{const p=FEEL.dodge[u.kind];return p&&u.mob&&!u.boss&&!u.ecl&&!u
     let t=F.tid>=0?UMAP.get(F.tid):null;if(t&&(t.dead||!isEnemy(u,t)))t=null;
     const an=u.atkAnim;u.atkCd=0;const ok=_b(u,t||undefined);if(ok){u.atkAnim=an;feelFury(u)}else u.atkCd=.08}}
 // ---- creeps and zombies: wind-up, turn-limited tracking, then a cone strike ----
-function windOf(u){if(u.zombie)return u.big?FEEL.zWindBig:FEEL.zWind;if(u.boss)return FEEL.mobWindBoss;if(u.kind==='wolf')return FEEL.mobWindWolf;return u.big||u.r>=34?FEEL.mobWindBig:FEEL.mobWind}
-function startWind(u,t){const W=windOf(u),a=Math.atan2(t.y-u.y,t.x-u.x);u.fw={t:W,T:W,tid:t.id,ang:a};u.atkCd=W+.5;u.atkAnim=.3+W;u.fx=Math.cos(a);u.fy=Math.sin(a);
+function feelWindOf(u){if(u.zombie)return u.big?FEEL.zWindBig:FEEL.zWind;if(u.boss)return FEEL.mobWindBoss;if(u.kind==='wolf')return FEEL.mobWindWolf;return u.big||u.r>=34?FEEL.mobWindBig:FEEL.mobWind}
+function feelStartWind(u,t){const W=feelWindOf(u),a=Math.atan2(t.y-u.y,t.x-u.x);u.fw={t:W,T:W,tid:t.id,ang:a};u.atkCd=W+.5;u.atkAnim=.3+W;u.fx=Math.cos(a);u.fy=Math.sin(a);
   FW_N.set(t.id,(FW_N.get(t.id)||0)+1);
-  if(t.hero&&!isHuman(t)&&!(t.rlcd>0)&&Math.random()<.3){const s=Math.random()<.5?.7:-.7,b=Math.atan2(t.y-u.y,t.x-u.x)+s;REACT.push({u:t,at:gameT+Math.max(.04,W-.16),x:Math.cos(b),y:Math.sin(b)})}
+  if(t.hero&&!isHuman(t)&&Math.random()<.4){const s=Math.random()<.5?.7:-.7,b=Math.atan2(t.y-u.y,t.x-u.x)+s;REACT.push({u:t,at:gameT+Math.max(.04,W-.16),x:Math.cos(b),y:Math.sin(b)})}
   if((u.big||u.boss||u.r>=34)&&isHuman(t))fxTextFor(u.x,u.y-u.r-46,'❗','#ff6a4a',W+.25,[t.id])}
-function windTick(u,dt){const F=u.fw;if(u.busyT>0)u.busyT=Math.max(0,u.busyT-dt);
+function feelWindTick(u,dt){const F=u.fw;if(u.busyT>0)u.busyT=Math.max(0,u.busyT-dt);
   if(u.stunT>0){u.fw=null;u.atkCd=.25;return{mx:0,my:0}}
   const t=UMAP.get(F.tid);
   if(t&&!t.dead){const mx=FEEL.turn*dt*(F.t>F.T*.35?1:.35);F.ang+=clamp(angD(Math.atan2(t.y-u.y,t.x-u.x),F.ang),-mx,mx);u.fx=Math.cos(F.ang);u.fy=Math.sin(F.ang)}
-  F.t-=dt;if(F.t<=0){u.fw=null;strike(u,F,t&&!t.dead?t:null)}
+  F.t-=dt;if(F.t<=0){u.fw=null;feelStrike(u,F,t&&!t.dead?t:null)}
   return{mx:0,my:0}}
-function strike(u,F,t){const night=isNight(),dmg=u.zombie?u.atkDmg:u.atkDmg*(night?1.4:1),cl=!u.zombie&&u.def.cleave,arc=cl?1.05:.9,
+function feelStrike(u,F,t){const night=isNight(),dmg=u.zombie?u.atkDmg:u.atkDmg*(night?1.4:1),cl=!u.zombie&&u.def.cleave,arc=cl?1.05:.9,
     lunge=u.big||u.r>=34||u.boss?FEEL.reachBig:FEEL.reach;let hit=0;
   for(const o of units){if(o.dead||!isEnemy(u,o)||!cl&&o!==t)continue;const reach=u.range+o.r+lunge;if(Math.abs(o.x-u.x)>reach||Math.abs(o.y-u.y)>reach)continue;
     const d=dist(u,o);if(d>reach)continue;if(Math.abs(angD(Math.atan2(o.y-u.y,o.x-u.x),F.ang))>arc&&d>u.r+o.r*.5)continue;
@@ -10072,7 +10075,7 @@ function strike(u,F,t){const night=isNight(),dmg=u.zombie?u.atkDmg:u.atkDmg*(nig
   if(u.r>30||u.big)sndAt('hit',u.x,u.y);
   u.atkCd=u.atkCdBase;if(FEEL.backOff[u.kind])u.backT=hit?.45:.2}
 // packs spread around their hero instead of queueing; hit-and-run creeps step back after a strike; those waiting their turn hang back
-function steer(u,m,dt){const t=u.aggro;if(!t||t.dead||u.dash||!(m.mx||m.my))return m;
+function feelSteer(u,m,dt){const t=u.aggro;if(!t||t.dead||u.dash||!(m.mx||m.my))return m;
   const d=dist(u,t)||1;if(u.backT>0){u.backT-=dt;return{mx:(u.x-t.x)/d*.75,my:(u.y-t.y)/d*.75}}
   const R=u.range+t.r,wait=u.waitT>0;if(wait)u.waitT-=dt;
   if(d>360||(ENG_N.get(t.id)||0)<2&&!wait)return m;
@@ -10080,66 +10083,53 @@ function steer(u,m,dt){const t=u.aggro;if(!t||t.dead||u.dash||!(m.mx||m.my))retu
   const sx=t.x+Math.cos(sa)*rr-u.x,sy=t.y+Math.sin(sa)*rr-u.y,sl=Math.hypot(sx,sy);if(sl<8)return wait?{mx:0,my:0}:m;
   const w=d<R+60?.85:.5,ml=Math.hypot(m.mx,m.my);let vx=m.mx/ml*(1-w)+sx/sl*w,vy=m.my/ml*(1-w)+sy/sl*w;const vl=Math.hypot(vx,vy)||1;
   return{mx:vx/vl*ml,my:vy/vl*ml}}
-function canSwing(u,t){if(!t||t.dead||u.busyT>0||u.stunT>0||u.atkCd>0||u.dash)return false;const d=dist(u,t);if(d>=u.range+t.r+6)return false;
+function feelCanSwing(u,t){if(!t||t.dead||u.busyT>0||u.stunT>0||u.atkCd>0||u.dash)return false;const d=dist(u,t);if(d>=u.range+t.r+6)return false;
   if(!u.zombie){const L=u.def.leash||420;if(dist(u,u.home)>=L||dist(t,u.home)>=L+120||t.hidden&&d>=170)return false}return true}
 {const _mt=mobThink;mobThink=function(u,dt){
   if(u.ecl||u.pet||u.summon)return _mt(u,dt);
-  if(u.fw)return windTick(u,dt);
-  const t=u.aggro;if(canSwing(u,t)){if((FW_N.get(t.id)||0)<FEEL.tokens){startWind(u,t);return{mx:0,my:0}}u.atkCd=rand(.25,.45);u.waitT=.45}
-  return steer(u,_mt(u,dt),dt)}}
+  if(u.fw)return feelWindTick(u,dt);
+  const t=u.aggro;if(feelCanSwing(u,t)){if((FW_N.get(t.id)||0)<FEEL.tokens){feelStartWind(u,t);return{mx:0,my:0}}u.atkCd=rand(.25,.45);u.waitT=.45}
+  return feelSteer(u,_mt(u,dt),dt)}}
 {const _zt=zombieThink;zombieThink=function(u,dt){
   if(u.rise>0)return _zt(u,dt);
-  if(u.fw)return windTick(u,dt);
-  const t=u.aggro;if(canSwing(u,t)){if((FW_N.get(t.id)||0)<FEEL.tokensZ){startWind(u,t);return{mx:0,my:0}}u.atkCd=rand(.2,.4);u.waitT=.4}
-  return steer(u,_zt(u,dt),dt)}}
-// ---- telegraphed blasts: bots roll out, nimble creeps hop out ----
-{const _ao=aoe;aoe=function(o){const r=_ao(o);try{warn(o)}catch(e){}return r}}
-function warn(a){if(!(a.delay>=.32)||a.fxOnly||!(a.dmg>0)||!a.owner)return;
+  if(u.fw)return feelWindTick(u,dt);
+  const t=u.aggro;if(feelCanSwing(u,t)){if((FW_N.get(t.id)||0)<FEEL.tokensZ){feelStartWind(u,t);return{mx:0,my:0}}u.atkCd=rand(.2,.4);u.waitT=.4}
+  return feelSteer(u,_zt(u,dt),dt)}}
+// ---- telegraphed blasts: bots step out, nimble creeps hop out ----
+{const _ao=aoe;aoe=function(o){const r=_ao(o);try{feelWarn(o)}catch(e){}return r}}
+function feelWarn(a){if(!(a.delay>=.32)||a.fxOnly||!(a.dmg>0)||!a.owner)return;
   for(const u of units){if(u.dead||u===a.owner||u.dash||!isEnemy(a.owner,u))continue;if(Math.abs(u.x-a.x)>(a.len||a.r||0)+200||Math.abs(u.y-a.y)>(a.len||a.r||0)+200)continue;
-    const bot=u.hero&&!isHuman(u)&&!(u.rlcd>0),hop=!bot&&canHop(u);if(!bot&&!hop)continue;
+    const bot=u.hero&&!isHuman(u),hop=!bot&&canHop(u);if(!bot&&!hop)continue;
     let x,y;if(a.shape==='line'||a.shape==='cone'){if(!hitArea(a,u))continue;const s=Math.sin(a.ang)*(u.x-a.x)-Math.cos(a.ang)*(u.y-a.y)>=0?1:-1;x=Math.sin(a.ang)*s;y=-Math.cos(a.ang)*s}
     else{const d=Math.hypot(u.x-a.x,u.y-a.y);if(d>a.r+u.r)continue;x=d>1?(u.x-a.x)/d:u.fx;y=d>1?(u.y-a.y)/d:u.fy}
     if(Math.random()<(bot?.5:Math.min(.8,hop*1.6)))REACT.push({u,at:gameT+Math.min(rand(.12,.28),Math.max(.05,a.delay-.14)),x,y})}}
 // ---- per frame (host) ----
-function pre(dt){FW_N.clear();ENG_N.clear();
+function feelPre(dt){FW_N.clear();ENG_N.clear();
   for(const u of units){if(u.dead)continue;
-    if(u.hero){if(u.rlcd>0)u.rlcd-=dt;if(!isHuman(u)&&u.rollT>0)u.rollT-=dt;   // tpsHost only ticks the human's roll timer
-      if(u.rlBuf){u.rlBuf.t-=dt;if(u.rlBuf.t<=0)u.rlBuf=null;else feelRoll(u,u.rlBuf.x,u.rlBuf.y,true)}
-      if(u.fwh)feelHeroSwing(u,dt)}
+    if(u.hero){if(u.fwh)feelHeroSwing(u,dt)}
     else if(u.mob){if(u.fw)FW_N.set(u.fw.tid,(FW_N.get(u.fw.tid)||0)+1);const t=u.aggro;if(t&&!t.dead)ENG_N.set(t.id,(ENG_N.get(t.id)||0)+1)}}
-  for(let i=REACT.length-1;i>=0;i--){const r=REACT[i];if(gameT<r.at)continue;REACT.splice(i,1);const u=r.u;if(!u||u.dead)continue;if(u.hero)feelRoll(u,r.x,r.y,true);else feelHop(u,r.x,r.y)}}
-// bolts: nimble creeps hop aside, bots sometimes roll
-function post(){if(!projs.length)return;
+  for(let i=REACT.length-1;i>=0;i--){const r=REACT[i];if(gameT<r.at)continue;REACT.splice(i,1);const u=r.u;if(!u||u.dead)continue;if(u.hero)feelStep(u,r.x,r.y,r.t);else feelHop(u,r.x,r.y)}}
+// bolts: nimble creeps hop aside, bots sometimes side-step
+function feelPost(){if(!projs.length)return;
   for(const u of units){if(u.dead||u.fw||u.dash||(frameN+u.id)%3)continue;let pc=0;
-    if(u.mob){pc=canHop(u);if(!pc)continue}else if(u.hero&&!isHuman(u)&&!(u.rlcd>0))pc=.14;else continue;
+    if(u.mob){pc=canHop(u);if(!pc)continue}else if(u.hero&&!isHuman(u))pc=.22;else continue;
     for(const p of projs){if(p.dead||!p.owner||p.owner===u||!isEnemy(p.owner,u)||u.mob&&!p.owner.hero)continue;
       const dx=u.x-p.x,dy=u.y-p.y;if(Math.abs(dx)>320||Math.abs(dy)>320)continue;const v=Math.hypot(p.vx,p.vy)||1,al=(dx*p.vx+dy*p.vy)/v;if(al<0||al>v*.4)continue;
       const cr=(dx*p.vy-dy*p.vx)/v;if(Math.abs(cr)>u.r+(p.wr||p.r)+8)continue;
       const S=p._dg||(p._dg=new Set());if(S.has(u.id))continue;S.add(u.id);
-      if(Math.random()<pc*(p.basic?1:1.4)){const sg=cr>=0?1:-1;REACT.push({u,at:gameT+rand(.02,.08),x:p.vy/v*sg,y:-p.vx/v*sg});break}}}}
-{const _hu=hostUpdate;hostUpdate=function(dt){pre(dt);_hu(dt);post()}}
-{const _hd=hostOnData;hostOnData=function(cid,d){if(d&&d.t==='rl'){const u=units.find(u=>u.ctrl===cid);if(u&&state==='play')feelRoll(u,clamp(+d.x||0,-1,1),clamp(+d.y||0,-1,1));return}return _hd(cid,d)}}
-// ---- local player: roll key / button, PC hold-to-aim, touch aim assist ----
-function rollPress(){const me=ME();if(!me||me.dead||state!=='play')return;const i=localInput();
-  if(net.mode==='client'){const now=performance.now();if(FEEL.cl>now)return;FEEL.cl=now+FEEL.rollCd*1000;netSend({t:'rl',x:+i.mx.toFixed(2),y:+i.my.toFixed(2)})}else feelRoll(me,i.mx,i.my)}
-if(typeof CUR!=='undefined'&&CUR.el&&CUR.el.pad){const pad=CUR.el.pad,ref=pad.children[1],b=document.createElement('div');b.id='arenaRoll';b.style.cssText=ref.style.cssText;b.className=ref.className;b.style.left='154px';
-  b.innerHTML='🌀<span style="position:absolute;left:0;right:0;bottom:-15px;font:10px sans-serif;color:#b8ad94;line-height:12px">กลิ้ง · K</span>';
-  const c=document.createElement('div');c.style.cssText='position:absolute;inset:0;border-radius:50%;display:none;align-items:center;justify-content:center;font:bold 20px sans-serif;color:#fff;text-shadow:0 0 4px #000;background:rgba(4,10,21,.62);pointer-events:none';b.appendChild(c);
-  b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();rollPress()});pad.appendChild(b);FEEL.btn=b;FEEL.btnCd=c;
-  const _cs=CUR.step;CUR.step=function(dt){const r=_cs.call(this,dt);const me=ME();let cd=0;if(me)cd=net.mode==='client'?Math.max(0,(FEEL.cl-performance.now())/1000):Math.max(0,me.rlcd||0);
-    const k=cd>0?Math.ceil(cd)+'':'';if(k!==FEEL.bk){FEEL.bk=k;c.textContent=k;c.style.display=k?'flex':'none';b.style.opacity=k?.75:1}return r};
-  CUR.el.hint.textContent='ฆ่ามอนสเตอร์เก็บ 🪙 แล้วกด 🛒 (P) ซื้อของ · K/คลิกขวา กลิ้งหลบ · Shift พุ่ง (45 วิ) · V สกิลพิเศษ · กดค้าง Q/E/R เพื่อเล็ง'}
+      if(Math.random()<pc*(p.basic?1:1.4)){const sg=cr>=0?1:-1;REACT.push({u,at:gameT+rand(.02,.08),x:p.vy/v*sg,y:-p.vx/v*sg,t:.32});break}}}}
+{const _hu=hostUpdate;hostUpdate=function(dt){feelPre(dt);_hu(dt);feelPost()}}
+// ---- local player: PC hold-to-aim, touch aim feelAssist ----
 let PCA=null;const SKC={Digit1:0,KeyQ:0,Digit2:1,KeyE:1,Digit3:2,KeyR:2};
 addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'||state!=='play')return;
-  if(e.code==='KeyK'){if(!e.repeat)rollPress();return}
   if(!(e.code in SKC))return;if(PCA&&PCA.code===e.code){e.stopImmediatePropagation();return}
   if(e.shiftKey||e.repeat||CUR.touch||!UI.mouse)return;const me=ME(),i=SKC[e.code];if(!me||me.dead||!me.skl[i]||me.cd[i]>0)return;const a=skAim(me,i);if(!a||a.t==='self')return;
   PCA={i,code:e.code};keys[e.code]=true;e.stopImmediatePropagation()},true);
 addEventListener('keyup',e=>{if(!PCA||e.code!==PCA.code)return;const i=PCA.i;PCA=null;if(state!=='play'||!UI.mouse)return;pressSkill(i,screenToWorld(UI.mouse.x,UI.mouse.y))},true);
-addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==2||state!=='play')return;if(PCA){PCA=null;e.stopImmediatePropagation();e.preventDefault();return}if(e.target===cv)rollPress()},true);
+addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==2||state!=='play'||!PCA)return;PCA=null;e.stopImmediatePropagation();e.preventDefault()},true);
 addEventListener('blur',()=>{PCA=null});
-{const _dan=drawAnnounce;drawAnnounce=function(s){_dan(s);if(PCA)try{drawPcAim()}catch(e){PCA=null}}}
-function drawPcAim(){const me=ME();if(!me||me.dead||!UI.mouse){PCA=null;return}const a=skAim(me,PCA.i);if(!a){PCA=null;return}
+{const _dan=drawAnnounce;drawAnnounce=function(s){_dan(s);if(PCA)try{feelDrawPcAim()}catch(e){PCA=null}}}
+function feelDrawPcAim(){const me=ME();if(!me||me.dead||!UI.mouse){PCA=null;return}const a=skAim(me,PCA.i);if(!a){PCA=null;return}
   const mw=screenToWorld(UI.mouse.x,UI.mouse.y),l=Math.hypot(mw.x-me.x,mw.y-me.y)||1,nx=(mw.x-me.x)/l,ny=(mw.y-me.y)/l,d=a.t==='dir'||a.t==='cone'?a.range:Math.min(l,a.range),
     p={x:me.x+nx*d,y:me.y+ny*d},col='rgba(120,200,255,',px=-ny,py=nx;
   ctx.save();polyW(circW(me.x,me.y,a.range,56));ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=2;ctx.setLineDash([8,6]);ctx.stroke();ctx.setLineDash([]);
@@ -10150,14 +10140,379 @@ function drawPcAim(){const me=ME();if(!me||me.dead||!UI.mouse){PCA=null;return}c
     if(t&&unitVisibleTo(t,me,me)){polyW(circW(t.x,t.y,t.r+16,24));ctx.strokeStyle='rgba(255,80,80,.95)';ctx.lineWidth=3;ctx.stroke()}}
   const q=w2s(p.x,p.y);if(q.ok){ctx.fillStyle='rgba(255,255,255,.9)';ctx.beginPath();ctx.arc(q.x,q.y,4,0,7);ctx.fill()}ctx.restore()}
 // touch: the dragged aim leans onto an enemy close to the line (or the circle)
-{const _ap=aimPoint;aimPoint=function(st){const p=_ap(st);if(!p||!p.a)return p;try{return assist(p)}catch(e){return p}}}
-function assist(p){const me=ME(),a=p.a;if(!me)return p;const ok=o=>!o.dead&&isEnemy(me,o)&&unitVisibleTo(o,me,me);
+{const _ap=aimPoint;aimPoint=function(st){const p=_ap(st);if(!p||!p.a)return p;try{return feelAssist(p)}catch(e){return p}}}
+function feelAssist(p){const me=ME(),a=p.a;if(!me)return p;const ok=o=>!o.dead&&isEnemy(me,o)&&unitVisibleTo(o,me,me);
   if(a.t==='dir'||a.t==='cone'){const a0=Math.atan2(p.y-me.y,p.x-me.x);let best=null,bw=a.t==='cone'?.22:.16;
     for(const o of units){if(!ok(o))continue;const d=dist(me,o);if(d<1||d>a.range+o.r)continue;const da=angD(Math.atan2(o.y-me.y,o.x-me.x),a0),w=Math.abs(da)*(o.hero?.7:1);if(w<bw){bw=w;best=da}}
     if(best===null)return p;const an=a0+best*.85,L=Math.hypot(p.x-me.x,p.y-me.y);return{x:me.x+Math.cos(an)*L,y:me.y+Math.sin(an)*L,a}}
   if(a.t==='area'){let best=null,bd=Math.max(60,a.r*.55);for(const o of units){if(!ok(o)||dist(me,o)>a.range+a.r*.5)continue;const d=Math.hypot(o.x-p.x,o.y-p.y)*(o.hero?.7:1);if(d<bd){bd=d;best=o}}
     if(best)return{x:lerp(p.x,best.x,.7),y:lerp(p.y,best.y,.7),a}}
   return p}
+}
+
+// ===================== TREASURE CHESTS · bigger, gilded and sparkling (Arena Royale, owner 2026-11-23) =====================
+// Owner: "ปรับรูปแบบและขนาดของกล่องสมบัติที่เปิดให้สวยงามและใหญ่ขึ้นมีแสงวับวาว"
+// Replaces R3.buildBoxes / R3.stepBoxes (r3.js): a half-barrel lid, gold bands and corner posts, a lock plate with a glowing gem,
+// a warm glow on the ground and star glints around every chest that is still shut; opening one with loot throws a pillar of gold
+// light, a flare and a fountain of sparks, and the inside glows for a few seconds. Render only — the chests' positions, collision
+// (radius 26 in a.js) and opening (b.js openBox) are the game's.
+(function(){if(typeof R3==='undefined'||typeof THREE==='undefined')return;const T=THREE,R=R3;
+const CW=54,CH=28,CD=36,LR=CD/2,OPEN=1.95;
+R.buildBoxes=function(){const B=WD.boxes||[];this.boxLid=null;this.chest=null;if(!B.length)return;const n=B.length;
+  const wood=this.tstd('planks','#8c4b24',.78,0),dark=this.std('#1c120c',.95,0),gold=this.std('#e8b846',.3,.85),
+    gem=this.std('#8ff4ff',.2,.1,{emissive:'#36d6ff',emissiveIntensity:1.8});
+  const box=(w,h,d,x,y,z)=>{const g=new T.BoxGeometry(w,h,d);g.translate(x,y,z);return g};
+  const barrel=(r,len,x,z)=>{const g=new T.CylinderGeometry(r,r,len,18,1,false,0,Math.PI);g.rotateZ(Math.PI/2);g.translate(x,0,z);return g};
+  const xs=[-CW*.3,CW*.3],corners=[[-1,-1],[1,-1],[-1,1],[1,1]];
+  // body (local +Z faces the door / the front), static
+  const gBody=box(CW,CH,CD,0,CH/2,0),gIn=box(CW-7,1,CD-7,0,CH+.05,0),
+    gGold=this.merge([box(CW+2.4,3.4,CD+2.4,0,1.7,0),box(CW+1.4,2.6,CD+1.4,0,CH-1.3,0),...xs.map(x=>box(4.2,CH,CD+1.6,x,CH/2,0)),
+      ...corners.map(([a,b])=>box(3.6,CH+.6,3.6,a*CW/2,CH/2,b*CD/2)),box(10,12,1.8,0,CH-8,CD/2+.9)]),
+    gGem=(()=>{const g=new T.BoxGeometry(4.6,4.6,4.6);g.rotateX(Math.PI/4);g.rotateZ(Math.PI/4);g.translate(0,CH-8,CD/2+2.4);return g})();
+  // lid in hinge space: hinge along the back top edge, the half barrel reaches forward to z = CD
+  const gLid=barrel(LR,CW,0,LR),gLidG=this.merge([...xs.map(x=>barrel(LR+1.1,4.4,x,LR)),barrel(LR+.9,2.4,-CW/2+1.2,LR),barrel(LR+.9,2.4,CW/2-1.2,LR),box(CW+1,2,2.2,0,1,CD),box(8,9,1.8,0,-2.5,CD+1)]);
+  const mk=(g,m,cast,ro)=>{const im=new T.InstancedMesh(g,m,n);im.frustumCulled=false;im.castShadow=!!cast&&!!this.hi;im.receiveShadow=true;if(ro)im.renderOrder=ro;this.scene.add(im);return im};
+  const glowM=new T.MeshBasicMaterial({map:this.tex('wglow'),color:'#ffc451',transparent:true,opacity:.5,depthWrite:false,blending:T.AdditiveBlending});
+  const innM=new T.MeshBasicMaterial({map:this.tex('wglow'),color:'#ffe08a',transparent:true,opacity:.95,depthWrite:false,blending:T.AdditiveBlending});
+  for(const m of[glowM,innM])m.userData.ownMat=1;
+  const gGlow=new T.PlaneGeometry(1,1);gGlow.rotateX(-Math.PI/2);
+  const C={n,k:new Float32Array(n),set:new Float32Array(n).fill(-1),okT:new Float32Array(n).fill(-99),P:[],Q:[],t:0,
+    body:mk(gBody,wood,true),inner:mk(gIn,dark),trim:mk(gGold,gold,true),gem:mk(gGem,gem),lid:mk(gLid,wood,true),lidG:mk(gLidG,gold,true),
+    glow:mk(gGlow,glowM,false,2),inn:mk(gGlow,innM,false,3),glowM,innM};
+  const M=new T.Matrix4(),Y=new T.Vector3(0,1,0),S1=new T.Vector3(1,1,1);
+  B.forEach((b,i)=>{const y=this.gY(b.x,b.y),P=new T.Vector3(b.x,y,b.y),Q=new T.Quaternion().setFromAxisAngle(Y,Math.PI/2-b.a);C.P.push(P);C.Q.push(Q);
+    M.compose(P,Q,S1);for(const im of[C.body,C.inner,C.trim,C.gem])im.setMatrixAt(i,M)});
+  for(const im of[C.body,C.inner,C.trim,C.gem])im.instanceMatrix.needsUpdate=true;
+  this.chest=C;this.boxLid=C.lid;this.stepBoxes(0,true)};
+R.stepBoxes=function(dt,force){const C=this.chest;if(!C)return;C.t+=dt;const M=new T.Matrix4(),H=new T.Matrix4().makeTranslation(0,CH,-CD/2),Rx=new T.Matrix4(),S=new T.Vector3(),V=new T.Vector3();
+  let lid=false,glow=false,inn=false;
+  for(let i=0;i<C.n;i++){const b=boxes[i],want=b&&b.open?1:0;let k=C.k[i];k=force?want:k+(want-k)*Math.min(1,dt*6);C.k[i]=k;
+    if(force||Math.abs(k-C.set[i])>.002){C.set[i]=k;M.compose(C.P[i],C.Q[i],S.set(1,1,1)).multiply(H).multiply(Rx.makeRotationX(-OPEN*k));C.lid.setMatrixAt(i,M);C.lidG.setMatrixAt(i,M);lid=true;
+      const g=(1-k)*175;M.compose(V.copy(C.P[i]).setY(C.P[i].y+1.2),C.Q[i],S.set(Math.max(.001,g),1,Math.max(.001,g)));C.glow.setMatrixAt(i,M);glow=true}
+    const ot=C.t-C.okT[i];if(ot>=0&&ot<6||force){const f=ot>=0&&ot<6?Math.min(1,ot*3)*Math.min(1,(6-ot)/2.5):0;M.compose(V.copy(C.P[i]).setY(C.P[i].y+CH+1.5),C.Q[i],S.set(Math.max(.001,(CW-4)*f*1.5),1,Math.max(.001,(CD-4)*f*1.5)));C.inn.setMatrixAt(i,M);inn=true}}
+  if(lid){C.lid.instanceMatrix.needsUpdate=true;C.lidG.instanceMatrix.needsUpdate=true}if(glow)C.glow.instanceMatrix.needsUpdate=true;if(inn)C.inn.instanceMatrix.needsUpdate=true;
+  C.glowM.opacity=.46+.16*Math.sin(C.t*2.3);
+  // star glints on the shut chests near the camera
+  if(!force&&dt>0&&this.sp){const cx=this.tx||0,cz=this.ty||0,rate=this.hi?4.2:2.2;
+    for(let i=0;i<C.n;i++){if(C.k[i]>.5)continue;const P=C.P[i];if(Math.abs(P.x-cx)>1500||Math.abs(P.z-cz)>1300||Math.random()>dt*rate)continue;
+      const a=Math.random()*6.283,r=Math.random();this.sp(true,{x:P.x+Math.cos(a)*CW*.55*r,y:P.y+8+Math.random()*44,z:P.z+Math.sin(a)*CD*.6*r,vy:rand(6,24),l:rand(.55,1.1),s:rand(16,30),s1:0,c:Math.random()<.75?'#ffe7a0':'#bff4ff',sp:1,vr:rand(-2,2),dr:2})}}};
+// opening: a chest with loot throws gold light and sparks and glows inside for a while; an empty one only puffs dust (r4.js)
+{const _d=R.doFx;R.doFx=function(e,me,L){const r=_d.apply(this,arguments);
+  if(e&&e.k==='box'&&e.ok&&this.chest){try{const C=this.chest,i=e.id|0;if(i>=0&&i<C.n)C.okT[i]=C.t;const P=C.P[i]||{x:e.x,y:this.gY(e.x,e.y),z:e.y},y=P.y+CH;
+    if(this.pillar)this.pillar(e.x,e.y,300,'#ffd35a',1.2);if(this.flare)this.flare(e.x,y+30,e.y,320,'#fff0b0',.45);
+    for(let k=0;k<(this.hi?34:18);k++)this.sp(true,{x:e.x+rand(-16,16),y:y+4,z:e.y+rand(-12,12),vx:rand(-70,70),vy:rand(170,340),vz:rand(-70,70),l:rand(.8,1.5),s:rand(11,20),s1:2,c:Math.random()<.7?'#ffe27a':'#fff8e0',sp:1,g:280,dr:1.1})}catch(err){}}
+  return r}}
+})();
+
+// ===================== VILLAGE MERCHANTS · shop only at an NPC, dash beside the attack button (Arena Royale, owner 2026-11-23) =====================
+// Owner: "เอาปุ่มกลิ้งออก แล้วก็ย้ายปุ่มพุ่งลงมาแถบข้างล่าง เอาปุ่มซื้อของออก จะซื้อของหรืออัพสกิลต้องไปซื้อที่ NPC ในแมพ ซึ่งจะมีอยู่ตามโซนหมู่บ้าน"
+// (owner's answers: the dash goes right beside the attack button; only the shop's wares — potions, level book, special skills,
+//  reforging — move to the merchants; skill points (+) still work anywhere; the merchants are the game's own villager model)
+//  · one merchant per village (a.js world gen, seeded: WD.npcs) beside a market stall, facing the square, 🛒 on the minimap
+//  · stand within NPC_R of one: the 🛒 prompt (or P) opens the shop, walking away closes it; the host refuses a purchase made
+//    away from a merchant, bots included (arena-bots.js walks them over); balance sims on an empty LAB arena still shop anywhere
+//  · the coin counter stays on screen but no longer opens the shop
+//  · the 💨 dash button (CUR pad child 1, kept in the pad so t1.js keeps drawing its cooldown) is placed on the attack button's
+//    upper right, or its lower left when a small screen has no room there
+const NPC_R=190;
+function npcNear(u,r){const N=WD&&WD.npcs;if(!u||!N)return null;let b=null,bd=r||NPC_R;for(const n of N){const d=Math.hypot(n.x-u.x,n.y-u.y);if(d<bd){bd=d;b=n}}return b}
+const npcGate=()=>!!(WD&&WD.npcs&&WD.npcs.length);
+if(typeof shopBuy==='function'){const _sb=shopBuy;
+  shopBuy=function(u,k){if(u&&u.hero&&!u.dead&&npcGate()&&!npcNear(u,NPC_R+40)){if(isHuman(u))fxTextFor(u.x,u.y-84,'🛒 ซื้อได้ที่พ่อค้าในหมู่บ้าน','#ffb0a0',1.6,[u.id]);return false}return _sb(u,k)}}
+// ---- minimap: merchants ----
+if(typeof drawMinimap==='function'){const _mm=drawMinimap;
+  drawMinimap=function(me,s,my0){const b=_mm(me,s,my0);try{const N=WD&&WD.npcs;if(N&&b){const k=b.w/WORLD;ctx.save();ctx.beginPath();ctx.rect(b.x,b.y,b.w,b.h);ctx.clip();
+      ctx.font=`${10*s}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';for(const n of N)ctx.fillText('🛒',b.x+n.x*k,b.y+n.y*k);ctx.restore()}}catch(e){}return b}}
+// ---- HUD: merchant prompt, gated shop, dash placement ----
+if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
+  const css=document.createElement('style');css.textContent=`
+#arenaNpcPrompt{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);transform:translateX(-50%);z-index:7;display:none;align-items:center;gap:9px;padding:8px 16px 8px 11px;
+  border:1px solid #d6b45e;border-radius:26px;background:linear-gradient(180deg,#2c2312f5,#120d07f5);color:#ffe9a8;font:700 15px/1 system-ui,sans-serif;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;
+  box-shadow:0 4px 14px #000a,0 0 0 1px #000;animation:arenaNpcPulse 1.6s ease-in-out infinite}
+#arenaNpcPrompt b{font-size:23px;line-height:1}#arenaNpcPrompt small{font:600 11px system-ui,sans-serif;color:#e8d49a;border:1px solid #c9a94a88;border-radius:4px;padding:2px 5px}
+#arenaNpcPrompt i{font:500 12px system-ui,sans-serif;color:#cdbb8a;font-style:normal}
+@keyframes arenaNpcPulse{0%,100%{box-shadow:0 4px 14px #000a,0 0 0 1px #000,0 0 0 0 #ffd35a00}50%{box-shadow:0 4px 14px #000a,0 0 0 1px #000,0 0 18px 4px #ffd35a66}}
+#arenaGold{pointer-events:none!important;cursor:default!important}#arenaGold img[alt="เปิดร้านค้า"]{display:none!important}
+.arena-combat-hud #arenaCombatPad #arenaDash .arena-pad-caption{bottom:auto!important;top:-17px!important}
+@media(max-height:420px){.arena-combat-hud #arenaCombatPad #arenaDash .arena-pad-caption{display:none!important}}`;document.head.appendChild(css);
+  const pr=document.createElement('div');pr.id='arenaNpcPrompt';pr.setAttribute('role','button');pr.innerHTML='<b>🛒</b><span>ร้านค้า</span><i></i><small>P</small>';document.body.appendChild(pr);
+  for(const k of['pointerup','pointermove','touchstart','wheel'])pr.addEventListener(k,e=>e.stopPropagation());
+  pr.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();CUR.toggle(true)});
+  const _tg=CUR.toggle;
+  CUR.toggle=function(v){const open=v===undefined?!this.open:!!v;if(open){const me=ME();if(!me||me.dead||!npcNear(me,NPC_R+20)&&npcGate()){
+      E.hint.textContent='🛒 ร้านค้าอยู่กับพ่อค้าในหมู่บ้าน · ดูไอคอน 🛒 บนแผนที่ แล้วเดินไปคุย';this.hintT=3.5;return}}return _tg.call(this,v)};
+  E.hint.textContent='ฆ่ามอนสเตอร์ เปิดกล่อง ค้นบ้านหาอาวุธ · เหรียญ 🪙 ใช้ซื้อของกับพ่อค้า 🛒 ในหมู่บ้าน · Shift พุ่ง (45 วิ) · V สกิลพิเศษ';
+  let near0=null,dashW=0;
+  // the dash: a free spot hugging the attack button, upper right first (owner's pick), else lower left; never over a skill button
+  // (a small phone has no room at full size: the button then shrinks a step at a time until it fits without covering a skill)
+  function npcPlaceDash(){const d=E.pad.children[1];if(!d||!UI.atk||!UI.atk.r||E.pad.style.display==='none')return;const a=UI.atk;
+    if(!dashW||Math.random()<.02)dashW=d.offsetWidth||60;const px=parseFloat(E.pad.style.left)||0,py=parseFloat(E.pad.style.top)||0;
+    let best=null,sc=1;
+    for(const k of[1,.84,.72]){const rd=dashW/2*k;
+      const ok=(x,y)=>x-rd>=SAFE.l+2&&x+rd<=W-SAFE.r-3&&y-rd>=SAFE.t+2&&y+rd<=H-SAFE.b-3&&UI.sk.every(b=>!b.r||Math.hypot(x-b.x,y-b.y)>=b.r+rd+2);
+      const at=(deg,ex)=>{const dd=a.r+rd+ex,q=deg*Math.PI/180;return{x:a.x+Math.cos(q)*dd,y:a.y+Math.sin(q)*dd}};
+      for(const set of[[318,326,310,334,302,342],[160,150,170,142,178]]){for(const deg of set){for(const ex of[2,7,13,20]){const p=at(deg,ex);if(ok(p.x,p.y)){best=p;break}}if(best)break}if(best)break}
+      if(best){sc=k;break}}
+    if(!best){sc=.72;const rd=dashW/2*sc,q=150*Math.PI/180;best={x:a.x+Math.cos(q)*(a.r+rd+2),y:Math.min(H-SAFE.b-rd-3,a.y+Math.sin(q)*(a.r+rd+2))}}
+    const l=(best.x-dashW/2-px).toFixed(1)+'px',t=(best.y-dashW/2-py).toFixed(1)+'px',tf=sc<1?'scale('+sc+')':'';
+    if(d.style.left!==l)d.style.left=l;if(d.style.top!==t)d.style.top=t;if(d.style.transform!==tf){d.style.transform=tf;d.style.transformOrigin='50% 50%'}}
+  function npcHudStep(){const me=ME(),sky=typeof DROP!=='undefined'&&DROP.sky&&DROP.sky(),on=state==='play'&&me&&!me.dead&&!sky;
+    const n=on?npcNear(me,NPC_R):null;if(n!==near0){near0=n;pr.querySelector('i').textContent=n?'· '+n.name:''}
+    const show=!!n&&!CUR.open;if((pr.style.display==='flex')!==show)pr.style.display=show?'flex':'none';
+    if(CUR.open&&(!on||npcGate()&&!npcNear(me,NPC_R+90)))_tg.call(CUR,false);
+    npcPlaceDash()}
+  // installed after the HUD installers (installMoonfallInventory / installArenaCombatControls run later in the same script)
+  setTimeout(()=>{const st=CUR.step;CUR.step=function(dt){const r=st.call(this,dt);try{npcHudStep()}catch(e){}return r};
+    const rd=CUR.render;CUR.render=function(me){rd.call(this,me);try{const n=npcNear(me,NPC_R+90),h=this.el.shop.querySelector('.moonfall-shop-head')||this.el.shop.firstElementChild;
+      if(n&&h&&!h.querySelector('.arena-npc-name')){const sp=document.createElement('small');sp.className='arena-npc-name';sp.style.cssText='display:block;font:500 12px system-ui,sans-serif;color:#cdbb8a;margin-top:2px';sp.textContent='พ่อค้า · '+n.name;(h.children[0]||h).appendChild(sp)}}catch(e){}}},0);
+}
+// ---- 3D: the merchants (Quaternius villagers, r8.js), a sign and a warm ring on the ground ----
+if(typeof R3!=='undefined'&&typeof THREE!=='undefined'){const R=R3,T=THREE;
+  const _sb=R.stepBoxes;R.stepBoxes=function(dt,force){_sb.call(this,dt,force);try{this.stepNpcs(dt||0)}catch(e){if(!this._npcErr){this._npcErr=1;console.warn('npc',e)}}};
+  R.npcSign=function(name){return this.cached('npcsign',()=>{const c=document.createElement('canvas');c.width=256;c.height=96;const x=c.getContext('2d');
+      const g=x.createLinearGradient(0,0,0,96);g.addColorStop(0,'#3a2c12');g.addColorStop(1,'#140e06');x.fillStyle=g;x.strokeStyle='#e2c06a';x.lineWidth=4;
+      x.beginPath();x.roundRect?x.roundRect(6,10,244,60,18):x.rect(6,10,244,60);x.fill();x.stroke();x.fillStyle='#e2c06a';x.beginPath();x.moveTo(116,70);x.lineTo(128,88);x.lineTo(140,70);x.fill();
+      x.font='bold 34px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillStyle='#ffe9a8';x.fillText('🛒 ร้านค้า',128,41);
+      const t=new T.CanvasTexture(c);if(T.SRGBColorSpace)t.colorSpace=T.SRGBColorSpace;const m=new T.SpriteMaterial({map:t,transparent:true,depthWrite:false});m.userData.ownMat=1;return m})};
+  R.clearNpcs=function(){if(this.npcO)for(const o of this.npcO){if(o.root.parent)o.root.parent.remove(o.root);try{o.mixer.stopAllAction()}catch(e){}}this.npcO=null};
+  R.buildNpcs=function(N){this.npcO=[];const ringM=new T.MeshBasicMaterial({map:this.tex('wglow'),color:'#ffcf6a',transparent:true,opacity:.5,depthWrite:false,blending:T.AdditiveBlending});ringM.userData.ownMat=1;
+    const ringG=new T.PlaneGeometry(170,170);ringG.rotateX(-Math.PI/2);
+    for(const n of N){const fem=n.id%3===1,ch='c_'+(fem?'F':'M')+'P',parts=[fem?'h_F':'h_M',fem?(n.id%2?'x_Long':'x_Buns'):(n.id%2?'x_SimpleParted':'x_Buzzed'),fem?'x_BrowFemale':'x_BrowRegular'];
+      if(!fem&&n.id%2===0)parts.push('x_Beard');if(!this.qn.g[ch])continue;
+      const tint=['#c08a3a','#8a5a2a','#6f8040','#8a3f2e','#3f5f8a'][n.id%5],hair=QN_HAIR[(n.id*3+1)%QN_HAIR.length];
+      const A=this.qnAssemble(ch,parts,src=>{const k=this.qnKind(src);return k==='cloth'?this.qnMat(src,{tint,k:.55}):k==='hair'?this.qnMat(src,{tint:hair,k:.9}):this.qnMat(src)});
+      const m=A.m;m.scale.setScalar(QN_S);m.traverse(q=>{if(q.isMesh){q.castShadow=!!this.hi;q.receiveShadow=true;q.frustumCulled=false}});
+      const root=new T.Group(),body=new T.Group();root.add(body);body.add(m);const gy=this.gY(n.x,n.y);root.position.set(n.x,gy,n.y);
+      const rot0=Math.atan2(Math.cos(n.a),Math.sin(n.a));root.rotation.y=rot0;
+      const sign=new T.Sprite(this.npcSign());sign.scale.set(118,44,1);sign.position.set(n.x,gy+182,n.y);sign.renderOrder=12;
+      const ring=new T.Mesh(ringG,ringM);ring.position.set(n.x,gy+1.5,n.y);ring.renderOrder=2;
+      const o={n,root,sign,ring,mixer:new T.AnimationMixer(m),rot:rot0,rot0,gy};const c=this.qnClip('hero',A.bones,'Idle_Loop');if(c){const a=o.mixer.clipAction(c);a.play();a.time=(n.id*.37)%c.duration}
+      this.scene.add(root);this.scene.add(sign);this.scene.add(ring);this.npcO.push(o)}
+    this.npcRing=ringM};
+  R.stepNpcs=function(dt){const N=WD&&WD.npcs;if(!N||!N.length){if(this.npcO)this.clearNpcs();return}
+    if(this.npcO&&(this.npcWD!==WD||this.npcO.length&&this.npcO[0].root.parent!==this.scene))this.clearNpcs();
+    if(!this.npcO){if(!this.qn||this.qn.mobOnly||!window.AR_GLTF||!this.scene)return;this.npcWD=WD;this.buildNpcs(N)}
+    const me=ME(),L=listener()||me,t=this.t||0;if(this.npcRing)this.npcRing.opacity=.38+.14*Math.sin(t*2.2);
+    for(const o of this.npcO){const n=o.n,far=!L||Math.abs(n.x-L.x)>2600||Math.abs(n.y-L.y)>2000;o.root.visible=o.sign.visible=o.ring.visible=!far;if(far)continue;
+      o.mixer.update(dt);let want=o.rot0;if(me&&!me.dead){const d=Math.hypot(me.x-n.x,me.y-n.y);if(d<NPC_R+220)want=Math.atan2(me.x-n.x,me.y-n.y)}
+      let dr=want-o.rot;dr=Math.atan2(Math.sin(dr),Math.cos(dr));o.rot+=dr*Math.min(1,dt*4);o.root.rotation.y=o.rot;o.sign.position.y=o.gy+182+Math.sin(t*2+n.id)*5}};
+}
+
+// ===================== SMARTER BOTS (Arena Royale, owner 2026-11-23) =====================
+// Owner: "ปรับบอทให้ฉลาดขึ้นคือบางทีบอทมันไม่โจมตีกันเอง หรือแม้แต่ผู้เล่นถ้าผู้เล่นไม่โจมตีก่อน
+//         แล้วก็การโจมตีใกล้กันทำไมผู้เล่นโดนบอทชนถอยหลังแม้จะกดเดินหน้า"
+// Wraps b.js botThink; its own decision tick still runs first, then:
+//  · heroes: an armed bot hunts the enemy hero it sees (nearer, weaker, lower on health first) instead of waiting to be hit
+//    (b.js only went for heroes after 2:30 and then with a 3–30% roll); once it commits it keeps the hunt until the target dies, leaves
+//    its sight or the storm, or the bot drops under 30% health (then b.js's own flee takes over)
+//  · melee spacing: a melee bot stops walking INTO its target once in reach and circles a little instead — b.js kept pushing,
+//    which shoved the player backwards even while walking forward (and b.js pushMass now gives a player 10 to a bot's 3)
+//  · dodging: u.ai.dodge (set by arena-feel.js when a creep winds up on the bot, a blast is telegraphed under it, or a bolt flies at it)
+//    steers it out for a moment
+//  · unarmed with nothing to pick up: it goes to open the nearest closed chest
+//  · shopping: with coins to spend and no fight on, it walks to the nearest village merchant (arena-npc.js) and buys there
+const BOTX={grace:20,near:560,engage:.9,far:.4,huntMax:28,shopGold:130,shopEvery:70,chestR:2600};
+if(typeof botThink==='function'){
+{const _bt=botThink;botThink=function(u,dt){const ai=u.ai,dec=ai.t-dt<=0;let m=_bt(u,dt);
+  try{if(dec)botxDecide(u);m=botxSteer(u,m,dt)}catch(e){if(!BOTX.err){BOTX.err=1;console.warn('bots',e)}}return m}}
+const inZone=p=>Math.hypot(p.x-zone.x,p.y-zone.y)<zone.r-60;
+function botxHuntOk(u,h,sight){return h&&h.hero&&!h.dead&&isEnemy(u,h)&&(!h.hidden||dist(u,h)<170)&&dist(u,h)<sight*1.35&&inZone(h)}
+function botxDecide(u){const ai=u.ai,hpR=u.hp/u.maxHp,sight=Math.min(visionR(),420+90*zone.ph);
+  // 1) heroes
+  if(ai.hunt){const h=UMAP.get(ai.hunt.id);if(!botxHuntOk(u,h,sight)||hpR<.3||!u.wk||gameT>ai.hunt.until)ai.hunt=null;else{ai.tgt=h;ai.goal=null;ai.flee=false}}
+  if(!ai.hunt&&u.wk&&gameT>=BOTX.grace&&hpR>.35&&!(ai.flee&&ai.tgt&&ai.tgt.hero)){
+    let best=null,bs=-1e9;
+    for(const h of units){if(!h.hero||h.dead||h===u||!isEnemy(u,h)||h.hidden&&dist(u,h)>=170)continue;const d=dist(u,h);if(d>sight||!inZone(h))continue;
+      const sc=-d/300+(1-h.hp/h.maxHp)*2.2+(power(u)-power(h))*.25+(isHuman(h)?.15:0);if(sc>bs){bs=sc;best=h}}
+    if(best){const d=dist(u,best),hr=best.hp/best.maxHp,edge=power(u)-power(best),cur=ai.tgt;
+      const want=edge>-2.5||hr<.35||hpR>.8&&edge>-4,take=!cur||cur.dead||cur.mob&&(d<BOTX.near||ai.threat!==cur);
+      if(want&&take&&Math.random()<(d<BOTX.near?BOTX.engage:BOTX.far*(.6+(ai.agg||.5)*.6))){ai.hunt={id:best.id,until:gameT+BOTX.huntMax};ai.tgt=best;ai.goal=null;ai.flee=false}}}
+  if(ai.tgt&&ai.tgt.hero)return;
+  // 2) unarmed and nothing to pick up: the nearest closed chest
+  if(!u.wk&&!ai.goal){let b=null,bd=BOTX.chestR;for(const x of boxes){if(x.open)continue;const d=dist(u,x);if(d<bd&&Math.hypot(x.x-zone.tx,x.y-zone.ty)<zone.tr+zone.r*.25){bd=d;b=x}}if(b)ai.goal={x:b.x,y:b.y,box:b.id}}
+  // 3) a shopping trip
+  if(typeof npcNear==='function'&&npcGate()&&!ai.flee&&gameT-(ai.shopT||-99)>BOTX.shopEvery){const g=u.gold|0;
+    if(g>=BOTX.shopGold||(u.bag[0]|0)===0&&g>=40){const n=npcNear(u,4200);
+      if(n&&Math.hypot(n.x-zone.tx,n.y-zone.ty)<zone.tr+zone.r*.3&&inZone(n)){if(!ai.tgt||ai.tgt.mob&&ai.threat!==ai.tgt){ai.tgt=null;ai.goal={x:n.x,y:n.y,npc:n.id}}}}}}
+function botxShop(u){const g=()=>u.gold|0;let n=0;
+  while((u.bag[0]|0)<2&&g()>=(shopPrice(u,'hp')||99)+10&&n++<3)if(!shopBuy(u,'hp'))break;
+  if((u.bag[1]|0)<1&&g()>=60)shopBuy(u,'mp');
+  if(!u.xs&&g()>=210)shopBuy(u,'x'+(1+u.id%6));else if(u.xs&&(u.xl||1)<3&&g()>=(shopPrice(u,'x'+u.xs)||9999)+40)shopBuy(u,'x'+u.xs);
+  const lv=shopPrice(u,'lv');if(lv!=null&&g()>=lv+30)shopBuy(u,'lv');u.ai.shopT=gameT}
+function botxSteer(u,m,dt){const ai=u.ai;
+  if(ai.dodge&&ai.dodge.t>0){ai.dodge.t-=dt;const k=ai.dodge;m={mx:k.x+m.mx*.15,my:k.y+m.my*.15}}
+  else{const t=ai.tgt;
+    if(t&&!t.dead&&!ai.flee&&u.melee){const d=dist(u,t)||1,R=u.range+t.r;if(d<R-4){const nx=(t.x-u.x)/d,ny=(t.y-u.y)/d,dot=m.mx*nx+m.my*ny;if(dot>0)m={mx:m.mx-dot*nx,my:m.my-dot*ny};
+      if(t.hero){const s=ai.strafe||1;m={mx:m.mx-ny*.32*s,my:m.my+nx*.32*s}}}}
+    const G=ai.goal;
+    if(G&&G.npc!==undefined){const n=WD.npcs&&WD.npcs[G.npc];if(!n)ai.goal=null;else if(Math.hypot(n.x-u.x,n.y-u.y)<NPC_R-30){botxShop(u);ai.goal=null}}
+    else if(G&&G.box!==undefined){const b=boxes[G.box];if(!b||b.open)ai.goal=null;else if(dist(u,b)<u.r+62)openBox(u,b.id)}}
+  const l=Math.hypot(m.mx,m.my);if(l>1){m.mx/=l;m.my/=l}return m}
+}
+
+// ===================== SKY DROP · everyone comes down from the sky and each player picks where (Arena Royale, owner 2026-11-23) =====================
+// Owner: "ตอนเริ่มเกมอยากได้ Animation ส่งทุกคนลงมาจากฟ้า ผู้เล่นเลือกได้ว่าจะลงโซนไหน"
+//  · pick  (DROP.PICK s, shorter once every player is ready): a full-screen map; tap anywhere inside the storm circle to choose the
+//          landing spot (lands, villages, merchants and landmarks are labelled); 🎲 picks a village at random, ✔ says ready.
+//          The world is frozen meanwhile (the host skips hostUpdate), so the storm clock and gameT start when everyone lands.
+//          Bots pick villages / camps / open ground; in team games they land beside their team's player (or leader)
+//  · fall  everyone drops from high above its spot with a comet trail, staggered; the camera starts far out and closes in as you
+//          land; touchdown kicks up dust, a shock ring and a flash. Heroes are hidden until their own fall begins
+//  · host-authoritative: the host broadcasts {t:'drop'} every .6 s (clients joining the match late in the pick still sync), clients
+//    send {t:'land'} / {t:'dready'}; game actions sent during the drop are ignored. LAB / balance sims (simMode) skip the drop,
+//    and window.__game.skipDrop() ends it at once (tests)
+// Starter weapons by the spawn points are gone (a.js): search the houses, chests and monsters where you land.
+const DROP={st:'off',PICK:13,PICKN:17,F:2.6,H0:2300,t:0,tot:0,bc:0,picks:new Map(),ready:new Set(),fall:null,mine:null,mates:[],waitT:0,el:null,reg:null,regWD:null,
+  sky(){return this.st==='pick'||this.st==='wait'||this.st==='fall'&&this.inAir(myId)},
+  inAir(id){const f=this.fall,q=f&&f.L.get(id);return !!q&&this.now()-f.t0-q.d<f.F},
+  hideId(id){if(this.st==='pick'||this.st==='wait')return true;const f=this.fall,q=f&&f.L.get(id);return !!q&&this.now()-f.t0-q.d<0},
+  now(){return performance.now()/1000},
+  // body height above the ground during the fall (0 once landed)
+  h(id){const f=this.fall,q=f&&f.L.get(id);if(!q)return 0;const k=(this.now()-f.t0-q.d)/f.F;if(k<0)return this.H0;if(k>=1)return 0;return this.H0*(1-k)*(1-k)},
+  camK(){if(this.st==='pick'||this.st==='wait')return 2.6;const f=this.fall,q=f&&f.L.get(myId);if(!q)return 1;const k=(this.now()-f.t0-q.d)/f.F;
+    if(k<0)return 2.6;if(k<1)return 1+1.6*Math.pow(1-k,1.6);return 1}};
+if(typeof hostNewGame==='function'){
+// ---------------------------------------------------------------- host ----------------------------------------------------------------
+const okLand=p=>walkable(p.x,p.y,34)&&!inWater(p.x,p.y)&&!houseAt(p)&&!inDG(p,80)&&!blockedAt(p,30)&&Math.hypot(p.x-zone.x,p.y-zone.y)<zone.r-140;
+function dropLandSpot(p,taken){const free=q=>okLand(q)&&!taken.some(t=>Math.hypot(t.x-q.x,t.y-q.y)<70);if(free(p))return{x:p.x,y:p.y};
+  for(let r=40;r<=900;r+=40)for(let i=0,n=Math.max(8,Math.round(r/14));i<n;i++){const a=i/n*6.2832+r*.013,q={x:p.x+Math.cos(a)*r,y:p.y+Math.sin(a)*r};if(free(q))return q}
+  for(let k=0;k<400;k++){const a=Math.random()*6.2832,d=Math.sqrt(Math.random())*(zone.r-200),q={x:zone.x+Math.cos(a)*d,y:zone.y+Math.sin(a)*d};if(free(q))return q}
+  return{x:zone.x,y:zone.y}}
+// a bot's (or an undecided player's) spot: mostly a village, sometimes a monster camp or open ground
+function dropRandomLand(){const inz=p=>Math.hypot(p.x-zone.x,p.y-zone.y)<zone.r-260,V=WD.villages.filter(inz),r=Math.random();
+  if(V.length&&r<.62){const v=V[Math.floor(Math.random()*V.length)],a=Math.random()*6.2832,d=Math.random()*v.r*.75;return{x:v.x+Math.cos(a)*d,y:v.y+Math.sin(a)*d}}
+  const C=WD.camps.filter(inz);if(C.length&&r<.8){const c=C[Math.floor(Math.random()*C.length)],a=Math.random()*6.2832;return{x:c.x+Math.cos(a)*420,y:c.y+Math.sin(a)*420}}
+  const a=Math.random()*6.2832,d=Math.sqrt(Math.random())*(zone.r-300);return{x:zone.x+Math.cos(a)*d,y:zone.y+Math.sin(a)*d}}
+const clampZ=p=>{const dx=p.x-zone.x,dy=p.y-zone.y,d=Math.hypot(dx,dy),m=zone.r-160;return d>m?{x:zone.x+dx/d*m,y:zone.y+dy/d*m}:{x:p.x,y:p.y}};
+DROP.start=function(){const solo=!Object.keys(net.cl||{}).length;this.st='pick';this.tot=this.t=solo?this.PICK:this.PICKN;this.bc=0;this.picks.clear();this.ready.clear();this.fall=null;this.mine=null;this.mates=[];
+  for(const u of units)if(u.hero&&!isHuman(u))u.dropAt=rand(.6,this.tot-1.2)};
+DROP.pick=function(u,p,ready){if(!u||!u.hero||this.st!=='pick')return;if(p){const q=clampZ({x:clamp(+p.x||0,0,WORLD),y:clamp(+p.y||0,0,WORLD)});this.picks.set(u.id,q)}if(ready)this.ready.add(u.id)};
+DROP.bcast=function(){if(this.st==='pick'){const m=[];if(MC.ts>1)for(const [id,p] of this.picks){const u=UMAP.get(id);if(u&&isHuman(u))m.push([id,Math.round(p.x),Math.round(p.y),u.team])}
+    emit({t:'drop',st:'pick',T:+this.t.toFixed(2),tot:this.tot,m})}
+  else if(this.st==='fall'){const f=this.fall;emit({t:'drop',st:'fall',F:f.F,el:+(this.now()-f.t0).toFixed(2),L:[...f.L].map(([id,q])=>[id,Math.round(q.x),Math.round(q.y),+q.d.toFixed(2)])})}
+  else emit({t:'drop',st:'done'})};
+DROP.toFall=function(){const taken=[],L=new Map(),heroes=units.filter(u=>u.hero&&!u.dead);
+  // squads: the team's first player (else its lowest id) decides; teammates come down around that spot
+  const lead=new Map();if(MC.ts>1)for(const u of heroes){const c=lead.get(u.team);if(!c||isHuman(u)&&!isHuman(c)||isHuman(u)===isHuman(c)&&u.id<c.id)lead.set(u.team,u)}
+  const isLead=u=>MC.ts===1||lead.get(u.team)===u,put=(u,p)=>{const q=dropLandSpot(clampZ(p),taken);taken.push(q);u.x=u.tx=q.x;u.y=u.ty=q.y;u.dash=null;u.kb=null;u.leap=null;u._vx=u._vy=0;
+    L.set(u.id,{x:q.x,y:q.y,d:isHuman(u)?rand(0,.25):rand(.1,1.3)})};
+  // leaders (everyone in free-for-all) first, then each teammate around where its leader actually lands
+  for(const u of heroes)if(isLead(u))put(u,this.picks.get(u.id)||dropRandomLand());
+  for(const u of heroes){if(isLead(u))continue;let p=this.picks.get(u.id);if(!p){const l=L.get(lead.get(u.team).id),a=Math.random()*6.2832;p=l?{x:l.x+Math.cos(a)*rand(120,220),y:l.y+Math.sin(a)*rand(120,220)}:dropRandomLand()}put(u,p)}
+  this.fall={t0:this.now(),F:this.F,L};this.st='fall';this.t=this.F+1.5;this.bc=0;
+  const me=ME();if(me&&typeof cam!=='undefined'){cam.x=me.x-W/2/Z;cam.y=me.y-H/2/Z}};
+DROP.skip=function(){if(this.st!=='pick'&&this.st!=='fall'&&this.st!=='wait')return;if(net.mode==='client'){this.st='off';this.fall=null;return}if(this.st==='pick')this.toFall();
+  if(this.fall)for(const q of this.fall.L.values())q.d=-9;this.st='done';this.bcast()};
+{const _nb=hostNewGame;hostNewGame=function(players,seed,cfg){const r=_nb.apply(this,arguments);try{if(typeof simMode!=='undefined'&&simMode)DROP.st='off';else DROP.start()}catch(e){DROP.st='off'}return r}}
+{const _hu=hostUpdate;hostUpdate=function(dt){if(DROP.st!=='pick'&&DROP.st!=='fall')return _hu(dt);
+  DROP.t-=dt;DROP.bc-=dt;
+  if(DROP.st==='pick'){for(const u of units)if(u.hero&&!isHuman(u)&&u.dropAt!==undefined&&DROP.tot-DROP.t>=u.dropAt&&!DROP.picks.has(u.id)){const p=dropRandomLand();if(MC.ts===1)DROP.picks.set(u.id,clampZ(p))}
+    const hum=units.filter(u=>u.hero&&isHuman(u)&&!u.dead);if(hum.length&&hum.every(u=>DROP.ready.has(u.id))&&DROP.t>1.2)DROP.t=1.2;
+    if(DROP.t<=0){DROP.toFall();DROP.bc=0}}
+  else if(DROP.t<=0){DROP.st='done';DROP.bc=0}
+  if(DROP.bc<=0){DROP.bc=.6;DROP.bcast()}}}
+{const _hd=hostOnData;hostOnData=function(cid,d){if(d&&(d.t==='land'||d.t==='dready')){const u=units.find(q=>q.ctrl===cid);if(u)DROP.pick(u,d.t==='land'?d:null,d.t==='dready'||!!d.r);return}
+  if(d&&(DROP.st==='pick'||DROP.st==='fall')&&['k','u','dg','xs','buy','ob','pk','sw','l'].includes(d.t))return;return _hd(cid,d)}}
+// --------------------------------------------------------------- client ---------------------------------------------------------------
+{const _cs=clientStart2;clientStart2=function(d){DROP.st='wait';DROP.waitT=4;DROP.fall=null;DROP.mine=null;DROP.mates=[];return _cs.apply(this,arguments)}}
+{const _ae=applyEvent;applyEvent=function(e){if(!e||e.t!=='drop')return _ae(e);if(net.mode!=='client')return;
+  if(e.st==='pick'){DROP.st='pick';DROP.t=e.T;DROP.tot=e.tot||DROP.tot||e.T;const me=ME();DROP.mates=(e.m||[]).filter(q=>me&&q[3]===me.team&&q[0]!==myId)}
+  else if(e.st==='fall'){const L=new Map();for(const q of e.L||[])L.set(q[0],{x:q[1],y:q[2],d:q[3]});const old=DROP.fall;
+    if(!old||DROP.st!=='fall')DROP.fall={t0:DROP.now()-(e.el||0),F:e.F||DROP.F,L};else for(const [id,q] of L){const o=old.L.get(id);if(o){q.landed=o.landed}old.L.set(id,Object.assign(o||{},q))}
+    DROP.st='fall'}
+  else if(e.st==='done'){if(DROP.st!=='off'&&DROP.st!=='done'){if(DROP.fall)DROP.st='done';else DROP.st='off'}}}}
+// the local player's choice
+DROP.choose=function(p,ready){const me=ME();if(!me||(this.st!=='pick'))return;if(p){this.mine={x:p.x,y:p.y}}
+  if(net.mode==='client'){if(p)netSend({t:'land',x:Math.round(p.x),y:Math.round(p.y),r:ready?1:0});else if(ready)netSend({t:'dready'})}else this.pick(me,p,ready);if(ready)this.readyMe=true};
+DROP.randomVillage=function(){const V=WD.villages.filter(v=>Math.hypot(v.x-zone.x,v.y-zone.y)<zone.r-300);if(!V.length)return{x:zone.x,y:zone.y};const v=V[Math.floor(Math.random()*V.length)];return{x:v.x+rand(-120,120),y:v.y+rand(-120,120)}};
+// heroes in the sky are not drawn (3D, 2D, minimap, bars)
+{const _uv=unitVisibleTo;unitVisibleTo=function(u,me,L){if(u&&u.hero&&DROP.st!=='off'&&DROP.st!=='done'&&DROP.hideId(u.id))return false;if(u&&u.hero&&DROP.fall&&DROP.st==='done'&&DROP.hideId(u.id))return false;return _uv(u,me,L)}}
+// no game input while choosing / falling
+{const busy=()=>DROP.st==='pick'||DROP.st==='wait'||DROP.st==='fall';
+  if(typeof pressSkill==='function'){const _ps=pressSkill;pressSkill=function(){if(busy())return;return _ps.apply(this,arguments)}}
+  if(typeof usePotion==='function'){const _up=usePotion;usePotion=function(){if(busy())return false;return _up.apply(this,arguments)}}
+  if(typeof CUR!=='undefined'){for(const k of['dodge','special']){const f=CUR[k];if(typeof f==='function')CUR[k]=function(){if(busy())return;return f.apply(this,arguments)}}}}
+addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(state==='play'&&(DROP.st==='pick'||DROP.st==='wait'||DROP.st==='fall')&&e.code!=='Escape'){if(DROP.st!=='fall'&&(e.code==='Enter'||e.code==='Space')&&DROP.st==='pick'){DROP.choose(DROP.mine,true)}e.stopImmediatePropagation();e.preventDefault()}},true);
+setTimeout(()=>{window.__game=window.__game||{};window.__game.skipDrop=()=>DROP.skip();window.__game.drop=DROP},0);   // d.js (later in the script) builds window.__game
+// ---------------------------------------------------------------- map overlay ----------------------------------------------------------------
+DROP.ui=function(){if(this.el)return;const c=document.createElement('canvas');c.id='arenaDropMap';c.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:45;display:none;touch-action:none;cursor:crosshair';document.body.appendChild(c);this.el=c;this.btn=[];
+  const at=e=>{const r=c.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}};
+  c.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(this.st!=='pick')return;const p=at(e);
+    for(const b of this.btn)if(p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h){if(typeof AU!=='undefined')AU.play('click');b.f();return}
+    const M=this.map;if(M&&p.x>=M.x&&p.x<=M.x+M.s&&p.y>=M.y&&p.y<=M.y+M.s){const w={x:(p.x-M.x)/M.s*WORLD,y:(p.y-M.y)/M.s*WORLD},dx=w.x-zone.x,dy=w.y-zone.y,d=Math.hypot(dx,dy),m=zone.r-160;
+      this.choose(d>m?{x:zone.x+dx/d*m,y:zone.y+dy/d*m}:w,false);if(typeof AU!=='undefined')AU.play('click')}});
+  c.addEventListener('pointermove',e=>{this.hover=at(e)});c.addEventListener('pointerleave',()=>{this.hover=null});
+  for(const k of['pointerup','touchstart','wheel','contextmenu'])c.addEventListener(k,e=>{e.stopPropagation();if(k==='contextmenu')e.preventDefault()});
+  const loop=()=>{requestAnimationFrame(loop);const on=state==='play'&&(this.st==='pick'||this.st==='wait');if(on!==this.shown){this.shown=on;c.style.display=on?'block':'none'}
+    if(net.mode==='client'&&this.st==='wait'){this.waitT-=1/60;if(this.waitT<=0)this.st='off'}
+    if(on)try{this.draw()}catch(err){if(!this.drawErr){this.drawErr=1;console.warn('drop map',err)}}};requestAnimationFrame(loop)};
+DROP.regions=function(){if(this.regWD===WD&&this.reg)return this.reg;this.regWD=WD;const acc={};if(typeof REG==='undefined'||!REG.at)return this.reg=[];
+  const n=44;for(let i=0;i<n;i++)for(let j=0;j<n;j++){const x=(i+.5)/n*WORLD,y=(j+.5)/n*WORLD;if(!walkable(x,y,0)||Math.hypot(x-ARENA.x,y-ARENA.y)>ARENA.r)continue;const r=REG.at(x,y);if(r<0)continue;const a=acc[r]||(acc[r]={x:0,y:0,n:0});a.x+=x;a.y+=y;a.n++}
+  return this.reg=Object.keys(acc).map(r=>({r:+r,x:acc[r].x/acc[r].n,y:acc[r].y/acc[r].n,n:acc[r].n})).filter(q=>q.n>8)};
+DROP.draw=function(){const c=this.el,dpr=Math.min(2,window.devicePixelRatio||1),w=innerWidth,h=innerHeight;if(c.width!==Math.round(w*dpr)||c.height!==Math.round(h*dpr)){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr)}
+  const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);const T=performance.now()/1000;
+  const bg=x.createRadialGradient(w*.4,h*.45,0,w*.4,h*.45,Math.max(w,h)*.8);bg.addColorStop(0,'#141c2cf4');bg.addColorStop(1,'#04060bfa');x.fillStyle=bg;x.fillRect(0,0,w,h);
+  const sl=(typeof SAFE!=='undefined'?SAFE.l:0)+10,sr=(typeof SAFE!=='undefined'?SAFE.r:0)+10,P=clamp(w*.3,190,330),S=Math.max(120,Math.min(h-24,w-P-sl-sr-24)),mx=sl+Math.max(0,(w-P-sl-sr-12-S)/2),my=(h-S)/2;
+  this.map={x:mx,y:my,s:S};const k=S/WORLD,X=v=>mx+v*k,Y=v=>my+v*k;
+  // the map, darkened outside the storm circle
+  x.save();x.shadowColor='#000';x.shadowBlur=24;x.fillStyle='#000';x.fillRect(mx-4,my-4,S+8,S+8);x.restore();
+  if(typeof MINI!=='undefined'&&MINI)x.drawImage(MINI,mx,my,S,S);x.save();x.beginPath();x.rect(mx,my,S,S);x.arc(X(zone.x),Y(zone.y),zone.r*k,0,6.2832,true);x.fillStyle='#030409b8';x.fill('evenodd');x.restore();
+  x.strokeStyle='#c9a0ff';x.lineWidth=2;x.beginPath();x.arc(X(zone.x),Y(zone.y),zone.r*k,0,6.2832);x.stroke();
+  x.strokeStyle='#d6b45e';x.lineWidth=1.5;x.strokeRect(mx-1.5,my-1.5,S+3,S+3);
+  const lab=(t,px,py,sz,col,bold)=>{x.font=(bold?'700 ':'500 ')+sz+'px system-ui,sans-serif';x.textAlign='center';x.textBaseline='middle';x.lineWidth=3;x.strokeStyle='#000c';x.strokeText(t,px,py);x.fillStyle=col;x.fillText(t,px,py)};
+  const fs=clamp(S/62,9,13);
+  // lands
+  if(typeof REG!=='undefined')for(const g of this.regions())lab((REG.IC[g.r]||'')+' '+REG.N[g.r],X(g.x),Y(g.y),fs+3,'#ffffff9a',true);
+  // landmarks
+  const icon=(t,px,py,sz)=>{x.font=sz+'px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(t,px,py)};
+  if(WD.castle)icon('🏰',X(WD.castle.cx),Y(WD.castle.cy),fs+4);if(WD.fort&&WD.fort.castle)icon('❄️',X(WD.fort.castle.x),Y(WD.fort.castle.y),fs+3);
+  for(const s of WD.shrines||[])icon('✨',X(s.x),Y(s.y),fs);
+  for(const n of WD.npcs||[])icon('🛒',X(n.x)+fs*.9,Y(n.y)-fs*.2,fs);
+  for(const v of WD.villages){const px=X(v.x),py=Y(v.y);x.fillStyle='#ffd35a';x.beginPath();x.arc(px,py,3.2,0,6.2832);x.fill();lab(v.name,px,py+fs,fs,'#ffe9b0',false)}
+  // hover: which land
+  if(this.hover&&this.hover.x>=mx&&this.hover.x<=mx+S&&this.hover.y>=my&&this.hover.y<=my+S&&typeof REG!=='undefined'){const wx=(this.hover.x-mx)/k,wy=(this.hover.y-my)/k,r=REG.at(wx,wy);
+    x.strokeStyle='#ffffff55';x.lineWidth=1;x.beginPath();x.arc(this.hover.x,this.hover.y,12,0,6.2832);x.stroke();if(r>=0)lab(REG.IC[r]+' '+REG.N[r],this.hover.x,this.hover.y-20,fs+1,'#fff',true)}
+  // pins: teammates, then me
+  const pin=(px,py,col,txt)=>{const b=Math.sin(T*4)*2;x.save();x.translate(px,py);x.strokeStyle=col;x.lineWidth=2;for(let i=0;i<2;i++){const q=((T*.9+i*.5)%1);x.globalAlpha=1-q;x.beginPath();x.arc(0,0,6+q*22,0,6.2832);x.stroke()}x.globalAlpha=1;
+    x.fillStyle=col;x.beginPath();x.moveTo(0,-2+b);x.bezierCurveTo(-9,-14+b,-9,-26+b,0,-26+b);x.bezierCurveTo(9,-26+b,9,-14+b,0,-2+b);x.fill();x.fillStyle='#000a';x.beginPath();x.arc(0,-18+b,3.4,0,6.2832);x.fill();x.restore();if(txt)lab(txt,px,py-36,fs,col,true)};
+  const me=ME(),mates=net.mode==='client'?this.mates:MC.ts>1&&me?[...this.picks].filter(([id])=>{const u=UMAP.get(id);return id!==myId&&u&&isHuman(u)&&u.team===me.team}).map(([id,p])=>[id,p.x,p.y]):[];
+  for(const q of mates){const u=UMAP.get(q[0]);pin(X(q[1]),Y(q[2]),'#6fb6ff',u?u.name:'')}
+  if(this.mine)pin(X(this.mine.x),Y(this.mine.y),'#ffd35a','จุดของคุณ');
+  // side panel
+  const px=w-P-sr,pw=P;let y=Math.max(14,(h-Math.min(h-20,330))/2);
+  lab('🪂 เลือกจุดลงจากฟ้า',px+pw/2,y+12,clamp(pw/12,15,22),'#ffe9a8',true);y+=34;
+  const tips=['แตะบนแผนที่ (ในวงพายุ) เพื่อเลือกจุดลง','หมู่บ้านมีอาวุธในบ้าน กล่องสมบัติ และพ่อค้า 🛒','ไม่เลือก = สุ่มให้'];
+  for(const t of tips){lab(t,px+pw/2,y,clamp(pw/24,10,12.5),'#cbbf9f',false);y+=18}y+=6;
+  if(this.st==='wait'){lab('กำลังรอโฮสต์…',px+pw/2,y+30,16,'#fff',true);return}
+  // countdown ring
+  const R=clamp(pw/7,22,36),cx=px+pw/2,cy=y+R+4,fr=clamp(this.t/Math.max(1,this.tot),0,1);x.lineWidth=5;x.strokeStyle='#ffffff22';x.beginPath();x.arc(cx,cy,R,0,6.2832);x.stroke();
+  x.strokeStyle='#ffd35a';x.beginPath();x.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+6.2832*fr);x.stroke();lab(String(Math.max(0,Math.ceil(this.t))),cx,cy+1,R*.9,'#fff',true);y+=R*2+18;
+  if(this.mine&&typeof REG!=='undefined'){const r=REG.at(this.mine.x,this.mine.y);let near=null,bd=1e9;for(const v of WD.villages){const d=Math.hypot(v.x-this.mine.x,v.y-this.mine.y);if(d<bd){bd=d;near=v}}
+    lab((r>=0?REG.IC[r]+' '+REG.N[r]:'')+(near&&bd<near.r+250?' · '+near.name:''),cx,y,clamp(pw/22,11,13.5),'#ffe9b0',true);y+=22}
+  // buttons
+  const bw=Math.min(pw-20,220),bh=clamp(h/12,32,42);this.btn=[];
+  const btn=(t,f,hot)=>{const bx=cx-bw/2;x.fillStyle=hot?'#6b5a1ef0':'#1a2230f0';x.strokeStyle=hot?'#e2c06a':'#7d8aa0';x.lineWidth=1.5;x.beginPath();x.roundRect?x.roundRect(bx,y,bw,bh,bh/2):x.rect(bx,y,bw,bh);x.fill();x.stroke();
+    lab(t,cx,y+bh/2+1,clamp(bh*.42,13,16),hot?'#fff3cf':'#dfe6f0',true);this.btn.push({x:bx,y,w:bw,h:bh,f});y+=bh+10};
+  btn('🎲 สุ่มหมู่บ้าน',()=>this.choose(this.randomVillage(),false),false);
+  btn(this.readyMe?'✔ พร้อมแล้ว':'✔ พร้อม · ลงเลย',()=>this.choose(this.mine,true),!this.readyMe)};
+DROP.ui();
+{const _st=DROP.start;DROP.start=function(){this.readyMe=false;return _st.call(this)}}
+{const _cs2=clientStart2;clientStart2=function(d){DROP.readyMe=false;return _cs2.apply(this,arguments)}}
+// ---------------------------------------------------------------- 3D: the fall ----------------------------------------------------------------
+if(typeof R3!=='undefined'&&typeof THREE!=='undefined'){const R=R3;
+  {const _fr=R.frame;R.frame=function(dt){this.camK=DROP.camK();return _fr.apply(this,arguments)}}
+  {const _qa=R.qnAnim;R.qnAnim=function(o,u,Tm,dt,mv){const r=_qa.apply(this,arguments);try{if(u&&u.hero&&DROP.fall)dropFallBody(this,o,u,dt)}catch(e){}return r}}
+  function dropFallBody(R,o,u,dt){const f=DROP.fall,q=f.L.get(u.id);if(!q)return;const k=(DROP.now()-f.t0-q.d)/f.F;if(k<0||!o.body)return;
+    if(k<1){const hh=DROP.H0*(1-k)*(1-k);o.body.position.y+=hh;o.body.rotation.x+=.35*(1-k);
+      const gy=o.gy||0,y=gy+hh+70;if(R.sp&&hh>60){R.sp(true,{x:u.x+rand(-12,12),y:y+rand(-10,30),z:u.y+rand(-12,12),vx:rand(-25,25),vy:rand(180,330),vz:rand(-25,25),l:rand(.35,.6),s:rand(40,62),s1:6,c:'#d6f0ff',c2:'#4a86ff',sp:0,dr:.6});
+        if(Math.random()<.6)R.sp(true,{x:u.x+rand(-30,30),y:y+rand(-20,40),z:u.y+rand(-30,30),vy:rand(60,160),l:rand(.5,.9),s:rand(10,16),s1:0,c:'#ffffff',sp:1,dr:1})}
+      if(!q.ring&&R.ring){q.ring=1;R.ring(q.x,q.y,30,90,'#9fd8ff',Math.max(.6,(1-k)*f.F))}}
+    else if(!q.landed){q.landed=1;q.lt=DROP.now();const gy=o.gy||0;
+      if(R.burstFX)R.burstFX(q.x,q.y,gy+12,'#d8c8a8',R.hi?26:14,260,{g:420,s:18});if(R.ring){R.ring(q.x,q.y,20,170,'#ffffff',.5);R.ring(q.x,q.y,40,240,'#9fd8ff',.7)}
+      if(R.flare)R.flare(q.x,gy+60,q.y,260,'#cfe8ff',.25);if(u.id===myId){shakeA=Math.max(shakeA,11)}
+      if(typeof AU!=='undefined'&&AU.playAt)try{AU.playAt('quake',q.x,q.y)}catch(e){}}
+    if(q.lt){const s=(DROP.now()-q.lt)/.32;if(s<1){const a=Math.sin(s*Math.PI)*.22;o.body.scale.set(1+a*.6,1-a,1+a*.6)}else if(!q.sq){q.sq=1;o.body.scale.set(1,1,1)}}}
+}
 }
 
 // ===================== SETTINGS: view + graphics quality =====================
@@ -10301,7 +10656,7 @@ window.installArenaMenuUX=function(){
     const controls=make('div','arena-controls-guide');
     controls.append(make('h4','','คีย์ลัดและสัมผัส'));
     const keys=make('dl');
-    for(const [key,detail] of [['W A S D','เคลื่อนที่'],['Q · E · R','สกิลอาวุธ (PC กดค้างเล็ง ปล่อยร่าย)'],['Shift','พุ่ง (คูลดาวน์ยาว)'],['K · คลิกขวา','กลิ้งหลบ (อมตะชั่วครู่)'],['V','สกิลพิเศษ'],['B · P','กระเป๋า · ร้านค้า'],['มือถือ','จอยซ้ายเดิน · กดค้างสกิลแล้วลากเพื่อเล็ง']])keys.append(make('dt','',key),make('dd','',detail));
+    for(const [key,detail] of [['W A S D','เคลื่อนที่'],['Q · E · R','สกิลอาวุธ (PC กดค้างเล็ง ปล่อยร่าย)'],['Shift','พุ่งหลบ (ปุ่ม 💨 ข้างปุ่มโจมตี)'],['V','สกิลพิเศษ'],['B','กระเป๋า'],['P · 🛒','ร้านค้า (ต้องยืนใกล้พ่อค้าในหมู่บ้าน)'],['มือถือ','จอยซ้ายเดิน · กดค้างสกิลแล้วลากเพื่อเล็ง']])keys.append(make('dt','',key),make('dd','',detail));
     controls.appendChild(keys);groups[1].panel.appendChild(controls);
     rowFor(groups[2],'sndBtn','เพลงและเอฟเฟกต์','แตะเพื่อสลับเสียงทั้งหมด · เฉพาะเอฟเฟกต์ · ปิดเสียง');
     const credits=document.getElementById('credBtn');credits.className='arena-settings-credits';credits.addEventListener('click',()=>dialog.close(),true);groups[2].panel.appendChild(credits);

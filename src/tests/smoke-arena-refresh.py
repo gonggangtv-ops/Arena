@@ -209,6 +209,7 @@ def settings(visit):
 def enter_arena(visit):
     visit.press('#soloBtn')
     visit.page.wait_for_function("state==='play'&&document.getElementById('loading').classList.contains('hidden')", polling=100)
+    visit.page.evaluate("window.__game&&__game.skipDrop&&__game.skipDrop()")   # the sky-drop landing map (arena-drop.js) would cover the HUD
     value = visit.page.evaluate("""async()=>{
       await R3.renderer.compileAsync(R3.scene,R3.cam);R3.frame(1/30);
       return {state,heroes:units.filter(unit=>unit.hero).length,alive,view3D,
@@ -286,6 +287,11 @@ try:
                 page.keyboard.down('w')
                 assert page.evaluate('localInput().my<0')
                 page.keyboard.up('w')
+                # the shop lives with the village merchants (arena-npc.js): P does nothing far from one, opens it beside one
+                page.evaluate("(()=>{const me=ME();let away=null;for(let i=0;i<400&&!away;i++){const p={x:2000+Math.random()*(WORLD-4000),y:2000+Math.random()*(WORLD-4000)};if(!npcNear(p,600))away=p}me.x=away.x;me.y=away.y})()")
+                page.keyboard.press('p')
+                assert not page.evaluate('CUR.open')
+                page.evaluate("(()=>{const me=ME(),n=WD.npcs[0];me.x=n.x+60;me.y=n.y})()")
                 page.keyboard.press('p')
                 assert page.evaluate('CUR.open')
                 page.keyboard.press('p')
