@@ -5,10 +5,8 @@
 #menu[data-arena-menu] .moonfall-menu-scenery{background-image:linear-gradient(90deg,#080b10 0%,#080b10ee 20%,#080b10ae 36%,#080b1024 58%,transparent 80%),linear-gradient(0deg,#080b10 0%,#080b1033 30%,transparent 75%,#080b1040),var(--arena-menu-art);background-position:center,center,74% center;background-size:cover;background-repeat:no-repeat}
 #menu[data-arena-menu] .moonfall-menu-content{width:min(500px,43vw);gap:9px}
 #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:13px}
-#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(59px,6.7vw,101px);line-height:.84;letter-spacing:-.045em;text-shadow:none}
-#menu[data-arena-menu] .moonfall-menu-title .anime-kicker{color:#c1b8a6;letter-spacing:.3em;font-size:9px;margin-bottom:22px}
-#menu[data-arena-menu] .moonfall-menu-crest{border-color:#b49b6b8c;box-shadow:0 0 20px #c9a7701a}
-#menu[data-arena-menu] .moonfall-menu-crest::before{content:'✦';font-size:25px;color:#d9be8c;text-shadow:0 0 18px #c7a46a55}
+#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{width:min(100%,452px);font-size:clamp(30px,5.2vw,71px);line-height:1;letter-spacing:-.045em}
+#menu[data-arena-menu] .moonfall-menu-title .anime-kicker{color:#c1b8a6;letter-spacing:.28em;font-size:9px;margin:0 0 2px;padding:0;min-height:18px}
 #menu[data-arena-menu] .moonfall-menu-chapter{margin-top:22px;font-size:9px;letter-spacing:.27em;color:#b9a684}
 #menu[data-arena-menu] .moonfall-menu-chapter::before{width:28px;background:linear-gradient(90deg,#a98a4e55,#d0b27c)}
 #menu[data-arena-menu] .moonfall-menu-title .sub{max-width:355px;margin-top:13px;color:#afbac7;font-size:12px;line-height:1.85}
@@ -21,8 +19,7 @@
 #menu[data-arena-menu] .moonfall-play-actions .go>svg.arena-action-arrow{align-self:center;flex:none;width:16px;height:16px;color:#a99d87}
 #menu[data-arena-menu] .moonfall-play-actions #soloBtn{min-height:76px;padding:14px 17px;gap:14px;isolation:isolate;overflow:hidden;background:linear-gradient(116deg,#513628,#2b2025 49%,#191b27);border:1px solid #c99860;border-top-color:#f3cf94;box-shadow:0 5px 28px #d2844528,inset 0 1px #ffe6b253;color:#fff0d1}
 #menu[data-arena-menu] .moonfall-play-actions #soloBtn::before{content:'';position:absolute;inset:4px;border:1px solid #e4b7824f;transform:none;pointer-events:none}
-/* the sweep moves its background, not the box: a translated ::after widened the button's scrollable overflow (scrollWidth 2x) */
-#menu[data-arena-menu] .moonfall-play-actions #soloBtn::after{content:'';position:absolute;inset:0;background:linear-gradient(111deg,transparent 40%,#ffdba317 50%,transparent 60%) no-repeat;background-size:300% 100%;background-position:100% 0;transition:background-position .65s cubic-bezier(.2,.8,.25,1);pointer-events:none}
+#menu[data-arena-menu] .moonfall-play-actions #soloBtn::after{content:'';position:absolute;inset:0;background:linear-gradient(111deg,transparent 35%,#ffdba329 49%,transparent 63%) 100% 0/300% 100%;transition:background-position .65s cubic-bezier(.2,.8,.25,1);pointer-events:none}
 #menu[data-arena-menu] #soloBtn>svg{width:36px;height:36px;padding:7px;box-sizing:border-box;background:#2b2128;border:1px solid #a07a5494;color:#ffe5b6;filter:drop-shadow(0 2px 5px #151017)}
 #menu[data-arena-menu] #soloBtn .arena-action-name{font-size:21px;font-weight:800;letter-spacing:.045em;text-shadow:0 1px 12px #edb97755}
 #menu[data-arena-menu] #soloBtn .arena-action-description{color:#d6c5b4;font-size:11px}
@@ -81,13 +78,13 @@
 .arena-settings-footer{display:flex;justify-content:space-between;gap:18px;flex:none;align-items:center;min-height:51px;padding:14px 30px;border-top:1px solid #8a9aaa26;color:#9aabbc;font-size:10px;line-height:1.8;background:#08111b6b}
 .arena-settings button:focus-visible{outline:2px solid #efd7a7;outline-offset:3px}
 
-@media(min-width:1500px) and (min-height:850px){#menu[data-arena-menu]{padding-top:8vh}#menu[data-arena-menu] .moonfall-menu-content{gap:11px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:98px}}
-@media(max-width:1000px) and (min-width:601px){#menu[data-arena-menu] .moonfall-menu-content{width:min(455px,53vw)}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:67px}}
+@media(min-width:1500px) and (min-height:850px){#menu[data-arena-menu]{padding-top:8vh}#menu[data-arena-menu] .moonfall-menu-content{gap:11px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{width:min(100%,460px)}}
+@media(max-width:1000px) and (min-width:601px){#menu[data-arena-menu] .moonfall-menu-content{width:min(455px,53vw)}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(38px,6vw,67px)}}
 @media(max-width:600px){
   #menu[data-arena-menu]{padding:clamp(96px,14vh,130px) max(23px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(23px,env(safe-area-inset-left))}
   #menu[data-arena-menu] .moonfall-menu-content{width:100%;gap:8px}
   #menu[data-arena-menu] .moonfall-menu-scenery{background-image:linear-gradient(0deg,#080b10 16%,#080b10ef 38%,#080b1033 75%,#080b1033),linear-gradient(90deg,#080b1088,transparent 90%),var(--arena-menu-art);background-size:cover,cover,auto 72vh;background-position:center,center,82% top}
-  #menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(59px,16vw,82px);line-height:.84}
+  #menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(30px,10.8vw,62px)}
   #menu[data-arena-menu] .moonfall-menu-title .anime-kicker{font-size:8px;letter-spacing:.23em;margin-bottom:18px}
   #menu[data-arena-menu] .moonfall-menu-chapter{margin-top:19px;font-size:8px;letter-spacing:.2em}
   #menu[data-arena-menu] .moonfall-menu-title .sub{font-size:11px;margin-top:10px;max-width:305px;line-height:1.8}
@@ -115,7 +112,7 @@
   #menu[data-arena-menu]{padding-top:max(15px,env(safe-area-inset-top));padding-bottom:max(15px,env(safe-area-inset-bottom));padding-left:max(26px,env(safe-area-inset-left))}
   #menu[data-arena-menu] .moonfall-menu-scenery{background-position:center,center,74% top}
   #menu[data-arena-menu] .moonfall-menu-content{width:min(430px,53vw);gap:6px}
-  #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:4px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:43px;line-height:.82}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark span:last-child{margin-top:2px}
+  #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:4px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{width:min(100%,77vh);font-size:clamp(28px,9vh,45px)}
   #menu[data-arena-menu] .moonfall-menu-title .anime-kicker{font-size:7px;margin-bottom:10px;letter-spacing:.23em}#menu[data-arena-menu] .moonfall-menu-chapter{margin-top:11px;font-size:7px}#menu[data-arena-menu] .moonfall-menu-title .sub{font-size:9px;margin-top:7px;line-height:1.6;max-width:none}
   #menu[data-arena-menu] .moonfall-play-actions .go{min-height:54px;padding:8px 11px;gap:9px}#menu[data-arena-menu] .moonfall-play-actions #soloBtn{min-height:60px;padding:10px 17px}
   #menu[data-arena-menu] #soloBtn .arena-action-name{font-size:16px}#menu[data-arena-menu] #soloBtn .arena-action-description{font-size:9px}#menu[data-arena-menu] #soloBtn>svg{width:27px;height:27px}

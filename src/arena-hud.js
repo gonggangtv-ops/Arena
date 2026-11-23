@@ -63,23 +63,63 @@ function drawArenaStatus(u,x,y,w,s){
   return used?lines.length*(h+gap):0;
 }
 
+function arenaPlatePath(x,y,w,h,s){
+  const cut=Math.min(7*s,h*.32);
+  ctx.beginPath();ctx.moveTo(x+cut,y);ctx.lineTo(x+w-cut,y);ctx.lineTo(x+w,y+cut);
+  ctx.lineTo(x+w,y+h-cut);ctx.lineTo(x+w-cut,y+h);ctx.lineTo(x+cut,y+h);
+  ctx.lineTo(x,y+h-cut);ctx.lineTo(x,y+cut);ctx.closePath();
+}
+
+function arenaPlate(x,y,w,h,s,tone='gold',accent){
+  const [rim,top,bottom]=tone==='danger'?['#bb675f','#49272f','#1a111c']:
+    tone==='muted'?['#897b91','#2d293b','#10111c']:['#b58b61','#33293b','#11101a'];
+  ctx.save();
+  arenaPlatePath(x,y,w,h,s);
+  const metal=ctx.createLinearGradient(x,y,x+w*.13,y+h);
+  metal.addColorStop(0,top);metal.addColorStop(.65,bottom);metal.addColorStop(1,'#0c0d15');
+  ctx.fillStyle=metal;ctx.fill();
+  ctx.strokeStyle='#07070e';ctx.lineWidth=3*s;ctx.stroke();
+  ctx.strokeStyle=accent||rim;ctx.lineWidth=Math.max(1,s);ctx.stroke();
+  const inset=3*s;
+  arenaPlatePath(x+inset,y+inset,w-2*inset,h-2*inset,.68*s);
+  ctx.strokeStyle=hexA(accent||rim,.36);ctx.lineWidth=.75*s;ctx.stroke();
+  const edge=ctx.createLinearGradient(x+11*s,y,x+w-11*s,y);
+  edge.addColorStop(0,'#fff0cd00');edge.addColorStop(.39,'#f8dba969');edge.addColorStop(1,'#fff0cd00');
+  ctx.fillStyle=edge;ctx.fillRect(x+11*s,y,w-22*s,Math.max(1,s*.75));
+  ctx.restore();
+}
+
 function arenaNotice(txt,x,y,maxWidth,s,{tone='gold',align='center',size=15,alpha=1}={}){
-  const [rim,ink,top,bottom]=tone==='danger'?['#a96b62','#ffd0b8','#41242a','#1a131c']:
-    tone==='muted'?['#786b56','#dfe4e6','#26313d','#111723']:['#9b8057','#f7dfaf','#2b3039','#121721'];
+  const ink=tone==='danger'?'#ffd0bc':tone==='muted'?'#e0dfec':'#fae6c4';
   ctx.save();ctx.globalAlpha=alpha;
-  const fontSize=size*s,pad=11*s,height=(size+10)*s,corner=4*s;
-  ctx.font=`650 ${fontSize}px ${ARENA_HUD_FONT}`;
+  const pad=18*s,height=(size+11)*s;
+  ctx.font=`650 ${size*s}px ${ARENA_HUD_FONT}`;
   const width=Math.min(maxWidth,ctx.measureText(txt).width+2*pad);
-  const left=x-(align==='right'?width:width/2),topY=y-height/2;
-  const g=ctx.createLinearGradient(0,topY,0,topY+height);g.addColorStop(0,top);g.addColorStop(1,bottom);
-  ctx.beginPath();
-  ctx.moveTo(left+corner,topY);ctx.lineTo(left+width-corner,topY);ctx.lineTo(left+width,topY+corner);
-  ctx.lineTo(left+width,topY+height-corner);ctx.lineTo(left+width-corner,topY+height);
-  ctx.lineTo(left+corner,topY+height);ctx.lineTo(left,topY+height-corner);ctx.lineTo(left,topY+corner);ctx.closePath();
-  ctx.fillStyle=g;ctx.fill();ctx.strokeStyle=rim;ctx.lineWidth=1;ctx.stroke();
-  ctx.fillStyle=rim;ctx.fillRect(left+5*s,topY+height*.32,1,height*.36);
+  const left=x-(align==='right'?width:width/2);
+  arenaPlate(left,y-height/2,width,height,s,tone);
+  const r=2.3*s;
+  ctx.fillStyle=tone==='danger'?'#e49082':tone==='muted'?'#ac9cb8':'#e6bc84';
+  for(const p of [left+8*s,left+width-8*s]){
+    ctx.beginPath();ctx.moveTo(p,y-r);ctx.lineTo(p+r,y);ctx.lineTo(p,y+r);ctx.lineTo(p-r,y);ctx.closePath();ctx.fill();
+  }
   ctx.fillStyle=ink;ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText(txt,left+width/2,y,Math.max(1,width-2*pad));ctx.restore();
+}
+
+function drawArenaPickup(me,s,pr,box,item){
+  const weapon=item&&WEAPONS[item.wk],tint=box?'#dcb985':TIERS[item.tier].c;
+  const rune=item&&!me.wk2?wvIcons(itWV(item)):'';
+  const label=box?'เปิดกล่อง':(me.wk2?'รับ ':'เก็บ ')+weapon.names[item.tier]+(me.wk2?' · แทนช่องสำรอง':'')+(rune?' '+rune:'');
+  ctx.save();ctx.font=`650 ${13*s}px ${ARENA_HUD_FONT}`;
+  const w=Math.min(W-SAFE.l-SAFE.r-16,ctx.measureText(label).width+58*s),h=33*s;
+  const x=clamp(pr.x+pr.w/2-w/2,SAFE.l+8,W-SAFE.r-w-8);
+  const y=pr.y-h-10*s-(pr.statusHeight||0)-(me.pts>0?16*s:0);
+  arenaPlate(x,y,w,h,s,'gold',tint);
+  const image=box?ArenaHudIcons.symbol('chest'):ArenaHudIcons.weapon(item.wk);
+  ctx.drawImage(image,x+8*s,y+3*s,h-6*s,h-6*s);
+  ctx.textBaseline='middle';ctx.textAlign='left';ctx.fillStyle=press[4]>0?'#fff':'#fae9cf';
+  ctx.fillText(label,x+40*s,y+h/2,w-49*s);
+  ctx.restore();UI.swap={x,y,w,h};
 }
 
 function drawArenaFeed(s){
@@ -92,6 +132,7 @@ const ArenaHudIcons=(()=>{
   const weapons=new Map(),symbols=new Map(),statuses=new Map();
   const tome='M3 5 Q7 4 12 7 Q17 4 21 5 L21 18 Q17 17 12 20 Q7 17 3 18 Z M12 7 V20 M5.5 8.5 Q8 8.5 10 10 M5.5 11.5 Q8 11.5 10 13 M15 11 L17 8.5 L19 11 L17 13.5 Z';
   const glyphs={
+    chest:['M3 11V7l4-3h10l4 3v4m-18 0h18v8H3Zm7 0v4h4v-4M7 7v3m10-3v3','#f9d594'],
     health:['M12 20 4.8 12.7C-.5 7.4 6.7 1.9 12 7.4c5.3-5.5 12.5 0 7.2 5.3Z','#ffb9b6',true],
     mana:['M12 2.5 19 12 12 21.5 5 12Z M12 7 15.5 12 12 16.5 8.5 12Z','#a7f4ff',true],
     shield:['M12 2.5C9 5 6 6 3.8 6l1.1 7.7C5.6 17 8.2 19.5 12 21.5c3.8-2 6.4-4.5 7.1-7.8L20.2 6c-2.2 0-5.2-1-8.2-3.5Z M12 6.5v10.7 M8.3 11h7.4','#efcf8b'],
@@ -125,6 +166,8 @@ const ArenaHudIcons=(()=>{
   }
   function weapon(key){
     const wk=key&&Object.hasOwn(WEAPONS,key)?key:'fist';
+    const portrait=window.MoonfallUI?.weapon?.(wk);
+    if(portrait)return portrait;
     if(weapons.has(wk))return weapons.get(wk);
     const canvas=plate(144),paint=canvas.getContext('2d');
     const fusion=FUSED[wk],base=fusion?.base||wk;
@@ -196,26 +239,24 @@ function installArenaHud(){
 
   drawPanel=function(me,s){
     const left=SAFE.l+UI.b*3.4,right=W-SAFE.r-UI.b*4.6;
-    const w=clamp(right-left,230*s,440*s),h=17*s;
+    const w=clamp(right-left,230*s,440*s),h=23*s;
     const x=clamp(W/2-w/2-UI.b*.6,left,right-w),y=H-SAFE.b-h-5;
     const ratio=me.lvl>=MAXL?1:clamp(me.xp/needXp(me.lvl),0,1);
-    const emblem=ArenaHudIcons.weapon(me.wk),cut=4*s;
+    const emblem=ArenaHudIcons.weapon(me.wk);
     const title=me.wk?WEAPONS[me.wk].names[me.wt]:'มือเปล่า';
     const rank=me.wk?TIERS[me.wt].c:'#ddd2bb';
-    ctx.save();ctx.beginPath();ctx.moveTo(x+cut,y);ctx.lineTo(x+w-cut,y);ctx.lineTo(x+w,y+cut);
-    ctx.lineTo(x+w,y+h-cut);ctx.lineTo(x+w-cut,y+h);ctx.lineTo(x+cut,y+h);
-    ctx.lineTo(x,y+h-cut);ctx.lineTo(x,y+cut);ctx.closePath();
-    ctx.fillStyle='#14151c';ctx.fill();ctx.strokeStyle='#807051';ctx.lineWidth=1;ctx.stroke();
-
-    const tx=x+8*s,trackY=y+h-3.5*s,trackW=w-16*s;
-    ctx.fillStyle='#262631';ctx.fillRect(tx,trackY,trackW,2*s);
-    ctx.fillStyle='#c6a36b';ctx.fillRect(tx,trackY,trackW*ratio,2*s);
-    if(ratio>0){ctx.fillStyle='#f6daa2';ctx.fillRect(tx,trackY,trackW*ratio,.75*s)}
-    ctx.textBaseline='middle';ctx.textAlign='left';ctx.font=`700 ${10*s}px system-ui,sans-serif`;
-    ctx.fillStyle='#ead7ae';ctx.fillText(`Lv. ${me.lvl}`,tx,y+6.5*s);
-    const iconSize=14*s,iconX=x+57*s;
-    ctx.drawImage(emblem,iconX,y-.75*s,iconSize,iconSize);
-    ctx.fillStyle=rank;ctx.fillText(title,iconX+iconSize+2*s,y+6.5*s,w-81*s);
+    ctx.save();arenaPlate(x,y,w,h,s);
+    const tx=x+9*s,textY=y+9.7*s,trackY=y+h-5*s,trackW=w-18*s;
+    ctx.fillStyle='#20202e';ctx.fillRect(tx,trackY,trackW,2*s);
+    ctx.fillStyle='#c89a66';ctx.fillRect(tx,trackY,trackW*ratio,2*s);
+    if(ratio>0){ctx.fillStyle='#f5d5a4';ctx.fillRect(tx,trackY,trackW*ratio,.75*s)}
+    ctx.textBaseline='middle';ctx.textAlign='left';ctx.font=`700 ${10.5*s}px ${ARENA_HUD_FONT}`;
+    ctx.fillStyle='#eed8aa';ctx.fillText(`Lv. ${me.lvl}`,tx,textY);
+    ctx.fillStyle='#bba18072';ctx.fillRect(x+46*s,y+4*s,1,h-11*s);
+    const iconX=x+52*s,iconSize=24*s;
+    ctx.drawImage(emblem,iconX,textY-iconSize/2,iconSize,iconSize);
+    ctx.font=`700 ${11.4*s}px ${ARENA_HUD_FONT}`;
+    ctx.fillStyle=rank;ctx.fillText(title,iconX+27*s,textY,w-89*s);
 
     // Leave room for the dash control and its keyboard label.
     const dash=arenaDashAnchor(potionRail({x,w},s));

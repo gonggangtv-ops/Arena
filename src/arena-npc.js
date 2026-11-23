@@ -18,11 +18,9 @@ if(typeof shopBuy==='function'){const _sb=shopBuy;
 if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
   const css=document.createElement('style');css.textContent=`
 #arenaNpcPrompt{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);transform:translateX(-50%);z-index:7;display:none;align-items:center;gap:9px;padding:8px 16px 8px 11px;
-  border:1px solid #d6b45e;border-radius:26px;background:linear-gradient(180deg,#2c2312f5,#120d07f5);color:#ffe9a8;font:700 15px/1 system-ui,sans-serif;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;
-  box-shadow:0 4px 14px #000a,0 0 0 1px #000;animation:arenaNpcPulse 1.6s ease-in-out infinite}
+  font:700 14px/1 system-ui,sans-serif;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
 #arenaNpcPrompt b{font-size:23px;line-height:1}#arenaNpcPrompt small{font:600 11px system-ui,sans-serif;color:#e8d49a;border:1px solid #c9a94a88;border-radius:4px;padding:2px 5px}
 #arenaNpcPrompt i{font:500 12px system-ui,sans-serif;color:#cdbb8a;font-style:normal}
-@keyframes arenaNpcPulse{0%,100%{box-shadow:0 4px 14px #000a,0 0 0 1px #000,0 0 0 0 #ffd35a00}50%{box-shadow:0 4px 14px #000a,0 0 0 1px #000,0 0 18px 4px #ffd35a66}}
 #arenaGold{pointer-events:none!important;cursor:default!important}#arenaGold img[alt="เปิดร้านค้า"]{display:none!important}
 `;document.head.appendChild(css);
   const pr=document.createElement('div');pr.id='arenaNpcPrompt';pr.setAttribute('role','button');pr.innerHTML='<b>🛒</b><span>ร้านค้า</span><i></i><small>P</small>';document.body.appendChild(pr);
@@ -38,6 +36,10 @@ if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
   function npcHudStep(){const me=ME(),sky=typeof DROP!=='undefined'&&DROP.sky&&DROP.sky(),on=state==='play'&&me&&!me.dead&&!sky;
     const n=on?npcNear(me,NPC_R):null;if(n!==near0){near0=n;pr.querySelector('i').textContent=n?'· '+n.name:''}
     const show=!!n&&!CUR.open;if((pr.style.display==='flex')!==show)pr.style.display=show?'flex':'none';
+    if(show){
+      const bottom=Math.max(SAFE.b+96,UI.swap?H-UI.swap.y+8:0)+'px';
+      if(pr.style.bottom!==bottom)pr.style.bottom=bottom;
+    }
     if(CUR.open&&(!on||npcGate()&&!npcNear(me,NPC_R+90)))_tg.call(CUR,false)}
   // installed after the HUD installers (installMoonfallInventory / installArenaCombatControls run later in the same script)
   setTimeout(()=>{const st=CUR.step;CUR.step=function(dt){const r=st.call(this,dt);try{npcHudStep()}catch(e){}return r};
@@ -48,8 +50,10 @@ if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
 if(typeof R3!=='undefined'&&typeof THREE!=='undefined'){const R=R3,T=THREE;
   const _sb=R.stepBoxes;R.stepBoxes=function(dt,force){_sb.call(this,dt,force);try{this.stepNpcs(dt||0)}catch(e){if(!this._npcErr){this._npcErr=1;console.warn('npc',e)}}};
   R.npcSign=function(name){return this.cached('npcsign',()=>{const c=document.createElement('canvas');c.width=256;c.height=96;const x=c.getContext('2d');
-      const g=x.createLinearGradient(0,0,0,96);g.addColorStop(0,'#3a2c12');g.addColorStop(1,'#140e06');x.fillStyle=g;x.strokeStyle='#e2c06a';x.lineWidth=4;
-      x.beginPath();x.roundRect?x.roundRect(6,10,244,60,18):x.rect(6,10,244,60);x.fill();x.stroke();x.fillStyle='#e2c06a';x.beginPath();x.moveTo(116,70);x.lineTo(128,88);x.lineTo(140,70);x.fill();
+      const g=x.createLinearGradient(0,0,0,96);g.addColorStop(0,'#33293b');g.addColorStop(1,'#11101a');x.fillStyle=g;x.strokeStyle='#d9b58c';x.lineWidth=3;
+      x.beginPath();x.moveTo(18,10);x.lineTo(238,10);x.lineTo(250,22);x.lineTo(250,58);
+      x.lineTo(238,70);x.lineTo(18,70);x.lineTo(6,58);x.lineTo(6,22);x.closePath();x.fill();x.stroke();
+      x.strokeStyle='#d9b58c65';x.lineWidth=1;x.strokeRect(20,16,216,48);x.fillStyle='#d9b58c';x.beginPath();x.moveTo(116,70);x.lineTo(128,88);x.lineTo(140,70);x.fill();
       x.font='bold 34px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillStyle='#ffe9a8';x.fillText('🛒 ร้านค้า',128,41);
       const t=new T.CanvasTexture(c);if(T.SRGBColorSpace)t.colorSpace=T.SRGBColorSpace;const m=new T.SpriteMaterial({map:t,transparent:true,depthWrite:false});m.userData.ownMat=1;return m})};
   R.clearNpcs=function(){if(this.npcO)for(const o of this.npcO){if(o.root.parent)o.root.parent.remove(o.root);try{o.mixer.stopAllAction()}catch(e){}}this.npcO=null};

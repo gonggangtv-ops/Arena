@@ -557,7 +557,7 @@ function fuseLine(me){if(!me||me.dead||!me.wk||FUSED[me.wk])return null;if(me.fu
   if(me.wk2&&FUSED[me.wk2])return{t:'⚒️ อาวุธสำรองหลอมแล้ว — แตะรูปอาวุธเพื่อใช้',c:'#ffd27a'};
   if(left>0){const tt=`⚒️ หลอมอาวุธใน ${fmtT(left)}`;return F?{t:`${tt} · ${WEAPONS[me.wk].ic}+${WEAPONS[me.wk2].ic} → ${F.ic} ${F.n}`,c:left<30?'#ffd27a':'#f2e2b8',p:left<30?1:0}:{t:`${tt} · ต้องมีอาวุธ 2 ชนิด (1/2)`,c:'#c8c0b0'}}
   return{t:'⚒️ เก็บอาวุธอีกชนิด — หลอมทันที',c:'#ffd27a'}}
-function drawSwap(me,s,pr){const bx=boxNear(me);const it=bx?null:swapCandidate(me);if(!bx&&!it)return;const W2=it&&WEAPONS[it.wk];const txt=bx?'📦 เปิดกล่อง':me.wk2?`🔄 รับ ${W2.ic} ${W2.names[it.tier]} · ทิ้ง ${WEAPONS[me.wk2].ic}`:`🔄 เก็บ ${W2.ic} ${W2.names[it.tier]}`+(CURSED&&it?' '+wvIcons(itWV(it)):'');
+function drawSwap(me,s,pr){const bx=boxNear(me);const it=bx?null:swapCandidate(me);if(!bx&&!it)return;if(ARX){drawArenaPickup(me,s,pr,bx,it);return}const W2=it&&WEAPONS[it.wk];const txt=bx?'📦 เปิดกล่อง':me.wk2?`🔄 รับ ${W2.ic} ${W2.names[it.tier]} · ทิ้ง ${WEAPONS[me.wk2].ic}`:`🔄 เก็บ ${W2.ic} ${W2.names[it.tier]}`+(CURSED&&it?' '+wvIcons(itWV(it)):'');
   ctx.font=`bold ${13*s}px system-ui,sans-serif`;const w=ctx.measureText(txt).width+26*s,h=30*s;const x=clamp(pr.x+pr.w/2-w/2,SAFE.l+8,W-SAFE.r-w-8),y=pr.y-h-10*s-(pr.statusHeight||0)-(me.pts>0?14*s:0);
   const pl=press[4]>0;ctx.globalAlpha=.94;panelBg(x,y,w,h,h/2);ctx.strokeStyle=bx?'#e8c050':TIERS[it.tier].c;ctx.lineWidth=2.5;rr(x,y,w,h,h/2);ctx.stroke();ctx.globalAlpha=1;
   ctx.fillStyle=pl?'#fff':'#ffe9a8';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,x+w/2,y+h/2+1);ctx.textBaseline='alphabetic';UI.swap={x,y,w,h}}
@@ -768,12 +768,12 @@ LOOKS.forEach((l,i)=>{const b=document.createElement('button');b.type='button';b
   b.onclick=()=>{chosenLook=i;lsSet('ar_look',String(i));AU.init();AU.play('click');lookEl.querySelectorAll('.look').forEach((e,j)=>e.classList.toggle('sel',j===i));
     if(net.mode==='client')netSend({t:'look',look:i});else if(net.mode==='host'&&net.lobby[0]){net.lobby[0].look=i;pushLobby()}};lookEl.appendChild(b)});
 const codexEl=$('codex');
-for(const k of WK){const d=WEAPONS[k];const el=document.createElement('div');el.className='wcard';
+for(const k of WK){const d=WEAPONS[k];const el=document.createElement('div');el.className='wcard';if(ARX)el.dataset.weapon=k;
   el.innerHTML=`<div class="ic">${d.ic}</div><b>${d.n}</b><small>${d.desc}</small><div class="sks">${SK[k].map(s=>`<span title="${s.n}">${s.ic}</span>`).join(' ')}</div>`;codexEl.appendChild(el)}
 // fusion recipes: every fused weapon, what makes it and its three new skills
 function recipeTxt(F){const M='🗡️🪓🔪⚔️',R='🏹🎯',S=k=>WEAPONS[k].ic+' '+WEAPONS[k].n;
   return F.arch==='MM'?`${M} ประชิด 2 ชนิด`:F.arch==='MR'?`${M} ประชิด + ${R} ยิงไกล`:F.arch==='RR'?'🏹 ธนูยาว + 🎯 หน้าไม้':F.arch==='MS'?`${M} ประชิด + ${S(F.el)}`:F.arch==='RS'?`${R} ยิงไกล + ${S(F.el)}`:`${WEAPONS[F.el].ic} + ${WEAPONS[F.el2].ic} คทา 2 ธาตุ`}
-{const G=$('fuseGrid');for(const k of FK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';el.style.borderColor=hexA(F.glow,.55);
+{const G=$('fuseGrid');for(const k of FK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';if(ARX)el.dataset.weapon=k;el.style.borderColor=hexA(F.glow,.55);
   el.innerHTML=`<div class="fh2"><span class="ic">${F.ic}</span><div><b>${F.n}</b><div class="rc">${recipeTxt(F)}</div></div></div><small>${F.desc}</small><div class="sks">${SK[k].map((s,i)=>`<span>${s.ic} ${['Q','E','R'][i]} · ${s.n}</span>`).join('')}</div>`;G.appendChild(el)}}
 $('fuseBtn').onclick=()=>{AU.init();AU.play('click');$('fuseOv').classList.remove('hidden')};
 // sound credits (CC BY works must be credited; CC0 listed as thanks)
