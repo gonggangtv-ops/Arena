@@ -5,6 +5,7 @@ cur='cursed' in sys.argv
 classic='classic' in sys.argv          # the old v2.5 game, kept for reference (classic.html, not deployed)
 arena=not cur and not classic          # index.html: every Cursed Realm system, original scenery, Meshy village houses
 sys_on=cur or arena
+game_title='MuzCruor' if arena else 'The Cursed Realm' if cur else 'Arena Royale'
 VILLAGE=['house-cottage','house-long','house-witch','market-stall','village-well','street-lantern','stone-bridge','plaza-fountain']
 # nature dressing joins the required set once its models are in the manifest
 NATURE=['mossy-boulder','nebula-bloom','rocky-meadow','banana-plant','river-stones','mystic-mushrooms','emerald-crystals','dungeon-wall','verdant-tree','stone-guardian','magma-titan','pine-tree','pine-tree-lo','wide-rock','bastion-hill','mango-tree','goblin-shaman']
@@ -61,10 +62,9 @@ if sys_on:
         js += "installArenaHud();installArenaVitals();installArenaCombatControls();"
     js += "installMoonfallLoading();\n"
     import re
-    if cur:sh=sh.replace('<title>Arena Royale</title>','<title>The Cursed Realm</title>')
-    sh=sh.replace('<title>Arena Royale</title>','<title>Arena Royale</title>').replace('<meta name="theme-color" content="#0c0a08">','<meta name="theme-color" content="#080b16">')
+    sh=sh.replace('<title>Arena Royale</title>',f'<title>{game_title}</title>').replace('<meta name="theme-color" content="#0c0a08">','<meta name="theme-color" content="#080b16">')
     sh=sh.replace('</style>','</style>\n'+'\n'.join("<link rel=\"stylesheet\" href=\"%s\" onerror=\"window.__moonfallCodeFailure='%s';if(window.moonfallCodeFailure)moonfallCodeFailure('%s')\">"%(f,f,f) for f in MOONCSS),1)
-    sh=re.sub(r'  <h1>⚔️ Arena Royale</h1>\n  <div class="sub">[^\n]*</div>',('  <div class="anime-kicker">MOONFALL · DARK CELESTIAL FANTASY</div>\n  <h1>The Cursed Realm</h1>\n  <div class="sub">ใต้เงาจันทราที่แตกสลาย · 32 ผู้กล้า หนึ่งตำนานบทสุดท้าย</div>' if cur else '  <div class="anime-kicker">BATTLE ROYALE · DARK FANTASY</div>\n  <h1>Arena Royale</h1>\n  <div class="sub">32 ผู้กล้า ล่ามอนสเตอร์ เก็บเหรียญ หนึ่งผู้รอดชีวิต</div>'),sh,count=1)
+    sh=re.sub(r'  <h1>⚔️ Arena Royale</h1>\n  <div class="sub">[^\n]*</div>',('  <div class="anime-kicker">MOONFALL · DARK CELESTIAL FANTASY</div>\n  <h1>The Cursed Realm</h1>\n  <div class="sub">ใต้เงาจันทราที่แตกสลาย · 32 ผู้กล้า หนึ่งตำนานบทสุดท้าย</div>' if cur else f'  <div class="anime-kicker">BATTLE ROYALE · DARK FANTASY</div>\n  <h1>{game_title}</h1>\n  <div class="sub">32 ผู้กล้า ล่ามอนสเตอร์ เก็บเหรียญ หนึ่งผู้รอดชีวิต</div>'),sh,count=1)
     sh=sh.replace('  <div class="msg" id="menuMsg"></div>',('  <div class="row celestial-tools"><button class="go ghost small" id="moonfallBtn">☽ สำรวจ Moonfall</button><button class="go ghost small" id="celestialInfoBtn">สถานะโมเดล / Performance</button></div>' if cur else '  <div class="row celestial-tools"></div>')+'\n  <div id="celestialAssetNote" role="status">กำลังตรวจสอบไฟล์โมเดล…</div>\n  <div class="msg" id="menuMsg"></div>',1)
     sh=sh.replace('  <div class="tip">','  <button class="anime-help-toggle" id="animeHelp" aria-expanded="false" aria-controls="animeGuide">วิธีเล่นและการควบคุม ▾</button>\n  <div class="tip anime-help-collapsed" id="animeGuide">',1)
     sh=re.sub(r'(<div id="loading"[^>]*><div class="spin"></div><div class="sub"[^>]*>)[^<]*',r'\1กำลังเปิดประตูสู่ Moonfall…',sh,count=1)
@@ -72,7 +72,7 @@ if sys_on:
     loading=open(os.path.join(D,'moonfall-loading.html'),encoding='utf-8').read().strip()
     if arena:
         arena_loading=open(os.path.join(D,'arena-loading.html'),encoding='utf-8').read().strip()
-        loading=arena_loading+'\n<script>'+loading.split('<script>',1)[1]
+        loading=arena_loading.replace('{{GAME_TITLE}}',game_title)+'\n<script>'+loading.split('<script>',1)[1]
     sh=sh.replace('<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>',loading)
     sh=re.sub(r'(<button[^>]*id="(?:soloBtn|qmBtn|hostBtn|joinBtn|lobbyStart|moonfallBtn)"[^>]*)(>)',r'\1 disabled\2',sh)
     if arena:sh=sh.replace('</head>','<script>window.CELESTIAL_KEYS='+repr(VILLAGE).replace("'",'"')+'</script>\n'+arena_style+'</head>',1)
@@ -93,7 +93,7 @@ else:
     libs=critical_libs(libs)
     st=sh[sh.index('<style>'):sh.index('</style>')+8].replace("html,body{margin:0;height:100%;","html,body{margin:0;height:100%;padding:0!important;")
     body=sh[sh.index('<body>')+6:sh.rindex('</body>')].replace('<!--LIBS-->',libs).replace('<!--TURN-->','').replace('/*GAME*/',js)
-    out=('<title>The Cursed Realm</title>\n' if cur else '<title>Arena Royale</title>\n')+st+'\n'+body
+    out=f'<title>{game_title}</title>\n'+st+'\n'+body
     if sys_on:out=out.replace(st,st+''.join('\n<style>'+open(os.path.join(D,f),encoding='utf-8').read()+'</style>' for f in MOONCSS)+arena_style,1)
     p=os.path.join(os.path.dirname(D),'cursed_artifact.html' if cur else 'classic_artifact.html' if classic else 'artifact.html')
 open(p,'w',encoding='utf-8').write(out)

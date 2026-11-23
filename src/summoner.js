@@ -190,10 +190,10 @@ const _aev=applyEvent;applyEvent=function(e){if(e&&e.t==='pd'){const u=UMAP.get(
 // the HUD's weapon glyph: a tome has none (its emoji is drawn instead)
 if(typeof wpIco==='function'){const _wi=wpIco;wpIco=function(me){if(me&&SO(me.wk))return null;return _wi(me)}}
 // ---- the codex card and the fusion recipes ----
-try{const el=document.createElement('div');el.className='wcard';const d=WEAPONS[K];
+try{const el=document.createElement('div');el.className='wcard';if(ARX)el.dataset.weapon=K;const d=WEAPONS[K];
   el.innerHTML=`<div class="ic">${d.ic}</div><b>${d.n}</b><small>${d.desc}</small><div class="sks">${SK[K].map(s=>`<span title="${s.n}">${s.ic}</span>`).join(' ')}</div>`;$('codex').appendChild(el)}catch(e){}
 try{const G=$('fuseGrid'),M='🗡️🪓🔪⚔️',R='🏹🎯';
-  for(const k of SOK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';el.style.borderColor=hexA(F.glow,.55);
+  for(const k of SOK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';if(ARX)el.dataset.weapon=k;el.style.borderColor=hexA(F.glow,.55);
     const rc=F.so==='M'?`📖 คัมภีร์วิญญาณ + ${M} ประชิด`:F.so==='R'?`📖 คัมภีร์วิญญาณ + ${R} ยิงไกล`:`📖 คัมภีร์วิญญาณ + ${WEAPONS[F.el].ic} ${WEAPONS[F.el].n}`;
     el.innerHTML=`<div class="fh2"><span class="ic">${F.ic}</span><div><b>${F.n}</b><div class="rc">${rc}</div></div></div><small>${F.desc}</small><div class="sks">${SK[k].map((s,i)=>`<span>${s.ic} ${['Q','E','R'][i]} · ${s.n}</span>`).join('')}</div>`;G.appendChild(el)}}catch(e){}
 window.SUMMONER={K,PK,petsOf,SO,SOK,soKit,soEl,spiritAttackDamage,spiritGuardianDamage};

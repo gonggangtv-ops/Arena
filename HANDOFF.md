@@ -7,6 +7,19 @@
 
 ---
 
+## 2026-11-23 · Codex · เปลี่ยนชื่อเกมเป็น MuzCruor
+
+- ใช้ชื่อ **MuzCruor** บนแท็บเบราว์เซอร์ หน้าโหลด เมนู และเว็บที่ build แบบ artifact พร้อมโลโก้เงิน–ทองตราคราส `muzcruor-mark.webp` และตัวอักษรสำรอง Cinzel · `src/build.py`, `arena-loading.html/css`, `arena-menu.js/css`
+- ชื่อแอป Android แสดง MuzCruor และ workflow แบบกดเองตั้งชื่อไฟล์ `MuzCruor.apk` · `strings.xml`, `build-apk.yml`, README
+- ตรวจ build index/artifact, `node --check`, ขนาดและความโปร่งใสของโลโก้ และชื่อแอปจาก manifest/ทรัพยากร Android · Chrome ผ่าน HTTP ทดสอบแท็บเกม หน้าโหลด เมนู และเริ่มแมตช์บนเดสก์ท็อปกับมือถือจำลอง · ทดสอบข้อความสำรองเมื่อโหลดโลโก้ไม่สำเร็จ · ยังไม่ได้สร้าง APK · branch `codex/muzcruor` ต่อจากงานภาพอาวุธและกรอบข้อความ
+
+## 2026-11-23 · Codex · โลโก้ตราคราส ภาพอาวุธ และกรอบข้อความ
+
+- ใช้ `arena-royale-mark.webp` เป็นโลโก้พื้นโปร่งใสของหน้าโหลดและเมนู มีแสงกวาดเฉพาะโลโก้และรองรับ reduced motion หัวข้อ Arena Royale อ่านได้ด้วยโปรแกรมอ่านหน้าจอและแสดงข้อความได้ระหว่างรอภาพ · `arena-loading.html/css`, `arena-menu.js/css`
+- เพิ่มภาพอาวุธ 27 ชนิดจากโมเดลในเกมและตรามือเปล่าใน `arena-armory.webp` ใช้ในแถบชื่อเหนือ EXP ป้ายเก็บอาวุธ และคู่มืออาวุธ/สูตรหลอม · `skill-atlas.json`, `moonfall-ui.js`, `arena-hud.js`, `c.js`, `summoner.js`
+- กรอบชื่ออาวุธ ข้อความแจ้งเตือน รายละเอียดสกิล และป้ายร้านค้าใช้เหล็กโทนเข้มขลิบทอง ป้ายร้านค้าขยับเหนือป้ายเก็บอาวุธเมื่อมีทั้งคู่ · `arena-hud.js`, `arena-combat-hud.css`, `arena-npc.js`
+- ตรวจ build Arena, `node --check`, และ HTTP Chromium เดสก์ท็อป/มือถือจำลอง · เช็กโลโก้ แสงกวาดและ reduced motion ภาพอาวุธครบ 28 ช่อง กดค้างดูสกิล และคลิก/แตะเก็บอาวุธข้างพ่อค้า · `smoke-arena-refresh.py` และ `smoke-arena-combat-hud.py` ผ่าน · branch `codex/arena-brand-ui`
+
 ## 2026-11-23 · Codex · หน้าโหลดเงาคราส ไอคอนสถานะ และพิธีหลอมอาวุธ
 
 - หน้าโหลดและเมนูใช้ภาพป้อมสนามเงาคราสและโลโก้ Arena Royale สองชั้นแบบโลหะ ฟอนต์ Cinzel เก็บในเกม · หน้าโหลดขยับกล้อง หมอก แสงประตู และประกายไฟด้วย CSS พร้อมรองรับ reduced motion · โหลดครบแล้วแสดงสถานะพร้อมและเปิดเมนู ปุ่ม “เข้าสู่สนาม” และป้ายขณะเตรียมแมตช์ใช้ธีมเดียวกัน · `arena-loading.html/css`, `arena-menu.js/css`, `moonfall-loading.js`, `build.py`

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#080b16">
-<title>Arena Royale</title>
+<title>MuzCruor</title>
 <style>
 :root{color-scheme:dark;--bg:#0c0a08;--panel:#1c1712;--line:#5a4a2a;--gold:#e6c25a;--ink:#f2ead8;--mute:#b8a888;--bad:#ff7a7a}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-family:system-ui,-apple-system,"Noto Sans Thai","Segoe UI",sans-serif;color:var(--ink)}
@@ -122,9 +122,14 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "moon-dead-tree", "temple-gate", "moon-stairs", "modular-wall", "wall-corner", "ruin-arch", "guardian-statue", "moon-arena", "city-pillar", "city-knight", "ice-queen", "frost-scepter", "snow-stairs", "queen-vfx", "brazier"]</script>
 
 <style>@font-face{font-family:'Arena Cinzel';src:url('assets/ui/arena-cinzel.woff') format('woff');font-weight:700;font-display:swap}
-.arena-wordmark{display:flex;flex-direction:column;align-items:flex-start;gap:.025em;margin:0;font:700 clamp(60px,7.6vw,116px)/.85 'Arena Cinzel',Georgia,serif;letter-spacing:-.05em}
-.arena-wordmark span{display:block;padding:.07em .045em .03em 0;color:#f4eee0;background:linear-gradient(177deg,#fff9e9 5%,#e1dce1 46%,#9398ad 52%,#e2def0 85%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 5px 16px #050510b0)}
-.arena-wordmark span+span{font-size:.91em;letter-spacing:.012em;color:#e0ad68;background-image:linear-gradient(180deg,#fff3d6 6%,#dec087 43%,#976137 56%,#f2c681 89%)}
+:root{--arena-wordmark-art:url('assets/ui/muzcruor-mark.webp')}
+.arena-wordmark{position:relative;display:grid;align-content:center;width:min(100%,445px);aspect-ratio:1344/437;margin:0;font:700 clamp(30px,5.2vw,72px)/1 'Arena Cinzel',Georgia,serif;letter-spacing:-.045em;text-align:center}
+.arena-wordmark span{display:block;color:#e9e6f2;text-shadow:0 4px 16px #080814}
+.arena-wordmark img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;visibility:hidden;filter:drop-shadow(0 5px 14px #070610c7)}
+.arena-wordmark-ready img{visibility:visible}
+.arena-wordmark-ready span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.arena-wordmark-ready::after{content:'';position:absolute;inset:0;pointer-events:none;mask:var(--arena-wordmark-art) center/contain no-repeat;background:linear-gradient(110deg,transparent 46%,#faecd221 49%,#fff6de78 50%,transparent 54%) 100% 0/310% 100%;animation:arena-mark-glint 9s 1s infinite}
+@keyframes arena-mark-glint{0%,5%{background-position:100% 0;opacity:0}8%{opacity:.68}23%,100%{background-position:0 0;opacity:0}}
 #loading.arena-load{--gate-x:75%;overflow:auto;min-height:0;padding:clamp(20px,6vh,68px) max(30px,min(5.8vw,86px),calc((100vw - 1260px)/2),env(safe-area-inset-left));background:#10101d}
 .arena-load-backdrop{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
 .arena-load-art,.arena-load-light,.arena-load-mist,.arena-load-embers,.arena-load-backdrop::after{position:absolute;inset:0}
@@ -138,11 +143,6 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 @keyframes arena-mist{from{transform:translateX(-11%);opacity:.52}to{transform:translate(13%,-5%);opacity:.9}}
 @keyframes arena-ember{0%{transform:translate(0,0);opacity:0}15%{opacity:.75}65%{opacity:.45}100%{transform:translate(var(--drift),var(--rise));opacity:0}}
 .arena-load-card{flex:none;position:relative;width:min(455px,100%);text-align:left;text-shadow:0 3px 12px #0007}
-.arena-crest{position:relative;width:38px;height:38px;margin:0 0 clamp(21px,3.7vh,42px) 6px;transform:rotate(45deg);border:1px solid #ebc890ae;background:linear-gradient(135deg,#3d344a,#141825);box-shadow:0 0 23px #edb67836,inset 0 0 12px #efcca724}
-.arena-crest::after{content:'';position:absolute;inset:4px;border:1px solid #b7a4c85c}
-.arena-crest i{position:absolute;inset:0;transform:rotate(-45deg)}
-.arena-crest i::before,.arena-crest i::after{content:'';position:absolute;inset:8px 16px;background:linear-gradient(#fff6d6,#c3945b);clip-path:polygon(50% 0,90% 18%,90% 68%,100% 68%,100% 78%,65% 78%,65% 100%,35% 100%,35% 78%,0 78%,0 68%,10% 68%,10% 18%);transform:rotate(38deg)}
-.arena-crest i::after{transform:rotate(-38deg)}
 .arena-load-rule{width:min(300px,76%);height:1px;margin:clamp(23px,5vh,46px) 0 clamp(15px,2.7vh,27px);background:linear-gradient(90deg,#e8be7c,#a8814f42,transparent)}
 .arena-load-rule::before{content:'';display:block;width:6px;height:6px;border:1px solid #ecd5aa;background:#34293a;transform:translateY(-3px) rotate(45deg)}
 .arena-load #moonfallLoadTitle{font:650 clamp(17px,2.15vw,26px)/1.45 system-ui,sans-serif;color:#f5e7d6;margin:0 0 4px}
@@ -159,19 +159,22 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
   #loading.arena-load{--gate-x:62%;align-items:flex-end;padding:28px max(24px,env(safe-area-inset-right)) max(46px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left))}
   .arena-load-art{background-size:auto 100%;background-position:80% center}
   .arena-load-backdrop::after{background:linear-gradient(0deg,#080912 4%,#0a0b17e8 25%,#0c0d1a83 58%,#0a09163b 81%)}
-  .arena-load .arena-wordmark{font-size:clamp(54px,14.5vw,86px)}
+  .arena-load .arena-wordmark{font-size:clamp(30px,10.8vw,59px)}
 }
 @media(max-height:510px) and (orientation:landscape){
   #loading.arena-load{padding-top:16px;padding-bottom:16px}
   .arena-load-card{width:min(365px,48vw)}
-  .arena-load .arena-wordmark{font-size:clamp(40px,11.8vh,65px)}
-  .arena-crest{width:28px;height:28px;margin-bottom:18px}.arena-crest i::before,.arena-crest i::after{inset:5px 11px}
+  .arena-load .arena-wordmark{max-width:77vh;font-size:clamp(28px,9.5vh,47px)}
   .arena-load-rule{margin:20px 0 13px}
 }
 @media(prefers-reduced-motion:reduce){
-  .arena-load-art,.arena-load-light,.arena-load-mist,.arena-load-embers i,#loading.arena-load[data-phase=ready]{animation:none}
+  .arena-load-art,.arena-load-light,.arena-load-mist,.arena-load-embers i,.arena-wordmark-ready::after,#loading.arena-load[data-phase=ready]{animation:none}
   .arena-load-embers{display:none}
   .arena-load #moonfallLoadFill{transition:none}
+}
+@media(forced-colors:active){
+  .arena-wordmark-ready img,.arena-wordmark-ready::after{visibility:hidden}
+  .arena-wordmark-ready span{position:static;width:auto;height:auto;overflow:visible;clip-path:none}
 }
 
 /* Arena-only interface. The published Moonfall/Cursed presentation stays independent. */
@@ -181,10 +184,8 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 #menu[data-arena-menu] .moonfall-menu-scenery{background-image:linear-gradient(90deg,#080b10 0%,#080b10ee 20%,#080b10ae 36%,#080b1024 58%,transparent 80%),linear-gradient(0deg,#080b10 0%,#080b1033 30%,transparent 75%,#080b1040),var(--arena-menu-art);background-position:center,center,74% center;background-size:cover;background-repeat:no-repeat}
 #menu[data-arena-menu] .moonfall-menu-content{width:min(500px,43vw);gap:9px}
 #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:13px}
-#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(59px,6.7vw,101px);line-height:.84;letter-spacing:-.045em;text-shadow:none}
-#menu[data-arena-menu] .moonfall-menu-title .anime-kicker{color:#c1b8a6;letter-spacing:.3em;font-size:9px;margin-bottom:22px}
-#menu[data-arena-menu] .moonfall-menu-crest{border-color:#b49b6b8c;box-shadow:0 0 20px #c9a7701a}
-#menu[data-arena-menu] .moonfall-menu-crest::before{content:'✦';font-size:25px;color:#d9be8c;text-shadow:0 0 18px #c7a46a55}
+#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{width:min(100%,452px);font-size:clamp(30px,5.2vw,71px);line-height:1;letter-spacing:-.045em}
+#menu[data-arena-menu] .moonfall-menu-title .anime-kicker{color:#c1b8a6;letter-spacing:.28em;font-size:9px;margin:0 0 2px;padding:0;min-height:18px}
 #menu[data-arena-menu] .moonfall-menu-chapter{margin-top:22px;font-size:9px;letter-spacing:.27em;color:#b9a684}
 #menu[data-arena-menu] .moonfall-menu-chapter::before{width:28px;background:linear-gradient(90deg,#a98a4e55,#d0b27c)}
 #menu[data-arena-menu] .moonfall-menu-title .sub{max-width:355px;margin-top:13px;color:#afbac7;font-size:12px;line-height:1.85}
@@ -197,14 +198,14 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 #menu[data-arena-menu] .moonfall-play-actions .go>svg.arena-action-arrow{align-self:center;flex:none;width:16px;height:16px;color:#a99d87}
 #menu[data-arena-menu] .moonfall-play-actions #soloBtn{min-height:76px;padding:14px 17px;gap:14px;isolation:isolate;overflow:hidden;background:linear-gradient(116deg,#513628,#2b2025 49%,#191b27);border:1px solid #c99860;border-top-color:#f3cf94;box-shadow:0 5px 28px #d2844528,inset 0 1px #ffe6b253;color:#fff0d1}
 #menu[data-arena-menu] .moonfall-play-actions #soloBtn::before{content:'';position:absolute;inset:4px;border:1px solid #e4b7824f;transform:none;pointer-events:none}
-#menu[data-arena-menu] .moonfall-play-actions #soloBtn::after{content:'';position:absolute;inset:0;background:linear-gradient(111deg,transparent 18%,#ffdba317 49%,transparent 78%);transform:translateX(-100%);transition:transform .65s cubic-bezier(.2,.8,.25,1);pointer-events:none}
+#menu[data-arena-menu] .moonfall-play-actions #soloBtn::after{content:'';position:absolute;inset:0;background:linear-gradient(111deg,transparent 35%,#ffdba329 49%,transparent 63%) 100% 0/300% 100%;transition:background-position .65s cubic-bezier(.2,.8,.25,1);pointer-events:none}
 #menu[data-arena-menu] #soloBtn>svg{width:36px;height:36px;padding:7px;box-sizing:border-box;background:#2b2128;border:1px solid #a07a5494;color:#ffe5b6;filter:drop-shadow(0 2px 5px #151017)}
 #menu[data-arena-menu] #soloBtn .arena-action-name{font-size:21px;font-weight:800;letter-spacing:.045em;text-shadow:0 1px 12px #edb97755}
 #menu[data-arena-menu] #soloBtn .arena-action-description{color:#d6c5b4;font-size:11px}
 #menu[data-arena-menu] #soloBtn>svg.arena-action-arrow{width:22px;height:22px;padding:0;background:none;border:0;color:#dfba80}
 #menu[data-arena-menu] .moonfall-play-actions .go:not(:disabled):hover{background:linear-gradient(120deg,#34414ce8,#15222de8);border-color:#baa57a;box-shadow:0 4px 24px #c9a6691c}
 #menu[data-arena-menu] .moonfall-play-actions #soloBtn:not(:disabled):hover{background:linear-gradient(116deg,#6e4931,#372734 53%,#202434);box-shadow:0 4px 36px #d29d563b;border-color:#ffe4af;color:#fff6e5}
-#menu[data-arena-menu] .moonfall-play-actions #soloBtn:not(:disabled):hover::after,#menu[data-arena-menu] .moonfall-play-actions #soloBtn:focus-visible::after{transform:translateX(100%)}
+#menu[data-arena-menu] .moonfall-play-actions #soloBtn:not(:disabled):hover::after,#menu[data-arena-menu] .moonfall-play-actions #soloBtn:focus-visible::after{background-position:0 0}
 #menu[data-arena-menu] .moonfall-play-actions .go:disabled{opacity:.5;cursor:wait}
 #menu[data-arena-menu] .moonfall-play-actions .go:focus-visible{outline:2px solid #f7e2b3;outline-offset:4px}
 #menu[data-arena-menu] .moonfall-start-hint{font-size:9px;color:#94a0ae}
@@ -256,13 +257,13 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 .arena-settings-footer{display:flex;justify-content:space-between;gap:18px;flex:none;align-items:center;min-height:51px;padding:14px 30px;border-top:1px solid #8a9aaa26;color:#9aabbc;font-size:10px;line-height:1.8;background:#08111b6b}
 .arena-settings button:focus-visible{outline:2px solid #efd7a7;outline-offset:3px}
 
-@media(min-width:1500px) and (min-height:850px){#menu[data-arena-menu]{padding-top:8vh}#menu[data-arena-menu] .moonfall-menu-content{gap:11px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:98px}}
-@media(max-width:1000px) and (min-width:601px){#menu[data-arena-menu] .moonfall-menu-content{width:min(455px,53vw)}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:67px}}
+@media(min-width:1500px) and (min-height:850px){#menu[data-arena-menu]{padding-top:8vh}#menu[data-arena-menu] .moonfall-menu-content{gap:11px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{width:min(100%,460px)}}
+@media(max-width:1000px) and (min-width:601px){#menu[data-arena-menu] .moonfall-menu-content{width:min(455px,53vw)}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(38px,6vw,67px)}}
 @media(max-width:600px){
   #menu[data-arena-menu]{padding:clamp(96px,14vh,130px) max(23px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(23px,env(safe-area-inset-left))}
   #menu[data-arena-menu] .moonfall-menu-content{width:100%;gap:8px}
   #menu[data-arena-menu] .moonfall-menu-scenery{background-image:linear-gradient(0deg,#080b10 16%,#080b10ef 38%,#080b1033 75%,#080b1033),linear-gradient(90deg,#080b1088,transparent 90%),var(--arena-menu-art);background-size:cover,cover,auto 72vh;background-position:center,center,82% top}
-  #menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(59px,16vw,82px);line-height:.84}
+  #menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(30px,10.8vw,62px)}
   #menu[data-arena-menu] .moonfall-menu-title .anime-kicker{font-size:8px;letter-spacing:.23em;margin-bottom:18px}
   #menu[data-arena-menu] .moonfall-menu-chapter{margin-top:19px;font-size:8px;letter-spacing:.2em}
   #menu[data-arena-menu] .moonfall-menu-title .sub{font-size:11px;margin-top:10px;max-width:305px;line-height:1.8}
@@ -290,7 +291,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
   #menu[data-arena-menu]{padding-top:max(15px,env(safe-area-inset-top));padding-bottom:max(15px,env(safe-area-inset-bottom));padding-left:max(26px,env(safe-area-inset-left))}
   #menu[data-arena-menu] .moonfall-menu-scenery{background-position:center,center,74% top}
   #menu[data-arena-menu] .moonfall-menu-content{width:min(430px,53vw);gap:6px}
-  #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:4px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:43px;line-height:.82}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark span:last-child{margin-top:2px}
+  #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:4px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{width:min(100%,77vh);font-size:clamp(28px,9vh,45px)}
   #menu[data-arena-menu] .moonfall-menu-title .anime-kicker{font-size:7px;margin-bottom:10px;letter-spacing:.23em}#menu[data-arena-menu] .moonfall-menu-chapter{margin-top:11px;font-size:7px}#menu[data-arena-menu] .moonfall-menu-title .sub{font-size:9px;margin-top:7px;line-height:1.6;max-width:none}
   #menu[data-arena-menu] .moonfall-play-actions .go{min-height:54px;padding:8px 11px;gap:9px}#menu[data-arena-menu] .moonfall-play-actions #soloBtn{min-height:60px;padding:10px 17px}
   #menu[data-arena-menu] #soloBtn .arena-action-name{font-size:16px}#menu[data-arena-menu] #soloBtn .arena-action-description{font-size:9px}#menu[data-arena-menu] #soloBtn>svg{width:27px;height:27px}
@@ -301,11 +302,11 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 @media(prefers-reduced-motion:reduce){#menu[data-arena-menu] .moonfall-play-actions .go,#menu[data-arena-menu] .moonfall-play-actions #soloBtn::after{transition:none}}
 
 /* Arena-only combat hardware; the original positions and pointer bounds stay intact. */
-.arena-combat-hud #moonfallSkillHint{background:linear-gradient(135deg,#19222deF,#080f18fa);border-color:#b5a17b;border-top-color:#e3cc9f;border-radius:3px;box-shadow:0 8px 28px #0008,inset 0 1px #fff08;color:#b8c9d7;font-size:11px;line-height:1.7}
+.arena-combat-hud #moonfallSkillHint{font-size:11px;line-height:1.7}
 .arena-combat-hud #moonfallSkillHint strong{color:#f1e5cb;font-size:12px;line-height:1.7;margin-bottom:4px}
 .arena-combat-hud #moonfallSkillHint span{color:#b0c6d9}
 /* A stationary hold opens the card on touch and mouse. */
-.arena-combat-hud #moonfallSkillHint[data-hold]:not([hidden]){display:block;z-index:8;box-sizing:border-box;width:min(285px,calc(100vw - 20px));padding:9px 12px;line-height:1.6}
+.arena-combat-hud #moonfallSkillHint[data-hold]:not([hidden]){display:block;z-index:8;box-sizing:border-box;width:min(285px,calc(100vw - 20px));padding:11px 14px;line-height:1.6}
 .arena-combat-hud #moonfallSkillHint[data-hold] strong{font-size:13px;margin:0 0 5px;padding-bottom:4px;border-bottom:1px solid #cdb8894d}
 .arena-combat-hud #moonfallSkillHint .skill-damage{color:#ffe1a2;margin-top:4px;font-weight:650}
 .arena-combat-hud #moonfallSkillHint .skill-note{color:#e2ebf2;margin-top:4px}
@@ -322,11 +323,37 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 .arena-combat-hud #arenaGold{border-color:#b29b6f!important;border-radius:3px!important;background:linear-gradient(135deg,#1d2936f2,#080f18f5)!important;box-shadow:0 3px 12px #0005,inset 0 1px #f4e5bf1a;color:#efdaaa!important;font-family:system-ui,sans-serif!important;font-variant-numeric:tabular-nums;text-shadow:0 1px 3px #000}
 .arena-combat-hud #arenaGold .moonfall-item-art{border-radius:3px;border-color:#b6a17a66;box-shadow:inset 0 0 0 1px #040a12}
 .arena-combat-hud #arenaRegion{border-radius:2px!important;background:linear-gradient(135deg,#192432e0,#080f18eb)!important;box-shadow:0 1px 0 #c2ab7933;color:#d5d9d8!important;font-family:system-ui,sans-serif!important;text-shadow:0 1px 3px #000}
-.arena-combat-hud #arenaCombatHint{border-color:#b7a078!important;border-radius:3px!important;background:linear-gradient(135deg,#182535ed,#080f18f5)!important;color:#d6e0e6!important;box-shadow:0 5px 20px #0005;font:12px/1.75 system-ui,sans-serif!important}
+.arena-combat-hud #arenaCombatHint{font-size:12px!important;line-height:1.75!important}
 @media(max-height:359px) and (min-aspect-ratio:20/21){.arena-combat-hud #arenaGold{box-sizing:border-box;min-height:44px}.arena-combat-hud #arenaGold .moonfall-item-art{width:26px;height:26px;vertical-align:middle}}
 /* Match the game's existing H > W * 1.05 portrait pause/rotation screen. */
-@media(max-aspect-ratio:20/21){.arena-combat-hud #arenaCombatPad,.arena-combat-hud #arenaGold,.arena-combat-hud #arenaRegion,.arena-combat-hud #arenaCombatHint,.arena-combat-hud #moonfallSkillHint,.arena-combat-hud #moonfallShop{visibility:hidden!important}}
+@media(max-aspect-ratio:20/21){.arena-combat-hud #arenaCombatPad,.arena-combat-hud #arenaGold,.arena-combat-hud #arenaRegion,.arena-combat-hud #arenaCombatHint,.arena-combat-hud #moonfallSkillHint,.arena-combat-hud #moonfallShop,.arena-combat-hud #arenaNpcPrompt{visibility:hidden!important}}
 @media(prefers-reduced-motion:reduce){.arena-combat-hud #arenaCombatPad *{transition:none!important;animation:none!important}}
+
+.arena-combat-hud{--arena-panel:linear-gradient(145deg,#30283a,#171623 60%,#0e101b);--arena-rim:#b58b62;--arena-inlay:#d5ad7945;--arena-parchment:#f6e7d2}
+.arena-combat-hud :is(#moonfallSkillHint,#arenaCombatHint,#arenaNpcPrompt){
+  background:var(--arena-panel)!important;border:1px solid var(--arena-rim)!important;border-radius:2px!important;
+  outline:1px solid #070810;box-shadow:inset 0 0 0 3px #10101af0,inset 0 0 0 4px var(--arena-inlay),0 8px 22px #050610aa!important;
+  color:var(--arena-parchment)!important;text-shadow:0 2px 3px #070810;font-family:"Noto Sans Thai",system-ui,sans-serif!important
+}
+.arena-combat-hud :is(#moonfallSkillHint,#arenaCombatHint,#arenaNpcPrompt)::before{
+  content:'';position:absolute;inset:0 8px auto;height:1px;
+  background:linear-gradient(90deg,transparent,#f4d7acb5 38%,transparent);pointer-events:none
+}
+.arena-combat-hud #moonfallSkillHint[data-hold] strong{
+  border-bottom-color:var(--arena-inlay);color:#ffe9c4;letter-spacing:.01em
+}
+.arena-combat-hud #moonfallSkillHint .skill-meta{color:#d3c6dd}
+.arena-combat-hud #arenaCombatHint{padding:8px 16px!important}
+.arena-combat-hud :is(#codex .wcard,#fuseGrid .fcard){
+  background:var(--arena-panel);border-radius:3px;box-shadow:inset 0 0 0 2px #0b0c15,inset 0 0 0 3px var(--arena-inlay)
+}
+.arena-combat-hud :is(#codex .wcard,#fuseGrid .fcard) b{color:var(--arena-parchment)}
+.arena-combat-hud .arena-weapon-portrait{
+  display:block;width:42px;height:42px;flex:none;
+  background-image:url('assets/ui/arena-armory.webp');background-size:600% 500%;background-repeat:no-repeat
+}
+.arena-combat-hud #codex .arena-weapon-portrait{margin:0 auto 3px}
+.arena-combat-hud #fuseGrid .arena-weapon-portrait{width:46px;height:46px}
 </style>
 </head>
 <body>
@@ -335,7 +362,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <canvas id="c"></canvas>
 <div id="menu" class="ov">
   <div class="anime-kicker">BATTLE ROYALE · DARK FANTASY</div>
-  <h1>Arena Royale</h1>
+  <h1>MuzCruor</h1>
   <div class="sub">32 ผู้กล้า ล่ามอนสเตอร์ เก็บเหรียญ หนึ่งผู้รอดชีวิต</div>
   <div class="codex" id="codex"></div>
   <div class="row">
@@ -427,8 +454,10 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     <div class="arena-load-embers"></div>
   </div>
   <div class="arena-load-card">
-    <div class="arena-crest" aria-hidden="true"><i></i></div>
-    <h1 class="arena-wordmark" id="arenaLoadWordmark"><span>ARENA</span><span>ROYALE</span></h1>
+    <h1 class="arena-wordmark" id="arenaLoadWordmark" aria-label="MuzCruor">
+      <span>MuzCruor</span>
+      <img src="assets/ui/muzcruor-mark.webp" alt="" width="1344" height="437" decoding="async">
+    </h1>
     <div class="arena-load-rule" aria-hidden="true"></div>
     <h2 id="moonfallLoadTitle">กำลังเปิดประตูสนาม</h2>
     <p id="moonfallLoadStatus" role="status" aria-live="polite">กำลังตรวจสอบไฟล์เกม…</p>
@@ -3213,7 +3242,7 @@ function fuseLine(me){if(!me||me.dead||!me.wk||FUSED[me.wk])return null;if(me.fu
   if(me.wk2&&FUSED[me.wk2])return{t:'⚒️ อาวุธสำรองหลอมแล้ว — แตะรูปอาวุธเพื่อใช้',c:'#ffd27a'};
   if(left>0){const tt=`⚒️ หลอมอาวุธใน ${fmtT(left)}`;return F?{t:`${tt} · ${WEAPONS[me.wk].ic}+${WEAPONS[me.wk2].ic} → ${F.ic} ${F.n}`,c:left<30?'#ffd27a':'#f2e2b8',p:left<30?1:0}:{t:`${tt} · ต้องมีอาวุธ 2 ชนิด (1/2)`,c:'#c8c0b0'}}
   return{t:'⚒️ เก็บอาวุธอีกชนิด — หลอมทันที',c:'#ffd27a'}}
-function drawSwap(me,s,pr){const bx=boxNear(me);const it=bx?null:swapCandidate(me);if(!bx&&!it)return;const W2=it&&WEAPONS[it.wk];const txt=bx?'📦 เปิดกล่อง':me.wk2?`🔄 รับ ${W2.ic} ${W2.names[it.tier]} · ทิ้ง ${WEAPONS[me.wk2].ic}`:`🔄 เก็บ ${W2.ic} ${W2.names[it.tier]}`+(CURSED&&it?' '+wvIcons(itWV(it)):'');
+function drawSwap(me,s,pr){const bx=boxNear(me);const it=bx?null:swapCandidate(me);if(!bx&&!it)return;if(ARX){drawArenaPickup(me,s,pr,bx,it);return}const W2=it&&WEAPONS[it.wk];const txt=bx?'📦 เปิดกล่อง':me.wk2?`🔄 รับ ${W2.ic} ${W2.names[it.tier]} · ทิ้ง ${WEAPONS[me.wk2].ic}`:`🔄 เก็บ ${W2.ic} ${W2.names[it.tier]}`+(CURSED&&it?' '+wvIcons(itWV(it)):'');
   ctx.font=`bold ${13*s}px system-ui,sans-serif`;const w=ctx.measureText(txt).width+26*s,h=30*s;const x=clamp(pr.x+pr.w/2-w/2,SAFE.l+8,W-SAFE.r-w-8),y=pr.y-h-10*s-(pr.statusHeight||0)-(me.pts>0?14*s:0);
   const pl=press[4]>0;ctx.globalAlpha=.94;panelBg(x,y,w,h,h/2);ctx.strokeStyle=bx?'#e8c050':TIERS[it.tier].c;ctx.lineWidth=2.5;rr(x,y,w,h,h/2);ctx.stroke();ctx.globalAlpha=1;
   ctx.fillStyle=pl?'#fff':'#ffe9a8';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,x+w/2,y+h/2+1);ctx.textBaseline='alphabetic';UI.swap={x,y,w,h}}
@@ -3424,12 +3453,12 @@ LOOKS.forEach((l,i)=>{const b=document.createElement('button');b.type='button';b
   b.onclick=()=>{chosenLook=i;lsSet('ar_look',String(i));AU.init();AU.play('click');lookEl.querySelectorAll('.look').forEach((e,j)=>e.classList.toggle('sel',j===i));
     if(net.mode==='client')netSend({t:'look',look:i});else if(net.mode==='host'&&net.lobby[0]){net.lobby[0].look=i;pushLobby()}};lookEl.appendChild(b)});
 const codexEl=$('codex');
-for(const k of WK){const d=WEAPONS[k];const el=document.createElement('div');el.className='wcard';
+for(const k of WK){const d=WEAPONS[k];const el=document.createElement('div');el.className='wcard';if(ARX)el.dataset.weapon=k;
   el.innerHTML=`<div class="ic">${d.ic}</div><b>${d.n}</b><small>${d.desc}</small><div class="sks">${SK[k].map(s=>`<span title="${s.n}">${s.ic}</span>`).join(' ')}</div>`;codexEl.appendChild(el)}
 // fusion recipes: every fused weapon, what makes it and its three new skills
 function recipeTxt(F){const M='🗡️🪓🔪⚔️',R='🏹🎯',S=k=>WEAPONS[k].ic+' '+WEAPONS[k].n;
   return F.arch==='MM'?`${M} ประชิด 2 ชนิด`:F.arch==='MR'?`${M} ประชิด + ${R} ยิงไกล`:F.arch==='RR'?'🏹 ธนูยาว + 🎯 หน้าไม้':F.arch==='MS'?`${M} ประชิด + ${S(F.el)}`:F.arch==='RS'?`${R} ยิงไกล + ${S(F.el)}`:`${WEAPONS[F.el].ic} + ${WEAPONS[F.el2].ic} คทา 2 ธาตุ`}
-{const G=$('fuseGrid');for(const k of FK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';el.style.borderColor=hexA(F.glow,.55);
+{const G=$('fuseGrid');for(const k of FK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';if(ARX)el.dataset.weapon=k;el.style.borderColor=hexA(F.glow,.55);
   el.innerHTML=`<div class="fh2"><span class="ic">${F.ic}</span><div><b>${F.n}</b><div class="rc">${recipeTxt(F)}</div></div></div><small>${F.desc}</small><div class="sks">${SK[k].map((s,i)=>`<span>${s.ic} ${['Q','E','R'][i]} · ${s.n}</span>`).join('')}</div>`;G.appendChild(el)}}
 $('fuseBtn').onclick=()=>{AU.init();AU.play('click');$('fuseOv').classList.remove('hidden')};
 // sound credits (CC BY works must be credited; CC0 listed as thanks)
@@ -7216,10 +7245,10 @@ const _aev=applyEvent;applyEvent=function(e){if(e&&e.t==='pd'){const u=UMAP.get(
 // the HUD's weapon glyph: a tome has none (its emoji is drawn instead)
 if(typeof wpIco==='function'){const _wi=wpIco;wpIco=function(me){if(me&&SO(me.wk))return null;return _wi(me)}}
 // ---- the codex card and the fusion recipes ----
-try{const el=document.createElement('div');el.className='wcard';const d=WEAPONS[K];
+try{const el=document.createElement('div');el.className='wcard';if(ARX)el.dataset.weapon=K;const d=WEAPONS[K];
   el.innerHTML=`<div class="ic">${d.ic}</div><b>${d.n}</b><small>${d.desc}</small><div class="sks">${SK[K].map(s=>`<span title="${s.n}">${s.ic}</span>`).join(' ')}</div>`;$('codex').appendChild(el)}catch(e){}
 try{const G=$('fuseGrid'),M='🗡️🪓🔪⚔️',R='🏹🎯';
-  for(const k of SOK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';el.style.borderColor=hexA(F.glow,.55);
+  for(const k of SOK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';if(ARX)el.dataset.weapon=k;el.style.borderColor=hexA(F.glow,.55);
     const rc=F.so==='M'?`📖 คัมภีร์วิญญาณ + ${M} ประชิด`:F.so==='R'?`📖 คัมภีร์วิญญาณ + ${R} ยิงไกล`:`📖 คัมภีร์วิญญาณ + ${WEAPONS[F.el].ic} ${WEAPONS[F.el].n}`;
     el.innerHTML=`<div class="fh2"><span class="ic">${F.ic}</span><div><b>${F.n}</b><div class="rc">${rc}</div></div></div><small>${F.desc}</small><div class="sks">${SK[k].map((s,i)=>`<span>${s.ic} ${['Q','E','R'][i]} · ${s.n}</span>`).join('')}</div>`;G.appendChild(el)}}catch(e){}
 window.SUMMONER={K,PK,petsOf,SO,SOK,soKit,soEl,spiritAttackDamage,spiritGuardianDamage};
@@ -10683,11 +10712,9 @@ if(typeof shopBuy==='function'){const _sb=shopBuy;
 if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
   const css=document.createElement('style');css.textContent=`
 #arenaNpcPrompt{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);transform:translateX(-50%);z-index:7;display:none;align-items:center;gap:9px;padding:8px 16px 8px 11px;
-  border:1px solid #d6b45e;border-radius:26px;background:linear-gradient(180deg,#2c2312f5,#120d07f5);color:#ffe9a8;font:700 15px/1 system-ui,sans-serif;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;
-  box-shadow:0 4px 14px #000a,0 0 0 1px #000;animation:arenaNpcPulse 1.6s ease-in-out infinite}
+  font:700 14px/1 system-ui,sans-serif;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
 #arenaNpcPrompt b{font-size:23px;line-height:1}#arenaNpcPrompt small{font:600 11px system-ui,sans-serif;color:#e8d49a;border:1px solid #c9a94a88;border-radius:4px;padding:2px 5px}
 #arenaNpcPrompt i{font:500 12px system-ui,sans-serif;color:#cdbb8a;font-style:normal}
-@keyframes arenaNpcPulse{0%,100%{box-shadow:0 4px 14px #000a,0 0 0 1px #000,0 0 0 0 #ffd35a00}50%{box-shadow:0 4px 14px #000a,0 0 0 1px #000,0 0 18px 4px #ffd35a66}}
 #arenaGold{pointer-events:none!important;cursor:default!important}#arenaGold img[alt="เปิดร้านค้า"]{display:none!important}
 `;document.head.appendChild(css);
   const pr=document.createElement('div');pr.id='arenaNpcPrompt';pr.setAttribute('role','button');pr.innerHTML='<b>🛒</b><span>ร้านค้า</span><i></i><small>P</small>';document.body.appendChild(pr);
@@ -10703,6 +10730,10 @@ if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
   function npcHudStep(){const me=ME(),sky=typeof DROP!=='undefined'&&DROP.sky&&DROP.sky(),on=state==='play'&&me&&!me.dead&&!sky;
     const n=on?npcNear(me,NPC_R):null;if(n!==near0){near0=n;pr.querySelector('i').textContent=n?'· '+n.name:''}
     const show=!!n&&!CUR.open;if((pr.style.display==='flex')!==show)pr.style.display=show?'flex':'none';
+    if(show){
+      const bottom=Math.max(SAFE.b+96,UI.swap?H-UI.swap.y+8:0)+'px';
+      if(pr.style.bottom!==bottom)pr.style.bottom=bottom;
+    }
     if(CUR.open&&(!on||npcGate()&&!npcNear(me,NPC_R+90)))_tg.call(CUR,false)}
   // installed after the HUD installers (installMoonfallInventory / installArenaCombatControls run later in the same script)
   setTimeout(()=>{const st=CUR.step;CUR.step=function(dt){const r=st.call(this,dt);try{npcHudStep()}catch(e){}return r};
@@ -10713,8 +10744,10 @@ if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
 if(typeof R3!=='undefined'&&typeof THREE!=='undefined'){const R=R3,T=THREE;
   const _sb=R.stepBoxes;R.stepBoxes=function(dt,force){_sb.call(this,dt,force);try{this.stepNpcs(dt||0)}catch(e){if(!this._npcErr){this._npcErr=1;console.warn('npc',e)}}};
   R.npcSign=function(name){return this.cached('npcsign',()=>{const c=document.createElement('canvas');c.width=256;c.height=96;const x=c.getContext('2d');
-      const g=x.createLinearGradient(0,0,0,96);g.addColorStop(0,'#3a2c12');g.addColorStop(1,'#140e06');x.fillStyle=g;x.strokeStyle='#e2c06a';x.lineWidth=4;
-      x.beginPath();x.roundRect?x.roundRect(6,10,244,60,18):x.rect(6,10,244,60);x.fill();x.stroke();x.fillStyle='#e2c06a';x.beginPath();x.moveTo(116,70);x.lineTo(128,88);x.lineTo(140,70);x.fill();
+      const g=x.createLinearGradient(0,0,0,96);g.addColorStop(0,'#33293b');g.addColorStop(1,'#11101a');x.fillStyle=g;x.strokeStyle='#d9b58c';x.lineWidth=3;
+      x.beginPath();x.moveTo(18,10);x.lineTo(238,10);x.lineTo(250,22);x.lineTo(250,58);
+      x.lineTo(238,70);x.lineTo(18,70);x.lineTo(6,58);x.lineTo(6,22);x.closePath();x.fill();x.stroke();
+      x.strokeStyle='#d9b58c65';x.lineWidth=1;x.strokeRect(20,16,216,48);x.fillStyle='#d9b58c';x.beginPath();x.moveTo(116,70);x.lineTo(128,88);x.lineTo(140,70);x.fill();
       x.font='bold 34px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillStyle='#ffe9a8';x.fillText('🛒 ร้านค้า',128,41);
       const t=new T.CanvasTexture(c);if(T.SRGBColorSpace)t.colorSpace=T.SRGBColorSpace;const m=new T.SpriteMaterial({map:t,transparent:true,depthWrite:false});m.userData.ownMat=1;return m})};
   R.clearNpcs=function(){if(this.npcO)for(const o of this.npcO){if(o.root.parent)o.root.parent.remove(o.root);try{o.mixer.stopAllAction()}catch(e){}}this.npcO=null};
@@ -11132,8 +11165,19 @@ window.installArenaMenuUX=function(){
     const icon=key=>{const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.35');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[key]);svg.appendChild(path);return svg;};
     const title=menu.querySelector('.moonfall-menu-title');
     const wordmark=title.querySelector('h1');
-    wordmark.classList.add('arena-wordmark');wordmark.setAttribute('aria-label','Arena Royale');
-    wordmark.replaceChildren(make('span','','ARENA'),make('span','','ROYALE'));
+    const name=document.title;
+    wordmark.classList.add('arena-wordmark');wordmark.setAttribute('aria-label',name);
+    wordmark.replaceChildren(make('span','',name));
+    const loadingMark=document.getElementById('arenaLoadWordmark');
+    const image=loadingMark?.querySelector('img');
+    if(image){
+      wordmark.append(image.cloneNode());
+      for(const mark of [wordmark,loadingMark]){
+        const art=mark.querySelector('img');
+        art.decode().then(()=>mark.classList.add('arena-wordmark-ready'),()=>art.remove());
+      }
+    }
+    title.querySelector('.moonfall-menu-crest')?.remove();
     title.querySelector('.anime-kicker').textContent='BATTLE ROYALE';
     title.querySelector('.moonfall-menu-chapter').remove();
     title.querySelector('.sub').textContent='32 ผู้กล้า · เก็บอาวุธ ปลดปล่อยสกิล · เหลือเพียงตำนานเดียว';
@@ -11148,6 +11192,19 @@ window.installArenaMenuUX=function(){
       copy.append(make('span','arena-action-name',label),make('span','arena-action-description',description));
       const arrow=icon('arrow');arrow.classList.add('arena-action-arrow');button.replaceChildren(icon(graphic),copy,arrow);
     }
+    const refreshWeaponPortraits=()=>{
+      const atlas=window.MoonfallUI?.snapshot().atlas;
+      const sheet=atlas?.sheets.armory;
+      if(!sheet)return;
+      for(const card of document.querySelectorAll('#codex [data-weapon],#fuseGrid [data-weapon]')){
+        const tile=card.querySelector('.ic'),cell=atlas.weaponPortraits[card.dataset.weapon];
+        if(!Number.isInteger(cell))continue;
+        tile.textContent='';tile.classList.add('arena-weapon-portrait');tile.setAttribute('aria-hidden','true');
+        tile.style.backgroundPosition=`${(cell%sheet.columns)/(sheet.columns-1)*100}% ${Math.floor(cell/sheet.columns)/(sheet.rows-1)*100}%`;
+      }
+    };
+    window.addEventListener('moonfallui:ready',refreshWeaponPortraits,{once:true});
+    if(window.MoonfallUI?.snapshot().state==='loaded')refreshWeaponPortraits();
     const utilities=make('nav','arena-menu-utilities');utilities.setAttribute('aria-label','เครื่องมือเกม');
     const open=make('button','arena-menu-tool');open.id='arenaSettingsBtn';open.type='button';
     open.append(icon('gear'),make('span','','ตั้งค่า'));open.setAttribute('aria-haspopup','dialog');open.setAttribute('aria-controls','arenaSettings');open.setAttribute('aria-expanded','false');
@@ -11418,23 +11475,63 @@ function drawArenaStatus(u,x,y,w,s){
   return used?lines.length*(h+gap):0;
 }
 
+function arenaPlatePath(x,y,w,h,s){
+  const cut=Math.min(7*s,h*.32);
+  ctx.beginPath();ctx.moveTo(x+cut,y);ctx.lineTo(x+w-cut,y);ctx.lineTo(x+w,y+cut);
+  ctx.lineTo(x+w,y+h-cut);ctx.lineTo(x+w-cut,y+h);ctx.lineTo(x+cut,y+h);
+  ctx.lineTo(x,y+h-cut);ctx.lineTo(x,y+cut);ctx.closePath();
+}
+
+function arenaPlate(x,y,w,h,s,tone='gold',accent){
+  const [rim,top,bottom]=tone==='danger'?['#bb675f','#49272f','#1a111c']:
+    tone==='muted'?['#897b91','#2d293b','#10111c']:['#b58b61','#33293b','#11101a'];
+  ctx.save();
+  arenaPlatePath(x,y,w,h,s);
+  const metal=ctx.createLinearGradient(x,y,x+w*.13,y+h);
+  metal.addColorStop(0,top);metal.addColorStop(.65,bottom);metal.addColorStop(1,'#0c0d15');
+  ctx.fillStyle=metal;ctx.fill();
+  ctx.strokeStyle='#07070e';ctx.lineWidth=3*s;ctx.stroke();
+  ctx.strokeStyle=accent||rim;ctx.lineWidth=Math.max(1,s);ctx.stroke();
+  const inset=3*s;
+  arenaPlatePath(x+inset,y+inset,w-2*inset,h-2*inset,.68*s);
+  ctx.strokeStyle=hexA(accent||rim,.36);ctx.lineWidth=.75*s;ctx.stroke();
+  const edge=ctx.createLinearGradient(x+11*s,y,x+w-11*s,y);
+  edge.addColorStop(0,'#fff0cd00');edge.addColorStop(.39,'#f8dba969');edge.addColorStop(1,'#fff0cd00');
+  ctx.fillStyle=edge;ctx.fillRect(x+11*s,y,w-22*s,Math.max(1,s*.75));
+  ctx.restore();
+}
+
 function arenaNotice(txt,x,y,maxWidth,s,{tone='gold',align='center',size=15,alpha=1}={}){
-  const [rim,ink,top,bottom]=tone==='danger'?['#a96b62','#ffd0b8','#41242a','#1a131c']:
-    tone==='muted'?['#786b56','#dfe4e6','#26313d','#111723']:['#9b8057','#f7dfaf','#2b3039','#121721'];
+  const ink=tone==='danger'?'#ffd0bc':tone==='muted'?'#e0dfec':'#fae6c4';
   ctx.save();ctx.globalAlpha=alpha;
-  const fontSize=size*s,pad=11*s,height=(size+10)*s,corner=4*s;
-  ctx.font=`650 ${fontSize}px ${ARENA_HUD_FONT}`;
+  const pad=18*s,height=(size+11)*s;
+  ctx.font=`650 ${size*s}px ${ARENA_HUD_FONT}`;
   const width=Math.min(maxWidth,ctx.measureText(txt).width+2*pad);
-  const left=x-(align==='right'?width:width/2),topY=y-height/2;
-  const g=ctx.createLinearGradient(0,topY,0,topY+height);g.addColorStop(0,top);g.addColorStop(1,bottom);
-  ctx.beginPath();
-  ctx.moveTo(left+corner,topY);ctx.lineTo(left+width-corner,topY);ctx.lineTo(left+width,topY+corner);
-  ctx.lineTo(left+width,topY+height-corner);ctx.lineTo(left+width-corner,topY+height);
-  ctx.lineTo(left+corner,topY+height);ctx.lineTo(left,topY+height-corner);ctx.lineTo(left,topY+corner);ctx.closePath();
-  ctx.fillStyle=g;ctx.fill();ctx.strokeStyle=rim;ctx.lineWidth=1;ctx.stroke();
-  ctx.fillStyle=rim;ctx.fillRect(left+5*s,topY+height*.32,1,height*.36);
+  const left=x-(align==='right'?width:width/2);
+  arenaPlate(left,y-height/2,width,height,s,tone);
+  const r=2.3*s;
+  ctx.fillStyle=tone==='danger'?'#e49082':tone==='muted'?'#ac9cb8':'#e6bc84';
+  for(const p of [left+8*s,left+width-8*s]){
+    ctx.beginPath();ctx.moveTo(p,y-r);ctx.lineTo(p+r,y);ctx.lineTo(p,y+r);ctx.lineTo(p-r,y);ctx.closePath();ctx.fill();
+  }
   ctx.fillStyle=ink;ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText(txt,left+width/2,y,Math.max(1,width-2*pad));ctx.restore();
+}
+
+function drawArenaPickup(me,s,pr,box,item){
+  const weapon=item&&WEAPONS[item.wk],tint=box?'#dcb985':TIERS[item.tier].c;
+  const rune=item&&!me.wk2?wvIcons(itWV(item)):'';
+  const label=box?'เปิดกล่อง':(me.wk2?'รับ ':'เก็บ ')+weapon.names[item.tier]+(me.wk2?' · แทนช่องสำรอง':'')+(rune?' '+rune:'');
+  ctx.save();ctx.font=`650 ${13*s}px ${ARENA_HUD_FONT}`;
+  const w=Math.min(W-SAFE.l-SAFE.r-16,ctx.measureText(label).width+58*s),h=33*s;
+  const x=clamp(pr.x+pr.w/2-w/2,SAFE.l+8,W-SAFE.r-w-8);
+  const y=pr.y-h-10*s-(pr.statusHeight||0)-(me.pts>0?16*s:0);
+  arenaPlate(x,y,w,h,s,'gold',tint);
+  const image=box?ArenaHudIcons.symbol('chest'):ArenaHudIcons.weapon(item.wk);
+  ctx.drawImage(image,x+8*s,y+3*s,h-6*s,h-6*s);
+  ctx.textBaseline='middle';ctx.textAlign='left';ctx.fillStyle=press[4]>0?'#fff':'#fae9cf';
+  ctx.fillText(label,x+40*s,y+h/2,w-49*s);
+  ctx.restore();UI.swap={x,y,w,h};
 }
 
 function drawArenaFeed(s){
@@ -11447,6 +11544,7 @@ const ArenaHudIcons=(()=>{
   const weapons=new Map(),symbols=new Map(),statuses=new Map();
   const tome='M3 5 Q7 4 12 7 Q17 4 21 5 L21 18 Q17 17 12 20 Q7 17 3 18 Z M12 7 V20 M5.5 8.5 Q8 8.5 10 10 M5.5 11.5 Q8 11.5 10 13 M15 11 L17 8.5 L19 11 L17 13.5 Z';
   const glyphs={
+    chest:['M3 11V7l4-3h10l4 3v4m-18 0h18v8H3Zm7 0v4h4v-4M7 7v3m10-3v3','#f9d594'],
     health:['M12 20 4.8 12.7C-.5 7.4 6.7 1.9 12 7.4c5.3-5.5 12.5 0 7.2 5.3Z','#ffb9b6',true],
     mana:['M12 2.5 19 12 12 21.5 5 12Z M12 7 15.5 12 12 16.5 8.5 12Z','#a7f4ff',true],
     shield:['M12 2.5C9 5 6 6 3.8 6l1.1 7.7C5.6 17 8.2 19.5 12 21.5c3.8-2 6.4-4.5 7.1-7.8L20.2 6c-2.2 0-5.2-1-8.2-3.5Z M12 6.5v10.7 M8.3 11h7.4','#efcf8b'],
@@ -11480,6 +11578,8 @@ const ArenaHudIcons=(()=>{
   }
   function weapon(key){
     const wk=key&&Object.hasOwn(WEAPONS,key)?key:'fist';
+    const portrait=window.MoonfallUI?.weapon?.(wk);
+    if(portrait)return portrait;
     if(weapons.has(wk))return weapons.get(wk);
     const canvas=plate(144),paint=canvas.getContext('2d');
     const fusion=FUSED[wk],base=fusion?.base||wk;
@@ -11551,26 +11651,24 @@ function installArenaHud(){
 
   drawPanel=function(me,s){
     const left=SAFE.l+UI.b*3.4,right=W-SAFE.r-UI.b*4.6;
-    const w=clamp(right-left,230*s,440*s),h=17*s;
+    const w=clamp(right-left,230*s,440*s),h=23*s;
     const x=clamp(W/2-w/2-UI.b*.6,left,right-w),y=H-SAFE.b-h-5;
     const ratio=me.lvl>=MAXL?1:clamp(me.xp/needXp(me.lvl),0,1);
-    const emblem=ArenaHudIcons.weapon(me.wk),cut=4*s;
+    const emblem=ArenaHudIcons.weapon(me.wk);
     const title=me.wk?WEAPONS[me.wk].names[me.wt]:'มือเปล่า';
     const rank=me.wk?TIERS[me.wt].c:'#ddd2bb';
-    ctx.save();ctx.beginPath();ctx.moveTo(x+cut,y);ctx.lineTo(x+w-cut,y);ctx.lineTo(x+w,y+cut);
-    ctx.lineTo(x+w,y+h-cut);ctx.lineTo(x+w-cut,y+h);ctx.lineTo(x+cut,y+h);
-    ctx.lineTo(x,y+h-cut);ctx.lineTo(x,y+cut);ctx.closePath();
-    ctx.fillStyle='#14151c';ctx.fill();ctx.strokeStyle='#807051';ctx.lineWidth=1;ctx.stroke();
-
-    const tx=x+8*s,trackY=y+h-3.5*s,trackW=w-16*s;
-    ctx.fillStyle='#262631';ctx.fillRect(tx,trackY,trackW,2*s);
-    ctx.fillStyle='#c6a36b';ctx.fillRect(tx,trackY,trackW*ratio,2*s);
-    if(ratio>0){ctx.fillStyle='#f6daa2';ctx.fillRect(tx,trackY,trackW*ratio,.75*s)}
-    ctx.textBaseline='middle';ctx.textAlign='left';ctx.font=`700 ${10*s}px system-ui,sans-serif`;
-    ctx.fillStyle='#ead7ae';ctx.fillText(`Lv. ${me.lvl}`,tx,y+6.5*s);
-    const iconSize=14*s,iconX=x+57*s;
-    ctx.drawImage(emblem,iconX,y-.75*s,iconSize,iconSize);
-    ctx.fillStyle=rank;ctx.fillText(title,iconX+iconSize+2*s,y+6.5*s,w-81*s);
+    ctx.save();arenaPlate(x,y,w,h,s);
+    const tx=x+9*s,textY=y+9.7*s,trackY=y+h-5*s,trackW=w-18*s;
+    ctx.fillStyle='#20202e';ctx.fillRect(tx,trackY,trackW,2*s);
+    ctx.fillStyle='#c89a66';ctx.fillRect(tx,trackY,trackW*ratio,2*s);
+    if(ratio>0){ctx.fillStyle='#f5d5a4';ctx.fillRect(tx,trackY,trackW*ratio,.75*s)}
+    ctx.textBaseline='middle';ctx.textAlign='left';ctx.font=`700 ${10.5*s}px ${ARENA_HUD_FONT}`;
+    ctx.fillStyle='#eed8aa';ctx.fillText(`Lv. ${me.lvl}`,tx,textY);
+    ctx.fillStyle='#bba18072';ctx.fillRect(x+46*s,y+4*s,1,h-11*s);
+    const iconX=x+52*s,iconSize=24*s;
+    ctx.drawImage(emblem,iconX,textY-iconSize/2,iconSize,iconSize);
+    ctx.font=`700 ${11.4*s}px ${ARENA_HUD_FONT}`;
+    ctx.fillStyle=rank;ctx.fillText(title,iconX+27*s,textY,w-89*s);
 
     // Leave room for the dash control and its keyboard label.
     const dash=arenaDashAnchor(potionRail({x,w},s));

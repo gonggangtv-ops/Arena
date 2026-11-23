@@ -22,8 +22,19 @@ window.installArenaMenuUX=function(){
     const icon=key=>{const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.35');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[key]);svg.appendChild(path);return svg;};
     const title=menu.querySelector('.moonfall-menu-title');
     const wordmark=title.querySelector('h1');
-    wordmark.classList.add('arena-wordmark');wordmark.setAttribute('aria-label','Arena Royale');
-    wordmark.replaceChildren(make('span','','ARENA'),make('span','','ROYALE'));
+    const name=document.title;
+    wordmark.classList.add('arena-wordmark');wordmark.setAttribute('aria-label',name);
+    wordmark.replaceChildren(make('span','',name));
+    const loadingMark=document.getElementById('arenaLoadWordmark');
+    const image=loadingMark?.querySelector('img');
+    if(image){
+      wordmark.append(image.cloneNode());
+      for(const mark of [wordmark,loadingMark]){
+        const art=mark.querySelector('img');
+        art.decode().then(()=>mark.classList.add('arena-wordmark-ready'),()=>art.remove());
+      }
+    }
+    title.querySelector('.moonfall-menu-crest')?.remove();
     title.querySelector('.anime-kicker').textContent='BATTLE ROYALE';
     title.querySelector('.moonfall-menu-chapter').remove();
     title.querySelector('.sub').textContent='32 ผู้กล้า · เก็บอาวุธ ปลดปล่อยสกิล · เหลือเพียงตำนานเดียว';
@@ -38,6 +49,19 @@ window.installArenaMenuUX=function(){
       copy.append(make('span','arena-action-name',label),make('span','arena-action-description',description));
       const arrow=icon('arrow');arrow.classList.add('arena-action-arrow');button.replaceChildren(icon(graphic),copy,arrow);
     }
+    const refreshWeaponPortraits=()=>{
+      const atlas=window.MoonfallUI?.snapshot().atlas;
+      const sheet=atlas?.sheets.armory;
+      if(!sheet)return;
+      for(const card of document.querySelectorAll('#codex [data-weapon],#fuseGrid [data-weapon]')){
+        const tile=card.querySelector('.ic'),cell=atlas.weaponPortraits[card.dataset.weapon];
+        if(!Number.isInteger(cell))continue;
+        tile.textContent='';tile.classList.add('arena-weapon-portrait');tile.setAttribute('aria-hidden','true');
+        tile.style.backgroundPosition=`${(cell%sheet.columns)/(sheet.columns-1)*100}% ${Math.floor(cell/sheet.columns)/(sheet.rows-1)*100}%`;
+      }
+    };
+    window.addEventListener('moonfallui:ready',refreshWeaponPortraits,{once:true});
+    if(window.MoonfallUI?.snapshot().state==='loaded')refreshWeaponPortraits();
     const utilities=make('nav','arena-menu-utilities');utilities.setAttribute('aria-label','เครื่องมือเกม');
     const open=make('button','arena-menu-tool');open.id='arenaSettingsBtn';open.type='button';
     open.append(icon('gear'),make('span','','ตั้งค่า'));open.setAttribute('aria-haspopup','dialog');open.setAttribute('aria-controls','arenaSettings');open.setAttribute('aria-expanded','false');
