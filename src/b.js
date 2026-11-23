@@ -793,6 +793,8 @@ function campTick(){const P=mobPow(gameT),grow=(mobGrowT-=1)<=0&&P>1;if(grow)mob
     for(const id of c.mem){const m=UMAP.get(id);if(!m)continue;mobScale(m,Math.min(mobCap(m),sc*(c.sc||1)));m.dead=false;m.x=m.home.x;m.y=m.home.y;m.aggro=null;m.stunT=0;m.rootT=0;m.slowT=0;m.burnT=0;m.kb=null}
     c.deadAt=-1;c.respawns++;if(c.tier==='boss')emit({t:'f',s:'🐉 มังกรเพลิงกลับมาเฝ้าปราสาท!'})}}}
 let avgLvl=1,frameN=0,HEROES=[];
+// bolts hit the body, not the whole collision circle (owner 2026-11-23: hitboxes felt too generous)
+const HBX=.85;
 function hitArea(a,u){if(a.shape==='line'){const ex=a.x+Math.cos(a.ang)*a.len,ey=a.y+Math.sin(a.ang)*a.len;return segDist(u,[a.x,a.y,ex,ey])<a.w/2+u.r*.5}
   if(a.shape==='cone'){const d=dist(a,u);if(d>a.len+u.r*.5)return false;let da=Math.abs(Math.atan2(u.y-a.y,u.x-a.x)-a.ang);if(da>Math.PI)da=Math.PI*2-da;return da<a.arc||d<u.r+30}
   return dist(a,u)<a.r+u.r*.6}
@@ -827,6 +829,7 @@ function hostUpdate(dt){
     let m={mx:0,my:0};
     if(isHuman(u)){const inp=u.ctrl==='host'?localInput():(net.inputs[u.ctrl]||{mx:0,my:0,atk:false});m={mx:inp.mx||0,my:inp.my||0};if(CURSED){tpsHost(u,inp,dt);if(u.blk){m.mx*=.45;m.my*=.45}}if(inp.atk&&!u.blk)basic(u)}
     else if(u.zombie)m=zombieThink(u,dt);else if(u.mob){nightAggro(u);m=mobThink(u,dt)}else{m=botThink(u,dt);if(Math.random()<dt*3)botPotions(u)}
+    if(typeof feelMove==='function')m=feelMove(u,m,dt);   // arena-feel.js: acceleration, wind-up slow, roll easing
     if(u.stunT>0||u.rootT>0){m.mx=0;m.my=0}
     u.mvx=m.mx;u.mvy=m.my;u.wet=u.hero&&inWater(u.x,u.y);
     if(u.leap){const L=u.leap;L.t+=dt;const k=Math.min(1,L.t/L.T);u.x=lerp(L.sx,L.tx,k);u.y=lerp(L.sy,L.ty,k);
@@ -859,7 +862,7 @@ function hostUpdate(dt){
     const wr=p.wr||p.r;let hitS=!p.ghost&&(solidAt(p.x,p.y)||forObstacles(p.x,p.y,wr,o=>o.c===1?((p.x-o.x)**2+(p.y-o.y)**2<(o.r+wr)**2):circRect(p.x,p.y,wr,o)));
     if(p.ghost&&(p.x<0||p.y<0||p.x>WORLD||p.y>WORLD))p.life=0;
     if(!hitS)for(const u of units){if(u.dead||!isEnemy(p.owner,u)||p.hit.has(u))continue;
-      if(Math.abs(p.x-u.x)<u.r+p.r&&dist(p,u)<u.r+p.r){p.hit.add(u);
+      if(Math.abs(p.x-u.x)<u.r+p.r&&dist(p,u)<u.r*HBX+p.r){p.hit.add(u);
         if(p.basic)addFury(p.owner);if(!p.boom){dealDamage(u,p.dmg,p.crit?'pure':p.type,p.owner,false,p.crit);sndAt(p.crit?'crit':projHitSnd(p),u.x,u.y);
           if(!u.dead){if(p.slow){u.slowT=Math.max(u.slowT,p.slow);u.slowAmt=Math.max(u.slowT>p.slow?u.slowAmt:0,p.slowAmt)}if(p.root){u.rootT=Math.max(u.rootT,p.root);fxE('snare',{id:u.id,x:u.x|0,y:u.y|0})}
             if(p.el)elemHit(p.owner,u,p.el,p.elP);else if(p.st&&(!p.stP||Math.random()<p.stP))stAdd(p.owner,u,p.st,1);if(p.kbF&&!u.boss&&!u.golem){const l=Math.hypot(p.vx,p.vy)||1;u.kb={vx:p.vx/l*p.kbF,vy:p.vy/l*p.kbF,t:.2};u.dash=null}}

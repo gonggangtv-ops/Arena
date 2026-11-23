@@ -396,8 +396,8 @@ Object.assign(R3,{
       if(o&&o.dieT>0){o.dieT-=dt;const kk=1-o.dieT/1.4;o.root.visible=o.dieT>0;o.body.rotation.x=-Math.min(1.45,kk*3);o.root.position.y=o.gy-Math.max(0,kk-.6)*40;continue}
       if(!o){if(!vis)continue;o=this.objFor(u)}o.root.visible=vis;if(!vis){o.lx=u.x;o.ly=u.y;continue}
       const mv=Math.hypot(u.x-o.lx,u.y-o.ly)/Math.max(dt,.001);o.lx=u.x;o.ly=u.y;o.gy=this.gY(u.x,u.y);o.root.position.set(u.x,o.gy,u.y);
-      const want=Math.atan2(u.fx,u.fy);let dr=want-o.rot;dr=Math.atan2(Math.sin(dr),Math.cos(dr));o.rot+=dr*Math.min(1,dt*14);o.root.rotation.y=o.rot;
-      const moving=mv>25&&!u.dash&&!u.leap;o.walk+=dt*(moving?Math.min(16,mv/15):0);o.mvK=lerp(o.mvK,moving?1:0,Math.min(1,dt*10));
+      const want=Math.atan2(u.fx,u.fy);let dr=want-o.rot;dr=Math.atan2(Math.sin(dr),Math.cos(dr));o.rot+=dr*Math.min(1,dt*(u.hero?12:u.big||u.r>=34?7:9));o.root.rotation.y=o.rot;
+      const moving=mv>25&&!u.dash&&!u.leap;o.walk+=dt*(moving?Math.min(16,mv/15):0);o.mvK=lerp(o.mvK,moving?1:0,Math.min(1,dt*7));
       if(u.hero&&o.kind!=='kk'&&!o.qn&&!o.celestial){if(o.at!==u.at){this.dress(o,u.at,u.look);o.at=u.at}if(o.wk!==u.wk||o.wt!==u.wt){this.arm(o,u);o.wk=u.wk;o.wt=u.wt}}
       o.body.rotation.x=0;if(o.celestial)this.celestialAnim(o,u,T,dt,mv);else if(o.qn)this.qnAnim(o,u,T,dt,mv);else if(o.kind==='kk')this.animKK(o,u,T,dt,mv);else if(o.kind==='kkz')this.animKKZ(o,u,T,dt,mv);else if(o.kind==='hero')this.animHum(o,u,T,dt);else if(o.kind==='wolf')this.animWolf(o,u,T);else if(o.kind==='dragon')this.animDragon(o,u,T,dt);else this.animBig(o,u,T);
       const sq=u.hurtT>0?.9:1;o.body.scale.set(1+(1-sq)*.5,sq,1+(1-sq)*.5);
