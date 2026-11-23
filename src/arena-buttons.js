@@ -9,6 +9,8 @@
 //  · the 💨 dash button sits left of the HP potion, the ✦ special (V) right above it, left of the MP potion — clear of the
 //    skill-cancel spot it used to cover; both shrink together on small screens (CUR pad children, so t1.js keeps their cooldowns)
 //  · the coin counter is a slim pill with a small coin
+//  · the weapon swap (owner 2026-11-23, rule in b.js swapWeapons): the reserve weapon's circle in the top-left frame shows the
+//    swap cooldown as a dark sweep with the seconds left, and a red ring with crossed swords while the hero is being hit
 //  · the Eclipse boss bar (eclipse-fx.js R3.eclHud: the Snow Queen's three bars, the Overlord's phases) comes up again: installArenaVitals
 //    replaces drawTarget outright, which dropped eclipse-fx.js's hook, so in Arena the bar never showed. While it is up, the boss's own
 //    small top frame is skipped (no stacked bars), as eclipse-fx.js meant
@@ -60,6 +62,14 @@ function atkxDraw(me){const B=atkxSpot();UI.atkMob=B;if(!B||!me)return;if(ATKX.p
   if(!atkxCoarse){const s=Math.max(7,B.r*.2),kx=B.x-B.r*.72,ky=B.y-B.r*.72;rr(kx-s,ky-s,s*2,s*2,Math.max(2,s*.23));ctx.fillStyle='#071019f5';ctx.fill();ctx.strokeStyle='#b4c0ca';ctx.lineWidth=1;ctx.stroke();
     ctx.font='600 '+Math.max(9,s*1.27)+'px system-ui,sans-serif';ctx.fillStyle='#e5edf4';ctx.fillText('K',kx,ky+.5)}
   ctx.restore()}
+// ---- the weapon swap lock on the reserve weapon's circle ----
+function atkxSwapHud(me){const B=UI.wsw2;if(!B||!me||!me.wk2||me.dead||typeof SWAP_CD==='undefined')return;
+  const cd=Math.max(0,(me.swT||0)-gameT),hit=net.mode==='client'?gameT-(me._potHit===undefined?-99:me._potHit)<POT_FIGHT:potFight(me);if(cd<=0&&!hit)return;
+  ctx.save();if(cd>0){ctx.fillStyle='#040a15c4';ctx.beginPath();ctx.moveTo(B.x,B.y);ctx.arc(B.x,B.y,B.r,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.min(1,cd/SWAP_CD));ctx.closePath();ctx.fill();
+    ctx.font='700 '+Math.max(10,B.r*.78)+'px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;ctx.strokeStyle='#000c';ctx.strokeText(Math.ceil(cd),B.x,B.y+.5);ctx.fillStyle='#fff4dc';ctx.fillText(Math.ceil(cd),B.x,B.y+.5)}
+  if(hit){ctx.beginPath();ctx.arc(B.x,B.y,B.r+1.5,0,Math.PI*2);ctx.strokeStyle='#ff5a4a';ctx.lineWidth=2.2;ctx.stroke();if(cd<=0){ctx.fillStyle='#3a0a08b8';ctx.beginPath();ctx.arc(B.x,B.y,B.r,0,Math.PI*2);ctx.fill();
+    ctx.font=Math.max(10,B.r*.9)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⚔️',B.x,B.y+1)}}
+  ctx.restore()}
 // ---- the dash and special buttons beside the potions, the slim coin ----
 function arenaDashAnchor(potion){
   const r=clamp(potion.r*2.7,46,60)/2,gap=Math.max(5,potion.r*.28);
@@ -83,6 +93,7 @@ if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
   setTimeout(()=>{   // after the HUD installers (installArenaCombatControls replaces drawBtnAtk; arena-npc.js wraps CUR.step first)
     const _da=drawBtnAtk;drawBtnAtk=function(B,me){const r=_da.apply(this,arguments);try{atkxDraw(me)}catch(e){}return r};
     const st=CUR.step;CUR.step=function(dt){const r=st.call(this,dt);try{if(state!=='play')ATKX.held.clear();else atkxLayout()}catch(e){}return r};
+    if(typeof drawFrame==='function'){const _df=drawFrame;drawFrame=function(me){const r=_df.apply(this,arguments);try{atkxSwapHud(me)}catch(e){}return r}}
     if(typeof R3!=='undefined'&&R3.eclHud&&typeof drawTarget==='function'){const _dt=drawTarget;let t0=0;
       drawTarget=function(me,s,fr){const now=performance.now(),dt=Math.min(.1,(now-(t0||now))/1000);t0=now;try{R3.eclHud(me,(typeof listener==='function'&&listener())||me,dt)}catch(e){}
         const u=TGT&&UMAP.get(TGT.id);if(u&&R3._eclBossShown&&(u.ecl==='queen'||u.ecl==='overlord'))return;return _dt.apply(this,arguments)}}},0);

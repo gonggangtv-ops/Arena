@@ -886,6 +886,46 @@
    "rigged": false,
    "animations": [],
    "source": "Blender script moonfall-docs/blender/queen_vfx.py (procedural, seeded; textures rendered with Cycles)"
+  },
+  "bone-heap": {
+   "name": "Human bones heap (Cursed Forest decor)",
+   "source": "Meshy_AI_Human_Bones_Heap (owner upload 2026-11-23, 3.5M tris simplified to 20k)",
+   "url": "assets/meshy/bone-heap.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "knight-tomb": {
+   "name": "Mossbound Knight on his tomb (Cursed Forest, searchable)",
+   "source": "Meshy_AI_Mossbound_Knight (owner upload 2026-11-23, 2.6M tris simplified to 15k)",
+   "url": "assets/meshy/knight-tomb.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "chest-eye": {
+   "name": "Enchanted Sentinel chest (ordinary chests)",
+   "source": "Enchanted_Sentinel (owner upload 2026-11-23, 645k tris simplified to 6.8k)",
+   "url": "assets/meshy/chest-eye.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "potion-hp": {
+   "name": "Inferno Vial (health potion on the ground)",
+   "source": "Meshy_AI_Inferno_Vial (owner upload 2026-11-23, 518k tris simplified to 3k)",
+   "url": "assets/meshy/potion-hp.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "potion-mana": {
+   "name": "Mana vial (mana potion on the ground)",
+   "source": "Meshy_AI_A_small_medieval_fantasy_mana (owner upload 2026-11-23, 443k tris simplified to 3.1k)",
+   "url": "assets/meshy/potion-mana.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
   }
  },
  "warrior": {

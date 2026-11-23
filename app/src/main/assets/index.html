@@ -119,7 +119,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <link rel="stylesheet" href="moonfall-menu.css" onerror="window.__moonfallCodeFailure='moonfall-menu.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-menu.css')">
 <link rel="stylesheet" href="moonfall-inventory.css" onerror="window.__moonfallCodeFailure='moonfall-inventory.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-inventory.css')">
 <link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
-<script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "moon-dead-tree", "temple-gate", "moon-stairs", "modular-wall", "wall-corner", "ruin-arch", "guardian-statue", "moon-arena", "city-pillar", "city-knight", "ice-queen", "frost-scepter", "snow-stairs", "queen-vfx", "brazier"]</script>
+<script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "moon-dead-tree", "temple-gate", "moon-stairs", "modular-wall", "wall-corner", "ruin-arch", "guardian-statue", "moon-arena", "city-pillar", "city-knight", "ice-queen", "frost-scepter", "snow-stairs", "queen-vfx", "brazier", "bone-heap", "knight-tomb", "chest-eye", "potion-hp", "potion-mana"]</script>
 
 <style>/* Arena-only interface. The published Moonfall/Cursed presentation stays independent. */
 :root{--arena-menu-art:url('assets/ui/arena-citadel.webp')}
@@ -319,7 +319,7 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
   <div id="celestialAssetNote" role="status">กำลังตรวจสอบไฟล์โมเดล…</div>
   <div class="msg" id="menuMsg"></div>
   <button class="anime-help-toggle" id="animeHelp" aria-expanded="false" aria-controls="animeGuide">วิธีเล่นและการควบคุม ▾</button>
-  <div class="tip anime-help-collapsed" id="animeGuide">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🪂 เริ่มเกม: ทุกคนลงมาจากฟ้า แตะบนแผนที่ (ในวงพายุ) เพื่อเลือกจุดลง ไม่เลือก = สุ่มให้<br>⚔️ ปุ่มโจมตี (J / Space) ตี <b>ฮีโร่ก่อนเสมอ</b> ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์ · ปุ่มเล็ก 🐲 <b>ตีมอน</b> (K) ข้างปุ่มโจมตี ตีเฉพาะมอนสเตอร์<br>💨 พุ่ง (Shift) อมตะระหว่างพุ่ง คูลดาวน์ 45 วิ ปุ่มอยู่ซ้ายขวดเลือด · ✦ สกิลพิเศษ (V) อยู่เหนือปุ่มพุ่ง<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: กดค้าง Q E R เล็งตามเมาส์ ปล่อยเพื่อร่าย)<br>🛒 ร้านค้าอยู่กับพ่อค้าในหมู่บ้าน: ยืนใกล้แล้วแตะ "ร้านค้า" (หรือ P) ซื้อยา สมุดเลเวล สกิลพิเศษ สุ่มความสามารถอาวุธใหม่ · เหรียญ 🪙 ได้จากมอนสเตอร์และกล่อง<br>🗡️ อาวุธ/เกราะ: ค้นตามบ้าน 📦 กล่องสมบัติ (คีย์ F) ได้ของ 68% · มอนสเตอร์ทุกตัวมีโอกาสดรอป ยิ่งตัวใหญ่ยิ่งดี · พื้นโล่งมีน้อย<br>🎒 กระเป๋า: 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า) · ระหว่างโดนตียาฟื้นได้ครึ่งเดียว<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>👑 บอส: 🌋 ไททันลาวาบรรพกาลในปราสาท 🏰 · ❄ ราชินีหิมะบนปราสาทน้ำแข็ง (เลือด 3 หลอด หลอดแตกเข้าเฟสใหม่ ระหว่างเปลี่ยนเฟสตีไม่เข้า) · ☾ Celestial Overlord ที่แท่นสุริยคราส<br>✨ ศาลภูตฟื้นเลือด/มานา · ถ้ำลับในภูเขามีสมบัติ · 🌳 ตัดต้นไม้ล้มได้ (ต้นกล้วยตีทีเดียวล้ม)<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
+  <div class="tip anime-help-collapsed" id="animeGuide">⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน<br>🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด <b>ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4</b> · จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ<br>🪂 เริ่มเกม: ทุกคนลงมาจากฟ้า แตะบนแผนที่ (ในวงพายุ) เพื่อเลือกจุดลง ไม่เลือก = สุ่มให้<br>⚔️ ปุ่มโจมตี (J / Space) ตี <b>ฮีโร่ก่อนเสมอ</b> ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์ · ปุ่มเล็ก 🐲 <b>ตีมอน</b> (K) ข้างปุ่มโจมตี ตีเฉพาะมอนสเตอร์<br>💨 พุ่ง (Shift) อมตะระหว่างพุ่ง คูลดาวน์ 45 วิ ปุ่มอยู่ซ้ายขวดเลือด · ✦ สกิลพิเศษ (V) อยู่เหนือปุ่มพุ่ง<br>🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: กดค้าง Q E R เล็งตามเมาส์ ปล่อยเพื่อร่าย)<br>🛒 ร้านค้าอยู่กับพ่อค้าในหมู่บ้าน: ยืนใกล้แล้วแตะ "ร้านค้า" (หรือ P) ซื้อยา สมุดเลเวล สกิลพิเศษ สุ่มความสามารถอาวุธใหม่ · เหรียญ 🪙 ได้จากมอนสเตอร์และกล่อง<br>🗡️ อาวุธ/เกราะ: ค้นตามบ้าน 📦 กล่องสมบัติ (คีย์ F) ได้ของ 68% · มอนสเตอร์ทุกตัวมีโอกาสดรอป ยิ่งตัวใหญ่ยิ่งดี · พื้นโล่งมีน้อย<br>🎒 กระเป๋า: 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า) · ระหว่างโดนตียาฟื้นได้ครึ่งเดียว<br>🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้<br>👑 บอส: 🌋 ไททันลาวาบรรพกาลในปราสาท 🏰 · ❄ ราชินีหิมะบนปราสาทน้ำแข็ง (เลือด 3 หลอด หลอดแตกเข้าเฟสใหม่ ระหว่างเปลี่ยนเฟสตีไม่เข้า) · ☾ Celestial Overlord ที่แท่นสุริยคราส<br>✨ ศาลภูตฟื้นเลือด/มานา · ถ้ำลับในภูเขามีสมบัติ · 🌳 ตัดต้นไม้ล้มได้ (ต้นกล้วยตีทีเดียวล้ม)<br>🪦 ป่าต้องสาป: ร่างอัศวินบนหลุมศพที่ยังเรืองแสงเขียว ยืนใกล้แล้วแตะ 🔍 (หรือ F) เพื่อค้น แตะอีกครั้งเพื่อเก็บของ · <b>ยิ่งค้นนาน ยิ่งได้ของดี</b> (ธรรมดา → หายาก → มหากาพย์ → ตำนาน ภายใน 10 วิ) · เดินออกหรือโดนตีจะหยุดค้น · หลุมละครั้ง<br>⛓️ คุกใต้ดิน: ห้องผู้คุมมีกล่องสมบัติทอง 6 ใบ เปิดได้ของหายากทุกใบ<br>⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ (คูลดาวน์ 5 วิ · โดนตีอยู่สลับไม่ได้) · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง
 <br>จอยซ้าย = เดิน · เดินชนอาวุธเพื่อเก็บ (🔄 รับอาวุธ) · แตะ ＋ อัปสกิล (อัลติเลเวล 6/11/16)</div>
   <button class="credlink" id="credBtn">🎵 เครดิตเสียงและเพลง</button>
 </div>
@@ -1451,10 +1451,9 @@ function genWorld(seed){
       if(R.role==='entry'){for(const it of['potion','potion','mana']){const p=spot(R,140);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it})}continue}
       if(R.role==='vault'){camp(R,'vault',1.7);
         for(let k=0;k<3;k++){const p=spot(R,120);w.items.push({id:iid++,k:'c',x:p.x,y:p.y,n:3,gold:true})}
-        for(let k=0;k<4;k++){const p=spot(R,120);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:k===0&&SR()<.45?4:3})}
-        for(let k=0;k<2;k++){const p=spot(R,120);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:SR()<.4?4:3})}
-        {const p=spot(R,120);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:'tome'})}
-        for(let k=0;k<4;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:26,prop:1})}
+        // owner 2026-11-23: "ปรับของหายากที่อยู่หลังบอส ในคุกเอาออกไป ให้เอาไปอยู่ในกล่องสุ่มสมบัติแทน" — the tier 3-4 weapons, runes and
+        // the tome no longer lie on the vault floor; six gilded treasure chests (vault:1) hold them, rolled when opened (b.js openBox)
+        for(let k=0;k<6;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3),vault:1});w.rocks.push({x:p.x,y:p.y,r:26,prop:1})}
         continue}
       camp(R,R.role,1.35);
       for(let k=0;k<2;k++){const p=spot(R,110);w.items.push({id:iid++,k:'c',x:p.x,y:p.y,n:1+(SR()<.5?1:0)})}
@@ -1476,6 +1475,22 @@ function genWorld(seed){
       if(sc>=0){best=p;break}if(sc>bs){bs=sc;best=p}}
     if(!best)best={x:CX+sr(-300,300),y:CY+sr(-300,300)};w.spawns.push(best);
     }   // owner 2026-11-23: no starter weapons by the spawn points — everyone drops in from the sky and searches houses (arena-drop.js)
+  // ---- the Cursed Forest's dead (owner 2026-11-23): heaps of bones (decor) and fallen knights on their tombs, which a hero can
+  // search for loot (arena-tombs.js: the longer the search, the better the find). Integer hash per cell, no SR draws; REG.at reads
+  // this world (its Old Town), not the one before, so every machine places them alike ----
+  if(!MOON&&typeof REG!=='undefined'&&REG.at){const W0=WD;WD=w;try{w.tombs=[];w.bones=[];const CS2=420,n2=Math.floor(WORLD/CS2),cells=[];
+    for(let j=1;j<n2-1;j++)for(let i=1;i<n2-1;i++)cells.push([cutH(i,j,31),i,j]);cells.sort((a,b)=>a[0]-b[0]);
+    for(const [h,i,j] of cells){if(w.tombs.length>=10&&w.bones.length>=20)break;
+      const p={x:(i+.15+cutH(i,j,32)*.7)*CS2,y:(j+.15+cutH(i,j,33)*.7)*CS2};if(REG.at(p.x,p.y)!==1)continue;
+      const tomb=h<.45&&w.tombs.length<10,r=tomb?64:46;
+      if(!free(p,r+40)||pathNear(p,r+30)||rockNear(p,r+24)||!tFree(p,r+20)||w.houses.some(q=>inRect(p,q.al||q,r+50))||w.camps.some(c=>dist(c,p)<300)||w.graves.some(g=>dist(g,p)<300)||
+        w.boxes.some(b=>dist(b,p)<200)||(w.dg&&w.dg.ents.some(e=>dist(e,p)<320)))continue;
+      if(w.tombs.some(t=>dist(t,p)<(tomb?1100:380))||w.bones.some(b=>dist(b,p)<(tomb?380:520)))continue;
+      const a=cutH(i,j,34)*6.2832;
+      if(tomb){w.tombs.push({id:w.tombs.length,x:Math.round(p.x),y:Math.round(p.y),a});const dx=Math.sin(a)*24,dy=Math.cos(a)*24;
+        w.rocks.push({x:p.x+dx,y:p.y+dy,r:36,prop:1},{x:p.x-dx,y:p.y-dy,r:36,prop:1})}
+      else if(w.bones.length<20){const sc=.85+cutH(i,j,35)*.4;w.bones.push({x:Math.round(p.x),y:Math.round(p.y),a,s:sc});w.rocks.push({x:p.x,y:p.y,r:30*sc,prop:1})}}}
+    finally{WD=W0}}
   SR=Math.random;
   return w;
 }
@@ -2061,7 +2076,13 @@ function equipWeapon(u,it){it.dead=true;removeItem(it);const slot=wSlot(u,it),H=
   if(it.tier===3)emit({t:'f',s:`⭐ ${u.name} ได้อาวุธตำนาน!`,v:H||[]});
   if(it.tier===4){emit({t:'f',s:`🌈 ${u.name} ถืออาวุธระดับ SSR!`,v:H||[]});fxE('ssr',{id:u.id,x:u.x|0,y:u.y|0})}}
 // swap the weapon in hand with the backup (T key / tap the weapon portrait)
-function swapWeapons(u){if(!u||u.dead||!u.wk2||u.fuseT>0||u.leap||u.dash)return false;const k=u.wk,t=u.wt,v=u.wv;u.wk=u.wk2;u.wt=u.wt2;u.wv=u.wv2;u.wk2=k;u.wt2=t;u.wv2=v;
+// owner 2026-11-23: "ปรับคูลดาวน์ในการสลับอาวุธ เมื่อถูกโจมตีจะสลับไม่ได้" — SWAP_CD seconds between swaps, and none while being hit
+// (the potions' rule: hurt within the last POT_FIGHT seconds). Host-authoritative; the client checks the same before it predicts
+const SWAP_CD=5;
+function swapLock(u){if(!u)return'';if((u.swT||0)>gameT)return'cd';if(potFight(u))return'hit';return''}
+function swapLockMsg(u,lk){if(gameT-(u._swMsgT||-9)<.8)return;u._swMsgT=gameT;
+  fxTextFor(u.x,u.y-84,lk==='hit'?'⚔️ โดนโจมตีอยู่ สลับอาวุธไม่ได้':'🔁 สลับอาวุธได้อีก '+Math.ceil((u.swT||0)-gameT)+' วิ','#ffb0a0',1.2,[u.id])}
+function swapWeapons(u){if(!u||u.dead||!u.wk2||u.fuseT>0||u.leap||u.dash)return false;{const lk=swapLock(u);if(lk){if(isHuman(u))swapLockMsg(u,lk);return false}}u.swT=gameT+SWAP_CD;const k=u.wk,t=u.wt,v=u.wv;u.wk=u.wk2;u.wt=u.wt2;u.wv=u.wv2;u.wk2=k;u.wt2=t;u.wv2=v;
   u.spinT=0;u.lotusT=0;u.rapid=null;recalc(u);u.atkCd=Math.max(u.atkCd,.3);sndAt('weapon',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:TIERS[Math.max(0,u.wt)].c});
   if(isHuman(u))fxTextFor(u.x,u.y-84,'🔁 '+wName(u.wk,u.wt),TIERS[Math.max(0,u.wt)].c,1.4,[u.id]);return true}
 // ---- fusion ----
@@ -2091,8 +2112,16 @@ const BOX_RATE=.68;   // 2026-11-23: was .2 — chests are a main source of gear
 function boxNear(u){if(!u||u.dead)return null;let best=null,bd=1e9;for(const b of boxes){if(b.open||Math.abs(b.x-u.x)>110||Math.abs(b.y-u.y)>110)continue;const d=dist(u,b);if(d>u.r+62||d>=bd)continue;
     const h=WD.houses[b.house];if(h&&!inRect(u,h,0))continue;best=b;bd=d}return best}
 function openBox(u,id){const b=boxes[id];if(!b||b.open||!u||u.dead||dist(u,b)>u.r+70)return;const h=WD.houses[b.house];if(h&&!inRect(u,h,4))return;
-  b.open=true;const ok=Math.random()<BOX_RATE;const fx=b.x+Math.cos(b.a)*34,fy=b.y+Math.sin(b.a)*34;
+  b.open=true;const ok=b.vault||Math.random()<BOX_RATE;const fx=b.x+Math.cos(b.a)*34,fy=b.y+Math.sin(b.a)*34;
   fxE('box',{id,x:b.x|0,y:b.y|0,ok:ok?1:0});sndAt(ok?'chest':'pick',b.x,b.y);const H=isHuman(u)?[u.id]:null;
+  // the dungeon warden's treasure chests (a.js vault:1, owner 2026-11-23): never empty, the hoard that used to lie on the vault floor
+  if(b.vault){const r=Math.random(),sx=-Math.sin(b.a)*30,sy=Math.cos(b.a)*30;
+    if(r<.45)dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier:Math.random()<.25?4:3});
+    else if(r<.78)dropItem({k:'r',x:fx,y:fy,tier:Math.random()<.3?4:3});
+    else if(r<.9)dropItem({k:'i',x:fx,y:fy,it:'tome'});
+    else dropItem({k:'c',x:fx,y:fy,n:4,gold:true});
+    if(Math.random()<.4)dropItem(Math.random()<.5?{k:'c',x:fx+sx,y:fy+sy,n:2,gold:true}:{k:'p',x:fx+sx,y:fy+sy,b:Math.random()<.5?2:0});
+    if(H)fxTextFor(b.x,b.y-46,'💎 สมบัติผู้คุม!','#ffd35a',1.7,H,1);return}
   if(ok){const r=Math.random(),sx=-Math.sin(b.a)*30,sy=Math.cos(b.a)*30;
     if(r<.48)dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([6,36,38,18,2])});
     else if(r<.84)dropItem({k:'r',x:fx,y:fy,tier:pickTier([0,22,40,30,8])});
@@ -2217,7 +2246,9 @@ function screenToWorld(x,y){if(view3D&&has3D()&&R3.ok&&R3.toGround)return R3.toG
 function pressLearn(i){const me=ME();if(!me||!canLearn(me,i))return;if(net.mode==='client'){netSend({t:'l',i});me.pts--;me.skl[i]++;AU.play('learn')}else learn(me,i)}
 function soundToggle(){AU.toggle();feedList.unshift({txt:['🔊 ','🔉 ','🔇 '][AU.mode]+AU.modeName(),t:2.5,hl:1});if(feedList.length>5)feedList.pop()}
 function pressSwapW(){const me=ME();if(!me||me.dead||!me.wk2||me.fuseT>0)return;UI.wswT=.2;
-  if(net.mode==='client'){netSend({t:'sw'});const k=me.wk,t=me.wt;me.wk=me.wk2;me.wt=me.wt2;me.wk2=k;me.wt2=t;AU.play('weapon',.7)}else swapWeapons(me)}
+  if(net.mode==='client'){   // the host's rule, from what a client knows: its own swap timer and when its HP last dropped
+    const lk=(me.swT||0)>gameT?'cd':gameT-(me._potHit===undefined?-99:me._potHit)<POT_FIGHT?'hit':'';if(lk){swapLockMsg(me,lk);AU.play('nomana');return}
+    me.swT=gameT+SWAP_CD;netSend({t:'sw'});const k=me.wk,t=me.wt;me.wk=me.wk2;me.wt=me.wt2;me.wk2=k;me.wt2=t;AU.play('weapon',.7)}else if(!swapWeapons(me))AU.play('nomana')}
 function pressSwap(){press[4]=.2;const me=ME();const bx=boxNear(me);if(bx){if(net.mode==='client')netSend({t:'ob',id:bx.id});else openBox(me,bx.id);return}const it=swapCandidate(me);if(!it)return;if(net.mode==='client')netSend({t:'pk',id:it.id});else pickSwap(me,it.id)}
 cv.addEventListener('pointerdown',e=>{
   e.preventDefault();AU.init();if(state!=='play')return;const x=e.clientX,y=e.clientY;
@@ -5376,7 +5407,7 @@ const REG={N:['อาณาจักรล่มสลาย','ป่าต้�
   TIP:['เหรียญจากมอนสเตอร์ +25%','มอนสเตอร์ว่องไวและมีพิษ','โดนตีแล้วช้าลง · ฟื้นมานาเร็วขึ้น','โดนตีแล้วติดไฟ · ระวังลาวาปะทุ','มอนสเตอร์แกร่งมาก · เหรียญ +60%'],
   G:[[1.5,1.3,.9,.5],[.6,1.02,.62,.45],[2.3,2.45,2.7,.93],[.82,.58,.5,.9],[1.1,.66,1.55,.85]],   // ground: tint of the grass's own brightness, how much
   OBJ:[['#b09868',.3],['#2a4a34',.4],['#e8f4ff',.6],['#3a2c28',.62],['#6a3aa8',.5]],MOB:['#c8b890','#6fbf6a','#bfe6ff','#ff7a4a','#b070ff'],
-  FOG:['#2a2620','#0e1c14','#9fb8d0','#3a1c14','#1a0c2c'],HEMI:['#e8d8b0','#8ad0a0','#d8ecff','#ff9a70','#b08aff'],LUM:[1,.85,1.3,.95,.85],GLOW:[null,['#7dff9a',110],['#9fe0ff',150],['#ff5a1a',210],['#b060ff',190]],
+  FOG:['#2a2620','#0e1c14','#9fb8d0','#3a1c14','#1a0c2c'],HEMI:['#e8d8b0','#8ad0a0','#d8ecff','#ff9a70','#b08aff'],LUM:[1,.85,1.12,.95,.85],GLOW:[null,['#7dff9a',110],['#9fe0ff',150],['#ff5a1a',210],['#b060ff',190]],   // LUM[2] 1.3 -> 1.12: the snow was glaring (owner 2026-11-23)
   tw:[0,0,0,0,0],tq:[0,0,0,0],aw:null,cur:-1,mats:new Map(),
   w(x,y,o){if(!this.nz){this.nz=makeNoise(mulberry32(77),2400);this.nz2=makeNoise(mulberry32(91),1700)}
     const dx=x-CX,dy=y-CY,d=Math.hypot(dx,dy)+(this.nz(x,y)-.5)*1300,a=Math.atan2(dy,dx)+(this.nz2(x,y)-.5)*1.1,kc=clamp((3300-d)/700,0,1);let s=0;
@@ -9303,12 +9334,12 @@ float regCell(vec2 x){vec2 n=floor(x),f=fract(x);float f1=8.,f2=8.;
   const FLORA=(K,SNOW)=>`
 vec3 regEm=vec3(0.);vec3 regEmK=vec3(1.);vec3 regIbl=vec3(1.);
 {vec4 rg=texture2D(uRegMap,vFowW*${INV.toExponential(6)});float wC=rg.r,wI=rg.g,wA=rg.b,wV=rg.a,w0=clamp(1.-wC-wI-wA-wV,0.,1.);
- regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
+ regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.86,.9,.98)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
  vec3 wn=normalize((vec4(normal,0.)*viewMatrix).xyz);
  vec4 nz=texture2D(vxN,vFowW*.011+vec2(vWY*.006,0.));
  vec3 c=diffuseColor.rgb;float l=dot(c,vec3(.3,.59,.11));
  float upr=smoothstep(.32,.72,wn.y+(nz.r-.5)*.5),up=upr*${SNOW};
- vec3 fr=mix(c*vec3(.7,.8,.96)+vec3(.05,.07,.1),vec3(.9,.94,1.)*(.9+.1*nz.a),up);
+ vec3 fr=mix(c*vec3(.7,.8,.96)+vec3(.05,.07,.1),vec3(.8,.84,.9)*(.9+.1*nz.a),up);
  vec3 wi=mix(vec3(l)*vec3(.72,.66,.52),c*vec3(.5,.4,.28),.3)*.64;wi=mix(wi,wi*vec3(.42,.44,.38),smoothstep(.5,.8,nz.g)*.6);
  wi=mix(wi,vec3(l)*vec3(.46,.58,.28)*.66,smoothstep(.62,.86,nz.a)*.4);
  vec3 ch=mix(vec3(l)*vec3(.42,.38,.36)*.36,vec3(.3,.29,.28)*(.8+.2*nz.r),upr*.55);
@@ -9322,7 +9353,7 @@ vec3 regEm=vec3(0.);vec3 regEmK=vec3(1.);vec3 regIbl=vec3(1.);
   const WATER=`
 float regIce=0.;vec3 regIbl=vec3(1.);
 {vec4 rg=texture2D(uRegMap,vFowW*${INV.toExponential(6)});float wC=rg.r,wI=rg.g,wA=rg.b,wV=rg.a,w0=clamp(1.-wC-wI-wA-wV,0.,1.);
- regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
+ regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.86,.9,.98)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
  if(wI>.01){vec4 nz=texture2D(vxN,vFowW*.004);float cr=1.-smoothstep(.015,.05,texture2D(vxN,vFowW*.009).g);
    vec3 ice=mix(vec3(.55,.72,.84),vec3(.82,.9,.97),nz.r)+cr*.22;
    diffuseColor.rgb=mix(diffuseColor.rgb,ice,wI*.94);diffuseColor.a=mix(diffuseColor.a,.97,wI);
@@ -9347,11 +9378,11 @@ transformed.y*=max(1.-.8*rg.g-.62*rg.b-.32*rg.a+.08*rg.r,.1)*(1.-.95*ds);}
   const BUILD=`
 vec3 regEm=vec3(0.);vec3 regEmK=vec3(1.);vec3 regIbl=vec3(1.);
 {vec4 rg=texture2D(uRegMap,vFowW*${INV.toExponential(6)});float wC=rg.r,wI=rg.g,wA=rg.b,wV=rg.a,w0=clamp(1.-wC-wI-wA-wV,0.,1.);
- regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
+ regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.86,.9,.98)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
  vec3 wn=normalize((vec4(normal,0.)*viewMatrix).xyz);
  vec3 c=diffuseColor.rgb;vec3 g=mix(vec3(dot(c,vec3(.3,.59,.11))),c,.5);
  float fz=.12+.45*smoothstep(.15,.95,wn.y);
- vec3 fr=mix(c*vec3(.86,.92,1.03)+vec3(.02,.03,.05),vec3(.84,.89,.95),fz);
+ vec3 fr=mix(c*vec3(.86,.92,1.03)+vec3(.02,.03,.05),vec3(.76,.81,.88),fz);
  diffuseColor.rgb=c*vec3(1.03,1.,.95)*w0+g*vec3(.74,.75,.66)*wC+fr*wI+g*vec3(.62,.58,.54)*wA+g*vec3(.7,.62,.84)*wV;}
 `;
   const IBLK=`#include <lights_fragment_maps>
@@ -9381,7 +9412,7 @@ radiance*=regIbl;
   // ---------------- the ground of each land ----------------
   const TERR=`
 {vec4 rg=texture2D(uRegMap,w*${INV.toExponential(6)});float wC=rg.r,wI=rg.g,wA=rg.b,wV=rg.a,w0=clamp(1.-wC-wI-wA-wV,0.,1.);
- regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.95,1.,1.1)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
+ regIbl=vec3(1.)*w0+vec3(.55,.68,.55)*wC+vec3(.86,.9,.98)*wI+vec3(.95,.55,.38)*wA+vec3(.64,.5,.82)*wV;
  float tp=uRegP.x,nt=uRegP.y,fl=smoothstep(.78,.95,vWN.y);
  // FROZEN: the ground is a sheet of ice (deep blue where thick, pale where thin, white fractures at two scales, trapped air,
  // the sky sliding over it as the camera moves) with packed snow drifted around it, over the slopes and on the rock
@@ -9395,10 +9426,10 @@ radiance*=regIbl;
    float bub=smoothstep(.78,.9,texture2D(vxN,w*.043).r)*smoothstep(.4,.7,nz.r);
    ice=mix(ice,vec3(.78,.86,.92),cr1*.85);ice+=cr2*vec3(.3,.35,.38)+bub*vec3(.22,.26,.3);
    vec2 ws=vec2(w.x*.91+w.y*.41,w.y*.91-w.x*.41);float streak=smoothstep(.52,.82,texture2D(vxN,vec2(ws.x*.0011,ws.y*.0072)).r);
-   vec3 snow=vec3(.8,.85,.92)*(.88+.12*nz.r);snow=mix(snow,snow*vec3(.88,.93,1.03),smoothstep(.4,.7,nz3.g)*.45);
+   vec3 snow=vec3(.71,.76,.84)*(.86+.14*nz.r);snow=mix(snow,snow*vec3(.88,.93,1.03),smoothstep(.4,.7,nz3.g)*.45);
    float ic=sheet*(1.-streak*.35);vec3 fz=mix(snow*(1.+rim*.06),ice,ic);
    // DEEP SNOW: thick, soft and bright, in long wind-shaped drifts with blue shade in the hollows
-   vec3 deep=vec3(.84,.88,.95)*(.94+.06*nz.r);float drift=smoothstep(.25,.75,texture2D(vxN,vec2(ws.x*.0009,ws.y*.0035)+vec2(.4,.2)).g);
+   vec3 deep=vec3(.75,.8,.88)*(.92+.08*nz.r);float drift=smoothstep(.25,.75,texture2D(vxN,vec2(ws.x*.0009,ws.y*.0035)+vec2(.4,.2)).g);
    deep=mix(deep*vec3(.84,.9,1.02),deep,drift);fz=mix(fz,deep,dsk);
    fz=mix(fz,c*vec3(.66,.76,.92)+vec3(.16,.19,.24),k*(1.-smoothstep(.5,.78,vWN.y))*.8);
    fz=mix(fz,mix(ice,vec3(.62,.8,.92),.35),wt*.9);
@@ -9459,7 +9490,9 @@ radiance*=regIbl;
   const ATM=[
     {fog:null,fogD:0,hemi:'#ffe8c8',hl:.3,hemiK:1.03,sun:'#ffdcae',sunK:1.04,mist:1,ap:1,bloom:1,sat:1.06,con:1.03,vig:.14,lift:[.004,.0,-.006],gain:[1.04,1.,.93]},
     {fog:'#262924',fogD:.00032,hemi:'#808a7c',hl:.7,hemiK:.74,sun:'#b0b294',sunK:.52,mist:2.2,ap:1.7,bloom:.9,sat:.5,con:1.12,vig:.5,lift:[-.002,.008,-.002],gain:[.94,.97,.84]},
-    {fog:'#a3bacf',fogD:.00018,hemi:'#d6e6ff',hl:.6,hemiK:1.05,sun:'#eef4ff',sunK:1.05,mist:1.05,ap:1.2,bloom:1.1,sat:.9,con:1.07,vig:.2,lift:[0,.006,.02],gain:[.95,1.,1.06]},
+    // (owner 2026-11-23 "โซนหิมะมันแสงจ้าเกินไปหน่อย": a softer sun and sky, much less bloom, the highlights pulled down, a touch more
+    //  contrast so the snow keeps its shape instead of washing out — with the darker snow albedo below)
+    {fog:'#97adc2',fogD:.00018,hemi:'#cddcf2',hl:.6,hemiK:.9,sun:'#e8eefa',sunK:.84,mist:1.05,ap:1.2,bloom:.7,sat:.9,con:1.1,vig:.22,lift:[0,.006,.02],gain:[.9,.93,.98]},
     {fog:'#2a1d18',fogD:.00027,hemi:'#9c8f88',hl:.6,hemiK:.8,sun:'#ffb886',sunK:.82,mist:1.5,ap:1.7,bloom:1.25,sat:.92,con:1.12,vig:.38,lift:[.006,.002,0],gain:[1.03,.98,.92]},
     {fog:'#1c1620',fogD:.00022,hemi:'#6a5e78',hl:.75,hemiK:.7,sun:'#a898d0',sunK:.62,mist:1.1,ap:1.2,bloom:1.25,sat:.85,con:1.05,vig:.45,lift:[.006,.002,.01],gain:[1.,.95,1.02]}];
   const AC=ATM.map(a=>({fog:a.fog?new T.Color(a.fog):null,hemi:new T.Color(a.hemi),sun:new T.Color(a.sun)}));
@@ -9588,33 +9621,47 @@ void main(){vec2 d=gl_PointCoord-.5;float r=length(d)*2.;if(r>1.)discard;float a
 
   // ---------------- footprints in the deep snow ----------------
   // every hero the player can see wades through deep snow: a soft furrow along the way and a boot print at every step (left,
-  // right, ...), fading after a while. One instanced mesh, a ring of FP.N decals, two shapes in one small atlas; render only
-  const FP={mesh:null,scene:null,i:0,N:900,life:18,last:new Map(),tex:null,U:null};
-  function fpTexture(){const c=document.createElement('canvas');c.width=128;c.height=128;const g=c.getContext('2d');
-    const blob=(x,y,rx,ry,a)=>{const gr=g.createRadialGradient(0,0,0,0,0,1);gr.addColorStop(0,'rgba(255,255,255,'+a+')');gr.addColorStop(.7,'rgba(255,255,255,'+a*.85+')');gr.addColorStop(1,'rgba(255,255,255,0)');
-      g.save();g.translate(x,y);g.scale(rx,ry);g.fillStyle=gr;g.beginPath();g.arc(0,0,1,0,6.283);g.fill();g.restore()};
-    blob(34,40,18,32,1);blob(31,100,14,18,1);for(let k=0;k<4;k++)blob(22+k*6,16+Math.abs(k-1.5)*3,3,3,.5);   // left half: the boot print, toe up
-    const gr=g.createRadialGradient(0,0,0,0,0,1);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.55,'rgba(255,255,255,.7)');gr.addColorStop(1,'rgba(255,255,255,0)');
-    g.save();g.translate(96,64);g.scale(30,62);g.fillStyle=gr;g.beginPath();g.arc(0,0,1,0,6.283);g.fill();g.restore();   // right half: a soft furrow
-    const t=new T.CanvasTexture(c);t.colorSpace=T.NoColorSpace;return t}
+  // right, ...), fading after a while. One instanced mesh, a ring of FP.N decals, two shapes in one small atlas; render only.
+  // Owner 2026-11-23 "ปรับรอยเท้าตรงหิมะให้มันดูสมจริงลึกลงไปในหิมะ": the atlas is a height map now (R = how deep the snow is pressed,
+  // G = the rim of snow pushed up around it); the shader rebuilds the dented surface from it (screen-space derivatives of the world
+  // position pushed down by the depth) and lights it with the sun: the wall facing away from the sun falls into blue shadow, the
+  // far wall and the rim catch the light, the bottom of the print is darker still
+  const FP={mesh:null,scene:null,i:0,N:900,life:24,last:new Map(),tex:null,U:null};
+  function fpTexture(){const N=128,c=document.createElement('canvas');c.width=N;c.height=N;const g=c.getContext('2d'),D=new Float32Array(N*N),Rm=new Float32Array(N*N);
+    const sst=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+    // an ellipse pressed in: flat floor, sloped walls (depth 0..1); a ring of pushed-up snow just outside
+    const dent=(x0,x1,cx,cy,rx,ry,dep,rim)=>{for(let y=0;y<N;y++)for(let x=x0;x<x1;x++){const dx=(x+.5-cx)/rx,dy=(y+.5-cy)/ry,r=Math.sqrt(dx*dx+dy*dy),k=y*N+x;
+        D[k]=Math.max(D[k],dep*(1-sst(.42,1,r)));Rm[k]=Math.max(Rm[k],rim*sst(.85,1.1,r)*(1-sst(1.1,1.6,r)))}};
+    // left half: the boot, toe up — the sole (deep under the ball of the foot), the heel, a shallower arch between, a few tread bars
+    dent(0,64,32,42,15,27,1,.55);dent(0,64,31,98,12,15,.95,.5);dent(0,64,31.5,70,8,14,.45,0);
+    for(let y=22;y<60;y+=7)for(let x=20;x<44;x++){const k=y*N+x;if(D[k]>.6)D[k]=Math.min(1,D[k]+.12)}
+    // right half: the furrow, a long trough with soft walls and banks
+    for(let y=0;y<N;y++)for(let x=64;x<N;x++){const dx=(x+.5-96)/27,dy=(y+.5-64)/60,r=Math.sqrt(dx*dx+dy*dy*.6),k=y*N+x;D[k]=.55*(1-sst(.25,1,r));Rm[k]=.35*sst(.8,1.05,Math.abs(dx))*(1-sst(1.05,1.45,Math.abs(dx)))*(1-sst(.7,1,Math.abs(dy)))}
+    const im=g.createImageData(N,N);for(let k=0;k<N*N;k++){im.data[k*4]=Math.round(D[k]*255);im.data[k*4+1]=Math.round(Rm[k]*255);im.data[k*4+2]=0;im.data[k*4+3]=255}g.putImageData(im,0,0);
+    const t=new T.CanvasTexture(c);t.colorSpace=T.NoColorSpace;t.premultiplyAlpha=false;return t}
   function fpMesh(R){
     const geo=new T.PlaneGeometry(1,1),born=new Float32Array(FP.N).fill(-1e4),kind=new Float32Array(FP.N);
     geo.setAttribute('aBorn',new T.InstancedBufferAttribute(born,1));geo.setAttribute('aKind',new T.InstancedBufferAttribute(kind,1));
     FP.tex=FP.tex||fpTexture();
-    FP.U=Object.assign(T.UniformsUtils.clone(T.UniformsLib.fog),{map:{value:FP.tex},uT:{value:0},uLife:{value:FP.life},uLit:{value:1},uFowC:R.U.fowC,uFowR:R.U.fowR});
-    const m=new T.ShaderMaterial({uniforms:FP.U,transparent:true,depthWrite:false,fog:true,side:T.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4,
+    FP.U={map:{value:FP.tex},uT:{value:0},uLife:{value:FP.life},uLit:{value:1},uSun:{value:new T.Vector3(-560,1300,420).normalize()},uFowC:R.U.fowC,uFowR:R.U.fowR};
+    // 2x multiply ("detail") blending: out = 2·src·dst, so 0.5 leaves the snow as it is, darker shades it, brighter lights it — the
+    // dent darkens and lights the snow already there instead of painting a colour over it
+    const m=new T.ShaderMaterial({uniforms:FP.U,transparent:true,depthWrite:false,side:T.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4,
+      blending:T.CustomBlending,blendEquation:T.AddEquation,blendSrc:T.DstColorFactor,blendDst:T.SrcColorFactor,
       vertexShader:`attribute float aBorn,aKind;uniform float uT,uLife;varying vec2 vUv;varying float vA,vK;varying vec2 vW;
-#include <fog_pars_vertex>
-void main(){vUv=vec2(uv.x*.5+aKind*.5,uv.y);vK=aKind;float age=uT-aBorn;vA=smoothstep(0.,.15,age)*(1.-smoothstep(uLife*.4,uLife,age));
- vec4 wp=modelMatrix*instanceMatrix*vec4(position,1.);vW=wp.xz;vec4 mvPosition=viewMatrix*wp;gl_Position=projectionMatrix*mvPosition;
-#include <fog_vertex>
-}`,
-      fragmentShader:`uniform sampler2D map;uniform float uLit;uniform vec2 uFowC;uniform float uFowR;varying vec2 vUv;varying float vA,vK;varying vec2 vW;
-#include <fog_pars_fragment>
-void main(){float a=texture2D(map,vUv).a*vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,distance(vW,uFowC)))*mix(.85,.28,vK);if(a<.01)discard;
- gl_FragColor=vec4(vec3(.24,.31,.46)*uLit,a);
-#include <fog_fragment>
-}`});
+void main(){vUv=vec2(uv.x*.5+aKind*.5,uv.y);vK=aKind;float age=uT-aBorn;vA=smoothstep(0.,.15,age)*(1.-smoothstep(uLife*.45,uLife,age));
+ vec4 wp=modelMatrix*instanceMatrix*vec4(position,1.);vW=wp.xz;gl_Position=projectionMatrix*viewMatrix*wp;}`,
+      fragmentShader:`uniform sampler2D map;uniform float uLit;uniform vec3 uSun;uniform vec2 uFowC;uniform float uFowR;varying vec2 vUv;varying float vA,vK;varying vec2 vW;
+void main(){vec2 hr=texture2D(map,vUv).rg;float dep=hr.r,rim=hr.g;float cov=max(smoothstep(.02,.3,dep),smoothstep(.02,.3,rim));
+ float a=cov*vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,distance(vW,uFowC)));if(a<.01)discard;
+ // the dented surface: down by the depth, up by the rim (world units), its normal from screen-space derivatives
+ float sink=mix(8.,6.,vK);vec3 P=vec3(vW.x,(rim*.5-dep)*sink,vW.y);vec3 N=normalize(cross(dFdy(P),dFdx(P)));if(N.y<0.)N=-N;
+ float lit=clamp(dot(N,uSun),0.,1.)/max(uSun.y,.05);                 // 1 = as lit as the flat snow around it
+ float v=clamp(lit,.45,1.35)*mix(1.,.8,dep*(1.-vK*.35));            // the walls by the sun, the floor in the hollow's shade
+ vec3 m=vec3(v)*mix(vec3(.84,.9,1.),vec3(1.),smoothstep(.7,1.,v));  // shade turns cold blue
+ m=mix(vec3(1.),m,a*mix(1.,.8,1.-uLit));
+ gl_FragColor=vec4(clamp(m,.2,1.6)*.5,1.);}`});
+    m.extensions={derivatives:true};
     const mesh=new T.InstancedMesh(geo,m,FP.N);mesh.frustumCulled=false;mesh.renderOrder=1;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
     const z=new T.Matrix4().makeScale(0,0,0);for(let i=0;i<FP.N;i++)mesh.setMatrixAt(i,z);mesh.instanceMatrix.needsUpdate=true;
     R.scene.add(mesh);FP.mesh=mesh;FP.scene=R.scene;FP.i=0;FP.last.clear()}
@@ -9632,8 +9679,9 @@ void main(){float a=texture2D(map,vUv).a*vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,
       if(dd<34)continue;if(!FP.mesh)fpMesh(R);
       const a=Math.atan2(dy,dx),c=Math.cos(a+1.5708),sn=Math.sin(a+1.5708);s.side=-s.side;
       fpPut(R,(u.x+s.x)/2,(u.y+s.y)/2,a,40,dd+30,1);                                 // the furrow, under both feet
-      fpPut(R,u.x+c*9*s.side,u.y+sn*9*s.side,a,16*s.side,34,0);s.x=u.x;s.y=u.y}       // the print, left or right of the way
-    if(FP.mesh){FP.U.uT.value=S.t;FP.U.uLit.value=.3+.7*(typeof R.dayK==='function'?R.dayK():1)}}
+      fpPut(R,u.x+c*9*s.side,u.y+sn*9*s.side,a,19*s.side,38,0);s.x=u.x;s.y=u.y}       // the print, left or right of the way
+    if(FP.mesh){FP.U.uT.value=S.t;FP.U.uLit.value=.3+.7*(typeof R.dayK==='function'?R.dayK():1);
+      if(R.sun&&R.sun.target){const v=FP.U.uSun.value;v.copy(R.sun.position).sub(R.sun.target.position);if(v.lengthSq()>1)v.normalize();else v.set(-560,1300,420).normalize()}}}
   // ---------------- per frame ----------------
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);
     try{if(L&&typeof state!=='undefined'&&state==='play'){dt=Math.min(.1,Math.max(0,dt||0));S.t=(S.t+dt)%3600;atmosphere(this,L,dt);weather(this,L,dt);audioLand(L,dt);footprints(this,L,dt)}}catch(e){warn('frame',e)}return r};
@@ -10364,52 +10412,94 @@ function feelAssist(p){const me=ME(),a=p.a;if(!me)return p;const ok=o=>!o.dead&&
 // a warm glow on the ground and star glints around every chest that is still shut; opening one with loot throws a pillar of gold
 // light, a flare and a fountain of sparks, and the inside glows for a few seconds. Render only — the chests' positions, collision
 // (radius 26 in a.js) and opening (b.js openBox) are the game's.
-(function(){if(typeof R3==='undefined'||typeof THREE==='undefined')return;const T=THREE,R=R3;
+// Owner, later the same day: "ไฟล์3 เปลี่ยนโมเดล กล่องธรรมดา · ไฟล์ที่4 โมเดลขวดเลือด · ไฟล์5 โมเดลมานา"
+//  · every ordinary chest (houses, castle, dungeon rooms, the fort gate) is the owner's Enchanted Sentinel chest ('chest-eye'): its
+//    mesh is cut at the lid seam when the world is built, so the lid still swings open on its back hinge; a cold rune-blue glow
+//  · the gilded chest above now marks the dungeon warden's treasure chests (a.js vault:1, never empty — b.js openBox)
+//  · health and mana potions lying on the ground are the owner's vials ('potion-hp', 'potion-mana') instead of the emoji sprite
+(function(){if(typeof R3==='undefined'||typeof THREE==='undefined')return;const T=THREE,R=R3,A=()=>window.CelestialAssets;
 const CW=54,CH=28,CD=36,LR=CD/2,OPEN=1.95;
-R.buildBoxes=function(){const B=WD.boxes||[];this.boxLid=null;this.chest=null;if(!B.length)return;const n=B.length;
-  const wood=this.tstd('planks','#8c4b24',.78,0),dark=this.std('#1c120c',.95,0),gold=this.std('#e8b846',.3,.85),
-    gem=this.std('#8ff4ff',.2,.1,{emissive:'#36d6ff',emissiveIntensity:1.8});
-  const box=(w,h,d,x,y,z)=>{const g=new T.BoxGeometry(w,h,d);g.translate(x,y,z);return g};
-  const barrel=(r,len,x,z)=>{const g=new T.CylinderGeometry(r,r,len,18,1,false,0,Math.PI);g.rotateZ(Math.PI/2);g.translate(x,0,z);return g};
+const EYE={W:58,SEAM:.62,OPEN:1.7};
+const loaded=k=>{const a=A()&&A().get(k);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.size)};
+const box=(w,h,d,x,y,z)=>{const g=new T.BoxGeometry(w,h,d);g.translate(x,y,z);return g};
+const barrel=(r,len,x,z)=>{const g=new T.CylinderGeometry(r,r,len,18,1,false,0,Math.PI);g.rotateZ(Math.PI/2);g.translate(x,0,z);return g};
+// shared by both kinds: the glow on the ground of a shut chest and the light inside an opened one
+function glowKit(R,n,col){const glowM=new T.MeshBasicMaterial({map:R.tex('wglow'),color:col,transparent:true,opacity:.5,depthWrite:false,blending:T.AdditiveBlending}),
+    innM=new T.MeshBasicMaterial({map:R.tex('wglow'),color:'#ffe08a',transparent:true,opacity:.95,depthWrite:false,blending:T.AdditiveBlending});
+  for(const m of[glowM,innM])m.userData.ownMat=1;const g=new T.PlaneGeometry(1,1);g.rotateX(-Math.PI/2);
+  const mk=(m,ro)=>{const im=new T.InstancedMesh(g,m,n);im.frustumCulled=false;im.renderOrder=ro;R.scene.add(im);return im};
+  return{glow:mk(glowM,2),inn:mk(innM,3),glowM,innM}}
+// the gilded treasure chest (procedural), over the boxes in ids
+function kitGild(R,ids){const n=ids.length;
+  const wood=R.tstd('planks','#8c4b24',.78,0),dark=R.std('#1c120c',.95,0),gold=R.std('#e8b846',.3,.85),
+    gem=R.std('#8ff4ff',.2,.1,{emissive:'#36d6ff',emissiveIntensity:1.8});
   const xs=[-CW*.3,CW*.3],corners=[[-1,-1],[1,-1],[-1,1],[1,1]];
   // body (local +Z faces the door / the front), static
   const gBody=box(CW,CH,CD,0,CH/2,0),gIn=box(CW-7,1,CD-7,0,CH+.05,0),
-    gGold=this.merge([box(CW+2.4,3.4,CD+2.4,0,1.7,0),box(CW+1.4,2.6,CD+1.4,0,CH-1.3,0),...xs.map(x=>box(4.2,CH,CD+1.6,x,CH/2,0)),
+    gGold=R.merge([box(CW+2.4,3.4,CD+2.4,0,1.7,0),box(CW+1.4,2.6,CD+1.4,0,CH-1.3,0),...xs.map(x=>box(4.2,CH,CD+1.6,x,CH/2,0)),
       ...corners.map(([a,b])=>box(3.6,CH+.6,3.6,a*CW/2,CH/2,b*CD/2)),box(10,12,1.8,0,CH-8,CD/2+.9)]),
     gGem=(()=>{const g=new T.BoxGeometry(4.6,4.6,4.6);g.rotateX(Math.PI/4);g.rotateZ(Math.PI/4);g.translate(0,CH-8,CD/2+2.4);return g})();
   // lid in hinge space: hinge along the back top edge, the half barrel reaches forward to z = CD
-  const gLid=barrel(LR,CW,0,LR),gLidG=this.merge([...xs.map(x=>barrel(LR+1.1,4.4,x,LR)),barrel(LR+.9,2.4,-CW/2+1.2,LR),barrel(LR+.9,2.4,CW/2-1.2,LR),box(CW+1,2,2.2,0,1,CD),box(8,9,1.8,0,-2.5,CD+1)]);
-  const mk=(g,m,cast,ro)=>{const im=new T.InstancedMesh(g,m,n);im.frustumCulled=false;im.castShadow=!!cast&&!!this.hi;im.receiveShadow=true;if(ro)im.renderOrder=ro;this.scene.add(im);return im};
-  const glowM=new T.MeshBasicMaterial({map:this.tex('wglow'),color:'#ffc451',transparent:true,opacity:.5,depthWrite:false,blending:T.AdditiveBlending});
-  const innM=new T.MeshBasicMaterial({map:this.tex('wglow'),color:'#ffe08a',transparent:true,opacity:.95,depthWrite:false,blending:T.AdditiveBlending});
-  for(const m of[glowM,innM])m.userData.ownMat=1;
-  const gGlow=new T.PlaneGeometry(1,1);gGlow.rotateX(-Math.PI/2);
-  const C={n,k:new Float32Array(n),set:new Float32Array(n).fill(-1),okT:new Float32Array(n).fill(-99),P:[],Q:[],t:0,
-    body:mk(gBody,wood,true),inner:mk(gIn,dark),trim:mk(gGold,gold,true),gem:mk(gGem,gem),lid:mk(gLid,wood,true),lidG:mk(gLidG,gold,true),
-    glow:mk(gGlow,glowM,false,2),inn:mk(gGlow,innM,false,3),glowM,innM};
+  const gLid=barrel(LR,CW,0,LR),gLidG=R.merge([...xs.map(x=>barrel(LR+1.1,4.4,x,LR)),barrel(LR+.9,2.4,-CW/2+1.2,LR),barrel(LR+.9,2.4,CW/2-1.2,LR),box(CW+1,2,2.2,0,1,CD),box(8,9,1.8,0,-2.5,CD+1)]);
+  const mk=(g,m,cast)=>{const im=new T.InstancedMesh(g,m,n);im.frustumCulled=false;im.castShadow=!!cast&&!!R.hi;im.receiveShadow=true;R.scene.add(im);return im};
+  const C=Object.assign({kind:'gild',ids,n,H:CH,inW:CW-4,inD:CD-4,glowW:175,k:new Float32Array(n),set:new Float32Array(n).fill(-1),okT:new Float32Array(n).fill(-99),P:[],Q:[],
+    body:mk(gBody,wood,true),inner:mk(gIn,dark),trim:mk(gGold,gold,true),gem:mk(gGem,gem),lid:[mk(gLid,wood,true),mk(gLidG,gold,true)]},glowKit(R,n,'#ffc451'));
   const M=new T.Matrix4(),Y=new T.Vector3(0,1,0),S1=new T.Vector3(1,1,1);
-  B.forEach((b,i)=>{const y=this.gY(b.x,b.y),P=new T.Vector3(b.x,y,b.y),Q=new T.Quaternion().setFromAxisAngle(Y,Math.PI/2-b.a);C.P.push(P);C.Q.push(Q);
-    M.compose(P,Q,S1);for(const im of[C.body,C.inner,C.trim,C.gem])im.setMatrixAt(i,M)});
+  ids.forEach((id,j)=>{const b=WD.boxes[id],y=R.gY(b.x,b.y),P=new T.Vector3(b.x,y,b.y),Q=new T.Quaternion().setFromAxisAngle(Y,Math.PI/2-b.a);C.P.push(P);C.Q.push(Q);
+    M.compose(P,Q,S1);for(const im of[C.body,C.inner,C.trim,C.gem])im.setMatrixAt(j,M)});
   for(const im of[C.body,C.inner,C.trim,C.gem])im.instanceMatrix.needsUpdate=true;
-  this.chest=C;this.boxLid=C.lid;this.stepBoxes(0,true)};
-R.stepBoxes=function(dt,force){const C=this.chest;if(!C)return;C.t+=dt;const M=new T.Matrix4(),H=new T.Matrix4().makeTranslation(0,CH,-CD/2),Rx=new T.Matrix4(),S=new T.Vector3(),V=new T.Vector3();
-  let lid=false,glow=false,inn=false;
-  for(let i=0;i<C.n;i++){const b=boxes[i],want=b&&b.open?1:0;let k=C.k[i];k=force?want:k+(want-k)*Math.min(1,dt*6);C.k[i]=k;
-    if(force||Math.abs(k-C.set[i])>.002){C.set[i]=k;M.compose(C.P[i],C.Q[i],S.set(1,1,1)).multiply(H).multiply(Rx.makeRotationX(-OPEN*k));C.lid.setMatrixAt(i,M);C.lidG.setMatrixAt(i,M);lid=true;
-      const g=(1-k)*175;M.compose(V.copy(C.P[i]).setY(C.P[i].y+1.2),C.Q[i],S.set(Math.max(.001,g),1,Math.max(.001,g)));C.glow.setMatrixAt(i,M);glow=true}
-    const ot=C.t-C.okT[i];if(ot>=0&&ot<6||force){const f=ot>=0&&ot<6?Math.min(1,ot*3)*Math.min(1,(6-ot)/2.5):0;M.compose(V.copy(C.P[i]).setY(C.P[i].y+CH+1.5),C.Q[i],S.set(Math.max(.001,(CW-4)*f*1.5),1,Math.max(.001,(CD-4)*f*1.5)));C.inn.setMatrixAt(i,M);inn=true}}
-  if(lid){C.lid.instanceMatrix.needsUpdate=true;C.lidG.instanceMatrix.needsUpdate=true}if(glow)C.glow.instanceMatrix.needsUpdate=true;if(inn)C.inn.instanceMatrix.needsUpdate=true;
-  C.glowM.opacity=.46+.16*Math.sin(C.t*2.3);
-  // star glints on the shut chests near the camera
-  if(!force&&dt>0&&this.sp){const cx=this.tx||0,cz=this.ty||0,rate=this.hi?4.2:2.2;
-    for(let i=0;i<C.n;i++){if(C.k[i]>.5)continue;const P=C.P[i];if(Math.abs(P.x-cx)>1500||Math.abs(P.z-cz)>1300||Math.random()>dt*rate)continue;
-      const a=Math.random()*6.283,r=Math.random();this.sp(true,{x:P.x+Math.cos(a)*CW*.55*r,y:P.y+8+Math.random()*44,z:P.z+Math.sin(a)*CD*.6*r,vy:rand(6,24),l:rand(.55,1.1),s:rand(16,30),s1:0,c:Math.random()<.75?'#ffe7a0':'#bff4ff',sp:1,vr:rand(-2,2),dr:2})}}};
+  const H=new T.Matrix4().makeTranslation(0,CH,-CD/2),Rx=new T.Matrix4();
+  C.lidM=(j,k,out)=>out.compose(C.P[j],C.Q[j],S1).multiply(H).multiply(Rx.makeRotationX(-OPEN*k));
+  return C}
+// the owner's chest: body and lid cut apart at the seam (triangles above it swing with the lid)
+const splitCache=new WeakMap();
+function splitLid(geo,seam){let s=splitCache.get(geo);if(s)return s;const idx=geo.index?geo.index.array:null,pos=geo.attributes.position,lidI=[],bodyI=[];
+  const n=idx?idx.length:pos.count;for(let t=0;t<n;t+=3){const a=idx?idx[t]:t,b=idx?idx[t+1]:t+1,c=idx?idx[t+2]:t+2;(((pos.getY(a)+pos.getY(b)+pos.getY(c))/3>seam)?lidI:bodyI).push(a,b,c)}
+  const body=geo.clone(),lid=geo.clone();body.setIndex(bodyI);lid.setIndex(lidI);s={body,lid};splitCache.set(geo,s);return s}
+function kitEye(R,ids){const parts=R.celestialAsset('chest-eye');if(!parts)return null;const sz=A().get('chest-eye').inspection.size,k=EYE.W/sz[0],W=EYE.W,H=sz[1]*k,D=sz[2]*k,n=ids.length;
+  const mk=(g,m)=>{const im=new T.InstancedMesh(g,m,n);im.frustumCulled=false;im.castShadow=!!R.hi;im.receiveShadow=true;R.scene.add(im);return im};
+  const body=[],lid=[];for(const p of parts){const s=splitLid(p.geo,EYE.SEAM);body.push(mk(s.body,p.mat));lid.push(mk(s.lid,p.mat))}
+  const C=Object.assign({kind:'eye',ids,n,H:H*EYE.SEAM,inW:W*.8,inD:D*.75,glowW:150,k:new Float32Array(n),set:new Float32Array(n).fill(-1),okT:new Float32Array(n).fill(-99),P:[],Q:[],body,lid},glowKit(R,n,'#59d8ff'));
+  const M=new T.Matrix4(),Y=new T.Vector3(0,1,0),S=new T.Vector3(W,H,D);
+  ids.forEach((id,j)=>{const b=WD.boxes[id],y=R.gY(b.x,b.y),P=new T.Vector3(b.x,y-1,b.y),Q=new T.Quaternion().setFromAxisAngle(Y,Math.PI/2-b.a);C.P.push(P);C.Q.push(Q);
+    M.compose(P,Q,S);for(const im of body)im.setMatrixAt(j,M)});for(const im of body)im.instanceMatrix.needsUpdate=true;
+  // hinge on the back edge of the seam, in the chest's own (scaled) space, so the lid turns without shearing
+  const Hm=new T.Matrix4().makeTranslation(0,EYE.SEAM*H,-D/2),Hi=new T.Matrix4().makeTranslation(0,-EYE.SEAM*H,D/2),Rx=new T.Matrix4(),Sm=new T.Matrix4().makeScale(W,H,D),I1=new T.Vector3(1,1,1);
+  C.lidM=(j,k,out)=>out.compose(C.P[j],C.Q[j],I1).multiply(Hm).multiply(Rx.makeRotationX(-EYE.OPEN*k)).multiply(Hi).multiply(Sm);
+  return C}
+R.buildBoxes=function(){const B=WD.boxes||[];this.boxLid=null;this.chest=null;this.chests=[];this.chestAt=new Map();if(!B.length)return;
+  const eyeOn=loaded('chest-eye'),gild=[],eye=[];B.forEach((b,i)=>(b.vault||!eyeOn?gild:eye).push(i));
+  if(gild.length)this.chests.push(kitGild(this,gild));if(eye.length){const K=kitEye(this,eye);if(K)this.chests.push(K);else for(const i of eye)gild.push(i)}
+  for(const C of this.chests)C.ids.forEach((id,j)=>this.chestAt.set(id,[C,j]));
+  this.chest=this.chests[0]||null;this.boxLid=this.chest&&this.chest.lid[0];this.stepBoxes(0,true)};
+R.stepBoxes=function(dt,force){const Ks=this.chests;if(!Ks||!Ks.length)return;const M=new T.Matrix4(),S=new T.Vector3(),V=new T.Vector3();
+  for(const C of Ks){C.t=(C.t||0)+dt;let lid=false,glow=false,inn=false;
+    for(let j=0;j<C.n;j++){const b=boxes[C.ids[j]],want=b&&b.open?1:0;let k=C.k[j];k=force?want:k+(want-k)*Math.min(1,dt*6);C.k[j]=k;
+      if(force||Math.abs(k-C.set[j])>.002){C.set[j]=k;C.lidM(j,k,M);for(const im of C.lid)im.setMatrixAt(j,M);lid=true;
+        const g=(1-k)*C.glowW;M.compose(V.copy(C.P[j]).setY(C.P[j].y+1.2),C.Q[j],S.set(Math.max(.001,g),1,Math.max(.001,g)));C.glow.setMatrixAt(j,M);glow=true}
+      const ot=C.t-C.okT[j];if(ot>=0&&ot<6||force){const f=ot>=0&&ot<6?Math.min(1,ot*3)*Math.min(1,(6-ot)/2.5):0;M.compose(V.copy(C.P[j]).setY(C.P[j].y+C.H+1.5),C.Q[j],S.set(Math.max(.001,C.inW*f*1.5),1,Math.max(.001,C.inD*f*1.5)));C.inn.setMatrixAt(j,M);inn=true}}
+    if(lid)for(const im of C.lid)im.instanceMatrix.needsUpdate=true;if(glow)C.glow.instanceMatrix.needsUpdate=true;if(inn)C.inn.instanceMatrix.needsUpdate=true;
+    C.glowM.opacity=(C.kind==='eye'?.34:.46)+.16*Math.sin(C.t*2.3);
+    // star glints on the shut chests near the camera
+    if(!force&&dt>0&&this.sp){const cx=this.tx||0,cz=this.ty||0,rate=(this.hi?4.2:2.2)*(C.kind==='eye'?.6:1);
+      for(let j=0;j<C.n;j++){if(C.k[j]>.5)continue;const P=C.P[j];if(Math.abs(P.x-cx)>1500||Math.abs(P.z-cz)>1300||Math.random()>dt*rate)continue;
+        const a=Math.random()*6.283,r=Math.random();this.sp(true,{x:P.x+Math.cos(a)*C.inW*.6*r,y:P.y+8+Math.random()*44,z:P.z+Math.sin(a)*C.inD*.7*r,vy:rand(6,24),l:rand(.55,1.1),s:rand(16,30),s1:0,
+          c:C.kind==='eye'?(Math.random()<.7?'#bff4ff':'#ffffff'):(Math.random()<.75?'#ffe7a0':'#bff4ff'),sp:1,vr:rand(-2,2),dr:2})}}}};
 // opening: a chest with loot throws gold light and sparks and glows inside for a while; an empty one only puffs dust (r4.js)
 {const _d=R.doFx;R.doFx=function(e,me,L){const r=_d.apply(this,arguments);
-  if(e&&e.k==='box'&&e.ok&&this.chest){try{const C=this.chest,i=e.id|0;if(i>=0&&i<C.n)C.okT[i]=C.t;const P=C.P[i]||{x:e.x,y:this.gY(e.x,e.y),z:e.y},y=P.y+CH;
-    if(this.pillar)this.pillar(e.x,e.y,300,'#ffd35a',1.2);if(this.flare)this.flare(e.x,y+30,e.y,320,'#fff0b0',.45);
-    for(let k=0;k<(this.hi?34:18);k++)this.sp(true,{x:e.x+rand(-16,16),y:y+4,z:e.y+rand(-12,12),vx:rand(-70,70),vy:rand(170,340),vz:rand(-70,70),l:rand(.8,1.5),s:rand(11,20),s1:2,c:Math.random()<.7?'#ffe27a':'#fff8e0',sp:1,g:280,dr:1.1})}catch(err){}}
+  if(e&&e.k==='box'&&e.ok&&this.chestAt){try{const q=this.chestAt.get(e.id|0),C=q&&q[0],j=q?q[1]:-1;if(C)C.okT[j]=C.t||0;const P=C?C.P[j]:{x:e.x,y:this.gY(e.x,e.y),z:e.y},y=P.y+(C?C.H:CH);
+    const vault=C&&C.kind==='gild'&&WD.boxes[e.id|0]&&WD.boxes[e.id|0].vault;
+    if(this.pillar)this.pillar(e.x,e.y,vault?380:300,'#ffd35a',vault?1.6:1.2);if(this.flare)this.flare(e.x,y+30,e.y,320,'#fff0b0',.45);
+    for(let k=0;k<(this.hi?34:18)*(vault?1.5:1);k++)this.sp(true,{x:e.x+rand(-16,16),y:y+4,z:e.y+rand(-12,12),vx:rand(-70,70),vy:rand(170,340),vz:rand(-70,70),l:rand(.8,1.5),s:rand(11,20),s1:2,c:Math.random()<.7?'#ffe27a':'#fff8e0',sp:1,g:280,dr:1.1})}catch(err){}}
   return r}}
+// ---- the potions on the ground: the owner's vials (health = Inferno Vial, mana = the blue flask) ----
+const POT={hp:{key:'potion-hp',H:30},mp:{key:'potion-mana',H:30}};
+const potKind=it=>it.k==='p'?(it.b===0||it.b===undefined?'hp':it.b===1?'mp':null):it.k==='i'?(it.it==='potion'?'hp':it.it==='mana'?'mp':null):null;
+{const _io=R.itemObj;R.itemObj=function(it){const pk=potKind(it),D=pk&&POT[pk];if(!D||!loaded(D.key))return _io.apply(this,arguments);
+  try{const parts=this.celestialAsset(D.key);if(!parts)return _io.apply(this,arguments);const sz=A().get(D.key).inspection.size,k=D.H/sz[1];
+    const g=new T.Group(),hold=new T.Group();g.add(hold);for(const p of parts){const m=new T.Mesh(p.geo,p.mat);m.scale.set(sz[0]*k,D.H,sz[2]*k);m.position.y=6;m.castShadow=!!this.hi;hold.add(m)}
+    g.userData.spin=hold;this.mesh(this.G.disc,this.glowM(pk==='hp'?'#ff6a7a':'#6ab0ff',.28),0,1,0,20,1,20,g);
+    g.position.set(it.x,this.gY(it.x,it.y),it.y);this.scene.add(g);return g}catch(e){return _io.apply(this,arguments)}}}
 })();
 
 // ===================== VILLAGE MERCHANTS · shop only at an NPC (Arena Royale, owner 2026-11-23) =====================
@@ -10717,6 +10807,8 @@ if(typeof R3!=='undefined'&&typeof THREE!=='undefined'){const R=R3;
 //  · the 💨 dash button sits left of the HP potion, the ✦ special (V) right above it, left of the MP potion — clear of the
 //    skill-cancel spot it used to cover; both shrink together on small screens (CUR pad children, so t1.js keeps their cooldowns)
 //  · the coin counter is a slim pill with a small coin
+//  · the weapon swap (owner 2026-11-23, rule in b.js swapWeapons): the reserve weapon's circle in the top-left frame shows the
+//    swap cooldown as a dark sweep with the seconds left, and a red ring with crossed swords while the hero is being hit
 //  · the Eclipse boss bar (eclipse-fx.js R3.eclHud: the Snow Queen's three bars, the Overlord's phases) comes up again: installArenaVitals
 //    replaces drawTarget outright, which dropped eclipse-fx.js's hook, so in Arena the bar never showed. While it is up, the boss's own
 //    small top frame is skipped (no stacked bars), as eclipse-fx.js meant
@@ -10768,6 +10860,14 @@ function atkxDraw(me){const B=atkxSpot();UI.atkMob=B;if(!B||!me)return;if(ATKX.p
   if(!atkxCoarse){const s=Math.max(7,B.r*.2),kx=B.x-B.r*.72,ky=B.y-B.r*.72;rr(kx-s,ky-s,s*2,s*2,Math.max(2,s*.23));ctx.fillStyle='#071019f5';ctx.fill();ctx.strokeStyle='#b4c0ca';ctx.lineWidth=1;ctx.stroke();
     ctx.font='600 '+Math.max(9,s*1.27)+'px system-ui,sans-serif';ctx.fillStyle='#e5edf4';ctx.fillText('K',kx,ky+.5)}
   ctx.restore()}
+// ---- the weapon swap lock on the reserve weapon's circle ----
+function atkxSwapHud(me){const B=UI.wsw2;if(!B||!me||!me.wk2||me.dead||typeof SWAP_CD==='undefined')return;
+  const cd=Math.max(0,(me.swT||0)-gameT),hit=net.mode==='client'?gameT-(me._potHit===undefined?-99:me._potHit)<POT_FIGHT:potFight(me);if(cd<=0&&!hit)return;
+  ctx.save();if(cd>0){ctx.fillStyle='#040a15c4';ctx.beginPath();ctx.moveTo(B.x,B.y);ctx.arc(B.x,B.y,B.r,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.min(1,cd/SWAP_CD));ctx.closePath();ctx.fill();
+    ctx.font='700 '+Math.max(10,B.r*.78)+'px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;ctx.strokeStyle='#000c';ctx.strokeText(Math.ceil(cd),B.x,B.y+.5);ctx.fillStyle='#fff4dc';ctx.fillText(Math.ceil(cd),B.x,B.y+.5)}
+  if(hit){ctx.beginPath();ctx.arc(B.x,B.y,B.r+1.5,0,Math.PI*2);ctx.strokeStyle='#ff5a4a';ctx.lineWidth=2.2;ctx.stroke();if(cd<=0){ctx.fillStyle='#3a0a08b8';ctx.beginPath();ctx.arc(B.x,B.y,B.r,0,Math.PI*2);ctx.fill();
+    ctx.font=Math.max(10,B.r*.9)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⚔️',B.x,B.y+1)}}
+  ctx.restore()}
 // ---- the dash and special buttons beside the potions, the slim coin ----
 function arenaDashAnchor(potion){
   const r=clamp(potion.r*2.7,46,60)/2,gap=Math.max(5,potion.r*.28);
@@ -10791,9 +10891,107 @@ if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
   setTimeout(()=>{   // after the HUD installers (installArenaCombatControls replaces drawBtnAtk; arena-npc.js wraps CUR.step first)
     const _da=drawBtnAtk;drawBtnAtk=function(B,me){const r=_da.apply(this,arguments);try{atkxDraw(me)}catch(e){}return r};
     const st=CUR.step;CUR.step=function(dt){const r=st.call(this,dt);try{if(state!=='play')ATKX.held.clear();else atkxLayout()}catch(e){}return r};
+    if(typeof drawFrame==='function'){const _df=drawFrame;drawFrame=function(me){const r=_df.apply(this,arguments);try{atkxSwapHud(me)}catch(e){}return r}}
     if(typeof R3!=='undefined'&&R3.eclHud&&typeof drawTarget==='function'){const _dt=drawTarget;let t0=0;
       drawTarget=function(me,s,fr){const now=performance.now(),dt=Math.min(.1,(now-(t0||now))/1000);t0=now;try{R3.eclHud(me,(typeof listener==='function'&&listener())||me,dt)}catch(e){}
         const u=TGT&&UMAP.get(TGT.id);if(u&&R3._eclBossShown&&(u.ecl==='queen'||u.ecl==='overlord'))return;return _dt.apply(this,arguments)}}},0);
+}
+
+// ===================== THE CURSED FOREST'S DEAD · bone heaps and searchable knights' tombs (Arena Royale, owner 2026-11-23) =====================
+// Owner: "ใส่ไฟล์1ตกแต่ง ในโซนต้องสาป ไฟล์ที่ 2 ตกแต่งในโซนต้องสาป แต่ กด ค้นหาของได้ ยิ่งนาน ยิ่งมีโอกาสได้ของดี"
+//  · file 1, a heap of human bones ('bone-heap'), and file 2, a moss-grown knight lying on his tomb ('knight-tomb'), stand in the
+//    Cursed Forest (REG land 1). a.js places them (WD.bones, WD.tombs: integer hash per cell, the same on every machine) with
+//    collision circles; this file draws them and runs the search
+//  · a tomb that has not been searched glows a sick green. Standing beside one: the 🔍 prompt (touch) or F starts a search, the
+//    same again stops it and takes what was found. The longer the search, the better the find — the bar walks through
+//    ธรรมดา (0–3 s) · หายาก (3–6 s) · มหากาพย์ (6–9 s) · ตำนาน (9–10 s); at 10 s it ends by itself. Walking off, getting hit or
+//    dying ends it early (whatever was found so far comes out); under 1.5 s nothing is found and the tomb stays untouched.
+//    One search per tomb per match
+//  · host-authoritative: the client asks ({t:'srch',i} / {t:'srchx'}), the host runs the timer on the hero (u.srch), rolls the loot
+//    and tells everyone ({t:'tss',i,u} started · {t:'tse',i,u,ok} ended). Bots leave the tombs alone
+const TOMB_R=130,TOMB_MAX=10,TOMB_MIN=1.5;
+const TOMB_BANDS=[[0,[55,35,10,0,0]],[3,[10,45,35,10,0]],[6,[0,15,45,32,8]],[9,[0,0,30,58,12]]];
+const tombBand=s=>{let b=0;for(let i=0;i<TOMB_BANDS.length;i++)if(s>=TOMB_BANDS[i][0])b=i;return b};
+function tombNear(u,r){const T=WD&&WD.tombs;if(!u||!T)return null;let b=null,bd=r||TOMB_R;for(const t of T){if(t.done)continue;const d=Math.hypot(t.x-u.x,t.y-u.y);if(d<bd){bd=d;b=t}}return b}
+// ---- host ----
+function tombStart(u,i){const T=WD&&WD.tombs,t=T&&T[i|0];if(!t||t.done||t.by!==undefined&&t.by!==u.id||!u||!u.hero||u.dead||u.srch||u.stunT>0)return;
+  if(Math.hypot(t.x-u.x,t.y-u.y)>TOMB_R+30)return;t.by=u.id;u.srch={i:t.id,t0:gameT,x:u.x,y:u.y};emit({t:'tss',i:t.id,u:u.id});sndAt('pick',t.x,t.y)}
+function tombStop(u,why){const S=u&&u.srch;if(!S)return;u.srch=null;const t=WD.tombs[S.i];if(!t)return;t.by=undefined;const s=Math.min(TOMB_MAX,gameT-S.t0),H=isHuman(u)?[u.id]:null;
+  if(why==='dead'||s<TOMB_MIN){emit({t:'tse',i:t.id,u:u.id,ok:0});if(H&&why!=='dead')fxTextFor(u.x,u.y-84,'🔍 ยังไม่ทันเจออะไร','#c8c0b0',1.2,H);return}
+  t.done=1;emit({t:'tse',i:t.id,u:u.id,ok:1,b:tombBand(s)});tombLoot(u,t,s,H)}
+function tombLoot(u,t,s,H){const band=tombBand(s),W=TOMB_BANDS[band][1],fx=t.x+Math.sin(t.a)*70,fy=t.y+Math.cos(t.a)*70,r=Math.random();let best=0;
+  if(r<.5){const tier=pickTier(W);best=tier;dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier})}
+  else if(r<.85){const tier=pickTier(W);best=tier;dropItem({k:'r',x:fx,y:fy,tier})}
+  else{best=band;dropItem({k:'c',x:fx,y:fy,n:2+band,gold:band>=1})}
+  if(band>=2&&Math.random()<.6)dropItem(Math.random()<.5?{k:'p',x:fx+30,y:fy-20,b:Math.random()<.5?2:0}:{k:'c',x:fx+30,y:fy-20,n:2,gold:true});
+  sndAt(best>=3?'chest':'pick',t.x,t.y);if(H)fxTextFor(t.x,t.y-70,'🔍 เจอของ'+TIERS[Math.min(4,best)].n+'!',TIERS[Math.min(4,best)].c,1.8,H,best>=3?1:0)}
+{const _ct=curTick;curTick=function(dt){_ct(dt);if(typeof net!=='undefined'&&net.mode==='client')return;try{
+  for(const u of units){const S=u.srch;if(!S)continue;
+    if(u.dead){tombStop(u,'dead');continue}
+    if(u.stunT>0||(u.lastDmgT!==undefined&&u.lastDmgT>S.t0+.05)||Math.hypot(u.x-S.x,u.y-S.y)>40||gameT-S.t0>=TOMB_MAX)tombStop(u,'end')}}catch(e){}}}
+{const _hd=hostOnData;hostOnData=function(cid,d){if(d&&(d.t==='srch'||d.t==='srchx')){const u=units.find(q=>q.ctrl===cid);if(u&&state==='play'){if(d.t==='srch')tombStart(u,d.i);else tombStop(u,'end')}return}
+  return _hd.apply(this,arguments)}}
+// every peer: who is searching which tomb, which are done
+const TOMBS={on:new Map(),my:null,wd:null};
+const tombFresh=()=>{if(TOMBS.wd!==WD){TOMBS.wd=WD;TOMBS.on.clear();TOMBS.my=null}};   // a new world: nobody is searching anything
+{const _ae=applyEvent;applyEvent=function(e){if(e&&(e.t==='tss'||e.t==='tse')){tombFresh();const t=WD&&WD.tombs&&WD.tombs[e.i|0];
+    if(e.t==='tss'){if(t)t.by=e.u;TOMBS.on.set(e.i|0,{u:e.u,t0:performance.now()});if(e.u===myId)TOMBS.my={i:e.i|0,t0:performance.now()}}
+    else{TOMBS.on.delete(e.i|0);if(t){t.by=undefined;if(e.ok)t.done=1}if(e.u===myId)TOMBS.my=null;
+      if(e.ok&&t&&typeof R3!=='undefined'&&R3.ok&&R3.tombDone)try{R3.tombDone(t,e.b|0)}catch(err){}}
+    return}
+  return _ae.apply(this,arguments)}}
+// the local player: F (after a chest or a weapon to pick up) and the prompt
+function tombPress(){const me=ME();if(!me||me.dead)return false;
+  if(TOMBS.my){if(net.mode==='client')netSend({t:'srchx'});else tombStop(me,'end');return true}
+  const t=tombNear(me);if(!t||t.by!==undefined)return false;if(net.mode==='client')netSend({t:'srch',i:t.id});else tombStart(me,t.id);return true}
+if(typeof pressSwap==='function'){const _ps=pressSwap;pressSwap=function(){const me=ME();if(TOMBS.my)return tombPress();
+  if(me&&!me.dead&&!boxNear(me)&&!swapCandidate(me)&&tombNear(me))return tombPress();return _ps.apply(this,arguments)}}
+// ---- the prompt / progress pill ----
+if(typeof CUR!=='undefined'&&CUR.el){
+  const css=document.createElement('style');css.textContent=`
+#arenaTomb{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);transform:translateX(-50%);z-index:7;display:none;flex-direction:column;align-items:stretch;gap:6px;min-width:210px;
+  padding:8px 16px 9px 12px;border:1px solid #7fbf6a;border-radius:20px;background:linear-gradient(180deg,#16231af5,#0a110cf5);color:#dff3cf;font:700 15px/1 system-ui,sans-serif;
+  cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;box-shadow:0 4px 14px #000a,0 0 0 1px #000}
+#arenaTomb .row{display:flex;align-items:center;gap:9px;white-space:nowrap}#arenaTomb b{font-size:21px;line-height:1}#arenaTomb small{margin-left:auto;font:600 11px system-ui,sans-serif;color:#cfe6c0;border:1px solid #7fbf6a88;border-radius:4px;padding:2px 5px}
+#arenaTomb .bar{position:relative;height:9px;border-radius:5px;background:#05090699;border:1px solid #9fd08a55;overflow:hidden;display:none}
+#arenaTomb .bar i{position:absolute;top:0;bottom:0;width:1px;background:#ffffff55}#arenaTomb .bar em{position:absolute;left:0;top:0;bottom:0;width:0;background:#dcdcdc}
+#arenaTomb .tier{font:700 12px system-ui,sans-serif;display:none}#arenaTomb.on .bar,#arenaTomb.on .tier{display:block}#arenaTomb.on{border-color:#d8c07a}
+@media(max-height:420px){#arenaTomb{bottom:calc(env(safe-area-inset-bottom,0px) + 64px);font-size:13px;min-width:180px}}`;document.head.appendChild(css);
+  const el=document.createElement('div');el.id='arenaTomb';el.setAttribute('role','button');
+  el.innerHTML='<div class="row"><b>🔍</b><span class="lb">ค้นร่างอัศวิน</span><small>F</small></div><div class="bar">'+TOMB_BANDS.slice(1).map(q=>'<i style="left:'+(q[0]/TOMB_MAX*100)+'%"></i>').join('')+'<em></em></div><div class="tier"></div>';
+  document.body.appendChild(el);const lb=el.querySelector('.lb'),em=el.querySelector('em'),tr=el.querySelector('.tier');
+  for(const k of['pointerup','pointermove','touchstart','wheel'])el.addEventListener(k,e=>e.stopPropagation());
+  el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();tombPress()});
+  const tierOf=s=>[0,1,2,3][tombBand(s)];let last='';
+  function tombHud(){tombFresh();const me=ME(),sky=typeof DROP!=='undefined'&&DROP.sky&&DROP.sky(),on=state==='play'&&me&&!me.dead&&!sky&&!CUR.open;
+    const M=TOMBS.my,near=on&&!M?tombNear(me):null,show=on&&(!!M||!!near&&near.by===undefined);
+    if((el.style.display==='flex')!==show)el.style.display=show?'flex':'none';if(!show)return;
+    if(M){const s=Math.min(TOMB_MAX,(performance.now()-M.t0)/1000),t=tierOf(s),k=s<TOMB_MIN?'wait':t;
+      const sig='s'+k;if(sig!==last){last=sig;el.classList.add('on');lb.textContent=s<TOMB_MIN?'กำลังค้น…':'กำลังค้น… แตะเพื่อเก็บของ';
+        tr.textContent=s<TOMB_MIN?'ยังไม่เจออะไร':'โอกาสได้ของ: '+TIERS[t].n+(t<3?' · ค้นต่อได้ของดีขึ้น':'');tr.style.color=TIERS[t].c;em.style.background=TIERS[t].c}
+      em.style.width=(s/TOMB_MAX*100).toFixed(1)+'%'}
+    else if(last!=='idle'){last='idle';el.classList.remove('on');lb.textContent='ค้นร่างอัศวิน';em.style.width='0%'}}
+  setTimeout(()=>{const st=CUR.step;CUR.step=function(dt){const r=st.call(this,dt);try{tombHud()}catch(e){}return r}},0);
+}
+// ---- 3D: the heaps, the tombs, a green glow on the ones still unsearched, dust while someone searches ----
+if(typeof R3!=='undefined'&&typeof THREE!=='undefined'){const P=R3,T=THREE,A=()=>window.CelestialAssets;
+  const loaded=k=>{const a=A()&&A().get(k);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.size)};
+  P.buildDead=function(){this.tombGlow=null;const B=WD.bones||[],TB=WD.tombs||[];
+    if(B.length&&loaded('bone-heap')){const s=A().get('bone-heap').inspection.size,parts=this.celestialAsset('bone-heap');
+      if(parts)for(const p of parts)this.instC(p.geo,p.mat,B,(q,add)=>{const w=104*q.s,k=w/s[0];add(q.x,this.gY(q.x,q.y)-3,q.y,w,s[1]*k,s[2]*k,0,q.a,0,null)},true,null,2600)}
+    if(TB.length&&loaded('knight-tomb')){const s=A().get('knight-tomb').inspection.size,parts=this.celestialAsset('knight-tomb'),L=118,k=L/s[2];
+      if(parts)for(const p of parts)this.instC(p.geo,p.mat,TB,(q,add)=>{add(q.x,this.gY(q.x,q.y)-2,q.y,s[0]*k,s[1]*k,L,0,q.a,0,null)},true,null,2600)}
+    if(TB.length){const m=new T.MeshBasicMaterial({map:this.tex('wglow'),color:'#7dff9a',transparent:true,opacity:.42,depthWrite:false,blending:T.AdditiveBlending});m.userData.ownMat=1;
+      const g=new T.PlaneGeometry(1,1);g.rotateX(-Math.PI/2);const im=new T.InstancedMesh(g,m,TB.length);im.frustumCulled=false;im.renderOrder=2;this.scene.add(im);
+      this.tombGlow={im,m,t:0};const M=new T.Matrix4();TB.forEach((t,i)=>{M.makeTranslation(t.x,this.gY(t.x,t.y)+1.4,t.y).scale(new T.Vector3(t.done?.001:230,1,t.done?.001:230));im.setMatrixAt(i,M)});im.instanceMatrix.needsUpdate=true}};
+  const _bp=P.buildProps;P.buildProps=function(){const r=_bp.apply(this,arguments);try{this.buildDead()}catch(e){if(!this._deadErr){this._deadErr=1;console.warn('dead',e)}}return r};
+  P.tombDone=function(t,band){const G=this.tombGlow;if(G){const M=new T.Matrix4().makeScale(0,0,0);G.im.setMatrixAt(t.id,M);G.im.instanceMatrix.needsUpdate=true}
+    const y=this.gY(t.x,t.y);if(this.pfxApi){this.pfxApi.smoke({x:t.x,y,z:t.y},this.hi?12:6,'#5a6a4a',60,{a:.45,size:1.3});this.pfxApi.sparks({x:t.x,y:y+40,z:t.y},this.hi?24:12,TIERS[Math.min(4,band+1)].c,'#ffffff',260,240,{life:.8})}
+    if(band>=2&&this.pillar)this.pillar(t.x,t.y,240,TIERS[Math.min(4,band+1)].c,.9)};
+  // a frame: the glow breathes; a tomb being searched coughs up dust and green motes
+  const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);try{const G=this.tombGlow;if(G){G.t+=dt||0;G.m.opacity=.34+.12*Math.sin(G.t*1.7)}
+      if(TOMBS.on.size&&this.sp&&dt>0)for(const [i] of TOMBS.on){const t=WD.tombs&&WD.tombs[i];if(!t||Math.random()>dt*14)continue;const y=this.gY(t.x,t.y);
+        this.sp(Math.random()<.5,{x:t.x+rand(-40,40),y:y+rand(10,50),z:t.y+rand(-40,40),vx:rand(-20,20),vy:rand(20,70),vz:rand(-20,20),l:rand(.6,1.2),s:rand(10,22),s1:2,c:Math.random()<.6?'#a8c890':'#d8ffb0',sp:1,dr:1.2})}}catch(e){}return r};
 }
 
 // ===================== SETTINGS: view + graphics quality =====================
@@ -10937,7 +11135,7 @@ window.installArenaMenuUX=function(){
     const controls=make('div','arena-controls-guide');
     controls.append(make('h4','','คีย์ลัดและสัมผัส'));
     const keys=make('dl');
-    for(const [key,detail] of [['W A S D','เคลื่อนที่'],['J · Space','โจมตี (ตีฮีโร่ก่อนเสมอ ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์)'],['K','ตีมอนสเตอร์อย่างเดียว (ปุ่มเล็ก 🐲 ข้างปุ่มโจมตี)'],['Q · E · R','สกิลอาวุธ (PC กดค้างเล็งตามเมาส์ ปล่อยร่าย · คลิกขวายกเลิก)'],['Shift','พุ่ง อมตะระหว่างพุ่ง คูลดาวน์ 45 วิ (ปุ่ม 💨 ซ้ายขวดเลือด)'],['V','สกิลพิเศษ (ปุ่ม ✦ เหนือปุ่มพุ่ง)'],['4 – 7 · B','ใช้ยา · เปิดกระเป๋า'],['F · T','เปิดกล่อง/เก็บอาวุธ · สลับอาวุธ'],['P','ร้านค้า (ต้องยืนใกล้พ่อค้าในหมู่บ้าน)'],['ปุ่มสกิลบนจอ','แตะแล้วปล่อยเพื่อใช้ · กดค้างเพื่อดูความเสียหายและความสามารถ'],['มือถือ','จอยซ้ายเดิน · ลากจากปุ่มสกิลเพื่อเล็ง แล้วปล่อยเพื่อร่าย']])keys.append(make('dt','',key),make('dd','',detail));
+    for(const [key,detail] of [['W A S D','เคลื่อนที่'],['J · Space','โจมตี (ตีฮีโร่ก่อนเสมอ ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์)'],['K','ตีมอนสเตอร์อย่างเดียว (ปุ่มเล็ก 🐲 ข้างปุ่มโจมตี)'],['Q · E · R','สกิลอาวุธ (PC กดค้างเล็งตามเมาส์ ปล่อยร่าย · คลิกขวายกเลิก)'],['Shift','พุ่ง อมตะระหว่างพุ่ง คูลดาวน์ 45 วิ (ปุ่ม 💨 ซ้ายขวดเลือด)'],['V','สกิลพิเศษ (ปุ่ม ✦ เหนือปุ่มพุ่ง)'],['4 – 7 · B','ใช้ยา · เปิดกระเป๋า'],['F · T','เปิดกล่อง/เก็บอาวุธ/ค้นร่างอัศวิน · สลับอาวุธ (คูลดาวน์ 5 วิ ห้ามสลับตอนโดนตี)'],['P','ร้านค้า (ต้องยืนใกล้พ่อค้าในหมู่บ้าน)'],['ปุ่มสกิลบนจอ','แตะแล้วปล่อยเพื่อใช้ · กดค้างเพื่อดูความเสียหายและความสามารถ'],['มือถือ','จอยซ้ายเดิน · ลากจากปุ่มสกิลเพื่อเล็ง แล้วปล่อยเพื่อร่าย']])keys.append(make('dt','',key),make('dd','',detail));
     controls.appendChild(keys);groups[1].panel.appendChild(controls);
     rowFor(groups[2],'sndBtn','เพลงและเอฟเฟกต์','แตะเพื่อสลับเสียงทั้งหมด · เฉพาะเอฟเฟกต์ · ปิดเสียง');
     const credits=document.getElementById('credBtn');credits.className='arena-settings-credits';credits.addEventListener('click',()=>dialog.close(),true);groups[2].panel.appendChild(credits);
