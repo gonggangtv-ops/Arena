@@ -135,7 +135,7 @@ function overlordAct(u,t,d,R,dt){const hr=u.hp/u.maxHp,ph=hr>.7?0:hr>.35?1:2;
   if(d<R+12&&u.atkCd<=0){u.atkCd=u.atkCdBase*sp;eclCast(u,'basic',.45);eclSwing(u,t,1,'#9fd0ff')}}
 
 // ---- death: the Overlord drops all three legendary weapons ----
-{const _k=kill;kill=function(t,src){const r=_k.apply(this,arguments);
+{const _k=kill;kill=function(t,src){if(!t||t.dead)return;const r=_k.apply(this,arguments);
   if(t&&t.ecl==='overlord'){emit({t:'f',s:'☾ Celestial Overlord ถูกโค่นแล้ว! อาวุธในตำนานร่วงลงบนแท่นบูชา'});emit({t:'k',a:16,x:t.x|0,y:t.y|0});emit({t:'ec',k:'die',id:t.id,x:t.x|0,y:t.y|0});
     for(let i=1;i<=3;i++){const a=i/3*6.283;dropItem({k:'w',x:t.x+Math.cos(a)*90,y:t.y+Math.sin(a)*90,wk:LEG[i].wk,tier:4,wv:lgWv(i,4)})}
     for(const id of t.summons||[]){const m=UMAP.get(id);if(m&&!m.dead)kill(m,null)}}

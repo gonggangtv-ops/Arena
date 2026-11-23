@@ -344,55 +344,81 @@ void main(){vec2 d=gl_PointCoord-.5;float r=length(d)*2.;if(r>1.)discard;float a
     if(typeof AU!=='undefined'&&AU.ctx){S.warm=S.warm||[0,0,0,0,0];for(let i=0;i<5;i++)if(!S.warm[i]&&(S.w[i]>.12||i===S.aud)){S.warm[i]=1;try{if(MUS)AU.track(TRK[i]);AU.track(AMB[i]);if(!i)AU.track('amb-night')}catch(e){}}}}
 
   // ---------------- footprints in the deep snow ----------------
-  // every hero the player can see wades through deep snow: a soft furrow along the way and a boot print at every step (left,
-  // right, ...), fading after a while. One instanced mesh, a ring of FP.N decals, two shapes in one small atlas; render only.
-  // Owner 2026-11-23 "ปรับรอยเท้าตรงหิมะให้มันดูสมจริงลึกลงไปในหิมะ": the atlas is a height map now (R = how deep the snow is pressed,
-  // G = the rim of snow pushed up around it); the shader rebuilds the dented surface from it (screen-space derivatives of the world
-  // position pushed down by the depth) and lights it with the sun: the wall facing away from the sun falls into blue shadow, the
-  // far wall and the rim catch the light, the bottom of the print is darker still
-  const FP={mesh:null,scene:null,i:0,N:900,life:24,last:new Map(),tex:null,U:null};
-  function fpTexture(){const N=128,c=document.createElement('canvas');c.width=N;c.height=N;const g=c.getContext('2d'),D=new Float32Array(N*N),Rm=new Float32Array(N*N);
+  // every hero the player can see leaves boot prints in deep snow (left, right, ...), fading after a while. One instanced mesh,
+  // a ring of FP.N decals; render only.
+  // Owner 2026-11-23, with a photo of boot prints in fresh snow: "รอยเท้าบนหิมะมันดูชัดแปลกๆ อยากได้แบบรูปที่แนบให้" — single prints
+  // a stride apart (no furrow), each a soft hollow the colour of the snow itself: the floor in pale blue shade, the wall that faces
+  // the sun lit bright, the wall that faces away in a deeper blue shadow, a crumbly lip of pushed-up snow, faint tread in the sole.
+  // The atlas is one boot baked on the CPU as a normal map (RGB) + height (A), so the normals are smooth (no screen-space
+  // derivatives, no stair-steps on the edges); the shader turns them to world space with the decal's own axes, lights them from the
+  // scene sun's side but low (32°, like the photo's winter sun: the game's sun stands so high that a wall would hardly catch it), lets
+  // the sun-side wall shade the floor next to it, and shades the snow under it by 2x multiply blending
+  const FP={mesh:null,scene:null,i:0,N:900,life:24,last:new Map(),tex:null,U:null,W:19,L:38,STEP:54,SIDE:8};
+  const FP_DEPTH=6;   // world units from the snow's surface down to a print's floor
+  function fpTexture(){const W=64,H=128,px=FP.W/W,py=FP.L/H,hgt=new Float32Array(W*H);   // rows run heel (v=0) to toe (v=1)
     const sst=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
-    // an ellipse pressed in: flat floor, sloped walls (depth 0..1); a ring of pushed-up snow just outside
-    const dent=(x0,x1,cx,cy,rx,ry,dep,rim)=>{for(let y=0;y<N;y++)for(let x=x0;x<x1;x++){const dx=(x+.5-cx)/rx,dy=(y+.5-cy)/ry,r=Math.sqrt(dx*dx+dy*dy),k=y*N+x;
-        D[k]=Math.max(D[k],dep*(1-sst(.42,1,r)));Rm[k]=Math.max(Rm[k],rim*sst(.85,1.1,r)*(1-sst(1.1,1.6,r)))}};
-    // left half: the boot, toe up — the sole (deep under the ball of the foot), the heel, a shallower arch between, a few tread bars
-    dent(0,64,32,42,15,27,1,.55);dent(0,64,31,98,12,15,.95,.5);dent(0,64,31.5,70,8,14,.45,0);
-    for(let y=22;y<60;y+=7)for(let x=20;x<44;x++){const k=y*N+x;if(D[k]>.6)D[k]=Math.min(1,D[k]+.12)}
-    // right half: the furrow, a long trough with soft walls and banks
-    for(let y=0;y<N;y++)for(let x=64;x<N;x++){const dx=(x+.5-96)/27,dy=(y+.5-64)/60,r=Math.sqrt(dx*dx+dy*dy*.6),k=y*N+x;D[k]=.55*(1-sst(.25,1,r));Rm[k]=.35*sst(.8,1.05,Math.abs(dx))*(1-sst(1.05,1.45,Math.abs(dx)))*(1-sst(.7,1,Math.abs(dy)))}
-    const im=g.createImageData(N,N);for(let k=0;k<N*N;k++){im.data[k*4]=Math.round(D[k]*255);im.data[k*4+1]=Math.round(Rm[k]*255);im.data[k*4+2]=0;im.data[k*4+3]=255}g.putImageData(im,0,0);
-    const t=new T.CanvasTexture(c);t.colorSpace=T.NoColorSpace;t.premultiplyAlpha=false;return t}
+    const hs=(x,y)=>{const n=Math.sin(x*127.1+y*311.7)*43758.5453;return n-Math.floor(n)};
+    const vn=(x,y)=>{const i=Math.floor(x),j=Math.floor(y),fx=x-i,fy=y-j,u=fx*fx*(3-2*fx),v=fy*fy*(3-2*fy);
+      return (hs(i,j)*(1-u)+hs(i+1,j)*u)*(1-v)+(hs(i,j+1)*(1-u)+hs(i+1,j+1)*u)*v};
+    // a capsule that widens from the heel (r1, at the origin) to the ball of the foot (r2, h further on): one hollow, no waist
+    const cap=(x,y,r1,r2,h)=>{x=Math.abs(x);const b=(r1-r2)/h,a=Math.sqrt(1-b*b),k=-x*b+y*a;
+      if(k<0)return Math.hypot(x,y)-r1;if(k>a*h)return Math.hypot(x,y-h)-r2;return x*a+y*b-r1};
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){const X=x+.5,Y=y+.5;
+      // the boot's outline (signed distance in texels, < 0 inside): heel to toe one widening hollow, the arch pinched in a little on
+      // the inner side (x > 32), the toe rounded; the edge crumbles (value noise)
+      let d=Math.max(cap(X-32,Y-28,10,18.5,62),Y-121);d+=Math.max(0,X-34)*sst(44,58,Y)*(1-sst(58,72,Y))*.16;
+      d+=(vn(X*.22,Y*.22)-.5)*2.6+(vn(X*.7+9,Y*.7)-.5)*.9;
+      const wall=7,floor=sst(0,-wall,d);
+      let dep=floor*(.95+.05*sst(40,96,Y));                                                   // the ball sinks a touch deeper
+      dep-=.035*floor*sst(-wall,-wall-5,d)*(.5+.5*Math.sin(Y*1.15));                         // faint tread bars across the sole
+      dep+=(vn(X*.5+31,Y*.5)-.5)*.06*floor;
+      const lip=.24*sst(-1,3,d)*(1-sst(3,12,d))*(.7+.6*vn(X*.3+57,Y*.3));                       // snow pushed up round the edge
+      hgt[y*W+x]=lip-dep}
+    const data=new Uint8Array(W*H*4),at=(x,y)=>hgt[clamp(y,0,H-1)*W+clamp(x,0,W-1)];
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){const gx=(at(x+1,y)-at(x-1,y))*FP_DEPTH/(2*px),gy=(at(x,y+1)-at(x,y-1))*FP_DEPTH/(2*py);
+      const l=Math.hypot(gx,gy,1),k=(y*W+x)*4,h=at(x,y);
+      data[k]=Math.round((-gx/l*.5+.5)*255);data[k+1]=Math.round((-gy/l*.5+.5)*255);data[k+2]=Math.round((1/l*.5+.5)*255);data[k+3]=Math.round(clamp((h+1)/1.25,0,1)*255)}
+    const t=new T.DataTexture(data,W,H,T.RGBAFormat);t.colorSpace=T.NoColorSpace;t.magFilter=T.LinearFilter;t.minFilter=T.LinearMipmapLinearFilter;t.generateMipmaps=true;
+    t.wrapS=t.wrapT=T.ClampToEdgeWrapping;t.needsUpdate=true;return t}
   function fpMesh(R){
-    const geo=new T.PlaneGeometry(1,1),born=new Float32Array(FP.N).fill(-1e4),kind=new Float32Array(FP.N);
-    geo.setAttribute('aBorn',new T.InstancedBufferAttribute(born,1));geo.setAttribute('aKind',new T.InstancedBufferAttribute(kind,1));
+    const geo=new T.PlaneGeometry(1,1),born=new Float32Array(FP.N).fill(-1e4);geo.setAttribute('aBorn',new T.InstancedBufferAttribute(born,1));
     FP.tex=FP.tex||fpTexture();
-    FP.U={map:{value:FP.tex},uT:{value:0},uLife:{value:FP.life},uLit:{value:1},uSun:{value:new T.Vector3(-560,1300,420).normalize()},uFowC:R.U.fowC,uFowR:R.U.fowR};
+    FP.U={map:{value:FP.tex},uT:{value:0},uLife:{value:FP.life},uLit:{value:1},uSun:{value:new T.Vector3(-560,1300,420).normalize()},uFowC:R.U.fowC,uFowR:R.U.fowR,
+      uScale:{value:new T.Vector3(FP.W,FP.L,FP_DEPTH)}};fpSun(FP.U.uSun.value,null);
     // 2x multiply ("detail") blending: out = 2·src·dst, so 0.5 leaves the snow as it is, darker shades it, brighter lights it — the
-    // dent darkens and lights the snow already there instead of painting a colour over it
+    // print shades and lights the snow already there instead of painting a colour over it
     const m=new T.ShaderMaterial({uniforms:FP.U,transparent:true,depthWrite:false,side:T.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4,
       blending:T.CustomBlending,blendEquation:T.AddEquation,blendSrc:T.DstColorFactor,blendDst:T.SrcColorFactor,
-      vertexShader:`attribute float aBorn,aKind;uniform float uT,uLife;varying vec2 vUv;varying float vA,vK;varying vec2 vW;
-void main(){vUv=vec2(uv.x*.5+aKind*.5,uv.y);vK=aKind;float age=uT-aBorn;vA=smoothstep(0.,.15,age)*(1.-smoothstep(uLife*.45,uLife,age));
- vec4 wp=modelMatrix*instanceMatrix*vec4(position,1.);vW=wp.xz;gl_Position=projectionMatrix*viewMatrix*wp;}`,
-      fragmentShader:`uniform sampler2D map;uniform float uLit;uniform vec3 uSun;uniform vec2 uFowC;uniform float uFowR;varying vec2 vUv;varying float vA,vK;varying vec2 vW;
-void main(){vec2 hr=texture2D(map,vUv).rg;float dep=hr.r,rim=hr.g;float cov=max(smoothstep(.02,.3,dep),smoothstep(.02,.3,rim));
- float a=cov*vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,distance(vW,uFowC)));if(a<.01)discard;
- // the dented surface: down by the depth, up by the rim (world units), its normal from screen-space derivatives
- float sink=mix(8.,6.,vK);vec3 P=vec3(vW.x,(rim*.5-dep)*sink,vW.y);vec3 N=normalize(cross(dFdy(P),dFdx(P)));if(N.y<0.)N=-N;
- float lit=clamp(dot(N,uSun),0.,1.)/max(uSun.y,.05);                 // 1 = as lit as the flat snow around it
- float v=clamp(lit,.45,1.35)*mix(1.,.8,dep*(1.-vK*.35));            // the walls by the sun, the floor in the hollow's shade
- vec3 m=vec3(v)*mix(vec3(.84,.9,1.),vec3(1.),smoothstep(.7,1.,v));  // shade turns cold blue
- m=mix(vec3(1.),m,a*mix(1.,.8,1.-uLit));
- gl_FragColor=vec4(clamp(m,.2,1.6)*.5,1.);}`});
-    m.extensions={derivatives:true};
+      vertexShader:`attribute float aBorn;uniform float uT,uLife;varying vec2 vUv;varying float vA;varying vec2 vW;varying vec3 vTx,vTy;
+void main(){vUv=uv;float age=uT-aBorn;vA=smoothstep(0.,.15,age)*(1.-smoothstep(uLife*.45,uLife,age));
+ mat4 M=modelMatrix*instanceMatrix;vec4 wp=M*vec4(position,1.);vW=wp.xz;
+ vTx=normalize(mat3(M)*vec3(1.,0.,0.));vTy=normalize(mat3(M)*vec3(0.,1.,0.));   // the print's across and along, mirrored for the left foot
+ gl_Position=projectionMatrix*viewMatrix*wp;}`,
+      fragmentShader:`uniform sampler2D map;uniform float uLit;uniform vec3 uSun,uScale;uniform vec2 uFowC;uniform float uFowR;varying vec2 vUv;varying float vA;varying vec2 vW;varying vec3 vTx,vTy;
+float hAt(vec2 uv){return texture2D(map,uv).a*1.25-1.;}
+void main(){vec4 t=texture2D(map,vUv);vec3 nt=t.rgb*2.-1.;float h=t.a*1.25-1.;
+ if(abs(h)<.012&&nt.z>.996)discard;                                   // untouched snow round the print
+ float fade=vA*(1.-smoothstep(uFowR*.85,uFowR*1.05,distance(vW,uFowC)));if(fade<.01)discard;
+ vec3 N=normalize(vTx*nt.x+vTy*nt.y+vec3(0.,max(nt.z,.05),0.));
+ float sunK=clamp(dot(N,uSun),0.,1.)/max(uSun.y,.1);                   // 1 = as lit as the flat snow, more on a wall facing the sun
+ // the wall on the sun's side shades the floor below it: walk toward the sun through the height map
+ vec2 sd=vec2(dot(uSun,vTx),dot(uSun,vTy));float sl=length(sd),sh=1.;
+ if(sl>.03&&h<-.08){vec2 dir=sd/sl;float tanE=uSun.y/sl;
+   for(int k=1;k<=5;k++){float s=float(k)*2.;float hk=hAt(vUv+dir*s/uScale.xy);sh=min(sh,1.-clamp(((hk-h)*uScale.z-s*tanE)/1.2,0.,1.));}}
+ float lit=sunK*sh,dep=clamp(-h,0.,1.);
+ vec3 c=mix(vec3(.7,.75,.86),vec3(1.),clamp(lit,0.,1.))+vec3(1.,.97,.9)*(clamp(lit,1.,1.7)-1.)*.42;   // shade turns grey-blue, the lit wall glints
+ c*=mix(vec3(1.),vec3(.87,.9,.95),smoothstep(.15,.85,dep));          // less sky reaches the hollow's floor
+ c=mix(vec3(1.),c,fade*mix(1.,.7,1.-uLit));
+ gl_FragColor=vec4(clamp(c,.3,1.5)*.5,1.);}`});
     const mesh=new T.InstancedMesh(geo,m,FP.N);mesh.frustumCulled=false;mesh.renderOrder=1;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
     const z=new T.Matrix4().makeScale(0,0,0);for(let i=0;i<FP.N;i++)mesh.setMatrixAt(i,z);mesh.instanceMatrix.needsUpdate=true;
     R.scene.add(mesh);FP.mesh=mesh;FP.scene=R.scene;FP.i=0;FP.last.clear()}
-  const fpM=new T.Matrix4(),fpR=new T.Matrix4(),fpX=new T.Matrix4().makeRotationX(-Math.PI/2),fpS=new T.Matrix4();
-  function fpPut(R,x,y,a,sx,sy,kind){const i=FP.i;FP.i=(FP.i+1)%FP.N;
+  const fpM=new T.Matrix4(),fpR=new T.Matrix4(),fpX=new T.Matrix4().makeRotationX(-Math.PI/2),fpS=new T.Matrix4(),fpV=new T.Vector3();
+  // the prints' light: the sun's compass direction, 32° above the horizon
+  function fpSun(out,v){let x=v?v.x:-560,z=v?v.z:420;const l=Math.hypot(x,z);if(l<1e-3){x=-560;z=420}const k=Math.cos(.56)/Math.hypot(x,z);out.set(x*k,Math.sin(.56),z*k)}
+  function fpPut(R,x,y,a,sx,sy){const i=FP.i;FP.i=(FP.i+1)%FP.N;
     fpS.makeScale(sx,sy,1);fpR.makeRotationY(-a-Math.PI/2);fpM.makeTranslation(x,R.gY(x,y)+.8,y).multiply(fpR).multiply(fpX).multiply(fpS);
-    FP.mesh.setMatrixAt(i,fpM);FP.mesh.instanceMatrix.needsUpdate=true;const g=FP.mesh.geometry.attributes;g.aBorn.array[i]=S.t;g.aBorn.needsUpdate=true;g.aKind.array[i]=kind;g.aKind.needsUpdate=true}
+    FP.mesh.setMatrixAt(i,fpM);FP.mesh.instanceMatrix.needsUpdate=true;const g=FP.mesh.geometry.attributes;g.aBorn.array[i]=S.t;g.aBorn.needsUpdate=true}
   function footprints(R,L,dt){if(!R.scene||!R.gY||typeof units==='undefined')return;if(!RM.deep)regionMap();
     if(FP.mesh&&FP.scene!==R.scene){FP.mesh=null}
     const me=typeof ME==='function'?ME():null,tx=R.tx||L.x,ty=R.ty||L.y;
@@ -400,12 +426,11 @@ void main(){vec2 hr=texture2D(map,vUv).rg;float dep=hr.r,rim=hr.g;float cov=max(
       const d=deepAt(u.x,u.y);if(d<.45||(typeof unitVisibleTo==='function'&&!unitVisibleTo(u,me,L))||(u.invisT>0&&u!==me)){FP.last.delete(u.id);continue}
       let s=FP.last.get(u.id);if(!s){FP.last.set(u.id,{x:u.x,y:u.y,side:1});continue}
       const dx=u.x-s.x,dy=u.y-s.y,dd=Math.hypot(dx,dy);if(dd>180||u.dash){s.x=u.x;s.y=u.y;continue}   // blinked or dashed: no trail across
-      if(dd<34)continue;if(!FP.mesh)fpMesh(R);
+      if(dd<FP.STEP)continue;if(!FP.mesh)fpMesh(R);
       const a=Math.atan2(dy,dx),c=Math.cos(a+1.5708),sn=Math.sin(a+1.5708);s.side=-s.side;
-      fpPut(R,(u.x+s.x)/2,(u.y+s.y)/2,a,40,dd+30,1);                                 // the furrow, under both feet
-      fpPut(R,u.x+c*9*s.side,u.y+sn*9*s.side,a,19*s.side,38,0);s.x=u.x;s.y=u.y}       // the print, left or right of the way
+      fpPut(R,u.x-dx/dd*8+c*FP.SIDE*s.side,u.y-dy/dd*8+sn*FP.SIDE*s.side,a+(Math.random()-.5)*.12,FP.W*s.side,FP.L);s.x=u.x;s.y=u.y}   // left or right of the way, a stride apart
     if(FP.mesh){FP.U.uT.value=S.t;FP.U.uLit.value=.3+.7*(typeof R.dayK==='function'?R.dayK():1);
-      if(R.sun&&R.sun.target){const v=FP.U.uSun.value;v.copy(R.sun.position).sub(R.sun.target.position);if(v.lengthSq()>1)v.normalize();else v.set(-560,1300,420).normalize()}}}
+      if(R.sun&&R.sun.target)fpSun(FP.U.uSun.value,fpV.copy(R.sun.position).sub(R.sun.target.position))}}
   // ---------------- per frame ----------------
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);
     try{if(L&&typeof state!=='undefined'&&state==='play'){dt=Math.min(.1,Math.max(0,dt||0));S.t=(S.t+dt)%3600;atmosphere(this,L,dt);weather(this,L,dt);audioLand(L,dt);footprints(this,L,dt)}}catch(e){warn('frame',e)}return r};
