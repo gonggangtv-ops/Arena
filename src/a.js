@@ -388,6 +388,7 @@ function battleHeat(){if(state!=='play'||!zone)return 0;return zone.st==='shrink
 
 // ===================== CANVAS / LAYOUT =====================
 const cv=$('c'),ctx=cv.getContext('2d');
+window.ArenaLanguage?.canvas(ctx);
 let W=0,H=0,DPR=1,Z=1;const SAFE={l:0,r:0,t:0,b:0};
 const UI={atk:{},sk:[{},{},{}],learn:[{},{},{}],joyHome:{},b:40,mute:{},s:1,swap:null,pot:null,bagBtn:null,bagOpen:false,bagRows:null,mouse:null,potP:-1,potT:0,cancel:null,wsw:null,wsw2:null,wswT:0};
 const LC=document.createElement('canvas'),lctx=LC.getContext('2d');

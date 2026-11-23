@@ -289,6 +289,24 @@ try:
             panel(page, 'graphics')
             visit.picture(label + '-settings-persisted')
             close_dialog(visit)
+            if not mobile:
+                language = page.locator('#arenaLanguageBtn')
+                assert language.inner_text() == 'English'
+                with page.expect_navigation(wait_until='domcontentloaded'):
+                    language.click()
+                visit.ready()
+                assert page.locator('html').get_attribute('lang') == 'en'
+                assert page.evaluate("localStorage.getItem('ar_language')") == 'en'
+                assert page.get_by_text('Enter the Arena', exact=True).is_visible()
+                assert language.inner_text() == 'ภาษาไทย'
+                assert page.evaluate("""() => {
+                    const name='ราชินีหิมะ';
+                    net.chat=[{n:name,s:'เข้าห้อง',k:0,y:0},{s:name+' เข้าห้อง',y:1}];
+                    renderChat();
+                    return document.querySelector('#chatLog .tx').textContent==='เข้าห้อง'
+                        && document.querySelector('#chatLog .sy').textContent.includes(name+' joined the room')
+                        && ctx.measureText('พายุขวาน').width===ctx.measureText('Axe Tempest').width;
+                }""")
             started = enter_arena(visit)
             if not mobile:
                 page.keyboard.down('w')

@@ -54,7 +54,7 @@ if(typeof R3!=='undefined'&&typeof THREE!=='undefined'){const R=R3,T=THREE;
       x.beginPath();x.moveTo(18,10);x.lineTo(238,10);x.lineTo(250,22);x.lineTo(250,58);
       x.lineTo(238,70);x.lineTo(18,70);x.lineTo(6,58);x.lineTo(6,22);x.closePath();x.fill();x.stroke();
       x.strokeStyle='#d9b58c65';x.lineWidth=1;x.strokeRect(20,16,216,48);x.fillStyle='#d9b58c';x.beginPath();x.moveTo(116,70);x.lineTo(128,88);x.lineTo(140,70);x.fill();
-      x.font='bold 34px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillStyle='#ffe9a8';x.fillText('🛒 ร้านค้า',128,41);
+      x.font='bold 34px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillStyle='#ffe9a8';x.fillText(ArenaLanguage.text('🛒 ร้านค้า'),128,41);
       const t=new T.CanvasTexture(c);if(T.SRGBColorSpace)t.colorSpace=T.SRGBColorSpace;const m=new T.SpriteMaterial({map:t,transparent:true,depthWrite:false});m.userData.ownMat=1;return m})};
   R.clearNpcs=function(){if(this.npcO)for(const o of this.npcO){if(o.root.parent)o.root.parent.remove(o.root);try{o.mixer.stopAllAction()}catch(e){}}this.npcO=null};
   R.buildNpcs=function(N){this.npcO=[];const ringM=new T.MeshBasicMaterial({map:this.tex('wglow'),color:'#ffcf6a',transparent:true,opacity:.5,depthWrite:false,blending:T.AdditiveBlending});ringM.userData.ownMat=1;

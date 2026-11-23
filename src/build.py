@@ -81,6 +81,13 @@ if sys_on:
     if arena:sh=sh.replace('</head>','<script>window.CELESTIAL_KEYS='+repr(VILLAGE).replace("'",'"')+'</script>\n'+arena_style+'</head>',1)
     else:sh=sh.replace('</head>','<script>window.CELESTIAL_SKIP='+repr(NATURE+P5+P5W+HOUSES+CITY_NEW+FORT_NEW).replace("'",'"')+'</script>\n</head>',1)  # Moonfall has no meadow dressing
     sh=sh.replace('<!--TURN-->','<!--TURN-->\n'+'\n'.join("<script src=\"%s\" onerror=\"moonfallCodeFailure('%s')\"></script>"%(f,f) for f in MOON),1)
+if arena:
+    with open(os.path.join(D,'arena-language.js'),encoding='utf-8') as f:
+        language_script=f.read()
+    with open(os.path.join(D,'arena-en.json'),encoding='utf-8') as f:
+        catalog=_j.dumps(_j.load(f),ensure_ascii=False,separators=(',',':')).replace('<',r'\u003c')
+    sh=sh.replace('<body>', '<body>\n<script>'+language_script+'\ninstallArenaLanguage('+catalog+');</script>',1)
+
 def critical_libs(text):
     if sys_on:
         for name in ['engine.min.js','models2.js','sfx.js']:
