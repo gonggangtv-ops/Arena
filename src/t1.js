@@ -4,7 +4,7 @@ const REG={N:['อาณาจักรล่มสลาย','ป่าต้�
   TIP:['เหรียญจากมอนสเตอร์ +25%','มอนสเตอร์ว่องไวและมีพิษ','โดนตีแล้วช้าลง · ฟื้นมานาเร็วขึ้น','โดนตีแล้วติดไฟ · ระวังลาวาปะทุ','มอนสเตอร์แกร่งมาก · เหรียญ +60%'],
   G:[[1.5,1.3,.9,.5],[.6,1.02,.62,.45],[2.3,2.45,2.7,.93],[.82,.58,.5,.9],[1.1,.66,1.55,.85]],   // ground: tint of the grass's own brightness, how much
   OBJ:[['#b09868',.3],['#2a4a34',.4],['#e8f4ff',.6],['#3a2c28',.62],['#6a3aa8',.5]],MOB:['#c8b890','#6fbf6a','#bfe6ff','#ff7a4a','#b070ff'],
-  FOG:['#2a2620','#0e1c14','#9fb8d0','#3a1c14','#1a0c2c'],HEMI:['#e8d8b0','#8ad0a0','#d8ecff','#ff9a70','#b08aff'],LUM:[1,.85,1.3,.95,.85],GLOW:[null,['#7dff9a',110],['#9fe0ff',150],['#ff5a1a',210],['#b060ff',190]],
+  FOG:['#2a2620','#0e1c14','#9fb8d0','#3a1c14','#1a0c2c'],HEMI:['#e8d8b0','#8ad0a0','#d8ecff','#ff9a70','#b08aff'],LUM:[1,.85,1.12,.95,.85],GLOW:[null,['#7dff9a',110],['#9fe0ff',150],['#ff5a1a',210],['#b060ff',190]],   // LUM[2] 1.3 -> 1.12: the snow was glaring (owner 2026-11-23)
   tw:[0,0,0,0,0],tq:[0,0,0,0],aw:null,cur:-1,mats:new Map(),
   w(x,y,o){if(!this.nz){this.nz=makeNoise(mulberry32(77),2400);this.nz2=makeNoise(mulberry32(91),1700)}
     const dx=x-CX,dy=y-CY,d=Math.hypot(dx,dy)+(this.nz(x,y)-.5)*1300,a=Math.atan2(dy,dx)+(this.nz2(x,y)-.5)*1.1,kc=clamp((3300-d)/700,0,1);let s=0;

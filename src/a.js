@@ -1022,10 +1022,9 @@ function genWorld(seed){
       if(R.role==='entry'){for(const it of['potion','potion','mana']){const p=spot(R,140);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it})}continue}
       if(R.role==='vault'){camp(R,'vault',1.7);
         for(let k=0;k<3;k++){const p=spot(R,120);w.items.push({id:iid++,k:'c',x:p.x,y:p.y,n:3,gold:true})}
-        for(let k=0;k<4;k++){const p=spot(R,120);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:k===0&&SR()<.45?4:3})}
-        for(let k=0;k<2;k++){const p=spot(R,120);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:SR()<.4?4:3})}
-        {const p=spot(R,120);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:'tome'})}
-        for(let k=0;k<4;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:26,prop:1})}
+        // owner 2026-11-23: "ปรับของหายากที่อยู่หลังบอส ในคุกเอาออกไป ให้เอาไปอยู่ในกล่องสุ่มสมบัติแทน" — the tier 3-4 weapons, runes and
+        // the tome no longer lie on the vault floor; six gilded treasure chests (vault:1) hold them, rolled when opened (b.js openBox)
+        for(let k=0;k<6;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3),vault:1});w.rocks.push({x:p.x,y:p.y,r:26,prop:1})}
         continue}
       camp(R,R.role,1.35);
       for(let k=0;k<2;k++){const p=spot(R,110);w.items.push({id:iid++,k:'c',x:p.x,y:p.y,n:1+(SR()<.5?1:0)})}
@@ -1047,6 +1046,22 @@ function genWorld(seed){
       if(sc>=0){best=p;break}if(sc>bs){bs=sc;best=p}}
     if(!best)best={x:CX+sr(-300,300),y:CY+sr(-300,300)};w.spawns.push(best);
     }   // owner 2026-11-23: no starter weapons by the spawn points — everyone drops in from the sky and searches houses (arena-drop.js)
+  // ---- the Cursed Forest's dead (owner 2026-11-23): heaps of bones (decor) and fallen knights on their tombs, which a hero can
+  // search for loot (arena-tombs.js: the longer the search, the better the find). Integer hash per cell, no SR draws; REG.at reads
+  // this world (its Old Town), not the one before, so every machine places them alike ----
+  if(!MOON&&typeof REG!=='undefined'&&REG.at){const W0=WD;WD=w;try{w.tombs=[];w.bones=[];const CS2=420,n2=Math.floor(WORLD/CS2),cells=[];
+    for(let j=1;j<n2-1;j++)for(let i=1;i<n2-1;i++)cells.push([cutH(i,j,31),i,j]);cells.sort((a,b)=>a[0]-b[0]);
+    for(const [h,i,j] of cells){if(w.tombs.length>=10&&w.bones.length>=20)break;
+      const p={x:(i+.15+cutH(i,j,32)*.7)*CS2,y:(j+.15+cutH(i,j,33)*.7)*CS2};if(REG.at(p.x,p.y)!==1)continue;
+      const tomb=h<.45&&w.tombs.length<10,r=tomb?64:46;
+      if(!free(p,r+40)||pathNear(p,r+30)||rockNear(p,r+24)||!tFree(p,r+20)||w.houses.some(q=>inRect(p,q.al||q,r+50))||w.camps.some(c=>dist(c,p)<300)||w.graves.some(g=>dist(g,p)<300)||
+        w.boxes.some(b=>dist(b,p)<200)||(w.dg&&w.dg.ents.some(e=>dist(e,p)<320)))continue;
+      if(w.tombs.some(t=>dist(t,p)<(tomb?1100:380))||w.bones.some(b=>dist(b,p)<(tomb?380:520)))continue;
+      const a=cutH(i,j,34)*6.2832;
+      if(tomb){w.tombs.push({id:w.tombs.length,x:Math.round(p.x),y:Math.round(p.y),a});const dx=Math.sin(a)*24,dy=Math.cos(a)*24;
+        w.rocks.push({x:p.x+dx,y:p.y+dy,r:36,prop:1},{x:p.x-dx,y:p.y-dy,r:36,prop:1})}
+      else if(w.bones.length<20){const sc=.85+cutH(i,j,35)*.4;w.bones.push({x:Math.round(p.x),y:Math.round(p.y),a,s:sc});w.rocks.push({x:p.x,y:p.y,r:30*sc,prop:1})}}}
+    finally{WD=W0}}
   SR=Math.random;
   return w;
 }

@@ -457,7 +457,13 @@ function equipWeapon(u,it){it.dead=true;removeItem(it);const slot=wSlot(u,it),H=
   if(it.tier===3)emit({t:'f',s:`⭐ ${u.name} ได้อาวุธตำนาน!`,v:H||[]});
   if(it.tier===4){emit({t:'f',s:`🌈 ${u.name} ถืออาวุธระดับ SSR!`,v:H||[]});fxE('ssr',{id:u.id,x:u.x|0,y:u.y|0})}}
 // swap the weapon in hand with the backup (T key / tap the weapon portrait)
-function swapWeapons(u){if(!u||u.dead||!u.wk2||u.fuseT>0||u.leap||u.dash)return false;const k=u.wk,t=u.wt,v=u.wv;u.wk=u.wk2;u.wt=u.wt2;u.wv=u.wv2;u.wk2=k;u.wt2=t;u.wv2=v;
+// owner 2026-11-23: "ปรับคูลดาวน์ในการสลับอาวุธ เมื่อถูกโจมตีจะสลับไม่ได้" — SWAP_CD seconds between swaps, and none while being hit
+// (the potions' rule: hurt within the last POT_FIGHT seconds). Host-authoritative; the client checks the same before it predicts
+const SWAP_CD=5;
+function swapLock(u){if(!u)return'';if((u.swT||0)>gameT)return'cd';if(potFight(u))return'hit';return''}
+function swapLockMsg(u,lk){if(gameT-(u._swMsgT||-9)<.8)return;u._swMsgT=gameT;
+  fxTextFor(u.x,u.y-84,lk==='hit'?'⚔️ โดนโจมตีอยู่ สลับอาวุธไม่ได้':'🔁 สลับอาวุธได้อีก '+Math.ceil((u.swT||0)-gameT)+' วิ','#ffb0a0',1.2,[u.id])}
+function swapWeapons(u){if(!u||u.dead||!u.wk2||u.fuseT>0||u.leap||u.dash)return false;{const lk=swapLock(u);if(lk){if(isHuman(u))swapLockMsg(u,lk);return false}}u.swT=gameT+SWAP_CD;const k=u.wk,t=u.wt,v=u.wv;u.wk=u.wk2;u.wt=u.wt2;u.wv=u.wv2;u.wk2=k;u.wt2=t;u.wv2=v;
   u.spinT=0;u.lotusT=0;u.rapid=null;recalc(u);u.atkCd=Math.max(u.atkCd,.3);sndAt('weapon',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:TIERS[Math.max(0,u.wt)].c});
   if(isHuman(u))fxTextFor(u.x,u.y-84,'🔁 '+wName(u.wk,u.wt),TIERS[Math.max(0,u.wt)].c,1.4,[u.id]);return true}
 // ---- fusion ----
@@ -488,8 +494,16 @@ const BOX_RATE=.68;   // 2026-11-23: was .2 — chests are a main source of gear
 function boxNear(u){if(!u||u.dead)return null;let best=null,bd=1e9;for(const b of boxes){if(b.open||Math.abs(b.x-u.x)>110||Math.abs(b.y-u.y)>110)continue;const d=dist(u,b);if(d>u.r+62||d>=bd)continue;
     const h=WD.houses[b.house];if(h&&!inRect(u,h,0))continue;best=b;bd=d}return best}
 function openBox(u,id){const b=boxes[id];if(!b||b.open||!u||u.dead||dist(u,b)>u.r+70)return;const h=WD.houses[b.house];if(h&&!inRect(u,h,4))return;
-  b.open=true;const ok=Math.random()<BOX_RATE;const fx=b.x+Math.cos(b.a)*34,fy=b.y+Math.sin(b.a)*34;
+  b.open=true;const ok=b.vault||Math.random()<BOX_RATE;const fx=b.x+Math.cos(b.a)*34,fy=b.y+Math.sin(b.a)*34;
   fxE('box',{id,x:b.x|0,y:b.y|0,ok:ok?1:0});sndAt(ok?'chest':'pick',b.x,b.y);const H=isHuman(u)?[u.id]:null;
+  // the dungeon warden's treasure chests (a.js vault:1, owner 2026-11-23): never empty, the hoard that used to lie on the vault floor
+  if(b.vault){const r=Math.random(),sx=-Math.sin(b.a)*30,sy=Math.cos(b.a)*30;
+    if(r<.45)dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier:Math.random()<.25?4:3});
+    else if(r<.78)dropItem({k:'r',x:fx,y:fy,tier:Math.random()<.3?4:3});
+    else if(r<.9)dropItem({k:'i',x:fx,y:fy,it:'tome'});
+    else dropItem({k:'c',x:fx,y:fy,n:4,gold:true});
+    if(Math.random()<.4)dropItem(Math.random()<.5?{k:'c',x:fx+sx,y:fy+sy,n:2,gold:true}:{k:'p',x:fx+sx,y:fy+sy,b:Math.random()<.5?2:0});
+    if(H)fxTextFor(b.x,b.y-46,'💎 สมบัติผู้คุม!','#ffd35a',1.7,H,1);return}
   if(ok){const r=Math.random(),sx=-Math.sin(b.a)*30,sy=Math.cos(b.a)*30;
     if(r<.48)dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([6,36,38,18,2])});
     else if(r<.84)dropItem({k:'r',x:fx,y:fy,tier:pickTier([0,22,40,30,8])});
@@ -614,7 +628,9 @@ function screenToWorld(x,y){if(view3D&&has3D()&&R3.ok&&R3.toGround)return R3.toG
 function pressLearn(i){const me=ME();if(!me||!canLearn(me,i))return;if(net.mode==='client'){netSend({t:'l',i});me.pts--;me.skl[i]++;AU.play('learn')}else learn(me,i)}
 function soundToggle(){AU.toggle();feedList.unshift({txt:['🔊 ','🔉 ','🔇 '][AU.mode]+AU.modeName(),t:2.5,hl:1});if(feedList.length>5)feedList.pop()}
 function pressSwapW(){const me=ME();if(!me||me.dead||!me.wk2||me.fuseT>0)return;UI.wswT=.2;
-  if(net.mode==='client'){netSend({t:'sw'});const k=me.wk,t=me.wt;me.wk=me.wk2;me.wt=me.wt2;me.wk2=k;me.wt2=t;AU.play('weapon',.7)}else swapWeapons(me)}
+  if(net.mode==='client'){   // the host's rule, from what a client knows: its own swap timer and when its HP last dropped
+    const lk=(me.swT||0)>gameT?'cd':gameT-(me._potHit===undefined?-99:me._potHit)<POT_FIGHT?'hit':'';if(lk){swapLockMsg(me,lk);AU.play('nomana');return}
+    me.swT=gameT+SWAP_CD;netSend({t:'sw'});const k=me.wk,t=me.wt;me.wk=me.wk2;me.wt=me.wt2;me.wk2=k;me.wt2=t;AU.play('weapon',.7)}else if(!swapWeapons(me))AU.play('nomana')}
 function pressSwap(){press[4]=.2;const me=ME();const bx=boxNear(me);if(bx){if(net.mode==='client')netSend({t:'ob',id:bx.id});else openBox(me,bx.id);return}const it=swapCandidate(me);if(!it)return;if(net.mode==='client')netSend({t:'pk',id:it.id});else pickSwap(me,it.id)}
 cv.addEventListener('pointerdown',e=>{
   e.preventDefault();AU.init();if(state!=='play')return;const x=e.clientX,y=e.clientY;
