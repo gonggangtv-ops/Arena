@@ -20,7 +20,7 @@ PROJECT = Path(__file__).resolve().parents[2]
 DEPLOY = PROJECT / 'app/src/main/assets'
 RESULT = PROJECT / 'moonfall-docs/reports/arena-refresh/smoke.json'
 PICTURES = Path(tempfile.mkdtemp(prefix='arena-refresh-'))
-NEW_ART = '**/arena-citadel.webp'
+NEW_ART = '**/arena-eclipse.webp'
 SHADER_ERROR = re.compile(r'WebGLProgram|shader error|shader couldn.t|VALIDATE_STATUS|GL_INVALID|program not valid', re.I)
 
 
@@ -258,8 +258,8 @@ try:
             boot_state = visit.ready()
             assert boot_state['moody'] and boot_state['gfxQ'] == 'auto', boot_state
             page.wait_for_function("document.getElementById('menu').dataset.arenaMenu", polling=100)
-            heading = page.locator('#menu h1').inner_text()
-            assert 'Arena' in heading and 'Royale' in heading and 'Cursed' not in heading, heading
+            heading = ' '.join(page.locator('#menu h1').inner_text().split())
+            assert heading.casefold() == 'arena royale', heading
             primary = fits(page, '#soloBtn', target=True)
             fits(page, '#menu')
             visit.picture(label + '-ready')

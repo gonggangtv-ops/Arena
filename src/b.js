@@ -97,6 +97,7 @@ function applyEvent(e){
         if(e.by===myId)AU.play(e.n,.78);
         else if((sndBudget[e.n]||0)<3){sndBudget[e.n]=(sndBudget[e.n]||0)+1;AU.playAt(e.n,e.x,e.y)}
       }
+      if(ARX&&(e.k==='fusing'||e.k==='fuse'))arenaForgeEvent(e);
       fxq.push(e);break;
     case 'f':feedList.unshift({txt:e.s,t:6,hl:e.v&&e.v.includes(myId)});if(feedList.length>5)feedList.pop();break;
     case 'a':if(!e.v||e.v.includes(myId))announce={txt:e.s,t:e.d||2.5};break;
@@ -462,7 +463,8 @@ function swapWeapons(u){if(!u||u.dead||!u.wk2||u.fuseT>0||u.leap||u.dash)return 
 // ---- fusion ----
 const canFuse=u=>!!(u.wk&&u.wk2&&!FUSED[u.wk]&&!FUSED[u.wk2]&&fuseKey(u.wk,u.wk2));
 const fuseTier=(a,b)=>Math.min(4,Math.max(a,b)+(a===b&&a>=2?1:0));
-function startFuse(u){u.fuseT=1.2;u.rapid=null;fxE('fusing',{id:u.id,x:u.x|0,y:u.y|0,a:AW.indexOf(u.wk),b:AW.indexOf(u.wk2)});sndAt('fusing',u.x,u.y);
+const FUSE_WINDUP=1.2;
+function startFuse(u){u.fuseT=FUSE_WINDUP;u.rapid=null;fxE('fusing',{id:u.id,x:u.x|0,y:u.y|0,a:AW.indexOf(u.wk),b:AW.indexOf(u.wk2),ta:u.wt,tb:u.wt2});sndAt('fusing',u.x,u.y);
   if(isHuman(u))fxTextFor(u.x,u.y-96,'⚒️ กำลังหลอมอาวุธ…','#ffd27a',1.4,[u.id],1)}
 function fuseNow(u){u.fuseT=0;if(!canFuse(u))return;const a=u.wk,b=u.wk2,fk=fuseKey(a,b),t=fuseTier(u.wt,u.wt2),F=WEAPONS[fk];
   u.wk=fk;u.wt=t;u.wk2=null;u.wt2=-1;u.wv2=0;u.spinT=0;u.lotusT=0;u.cd=[0,0,0];recalc(u);u.mp=u.maxMp;heal(u,u.maxHp*.3);
