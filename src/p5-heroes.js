@@ -11,9 +11,10 @@ const P5C={order:['idle','run','attack','cast','dodge','death'],idle:/Combat_Sta
 const P5H=138;   // hero height in world units (Quaternius heroes are ~140)
 const CA=()=>window.CelestialAssets;
 // the Spirit Tome (summoner.js) is the Summoner; a fused weapon keeps the class of the weapon it was forged on
-const p5Class=u=>{let k=u&&u.wk;if(!k)return'warrior';if(typeof FUSED!=='undefined'&&FUSED[k])k=FUSED[k].base||k;
+// owner 2026-11-23: a hero without a weapon is an ordinary villager (the Quaternius peasant in r8.js) until the first weapon is picked up
+const p5Class=u=>{let k=u&&u.wk;if(!k)return null;if(typeof FUSED!=='undefined'&&FUSED[k])k=FUSED[k].base||k;
   return k==='soul'?'summoner':k==='dagger'?'assassin':k==='bow'||k==='xbow'?'archer':k==='fire'||k==='frost'||k==='storm'?'mage':'warrior'};
-R.p5Ready=function(cls){const A=CA(),a=A&&A.get(P5[cls]);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations.length>=4&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
+R.p5Ready=function(cls){if(!cls)return false;const A=CA(),a=A&&A.get(P5[cls]);return !!(a&&a.state==='loaded'&&a.inspection&&a.inspection.skinned&&a.gltf.animations.length>=4&&window.AR_GLTF&&AR_GLTF.SkeletonUtils)};
 const p5Clips=a=>{if(a._p5)return a._p5;const list=a.gltf.animations,used=new Set(),out={};
   // in place: every clip's hips keep the IDLE clip's ground position (a clip's own first frame can already be a metre off)
   const hipT=c=>c&&c.tracks.find(t=>/\.position$/.test(t.name)&&/hips|pelvis|root/i.test(t.name)),ref=hipT(list.find(c=>/Combat_Stance|idle/i.test(c.name))||list[0]);

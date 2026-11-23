@@ -113,10 +113,12 @@ try:
           hostStartMatch();
         }""")
         host.wait_for_function('state==="play"&&document.getElementById("loading").classList.contains("hidden")', polling=100)
+        host.evaluate('window.__game&&__game.skipDrop&&__game.skipDrop()')   # end the sky-drop (arena-drop.js)
         start = host.evaluate("__avWire.find(message=>message.packet.t==='start').packet")
         assert len(start['heroes']) == 2
         client.evaluate("packet=>{net.mode='client';net.tr=__avTransport;clientOnData(packet);}", start)
         client.wait_for_function('state==="play"&&document.getElementById("loading").classList.contains("hidden")', polling=100)
+        client.evaluate('window.__game&&__game.skipDrop&&__game.skipDrop()')
         positions = host.evaluate("""() => {
           const h=ME(),c=units.find(unit=>unit.ctrl==='vfx-client');let spot=null;
           for(const p of [{x:h.x,y:h.y},...(ASP||WD.spawns)]){

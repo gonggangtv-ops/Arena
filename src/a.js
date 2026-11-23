@@ -703,12 +703,13 @@ function genWorld(seed){
     const ip=()=>({x:sr(h.x+45,h.x+h.w-45),y:sr(h.y+45,h.y+h.h-45)});
     const p1=ip();w.items.push({id:iid++,k:'w',x:p1.x,y:p1.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([42,36,19,3],SR),house:h.id});
     if(SR()<.5){const p2=ip();w.items.push({id:iid++,k:'c',x:p2.x,y:p2.y,n:1+(SR()<.3?1:0),house:h.id})}
-    if(SR()<.4){const p3=ip();w.items.push({id:iid++,k:'r',x:p3.x,y:p3.y,tier:pickTier([34,34,22,10,0],SR),house:h.id})}
+    if(SR()<.35){const p5=ip();w.items.push({id:iid++,k:'w',x:p5.x,y:p5.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([30,40,24,6],SR),house:h.id})}   // owner 2026-11-23: loot lives in houses
+    if(SR()<.65){const p3=ip();w.items.push({id:iid++,k:'r',x:p3.x,y:p3.y,tier:pickTier([34,34,22,10,0],SR),house:h.id})}
     if(SR()<.3){const p4=ip();w.items.push({id:iid++,k:'i',x:p4.x,y:p4.y,it:pickW(ITEMS,SR).id,house:h.id})}
     {const back=side==='t'?'b':side==='b'?'t':side==='l'?'r':'l',nb=h.w*h.h>62000&&SR()<.5?2:1;
       for(let q=0;q<nb;q++){const f=nb===1?sr(.3,.7):q?sr(.68,.85):sr(.15,.32);let bx,by;
         if(back==='t'||back==='b'){bx=lerp(h.x+60,h.x+h.w-60,f);by=back==='t'?h.y+T+26:h.y+h.h-T-26}else{by=lerp(h.y+60,h.y+h.h-60,f);bx=back==='l'?h.x+T+26:h.x+h.w-T-26}
-        w.boxes.push({id:w.boxes.length,x:bx,y:by,a:Math.atan2(h.door.y-by,h.door.x-bx),house:h.id});w.rocks.push({x:bx,y:by,r:18,prop:1})}}
+        w.boxes.push({id:w.boxes.length,x:bx,y:by,a:Math.atan2(h.door.y-by,h.door.x-bx),house:h.id});w.rocks.push({x:bx,y:by,r:26,prop:1})}}
     const HA=h.al||h,corners=[[HA.x-24,HA.y+26],[HA.x+HA.w+24,HA.y+26],[HA.x-24,HA.y+HA.h-26],[HA.x+HA.w+24,HA.y+HA.h-26]];
     let np=0;for(const c of corners){if(np>=2)break;if(Math.hypot(c[0]-h.out.x,c[1]-h.out.y)<90||SR()<.35)continue;const t=SR()<.5?'barrel':'crate';w.props.push({x:c[0],y:c[1],t});w.rocks.push({x:c[0],y:c[1],r:15,prop:1});np++}
 
@@ -827,7 +828,7 @@ function genWorld(seed){
     for(let k=0,t=0;k<5&&t<200;t++){const q=P(sr(-CITY_PRU+60,CITY_PRU-60),sr(CITY_PV+5,CITY_PV+CITY_PRV-35));const dx=q.x-C.x,dy=q.y-C.y;
       if(cityPondU(dx*C.lx+dy*C.ly,dx*C.ox+dy*C.oy)>-38||w.lilies.some(l=>Math.hypot(l.x-q.x,l.y-q.y)<44))continue;w.lilies.push({x:q.x,y:q.y,s:sr(.6,.9),a:sr(0,6.3),f:SR()<.4,wl:CITY_PW});k++}C.nLily=w.lilies.length;
     // loot: chests on the plaza and behind the temple, the temple's relics, potions at the gates and on the plaza
-    const box=(u,v)=>{const q=P(u,v);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1})};
+    const box=(u,v)=>{const q=P(u,v);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1})};
     box(-150,VP);box(150,VP);box(-150,VT+150);box(150,VT+150);
     {const q=P(0,VT+120);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(0,VT+200);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,40,45,15],SR)})}
     for(const [u,v,it] of[[-60,VP-120,'potion'],[60,VP-120,'potion'],[0,VP+130,'mana'],[-CITY_SU,gv+150,'potion'],[CITY_SU,gv+150,'potion']]){const q=P(u,v);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
@@ -870,7 +871,7 @@ function genWorld(seed){
       if(F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<c.r+70)||w.trees.some(t=>Math.abs(t.x-q.x)<120&&Math.abs(t.y-q.y)<120))continue;
       w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,78),v:2,ph:sr(0,6),h:sr(.9,1.15)});k++}
     // loot: two chests and gold by the castle gate, a tier-3 weapon and a rune behind the queen, potions at the stair head
-    for(const sg of[-1,1]){const q=P(sg*325,FORT_GATE-142);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:18,prop:1});
+    for(const sg of[-1,1]){const q=P(sg*325,FORT_GATE-142);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1});
       const c=P(sg*370,FORT_GATE-176);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
     {const q=P(-226,FORT_VC+255);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(226,FORT_VC+255);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,35,45,20],SR)})}
     for(const [u,it] of[[-90,'potion'],[90,'mana']]){const q=P(u,190);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
@@ -968,8 +969,15 @@ function genWorld(seed){
   const blockedGen=(p,r)=>{for(const o of w.rocks)if(Math.abs(o.x-p.x)<o.r+r&&dist(p,o)<o.r+r)return true;for(const o of w.solids)if(dist(p,o)<o.r+r)return true;for(const t of w.trees)if(Math.abs(t.x-p.x)<t.r+r&&dist(p,t)<t.r+r)return true;for(const q of w.walls)if(circRect(p.x,p.y,r,q))return true;return false};
   const outSpot=m=>{for(let k=0;k<120;k++){const p={x:sr(m,WORLD-m),y:sr(m,WORLD-m)};if(!free(p,0)||blockedGen(p,30)||w.houses.some(h=>inRect(p,h.al||h,10)))continue;return p}return{x:town?town.x+sr(-120,120):CX,y:town?town.y+sr(160,240):CY}};
   for(let k=0;k<176;k++){const p=outSpot(300);w.items.push({id:iid++,k:'c',x:p.x,y:p.y,n:1+(SR()<.25?1:0)})}
-  for(let k=0;k<104;k++){const p=outSpot(300);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([64,28,8,0],SR)})}
-  for(let k=0;k<120;k++){const p=outSpot(300);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:pickTier([50,32,14,4,0],SR)})}
+  // ---- village merchants (owner 2026-11-23: buying — potions, level books, special skills, reforging — happens only at an NPC in a
+  // village): one per village, beside a market stall and facing the square; arena-npc.js draws them and gates the shop ----
+  w.npcs=[];for(const V of w.villages){let pos=null;const ok=p=>walkable(p.x,p.y,14)&&!cityIn(p.x,p.y,40)&&Math.abs(riverD(p.x,p.y))>riverHW(p.y)+20&&lakeD(p.x,p.y)>20&&poolD(p.x,p.y)>50&&!blockedGen(p,34)&&!w.houses.some(h=>inRect(p,h.al||h,24));   // free() keeps out of villages, so not that
+    for(const st of(w.stalls||[]).filter(q=>Math.hypot(q.x-V.x,q.y-V.y)<V.r)){for(const sd of[1,-1]){const p={x:st.x-Math.sin(st.a)*sd*82,y:st.y+Math.cos(st.a)*sd*82};if(ok(p)){pos=p;break}}if(pos)break}
+    for(let k=0;k<80&&!pos;k++){const a=sr(0,6.283),d=sr(130,340);const p={x:V.x+Math.cos(a)*d,y:V.y+Math.sin(a)*d};if(ok(p))pos=p}
+    if(pos)w.npcs.push({id:w.npcs.length,x:Math.round(pos.x),y:Math.round(pos.y),a:Math.atan2(V.y-pos.y,V.x-pos.x),v:V.id,name:V.name})}
+  // owner 2026-11-23: weapons and armour rarely lie on the open ground (was 104 + 120) — search the houses, kill monsters, open chests
+  for(let k=0;k<28;k++){const p=outSpot(300);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([64,28,8,0],SR)})}
+  for(let k=0;k<30;k++){const p=outSpot(300);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:pickTier([50,32,14,4,0],SR)})}
   for(let k=0;k<136;k++){const p=outSpot(300);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:pickW(ITEMS,SR).id})}
   for(const V of w.villages)for(const it of['potion','potion','mana']){const a=sr(0,6.3),rr=V.plaza?120:82;w.items.push({id:iid++,k:'i',x:V.x+Math.cos(a)*rr,y:V.y+Math.sin(a)*rr,it})}
   // ---- neutral creep camps ----
@@ -999,7 +1007,7 @@ function genWorld(seed){
       for(let k=0;k<3;k++){const p=spot(lo,hi,g.b0,g.b1);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([0,35,45,20],SR)})}
       for(let k=0;k<2;k++){const p=spot(lo,hi,g.b0,g.b1);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:pickTier([0,25,45,27,3],SR)})}
       for(let k=0;k<2;k++){const p=spot(lo,hi,g.b0,g.b1);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:pickW(ITEMS,SR).id})}
-      for(let k=0;k<3;k++){const p=spot(lo,hi,g.b0,g.b1);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:18,prop:1})}}
+      for(let k=0;k<3;k++){const p=spot(lo,hi,g.b0,g.b1);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:26,prop:1})}}
     camp(spot(-C.LH*.3,C.LH*.3,C.DP*.12,C.DP*.24),'castle',1.2);
     for(let k=0;k<3;k++){const p=spot(-C.LH*.3,C.LH*.3,C.DP*.12,C.DP*.4);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:k?'potion':'mana'})}}
   // ---- dungeon contents: undead camps that come back, loot in every room, a vault behind the warden ----
@@ -1012,14 +1020,14 @@ function genWorld(seed){
         for(let k=0;k<4;k++){const p=spot(R,120);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:k===0&&SR()<.45?4:3})}
         for(let k=0;k<2;k++){const p=spot(R,120);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:SR()<.4?4:3})}
         {const p=spot(R,120);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:'tome'})}
-        for(let k=0;k<4;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:18,prop:1})}
+        for(let k=0;k<4;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:26,prop:1})}
         continue}
       camp(R,R.role,1.35);
       for(let k=0;k<2;k++){const p=spot(R,110);w.items.push({id:iid++,k:'c',x:p.x,y:p.y,n:1+(SR()<.5?1:0)})}
       {const p=spot(R,110);w.items.push({id:iid++,k:'w',x:p.x,y:p.y,wk:WK[Math.floor(SR()*WK.length)],tier:pickTier([0,30,50,20],SR)})}
       {const p=spot(R,110);w.items.push({id:iid++,k:'r',x:p.x,y:p.y,tier:pickTier([0,25,45,27,3],SR)})}
       {const p=spot(R,110);w.items.push({id:iid++,k:'i',x:p.x,y:p.y,it:pickW(ITEMS,SR).id})}
-      for(let k=0;k<2;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:18,prop:1})}}
+      for(let k=0;k<2;k++){const p=spot(R,90);w.boxes.push({id:w.boxes.length,x:p.x,y:p.y,a:sr(0,6.3)});w.rocks.push({x:p.x,y:p.y,r:26,prop:1})}}
     // two stairways down, far apart in the valley; each has a way back in the entry hall
     for(let t=0;t<6000&&D.ents.length<2;t++){const p={x:sr(1500,WORLD-1500),y:sr(1500,WORLD-1500)};if(outsideD(p.x,p.y)>-900||!free(p,150)||blockedGen(p,110)||pathNear(p,70)||inCastle(p,450))continue;
       if(w.villages.some(v=>dist(p,v)<v.r+300)||w.camps.some(c=>dist(c,p)<450)||w.shrines.some(s=>dist(s,p)<500)||w.graves.some(g=>dist(g,p)<400))continue;if(D.ents.some(e=>dist(e,p)<(t<3000?7000:4500)))continue;
@@ -1027,15 +1035,13 @@ function genWorld(seed){
     if(!D.ents.length){const v=w.villages.find(q=>q.main)||{x:CX,y:CY};D.ents.push({id:0,x:v.x+420,y:v.y+420,r:62})}
     {const nearE=g=>D.ents.some(e=>Math.abs(e.x-g.x)<170&&dist(e,g)<170);w.grass=w.grass.filter(g=>!nearE(g));w.flowers=w.flowers.filter(g=>!nearE(g));w.mush=w.mush.filter(g=>!nearE(g));w.bushes=w.bushes.filter(g=>!D.ents.some(e=>dist(e,g)<170+g.r));w.tgrass=w.tgrass.filter(g=>!D.ents.some(e=>dist(e,g)<170+g.r))}
     const E=D.entry;D.ents.forEach((e,i)=>{const n=D.ents.length,px=E.cx+(n>1?(i?260:-260):0),py=E.cy+170;D.ports.push({x:px,y:py,r:62,to:{x:e.x,y:e.y+150},ent:i});e.to={x:D.arrive.x+(n>1?(i?80:-80):0),y:D.arrive.y}})}
-  // ---- spawn points, each with two different starter weapons nearby ----
+  // ---- spawn points (where bots stand in balance sims; a real match drops everyone in from the sky, arena-drop.js) ----
   for(let i=0;i<TOTAL_HEROES;i++){let best=null,bs=-1e9;const a0=i/TOTAL_HEROES*Math.PI*2+sr(-.15,.15);
     for(let k=0;k<160;k++){const a=a0+sr(-.25,.25)*(1+k/60),f=sr(.42,.82);const rb=bndR(a);const p={x:CX+Math.cos(a)*rb*f,y:CY+Math.sin(a)*rb*f};
       if(!free(p,60)||blockedGen(p,40)||w.houses.some(h=>inRect(p,h.al||h,40)))continue;let sc=1e9;for(const s of w.spawns)sc=Math.min(sc,dist(p,s)-1000);for(const c of w.camps)if(dist(p,c)<450)sc-=600;for(const g of w.graves)if(dist(p,g)<520)sc-=600;
       if(sc>=0){best=p;break}if(sc>bs){bs=sc;best=p}}
     if(!best)best={x:CX+sr(-300,300),y:CY+sr(-300,300)};w.spawns.push(best);
-    const k1=Math.floor(SR()*WK.length);let k2=Math.floor(SR()*(WK.length-1));if(k2>=k1)k2++;const a1=sr(0,6.3);
-    for(const [wk,ang] of[[WK[k1],a1],[WK[k2],a1+Math.PI]]){let q=null;for(let t=0;t<40;t++){const a=ang+t*.7,d=sr(120,190);const p={x:best.x+Math.cos(a)*d,y:best.y+Math.sin(a)*d};if(free(p,0)&&!blockedGen(p,26)&&!w.houses.some(h=>inRect(p,h.al||h,10))){q=p;break}}
-      if(q)w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk,tier:0})}}
+    }   // owner 2026-11-23: no starter weapons by the spawn points — everyone drops in from the sky and searches houses (arena-drop.js)
   SR=Math.random;
   return w;
 }
@@ -1047,7 +1053,7 @@ const autoSize=n=>n<=6?'S':n<=16?'M':'L';
 // ts = team size (1 free-for-all, 2 duo, 4 squad); n is rounded up to whole teams
 function normCfg(c){c=c||{};const ts=[1,2,4].indexOf(c.ts|0)>=0?c.ts|0:1;let n=clamp((c.n|0)||TOTAL_HEROES,2,TOTAL_HEROES);n=Math.min(TOTAL_HEROES,Math.ceil(n/ts)*ts);if(n/ts<2)n=ts*2;
   return{n,size:SIZE_F[c.size]?c.size:autoSize(n),ts}}
-function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:(cfg.size==='L'&&WD&&WD.city?Math.max(9400,WD.city.far+250,WD.fort?WD.fort.far+250:0):9400)*f,f};   // a full match's first circle covers the Old Town and the Snow Queen's fort (index)if(cfg.size==='L'){if(cfg.ts>1)teamKit(seed,items);return}
+function genArena(seed,cfg,items){MC=cfg;const f=SIZE_F[cfg.size];ASP=null;ARENA={x:CX,y:CY,r:(cfg.size==='L'&&WD&&WD.city?Math.max(9400,WD.city.far+250,WD.fort?WD.fort.far+250:0):9400)*f,f};   // a full match's first circle covers the Old Town and the Snow Queen's fort (index)if(cfg.size==='L')return;   // no squad starter kits either (2026-11-23)
   let s=((seed|0)^0x5bd1e995^(cfg.n*7919))>>>0;const R=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
   const r0=ARENA.r,ok=(p,m)=>walkable(p.x,p.y,m)&&!inWater(p.x,p.y)&&!WD.houses.some(h=>inRect(p,h.al||h,30))&&!inCastleYard(p);
   // centre somewhere in the walkable heart of the valley, so the whole start circle is playable
