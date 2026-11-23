@@ -149,6 +149,9 @@ function damageNumber(target,damage,type,source,crit=false,absorbed=false,spread
 }
 function dealDamage(t,amt,type,src,quiet,crit){
   if(t.dead||t.reviveT>0||amt<=0)return 0;if(CURSED){amt=curDmg(t,amt,type,src,quiet);if(amt<=0)return 0}if(t.statT>0&&t.stat>0)amt*=1+.015*t.stat;   // storm static
+  // curDmg can hit the same target again before this hit lands (a storm shock, a frost burst, a chain with no one else to jump to);
+  // if that already killed it, this hit is over — going on would kill it a second time (owner 2026-11-23: "Hero ยังตายไม่หมดแต่ขึ้นว่าชนะ")
+  if(t.dead||t.reviveT>0)return 0;
   let k=1;if(type==='p')k=1-armorRed(t.armorV);else if(type==='m')k=1-t.mr;if(t.hero&&src&&src.hero&&src!==t)k*=PVP_K;
   let d=amt*k,ab=0;
   if(t.shieldHp>0){ab=Math.min(t.shieldHp,d);t.shieldHp-=ab;d-=ab}
@@ -189,7 +192,7 @@ function mobDeathFx(u,src){
   fxE('die',{id:u.id,x:u.x|0,y:u.y|0,c:u.def.color||u.def.col||'#a7a4a0',
     n,by:src&&isHuman(src)?src.id:-1,big:!!(u.big||u.boss||u.golem),zombie:!!u.zombie});
 }
-function kill(t,src){
+function kill(t,src){if(!t||t.dead)return;   // once only: a second kill would count the same death twice
   t.hp=0;if(CURSED&&!(t.hero&&t.aegis))coinKill(t,src);
   if(t.hero&&t.aegis){t.aegis=false;t.dead=true;t.reviveT=4;t.dash=null;t.leap=null;burstE(t.x,t.y,'#ffd35a',30);
     emit({t:'f',s:`⚜️ ${t.name} ใช้โล่อมตะ จะฟื้นใน 4 วิ`,v:[t.id]});return}
@@ -208,7 +211,7 @@ function kill(t,src){
     const c=WD.camps[t.camp];if(c&&c.mem.every(id=>{const m=UMAP.get(id);return !m||m.dead}))c.deadAt=gameT;
     return}
   const killer=src&&src.hero&&isEnemy(src,t)?src:(t.lastHit&&gameT-t.lastHit.time<8&&!t.lastHit.src.dead?t.lastHit.src:null);
-  alive--;t.rank=alive+1;deathOrder.push(t.id);sndAt('death',t.x,t.y);
+  alive=units.filter(u=>u.hero&&(!u.dead||u.reviveT>0)).length;t.rank=alive+1;deathOrder.push(t.id);   // counted, not decremented: it can never drift from who is really leftsndAt('death',t.x,t.y);
   KLOG.push({t:Math.round(gameT),v:(t.wk||'none')+t.lvl,k:killer?(killer.wk||'none')+killer.lvl:(src?src.kind||src.type:'zone'),zone:!src});
   const v=[t.id];if(killer)v.push(killer.id);
   emit({t:'f',s:killer?`${killer.name} ⚔ ${t.name}`:src&&src.mob?`${src.zombie?'🧟':'👹'} ${t.name} ถูก${src.name}ฆ่า`:`${t.name} ตายในวง`,v});
@@ -496,14 +499,15 @@ function boxNear(u){if(!u||u.dead)return null;let best=null,bd=1e9;for(const b o
 function openBox(u,id){const b=boxes[id];if(!b||b.open||!u||u.dead||dist(u,b)>u.r+70)return;const h=WD.houses[b.house];if(h&&!inRect(u,h,4))return;
   b.open=true;const ok=b.vault||Math.random()<BOX_RATE;const fx=b.x+Math.cos(b.a)*34,fy=b.y+Math.sin(b.a)*34;
   fxE('box',{id,x:b.x|0,y:b.y|0,ok:ok?1:0});sndAt(ok?'chest':'pick',b.x,b.y);const H=isHuman(u)?[u.id]:null;
-  // the dungeon warden's treasure chests (a.js vault:1, owner 2026-11-23): never empty, the hoard that used to lie on the vault floor
+  // the gilded treasure chests (a.js, owner 2026-11-23): never empty — what used to lie on the floor behind a boss. vault:1 the dungeon
+  // warden's vault, vault:2 behind the Snow Queen, vault:3 the old city's temple
   if(b.vault){const r=Math.random(),sx=-Math.sin(b.a)*30,sy=Math.cos(b.a)*30;
     if(r<.45)dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier:Math.random()<.25?4:3});
     else if(r<.78)dropItem({k:'r',x:fx,y:fy,tier:Math.random()<.3?4:3});
     else if(r<.9)dropItem({k:'i',x:fx,y:fy,it:'tome'});
     else dropItem({k:'c',x:fx,y:fy,n:4,gold:true});
     if(Math.random()<.4)dropItem(Math.random()<.5?{k:'c',x:fx+sx,y:fy+sy,n:2,gold:true}:{k:'p',x:fx+sx,y:fy+sy,b:Math.random()<.5?2:0});
-    if(H)fxTextFor(b.x,b.y-46,'💎 สมบัติผู้คุม!','#ffd35a',1.7,H,1);return}
+    if(H)fxTextFor(b.x,b.y-46,['','💎 สมบัติผู้คุม!','💎 สมบัติราชินีหิมะ!','💎 สมบัติวิหาร!'][b.vault]||'💎 สมบัติ!','#ffd35a',1.7,H,1);return}
   if(ok){const r=Math.random(),sx=-Math.sin(b.a)*30,sy=Math.cos(b.a)*30;
     if(r<.48)dropItem({k:'w',x:fx,y:fy,wk:WK[Math.floor(Math.random()*WK.length)],tier:pickTier([6,36,38,18,2])});
     else if(r<.84)dropItem({k:'r',x:fx,y:fy,tier:pickTier([0,22,40,30,8])});

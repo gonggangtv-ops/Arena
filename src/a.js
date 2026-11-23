@@ -821,7 +821,8 @@ function genWorld(seed){
     // loot: chests on the plaza and behind the temple, the temple's relics, potions at the gates and on the plaza
     const box=(u,v)=>{const q=P(u,v);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1})};
     box(-150,VP);box(150,VP);box(-150,VT+150);box(150,VT+150);
-    {const q=P(0,VT+120);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(0,VT+200);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,40,45,15],SR)})}
+    // the temple's relics (a legendary weapon and a rune the Dark Sentinel guards) are gilded treasure chests too (vault:3), same rule
+    SR();SR();for(const v of[VT+120,VT+200]){const q=P(0,v);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2,vault:3});w.rocks.push({x:q.x,y:q.y,r:26,prop:1})}
     for(const [u,v,it] of[[-60,VP-120,'potion'],[60,VP-120,'potion'],[0,VP+130,'mana'],[-CITY_SU,gv+150,'potion'],[CITY_SU,gv+150,'potion']]){const q=P(u,v);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
     for(const [u,v] of[[-C.hw*.45,VP+40],[C.hw*.45,VP+40],[0,VT-60]]){const q=P(u,v);w.items.push({id:iid++,k:'c',x:q.x,y:q.y,n:2,gold:SR()<.5})}
     // the garrison: three Dark Sentinels hold the temple court (eclipse.js kind, rich loot)
@@ -861,7 +862,10 @@ function genWorld(seed){
     // loot: two chests and gold by the castle gate, a tier-3 weapon and a rune behind the queen, potions at the stair head
     for(const sg of[-1,1]){const q=P(sg*330,FORT_VC-FORT_CD/2-110);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1});
       const c=P(sg*420,FORT_VC-FORT_CD/2-150);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
-    {const q=P(-70,FORT_VA+330);w.items.push({id:iid++,k:'w',x:q.x,y:q.y,wk:WK[Math.floor(SR()*WK.length)],tier:3});const r=P(70,FORT_VA+330);w.items.push({id:iid++,k:'r',x:r.x,y:r.y,tier:pickTier([0,0,35,45,20],SR)})}
+    // owner 2026-11-23 "ตรงบอสราชินีน้ำแข็ง ไอเทมระดับตำนานยังมีอยู่เลย": the legendary weapon and rune behind the queen are two of the
+    // gilded treasure chests now (vault:2, rolled when opened, b.js openBox); the two draws they used are still taken, so the rest
+    // of the world grows exactly as before
+    SR();SR();for(const u of[-70,70]){const q=P(u,FORT_VA+330);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2,vault:2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1})}
     for(const [u,it] of[[-90,'potion'],[90,'mana']]){const q=P(u,190);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
     // the Snow Queen (snow-queen.js): alone on her court, no respawn
     {const g=P(0,FORT_VA+170),camp={id:w.camps.length,x:g.x,y:g.y,tier:'icethrone',mem:[],maxRespawn:0,sc:1,rich:1};

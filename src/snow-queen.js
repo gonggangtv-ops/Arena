@@ -81,7 +81,7 @@ ECL_EXT.queen={detect:620,act:queenAct,
 // Eternal Winter spares whoever stands in one of its warm circles
 {const _ha=hitArea;hitArea=function(a,u){if(a.safes){for(const s of a.safes)if(Math.hypot(u.x-s.x,u.y-s.y)<s.r)return false}return _ha(a,u)}}
 // death: the court's treasure
-{const _k=kill;kill=function(t,src){if(t&&t.ecl==='queen'&&t._qFloor>0){t.hp=t._qFloor;return}   // a bar break, not a death
+{const _k=kill;kill=function(t,src){if(!t||t.dead)return;if(t.ecl==='queen'&&t._qFloor>0){t.hp=t._qFloor;return}   // a bar break, not a death
   const r=_k.apply(this,arguments);
   if(t&&t.ecl==='queen'){emit({t:'f',s:'❄ ราชินีหิมะถูกโค่นแล้ว! สมบัติแห่งบัลลังก์น้ำแข็งร่วงลงบนลาน'});emit({t:'k',a:16,x:t.x|0,y:t.y|0});emit({t:'ec',k:'die',id:t.id,x:t.x|0,y:t.y|0,q:1});
     dropItem({k:'w',x:t.x+90,y:t.y,wk:'frost',tier:4});dropItem({k:'r',x:t.x-90,y:t.y,tier:4});dropItem({k:'r',x:t.x,y:t.y+90,tier:3});

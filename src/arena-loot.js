@@ -7,7 +7,8 @@
 // Owner, later the same day: "ไฟล์3 เปลี่ยนโมเดล กล่องธรรมดา · ไฟล์ที่4 โมเดลขวดเลือด · ไฟล์5 โมเดลมานา"
 //  · every ordinary chest (houses, castle, dungeon rooms, the fort gate) is the owner's Enchanted Sentinel chest ('chest-eye'): its
 //    mesh is cut at the lid seam when the world is built, so the lid still swings open on its back hinge; a cold rune-blue glow
-//  · the gilded chest above now marks the dungeon warden's treasure chests (a.js vault:1, never empty — b.js openBox)
+//  · the gilded chest above now marks the treasure chests that never come up empty (b.js openBox): the dungeon warden's vault
+//    (a.js vault:1), behind the Snow Queen (vault:2) and the old city's temple (vault:3)
 //  · health and mana potions lying on the ground are the owner's vials ('potion-hp', 'potion-mana') instead of the emoji sprite
 (function(){if(typeof R3==='undefined'||typeof THREE==='undefined')return;const T=THREE,R=R3,A=()=>window.CelestialAssets;
 const CW=54,CH=28,CD=36,LR=CD/2,OPEN=1.95;
@@ -85,11 +86,27 @@ R.stepBoxes=function(dt,force){const Ks=this.chests;if(!Ks||!Ks.length)return;co
     for(let k=0;k<(this.hi?34:18)*(vault?1.5:1);k++)this.sp(true,{x:e.x+rand(-16,16),y:y+4,z:e.y+rand(-12,12),vx:rand(-70,70),vy:rand(170,340),vz:rand(-70,70),l:rand(.8,1.5),s:rand(11,20),s1:2,c:Math.random()<.7?'#ffe27a':'#fff8e0',sp:1,g:280,dr:1.1})}catch(err){}}
   return r}}
 // ---- the potions on the ground: the owner's vials (health = Inferno Vial, mana = the blue flask) ----
-const POT={hp:{key:'potion-hp',H:30},mp:{key:'potion-mana',H:30}};
+const POT={hp:{key:'potion-hp',H:30,c:'#ff3f58',g:'#ff6a7a'},mp:{key:'potion-mana',H:30,c:'#3f9bff',g:'#6ab0ff'}};
+// owner 2026-11-23 (later): "ทำเอฟเฟกเรืองแสง ให้ขวด เลือดกับ มานาหน่อย มันมองยาก" — the vial lights itself (its own texture as
+// emissive), a soft halo of its colour hangs round it, a glow lies on the ground under it — the three breathing together — and
+// small motes drift up from it
+const potMats=new Map(),potFx={halo:{},floor:{}};
+const potMat=(m,pk)=>{let c=potMats.get(m);if(!c){c=m.clone();if(c.emissive){if(c.map){c.emissive.set('#ffffff');c.emissiveMap=c.map;c.emissiveIntensity=.6}else{c.emissive.set(POT[pk].c);c.emissiveIntensity=.45}}
+  potMats.set(m,c)}return c};
+const potHalo=(R,pk)=>potFx.halo[pk]||(potFx.halo[pk]=new T.SpriteMaterial({map:R.tex('wglow'),color:new T.Color(POT[pk].c).multiplyScalar(R.post?1.7:1.2),transparent:true,opacity:.6,
+  depthWrite:false,blending:T.AdditiveBlending,toneMapped:false}));
+const potFloor=(R,pk)=>potFx.floor[pk]||(potFx.floor[pk]=new T.MeshBasicMaterial({map:R.tex('wglow'),color:new T.Color(POT[pk].g).multiplyScalar(R.post?1.4:1.1),transparent:true,opacity:.5,
+  depthWrite:false,blending:T.AdditiveBlending,toneMapped:false}));
 const potKind=it=>it.k==='p'?(it.b===0||it.b===undefined?'hp':it.b===1?'mp':null):it.k==='i'?(it.it==='potion'?'hp':it.it==='mana'?'mp':null):null;
 {const _io=R.itemObj;R.itemObj=function(it){const pk=potKind(it),D=pk&&POT[pk];if(!D||!loaded(D.key))return _io.apply(this,arguments);
   try{const parts=this.celestialAsset(D.key);if(!parts)return _io.apply(this,arguments);const sz=A().get(D.key).inspection.size,k=D.H/sz[1];
-    const g=new T.Group(),hold=new T.Group();g.add(hold);for(const p of parts){const m=new T.Mesh(p.geo,p.mat);m.scale.set(sz[0]*k,D.H,sz[2]*k);m.position.y=6;m.castShadow=!!this.hi;hold.add(m)}
-    g.userData.spin=hold;this.mesh(this.G.disc,this.glowM(pk==='hp'?'#ff6a7a':'#6ab0ff',.28),0,1,0,20,1,20,g);
+    const g=new T.Group(),hold=new T.Group();g.add(hold);for(const p of parts){const m=new T.Mesh(p.geo,potMat(p.mat,pk));m.scale.set(sz[0]*k,D.H,sz[2]*k);m.position.y=6;m.castShadow=!!this.hi;hold.add(m)}
+    const halo=new T.Sprite(potHalo(this,pk));halo.scale.set(64,64,1);halo.position.y=6+D.H*.48;halo.renderOrder=6;hold.add(halo);
+    this.planeG=this.planeG||new T.PlaneGeometry(1,1);const fl=new T.Mesh(this.planeG,potFloor(this,pk));fl.rotation.x=-Math.PI/2;fl.position.y=1.5;fl.scale.set(74,74,1);fl.renderOrder=2;g.add(fl);
+    g.userData.spin=hold;g.userData.potK=pk;
     g.position.set(it.x,this.gY(it.x,it.y),it.y);this.scene.add(g);return g}catch(e){return _io.apply(this,arguments)}}}
+{const _fx=R.fxExtra;R.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);try{this._potT=(this._potT||0)+(dt||0);const k=.5+.5*Math.sin(this._potT*3.1);
+  for(const pk in potFx.halo)potFx.halo[pk].opacity=.42+.28*k;for(const pk in potFx.floor)potFx.floor[pk].opacity=.32+.22*k;
+  if(dt>0&&this.sp&&this.itemObjs)for(const g of this.itemObjs.values()){const pk=g.userData.potK;if(!pk||!g.visible||Math.random()>dt*2.4)continue;const q=g.position;
+    this.sp(true,{x:q.x+rand(-10,10),y:q.y+rand(10,30),z:q.z+rand(-10,10),vy:rand(20,38),l:rand(.7,1.1),s:rand(5,8),s1:1.5,c:POT[pk].c,sp:1})}}catch(e){}return r}}
 })();
