@@ -108,9 +108,10 @@ window.installMoonfallVillage=function(P){
         this.scene.add(g)}}
     if(typeof MOON==='undefined'||!MOON)this.buildNature();
   };
-  // ---- Arena Royale nature dressing: mossy boulders, nebula blooms / rocky meadow patches / banana plants by the river and in the
-  //      meadows, clear-water river stones (decor only, no collision). Owner 2026-11-18: lupine, flower cushion and the sapling-like
-  //      tall-grass clump were replaced (their Meshy textures had black holes) ----
+  // ---- Arena Royale nature dressing: mossy boulders, nebula blooms / rocky meadow patches by the river and in the meadows,
+  //      clear-water river stones (decor only, no collision). Owner 2026-11-18: lupine, flower cushion and the sapling-like
+  //      tall-grass clump were replaced (their Meshy textures had black holes). Owner 2026-11-23: the banana plants left the decor,
+  //      they are fellable trees now (a.js world gen, flag bn; drawn by bananaTrees below) ----
   P.buildNature=function(){const tg=WD.tg,n=tg.n,C=tg.C,hg=tg.hg,dens=this.gdens;if(!tg||!dens)return;
     const hash=(x,y,s)=>{const v=Math.sin(x*12.9898+y*78.233+s*37.719)*43758.5453;return v-Math.floor(v)},sz=k=>{const a=A.get(k);return a&&a.inspection&&a.inspection.size};
     const inst=(key,items,size)=>this.natInst(key,items,size);
@@ -124,21 +125,20 @@ window.installMoonfallVillage=function(P){
       hills.push({x:c.x,y:c.y,r:c.r,h:Math.max(40,this.gY(c.x,c.y)-g),dy:g-this.gY(c.x,c.y)-6,a:hash(c.x,c.y,41)*6.283})}
     inst('bastion-hill',hills,(q,s)=>{const W=q.r*2.2,k=W/Math.max(s[0],s[2]);return[s[0]*k,Math.max(s[1]*k,q.h*1.28),s[2]*k]});
     const wet=(i,j,R)=>{for(let b=-R;b<=R;b+=1)for(let a=-R;a<=R;a+=1){const ii=i+a,jj=j+b;if(ii>=0&&jj>=0&&ii<n&&jj<n&&hg[jj*n+ii]<WL-1)return true}return false};
-    const stones=[],bloom=[],patch=[],banana=[];
+    const stones=[],bloom=[],patch=[];
     for(let j=2;j<n-2;j+=2)for(let i=2;i<n-2;i+=2){const k=j*n+i,h=hg[k],x=(i+hash(i,j,2))*C,y=(j+hash(i,j,3))*C,r=hash(i,j,4);
       if(h<WL-1){if(h>WL-18&&r<.09)stones.push({x,y,w:46+hash(i,j,5)*60,a:hash(i,j,6)*6.283,dy:-2});continue}
       if(h<WL+3){if(r<.32)stones.push({x,y,w:55+hash(i,j,5)*70,a:hash(i,j,6)*6.283});continue}
       if(!dens[k]||dens[k]<160)continue;const nearW=h<WL+28&&wet(i,j,5);
       const p=nearW?.34:WD.noise(x,y)<.44?.035:.012;if(r>p)continue;const t=hash(i,j,7);const it={x,y,a:hash(i,j,8)*6.283,s:.75+hash(i,j,9)*.6};
-      (t<.4?bloom:t<.72?patch:banana).push(it)}
+      if(t<.72)(t<.4?bloom:patch).push(it)}
     inst('river-stones',stones,(q,s)=>{const k=q.w/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
     inst('nebula-bloom',bloom,(q,s)=>{const H=70*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
     inst('rocky-meadow',patch.map(q=>Object.assign(q,{dy:-2})),(q,s)=>{const W=150*q.s,k=W/Math.max(s[0],s[2]);return[s[0]*k,s[1]*k,s[2]*k]});
-    inst('banana-plant',banana,(q,s)=>{const H=100*q.s,k=H/s[1];return[s[0]*k,H,s[2]*k]});
     // owner 2026-11-18: mystic mushrooms at the feet of trees, emerald crystals (thick in the abyss region), torch walls lining the
     // dungeon. Owner 2026-11-19: every floor model removed (octagon paving, ash-land rift slabs, dungeon flagstones)
     const mush=[],crys=[],reg=(x,y)=>typeof REG!=='undefined'&&REG.at?REG.at(x,y):-1,house=(x,y)=>typeof houseAt==='function'&&houseAt({x,y});
-    for(const t of WD.trees){const r=hash(t.x,t.y,11);if(r>.2)continue;const a=hash(t.x,t.y,12)*6.283,d=(t.cr||60)*.75+26,x=t.x+Math.cos(a)*d,y=t.y+Math.sin(a)*d;
+    for(const t of WD.trees){if(t.bn)continue;const r=hash(t.x,t.y,11);if(r>.2)continue;const a=hash(t.x,t.y,12)*6.283,d=(t.cr||60)*.75+26,x=t.x+Math.cos(a)*d,y=t.y+Math.sin(a)*d;
       if(!walkable(x,y,10)||inWater(x,y))continue;mush.push({x,y,a:hash(t.x,t.y,13)*6.283,s:.75+hash(t.x,t.y,14)*.6})}
     for(let j=2;j<n-2;j+=2)for(let i=2;i<n-2;i+=2){const k=j*n+i,h=hg[k];if(h<WL+3)continue;const x=(i+hash(i,j,21))*C,y=(j+hash(i,j,22))*C,r=hash(i,j,23),g=reg(x,y);
       if(g===3)continue;
@@ -153,12 +153,18 @@ window.installMoonfallVillage=function(P){
           if(hor){x=q.x+c;y=side<0?q.y-DE/2:q.y+q.h+DE/2;a=side<0?-Math.PI/2:Math.PI/2}else{y=q.y+c;x=side<0?q.x-DE/2:q.x+q.w+DE/2;a=side<0?0:Math.PI}
           const px=hor?x:x+(side<0?-DE:DE),py=hor?y+(side<0?-DE:DE):y;if(!inD(px,py)||inWall(px,py))continue;wl.push({x,y,a,len:step})}}
       inst('dungeon-wall',wl,q=>[DE,170,q.len+2]);dgW=wl.length}
-    this.natureCounts={hills:hills.length,stones:stones.length,bloom:bloom.length,patch:patch.length,banana:banana.length,mush:mush.length,crys:crys.length,dgFloor:dgF,dgWall:dgW}};
+    this.natureCounts={hills:hills.length,stones:stones.length,bloom:bloom.length,patch:patch.length,banana:WD.trees.filter(t=>t.bn).length,mush:mush.length,crys:crys.length,dgFloor:dgF,dgWall:dgW}};
   // owner's Verdant Solitude tree replaces the birches (r3 buildVegetation asks verdantOn first); drawn through instC with the tree
   // items so felling (trees-break.js) copies it and the see-through-canopy (treeParts) still works
   P.verdantOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('verdant-tree')};
   P.verdantTrees=function(list,reg){if(!list.length)return;const a=A.get('verdant-tree'),s=a.inspection.size,parts=this.celestialAsset('verdant-tree');
     const place=(t,add)=>{const H=(70*t.h+t.cr*1.3),k=H/s[1],R=mulberry32(Math.floor(t.x*7+t.y));add(t.x,this.gY(t.x,t.y)-2,t.y,s[0]*k,H,s[2]*k,0,R()*6.283,0,null)};
+    for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
+  // owner 2026-11-23: the banana plants are trees (a.js, flag bn) — the decor's own model and size (100 x size tall), drawn through instC
+  // with the tree items so felling (trees-break.js, one blow) copies and topples it like any tree
+  P.bananaOn=function(){return (typeof MOON==='undefined'||!MOON)&&this.mfProp('banana-plant')};
+  P.bananaTrees=function(list,reg){if(!list.length)return;const s=A.get('banana-plant').inspection.size,parts=this.celestialAsset('banana-plant');
+    const place=(t,add)=>{const H=100*t.h,k=H/s[1];add(t.x,this.gY(t.x,t.y)-1,t.y,s[0]*k,H,s[2]*k,0,t.ph,0,null)};
     for(const p of parts)this.instC(p.geo,p.mat,list,place,true,reg)};
   P.plainRock=function(r){return !r.prop&&(typeof MOON==='undefined'||!MOON)&&(this.mfProp('wide-rock')||!r.edge&&!r.cliff&&r.cave===undefined&&this.mfProp('mossy-boulder'))};
   // one Meshy prop instanced over a list (size(q,s) -> [sx,sy,sz] from the model's own proportions s)

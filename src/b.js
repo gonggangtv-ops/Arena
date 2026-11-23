@@ -834,7 +834,7 @@ function hostUpdate(dt){
       if(u.lotusT>0){u.lotusT-=dt;u.lotusTick-=dt;if(u.lotusTick<=0){u.lotusTick=.2;for(const o of units){if(o.dead||!isEnemy(u,o)||dist(u,o)>u.lotusR+o.r*.5)continue;dealDamage(o,u.lotusDmg,'p',u,false);if(!o.dead){o.slowT=Math.max(o.slowT,.5);o.slowAmt=Math.max(o.slowT>.5?o.slowAmt:0,.2)}}}}
     }
     let m={mx:0,my:0};
-    if(isHuman(u)){const inp=u.ctrl==='host'?localInput():(net.inputs[u.ctrl]||{mx:0,my:0,atk:false});m={mx:inp.mx||0,my:inp.my||0};if(CURSED){tpsHost(u,inp,dt);if(u.blk){m.mx*=.45;m.my*=.45}}if(inp.atk&&!u.blk)basic(u)}
+    if(isHuman(u)){const inp=u.ctrl==='host'?localInput():(net.inputs[u.ctrl]||{mx:0,my:0,atk:false});m={mx:inp.mx||0,my:inp.my||0};if(CURSED){tpsHost(u,inp,dt);if(u.blk){m.mx*=.45;m.my*=.45}}if(inp.atk&&!u.blk){u.amode=inp.am?2:1;basic(u)}}
     else if(u.zombie)m=zombieThink(u,dt);else if(u.mob){nightAggro(u);m=mobThink(u,dt)}else{m=botThink(u,dt);if(Math.random()<dt*3)botPotions(u)}
     if(typeof feelMove==='function')m=feelMove(u,m,dt);   // arena-feel.js: acceleration, wind-up slow, roll easing
     if(u.stunT>0||u.rootT>0){m.mx=0;m.my=0}

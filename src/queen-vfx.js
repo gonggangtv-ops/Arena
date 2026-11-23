@@ -194,7 +194,7 @@
   // ---------------- the queen herself: crown, wings, casting sigil, death ----------------
   const LQ=new T.Quaternion(),LP=new T.Vector3(),LS=new T.Vector3();
   function queenFx(R,dt,Tm){const u=queen();Q.wingK=Q.wingK||0;if(!u){Q.wingK=0;return}const o=R.objs.get(u.id);if(!o||!o.root||!o.root.visible)return;
-    const H=o.H||250,hr=u.hp/Math.max(1,u.maxHp),ph=hr>.7?0:hr>.35?1:2,A=u.ecA;
+    const H=o.H||250,hr=u.hp/Math.max(1,u.maxHp),ph=hr>2/3+1e-4?0:hr>1/3+1e-4?1:2,A=u.ecA;   // three bars (snow-queen.js)
     if(A&&A!==Q.lastA){Q.lastA=A;Q.castT=Q.t;Q.castN=A.n;Q.castD=A.d||1}
     const casting=Q.lastA&&Q.t-Q.castT<Q.castD?Q.castN:null,gy=o.gy!==undefined?o.gy:R.gY(u.x,u.y);
     // the sigil under her feet while she casts

@@ -113,22 +113,32 @@ R.eclEvent=function(e,u){if(!this.ok||!this.PA||!this.scene)return;const gy=this
 // ---- DOM: boss bar + eclipse darkening (pointer-events none: never blocks touch controls) ----
 const css=`#eclBoss{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 50px);transform:translateX(-50%);width:min(560px,72vw);z-index:30;pointer-events:none;font:600 13px/1.2 system-ui,sans-serif;color:#e8eeff;text-align:center;text-shadow:0 1px 3px #000;transition:opacity .4s;opacity:0}
 #eclBoss .n{letter-spacing:.06em;margin-bottom:5px}#eclBoss .n b{color:#b9a6ff;font-weight:700}
-#eclBoss .bar{position:relative;height:12px;border-radius:7px;background:#0b0d1acc;border:1px solid #8a9ad866;overflow:hidden;box-shadow:0 0 14px #6a5aff55}
+#eclBoss .bar{position:relative;height:13px;border-radius:7px;background:#0b0d1acc;border:1px solid #8a9ad866;overflow:hidden;box-shadow:0 0 14px #6a5aff55}
 #eclBoss .f{position:absolute;inset:0;width:100%;background:linear-gradient(90deg,#5a3ad8,#9fb8ff);transition:width .25s}#eclBoss .lag{position:absolute;inset:0;background:#ffffff55;transition:width 1.1s .3s}
 #eclBoss .m{position:absolute;top:-2px;bottom:-2px;width:2px;background:#ffe9a0}
+#eclBoss .u{position:absolute;inset:0;opacity:0;filter:saturate(.75) brightness(.55)}#eclBoss .x{position:absolute;right:7px;top:50%;transform:translateY(-50%);z-index:2;font:800 11px/1 system-ui,sans-serif;color:#fff;letter-spacing:.04em;text-shadow:0 0 3px #000,0 0 6px #0b2a4a,0 1px 2px #000;display:none}
 #eclDark{position:fixed;inset:0;z-index:5;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,#0000 25%,#12062ad9 100%)}
 #eclFlash{position:fixed;inset:0;z-index:6;pointer-events:none;opacity:0;transition:opacity .6s}`;
 let D=null;const dom=()=>{if(D)return D;const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
-  const b=document.createElement('div');b.id='eclBoss';b.innerHTML='<div class="n"></div><div class="bar"><div class="lag"></div><div class="f"></div><div class="m" style="left:70%"></div><div class="m" style="left:35%"></div></div>';
+  const b=document.createElement('div');b.id='eclBoss';b.innerHTML='<div class="n"></div><div class="bar"><div class="u"></div><div class="lag"></div><div class="f"></div><div class="m" style="left:70%"></div><div class="m" style="left:35%"></div><div class="x"></div></div>';
   const dk=document.createElement('div');dk.id='eclDark';const fl=document.createElement('div');fl.id='eclFlash';document.body.append(dk,fl,b);
-  D={b,n:b.querySelector('.n'),f:b.querySelector('.f'),lag:b.querySelector('.lag'),dk,fl};return D};
+  D={b,n:b.querySelector('.n'),f:b.querySelector('.f'),lag:b.querySelector('.lag'),u:b.querySelector('.u'),x:b.querySelector('.x'),ms:[...b.querySelectorAll('.m')],dk,fl};return D};
 R.eclFlash=function(c,a){if(typeof document==='undefined')return;const d=dom();d.fl.style.transition='none';d.fl.style.background=c;d.fl.style.opacity=a;requestAnimationFrame(()=>{d.fl.style.transition='opacity .9s';d.fl.style.opacity=0})};
 const BOSSUI={overlord:{t:'☾ CELESTIAL OVERLORD',ph:['PHASE I','PHASE II · ECLIPSE','PHASE III · TOTALITY'],bg:'linear-gradient(90deg,#5a3ad8,#9fb8ff)'},
-  queen:{t:'❄ SNOW QUEEN · ราชินีหิมะ',ph:['PHASE I','PHASE II · BLIZZARD','PHASE III · ETERNAL WINTER'],bg:'linear-gradient(90deg,#3a8ad8,#e8f6ff)'}};
+  // the Snow Queen (owner 2026-11-23): three health bars, one per phase; each bar its own colour, the next one shows dimmed beneath it
+  queen:{t:'❄ SNOW QUEEN · ราชินีหิมะ',ph:['PHASE I','PHASE II · BLIZZARD','PHASE III · ETERNAL WINTER'],bg:'linear-gradient(90deg,#3a8ad8,#e8f6ff)',bars:3,
+    bgs:['linear-gradient(90deg,#3a8ad8,#e8f6ff)','linear-gradient(90deg,#6a4ae0,#d8d2ff)','linear-gradient(90deg,#0fb8d0,#f4feff)']}};
 R.eclHud=function(me,L,dt){const F=me||L;if(!F||typeof document==='undefined')return;let b=null,bd=1e9;const cl=typeof net!=='undefined'&&net.mode==='client';for(const u of units){if(!BOSSUI[u.ecl]||u.dead||(cl&&!u.inSnap))continue;const d=Math.hypot(u.x-F.x,u.y-F.y);if(d<bd){bd=d;b=u}}
   const show=!!b&&bd<1600&&(b.hp<b.maxHp-1||bd<720);this._eclBossShown=show;if(!show&&!D)return;const d=dom();d.b.style.opacity=show?1:0;
-  if(show){const r=Math.max(0,b.hp/b.maxHp),ph=r>.7?0:r>.35?1:2,w=(r*100).toFixed(1)+'%';d.f.style.width=w;d.lag.style.width=w;
-    const U=BOSSUI[b.ecl],t=U.t+' <b>· '+U.ph[ph]+'</b> · '+fmtN(b.hp)+' / '+fmtN(b.maxHp);if(d.n._t!==t){d.n._t=t;d.n.innerHTML=t}if(d.f._bg!==U.bg){d.f._bg=U.bg;d.f.style.background=U.bg}}
+  if(show){const U=BOSSUI[b.ecl],r=Math.max(0,b.hp/b.maxHp);let ph,w,t,bg=U.bg,nb=0;
+    if(U.bars){const B=b.maxHp/U.bars;nb=Math.max(1,Math.ceil(b.hp/B-1e-6));ph=Math.min(U.bars-1,U.bars-nb);const cur=Math.max(0,b.hp-(nb-1)*B);
+      w=(Math.min(1,cur/B)*100).toFixed(1)+'%';bg=U.bgs[ph];t=U.t+' <b>· '+U.ph[ph]+'</b> · '+fmtN(cur)+' / '+fmtN(B)}
+    else{ph=r>.7?0:r>.35?1:2;w=(r*100).toFixed(1)+'%';t=U.t+' <b>· '+U.ph[ph]+'</b> · '+fmtN(b.hp)+' / '+fmtN(b.maxHp)}
+    // a new bar: the fill snaps full at once (no white "lost" trail across the whole bar)
+    if(d._nb!==nb){const sw=d._nb>nb;d._nb=nb;if(sw){d.lag.style.transition='none';d.lag.style.width=w;void d.lag.offsetWidth;d.lag.style.transition=''}
+      const nx=U.bars&&nb>1?U.bgs[ph+1]:'';d.u.style.background=nx;d.u.style.opacity=nx?1:0;d.x.style.display=U.bars?'block':'none';d.x.textContent='×'+nb;
+      for(const m of d.ms)m.style.display=U.bars?'none':''}
+    d.f.style.width=w;d.lag.style.width=w;if(d.n._t!==t){d.n._t=t;d.n.innerHTML=t}if(d.f._bg!==bg){d.f._bg=bg;d.f.style.background=bg}}
   // Ultimate Eclipse darkens the sky while it charges
   let dark=0;for(const a of aoes)if(a.kind==='ueclipse'&&Math.hypot(a.x-F.x,a.y-F.y)<a.r+600)dark=Math.max(dark,a.t<a.delay?Math.min(1,a.t/a.delay)*.85:Math.max(0,a.fxT||0));
   this._eclDk=lerp(this._eclDk||0,dark,Math.min(1,dt*6));d.dk.style.opacity=this._eclDk.toFixed(3)};

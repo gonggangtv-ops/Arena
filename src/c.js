@@ -91,7 +91,7 @@ const RoomT={kind:'room',api:null,g:null,ch:new Map(),me:null,budget:3500,rate:1
       if(typeof pr.k==='number'&&c.outQ.length){c.outQ=c.outQ.filter(q=>q[0]>pr.k)}
       if(typeof pr.ea==='number')net.cl[cid]&&(net.cl[cid].ea=pr.ea);
       if(Array.isArray(pr.q))for(const q of pr.q){if(!Array.isArray(q)||q[0]<=c.inAck)continue;c.inAck=q[0];if(q[1]&&typeof q[1]==='object')h.msg(cid,q[1]);c.dirty=true}
-      if(Array.isArray(pr.i))h.msg(cid,{t:'i',mx:+pr.i[0]||0,my:+pr.i[1]||0,a:pr.i[2]?1:0,b:pr.i[3]?1:0})}
+      if(Array.isArray(pr.i))h.msg(cid,{t:'i',mx:+pr.i[0]||0,my:+pr.i[1]||0,a:pr.i[2]===2?2:pr.i[2]?1:0,b:pr.i[3]?1:0})}
       if(c.dirty)this.flush(c)});
     h.join(cid,Object.assign({t:'hello'},hello))},
   flush(c){c.dirty=false;const o={q:c.outQ,k:c.inAck};if(c.S)o.S=c.S;c.r.presence(o).catch(()=>{})},
@@ -177,7 +177,7 @@ function hostJoin(cid,d){
 function hostOnData(cid,d){
   if(!d||!d.t)return;if(net.cl[cid])net.cl[cid].seen=performance.now();
   if(d.t==='look'){const p=net.lobby.find(p=>p.ctrl===cid);if(p){p.look=clamp(d.look|0,0,LOOKS.length-1);pushLobby()}}
-  else if(d.t==='i'){net.inputs[cid]={mx:clamp(+d.mx||0,-1,1),my:clamp(+d.my||0,-1,1),atk:!!d.a,blk:!!d.b}}
+  else if(d.t==='i'){net.inputs[cid]={mx:clamp(+d.mx||0,-1,1),my:clamp(+d.my||0,-1,1),atk:!!d.a,am:d.a===2,blk:!!d.b}}   // a: 1 attack (hero first) · 2 monster attack (arena-buttons.js)
   else if(d.t==='xs'){const u=units.find(u=>u.ctrl===cid);if(CURSED&&u&&state==='play')castSpecial(u,Number.isFinite(d.x)&&Number.isFinite(d.y)?{x:clamp(+d.x,0,WORLD),y:clamp(+d.y,0,WORLD)}:null)}
   else if(d.t==='buy'){const u=units.find(u=>u.ctrl===cid);if(CURSED&&u&&state==='play')shopBuy(u,String(d.k).slice(0,4))}
   else if(d.t==='dg'){const u=units.find(u=>u.ctrl===cid);if(CURSED&&u&&state==='play')tpsDodge(u,clamp(+d.x||0,-1,1),clamp(+d.y||0,-1,1))}
@@ -336,7 +336,7 @@ function clientUpdate(dt){
   for(const u of units){if(u.dead)continue;const k=1-Math.pow(.00002,dt);u.x=lerp(u.x,u.tx,k);u.y=lerp(u.y,u.ty,k);u.atkAnim-=dt;u.castAnim-=dt}
   for(const p of projs){p.x+=p.vx*dt;p.y+=p.vy*dt}
   for(const a of aoes){a.t+=dt;if(a.t>=a.delay&&!a.dot){a.done=true;a.fxT-=dt}}
-  net.inT-=dt;if(net.inT<=0){net.inT=net.tr&&net.tr.kind==='room'?.1:.05;const i=localInput();net.tr&&net.tr.input([+i.mx.toFixed(2),+i.my.toFixed(2),i.atk?1:0,i.blk?1:0])}
+  net.inT-=dt;if(net.inT<=0){net.inT=net.tr&&net.tr.kind==='room'?.1:.05;const i=localInput();net.tr&&net.tr.input([+i.mx.toFixed(2),+i.my.toFixed(2),i.am?2:i.atk?1:0,i.blk?1:0])}
   const me=ME();if(me){for(let i=0;i<3;i++)me.cd[i]=Math.max(0,me.cd[i]-dt);for(let i=0;i<4;i++)me.bcd[i]=Math.max(0,me.bcd[i]-dt)}
 }
 

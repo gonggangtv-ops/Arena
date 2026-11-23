@@ -809,8 +809,8 @@ function genWorld(seed){
       for(let k=0,t=0;k<7&&t<400;t++){const q=P(sr(-C.hw+300,C.hw-300),sr(260,C.dep-260));if(!open(q,170))continue;const an=sr(0,Math.PI),len=sr(200,280),tx=Math.cos(an),ty=Math.sin(an);
         if(!open({x:q.x+tx*len/2,y:q.y+ty*len/2},60)||!open({x:q.x-tx*len/2,y:q.y-ty*len/2},60))continue;
         C.props.push({k:'modular-wall',x:q.x,y:q.y,a:Math.atan2(-ty,tx),w:len,h:sr(110,150),d:40});for(let d=-len/2+20;d<=len/2-19;d+=38)solid({x:q.x+tx*d,y:q.y+ty*d},22);k++}
-      // garden trees (the Fallen Kingdom's tree, felling works)
-      for(let k=0,t=0;k<9&&t<500;t++){const q=P(sr(-C.hw+260,C.hw-260),sr(240,C.dep-220));if(!open(q,130))continue;w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,76),v:2,ph:sr(0,6),h:sr(.85,1.1)});k++}}
+      // garden trees (the Fallen Kingdom's tree, felling works; owner 2026-11-23: 40% fewer trees in every zone, 9 -> 5)
+      for(let k=0,t=0;k<5&&t<500;t++){const q=P(sr(-C.hw+260,C.hw-260),sr(240,C.dep-220));if(!open(q,130))continue;w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,76),v:2,ph:sr(0,6),h:sr(.85,1.1)});k++}}
     // reeds along the spring pool's banks (not by the channel), lily pads on its still north half
     for(let k=0,t=0;k<26&&t<300;t++){const an=sr(0,Math.PI*2),q=P(Math.cos(an)*(CITY_PRU-sr(4,22)),CITY_PV+Math.sin(an)*(CITY_PRV-sr(4,20)));
       const dx=q.x-C.x,dy=q.y-C.y,u=dx*C.lx+dy*C.ly,v=dx*C.ox+dy*C.oy;if(v<CITY_PV-70&&Math.abs(u)<CITY_FW/2+60)continue;w.reeds.push({x:q.x,y:q.y,s:sr(.85,1.3)});k++}C.nReed=w.reeds.length;
@@ -851,8 +851,8 @@ function genWorld(seed){
       const q=P(u,v);if(fortSB(F,u,v)>-70||F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<220))continue;
       const c=Object.assign(q,{r:sr(46,82),n:4+Math.floor(SR()*4),a:sr(0,6.3),h:sr(150,260)});F.crystals.push(c);if(c.r>60)solid(c,c.r*.7);k++}
     for(const sg of[-1,1]){const q=Object.assign(P(sg*(FORT_SH+60),FORT_OF+8),{r:44,n:4,a:sr(0,6.3),h:sr(130,170)});F.crystals.push(q)}
-    // snow pines on the plateau's flanks, behind the castle
-    for(let k=0,t=0;k<14&&t<300;t++){const u=sr(-F.hw+120,F.hw-120),v=sr(220,F.dep-120),au=Math.abs(u);if(au<F.hw-300&&v<F.dep-260)continue;
+    // snow pines on the plateau's flanks, behind the castle (owner 2026-11-23: 14 -> 8)
+    for(let k=0,t=0;k<8&&t<300;t++){const u=sr(-F.hw+120,F.hw-120),v=sr(220,F.dep-120),au=Math.abs(u);if(au<F.hw-300&&v<F.dep-260)continue;
       if(Math.abs(u)<FORT_CW/2+90&&Math.abs(v-FORT_VC)<FORT_CD/2+90)continue;const q=P(u,v);if(fortSB(F,u,v)>-90)continue;
       if(F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<c.r+70)||w.trees.some(t=>Math.abs(t.x-q.x)<120&&Math.abs(t.y-q.y)<120))continue;
       w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,78),v:2,ph:sr(0,6),h:sr(.9,1.15)});k++}
@@ -906,6 +906,11 @@ function genWorld(seed){
   const TS=100,gw=Math.ceil(WORLD/TS);const tgrid=Array.from({length:gw*gw},()=>[]);
   const tFree=(p,m)=>{const gx=Math.floor(p.x/TS),gy=Math.floor(p.y/TS);for(let y=gy-1;y<=gy+1;y++)for(let x=gx-1;x<=gx+1;x++){if(x<0||y<0||x>=gw||y>=gw)continue;for(const t of tgrid[y*gw+x])if(dist(t,p)<m)return false}return true};
   const rockNear=(p,m)=>{for(const r of w.rocks)if(Math.abs(r.x-p.x)<r.r+m&&dist(p,r)<r.r+m)return true;return false};
+  // Arena Royale (owner 2026-11-23): "ลดต้นไม้ทุกโซนลง 40%". Every forest keeps its shape and spacing, 40% of its trees are left out:
+  // a cut tree still holds its spot in the spacing grid until the mango trees are placed (so the gaps stay open ground instead of
+  // filling up again), then leaves. Integer hash of the spot, no extra SR draws
+  const cutH=(x,y,s)=>{let h=Math.imul(Math.floor(x),0x9E3779B1)^Math.imul(Math.floor(y)+0x7F4A7C15,0x85EBCA77)^Math.imul(s+1,0xC2B2AE3D);h^=h>>>16;h=Math.imul(h,0x7FEB352D);h^=h>>>15;h=Math.imul(h,0x846CA68B);h^=h>>>16;return(h>>>0)/4294967296};
+  const cut40=[];
   for(let gy=0;gy<gw;gy++)for(let gx=0;gx<gw;gx++){
     const p={x:gx*TS+sr(10,TS-10),y:gy*TS+sr(10,TS-10)};const o=outsideD(p.x,p.y);if(o>-30)continue;
     const nz=w.noise(p.x,p.y),foot=o>-420;const dire=isDire(p.x,p.y);const rdist=Math.abs(riverD(p.x,p.y))-riverHW(p.y);
@@ -916,12 +921,24 @@ function genWorld(seed){
     if(MOON){v=REG.tree(p.x,p.y,v,roll);if(v<0)continue}
     else{if(v===6)v=2;else if(v===5)v=4;else if(v===1)v=roll<.5?2:0;else if(v===3)v=roll<.5?4:2}
     if(!MOON&&(v===0||v===4)&&((roll*7919.37)%1)<.69)continue;   // owner 2026-11-18: 60% fewer pines   // Arena Royale (owner 2026-11-18): no willow / dead / round-crowned / crystal trees, pines + birches instead
-    const t={x:p.x,y:p.y,r:18,cr:sr(52,76)*(v===6?1.15:1),v,ph:sr(0,6),h:sr(.85,1.2)};w.trees.push(t);tgrid[gy*gw+gx].push(t)}
+    const t={x:p.x,y:p.y,r:18,cr:sr(52,76)*(v===6?1.15:1),v,ph:sr(0,6),h:sr(.85,1.2)};tgrid[gy*gw+gx].push(t);if(!MOON&&cutH(p.x,p.y,1)<.4){cut40.push(t);continue}w.trees.push(t)}
   // Arena Royale (owner 2026-11-19): Big Mango Trees, 10% more trees, scattered over the open ground between the woods. They are
   // ordinary birch-class trees (collision, felling) flagged mg; the renderer swaps in the owner's model
   if(!MOON){const nM=Math.round(w.trees.length*.10);let mN=0;for(let k=0;k<nM*60&&mN<nM;k++){const p={x:sr(200,WORLD-200),y:sr(200,WORLD-200)};
     if(outsideD(p.x,p.y)>-140||w.noise(p.x,p.y)>.5)continue;if(!free(p,48)||pathNear(p,60)||rockNear(p,56)||w.houses.some(h=>inRect(p,h.al||h,70))||!tFree(p,170))continue;
     const t={x:p.x,y:p.y,r:22,cr:sr(72,96),v:2,mg:1,ph:sr(0,6),h:sr(.9,1.15)};w.trees.push(t);tgrid[Math.floor(p.y/TS)*gw+Math.floor(p.x/TS)].push(t);mN++}}
+  for(const t of cut40){const c=tgrid[Math.floor(t.y/TS)*gw+Math.floor(t.x/TS)],i=c.indexOf(t);if(i>=0)c.splice(i,1)}
+  // Arena Royale (owner 2026-11-23): "ปรับต้นกล้วยให้ล้มได้". The banana plants were render-only decor (moonfall-village.js buildNature);
+  // they are trees now, flagged bn (birch-class for the fallback look; the renderer draws the owner's banana model), one blow fells
+  // one (trees-break.js), a slim trunk collides. Same spread as the decor (thick on the river and lake banks, a few in the meadows),
+  // 40% fewer like every other tree. Integer hash per terrain cell, no SR draws
+  if(!MOON&&w.tg&&w.tg.hg){const tg=w.tg,n=tg.n,C=tg.C,hg=tg.hg;
+    const wet=(i,j,R)=>{for(let b=-R;b<=R;b++)for(let a=-R;a<=R;a++){const ii=i+a,jj=j+b;if(ii>=0&&jj>=0&&ii<n&&jj<n&&hg[jj*n+ii]<WL-1)return true}return false};
+    for(let j=2;j<n-2;j+=2)for(let i=2;i<n-2;i+=2){const h=hg[j*n+i];if(h<WL+3)continue;const r=cutH(i,j,4);if(r>.34*.28*.6)continue;   // cheap reject first
+      const nearW=h<WL+28&&wet(i,j,5),pr=(nearW?.34:w.noise((i+.5)*C,(j+.5)*C)<.44?.035:.012)*.28*.6;if(r>pr)continue;
+      const p={x:(i+cutH(i,j,2))*C,y:(j+cutH(i,j,3))*C};
+      if(!free(p,22)||pathNear(p,34)||rockNear(p,30)||w.houses.some(q=>inRect(p,q.al||q,34))||!tFree(p,64))continue;
+      const sz=.75+cutH(i,j,9)*.6,t={x:p.x,y:p.y,r:13,cr:36*sz,v:2,bn:1,ph:cutH(i,j,8)*6.283,h:sz};w.trees.push(t);tgrid[Math.floor(p.y/TS)*gw+Math.floor(p.x/TS)].push(t)}}
   // decorative pines on the mountain slopes (no collision)
   for(let k=0;k<33000&&w.mtrees.length<5200;k++){const a=sr(0,6.283),d=bndR(a)+sr(20,1000);const x=CX+Math.cos(a)*d,y=CY+Math.sin(a)*d;const o=d-bndR(a);
     const hh=terrH(x,y);if(hh>720||hh<20)continue;if(caveK(x,y)>0||inDG({x,y},1150)||cityIn(x,y,240))continue;if(w.noise(x,y)<.38&&SR()<.6)continue;if(SR()<o/1300)continue;
