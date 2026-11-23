@@ -140,7 +140,8 @@ try:
         assert cast['projectile'] and cast['area'] and cast['projectiles'] > 0 and cast['areas'] > 0, cast
         packet = host.evaluate('__avPacket()')
         assert packet['p'] and all(len(row) in [6, 7] for row in packet['p'])
-        assert packet['o'] and all(len(row) == 12 for row in packet['o'])
+        # aoeRow (c.js): x y r t delay dot kind fxT vis ang shape w el — the element index became the 13th field
+        assert packet['o'] and all(len(row) == 13 for row in packet['o']), packet['o']
         host_fx = host.evaluate('__avRender(1/60,true)')
         client_fx = client.evaluate('packet=>{R3.avReset();return __avApply(packet,1/60,true);}', packet)
         bounded(host_fx)
@@ -148,8 +149,9 @@ try:
         assert host_fx['accepted'] > 0 and client_fx['accepted'] > 0
         assert host_fx['marks'].get('fire#0', 0) > 0, host_fx
         assert client_fx['marks'] == {}, 'Ownerless snapshot effects must not invent a caster/skill identity'
-        ownership = client.evaluate("({mode:net.mode,projectileOwnerOmitted:projs.every(p=>!('owner'in p)),areaOwnerElementOmitted:aoes.every(a=>!('owner'in a)&&!('el'in a))})")
-        assert ownership == {'mode': 'client', 'projectileOwnerOmitted': True, 'areaOwnerElementOmitted': True}
+        ownership = client.evaluate("({mode:net.mode,projectileOwnerOmitted:projs.every(p=>!('owner'in p)),areaOwnerOmitted:aoes.every(a=>!('owner'in a))})")
+        # the element is on the wire on purpose since #45 (aoeRow field 13, so clients colour elemental areas); the owner never is
+        assert ownership == {'mode': 'client', 'projectileOwnerOmitted': True, 'areaOwnerOmitted': True}, ownership
         host.screenshot(path=str(SHOTS / 'host-real-cast.png'), scale='css')
         client.screenshot(path=str(SHOTS / 'mobile-client-real-cast.png'), scale='css')
         report['realCast'] = {'cast': cast, 'positions': positions, 'wireProjectileRows': len(packet['p']),
@@ -228,7 +230,10 @@ try:
           R3.avStep(.4);const settled=ArenaVFX.snapshot(),sameResources=original===JSON.stringify(ids());
           let geometryDisposals=0,materialDisposals=0;
           for(const b of Object.values(R3._av.batches)){b.geometry.addEventListener('dispose',()=>geometryDisposals++);b.material.addEventListener('dispose',()=>materialDisposals++);}
-          R3.avDispose();const disposed=ArenaVFX.snapshot(),remainingMeshes=R3.scene.children.filter(n=>n.userData.arenaVFX).length;
+          // the pool's own batch meshes must leave the scene (later layers — arena-vfx-3d/hero/post/particles — flag their own
+          // meshes arenaVFX too and keep them)
+          const own=Object.values(R3._av.batches).map(b=>b.mesh);
+          R3.avDispose();const disposed=ArenaVFX.snapshot(),remainingMeshes=own.filter(m=>m.parent).length;
           R3.avReset();return {capped,settled,sameResources,geometryDisposals,materialDisposals,
             disposed,remainingMeshes,recreated:ArenaVFX.snapshot(),gameplayUnchanged:before===__avDigest()};
         }""")
