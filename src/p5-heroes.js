@@ -178,10 +178,10 @@ const _qa=R.qnAnim;R.qnAnim=function(o,u,Tm,dt,mv){
   if(!o.p5)return _qa.call(this,o,u,Tm,dt,mv);
   if(o.dying){o.dying=false;o.mixer.stopAllAction();o.ov=null;if(o.act.idle)o.act.idle.reset().play();if(o.act.run)o.act.run.reset().play()}
   if(o.wk!==u.wk||o.wt!==u.wt||o.p5wWait&&this.p5WReady(o.p5wWait))try{this.p5Arm(o,u)}catch(e){o.wk=u.wk;o.wt=u.wt;o.p5wWait=null}
-  const play=(k,ts)=>{const a=o.act[k];if(!a)return;if(o.ov&&o.ov!==a)o.ov.fadeOut(.08);a.reset().setLoop(T.LoopOnce,1);a.clampWhenFinished=true;a.timeScale=ts;a.setEffectiveWeight(1).fadeIn(.06).play();o.ov=a;o.ovT=a.getClip().duration/ts};
+  const play=(k,ts)=>{const a=o.act[k];if(!a)return;if(o.ov&&o.ov!==a)o.ov.fadeOut(.12);a.reset().setLoop(T.LoopOnce,1);a.clampWhenFinished=true;a.timeScale=ts;a.setEffectiveWeight(1).fadeIn(.09).play();o.ov=a;o.ovT=a.getClip().duration/ts};
   if(u.dash&&!o.dashOn){o.dashOn=1;play('dodge',2.6)}else if(!u.dash)o.dashOn=0;
   // a bow shot is drawn by p5BowPose (the Meshy "Side_Shot" clip held the bow flat at the hip, body turned away)
-  if(u.atkAnim>o.lastAtk+.05&&!(u.spinT>0)){if(o.bowP)o.bT=0;else play('attack',o.cls==='warrior'?1.9:o.cls==='assassin'?2.2:1.7)}
+  if(u.atkAnim>o.lastAtk+.05&&!(u.spinT>0)){if(o.bowP)o.bT=0;else play('attack',o.cls==='warrior'?1.65:o.cls==='assassin'?1.95:1.5)}
   else if(u.castAnim>o.lastCast+.05){if(o.bowP)o.bT=0;else play('cast',1.5)}
   o.lastAtk=u.atkAnim||0;o.lastCast=u.castAnim||0;
   let ow=0;if(o.ov){o.ovT-=dt;ow=clamp(o.ovT/.12,0,1);if(o.ovT<=0){o.ov.fadeOut(.12);o.ov=null;ow=0}}
