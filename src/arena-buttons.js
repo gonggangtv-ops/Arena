@@ -61,6 +61,10 @@ function atkxDraw(me){const B=atkxSpot();UI.atkMob=B;if(!B||!me)return;if(ATKX.p
     ctx.font='600 '+Math.max(9,s*1.27)+'px system-ui,sans-serif';ctx.fillStyle='#e5edf4';ctx.fillText('K',kx,ky+.5)}
   ctx.restore()}
 // ---- the dash and special buttons beside the potions, the slim coin ----
+function arenaDashAnchor(potion){
+  const r=clamp(potion.r*2.7,46,60)/2,gap=Math.max(5,potion.r*.28);
+  return {x:Math.max(SAFE.l+2+r,potion.x-potion.r-gap-r),r,gap};
+}
 if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
   const css=document.createElement('style');css.textContent=`
 .arena-combat-hud #arenaGold{padding:3px 10px 3px 4px!important;min-height:0!important;font-size:14px!important;line-height:22px!important;white-space:nowrap}
@@ -73,8 +77,8 @@ if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
   // c.js drawPotions: HP potion = UI.pot[0] just above the bottom panel (pot0.y = panel.y - r - 6s), MP potion = UI.pot[1] above it
   function atkxLayout(){if(E.pad.style.display==='none'||!UI.pot||!UI.pot[0]||!UI.pot[1])return;const d=E.pad.children[1],sp=E.b3;if(!d||!sp)return;
     const P0=UI.pot[0],P1=UI.pot[1],px=parseFloat(E.pad.style.left)||0,py=parseFloat(E.pad.style.top)||0;
-    const dia=clamp(P0.r*2.7,46,60),k=dia/60,rd=dia/2,gap=Math.max(5,P0.r*.28),floor=P0.y+P0.r+6*UI.s-3;
-    const x=Math.max(SAFE.l+2+rd,P0.x-P0.r-gap-rd),dy=Math.min(P0.y,floor-rd),sy=Math.max(SAFE.t+2+rd,Math.min(P1.y,dy-rd*2-gap));
+    const {x,r:rd,gap}=arenaDashAnchor(P0),k=rd/30,floor=P0.y+P0.r+6*UI.s-3;
+    const dy=Math.min(P0.y,floor-rd),sy=Math.max(SAFE.t+2+rd,Math.min(P1.y,dy-rd*2-gap));
     put(d,x,dy,k,px,py);put(sp,x,sy,k,px,py)}
   setTimeout(()=>{   // after the HUD installers (installArenaCombatControls replaces drawBtnAtk; arena-npc.js wraps CUR.step first)
     const _da=drawBtnAtk;drawBtnAtk=function(B,me){const r=_da.apply(this,arguments);try{atkxDraw(me)}catch(e){}return r};

@@ -1,4 +1,92 @@
 /* Arena Royale's cached steel emblems and compact HUD trim. */
+const ARENA_HUD_FONT='"Noto Sans Thai",system-ui,sans-serif';
+const arenaStatuses=[
+  ['โล่',true,u=>u.shieldHp>0&&u.shieldT],
+  ['เร่งวิ่ง',true,u=>Math.max(u.spdPT||0,u.buffT||0)],
+  ['ตีเร็ว',true,u=>u.asT],
+  ['บ้าคลั่ง',true,u=>u.rageT],
+  ['ฟื้นเลือด',true,u=>u.hotT],
+  ['ฟื้นมานา',true,u=>u.motT],
+  ['ล่องหน',true,u=>u.invisT],
+  ['ดูดเลือด',true,u=>u.lsT],
+  ['เดือด',true,u=>u.furyT,u=>u.fury],
+  ['ตีครั้งถัดไปแรงขึ้น',true,u=>(u.critNext||u.bsReady)?Infinity:0],
+  ['โล่อมตะ',true,u=>u.aegis?Infinity:0],
+  ['หลบความเสียหาย',true,u=>u.rollT],
+  ['ขุนพลคุ้มกัน',true,u=>u.wlord&&!u.wlord.dead&&SUMMONER.SO(u.wk)?u.wlord.lifeT:0],
+  ['มึน',false,u=>u.stunT],
+  ['ตรึง',false,u=>u.rootT],
+  ['เคลื่อนที่ช้า',false,u=>u.slowT],
+  ['เผาไหม้',false,u=>Math.max(u.burnT||0,u.ignT||0),u=>u.ign],
+  ['เย็นจัด',false,u=>u.chillT,u=>u.chill],
+  ['ประจุไฟฟ้า',false,u=>u.statT,u=>u.stat],
+  ['เน่าเปื่อย',false,u=>u.rotT],
+  ['ถูกตีตรา',false,u=>(u.smarkUntil||0)-gameT],
+  ['เปียก',false,u=>u.wet?Infinity:0],
+];
+function arenaStatusSnapshot(u){
+  const rows=[];
+  arenaStatuses.forEach(([, ,timer,stacks],i)=>{
+    const t=timer(u);
+    if(t>0)rows.push([i,t===Infinity?-1:Math.ceil(t*10)/10,stacks?.(u)||0]);
+  });
+  return rows;
+}
+function drawArenaStatus(u,x,y,w,s){
+  const [data,received]=u.arenaStatus||[[],0];
+  const remote=net.mode==='client',rows=remote?data:arenaStatusSnapshot(u),elapsed=remote?(performance.now()-received)/1000:0;
+  const h=17*s,gap=3*s,lines=[[]];
+  let used=0;
+  ctx.save();ctx.font=`600 ${10.5*s}px ${ARENA_HUD_FONT}`;
+  for(const [i,t,n] of rows){
+    if(t!==-1&&t<=elapsed)continue;
+    const [name,buff]=arenaStatuses[i];
+    const label=name+(n>0?` ×${n}`:'')+(t===-1?'':` · ${Math.ceil(t-elapsed)} วิ`);
+    const width=Math.min(w,ctx.measureText(label).width+17*s);
+    if(used&&used+width+gap>w){lines.push([]);used=0}
+    lines.at(-1).push({label,buff,width});used+=width+gap;
+  }
+  ctx.textAlign='left';ctx.textBaseline='middle';
+  lines.forEach((line,i)=>{
+    let left=x+(w-line.reduce((sum,chip)=>sum+chip.width+gap,-gap))/2;
+    const top=y-(i+1)*(h+gap);
+    for(const {label,buff,width} of line){
+      const rim=buff?'#608982':'#9b625b',ink=buff?'#c8f3de':'#ffc3b3';
+      rr(left,top,width,h,3*s);ctx.fillStyle=buff?'#14272bf5':'#311c23f5';ctx.fill();
+      ctx.strokeStyle=rim;ctx.lineWidth=1;ctx.stroke();
+      ctx.fillStyle=rim;ctx.fillRect(left+4*s,top+4*s,2*s,h-8*s);
+      ctx.fillStyle=ink;ctx.fillText(label,left+10*s,top+h*.52,width-14*s);left+=width+gap;
+    }
+  });
+  ctx.restore();
+  return used?lines.length*(h+gap):0;
+}
+
+function arenaNotice(txt,x,y,maxWidth,s,{tone='gold',align='center',size=15,alpha=1}={}){
+  const [rim,ink,top,bottom]=tone==='danger'?['#a96b62','#ffd0b8','#41242a','#1a131c']:
+    tone==='muted'?['#786b56','#dfe4e6','#26313d','#111723']:['#9b8057','#f7dfaf','#2b3039','#121721'];
+  ctx.save();ctx.globalAlpha=alpha;
+  const fontSize=size*s,pad=11*s,height=(size+10)*s,corner=4*s;
+  ctx.font=`650 ${fontSize}px ${ARENA_HUD_FONT}`;
+  const width=Math.min(maxWidth,ctx.measureText(txt).width+2*pad);
+  const left=x-(align==='right'?width:width/2),topY=y-height/2;
+  const g=ctx.createLinearGradient(0,topY,0,topY+height);g.addColorStop(0,top);g.addColorStop(1,bottom);
+  ctx.beginPath();
+  ctx.moveTo(left+corner,topY);ctx.lineTo(left+width-corner,topY);ctx.lineTo(left+width,topY+corner);
+  ctx.lineTo(left+width,topY+height-corner);ctx.lineTo(left+width-corner,topY+height);
+  ctx.lineTo(left+corner,topY+height);ctx.lineTo(left,topY+height-corner);ctx.lineTo(left,topY+corner);ctx.closePath();
+  ctx.fillStyle=g;ctx.fill();ctx.strokeStyle=rim;ctx.lineWidth=1;ctx.stroke();
+  ctx.fillStyle=rim;ctx.fillRect(left+5*s,topY+height*.32,1,height*.36);
+  ctx.fillStyle=ink;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(txt,left+width/2,y,Math.max(1,width-2*pad));ctx.restore();
+}
+
+function drawArenaFeed(s){
+  const width=Math.min(258*s,Math.max(148*s,W/2-155*s-SAFE.r));
+  feedList.forEach((f,i)=>arenaNotice(f.txt,W-SAFE.r-9,115+i*22*s,width,s,
+    {align:'right',size:11,tone:f.hl?'gold':'muted',alpha:clamp(f.t,0,1)}));
+}
+
 const ArenaHudIcons=(()=>{
   const weapons=new Map(),symbols=new Map();
   const tome='M3 5 Q7 4 12 7 Q17 4 21 5 L21 18 Q17 17 12 20 Q7 17 3 18 Z M12 7 V20 M5.5 8.5 Q8 8.5 10 10 M5.5 11.5 Q8 11.5 10 13 M15 11 L17 8.5 L19 11 L17 13.5 Z';
@@ -98,13 +186,17 @@ function installArenaHud(){
     ctx.drawImage(emblem,iconX,y-.75*s,iconSize,iconSize);
     ctx.fillStyle=rank;ctx.fillText(title,iconX+iconSize+2*s,y+6.5*s,w-81*s);
 
+    const dash=arenaDashAnchor(potionRail({x,w},s));
+    const statusWidth=clamp(dash.x-dash.r-x-(H>420?64:8),88*s,w);
+    const statusHeight=drawArenaStatus(me,x,y,statusWidth,s);
     if(me.pts>0){
+      const skillY=y-statusHeight;
       ctx.font=`700 ${10.5*s}px system-ui,sans-serif`;
       const label=`แต้มสกิล +${me.pts}`,labelW=ctx.measureText(label).width+15*s,middle=x+w/2;
-      rr(middle-labelW/2,y-17*s,labelW,14*s,3*s);ctx.fillStyle='#18221e';ctx.fill();
-      ctx.strokeStyle='#668968';ctx.stroke();ctx.textAlign='center';ctx.fillStyle='#c4ebba';ctx.fillText(label,middle,y-10*s);
+      rr(middle-labelW/2,skillY-17*s,labelW,14*s,3*s);ctx.fillStyle='#18221e';ctx.fill();
+      ctx.strokeStyle='#668968';ctx.stroke();ctx.textAlign='center';ctx.fillStyle='#c4ebba';ctx.fillText(label,middle,skillY-10*s);
     }
-    ctx.restore();return{x,y,w,h};
+    ctx.restore();return{x,y,w,h,statusHeight};
   };
 
   drawHUD=function(){

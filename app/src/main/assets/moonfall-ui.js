@@ -10,6 +10,7 @@ window.installMoonfallUI=function(){
   const hint=document.createElement('aside');hint.id='moonfallSkillHint';hint.hidden=true;hint.setAttribute('role','tooltip');document.body.appendChild(hint);
   const instructions=document.createElement('p');instructions.id='moonfallHUDHelp';instructions.className='moonfall-sr-only';
   instructions.textContent='เดินด้วย W A S D หรือจอยซ้าย โจมตีด้วย J หรือ Space (ตีฮีโร่ก่อนเสมอ) K หรือปุ่มเล็กข้างปุ่มโจมตีตีเฉพาะมอนสเตอร์ สกิล Q E R หรือ 1 2 3 กดปุ่ม + บนจอเพื่ออัปสกิล Shift หรือปุ่มซ้ายขวดเลือดเพื่อพุ่ง (คูลดาวน์ 45 วิ) V สกิลพิเศษ มือถือกดค้างแล้วลากเพื่อเล็ง ปล่อยเพื่อร่าย';
+  if(ARX)instructions.textContent+=' แตะสกิลเพื่อใช้ กดค้างเพื่ออ่านรายละเอียด';
   document.body.appendChild(instructions);cv.setAttribute('aria-describedby',instructions.id);
   function skillState(me,i){
     const skill=me?.wk&&SK[me.wk]?.[i],level=me?.skl?.[i]||0,index=Math.max(0,level-1);
@@ -18,7 +19,34 @@ window.installMoonfallUI=function(){
     const kind=!level?'locked':cooldown>0?'cooldown':me.mp<cost?'mana':'ready';
     return{kind,label:{locked:canLearn(me,i)?'อัปสกิลได้':'ยังไม่ปลดล็อก',cooldown:'กำลังฟื้นฟู',mana:'มานาไม่พอ',ready:'พร้อมใช้'}[kind],skill,cost,cooldown,level,maxCooldown:skill.cd[index]*cdMul(me)};
   }
+  function showHeldSkill(me,held){
+    const info=arenaSkillDetails(me,held.i);
+    const add=(tag,text,style)=>{
+      const el=document.createElement(tag);el.textContent=text;if(style)el.className=style;hint.appendChild(el);
+    };
+    hint.dataset.hold='';
+    hint.replaceChildren();
+    add('strong',(['Q','E','R','V'][held.i])+' · '+info.name+(info.level?' · Lv. '+info.level:''));
+    add('span',[info.state,info.cost!=null?'MP '+info.cost:'',info.cooldown!=null?'คูลดาวน์ '+arenaSkillTime(info.cooldown):''].filter(Boolean).join(' · '),'skill-meta');
+    if(info.damage)add('span','ความเสียหาย '+info.damage+' (ค่าพื้นฐานก่อนลดทอน)','skill-damage');
+    if(info.note)add('span',info.note,'skill-note');
+    if(info.rune)add('span','รูน · '+info.rune,'skill-rune');
+    hint.hidden=false;
+    const B=held.i===3?held.target.getBoundingClientRect():UI.sk[held.i];
+    const x=held.i===3?B.left+B.width/2:B.x,y=held.i===3?B.top:B.y-B.r;
+    hint.style.left=clamp(x-hint.offsetWidth/2,SAFE.l+8,Math.max(SAFE.l+8,W-SAFE.r-hint.offsetWidth-8))+'px';
+    hint.style.top=Math.max(SAFE.t+8,y-hint.offsetHeight-8)+'px';
+  }
   function updateHint(force=false){
+    if(ARX){
+      const me=ME(),held=arenaHeldSkill,now=performance.now();
+      if(held&&!held.drag&&me?.wk===held.wk&&arenaCanInspectSkill(me)&&now-held.since>=ARENA_SKILL_HOLD_MS){
+        if(!hint.hasAttribute('data-hold')||now-lastHint>=180){lastHint=now;showHeldSkill(me,held)}
+        return;
+      }
+      if(hint.hasAttribute('data-hold')){delete hint.dataset.hold;hint.hidden=true;lastHint=0;}
+      if(held||!arenaCanInspectSkill(me)){hint.hidden=true;return}
+    }
     if(coarse||hover<0||state!=='play'||!ME()||ME().dead){hint.hidden=true;return;}
     const now=performance.now();if(!force&&now-lastHint<200)return;lastHint=now;
     const i=hover,info=skillState(ME(),i),B=UI.sk[i];
@@ -61,9 +89,9 @@ window.installMoonfallUI=function(){
       const w=B.r*1.55,y=B.y+B.r*.22;ctx.fillStyle='#0a1635ee';rr(B.x-w/2,y,w,B.r*.5,3);ctx.fill();
       ctx.font='600 '+Math.max(9,B.r*.28)+'px system-ui';ctx.fillStyle='#c4e4ff';ctx.fillText('MP ต่ำ',B.x,y+B.r*.25);
     }
-    ctx.restore();if(hover===i)updateHint();
+    ctx.restore();if(!ARX&&hover===i)updateHint();
   };
-  drawHUD=function(){if(state!=='play'||ME()?.dead)hint.hidden=true;return original.hud();};
+  drawHUD=function(){if(ARX)updateHint();else if(state!=='play'||ME()?.dead)hint.hidden=true;return original.hud();};
   window.MoonfallUI={state:skillState,refreshHint:i=>{if(hover===i)updateHint();},snapshot:()=>({state:loadState,error:loadError,loadedIcons:icons.size,atlas,hotkeys:[...hotkeys]}),
     icon:(key,i)=>icons.get(key+':'+i)||null,item:key=>icons.get('item:'+key)||null};
   (async()=>{

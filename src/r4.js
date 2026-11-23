@@ -258,7 +258,13 @@ Object.assign(R3,{
       case 'equip':this.ring(e.x,e.y,20,70,e.c,.45);for(let i=0;i<14;i++){const a=i/14*6.283;this.sp(true,{x:e.x+Math.cos(a)*30,y:gy(e.x,e.y)+10,z:e.y+Math.sin(a)*30,vy:rand(80,180),l:.7,s:10,s1:2,c:e.c,sp:1})}break;
       case 'box':{const y=gy(e.x,e.y)+22;if(e.ok){this.burstFX(e.x,e.y,y,'#ffd35a',22,220,{g:200});this.ring(e.x,e.y,12,90,'#ffe27a',.6)}else for(let i=0;i<10;i++)this.sp(false,{x:e.x+rand(-14,14),y,z:e.y+rand(-10,10),vy:rand(20,60),l:.8,s:14,s1:30,c:'#b8a890',sp:1})}break;
       case 'chest':this.burstFX(e.x,e.y,gy(e.x,e.y)+24,e.c,16,180,{g:200});this.sp(true,{x:e.x,y:gy(e.x,e.y)+30,z:e.y,l:.4,s:90,s1:30,c:e.c,sp:0});break;
-      case 'die':{for(let i=0;i<16;i++)this.sp(false,{x:e.x+rand(-20,20),y:gy(e.x,e.y)+rand(10,60),z:e.y+rand(-20,20),vy:rand(20,60),l:rand(.8,1.4),s:30,s1:70,c:'#5a5050',a:.55,sp:2});const o=this.objs.get(e.id);if(o&&o.root.visible){o.dieT=1.4}break}
+      case 'die':{
+        const y=gy(e.x,e.y);
+        if(e.n)this.burstFX(e.x,e.y,y+30,e.c,26,200);
+        for(let i=0;i<16;i++)this.sp(false,{x:e.x+rand(-20,20),y:y+rand(10,60),z:e.y+rand(-20,20),vy:rand(20,60),l:rand(.8,1.4),s:30,s1:70,c:'#5a5050',a:.55,sp:2});
+        if(!ARX){const o=this.objs.get(e.id);if(o&&o.root.visible)o.dieT=1.4}
+        break;
+      }
       case 'snare':for(let i=0;i<10;i++){const a=i/10*6.283;this.sp(true,{x:e.x+Math.cos(a)*24,y:gy(e.x,e.y)+6,z:e.y+Math.sin(a)*24,vy:rand(30,80),l:.8,s:12,s1:4,c:'#8aff7a',sp:6,vr:3})}this.decal({x:e.x,y:e.y,r:34,c:'#7aff6a',life:1.3,tex:'rune',spin:3,a:.6,follow:U});break;
       case 'shatter':{const r=e.r||40;for(let i=0;i<(e.r?40:14);i++){const a=Math.random()*6.283,d=Math.random()*r;this.sp(true,{x:e.x+Math.cos(a)*d,y:gy(e.x,e.y)+rand(10,40),z:e.y+Math.sin(a)*d,vx:Math.cos(a)*rand(60,200),vy:rand(60,200),vz:Math.sin(a)*rand(60,200),l:rand(.4,.8),s:12,s1:4,c:'#dff8ff',sp:7,vr:6,g:500})}if(e.r)this.ring(e.x,e.y,20,e.r,'#bfeeff',.5);break}
       case 'freeze':break;
@@ -389,11 +395,21 @@ Object.assign(R3,{
     this.updateTrees(L);this.updateGround(this.tx,this.ty);
     const zr=Math.max(1,zone.r);this.zoneWall.visible=true;this.zoneWall.position.set(zone.x,250,zone.y);this.zoneWall.scale.set(zr,1,zr);this.zoneWall.material.opacity=.11+.04*Math.sin(T*2);
     U.zoneN.value.set(zone.tx,zone.ty,zone.st!=='done'?Math.max(1,zone.tr):-1);
+    // Start the death animation before visibility hides the actor in this frame.
+    if(ARX)for(const e of fxq)if(e.k==='die'){
+      const o=this.objs.get(e.id);
+      const unit=UMAP.get(e.id);
+      if(o?.root.visible&&!o.ecl&&!(o.dieT>0)&&(!unit||unit.dead))o.dieT=1.4;
+    }
     // units
+    const fall=(o)=>{
+      o.dieT-=dt;const k=1-o.dieT/1.4;o.root.visible=o.dieT>0;
+      o.body.rotation.x=-Math.min(1.45,k*3);o.root.position.y=o.gy-Math.max(0,k-.6)*40;
+    };
     const seen=new Set();
     for(const u of units){seen.add(u.id);let o=this.objs.get(u.id);const vis=!u.dead&&unitVisibleTo(u,me,L);
       if(o&&o.dieT>0&&o.celestial){this.celestialDie(o,dt);continue}if(o&&o.dieT>0&&o.qn){this.qnDie(o,dt);continue}if(o&&o.dieT>0&&(o.kind==='kk'||o.kind==='kkz')){this.kkDie(o,dt);continue}
-      if(o&&o.dieT>0){o.dieT-=dt;const kk=1-o.dieT/1.4;o.root.visible=o.dieT>0;o.body.rotation.x=-Math.min(1.45,kk*3);o.root.position.y=o.gy-Math.max(0,kk-.6)*40;continue}
+      if(o&&o.dieT>0){fall(o);continue}
       if(!o){if(!vis)continue;o=this.objFor(u)}o.root.visible=vis;if(!vis){o.lx=u.x;o.ly=u.y;continue}
       const mv=Math.hypot(u.x-o.lx,u.y-o.ly)/Math.max(dt,.001);o.lx=u.x;o.ly=u.y;o.gy=this.gY(u.x,u.y);o.root.position.set(u.x,o.gy,u.y);
       const want=Math.atan2(u.fx,u.fy);let dr=want-o.rot;dr=Math.atan2(Math.sin(dr),Math.cos(dr));o.rot+=dr*Math.min(1,dt*(u.hero?12:u.big||u.r>=34?7:9));o.root.rotation.y=o.rot;
@@ -418,7 +434,10 @@ Object.assign(R3,{
         if(u.lotusT>0&&Math.random()<dt*40){const a=Math.random()*6.28,r=rand(40,300);this.sp(true,{x:u.x+Math.cos(a)*r,y:o.gy+40,z:u.y+Math.sin(a)*r,l:.25,s:36,s1:8,c:'#ff7ad0',sp:1,vr:9})}}
       if(u.invisT>0){o.root.visible=u===me||dist(u,L)<170;if(u===me)o.body.position.x=Math.sin(T*30)*.6}
       if(u.dash&&Math.random()<dt*30)this.sp(false,{x:u.x,y:o.gy+40,z:u.y,l:.3,s:50,s1:30,c:'#b8a888',a:.25,sp:2})}
-    for(const [id,o] of this.objs)if(!seen.has(id)){this.scene.remove(o.root);this.objs.delete(id)}
+    for(const [id,o] of this.objs)if(!seen.has(id)){
+      if(ARX&&!o.ecl&&o.dieT>0){fall(o);continue}
+      this.scene.remove(o.root);this.objs.delete(id);
+    }
     // items
     const live=new Set();
     for(const it of items){live.add(it.id);let g=this.itemObjs.get(it.id);if(!g){g=this.itemObj(it);this.itemObjs.set(it.id,g)}

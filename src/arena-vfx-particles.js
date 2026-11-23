@@ -178,7 +178,7 @@
     const p=G(x,y,h);sparks(p,crit?26:12,crit?'#fff1b8':'#ffffff',crit?'#ffb43a':'#ffd6a0',crit?520:340,crit?380:240,{life:.7,size:crit?1.3:1});glow(p,crit?3:1,crit?'#ffd27a':'#ffffff',crit?70:40,.18)}catch(e){}return r};
   // deaths puff smoke; everything else passes through
   const _df=P.doFx;P.doFx=function(e,me,L){const r=_df.apply(this,arguments);if(!this._pfx||!e||e.t!=='fx')return r;try{
-    if(e.k==='die'&&e.x!==undefined&&nearL(e.x,e.y)){const u=UMAP.get(e.id),big=u&&(u.big||u.boss||u.golem),p=G(e.x,e.y,0);smoke(p,big?14:6,'#3a3430',big?60:26,{a:.45,size:big?1.6:1});embers(p,big?24:8,u&&u.zombie?'#9dff7a':'#ffb070','#ff5a2a',big?60:24)}
+    if(e.k==='die'&&e.x!==undefined&&nearL(e.x,e.y)){const u=UMAP.get(e.id),big=e.big||u&&(u.big||u.boss||u.golem),p=G(e.x,e.y,0);smoke(p,big?14:6,'#3a3430',big?60:26,{a:.45,size:big?1.6:1});embers(p,big?24:8,e.zombie||u?.zombie?'#9dff7a':'#ffb070','#ff5a2a',big?60:24)}
     else if(e.k==='leap'&&e.x!==undefined){scorch(e.x,e.y,(e.r||200)*.7,5)}}catch(err){}return r};
   // ---------------- per frame: trails, projectile tails, dash afterimages, scorch ----------------
   const ACT=u=>u&&!u.dead&&(u.atkAnim>0||u.spinT>0||u.lotusT>0);

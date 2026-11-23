@@ -2,6 +2,12 @@
 .arena-combat-hud #moonfallSkillHint{background:linear-gradient(135deg,#19222deF,#080f18fa);border-color:#b5a17b;border-top-color:#e3cc9f;border-radius:3px;box-shadow:0 8px 28px #0008,inset 0 1px #fff08;color:#b8c9d7;font-size:11px;line-height:1.7}
 .arena-combat-hud #moonfallSkillHint strong{color:#f1e5cb;font-size:12px;line-height:1.7;margin-bottom:4px}
 .arena-combat-hud #moonfallSkillHint span{color:#b0c6d9}
+/* A stationary hold opens the card on touch and mouse. */
+.arena-combat-hud #moonfallSkillHint[data-hold]:not([hidden]){display:block;z-index:8;box-sizing:border-box;width:min(285px,calc(100vw - 20px));padding:9px 12px;line-height:1.6}
+.arena-combat-hud #moonfallSkillHint[data-hold] strong{font-size:13px;margin:0 0 5px;padding-bottom:4px;border-bottom:1px solid #cdb8894d}
+.arena-combat-hud #moonfallSkillHint .skill-damage{color:#ffe1a2;margin-top:4px;font-weight:650}
+.arena-combat-hud #moonfallSkillHint .skill-note{color:#e2ebf2;margin-top:4px}
+.arena-combat-hud #moonfallSkillHint .skill-rune{color:#d8c6ee;margin-top:4px}
 .arena-combat-hud #arenaCombatPad .moonfall-special-art{background-size:112% 112%!important;background-position:center!important;box-shadow:0 3px 9px #0009,0 0 0 1px #040911,inset 0 0 0 2px #0c1522,inset 0 0 0 3px #dcc29488,inset 0 -7px 12px #02060b88!important;border-color:#c0b79b!important;color:#fff5dd!important;text-shadow:0 2px 5px #000,0 0 3px #000;font-family:system-ui,sans-serif!important;isolation:isolate}
 .arena-combat-hud #arenaCombatPad .moonfall-special-art::before{content:'';position:absolute;inset:2px;border-radius:inherit;pointer-events:none;z-index:0;background:linear-gradient(155deg,#ffffff15,transparent 43%,#02071066);border:1px solid #e9ddbe55}
 .arena-combat-hud #arenaCombatPad .moonfall-special-art::after{content:'';position:absolute;inset:-1px;border-radius:inherit;border:1px solid transparent;border-top-color:#f2dfb2c2;border-left-color:#c2cbd76b;pointer-events:none;z-index:2;transform:rotate(-27deg)}
