@@ -36,8 +36,6 @@ generation PNG and browser screenshots remain outside Git.
 
 ## Spirit tome sheets
 
-`moonfall-soul.webp` (6×1, three cells) holds the Spirit Tome's skills. `moonfall-soul2.webp` (6×3, 1374×687,
-WebP quality 88, 87 KB) holds the 15 skills of the five forged tomes (2026-11-21): ขุนพลวิญญาณ `fOM`, พรานวิญญาณ `fOR`
-and คัมภีร์วิญญาณเพลิง/เหมันต์/อัสนี `fOS_fire/frost/storm`, three cells each in that order. Both are rendered from the
-game's own models (spirit orb, soul tome, Lunar Construct, Dark Sentinel, Lunar Longbow) with three.js; no Meshy job
-or credit was used. Every key in `AW` must have its three cells in `skill-atlas.json` or the strict boot gate stops.
+`moonfall-soul.webp` (6×1, three cells) holds the Spirit Tome's skills. The eighteen illustrated skill icons use the same atlas cells. `moonfall-soul2.webp` (6×3, 1374×687) holds the five forged tomes in order
+`fOM`, `fOR`, `fOS_fire`, `fOS_frost`, `fOS_storm`. The three slots per tome show summons, orders and their ultimate. Every key in `AW`
+requires all three cells in `skill-atlas.json` to pass the boot gate.

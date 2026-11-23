@@ -72,13 +72,16 @@ function mkPet(id,kind,x,y,owner){const d=CREEPS[kind];const u=mkUnit({id,type:k
   else if(kind==='sknight')u.undead=1;   // drawn as a spectral skeleton knight
   return u}
 const petsOf=(o,kind)=>units.filter(u=>u.pet&&!u.dead&&u.owner===o&&(!kind||u.kind===kind));
-function dismiss(u,quiet){if(u.dead)return;u.hp=0;u.dead=true;u.deadAt=gameT;emit({t:'pd',id:u.id});fxE('die',{id:u.id,x:u.x|0,y:u.y|0});if(!quiet)fxE('soulgone',{x:u.x|0,y:u.y|0,pk:PK.indexOf(u.kind)})}
+function dismiss(u,quiet,defeat){if(u.dead)return;u.hp=0;u.dead=true;u.deadAt=gameT;emit({t:'pd',id:u.id});
+  if(ARX&&defeat)mobDeathFx(u,defeat.src);else fxE('die',{id:u.id,x:u.x|0,y:u.y|0});if(!quiet)fxE('soulgone',{x:u.x|0,y:u.y|0,pk:PK.indexOf(u.kind)})}
 function purge(){if(!units.some(u=>u.pet&&u.dead&&gameT-(u.deadAt||0)>2.5))return;units=units.filter(u=>!(u.pet&&u.dead&&gameT-(u.deadAt||0)>2.5));UMAP=new Map(units.map(u=>[u.id,u]))}
 function spawnPet(o,kind,x,y,hp,dmg,life,slot,el){let p={x,y};if(blockedAt(p,20)||houseAt(p)!==houseAt(o))p={x:o.x,y:o.y};
   const u=mkPet(pid++,kind,p.x,p.y,o);u.maxHp=Math.round(hp);u.hp=u.maxHp;u.atkDmg=dmg;u.lifeT=life;u.slot=slot;u.pel=el||null;u.rise=kind==='sguard'||kind==='swarlord'?.55:.25;u.fx=o.fx;u.fy=o.fy;addUnit(u);return u}
 // keep at most n of the given kinds: the oldest go first
 function cull(u,kinds,n){const live=petsOf(u).filter(p=>kinds.includes(p.kind)).sort((a,b)=>a.lifeT-b.lifeT);for(let k=0;k<live.length-n;k++)dismiss(live[k])}
 // ---- skills ----
+const spiritAttackDamage=(V,li,attack,amp,kit)=> (V.dmg[li]+(kit==='M'?.3:kit==='R'?.28:.32)*attack)*amp;
+const spiritGuardianDamage=(V,li,attack,amp)=>(V.gd[li]+.45*attack)*amp;
 const _c0=cast0;cast0=function(u,i,ap){if(!SO(u.wk))return _c0(u,i,ap);
   if(u.dead||u.stunT>0||u.dash||u.leap||u.kb||u.fuseT>0)return false;const L=u.skl[i];if(!L)return false;
   const W=u.wk,s=SK[W][i],li=L-1;if(u.cd[i]>0)return false;const cost=s.mp[li];
@@ -89,17 +92,17 @@ const _c0=cast0;cast0=function(u,i,ap){if(!SO(u.wk))return _c0(u,i,ap);
   if(u.invisT>0){u.invisT=0;u.bsReady=true}
   const amp=1+spellAmp(u),ring=(n,k)=>Math.atan2(u.fy,u.fx)+Math.PI+(k-(n-1)/2)*(n>3?.7:.9);
   if(i===0){const ids=[];
-    if(kit==='M'){const n=V.n[li];cull(u,['sknight'],MAXK-n);const hp=V.hp[li]+.07*u.maxHp,dmg=(V.dmg[li]+.3*A)*amp;
+    if(kit==='M'){const n=V.n[li];cull(u,['sknight'],MAXK-n);const hp=V.hp[li]+.07*u.maxHp,dmg=spiritAttackDamage(V,li,A,amp,kit);
       for(let k=0;k<n;k++){const a=ring(n,k);ids.push(spawnPet(u,'sknight',u.x+Math.cos(a)*80,u.y+Math.sin(a)*80,hp,dmg,V.t[li],k).id)}}
-    else if(kit==='R'){const n=V.n[li];cull(u,['shunter'],MAXH-n);const hp=V.hp[li]+.04*u.maxHp,dmg=(V.dmg[li]+.28*A)*amp;
+    else if(kit==='R'){const n=V.n[li];cull(u,['shunter'],MAXH-n);const hp=V.hp[li]+.04*u.maxHp,dmg=spiritAttackDamage(V,li,A,amp,kit);
       for(let k=0;k<n;k++){const a=ring(n,k);ids.push(spawnPet(u,'shunter',u.x+Math.cos(a)*95,u.y+Math.sin(a)*95,hp,dmg,V.t[li],k).id)}}
-    else{const n=V.n[li]+V.wolf[li];cull(u,['swisp','swolf'],MAXW-n);const hp=V.hp[li]+.05*u.maxHp,dmg=(V.dmg[li]+.32*A)*amp;
+    else{const n=V.n[li]+V.wolf[li];cull(u,['swisp','swolf'],MAXW-n);const hp=V.hp[li]+.05*u.maxHp,dmg=spiritAttackDamage(V,li,A,amp,kit);
       for(let k=0;k<n;k++){const wolf=k>=V.n[li],a=ring(n,k),d=wolf?70:90;
         ids.push(spawnPet(u,wolf?'swolf':'swisp',u.x+Math.cos(a)*d,u.y+Math.sin(a)*d,wolf?hp*1.8:hp,wolf?dmg*1.35:dmg,V.t[li],k,el).id)}}
     u.castAnim=.5;u.revealT=1.2;sndAt('orb',u.x,u.y);sndAt('shield',u.x,u.y);fxE('soulsum',{id:u.id,x:u.x|0,y:u.y|0,n:ids.length,c:el?ELEM[el].c:kit==='M'?'#a8c8ff':kit==='R'?'#d8ff9a':undefined})}
   else if(i===1){const t=ft&&dist(u,ft)<rngS+60?ft:ap?enemyNear(u,ap,rngS):nearestEnemy(u,rngS+40,true);if(!t||dist(u,t)>rngS+80)return false;
     const d=dist(u,t)||1,nx=(t.x-u.x)/d,ny=(t.y-u.y)/d;u.fx=nx;u.fy=ny;u.revealT=1.2;u.castAnim=.45;
-    const lance={spd:1250,r:16,dmg:V.dmg[li]*SA+.6*A,type:'m',kind:16,life:(rngS+120)/1250,big:1};if(el){lance.el=el;lance.elP=1}if(kit==='R')lance.pierce=1;
+    const lance={spd:1250,r:16,dmg:skillHitDamage('SO1',V,li,A,SA),type:'m',kind:16,life:(rngS+120)/1250,big:1};if(el){lance.el=el;lance.elP=1}if(kit==='R')lance.pierce=1;
     proj(u,nx,ny,lance);
     for(const p of petsOf(u)){p.focus=t;p.pbT=V.t;p.pbAmt=V.buff?V.buff[li]:.5;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.25);p.atkCd=Math.min(p.atkCd,.1);
       const pd=dist(p,t)||1,px=(t.x-p.x)/pd,py=(t.y-p.y)/pd;
@@ -110,15 +113,15 @@ const _c0=cast0;cast0=function(u,i,ap){if(!SO(u.wk))return _c0(u,i,ap);
     sndAt('blink',u.x,u.y);fxE('soulcmd',{id:u.id,x:u.x|0,y:u.y|0,x2:t.x|0,y2:t.y|0,tid:t.id})}
   else{const tg=ft?{x:ft.x,y:ft.y}:ap?ap:aim(u,rngS);const p=landSpot(u,clampTo(u,tg,rngS));const r=V.r[li];
     const d=Math.hypot(p.x-u.x,p.y-u.y)||1;u.fx=(p.x-u.x)/d;u.fy=(p.y-u.y)/d;u.castAnim=.6;u.revealT=1.5;
-    if(kit==='R'){aoe({x:p.x,y:p.y,r,dmg:V.dmg[li]*SA+.22*A,type:'m',owner:u,kind:'rain',delay:.3,dot:3,tick:.3});
-      const hp=SKV.fOR[0].hp[Math.min(3,li+1)]+.04*u.maxHp,dmg=(SKV.fOR[0].dmg[Math.min(3,li+1)]+.28*A)*amp;cull(u,['shunter'],MAXH);
+    if(kit==='R'){aoe({x:p.x,y:p.y,r,dmg:skillHitDamage('fOR2',V,li,A,SA),type:'m',owner:u,kind:'rain',delay:.3,dot:3,tick:.3});
+      const hp=SKV.fOR[0].hp[Math.min(3,li+1)]+.04*u.maxHp,dmg=spiritAttackDamage(SKV.fOR[0],Math.min(3,li+1),A,amp,'R');cull(u,['shunter'],MAXH);
       for(let k=0;k<V.n[li];k++){const a=Math.atan2(u.fy,u.fx)+Math.PI+(k-(V.n[li]-1)/2)*.9;spawnPet(u,'shunter',p.x+Math.cos(a)*r,p.y+Math.sin(a)*r,hp,dmg,V.t[li],k)}
       sndAt('volley',p.x,p.y);fxE('soulcmd',{id:u.id,x:u.x|0,y:u.y|0,x2:p.x|0,y2:p.y|0})}
     else{const big=kit==='M'?'swarlord':'sguard';for(const g of petsOf(u,big))dismiss(g);
-      const sl={x:p.x,y:p.y,r,dmg:V.dmg[li]*SA+.8*A,type:'m',owner:u,delay:.5,kind:'slam',stun:V.stun[li],big:true};
+      const sl={x:p.x,y:p.y,r,dmg:skillHitDamage('SO2',V,li,A,SA),type:'m',owner:u,delay:.5,kind:'slam',stun:V.stun[li],big:true};
       if(el){sl.el=el;sl.elP=1;sl.kind=el==='fire'?'meteor':el==='frost'?'frost':'thunder';if(el==='fire')sl.burn=(16+1.4*u.lvl)*(1+spellAmp(u))}
       aoe(sl);
-      const g=spawnPet(u,big,p.x,p.y,V.hp[li]+.12*u.maxHp,(V.gd[li]+.45*A)*(1+spellAmp(u)),V.t[li],0,el);g.fx=u.fx;g.fy=u.fy;if(kit==='M'){u.wlord=g;u.wlordDR=V.dr}
+      const g=spawnPet(u,big,p.x,p.y,V.hp[li]+.12*u.maxHp,spiritGuardianDamage(V,li,A,amp),V.t[li],0,el);g.fx=u.fx;g.fy=u.fy;if(kit==='M'){u.wlord=g;u.wlordDR=V.dr}
       sndAt('slam',p.x,p.y);sndAt('roar',p.x,p.y);fxE('soulgd',{id:g.id,x:p.x|0,y:p.y|0,r,c:el?ELEM[el].c:kit==='M'?'#7f9cff':undefined});emit({t:'k',a:8,x:p.x|0,y:p.y|0})}}
   u.cd[i]=s.cd[li]*cdMul(u);u.mp-=cost;return true};
 // ---- spirit AI ----
@@ -167,7 +170,7 @@ const _dd=dealDamage;dealDamage=function(t,amt,type,src,quiet,crit){
   if(src&&src.pet){const o=src.owner;if(o&&t&&t.smarkO===o.id&&gameT<(t.smarkUntil||0))amt*=1+(t.smarkK||0);src=o&&!o.dead?o:null}
   if(t&&t.wlord&&amt>0){if(!t.wlord.dead&&SO(t.wk))amt*=1-(t.wlordDR||0);else t.wlord=null}
   return _dd(t,amt,type,src,quiet,crit)};
-const _k=kill;kill=function(t,src){if(t&&t.pet){if(!t.dead){t.hp=0;dismiss(t);sndAt('mdie',t.x,t.y)}return}return _k(t,src)};
+const _k=kill;kill=function(t,src){if(t&&t.pet){if(!t.dead){t.hp=0;dismiss(t,false,{src});if(!ARX)sndAt('mdie',t.x,t.y)}return}return _k(t,src)};
 // bots never farm spirits as creeps
 const _bc=bestCreep;bestCreep=function(u,range){const P=units.filter(o=>o.pet&&!o.dead);for(const p of P)p.dead=true;try{return _bc(u,range)}finally{for(const p of P)p.dead=false}};
 const _ct=curTick;curTick=function(dt){_ct(dt);purgeT-=dt;if(purgeT<=0){purgeT=1;purge()}};
@@ -193,5 +196,5 @@ try{const G=$('fuseGrid'),M='🗡️🪓🔪⚔️',R='🏹🎯';
   for(const k of SOK){const F=WEAPONS[k],el=document.createElement('div');el.className='fcard';el.style.borderColor=hexA(F.glow,.55);
     const rc=F.so==='M'?`📖 คัมภีร์วิญญาณ + ${M} ประชิด`:F.so==='R'?`📖 คัมภีร์วิญญาณ + ${R} ยิงไกล`:`📖 คัมภีร์วิญญาณ + ${WEAPONS[F.el].ic} ${WEAPONS[F.el].n}`;
     el.innerHTML=`<div class="fh2"><span class="ic">${F.ic}</span><div><b>${F.n}</b><div class="rc">${rc}</div></div></div><small>${F.desc}</small><div class="sks">${SK[k].map((s,i)=>`<span>${s.ic} ${['Q','E','R'][i]} · ${s.n}</span>`).join('')}</div>`;G.appendChild(el)}}catch(e){}
-window.SUMMONER={K,PK,petsOf,SO,SOK};
+window.SUMMONER={K,PK,petsOf,SO,SOK,soKit,soEl,spiritAttackDamage,spiritGuardianDamage};
 })();

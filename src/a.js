@@ -355,6 +355,8 @@ const AU={ctx:null,mode:lsGet('ar_mute','0')==='1'?2:(+lsGet('ar_snd','0')||0), 
       case 'win':[523,659,784,1047,1319].forEach((f,i)=>this.tone(f,.4,'triangle',.1,0,i*.12));break;
       case 'click':this.tone(800,.04,'square',.05);break;
       case 'mob':this.noise(.1,.15*v,'lowpass',500);break;
+      case 'mdie':this.tone(190,.3,'triangle',.15*v,55);this.noise(.22,.19*v,'lowpass',650);break;
+      case 'zdie':this.tone(92,.42,'sawtooth',.1*v,35);this.noise(.32,.18*v,'bandpass',450,1,0,180);break;
       case 'nomana':this.tone(220,.12,'square',.05);break;
       // weapon fusion: a rising shimmer, then an anvil strike + bright chord
       case 'fusing':this.tone(220,1.1,'sawtooth',.05*v,880);this.tone(330,1.1,'triangle',.05*v,1320,.1);this.noise(1.1,.08*v,'bandpass',800,3,0,5000);break;
