@@ -21,7 +21,9 @@ window.installArenaMenuUX=function(){
     };
     const icon=key=>{const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.35');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[key]);svg.appendChild(path);return svg;};
     const title=menu.querySelector('.moonfall-menu-title');
-    title.querySelector('h1').innerHTML='<span>Arena</span><span>Royale</span>';
+    const wordmark=title.querySelector('h1');
+    wordmark.classList.add('arena-wordmark');wordmark.setAttribute('aria-label','Arena Royale');
+    wordmark.replaceChildren(make('span','','ARENA'),make('span','','ROYALE'));
     title.querySelector('.anime-kicker').textContent='BATTLE ROYALE';
     title.querySelector('.moonfall-menu-chapter').remove();
     title.querySelector('.sub').textContent='32 ผู้กล้า · เก็บอาวุธ ปลดปล่อยสกิล · เหลือเพียงตำนานเดียว';

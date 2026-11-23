@@ -39,3 +39,11 @@ generation PNG and browser screenshots remain outside Git.
 `moonfall-soul.webp` (6×1, three cells) holds the Spirit Tome's skills. The eighteen illustrated skill icons use the same atlas cells. `moonfall-soul2.webp` (6×3, 1374×687) holds the five forged tomes in order
 `fOM`, `fOR`, `fOS_fire`, `fOS_frost`, `fOS_storm`. The three slots per tome show summons, orders and their ultimate. Every key in `AW`
 requires all three cells in `skill-atlas.json` to pass the boot gate.
+
+
+## Arena loading and menu
+
+`arena-eclipse.webp` is the 1672×941 illustrated citadel used on the loading
+screen and main menu. CSS supplies the moving camera, fog, gate light and
+embers. `arena-cinzel.woff` is a subset of the Cinzel Bold typeface for the
+Arena Royale wordmark. See [the font license](cinzel-OFL.txt).

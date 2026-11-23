@@ -402,6 +402,7 @@ function draw2D(){
   for(const u of units){if(u.dead||!vis(u.x,u.y,80)||!unitVisibleTo(u,me,L))continue;drawUnit2D(u,me,u.inBush||u.invisT>0?.55:1)}
   for(const p of projs){if(!vis(p.x,p.y))continue;if(p.kind===0||p.kind===5||p.kind===7||p.kind===13||p.kind===11){const a=Math.atan2(p.vy,p.vx);ctx.strokeStyle=p.el?ELEM[p.el].c:p.kind===11?'#7ff0d8':p.kind===5?'#c8ff9a':'#e6fff0';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(p.x-Math.cos(a)*22,p.y-Math.sin(a)*22);ctx.lineTo(p.x,p.y);ctx.stroke()}
     else{ctx.fillStyle=p.el?ELEM[p.el].c:p.kind===14?'#ff8a3a':p.kind===2||p.kind===1?'#ff7a2a':p.kind===10?'#b9a6ff':p.kind===8?'#ff9a4a':p.kind===9?'#e8d8a8':p.kind===6?'#dfe8ff':'#bfefff';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()}}
+  if(ARX)drawArenaForge2D(L,vis);
   for(const p of parts){if(!vis(p.x,p.y))continue;ctx.globalAlpha=clamp(p.life/p.max,0,1);ctx.fillStyle=p.col;if(p.line)ctx.fillRect(p.x-1.5,p.y-18,3,18);else{ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,7);ctx.fill()}}ctx.globalAlpha=1;
   for(const q of WD.walls){if(!vis(q.x+q.w/2,q.y+q.h/2,Math.max(q.w,q.h)))continue;ctx.fillStyle=q.castle?'#a8a094':'#e8dcc0';ctx.fillRect(q.x,q.y,q.w,q.h);ctx.strokeStyle='#5d4632';ctx.lineWidth=2;ctx.strokeRect(q.x,q.y,q.w,q.h)}
   for(const l of WD.lanterns){if(!vis(l.x,l.y))continue;ctx.fillStyle='#3a2a1e';ctx.fillRect(l.x-3,l.y-6,6,20);ctx.fillStyle=l.torch?'#ff8a2a':l.dire?'#c08aff':'#ffd27a';ctx.beginPath();ctx.arc(l.x,l.y-10,7,0,7);ctx.fill()}
