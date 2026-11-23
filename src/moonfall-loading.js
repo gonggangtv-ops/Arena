@@ -3,6 +3,16 @@
 window.installMoonfallLoading=function(){
   'use strict';
   const screen=$('loading'),status=$('moonfallLoadStatus'),count=$('moonfallLoadCount'),progress=$('moonfallLoadProgress'),fill=$('moonfallLoadFill'),error=$('moonfallLoadError'),retry=$('moonfallLoadRetry');
+  const arena=screen.classList.contains('arena-load'),title=$('moonfallLoadTitle');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  if(arena){
+    const layer=screen.querySelector('.arena-load-embers');
+    for(let i=0;i<22;i++){
+      const ember=document.createElement('i');
+      ember.style.cssText=`--x:${20+i*47%79}%;--size:${1+i%3}px;--speed:${7+i%7}s;--delay:-${i*.73}s;--drift:${18+i*29%140}px;--rise:-${20+i*13%58}vh`;
+      layer.appendChild(ember);
+    }
+  }
   const ids=['soloBtn','qmBtn','hostBtn','joinBtn','lobbyStart','moonfallBtn'];
   const original={host:hostStartMatch,host2:hostStartMatch2,client:clientStart,enter:enterPlay,menu:R3.menuFrame,qnSetup:R3.qnSetup,quick:quickMatch,room:hostRoom,join:joinRoom};
   let ready=false,failed=false,launchBusy=false,phase='loading',packDone=0,musicDone=0,artDone=0,renderDone=0,fontsDone=0,total=0,clientToken=0;
@@ -14,10 +24,11 @@ window.installMoonfallLoading=function(){
     for(const id of [...OV,'c']){const element=$(id);if(element)element.inert=value;}
     if(!value)syncMpButtons();
   }
+  function setPhase(next){phase=next;if(arena)screen.dataset.phase=next;}
   function show(text){screen.classList.remove('hidden');if(status.textContent!==text)status.textContent=text;}
   function fail(reason){
-    if(failed)return;failed=true;ready=false;phase='error';lock(true);show('ยังเข้าเกมไม่ได้');
-    $('moonfallLoadTitle').textContent='โหลดข้อมูลไม่สำเร็จ';error.hidden=false;error.textContent=reason+' · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง';retry.hidden=false;count.textContent='ตรวจสอบการเชื่อมต่อแล้วลองโหลดใหม่';
+    if(failed)return;failed=true;ready=false;setPhase('error');lock(true);show('ยังเข้าเกมไม่ได้');
+    title.textContent='โหลดข้อมูลไม่สำเร็จ';error.hidden=false;error.textContent=reason+' · ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง';retry.hidden=false;count.textContent='ตรวจสอบการเชื่อมต่อแล้วลองโหลดใหม่';
   }
   retry.onclick=()=>location.reload();
   function update(){
@@ -63,12 +74,13 @@ window.installMoonfallLoading=function(){
   };
   R3.menuFrame=function(dt){if(!ready||failed)return;return original.menu.call(this,dt);};
   withLoading=function(fn){
-    if(!ready||failed||launchBusy)return;launchBusy=true;lock(true);show('กำลังจัดสนามและเตรียมผู้กล้า…');phase='preparing';
+    if(!ready||failed||launchBusy)return;launchBusy=true;lock(true);setPhase('preparing');show('กำลังจัดสนามและเตรียมผู้กล้า…');
+    if(arena)title.textContent='กำลังเข้าสู่สนาม';
     fill.style.width='100%';progress.setAttribute('aria-valuenow','100');count.textContent='กำลังเตรียมสนาม';
     setTimeout(async()=>{
       try{
         await fn();if(view3D&&R3.ok&&R3.scene){await R3.renderer.compileAsync(R3.scene,R3.cam);R3.frame(1/60);}
-        if(!failed){phase='ready';screen.classList.add('hidden');lock(false);}
+        if(!failed){setPhase('ready');screen.classList.add('hidden');lock(false);}
       }catch(e){fail('เตรียมสนาม: '+e.message);}finally{launchBusy=false;}
     },60);
   };
@@ -109,8 +121,14 @@ window.installMoonfallLoading=function(){
       const suppressed=window.__noMenu;window.__noMenu=false;
       try{original.menu.call(R3,1/60);}finally{window.__noMenu=suppressed;}
       renderDone=1;update();if(failed)return;
-      ready=true;phase='ready';fill.style.width='100%';progress.setAttribute('aria-valuenow','100');count.textContent=total+' / '+total+' รายการ · พร้อมแล้ว';
-      unsubscribe();screen.classList.add('hidden');lock(false);resolveReady();$('soloBtn').focus({preventScroll:true});
+      fill.style.width='100%';progress.setAttribute('aria-valuenow','100');count.textContent=total+' / '+total+' รายการ · พร้อมแล้ว';
+      unsubscribe();setPhase('ready');
+      if(arena){
+        title.textContent='สนามพร้อมแล้ว';show('กำลังเปิดเมนูหลัก…');
+        if(!reduced.matches)await delay(320);
+        if(window.__moonfallCodeFailure)return fail('ไฟล์เกม: '+window.__moonfallCodeFailure);
+      }
+      ready=true;screen.classList.add('hidden');lock(false);resolveReady();$('soloBtn').focus({preventScroll:true});
     }catch(e){if(!failed)fail(e.message);}
   })();
 };

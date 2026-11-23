@@ -48,14 +48,14 @@ if arena:game_files[-1:-1]=['arena-vfx-tex.js','arena-vfx-runtime.js','arena-vfx
 if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js','p5-heroes.js']
 if arena:game_files[-1:-1]=['summoner.js','summoner-fx.js']   # fifth class: the Spirit Tome (Arena Royale only)
 if arena:game_files[-1:-1]=['snow-queen.js']   # the Snow Queen, boss of the ice castle (Arena Royale only; an Eclipse-style boss)
-if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-vfx-fire.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js','arena-falls.js','arena-frost.js','queen-vfx.js','arena-feel.js','arena-loot.js','arena-npc.js','arena-bots.js','arena-drop.js','arena-buttons.js','arena-tombs.js']
+if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-vfx-fire.js','arena-forge.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js','arena-falls.js','arena-frost.js','queen-vfx.js','arena-feel.js','arena-loot.js','arena-npc.js','arena-bots.js','arena-drop.js','arena-buttons.js','arena-tombs.js']
 if arena:game_files.extend(['arena-menu.js','arena-skill-details.js','arena-hud.js','arena-vitals.js','arena-combat-controls.js'])
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in game_files)
 js='const CURSED='+('true' if sys_on else 'false')+';const MOON='+('true' if cur else 'false')+';\n'+js
 MOON=['celestial-assets.js','celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js','moonfall-village.js','moonfall-ui.js','moonfall-menu.js','moonfall-inventory.js','moonfall-loading.js']
 MOONCSS=['celestial-theme.css','moonfall-ui.css','moonfall-menu.css','moonfall-inventory.css','moonfall-loading.css']
 if arena:MOON=[f for f in MOON if f not in ('celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js')]
-arena_style='\n<style>'+'\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['arena-menu.css','arena-combat-hud.css'])+'</style>\n' if arena else ''
+arena_style='\n<style>'+'\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['arena-loading.css','arena-menu.css','arena-combat-hud.css'])+'</style>\n' if arena else ''
 if sys_on:
     if arena:
         js += "\nmoody=lsGet('ar_tone2','dark')==='dark';syncTone();installArenaMenuUX();\n"
@@ -74,9 +74,8 @@ if sys_on:
     assert sh.count('animeHelp')==1 and sh.count('moonfallBtn')==(1 if cur else 0) and 'anime-kicker' in sh and 'ประตูสู่ Moonfall' in sh
     loading=open(os.path.join(D,'moonfall-loading.html'),encoding='utf-8').read().strip()
     if arena:
-        loading=loading.replace('id="loading"','id="loading" data-key-art="assets/ui/arena-citadel.webp"',1)
-        loading=loading.replace('THE CURSED REALM','BATTLE ROYALE').replace('>MOONFALL<','>ARENA ROYALE<')
-        loading=loading.replace('กำลังเปิดประตูจันทรา','กำลังเปิดประตูสนาม').replace('เมื่อจันทราร่วงหล่น ตำนานบทใหม่จึงเริ่มต้น','เตรียมตัวเข้าสู่สนามประลอง').replace('พลังจันทรา','อาวุธ')
+        arena_loading=open(os.path.join(D,'arena-loading.html'),encoding='utf-8').read().strip()
+        loading=arena_loading+'\n<script>'+loading.split('<script>',1)[1]
     sh=sh.replace('<div id="loading" class="ov hidden"><div class="spin"></div><div class="sub" style="font-size:15px;margin-top:12px">กำลังเปิดประตูสู่ Moonfall…</div></div>',loading)
     sh=re.sub(r'(<button[^>]*id="(?:soloBtn|qmBtn|hostBtn|joinBtn|lobbyStart|moonfallBtn)"[^>]*)(>)',r'\1 disabled\2',sh)
     if arena:sh=sh.replace('</head>','<script>window.CELESTIAL_KEYS='+repr(VILLAGE).replace("'",'"')+'</script>\n'+arena_style+'</head>',1)

@@ -121,16 +121,67 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 <link rel="stylesheet" href="moonfall-loading.css" onerror="window.__moonfallCodeFailure='moonfall-loading.css';if(window.moonfallCodeFailure)moonfallCodeFailure('moonfall-loading.css')">
 <script>window.CELESTIAL_KEYS=["market-stall", "village-well", "street-lantern", "stone-bridge", "plaza-fountain", "mossy-boulder", "nebula-bloom", "rocky-meadow", "banana-plant", "river-stones", "mystic-mushrooms", "emerald-crystals", "dungeon-wall", "verdant-tree", "stone-guardian", "magma-titan", "pine-tree", "pine-tree-lo", "wide-rock", "bastion-hill", "mango-tree", "goblin-shaman", "celestial-overlord", "dark-sentinel", "lunar-construct", "lunar-greatsword", "eclipse-scythe", "moon-staff", "p5-warrior", "p5-assassin", "p5-archer", "p5-mage", "p5w-w0-ironblade", "p5w-a0-shadow-fang", "p5w-b0-hunter-bow", "p5w-m0-apprentice-staff", "p5w-s0-spirit-orb", "p5w-w1-bloodcrest", "p5w-a1-night-veil", "p5w-b1-windleaf", "p5w-m1-arcane-staff", "p5w-s1-soul-tome", "p5w-w2-solar-justice", "p5w-a2-eclipse-twin", "p5w-b2-lunar-longbow", "p5w-m2-astral-nexus", "p5w-s2-genesis-grimoire", "p5w-x0-molten-axe", "house-timber", "house-candle", "house-potion", "moon-dead-tree", "temple-gate", "moon-stairs", "modular-wall", "wall-corner", "ruin-arch", "guardian-statue", "moon-arena", "city-pillar", "city-knight", "ice-queen", "frost-scepter", "snow-stairs", "queen-vfx", "brazier", "bone-heap", "knight-tomb", "chest-eye", "potion-hp", "potion-mana"]</script>
 
-<style>/* Arena-only interface. The published Moonfall/Cursed presentation stays independent. */
-:root{--arena-menu-art:url('assets/ui/arena-citadel.webp')}
-#menu[data-arena-menu]{background:#0b0c10;padding-top:max(40px,env(safe-area-inset-top));padding-left:max(38px,calc((100vw - 1260px)/2),env(safe-area-inset-left));padding-bottom:max(28px,env(safe-area-inset-bottom))}
+<style>@font-face{font-family:'Arena Cinzel';src:url('assets/ui/arena-cinzel.woff') format('woff');font-weight:700;font-display:swap}
+.arena-wordmark{display:flex;flex-direction:column;align-items:flex-start;gap:.025em;margin:0;font:700 clamp(60px,7.6vw,116px)/.85 'Arena Cinzel',Georgia,serif;letter-spacing:-.05em}
+.arena-wordmark span{display:block;padding:.07em .045em .03em 0;color:#f4eee0;background:linear-gradient(177deg,#fff9e9 5%,#e1dce1 46%,#9398ad 52%,#e2def0 85%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 5px 16px #050510b0)}
+.arena-wordmark span+span{font-size:.91em;letter-spacing:.012em;color:#e0ad68;background-image:linear-gradient(180deg,#fff3d6 6%,#dec087 43%,#976137 56%,#f2c681 89%)}
+#loading.arena-load{--gate-x:75%;overflow:auto;min-height:0;padding:clamp(20px,6vh,68px) max(30px,min(5.8vw,86px),calc((100vw - 1260px)/2),env(safe-area-inset-left));background:#10101d}
+.arena-load-backdrop{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.arena-load-art,.arena-load-light,.arena-load-mist,.arena-load-embers,.arena-load-backdrop::after{position:absolute;inset:0}
+.arena-load-art{background:#151526 var(--arena-menu-art) 76% center/cover no-repeat;transform:scale(1.04);transform-origin:74% 50%;animation:arena-camera 19s ease-in-out infinite alternate}
+.arena-load-light{background:radial-gradient(ellipse 19% 24% at var(--gate-x) 59%,#ffb65e3d,transparent 76%),radial-gradient(ellipse 23% 28% at 82% 10%,#d291f643,transparent 78%);mix-blend-mode:screen;animation:arena-gate 5s ease-in-out infinite alternate}
+.arena-load-mist{inset:36% -25% -12%;background:radial-gradient(ellipse 45% 18% at 62% 49%,#9dabc43e,transparent 78%),radial-gradient(ellipse 42% 17% at 44% 76%,#969bb537,transparent 80%),radial-gradient(ellipse 30% 11% at 74% 86%,#b8bacd36,transparent 84%);animation:arena-mist 14s ease-in-out infinite alternate}
+.arena-load-backdrop::after{content:'';background:linear-gradient(88deg,#080912eb,#0d0e1cc4 22%,#10101e42 54%,transparent 76%),linear-gradient(0deg,#060710bd,transparent 32%,transparent 82%,#0b09183d)}
+.arena-load-embers i{position:absolute;bottom:-5%;left:var(--x);width:var(--size);height:var(--size);border-radius:50%;background:#ffd487;box-shadow:0 0 7px 1px #eb883b9c;animation:arena-ember var(--speed) var(--delay) linear infinite}
+@keyframes arena-camera{from{transform:scale(1.04)}to{transform:translate(-.85%,.4%) scale(1.095)}}
+@keyframes arena-gate{from{opacity:.38}to{opacity:.95}}
+@keyframes arena-mist{from{transform:translateX(-11%);opacity:.52}to{transform:translate(13%,-5%);opacity:.9}}
+@keyframes arena-ember{0%{transform:translate(0,0);opacity:0}15%{opacity:.75}65%{opacity:.45}100%{transform:translate(var(--drift),var(--rise));opacity:0}}
+.arena-load-card{flex:none;position:relative;width:min(455px,100%);text-align:left;text-shadow:0 3px 12px #0007}
+.arena-crest{position:relative;width:38px;height:38px;margin:0 0 clamp(21px,3.7vh,42px) 6px;transform:rotate(45deg);border:1px solid #ebc890ae;background:linear-gradient(135deg,#3d344a,#141825);box-shadow:0 0 23px #edb67836,inset 0 0 12px #efcca724}
+.arena-crest::after{content:'';position:absolute;inset:4px;border:1px solid #b7a4c85c}
+.arena-crest i{position:absolute;inset:0;transform:rotate(-45deg)}
+.arena-crest i::before,.arena-crest i::after{content:'';position:absolute;inset:8px 16px;background:linear-gradient(#fff6d6,#c3945b);clip-path:polygon(50% 0,90% 18%,90% 68%,100% 68%,100% 78%,65% 78%,65% 100%,35% 100%,35% 78%,0 78%,0 68%,10% 68%,10% 18%);transform:rotate(38deg)}
+.arena-crest i::after{transform:rotate(-38deg)}
+.arena-load-rule{width:min(300px,76%);height:1px;margin:clamp(23px,5vh,46px) 0 clamp(15px,2.7vh,27px);background:linear-gradient(90deg,#e8be7c,#a8814f42,transparent)}
+.arena-load-rule::before{content:'';display:block;width:6px;height:6px;border:1px solid #ecd5aa;background:#34293a;transform:translateY(-3px) rotate(45deg)}
+.arena-load #moonfallLoadTitle{font:650 clamp(17px,2.15vw,26px)/1.45 system-ui,sans-serif;color:#f5e7d6;margin:0 0 4px}
+.arena-load #moonfallLoadStatus{margin:0 0 17px;color:#c2c5d8;font-size:13px}
+.arena-load #moonfallLoadProgress{height:4px;margin:0;background:#14101b;border:1px solid #b4976d5c;border-radius:0;overflow:visible}
+.arena-load #moonfallLoadFill{height:100%;position:relative;background:linear-gradient(90deg,#886442,#dca868 69%,#fff0cf);box-shadow:0 0 14px #ffc87882}
+.arena-load #moonfallLoadFill::after{content:'';position:absolute;right:0;top:50%;width:5px;height:5px;background:#fff0d2;box-shadow:0 0 12px #ffbf73;transform:translate(1px,-50%) rotate(45deg)}
+.arena-load #moonfallLoadCount{font-variant-numeric:tabular-nums;color:#c9bda9;letter-spacing:.04em;margin-top:11px}
+.arena-load[data-phase=ready] #moonfallLoadTitle{color:#ffe5b1}
+.arena-load[data-phase=ready] #moonfallLoadFill{background:linear-gradient(90deg,#a37546,#fff0c4)}
+.arena-load[data-phase=ready]{animation:arena-ready .32s ease-in both}
+@keyframes arena-ready{from{opacity:1}to{opacity:0}}
+@media(max-width:650px) and (orientation:portrait){
+  #loading.arena-load{--gate-x:62%;align-items:flex-end;padding:28px max(24px,env(safe-area-inset-right)) max(46px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left))}
+  .arena-load-art{background-size:auto 100%;background-position:80% center}
+  .arena-load-backdrop::after{background:linear-gradient(0deg,#080912 4%,#0a0b17e8 25%,#0c0d1a83 58%,#0a09163b 81%)}
+  .arena-load .arena-wordmark{font-size:clamp(54px,14.5vw,86px)}
+}
+@media(max-height:510px) and (orientation:landscape){
+  #loading.arena-load{padding-top:16px;padding-bottom:16px}
+  .arena-load-card{width:min(365px,48vw)}
+  .arena-load .arena-wordmark{font-size:clamp(40px,11.8vh,65px)}
+  .arena-crest{width:28px;height:28px;margin-bottom:18px}.arena-crest i::before,.arena-crest i::after{inset:5px 11px}
+  .arena-load-rule{margin:20px 0 13px}
+}
+@media(prefers-reduced-motion:reduce){
+  .arena-load-art,.arena-load-light,.arena-load-mist,.arena-load-embers i,#loading.arena-load[data-phase=ready]{animation:none}
+  .arena-load-embers{display:none}
+  .arena-load #moonfallLoadFill{transition:none}
+}
+
+/* Arena-only interface. The published Moonfall/Cursed presentation stays independent. */
+:root{--arena-menu-art:url('assets/ui/arena-eclipse.webp')}
+#menu[data-arena-menu]{background:#0b0c10;padding-top:max(40px,env(safe-area-inset-top));padding-left:max(38px,min(5.8vw,86px),calc((100vw - 1260px)/2),env(safe-area-inset-left));padding-bottom:max(28px,env(safe-area-inset-bottom))}
 #menu[data-arena-menu]::after{inset:13px;border-color:#bba6802e}
 #menu[data-arena-menu] .moonfall-menu-scenery{background-image:linear-gradient(90deg,#080b10 0%,#080b10ee 20%,#080b10ae 36%,#080b1024 58%,transparent 80%),linear-gradient(0deg,#080b10 0%,#080b1033 30%,transparent 75%,#080b1040),var(--arena-menu-art);background-position:center,center,74% center;background-size:cover;background-repeat:no-repeat}
 #menu[data-arena-menu] .moonfall-menu-content{width:min(500px,43vw);gap:9px}
 #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:13px}
-#menu[data-arena-menu] .moonfall-menu-title h1{font:400 clamp(57px,6.2vw,92px)/.84 Georgia,serif;letter-spacing:-.045em;text-shadow:0 5px 32px #0008}
-#menu[data-arena-menu] .moonfall-menu-title h1 span:first-child{color:#f0efea}
-#menu[data-arena-menu] .moonfall-menu-title h1 span:last-child{margin-top:8px;color:#d6b77f;background:linear-gradient(#f9e7ba,#c09d64);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(59px,6.7vw,101px);line-height:.84;letter-spacing:-.045em;text-shadow:none}
 #menu[data-arena-menu] .moonfall-menu-title .anime-kicker{color:#c1b8a6;letter-spacing:.3em;font-size:9px;margin-bottom:22px}
 #menu[data-arena-menu] .moonfall-menu-crest{border-color:#b49b6b8c;box-shadow:0 0 20px #c9a7701a}
 #menu[data-arena-menu] .moonfall-menu-crest::before{content:'✦';font-size:25px;color:#d9be8c;text-shadow:0 0 18px #c7a46a55}
@@ -144,15 +195,17 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 .arena-action-name{font-size:13px;font-weight:600;line-height:1.3;white-space:normal}
 .arena-action-description{font-size:11px;font-weight:400;letter-spacing:0;line-height:1.6;color:#9eacb8}
 #menu[data-arena-menu] .moonfall-play-actions .go>svg.arena-action-arrow{align-self:center;flex:none;width:16px;height:16px;color:#a99d87}
-#menu[data-arena-menu] .moonfall-play-actions #soloBtn{min-height:76px;padding:15px 20px;gap:16px;isolation:isolate;background:linear-gradient(100deg,#ab8850,#eddaa4 47%,#c09e62);border:1px solid #edd8a2;border-top-color:#ffedc3;box-shadow:0 4px 25px #bf98502b,inset 0 1px #ffffbf7a;color:#181b22}
-#menu[data-arena-menu] .moonfall-play-actions #soloBtn::before{content:'';position:absolute;inset:4px;border:1px solid #715a352f;transform:none;pointer-events:none}
-#menu[data-arena-menu] .moonfall-play-actions #soloBtn::after{content:none}
-#menu[data-arena-menu] #soloBtn>svg{width:33px;height:33px;color:#40392c;filter:none}
-#menu[data-arena-menu] #soloBtn .arena-action-name{font-size:20px;font-weight:700;letter-spacing:.02em}
-#menu[data-arena-menu] #soloBtn .arena-action-description{color:#504a3d;font-size:11px}
-#menu[data-arena-menu] #soloBtn>svg.arena-action-arrow{width:24px;height:24px;color:#665237}
+#menu[data-arena-menu] .moonfall-play-actions #soloBtn{min-height:76px;padding:14px 17px;gap:14px;isolation:isolate;overflow:hidden;background:linear-gradient(116deg,#513628,#2b2025 49%,#191b27);border:1px solid #c99860;border-top-color:#f3cf94;box-shadow:0 5px 28px #d2844528,inset 0 1px #ffe6b253;color:#fff0d1}
+#menu[data-arena-menu] .moonfall-play-actions #soloBtn::before{content:'';position:absolute;inset:4px;border:1px solid #e4b7824f;transform:none;pointer-events:none}
+/* the sweep moves its background, not the box: a translated ::after widened the button's scrollable overflow (scrollWidth 2x) */
+#menu[data-arena-menu] .moonfall-play-actions #soloBtn::after{content:'';position:absolute;inset:0;background:linear-gradient(111deg,transparent 40%,#ffdba317 50%,transparent 60%) no-repeat;background-size:300% 100%;background-position:100% 0;transition:background-position .65s cubic-bezier(.2,.8,.25,1);pointer-events:none}
+#menu[data-arena-menu] #soloBtn>svg{width:36px;height:36px;padding:7px;box-sizing:border-box;background:#2b2128;border:1px solid #a07a5494;color:#ffe5b6;filter:drop-shadow(0 2px 5px #151017)}
+#menu[data-arena-menu] #soloBtn .arena-action-name{font-size:21px;font-weight:800;letter-spacing:.045em;text-shadow:0 1px 12px #edb97755}
+#menu[data-arena-menu] #soloBtn .arena-action-description{color:#d6c5b4;font-size:11px}
+#menu[data-arena-menu] #soloBtn>svg.arena-action-arrow{width:22px;height:22px;padding:0;background:none;border:0;color:#dfba80}
 #menu[data-arena-menu] .moonfall-play-actions .go:not(:disabled):hover{background:linear-gradient(120deg,#34414ce8,#15222de8);border-color:#baa57a;box-shadow:0 4px 24px #c9a6691c}
-#menu[data-arena-menu] .moonfall-play-actions #soloBtn:not(:disabled):hover{background:linear-gradient(100deg,#c49e63,#ffedbd 47%,#d3b47c);box-shadow:0 4px 32px #c9a6693d;border-color:#fff0c9;color:#181b22}
+#menu[data-arena-menu] .moonfall-play-actions #soloBtn:not(:disabled):hover{background:linear-gradient(116deg,#6e4931,#372734 53%,#202434);box-shadow:0 4px 36px #d29d563b;border-color:#ffe4af;color:#fff6e5}
+#menu[data-arena-menu] .moonfall-play-actions #soloBtn:not(:disabled):hover::after,#menu[data-arena-menu] .moonfall-play-actions #soloBtn:focus-visible::after{background-position:0 0}
 #menu[data-arena-menu] .moonfall-play-actions .go:disabled{opacity:.5;cursor:wait}
 #menu[data-arena-menu] .moonfall-play-actions .go:focus-visible{outline:2px solid #f7e2b3;outline-offset:4px}
 #menu[data-arena-menu] .moonfall-start-hint{font-size:9px;color:#94a0ae}
@@ -168,15 +221,6 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 #menu[data-arena-menu] .moonfall-menu-legend{color:#d3bc91;letter-spacing:.26em;right:max(48px,5vw);bottom:max(36px,5vh)}
 #menu[data-arena-menu] .moonfall-menu-legend-index{color:#e0c497;border-color:#c5aa7380;font-size:18px}
 #menu[data-arena-menu] .moonfall-menu-legend>span:last-child>span{color:#a8b2be}
-.moonfall-load .moonfall-load-art{background-image:var(--arena-menu-art)}
-.moonfall-load .moonfall-load-art::after{background:linear-gradient(90deg,#070b10f2,#070b10c9 30%,#070b1024 70%),linear-gradient(0deg,#070b10e6,transparent 38%,#070b1040)}
-.moonfall-load .moonfall-load-wordmark{font-size:clamp(36px,4.2vw,52px);letter-spacing:.025em;line-height:1.08;max-width:100%;white-space:normal;overflow-wrap:normal;color:#f2e0ba}
-.moonfall-load .moonfall-load-eyebrow{color:#c5ae85;letter-spacing:.25em}
-.moonfall-load .moonfall-load-chapter{color:#b2bec9}
-.moonfall-load #moonfallLoadFill{background:linear-gradient(90deg,#8a7047,#cfb479 65%,#fae4b1);box-shadow:0 0 12px #cbb07877}
-.moonfall-load .moonfall-load-crest{color:#ddc48e;border-color:#bda37580;box-shadow:0 0 24px #c9a56a10,inset 0 0 16px #c9a56a10}
-.moonfall-load .moonfall-load-crest span{filter:drop-shadow(0 0 12px #d1af7377)}
-.moonfall-load .moonfall-load-crest::before{border-color:#bda37555}
 
 .arena-settings{box-sizing:border-box;width:min(940px,calc(100vw - 48px));max-width:none;max-height:min(760px,calc(100vh - 48px));max-height:min(760px,calc(100dvh - 48px));padding:0;border:1px solid #9b89664d;border-top:2px solid #d1b47c;border-radius:3px;background:radial-gradient(ellipse at 100% 0,#27313e66,transparent 55%),#0e141d;color:#e1e4e7;box-shadow:0 25px 100px #000a;overflow:hidden;font-family:system-ui,sans-serif;touch-action:pan-y}
 .arena-settings[open]{display:flex;flex-direction:column}
@@ -213,13 +257,13 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 .arena-settings-footer{display:flex;justify-content:space-between;gap:18px;flex:none;align-items:center;min-height:51px;padding:14px 30px;border-top:1px solid #8a9aaa26;color:#9aabbc;font-size:10px;line-height:1.8;background:#08111b6b}
 .arena-settings button:focus-visible{outline:2px solid #efd7a7;outline-offset:3px}
 
-@media(min-width:1500px) and (min-height:850px){#menu[data-arena-menu]{padding-top:8vh}#menu[data-arena-menu] .moonfall-menu-content{gap:11px}#menu[data-arena-menu] .moonfall-menu-title h1{font-size:98px}}
-@media(max-width:1000px) and (min-width:601px){#menu[data-arena-menu] .moonfall-menu-content{width:min(455px,53vw)}#menu[data-arena-menu] .moonfall-menu-title h1{font-size:67px}}
+@media(min-width:1500px) and (min-height:850px){#menu[data-arena-menu]{padding-top:8vh}#menu[data-arena-menu] .moonfall-menu-content{gap:11px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:98px}}
+@media(max-width:1000px) and (min-width:601px){#menu[data-arena-menu] .moonfall-menu-content{width:min(455px,53vw)}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:67px}}
 @media(max-width:600px){
   #menu[data-arena-menu]{padding:clamp(96px,14vh,130px) max(23px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(23px,env(safe-area-inset-left))}
   #menu[data-arena-menu] .moonfall-menu-content{width:100%;gap:8px}
   #menu[data-arena-menu] .moonfall-menu-scenery{background-image:linear-gradient(0deg,#080b10 16%,#080b10ef 38%,#080b1033 75%,#080b1033),linear-gradient(90deg,#080b1088,transparent 90%),var(--arena-menu-art);background-size:cover,cover,auto 72vh;background-position:center,center,82% top}
-  #menu[data-arena-menu] .moonfall-menu-title h1{font-size:clamp(59px,16vw,82px);line-height:.84}
+  #menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:clamp(59px,16vw,82px);line-height:.84}
   #menu[data-arena-menu] .moonfall-menu-title .anime-kicker{font-size:8px;letter-spacing:.23em;margin-bottom:18px}
   #menu[data-arena-menu] .moonfall-menu-chapter{margin-top:19px;font-size:8px;letter-spacing:.2em}
   #menu[data-arena-menu] .moonfall-menu-title .sub{font-size:11px;margin-top:10px;max-width:305px;line-height:1.8}
@@ -231,7 +275,6 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
   .arena-action-name{font-size:12px}.arena-action-description{font-size:10px}
   .arena-menu-utilities{gap:20px}
   .arena-settings{width:calc(100vw - 24px);max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px)}
-  .moonfall-load .moonfall-load-art{background-position:82% top}.moonfall-load .moonfall-load-art::after{background:linear-gradient(0deg,#070b10 5%,#070b10f0 29%,#070b1088 58%,#070b1022 82%)}.moonfall-load .moonfall-load-wordmark{font-size:clamp(31px,8.4vw,42px);letter-spacing:.02em}
   .arena-settings-header{padding:21px 18px 18px;gap:12px}.arena-settings h2{font-size:23px}.arena-settings-header p{font-size:10px;margin-top:7px}
   .arena-settings-body{flex-direction:column}
   .arena-settings-tabs{flex-direction:row;gap:3px;width:100%;padding:9px 10px;border-right:0;border-bottom:1px solid #8a9aaa26}
@@ -248,16 +291,15 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
   #menu[data-arena-menu]{padding-top:max(15px,env(safe-area-inset-top));padding-bottom:max(15px,env(safe-area-inset-bottom));padding-left:max(26px,env(safe-area-inset-left))}
   #menu[data-arena-menu] .moonfall-menu-scenery{background-position:center,center,74% top}
   #menu[data-arena-menu] .moonfall-menu-content{width:min(430px,53vw);gap:6px}
-  #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:4px}#menu[data-arena-menu] .moonfall-menu-title h1{font-size:43px;line-height:.82}#menu[data-arena-menu] .moonfall-menu-title h1 span:last-child{margin-top:5px}
+  #menu[data-arena-menu] .moonfall-menu-title{margin-bottom:4px}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark{font-size:43px;line-height:.82}#menu[data-arena-menu] .moonfall-menu-title .arena-wordmark span:last-child{margin-top:2px}
   #menu[data-arena-menu] .moonfall-menu-title .anime-kicker{font-size:7px;margin-bottom:10px;letter-spacing:.23em}#menu[data-arena-menu] .moonfall-menu-chapter{margin-top:11px;font-size:7px}#menu[data-arena-menu] .moonfall-menu-title .sub{font-size:9px;margin-top:7px;line-height:1.6;max-width:none}
   #menu[data-arena-menu] .moonfall-play-actions .go{min-height:54px;padding:8px 11px;gap:9px}#menu[data-arena-menu] .moonfall-play-actions #soloBtn{min-height:60px;padding:10px 17px}
   #menu[data-arena-menu] #soloBtn .arena-action-name{font-size:16px}#menu[data-arena-menu] #soloBtn .arena-action-description{font-size:9px}#menu[data-arena-menu] #soloBtn>svg{width:27px;height:27px}
   .arena-action-name{font-size:12px}.arena-action-description{font-size:10px}.arena-menu-utilities{gap:18px}
   .arena-settings{max-height:calc(100vh - 20px);max-height:calc(100dvh - 20px);width:min(880px,calc(100vw - 36px))}
-  .moonfall-load .moonfall-load-wordmark{font-size:36px;max-width:100%}.moonfall-load .moonfall-load-eyebrow{font-size:8px}
   .arena-settings-header{padding:13px 22px 12px;align-items:center}.arena-settings h2{font-size:20px}.arena-settings-header p{display:none}.arena-settings-tabs{width:178px;padding:14px 12px}.arena-settings-tab{min-height:46px;font-size:11px;padding:10px}.arena-settings-panels{padding:14px 22px 20px}.arena-setting-row{min-height:77px;padding:13px 0}.arena-settings-footer{padding:10px 22px;min-height:38px}
 }
-@media(prefers-reduced-motion:reduce){#menu[data-arena-menu] .moonfall-play-actions .go{transition:none}}
+@media(prefers-reduced-motion:reduce){#menu[data-arena-menu] .moonfall-play-actions .go,#menu[data-arena-menu] .moonfall-play-actions #soloBtn::after{transition:none}}
 
 /* Arena-only combat hardware; the original positions and pointer bounds stay intact. */
 .arena-combat-hud #moonfallSkillHint{background:linear-gradient(135deg,#19222deF,#080f18fa);border-color:#b5a17b;border-top-color:#e3cc9f;border-radius:3px;box-shadow:0 8px 28px #0008,inset 0 1px #fff08;color:#b8c9d7;font-size:11px;line-height:1.7}
@@ -378,23 +420,24 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
     </section>
   </div>
 </div>
-<section id="loading" data-key-art="assets/ui/arena-citadel.webp" class="ov moonfall-load" role="dialog" aria-modal="true" aria-labelledby="moonfallLoadTitle" tabindex="-1">
-  <div class="moonfall-load-art" aria-hidden="true"></div>
-  <div class="moonfall-load-card">
-    <div class="moonfall-load-crest" aria-hidden="true"><span>☾</span></div>
-    <p class="moonfall-load-eyebrow">BATTLE ROYALE</p>
-    <p class="moonfall-load-wordmark" aria-hidden="true">ARENA ROYALE</p>
-    <p class="moonfall-load-chapter">เตรียมตัวเข้าสู่สนามประลอง</p>
-    <div class="moonfall-load-rule" aria-hidden="true"><span>✦</span></div>
+<section id="loading" class="ov moonfall-load arena-load" data-key-art="assets/ui/arena-eclipse.webp" data-phase="loading" role="dialog" aria-modal="true" aria-labelledby="arenaLoadWordmark" tabindex="-1">
+  <div class="arena-load-backdrop" aria-hidden="true">
+    <div class="arena-load-art"></div>
+    <div class="arena-load-light"></div>
+    <div class="arena-load-mist"></div>
+    <div class="arena-load-embers"></div>
+  </div>
+  <div class="arena-load-card">
+    <div class="arena-crest" aria-hidden="true"><i></i></div>
+    <h1 class="arena-wordmark" id="arenaLoadWordmark"><span>ARENA</span><span>ROYALE</span></h1>
+    <div class="arena-load-rule" aria-hidden="true"></div>
     <h2 id="moonfallLoadTitle">กำลังเปิดประตูสนาม</h2>
     <p id="moonfallLoadStatus" role="status" aria-live="polite">กำลังตรวจสอบไฟล์เกม…</p>
     <div id="moonfallLoadProgress" role="progressbar" aria-label="ความคืบหน้าโหลดเกม" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="moonfallLoadFill"></div></div>
     <p id="moonfallLoadCount">กำลังเตรียมข้อมูล</p>
-    <p class="moonfall-load-note">ฉาก · ผู้กล้า · อาวุธ<br>ประตูจะเปิดเมื่อทุกอย่างพร้อม</p>
     <div id="moonfallLoadError" role="alert" hidden></div>
     <button id="moonfallLoadRetry" type="button" onclick="location.reload()" hidden>โหลดใหม่อีกครั้ง</button>
   </div>
-  <div class="moonfall-load-edition" aria-hidden="true">DARK CELESTIAL FANTASY <span>✦</span> ARENA ROYALE</div>
 </section>
 <script>
 window.moonfallCodeFailure=function(name){
@@ -1717,6 +1760,7 @@ function applyEvent(e){
         if(e.by===myId)AU.play(e.n,.78);
         else if((sndBudget[e.n]||0)<3){sndBudget[e.n]=(sndBudget[e.n]||0)+1;AU.playAt(e.n,e.x,e.y)}
       }
+      if(ARX&&(e.k==='fusing'||e.k==='fuse'))arenaForgeEvent(e);
       fxq.push(e);break;
     case 'f':feedList.unshift({txt:e.s,t:6,hl:e.v&&e.v.includes(myId)});if(feedList.length>5)feedList.pop();break;
     case 'a':if(!e.v||e.v.includes(myId))announce={txt:e.s,t:e.d||2.5};break;
@@ -2088,7 +2132,8 @@ function swapWeapons(u){if(!u||u.dead||!u.wk2||u.fuseT>0||u.leap||u.dash)return 
 // ---- fusion ----
 const canFuse=u=>!!(u.wk&&u.wk2&&!FUSED[u.wk]&&!FUSED[u.wk2]&&fuseKey(u.wk,u.wk2));
 const fuseTier=(a,b)=>Math.min(4,Math.max(a,b)+(a===b&&a>=2?1:0));
-function startFuse(u){u.fuseT=1.2;u.rapid=null;fxE('fusing',{id:u.id,x:u.x|0,y:u.y|0,a:AW.indexOf(u.wk),b:AW.indexOf(u.wk2)});sndAt('fusing',u.x,u.y);
+const FUSE_WINDUP=1.2;
+function startFuse(u){u.fuseT=FUSE_WINDUP;u.rapid=null;fxE('fusing',{id:u.id,x:u.x|0,y:u.y|0,a:AW.indexOf(u.wk),b:AW.indexOf(u.wk2),ta:u.wt,tb:u.wt2});sndAt('fusing',u.x,u.y);
   if(isHuman(u))fxTextFor(u.x,u.y-96,'⚒️ กำลังหลอมอาวุธ…','#ffd27a',1.4,[u.id],1)}
 function fuseNow(u){u.fuseT=0;if(!canFuse(u))return;const a=u.wk,b=u.wk2,fk=fuseKey(a,b),t=fuseTier(u.wt,u.wt2),F=WEAPONS[fk];
   u.wk=fk;u.wt=t;u.wk2=null;u.wt2=-1;u.wv2=0;u.spinT=0;u.lotusT=0;u.cd=[0,0,0];recalc(u);u.mp=u.maxMp;heal(u,u.maxHp*.3);
@@ -3045,6 +3090,7 @@ function draw2D(){
   for(const u of units){if(u.dead||!vis(u.x,u.y,80)||!unitVisibleTo(u,me,L))continue;drawUnit2D(u,me,u.inBush||u.invisT>0?.55:1)}
   for(const p of projs){if(!vis(p.x,p.y))continue;if(p.kind===0||p.kind===5||p.kind===7||p.kind===13||p.kind===11){const a=Math.atan2(p.vy,p.vx);ctx.strokeStyle=p.el?ELEM[p.el].c:p.kind===11?'#7ff0d8':p.kind===5?'#c8ff9a':'#e6fff0';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(p.x-Math.cos(a)*22,p.y-Math.sin(a)*22);ctx.lineTo(p.x,p.y);ctx.stroke()}
     else{ctx.fillStyle=p.el?ELEM[p.el].c:p.kind===14?'#ff8a3a':p.kind===2||p.kind===1?'#ff7a2a':p.kind===10?'#b9a6ff':p.kind===8?'#ff9a4a':p.kind===9?'#e8d8a8':p.kind===6?'#dfe8ff':'#bfefff';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()}}
+  if(ARX)drawArenaForge2D(L,vis);
   for(const p of parts){if(!vis(p.x,p.y))continue;ctx.globalAlpha=clamp(p.life/p.max,0,1);ctx.fillStyle=p.col;if(p.line)ctx.fillRect(p.x-1.5,p.y-18,3,18);else{ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,7);ctx.fill()}}ctx.globalAlpha=1;
   for(const q of WD.walls){if(!vis(q.x+q.w/2,q.y+q.h/2,Math.max(q.w,q.h)))continue;ctx.fillStyle=q.castle?'#a8a094':'#e8dcc0';ctx.fillRect(q.x,q.y,q.w,q.h);ctx.strokeStyle='#5d4632';ctx.lineWidth=2;ctx.strokeRect(q.x,q.y,q.w,q.h)}
   for(const l of WD.lanterns){if(!vis(l.x,l.y))continue;ctx.fillStyle='#3a2a1e';ctx.fillRect(l.x-3,l.y-6,6,20);ctx.fillStyle=l.torch?'#ff8a2a':l.dire?'#c08aff':'#ffd27a';ctx.beginPath();ctx.arc(l.x,l.y-10,7,0,7);ctx.fill()}
@@ -8079,6 +8125,212 @@ ECL_EXT.queen={detect:620,act:queenAct,
   const _bw=P.buildWorld;if(_bw)P.buildWorld=function(){const r=_bw.apply(this,arguments);try{ensure(this)}catch(e){warn('build',e)}return r};
 })();
 
+// Arena fusion presentation runs off the existing start and completion events.
+const arenaForgeEffects=new Map();
+const arenaForgeMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const ARENA_FORGE_REVEAL=1.65;
+let arenaForgeWorld=null;
+
+function arenaForgeEvent(e){
+  if(arenaForgeWorld!==WD){arenaForgeEffects.clear();arenaForgeWorld=WD;}
+  const reveal=e.k==='fuse',keys=reveal?[AW[e.w]]:[AW[e.a],AW[e.b]];
+  if(keys.some(key=>!WEAPONS[key]))return;
+  const tiers=reveal?[e.tr??2]:[e.ta??2,e.tb??2];
+  const colors=keys.map(key=>WEAPONS[key].glow||WEAPONS[key].col||'#ffcb82');
+  arenaForgeEffects.set(e.id,{id:e.id,x:e.x,y:e.y,keys,tiers,colors,reveal,start:performance.now()});
+}
+
+function* arenaForgeFrames(listener,visible){
+  const now=performance.now(),reduced=arenaForgeMotion.matches;
+  let drawn=0;
+  for(const [id,fx] of arenaForgeEffects){
+    const age=(now-fx.start)/1000,u=UMAP.get(id);
+    const duration=fx.reveal?ARENA_FORGE_REVEAL:FUSE_WINDUP+.16;
+    if(arenaForgeWorld!==WD||age>=duration||(!fx.reveal&&u?.dead)){arenaForgeEffects.delete(id);continue;}
+    const x=u?.x??fx.x,y=u?.y??fx.y;
+    if(drawn>=5||!visible(x,y)||u&&listener&&!unitVisibleTo(u,ME(),listener))continue;
+    drawn++;
+    yield {fx,x,y,age,k:clamp(age/duration,0,1),reduced};
+  }
+}
+
+function arenaForgeOrbit(j,age,k,reduced){
+  const a=j*Math.PI+(reduced?.18:age*(4.2+4.5*k));
+  const r=lerp(148,21,k*k);
+  return {a,x:Math.cos(a)*r,z:Math.sin(a)*r,y:101+59*k+Math.sin(a)*9};
+}
+
+function makeArenaForgeTexture(kind){
+  const canvas=document.createElement('canvas');canvas.width=canvas.height=256;
+  const p=canvas.getContext('2d');
+  if(kind!=='sigil'){
+    const halo=p.createRadialGradient(128,128,0,128,128,126);
+    const stops=kind==='seal'?[[0,'#1c10262b'],[.52,'#20142b55'],[.77,'#2a162799'],[.91,'#24132182'],[1,'#2c172600']]:
+      [[0,'#fff'],[.12,'#fffd'],[.35,'#fff6'],[1,'#fff0']];
+    for(const [at,color] of stops)halo.addColorStop(at,color);
+    p.fillStyle=halo;p.fillRect(0,0,256,256);
+    return canvas;
+  }
+  p.translate(128,128);
+  p.strokeStyle='#fff';p.shadowColor='#fff9';p.shadowBlur=5;
+  for(const [r,width] of [[116,2.8],[108,1],[96,1.8],[64,1.4]]){
+    p.lineWidth=width;p.beginPath();p.arc(0,0,r,0,Math.PI*2);p.stroke();
+  }
+  for(let i=0;i<12;i++){
+    p.rotate(Math.PI/6);
+    p.lineWidth=1.8;p.beginPath();p.moveTo(0,-94);p.lineTo(6,-84);p.lineTo(0,-74);p.lineTo(-6,-84);p.closePath();p.stroke();
+    p.lineWidth=1.1;p.beginPath();p.moveTo(-8,-111);p.lineTo(-8,-102);p.moveTo(8,-111);p.lineTo(8,-102);p.stroke();
+  }
+  for(const a of[0,Math.PI/6]){
+    p.save();p.rotate(a);p.lineWidth=1.2;p.beginPath();
+    for(let i=0;i<3;i++)p.lineTo(Math.sin(i*Math.PI*2/3)*64,-Math.cos(i*Math.PI*2/3)*64);
+    p.closePath();p.stroke();p.restore();
+  }
+  return canvas;
+}
+
+const arenaForgeSigil=makeArenaForgeTexture('sigil');
+
+function arenaForgeModel(renderer,key,tier){
+  const T=THREE,root=new T.Group();
+  const glb=FUSED[key]?null:renderer.p5WKeyFor(key,tier);
+  const model=(glb&&renderer.p5WModel(glb))||renderer.weapon(key,tier);
+  const bounds=new T.Box3().setFromObject(model),center=bounds.getCenter(new T.Vector3()),size=bounds.getSize(new T.Vector3());
+  model.position.sub(center);
+  model.traverse(n=>{if(n.isMesh){n.castShadow=false;n.receiveShadow=false;}});
+  root.add(model);
+  root.userData.length=Math.max(1,size.x,size.y,size.z);
+  return root;
+}
+
+function arenaForgeVisual(renderer,paint){
+  // Three.js UUIDs and the shared particle pools use Math.random.
+  const previous=Math.random;
+  try{Math.random=renderer.avRand;return paint();}finally{Math.random=previous;}
+}
+
+function arenaForgeObject(renderer,key,make){
+  return renderer.get(key,()=>arenaForgeVisual(renderer,make));
+}
+
+function arenaForgePlane(renderer,key){
+  return arenaForgeObject(renderer,'forge-'+key,()=>{
+    const texture=renderer.texC.get('forge-'+key)||renderer.ctex(key==='sigil'?arenaForgeSigil:makeArenaForgeTexture(key),true,false);
+    renderer.texC.set('forge-'+key,texture);
+    const material=new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,
+      blending:key==='seal'?THREE.NormalBlending:THREE.AdditiveBlending,side:THREE.DoubleSide,toneMapped:false});
+    const shape=new THREE.Mesh(renderer.G.quad,material);shape.userData.ownMat=1;
+    return shape;
+  });
+}
+
+function drawArenaForge3D(renderer,listener){
+  const radius=visionR()+105,near=(x,y)=>!listener||Math.hypot(x-listener.x,y-listener.y)<radius;
+  for(const {fx,x,y,age,k,reduced} of arenaForgeFrames(listener,near)){
+    const ground=renderer.gY(x,y),fade=fx.reveal?Math.pow(1-k,.75):Math.min(1,age*7);
+    const color=fx.reveal?fx.colors[0]:'#efb467';
+    const size=fx.reveal?340+140*Math.sqrt(k):290+56*k;
+    // A shaded bed keeps the gold seal legible on snow and other bright ground.
+    const bed=arenaForgePlane(renderer,'seal');bed.position.set(x,ground+3,y);bed.rotation.x=-Math.PI/2;
+    bed.scale.set(size,size,1);bed.material.opacity=fade*.86;bed.renderOrder=2;
+    const circle=arenaForgePlane(renderer,'sigil');circle.renderOrder=3;
+    circle.position.set(x,ground+5,y);circle.rotation.set(-Math.PI/2,0,reduced?0:age*(fx.reveal?-.7:1.15));
+    circle.scale.set(size,size,1);circle.material.color.set(color);circle.material.opacity=fade*(fx.reveal?.66:.46+.24*k);
+
+    fx.keys.forEach((key,j)=>{
+      const t=fx.tiers[j],weapon=arenaForgeObject(renderer,'forge-weapon-'+key+'-'+t,()=>arenaForgeModel(renderer,key,t));
+      const pos=fx.reveal?{a:age*2.8,x:0,z:0,y:151+66*Math.sin(k*1.65)}:arenaForgeOrbit(j,age,k,reduced);
+      weapon.position.set(x+pos.x,ground+pos.y,y+pos.z);
+      weapon.rotation.set(.2,reduced?.35:pos.a+.6,fx.reveal?-.26:(j?-.52:.52)*(1-k));
+      const length=fx.reveal?145*Math.min(1,.52+age*4)*(1-Math.pow(k,6)*.83):103+19*k;
+      weapon.scale.setScalar(length/weapon.userData.length);
+      if(!fx.reveal&&!reduced){
+        for(let i=1;i<=8;i++){
+          const past=Math.max(0,age-i*.028),trail=arenaForgeOrbit(j,past,past/(FUSE_WINDUP+.16),false);
+          const glow=arenaForgePlane(renderer,'glow');glow.quaternion.copy(renderer.cam.quaternion);
+          glow.position.set(x+trail.x,ground+trail.y,y+trail.z);
+          const width=(29+17*k)*(1-i/10);
+          glow.scale.set(width,width,1);glow.material.color.set(fx.colors[j]);glow.material.opacity=fade*(1-i/10)*.76;
+        }
+      }
+    });
+    if(fx.reveal){
+      const beam=arenaForgePlane(renderer,'glow'),height=340+250*k;
+      beam.position.set(x,ground+height*.45,y);beam.quaternion.copy(renderer.cam.quaternion);
+      beam.scale.set((reduced?82:175)*(1-k*.53),height,1);beam.material.color.set(color);
+      beam.material.opacity=(reduced?.17:.62)*Math.pow(1-k,2.1);
+      if(!reduced)for(const side of [-1,1]){
+        const blade=arenaForgePlane(renderer,'glow');
+        blade.quaternion.copy(renderer.cam.quaternion);
+        blade.rotateZ(side*(.28+k*.5));
+        blade.position.set(x+side*(72+75*k),ground+height*.31,y);
+        blade.scale.set(53+30*k,height*.8,1);blade.material.color.set('#ffbf74');
+        blade.material.opacity=.50*Math.pow(1-k,3);
+      }
+    }else if(k>.61&&!reduced){
+      const core=arenaForgePlane(renderer,'glow'),scale=70+140*(k-.61);
+      core.position.set(x,ground+155,y);core.quaternion.copy(renderer.cam.quaternion);core.scale.set(scale,scale,1);
+      core.material.color.set('#ffdc9a');core.material.opacity=fade*clamp((k-.61)*1.7,0,.58);
+    }
+  }
+}
+
+function arenaForgeBurst(renderer,e){
+  const weapon=WEAPONS[AW[e.w]];
+  if(!weapon)return;
+  const x=e.x,z=e.y,y=renderer.gY(x,z),color=weapon.glow||weapon.col,gold='#ffc480';
+  const reduced=arenaForgeMotion.matches;
+  renderer.ring(x,z,30,268,gold,.82);
+  renderer.ring(x,z,54,385,color,1.17);
+  renderer.flash(x,y+104,z,color,reduced?900:3200,560,.43);
+  const count=reduced?14:renderer.hi?46:30;
+  const rng=mulberry32(Math.imul(e.id+1,1597334677)^e.w);
+  for(let i=0;i<count;i++){
+    const a=i/count*Math.PI*2+rng()*.24,v=180+rng()*420;
+    renderer.sp(true,{x:x+Math.cos(a)*20,y:y+48,z:z+Math.sin(a)*20,vx:Math.cos(a)*v,vz:Math.sin(a)*v,
+      vy:78+rng()*340,l:.5+rng()*.75,s:12+rng()*10,s1:2,c:i%3?color:gold,sp:7,g:330});
+  }
+  for(let i=0;i<(reduced?5:12);i++){
+    const a=i*Math.PI/6;
+    renderer.sp(false,{x:x+Math.cos(a)*44,y:y+10,z:z+Math.sin(a)*44,vx:Math.cos(a)*170,vz:Math.sin(a)*170,
+      vy:32,l:.84,s:45,s1:115,c:'#a6959d',sp:2,a:.31});
+  }
+}
+
+function drawArenaForge2D(listener,visible){
+  for(const {fx,x,y,age,k,reduced} of arenaForgeFrames(listener,visible)){
+    const fade=fx.reveal?1-k:Math.min(1,age*6),r=fx.reveal?154+145*Math.sqrt(k):138+19*k;
+    const color=fx.reveal?fx.colors[0]:'#ffc785';
+    ctx.save();ctx.translate(x,y);
+    ctx.fillStyle=hexA('#2a182c',.36*fade);ctx.beginPath();ctx.ellipse(0,0,r,r*.66,0,0,Math.PI*2);ctx.fill();
+    ctx.save();ctx.scale(1,.66);ctx.rotate(reduced?0:age*.8);ctx.globalAlpha=.76*fade;
+    ctx.drawImage(arenaForgeSigil,-r,-r,r*2,r*2);ctx.restore();
+    ctx.strokeStyle=hexA(color,.81*fade);ctx.lineWidth=3;
+    ctx.beginPath();ctx.ellipse(0,0,r,r*.66,0,0,Math.PI*2);ctx.stroke();
+    for(let j=0;j<fx.keys.length;j++){
+      const pos=fx.reveal?{a:0,x:0,z:0,y:92+45*k}:arenaForgeOrbit(j,age,k,reduced);
+      ctx.save();ctx.translate(pos.x,pos.z*.65-pos.y*.67);
+      ctx.rotate(fx.reveal||reduced?0:Math.sin(pos.a)*.55);
+      const size=fx.reveal?116:78;
+      ctx.globalAlpha=fade;ctx.shadowColor=fx.colors[j];ctx.shadowBlur=13;
+      ctx.drawImage(ArenaHudIcons.weapon(fx.keys[j]),-size/2,-size/2,size,size);ctx.restore();
+    }
+    ctx.restore();
+  }
+}
+
+{
+  const otherFx=R3.fx3,otherExtra=R3.fxExtra;
+  R3.fx3=function(e){
+    if(e.k==='fuse')return arenaForgeVisual(this,()=>arenaForgeBurst(this,e));
+    if(e.k!=='fusing')return otherFx.call(this,e);
+  };
+  R3.fxExtra=function(T,dt,me,listener){
+    otherExtra.call(this,T,dt,me,listener);
+    drawArenaForge3D(this,listener);
+  };
+}
+
 /* Arena Royale · the castle boss becomes the Primordial Lava Titan (Claude, 2026-11-18 · index only). Render + names.
  * The owner asked for a new boss model picked from Meshy instead of the dragon. With no credits left for a new rig, this uses
  * the rigged Lunar Construct already in the project (Meshy rig + Hammer/Ground_Slam/Death clips), scaled to 390 and re-forged
@@ -11078,7 +11330,9 @@ window.installArenaMenuUX=function(){
     };
     const icon=key=>{const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.35');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[key]);svg.appendChild(path);return svg;};
     const title=menu.querySelector('.moonfall-menu-title');
-    title.querySelector('h1').innerHTML='<span>Arena</span><span>Royale</span>';
+    const wordmark=title.querySelector('h1');
+    wordmark.classList.add('arena-wordmark');wordmark.setAttribute('aria-label','Arena Royale');
+    wordmark.replaceChildren(make('span','','ARENA'),make('span','','ROYALE'));
     title.querySelector('.anime-kicker').textContent='BATTLE ROYALE';
     title.querySelector('.moonfall-menu-chapter').remove();
     title.querySelector('.sub').textContent='32 ผู้กล้า · เก็บอาวุธ ปลดปล่อยสกิล · เหลือเพียงตำนานเดียว';
@@ -11301,32 +11555,32 @@ function arenaSkillDetails(me,i){
 /* Arena Royale's cached steel emblems and compact HUD trim. */
 const ARENA_HUD_FONT='"Noto Sans Thai",system-ui,sans-serif';
 const arenaStatuses=[
-  ['โล่',true,u=>u.shieldHp>0&&u.shieldT],
-  ['เร่งวิ่ง',true,u=>Math.max(u.spdPT||0,u.buffT||0)],
-  ['ตีเร็ว',true,u=>u.asT],
-  ['บ้าคลั่ง',true,u=>u.rageT],
-  ['ฟื้นเลือด',true,u=>u.hotT],
-  ['ฟื้นมานา',true,u=>u.motT],
-  ['ล่องหน',true,u=>u.invisT],
-  ['ดูดเลือด',true,u=>u.lsT],
-  ['เดือด',true,u=>u.furyT,u=>u.fury],
-  ['ตีครั้งถัดไปแรงขึ้น',true,u=>(u.critNext||u.bsReady)?Infinity:0],
-  ['โล่อมตะ',true,u=>u.aegis?Infinity:0],
-  ['หลบความเสียหาย',true,u=>u.rollT],
-  ['ขุนพลคุ้มกัน',true,u=>u.wlord&&!u.wlord.dead&&SUMMONER.SO(u.wk)?u.wlord.lifeT:0],
-  ['มึน',false,u=>u.stunT],
-  ['ตรึง',false,u=>u.rootT],
-  ['เคลื่อนที่ช้า',false,u=>u.slowT],
-  ['เผาไหม้',false,u=>Math.max(u.burnT||0,u.ignT||0),u=>u.ign],
-  ['เย็นจัด',false,u=>u.chillT,u=>u.chill],
-  ['ประจุไฟฟ้า',false,u=>u.statT,u=>u.stat],
-  ['เน่าเปื่อย',false,u=>u.rotT],
-  ['ถูกตีตรา',false,u=>(u.smarkUntil||0)-gameT],
-  ['เปียก',false,u=>u.wet?Infinity:0],
+  ['โล่',true,'shield',u=>u.shieldHp>0&&u.shieldT],
+  ['เร่งวิ่ง',true,'speed',u=>Math.max(u.spdPT||0,u.buffT||0)],
+  ['ตีเร็ว',true,'quickBlade',u=>u.asT],
+  ['บ้าคลั่ง',true,'rage',u=>u.rageT],
+  ['ฟื้นเลือด',true,'health',u=>u.hotT],
+  ['ฟื้นมานา',true,'mana',u=>u.motT],
+  ['ล่องหน',true,'stealth',u=>u.invisT],
+  ['ดูดเลือด',true,'leech',u=>u.lsT],
+  ['เดือด',true,'fury',u=>u.furyT,u=>u.fury],
+  ['ตีครั้งถัดไปแรงขึ้น',true,'critReady',u=>(u.critNext||u.bsReady)?Infinity:0],
+  ['โล่อมตะ',true,'aegisRune',u=>u.aegis?Infinity:0],
+  ['หลบความเสียหาย',true,'evasion',u=>u.rollT],
+  ['ขุนพลคุ้มกัน',true,'warden',u=>u.wlord&&!u.wlord.dead&&SUMMONER.SO(u.wk)?u.wlord.lifeT:0],
+  ['มึน',false,'stunned',u=>u.stunT],
+  ['ตรึง',false,'rooted',u=>u.rootT],
+  ['เคลื่อนที่ช้า',false,'slow',u=>u.slowT],
+  ['เผาไหม้',false,'scorched',u=>Math.max(u.burnT||0,u.ignT||0),u=>u.ign],
+  ['เย็นจัด',false,'chilled',u=>u.chillT,u=>u.chill],
+  ['ประจุไฟฟ้า',false,'staticCharge',u=>u.statT,u=>u.stat],
+  ['เน่าเปื่อย',false,'rot',u=>u.rotT],
+  ['ถูกตีตรา',false,'mark',u=>(u.smarkUntil||0)-gameT],
+  ['เปียก',false,'wet',u=>u.wet?Infinity:0],
 ];
 function arenaStatusSnapshot(u){
   const rows=[];
-  arenaStatuses.forEach(([, ,timer,stacks],i)=>{
+  arenaStatuses.forEach(([, , ,timer,stacks],i)=>{
     const t=timer(u);
     if(t>0)rows.push([i,t===Infinity?-1:Math.ceil(t*10)/10,stacks?.(u)||0]);
   });
@@ -11335,27 +11589,28 @@ function arenaStatusSnapshot(u){
 function drawArenaStatus(u,x,y,w,s){
   const [data,received]=u.arenaStatus||[[],0];
   const remote=net.mode==='client',rows=remote?data:arenaStatusSnapshot(u),elapsed=remote?(performance.now()-received)/1000:0;
-  const h=17*s,gap=3*s,lines=[[]];
+  const h=21*s,gap=3*s,lines=[[]];
   let used=0;
   ctx.save();ctx.font=`600 ${10.5*s}px ${ARENA_HUD_FONT}`;
   for(const [i,t,n] of rows){
     if(t!==-1&&t<=elapsed)continue;
-    const [name,buff]=arenaStatuses[i];
+    const [name,buff,key]=arenaStatuses[i];
     const label=name+(n>0?` ×${n}`:'')+(t===-1?'':` · ${Math.ceil(t-elapsed)} วิ`);
-    const width=Math.min(w,ctx.measureText(label).width+17*s);
+    const width=Math.min(w,ctx.measureText(label).width+31*s);
     if(used&&used+width+gap>w){lines.push([]);used=0}
-    lines.at(-1).push({label,buff,width});used+=width+gap;
+    lines.at(-1).push({label,buff,key,width});used+=width+gap;
   }
   ctx.textAlign='left';ctx.textBaseline='middle';
   lines.forEach((line,i)=>{
     let left=x+(w-line.reduce((sum,chip)=>sum+chip.width+gap,-gap))/2;
     const top=y-(i+1)*(h+gap);
-    for(const {label,buff,width} of line){
+    for(const {label,buff,key,width} of line){
       const rim=buff?'#608982':'#9b625b',ink=buff?'#c8f3de':'#ffc3b3';
       rr(left,top,width,h,3*s);ctx.fillStyle=buff?'#14272bf5':'#311c23f5';ctx.fill();
       ctx.strokeStyle=rim;ctx.lineWidth=1;ctx.stroke();
-      ctx.fillStyle=rim;ctx.fillRect(left+4*s,top+4*s,2*s,h-8*s);
-      ctx.fillStyle=ink;ctx.fillText(label,left+10*s,top+h*.52,width-14*s);left+=width+gap;
+      const emblem=ArenaHudIcons.status(key,buff);
+      ctx.drawImage(emblem,left+2*s,top+1*s,19*s,19*s);
+      ctx.fillStyle=ink;ctx.fillText(label,left+25*s,top+h*.52,width-30*s);left+=width+gap;
     }
   });
   ctx.restore();
@@ -11388,7 +11643,7 @@ function drawArenaFeed(s){
 }
 
 const ArenaHudIcons=(()=>{
-  const weapons=new Map(),symbols=new Map();
+  const weapons=new Map(),symbols=new Map(),statuses=new Map();
   const tome='M3 5 Q7 4 12 7 Q17 4 21 5 L21 18 Q17 17 12 20 Q7 17 3 18 Z M12 7 V20 M5.5 8.5 Q8 8.5 10 10 M5.5 11.5 Q8 11.5 10 13 M15 11 L17 8.5 L19 11 L17 13.5 Z';
   const glyphs={
     health:['M12 20 4.8 12.7C-.5 7.4 6.7 1.9 12 7.4c5.3-5.5 12.5 0 7.2 5.3Z','#ffb9b6',true],
@@ -11396,6 +11651,24 @@ const ArenaHudIcons=(()=>{
     shield:['M12 2.5C9 5 6 6 3.8 6l1.1 7.7C5.6 17 8.2 19.5 12 21.5c3.8-2 6.4-4.5 7.1-7.8L20.2 6c-2.2 0-5.2-1-8.2-3.5Z M12 6.5v10.7 M8.3 11h7.4','#efcf8b'],
     attack:['M5 19 18.8 5.2 21 3l-1.1 6.1L9.7 17 M5.6 14.2l4.2 4.2 M3 21l2-2','#e3e1d7'],
     speed:['M10 4h6l-1.6 8.4 6.2 3V19H5.4V15l3.2-3.4Z M7 8H3 M6 11H2','#d8e0e5'],
+    quickBlade:['M10 18 20 5l-1 6-7 8m-6-2 7 4m-4-2-2 3M3 9h7M4 13h4','#d7efff'],
+    rage:['M4 4c1 4 3 5 5 5m11-5c-1 4-3 5-5 5M4 4l-1 8 4 6 5 3 5-3 4-6-1-8M6 13l3 1m6 0 3-1m-9 5 3-2 3 2','#ffb97e'],
+    stealth:['M3 12c3-4 6-6 9-6s6 2 9 6c-3 4-6 6-9 6s-6-2-9-6ZM3 20 21 4M12 9a3 3 0 0 0-3 3','#d3b7f7'],
+    leech:['M12 3C10 8 5 13 5 16a7 5 0 0 0 14 0c0-3-5-8-7-13Zm-3 13h6m-3-3v6','#ff9fac'],
+    fury:['M4 16 17 3l3 1-3 4L7 19m2 2 10-11 2 1-4 7-5 4M3 13l4-5 3-3','#ffd381'],
+    critReady:['M12 2l2 7 7 3-7 2-2 8-2-8-7-2 7-3Zm-7 4 3 2m9 9 3 3','#fff1b5'],
+    aegisRune:['M12 2 4 6v7c0 4 5 7 8 9 3-2 8-5 8-9V6l-8-4Zm-4 7 4-3 4 3-4 7-4-7Z','#ffe3a6'],
+    evasion:['M3 16c4 0 6-7 10-7 2 0 4 1 7 3m-6-7 7 7-7 7M3 11h4m-1 9h5','#a9f1e7'],
+    warden:['M3 18V9l5 4 4-7 4 7 5-4v9H3Zm2 3h14M12 2v2','#f5d893'],
+    stunned:['M12 2l1.3 3 3.5.5-2.5 2.3.6 3.5L12 9.5l-3 1.8.6-3.5-2.5-2.3 3.6-.5ZM3 12l1 2 2.5.4-1.8 1.6.4 2.4L3 17l-2 1m18-5 1 2 2 .5-1.5 1.4.5 2.1-2-1.3-2 1.3 1-2-2-1.5Z','#f8ce80'],
+    rooted:['M12 3v11m0-6L7 5m5 7 6-5m-6 6L7 18l-4 1m9-6 4 6 5 2M7 18v4m9-3 1 3','#b7e49d'],
+    slow:['M9 20c-5-2-6-8-2-11 3-2 7-.5 8 2 1 3-2 6-5 4-1-1-1-2 0-3m-5 7h13l3-4-2-3h-3','#d7b7a7'],
+    scorched:['M12 3c1 6-2 7-2 10 4 0 4-4 4-5 5 4 6 7 4 11-2 3-10 4-12-1-2-5 2-8 3-9 0 5 3 3 3-6Z','#ffb17a'],
+    chilled:['M12 2v20M4 7l16 10M4 17 20 7M9 4l3 3 3-3M9 20l3-3 3 3M4 10l4-.5L7.5 5m9 14-.5-4 4-.5M4 14l4 1-.5 4m9-14-.5 4 4 .5','#a8e9ff'],
+    staticCharge:['M13 2 4 14h7l-1 8 10-12h-7l.5-8Z','#d7b1ff',true],
+    rot:['M8 19v2h8v-2l2-2v-3a7 7 0 0 0-12-5c-3 3-2 8 2 10Zm0-5h1m6 0h1M12 17v1','#c6e299'],
+    mark:['M12 2v5m0 10v5M2 12h5m10 0h5M12 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z','#ffb7ad'],
+    wet:['M12 2c3 5 7 9 7 13a7 7 0 0 1-14 0c0-4 4-8 7-13Zm-4 13c0 2 1 3 3 3','#a9d7ff'],
     audio:['M3.2 9h4l4.5-4.2v14.4L7.2 15h-4Z M15.2 8.4a5 5 0 0 1 0 7.2 M17.8 5.8a8.7 8.7 0 0 1 0 12.4','#f0dfb8'],
     quiet:['M3.2 9h4l4.5-4.2v14.4L7.2 15h-4Z M15.2 8.4a5 5 0 0 1 0 7.2','#d9d4c7'],
     muted:['M3.2 9h4l4.5-4.2v14.4L7.2 15h-4Z M15.7 9.2l5.6 5.6m0-5.6-5.6 5.6','#b6b9c2']
@@ -11442,7 +11715,19 @@ const ArenaHudIcons=(()=>{
     if(filled)paint.fill(path,'evenodd');else paint.stroke(path);
     symbols.set(key,canvas);return canvas;
   }
-  return{weapon,symbol};
+  function status(key,buff){
+    if(statuses.has(key))return statuses.get(key);
+    const canvas=plate(72),paint=canvas.getContext('2d'),ink=glyphs[key][1];
+    const rim=new Path2D('M16 3H56L69 16V56L56 69H16L3 56V16Z');
+    const fill=paint.createLinearGradient(0,0,0,72);
+    fill.addColorStop(0,buff?'#2b4951':'#553036');fill.addColorStop(1,buff?'#0e1b22':'#22131b');
+    paint.fillStyle=fill;paint.fill(rim);paint.strokeStyle=hexA(ink,.74);paint.lineWidth=3;paint.stroke(rim);
+    paint.fillStyle=hexA(ink,.7);paint.fillRect(20,3,32,2);
+    paint.shadowColor=hexA(ink,.65);paint.shadowBlur=9;
+    paint.drawImage(symbol(key),10,10,52,52);
+    statuses.set(key,canvas);return canvas;
+  }
+  return{weapon,symbol,status};
 })();
 window.ArenaHudIcons=ArenaHudIcons;
 
@@ -11486,6 +11771,7 @@ function installArenaHud(){
     ctx.drawImage(emblem,iconX,y-.75*s,iconSize,iconSize);
     ctx.fillStyle=rank;ctx.fillText(title,iconX+iconSize+2*s,y+6.5*s,w-81*s);
 
+    // Leave room for the dash control and its keyboard label.
     const dash=arenaDashAnchor(potionRail({x,w},s));
     const statusWidth=clamp(dash.x-dash.r-x-(H>420?64:8),88*s,w);
     const statusHeight=drawArenaStatus(me,x,y,statusWidth,s);
