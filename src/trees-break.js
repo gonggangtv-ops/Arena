@@ -1,6 +1,7 @@
 /* Arena Royale · breakable trees (Claude, 2026-11-18 · index only; felled trees keep their own textured instances, stumps, hit wobble).
  * Host-authoritative: melee swings (1), arrows/bolts passing the trunk (1), spinning blades (1.5 per tick) and every skill
- * area that resolves on it (3, damage-over-time fields 1.5 per tick) chip a tree's 3 points; at 0 it breaks.
+ * area that resolves on it (3, damage-over-time fields 1.5 per tick) chip a tree's 3 points; at 0 it breaks. Banana plants (a.js, flag
+ * bn, owner 2026-11-23 "ปรับต้นกล้วยให้ล้มได้") have 1 point: any blow fells one.
  * {t:'th',i} reports a hit (leaves shake loose), {t:'tb',i,a} breaks tree i falling along angle a on every peer:
  * its colliders leave the grid, the host re-opens the nav cells around it, the renderer hides its instances and drops a
  * felled copy with wood chips, leaves and dust. Trees regrow with the next world. */
@@ -8,7 +9,7 @@
   'use strict';
   if(typeof buildCollide!=='function'||typeof WD==='undefined')return;
   const HP=3;
-  const _bc=buildCollide;buildCollide=function(w){_bc(w);const map=new Map();w.trees.forEach((t,i)=>{t.ti=i;t.thp=HP;t.broken=0;t.cols=[];map.set(t.x+','+t.y,t)});
+  const _bc=buildCollide;buildCollide=function(w){_bc(w);const map=new Map();w.trees.forEach((t,i)=>{t.ti=i;t.thp=t.bn?1:HP;t.broken=0;t.cols=[];map.set(t.x+','+t.y,t)});
     for(const L of w.cg.cells)for(const o of L){if(o.c!==1||o.tree)continue;const t=map.get(o.x+','+o.y);if(t&&o.r===t.r){o.tree=t;if(!t.cols.includes(o))t.cols.push(o)}}};
   const host=()=>typeof net==='undefined'||net.mode!=='client';
   function nearTrees(x,y,r,fn){if(!WD||!WD.cg)return;const seen=new Set();forObstacles(x,y,r,o=>{const t=o.tree;if(!t||t.broken||seen.has(t))return;seen.add(t);fn(t)})}

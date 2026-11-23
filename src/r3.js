@@ -397,7 +397,10 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     const tr=WD.trees;this.trees=tr;this.treeHidden=new Uint8Array(tr.length);this.treeParts=tr.map(()=>[]);tr.forEach((t,i)=>t._i=i);
     // Arena Royale (owner 2026-11-21): every tree in the Cursed Forest (REG land 1) is the gnarled leafless moon tree (moonfall-village.js
     // deadTrees), whatever kind it was; the other kinds below only draw the trees outside that land
-    const DT=this.deadOn&&this.deadOn()?(t=>REG.at(t.x,t.y)===1):null,tl=DT?tr.filter(t=>!DT(t)):tr;
+    // ...and banana plants (a.js, flag bn, fellable) are the owner's banana model wherever they stand, once it is loaded
+    // (before that they fall back to the birch-class look below)
+    const BN=this.bananaOn&&this.bananaOn()?(t=>!!t.bn):null;
+    const DT=this.deadOn&&this.deadOn()?(t=>!(BN&&BN(t))&&REG.at(t.x,t.y)===1):null,tl=DT||BN?tr.filter(t=>!(DT&&DT(t))&&!(BN&&BN(t))):tr;
     const reg=(t,im,i)=>{if(t._i!==undefined)this.treeParts[t._i].push([im,i])};const RT=t=>mulberry32(Math.floor(t.x*7+t.y));
     const TH=t=>(t.v===2?70:t.v===5?54:t.v===6?44:t.v===1?40:38)*t.h;
     // Arena Royale: birches become the owner's Meshy Verdant Solitude tree (moonfall-village.js) when it is loaded
@@ -435,6 +438,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     if(this.mangoOn&&this.mangoOn())this.mangoTrees(tl.filter(MG),reg);
     if(this.pineOn&&this.pineOn())this.pineTrees(tl.filter(PM),reg);
     if(DT)this.deadTrees(tr.filter(DT),reg);
+    if(BN)this.bananaTrees(tr.filter(BN),reg);
     {const mg=tl.filter(t=>t.v===3),magP=(t,add,k)=>{const R=RT(t),th=TH(t),cr=t.cr,b=this.gY(t.x,t.y),c=MAG[Math.floor(R()*MAG.length)];
         for(const q of[[0,.5,0,.8,.64],[-.38,.84,.12,.56,.48],[.4,.78,-.16,.52,.46],[0,1.06,.08,.46,.4]])add(t.x+cr*q[0],b+th+cr*q[1],t.y+cr*q[2],cr*q[3]*k,cr*q[4]*k,cr*q[3]*k,R(),R()*6,0,c)};
       this.instC(BLOB(1),magicM,mg,(t,add)=>magP(t,add,cards?.72:1),true,reg);

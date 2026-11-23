@@ -115,7 +115,6 @@ DROP.draw=function(){const c=this.el,dpr=Math.min(2,window.devicePixelRatio||1),
   const icon=(t,px,py,sz)=>{x.font=sz+'px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(t,px,py)};
   if(WD.castle)icon('🏰',X(WD.castle.cx),Y(WD.castle.cy),fs+4);if(WD.fort&&WD.fort.castle)icon('❄️',X(WD.fort.castle.x),Y(WD.fort.castle.y),fs+3);
   for(const s of WD.shrines||[])icon('✨',X(s.x),Y(s.y),fs);
-  for(const n of WD.npcs||[])icon('🛒',X(n.x)+fs*.9,Y(n.y)-fs*.2,fs);
   for(const v of WD.villages){const px=X(v.x),py=Y(v.y);x.fillStyle='#ffd35a';x.beginPath();x.arc(px,py,3.2,0,6.2832);x.fill();lab(v.name,px,py+fs,fs,'#ffe9b0',false)}
   // hover: which land
   if(this.hover&&this.hover.x>=mx&&this.hover.x<=mx+S&&this.hover.y>=my&&this.hover.y<=my+S&&typeof REG!=='undefined'){const wx=(this.hover.x-mx)/k,wy=(this.hover.y-my)/k,r=REG.at(wx,wy);
@@ -129,7 +128,7 @@ DROP.draw=function(){const c=this.el,dpr=Math.min(2,window.devicePixelRatio||1),
   // side panel
   const px=w-P-sr,pw=P;let y=Math.max(14,(h-Math.min(h-20,330))/2);
   lab('🪂 เลือกจุดลงจากฟ้า',px+pw/2,y+12,clamp(pw/12,15,22),'#ffe9a8',true);y+=34;
-  const tips=['แตะบนแผนที่ (ในวงพายุ) เพื่อเลือกจุดลง','หมู่บ้านมีอาวุธในบ้าน กล่องสมบัติ และพ่อค้า 🛒','ไม่เลือก = สุ่มให้'];
+  const tips=['แตะบนแผนที่ (ในวงพายุ) เพื่อเลือกจุดลง','หมู่บ้านมีอาวุธในบ้าน กล่องสมบัติ และพ่อค้าขายของ','ไม่เลือก = สุ่มให้'];
   for(const t of tips){lab(t,px+pw/2,y,clamp(pw/24,10,12.5),'#cbbf9f',false);y+=18}y+=6;
   if(this.st==='wait'){lab('กำลังรอโฮสต์…',px+pw/2,y+30,16,'#fff',true);return}
   // countdown ring

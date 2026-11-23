@@ -78,7 +78,7 @@ window.installArenaMenuUX=function(){
     const controls=make('div','arena-controls-guide');
     controls.append(make('h4','','คีย์ลัดและสัมผัส'));
     const keys=make('dl');
-    for(const [key,detail] of [['W A S D','เคลื่อนที่'],['Q · E · R','สกิลอาวุธ (PC กดค้างเล็ง ปล่อยร่าย)'],['Shift','พุ่งหลบ (ปุ่ม 💨 ข้างปุ่มโจมตี)'],['V','สกิลพิเศษ'],['B','กระเป๋า'],['P · 🛒','ร้านค้า (ต้องยืนใกล้พ่อค้าในหมู่บ้าน)'],['มือถือ','จอยซ้ายเดิน · กดค้างสกิลแล้วลากเพื่อเล็ง']])keys.append(make('dt','',key),make('dd','',detail));
+    for(const [key,detail] of [['W A S D','เคลื่อนที่'],['J · Space','โจมตี (ตีฮีโร่ก่อนเสมอ ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์)'],['K','ตีมอนสเตอร์อย่างเดียว (ปุ่มเล็ก 🐲 ข้างปุ่มโจมตี)'],['Q · E · R','สกิลอาวุธ (PC กดค้างเล็งตามเมาส์ ปล่อยร่าย · คลิกขวายกเลิก)'],['Shift','พุ่ง อมตะระหว่างพุ่ง คูลดาวน์ 45 วิ (ปุ่ม 💨 ซ้ายขวดเลือด)'],['V','สกิลพิเศษ (ปุ่ม ✦ เหนือปุ่มพุ่ง)'],['4 – 7 · B','ใช้ยา · เปิดกระเป๋า'],['F · T','เปิดกล่อง/เก็บอาวุธ · สลับอาวุธ'],['P','ร้านค้า (ต้องยืนใกล้พ่อค้าในหมู่บ้าน)'],['มือถือ','จอยซ้ายเดิน · กดค้างสกิลแล้วลากเพื่อเล็ง']])keys.append(make('dt','',key),make('dd','',detail));
     controls.appendChild(keys);groups[1].panel.appendChild(controls);
     rowFor(groups[2],'sndBtn','เพลงและเอฟเฟกต์','แตะเพื่อสลับเสียงทั้งหมด · เฉพาะเอฟเฟกต์ · ปิดเสียง');
     const credits=document.getElementById('credBtn');credits.className='arena-settings-credits';credits.addEventListener('click',()=>dialog.close(),true);groups[2].panel.appendChild(credits);

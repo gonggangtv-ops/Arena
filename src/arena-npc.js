@@ -1,23 +1,20 @@
-// ===================== VILLAGE MERCHANTS · shop only at an NPC, dash beside the attack button (Arena Royale, owner 2026-11-23) =====================
+// ===================== VILLAGE MERCHANTS · shop only at an NPC (Arena Royale, owner 2026-11-23) =====================
 // Owner: "เอาปุ่มกลิ้งออก แล้วก็ย้ายปุ่มพุ่งลงมาแถบข้างล่าง เอาปุ่มซื้อของออก จะซื้อของหรืออัพสกิลต้องไปซื้อที่ NPC ในแมพ ซึ่งจะมีอยู่ตามโซนหมู่บ้าน"
 // (owner's answers: the dash goes right beside the attack button; only the shop's wares — potions, level book, special skills,
 //  reforging — move to the merchants; skill points (+) still work anywhere; the merchants are the game's own villager model)
-//  · one merchant per village (a.js world gen, seeded: WD.npcs) beside a market stall, facing the square, 🛒 on the minimap
+//  · one merchant per village (a.js world gen, seeded: WD.npcs) beside a market stall, facing the square (owner 2026-11-23: no 🛒 on
+//    the minimap or the drop map any more — "เอาไอคอน 🛒 บนแมพออก"; the 3D sign over the stall still names him)
 //  · stand within NPC_R of one: the 🛒 prompt (or P) opens the shop, walking away closes it; the host refuses a purchase made
 //    away from a merchant, bots included (arena-bots.js walks them over); balance sims on an empty LAB arena still shop anywhere
 //  · the coin counter stays on screen but no longer opens the shop
-//  · the 💨 dash button (CUR pad child 1, kept in the pad so t1.js keeps drawing its cooldown) is placed on the attack button's
-//    upper right, or its lower left when a small screen has no room there
+//  · (the 💨 dash button first moved beside the attack button here; later the same day it went left of the HP potion —
+//    arena-buttons.js places it now)
 const NPC_R=190;
 function npcNear(u,r){const N=WD&&WD.npcs;if(!u||!N)return null;let b=null,bd=r||NPC_R;for(const n of N){const d=Math.hypot(n.x-u.x,n.y-u.y);if(d<bd){bd=d;b=n}}return b}
 const npcGate=()=>!!(WD&&WD.npcs&&WD.npcs.length);
 if(typeof shopBuy==='function'){const _sb=shopBuy;
   shopBuy=function(u,k){if(u&&u.hero&&!u.dead&&npcGate()&&!npcNear(u,NPC_R+40)){if(isHuman(u))fxTextFor(u.x,u.y-84,'🛒 ซื้อได้ที่พ่อค้าในหมู่บ้าน','#ffb0a0',1.6,[u.id]);return false}return _sb(u,k)}}
-// ---- minimap: merchants ----
-if(typeof drawMinimap==='function'){const _mm=drawMinimap;
-  drawMinimap=function(me,s,my0){const b=_mm(me,s,my0);try{const N=WD&&WD.npcs;if(N&&b){const k=b.w/WORLD;ctx.save();ctx.beginPath();ctx.rect(b.x,b.y,b.w,b.h);ctx.clip();
-      ctx.font=`${10*s}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';for(const n of N)ctx.fillText('🛒',b.x+n.x*k,b.y+n.y*k);ctx.restore()}}catch(e){}return b}}
-// ---- HUD: merchant prompt, gated shop, dash placement ----
+// ---- HUD: merchant prompt, gated shop ----
 if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
   const css=document.createElement('style');css.textContent=`
 #arenaNpcPrompt{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);transform:translateX(-50%);z-index:7;display:none;align-items:center;gap:9px;padding:8px 16px 8px 11px;
@@ -27,34 +24,21 @@ if(typeof CUR!=='undefined'&&CUR.el){const E=CUR.el;
 #arenaNpcPrompt i{font:500 12px system-ui,sans-serif;color:#cdbb8a;font-style:normal}
 @keyframes arenaNpcPulse{0%,100%{box-shadow:0 4px 14px #000a,0 0 0 1px #000,0 0 0 0 #ffd35a00}50%{box-shadow:0 4px 14px #000a,0 0 0 1px #000,0 0 18px 4px #ffd35a66}}
 #arenaGold{pointer-events:none!important;cursor:default!important}#arenaGold img[alt="เปิดร้านค้า"]{display:none!important}
-.arena-combat-hud #arenaCombatPad #arenaDash .arena-pad-caption{bottom:auto!important;top:-17px!important}
-@media(max-height:420px){.arena-combat-hud #arenaCombatPad #arenaDash .arena-pad-caption{display:none!important}}`;document.head.appendChild(css);
+`;document.head.appendChild(css);
   const pr=document.createElement('div');pr.id='arenaNpcPrompt';pr.setAttribute('role','button');pr.innerHTML='<b>🛒</b><span>ร้านค้า</span><i></i><small>P</small>';document.body.appendChild(pr);
   for(const k of['pointerup','pointermove','touchstart','wheel'])pr.addEventListener(k,e=>e.stopPropagation());
   pr.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();CUR.toggle(true)});
   const _tg=CUR.toggle;
   CUR.toggle=function(v){const open=v===undefined?!this.open:!!v;if(open){const me=ME();if(!me||me.dead||!npcNear(me,NPC_R+20)&&npcGate()){
-      E.hint.textContent='🛒 ร้านค้าอยู่กับพ่อค้าในหมู่บ้าน · ดูไอคอน 🛒 บนแผนที่ แล้วเดินไปคุย';this.hintT=3.5;return}}return _tg.call(this,v)};
-  E.hint.textContent='ฆ่ามอนสเตอร์ เปิดกล่อง ค้นบ้านหาอาวุธ · เหรียญ 🪙 ใช้ซื้อของกับพ่อค้า 🛒 ในหมู่บ้าน · Shift พุ่ง (45 วิ) · V สกิลพิเศษ';
-  let near0=null,dashW=0;
-  // the dash: a free spot hugging the attack button, upper right first (owner's pick), else lower left; never over a skill button
-  // (a small phone has no room at full size: the button then shrinks a step at a time until it fits without covering a skill)
-  function npcPlaceDash(){const d=E.pad.children[1];if(!d||!UI.atk||!UI.atk.r||E.pad.style.display==='none')return;const a=UI.atk;
-    if(!dashW||Math.random()<.02)dashW=d.offsetWidth||60;const px=parseFloat(E.pad.style.left)||0,py=parseFloat(E.pad.style.top)||0;
-    let best=null,sc=1;
-    for(const k of[1,.84,.72]){const rd=dashW/2*k;
-      const ok=(x,y)=>x-rd>=SAFE.l+2&&x+rd<=W-SAFE.r-3&&y-rd>=SAFE.t+2&&y+rd<=H-SAFE.b-3&&UI.sk.every(b=>!b.r||Math.hypot(x-b.x,y-b.y)>=b.r+rd+2);
-      const at=(deg,ex)=>{const dd=a.r+rd+ex,q=deg*Math.PI/180;return{x:a.x+Math.cos(q)*dd,y:a.y+Math.sin(q)*dd}};
-      for(const set of[[318,326,310,334,302,342],[160,150,170,142,178]]){for(const deg of set){for(const ex of[2,7,13,20]){const p=at(deg,ex);if(ok(p.x,p.y)){best=p;break}}if(best)break}if(best)break}
-      if(best){sc=k;break}}
-    if(!best){sc=.72;const rd=dashW/2*sc,q=150*Math.PI/180;best={x:a.x+Math.cos(q)*(a.r+rd+2),y:Math.min(H-SAFE.b-rd-3,a.y+Math.sin(q)*(a.r+rd+2))}}
-    const l=(best.x-dashW/2-px).toFixed(1)+'px',t=(best.y-dashW/2-py).toFixed(1)+'px',tf=sc<1?'scale('+sc+')':'';
-    if(d.style.left!==l)d.style.left=l;if(d.style.top!==t)d.style.top=t;if(d.style.transform!==tf){d.style.transform=tf;d.style.transformOrigin='50% 50%'}}
+      E.hint.textContent='🛒 ร้านค้าอยู่กับพ่อค้าในหมู่บ้าน · เดินไปหาแผงขายของกลางหมู่บ้าน แล้วกดคุย';this.hintT=3.5;return}}return _tg.call(this,v)};
+  {const tc=matchMedia('(pointer:coarse)').matches||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);   // owner 2026-11-23: the current controls
+    E.hint.textContent=tc?'ค้นบ้าน เปิดกล่อง ล่ามอนสเตอร์หาอาวุธ · เหรียญ 🪙 ซื้อของกับพ่อค้าในหมู่บ้าน · ปุ่มโจมตีตีฮีโร่ก่อน · ปุ่มเล็ก 🐲 ตีมอน · 💨 พุ่งอยู่ซ้ายขวดเลือด':
+      'ค้นบ้าน เปิดกล่อง ล่ามอนสเตอร์หาอาวุธ · เหรียญ 🪙 ซื้อของกับพ่อค้าในหมู่บ้าน (P) · J โจมตี (ฮีโร่ก่อน) · K ตีมอน · Shift พุ่ง · V สกิลพิเศษ'}
+  let near0=null;
   function npcHudStep(){const me=ME(),sky=typeof DROP!=='undefined'&&DROP.sky&&DROP.sky(),on=state==='play'&&me&&!me.dead&&!sky;
     const n=on?npcNear(me,NPC_R):null;if(n!==near0){near0=n;pr.querySelector('i').textContent=n?'· '+n.name:''}
     const show=!!n&&!CUR.open;if((pr.style.display==='flex')!==show)pr.style.display=show?'flex':'none';
-    if(CUR.open&&(!on||npcGate()&&!npcNear(me,NPC_R+90)))_tg.call(CUR,false);
-    npcPlaceDash()}
+    if(CUR.open&&(!on||npcGate()&&!npcNear(me,NPC_R+90)))_tg.call(CUR,false)}
   // installed after the HUD installers (installMoonfallInventory / installArenaCombatControls run later in the same script)
   setTimeout(()=>{const st=CUR.step;CUR.step=function(dt){const r=st.call(this,dt);try{npcHudStep()}catch(e){}return r};
     const rd=CUR.render;CUR.render=function(me){rd.call(this,me);try{const n=npcNear(me,NPC_R+90),h=this.el.shop.querySelector('.moonfall-shop-head')||this.el.shop.firstElementChild;
