@@ -258,8 +258,9 @@ try:
             boot_state = visit.ready()
             assert boot_state['moody'] and boot_state['gfxQ'] == 'auto', boot_state
             page.wait_for_function("document.getElementById('menu').dataset.arenaMenu", polling=100)
-            heading = ' '.join(page.locator('#menu h1').inner_text().split())
-            assert heading.casefold() == 'arena royale', heading
+            heading = page.locator('#menu').get_by_role('heading', name='Arena Royale', exact=True)
+            assert heading.is_visible()
+            heading.locator('img').wait_for(state='visible')
             primary = fits(page, '#soloBtn', target=True)
             fits(page, '#menu')
             visit.picture(label + '-ready')

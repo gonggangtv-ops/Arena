@@ -1,9 +1,9 @@
 /* Arena-only combat hardware; the original positions and pointer bounds stay intact. */
-.arena-combat-hud #moonfallSkillHint{background:linear-gradient(135deg,#19222deF,#080f18fa);border-color:#b5a17b;border-top-color:#e3cc9f;border-radius:3px;box-shadow:0 8px 28px #0008,inset 0 1px #fff08;color:#b8c9d7;font-size:11px;line-height:1.7}
+.arena-combat-hud #moonfallSkillHint{font-size:11px;line-height:1.7}
 .arena-combat-hud #moonfallSkillHint strong{color:#f1e5cb;font-size:12px;line-height:1.7;margin-bottom:4px}
 .arena-combat-hud #moonfallSkillHint span{color:#b0c6d9}
 /* A stationary hold opens the card on touch and mouse. */
-.arena-combat-hud #moonfallSkillHint[data-hold]:not([hidden]){display:block;z-index:8;box-sizing:border-box;width:min(285px,calc(100vw - 20px));padding:9px 12px;line-height:1.6}
+.arena-combat-hud #moonfallSkillHint[data-hold]:not([hidden]){display:block;z-index:8;box-sizing:border-box;width:min(285px,calc(100vw - 20px));padding:11px 14px;line-height:1.6}
 .arena-combat-hud #moonfallSkillHint[data-hold] strong{font-size:13px;margin:0 0 5px;padding-bottom:4px;border-bottom:1px solid #cdb8894d}
 .arena-combat-hud #moonfallSkillHint .skill-damage{color:#ffe1a2;margin-top:4px;font-weight:650}
 .arena-combat-hud #moonfallSkillHint .skill-note{color:#e2ebf2;margin-top:4px}
@@ -20,8 +20,34 @@
 .arena-combat-hud #arenaGold{border-color:#b29b6f!important;border-radius:3px!important;background:linear-gradient(135deg,#1d2936f2,#080f18f5)!important;box-shadow:0 3px 12px #0005,inset 0 1px #f4e5bf1a;color:#efdaaa!important;font-family:system-ui,sans-serif!important;font-variant-numeric:tabular-nums;text-shadow:0 1px 3px #000}
 .arena-combat-hud #arenaGold .moonfall-item-art{border-radius:3px;border-color:#b6a17a66;box-shadow:inset 0 0 0 1px #040a12}
 .arena-combat-hud #arenaRegion{border-radius:2px!important;background:linear-gradient(135deg,#192432e0,#080f18eb)!important;box-shadow:0 1px 0 #c2ab7933;color:#d5d9d8!important;font-family:system-ui,sans-serif!important;text-shadow:0 1px 3px #000}
-.arena-combat-hud #arenaCombatHint{border-color:#b7a078!important;border-radius:3px!important;background:linear-gradient(135deg,#182535ed,#080f18f5)!important;color:#d6e0e6!important;box-shadow:0 5px 20px #0005;font:12px/1.75 system-ui,sans-serif!important}
+.arena-combat-hud #arenaCombatHint{font-size:12px!important;line-height:1.75!important}
 @media(max-height:359px) and (min-aspect-ratio:20/21){.arena-combat-hud #arenaGold{box-sizing:border-box;min-height:44px}.arena-combat-hud #arenaGold .moonfall-item-art{width:26px;height:26px;vertical-align:middle}}
 /* Match the game's existing H > W * 1.05 portrait pause/rotation screen. */
-@media(max-aspect-ratio:20/21){.arena-combat-hud #arenaCombatPad,.arena-combat-hud #arenaGold,.arena-combat-hud #arenaRegion,.arena-combat-hud #arenaCombatHint,.arena-combat-hud #moonfallSkillHint,.arena-combat-hud #moonfallShop{visibility:hidden!important}}
+@media(max-aspect-ratio:20/21){.arena-combat-hud #arenaCombatPad,.arena-combat-hud #arenaGold,.arena-combat-hud #arenaRegion,.arena-combat-hud #arenaCombatHint,.arena-combat-hud #moonfallSkillHint,.arena-combat-hud #moonfallShop,.arena-combat-hud #arenaNpcPrompt{visibility:hidden!important}}
 @media(prefers-reduced-motion:reduce){.arena-combat-hud #arenaCombatPad *{transition:none!important;animation:none!important}}
+
+.arena-combat-hud{--arena-panel:linear-gradient(145deg,#30283a,#171623 60%,#0e101b);--arena-rim:#b58b62;--arena-inlay:#d5ad7945;--arena-parchment:#f6e7d2}
+.arena-combat-hud :is(#moonfallSkillHint,#arenaCombatHint,#arenaNpcPrompt){
+  background:var(--arena-panel)!important;border:1px solid var(--arena-rim)!important;border-radius:2px!important;
+  outline:1px solid #070810;box-shadow:inset 0 0 0 3px #10101af0,inset 0 0 0 4px var(--arena-inlay),0 8px 22px #050610aa!important;
+  color:var(--arena-parchment)!important;text-shadow:0 2px 3px #070810;font-family:"Noto Sans Thai",system-ui,sans-serif!important
+}
+.arena-combat-hud :is(#moonfallSkillHint,#arenaCombatHint,#arenaNpcPrompt)::before{
+  content:'';position:absolute;inset:0 8px auto;height:1px;
+  background:linear-gradient(90deg,transparent,#f4d7acb5 38%,transparent);pointer-events:none
+}
+.arena-combat-hud #moonfallSkillHint[data-hold] strong{
+  border-bottom-color:var(--arena-inlay);color:#ffe9c4;letter-spacing:.01em
+}
+.arena-combat-hud #moonfallSkillHint .skill-meta{color:#d3c6dd}
+.arena-combat-hud #arenaCombatHint{padding:8px 16px!important}
+.arena-combat-hud :is(#codex .wcard,#fuseGrid .fcard){
+  background:var(--arena-panel);border-radius:3px;box-shadow:inset 0 0 0 2px #0b0c15,inset 0 0 0 3px var(--arena-inlay)
+}
+.arena-combat-hud :is(#codex .wcard,#fuseGrid .fcard) b{color:var(--arena-parchment)}
+.arena-combat-hud .arena-weapon-portrait{
+  display:block;width:42px;height:42px;flex:none;
+  background-image:url('assets/ui/arena-armory.webp');background-size:600% 500%;background-repeat:no-repeat
+}
+.arena-combat-hud #codex .arena-weapon-portrait{margin:0 auto 3px}
+.arena-combat-hud #fuseGrid .arena-weapon-portrait{width:46px;height:46px}
