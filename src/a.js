@@ -470,9 +470,18 @@ function townPath(x,y,m){const C=WD&&WD.city;if(!C)return false;m=m||0;const dx=
 function cityXY(C,u,v){return{x:C.x+u*C.lx+v*C.ox,y:C.y+u*C.ly+v*C.oy}}
 // Arena Royale (owner 2026-11-22): the Snow Queen's castle on a plateau one step up out of the Frozen Sanctuary, east of the Old
 // Town; one wide stairway climbs to it from the valley. Fort frame like the town's (u along the cliff, v out of the valley, cityXY
-// works on it). The castle stands at the back (FORT_VC), the queen's court in front of it (FORT_VA). arena-frost.js draws it,
-// snow-queen.js is the boss.
-const FORT_P=240,FORT_OF=60,FORT_SH=150,FORT_SB=-430,FORT_VA=640,FORT_VC=1380,FORT_CW=900,FORT_CD=560;
+// works on it). arena-frost.js draws it, snow-queen.js is the boss.
+const FORT_P=240,FORT_OF=60,FORT_SH=150,FORT_SB=-430;
+// Owner 2026-11-24 "ปรับขยายปราสาทให้ใหญ่แทนลานเดิม แล้วปรับปราสาทให้เป็นผลึกแก้วใสสวยงาม": the queen's moon court is gone and the castle
+// (the owner's Aurora Nexus Citadel, clear crystal glass in arena-frost.js) stands where it was, ~1.9x its first fit. Model frame (metres,
+// gate toward +z) -> fort frame: u = x*FORT_S, v = FORT_V0 - z*FORT_S; FORT_ZC is the model z of the GLB's bounds centre. FORT_ZF is its
+// front line (the faces of the front towers): behind that line the plateau is solid except the inner court before the keep, its two
+// side yards, the open gate and the shallow recess before the front walls (FORT_WALK, model metres [x0,x1,z0,z1], measured from the
+// model's walls). The queen holds the forecourt between the stair head and the gate; her treasure waits in the inner court.
+const FORT_S=190,FORT_V0=1007,FORT_ZF=1.96,FORT_ZC=.25;
+const FORT_WALK=[[-3,3,.36,1.25],[-3.3,-3,.36,.84],[3,3.3,.36,.84],[-3.3,-2.54,-1.08,.36],[2.54,3.3,-1.08,.36],[-1.34,1.34,1.2,2.2],[-2.98,-1.42,1.8,2.2],[1.42,2.98,1.8,2.2]];
+// model metres from (x,z) to ground a hero may stand on at the castle (0 there; the forecourt is everything before the front line)
+function fortWalkD(x,z){let d=Math.max(0,FORT_ZF-z);for(const r of FORT_WALK)d=Math.min(d,Math.hypot(Math.max(r[0]-x,0,x-r[1]),Math.max(r[2]-z,0,z-r[3])));return d}
 // signed distance to the plateau's sides and back (< 0 inside), rounded back corners
 function fortSB(F,u,v){const hw=F.hw+F.sw*Math.sin(v*.003+F.p3),vb=F.dep+90*Math.sin(u*.0021+F.p1),R=420,au=Math.abs(u);
   const du=au-(hw-R),dv=v-(vb-R);return du>0&&dv>0?Math.hypot(du,dv)-R:Math.max(au-hw,v-vb)}
@@ -831,46 +840,60 @@ function genWorld(seed){
       for(let i=0;i<3;i++){const q=P((i-1)*95,VT-230+(i===1?-50:0)),m={id:mid++,x:q.x,y:q.y,kind:'sentinel',camp:camp.id,sc:1.15,rich:1};w.mobs.push(m);camp.mem.push(m.id)}w.camps.push(camp)}
     // how far the town reaches from the valley's centre (the storm's first circle covers it)
     C.far=0;for(const [u,v] of[[-C.hw,C.dep],[C.hw,C.dep],[0,C.dep+120],[-C.hw,0],[C.hw,0]]){const q=P(u,v);C.far=Math.max(C.far,Math.hypot(q.x-CX,q.y-CY))}}
-  // ---- Frozen Sanctuary: the closed palace, the Queen's front court, and the stairway ----
-  if(w.fort){const F=w.fort,P=(u,v)=>cityXY(F,u,v),face=Math.atan2(-F.ox,-F.oy);
-    const prop=(k,u,v,o)=>{const q=Object.assign(P(u,v),{k,a:face},o||{});F.props.push(q);return q};
+  // ---- Frozen Sanctuary: the crystal citadel where the court was, the queen's forecourt before its gate, and the stairway ----
+  if(w.fort){const F=w.fort,P=(u,v)=>cityXY(F,u,v),face=Math.atan2(-F.ox,-F.oy),M=(x,z)=>P(x*FORT_S,FORT_V0-z*FORT_S);
+    const prop=(k,q,o)=>{q=Object.assign(q,{k,a:face},o||{});F.props.push(q);return q};
     const solid=(q,r)=>w.solids.push({x:q.x,y:q.y,r,t:'fort'});
+    // the fort draws from its own stream (one draw of the world's): the rest of the world stays put when the fort changes
+    const SR0=SR;SR=mulberry32(Math.floor(SR0()*4294967296));
     // Match the Blender rails, leaving the centre of the stairway clear.
     const railStart=FORT_SB+20,railEnd=FORT_OF+4,railRadius=15;
     const steps=Math.ceil((railEnd-railStart)/railRadius);
     for(const s of[-1,1])for(let i=0;i<=steps;i++)solid(P(s*140,lerp(railStart,railEnd,i/steps)),railRadius);
-    // paving (the court, the way from the stair head, the castle's apron): no grass or meadow dressing there
-    {const d=(u,v,r)=>{const q=P(u,v);F.paint.push([q.x,q.y,r])},l=(u0,v0,u1,v1,wd)=>{const a=P(u0,v0),b=P(u1,v1);F.paint.push([a.x,a.y,b.x,b.y,wd])};
-      l(0,FORT_SB-25,0,FORT_OF+10,445);d(0,FORT_VA,500);d(0,FORT_VC-FORT_CD/2-40,330);l(0,FORT_OF,0,FORT_VA-300,330);l(-FORT_CW/2,FORT_VC-FORT_CD/2-60,FORT_CW/2,FORT_VC-FORT_CD/2-60,160)}
-    // the castle: solid over its whole footprint (towers at the four corners)
-    F.castle=prop('snow-castle',0,FORT_VC,{w:FORT_CW,d:FORT_CD});
-    for(let u=-FORT_CW/2+70;u<=FORT_CW/2-70+1;u+=(FORT_CW-140)/6)for(let v=FORT_VC-FORT_CD/2+70;v<=FORT_VC+FORT_CD/2-70+1;v+=(FORT_CD-140)/4)solid(P(u,v),82);
-    for(const su of[-1,1])for(const sv of[-1,1])solid(P(su*FORT_CW/2,FORT_VC+sv*FORT_CD/2),92);
-    // guardians at the head of the stairway and either side of the gate, braziers round the court
-    for(const sg of[-1,1]){solid(prop('guardian-statue',sg*250,150,{h:230,ice:1}),52);solid(prop('guardian-statue',sg*210,FORT_VC-FORT_CD/2-90,{h:250,ice:1}),52)}
-    for(let i=0;i<4;i++){const a=(i+.5)/4*Math.PI*2,q=P(Math.cos(a)*470,FORT_VA+Math.sin(a)*400);F.braziers.push(q);solid(q,26)}
-    // ice crystal clusters along the plateau's sides and back corners and either side of the stair head (the big ones are solid)
-    for(let k=0,t=0;k<16&&t<400;t++){const u=sr(-F.hw+90,F.hw-90),v=sr(120,F.dep-80),au=Math.abs(u);
-      if(au<F.hw-330&&v<FORT_VC+FORT_CD/2+60)continue;if(Math.abs(u)<FORT_CW/2+120&&Math.abs(v-FORT_VC)<FORT_CD/2+120)continue;
-      const q=P(u,v);if(fortSB(F,u,v)>-70||F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<220))continue;
-      const c=Object.assign(q,{r:sr(46,82),n:4+Math.floor(SR()*4),a:sr(0,6.3),h:sr(150,260)});F.crystals.push(c);if(c.r>60)solid(c,c.r*.7);k++}
+    // paving: the stairway, the way across the forecourt to the gate, the queen's ground, the gate, the inner court, its side yards and
+    // the rest of the castle's floor
+    {const d=(q,r)=>F.paint.push([q.x,q.y,r]),l=(a,b,wd)=>F.paint.push([a.x,a.y,b.x,b.y,wd]);
+      l(P(0,FORT_SB-25),P(0,FORT_OF+10),445);l(P(0,FORT_OF),M(0,2.4),520);d(M(0,3.15),440);l(M(0,1.2),M(0,2.2),2.7*FORT_S);
+      l(M(-3.15,.8),M(3.15,.8),.95*FORT_S);for(const s of[-1,1])l(M(s*2.92,-1.05),M(s*2.92,.5),.8*FORT_S);
+      for(let z=-2.35;z<FORT_ZF;z+=.5)l(M(-4.35,z),M(4.35,z),.62*FORT_S)}   // the castle's whole floor: no meadow dressing shows through its glass
+    // the castle (arena-frost.js draws the model at FORT_S round its bounds centre; the minimap marks it)
+    F.castle=prop('aurora-citadel',M(0,FORT_ZC),{s:FORT_S});F.gate=M(0,FORT_ZF);
+    // its walls, towers and keep, and the plateau behind and beside it, are solid; FORT_WALK stays open. Cells of 1.1 m split in four
+    // near open ground; each puts one circle no wider than its distance to that ground, so no circle reaches into it and the gaps
+    // left along its edges are far too small for a hero
+    {const xs=(F.hw+F.sw+120)/FORT_S,zb=(FORT_V0-F.dep-260)/FORT_S;
+      const put=(x,z,r)=>{const u=x*FORT_S,v=FORT_V0-z*FORT_S;if(fortSB(F,u,v)-r*FORT_S>60)return;solid(P(u,v),r*FORT_S)};
+      const cell=(x,z,h)=>{const d=fortWalkD(x,z);if(d>=h*1.45||h<.16){if(d>.04)put(x,z,Math.min(d,h*1.75))}else for(const a of[-1,1])for(const b of[-1,1])cell(x+a*h/2,z+b*h/2,h/2)};
+      for(let z=FORT_ZF-.55;z>zb;z-=1.1)for(let x=.55;x<xs;x+=1.1){cell(x,z,.55);cell(-x,z,.55)}}
+    // before the front line: the gate's two crystal pillars, the crystal clusters at the front corners
+    for(const s of[-1,1]){solid(M(s*1.37,2.08),.24*FORT_S);solid(M(s*3.95,2.18),.4*FORT_S);solid(M(s*4.38,2.12),.14*FORT_S)}
+    // guardians at the head of the stairway and either side of the gate, braziers at the forecourt's corners
+    for(const sg of[-1,1]){solid(prop('guardian-statue',P(sg*250,150),{h:230,ice:1}),52);solid(prop('guardian-statue',M(sg*1.95,2.5),{h:250,ice:1}),52)}
+    for(const q of[P(-600,250),P(600,250),M(-3.25,2.75),M(3.25,2.75)]){F.braziers.push(q);solid(q,26)}
+    // ice crystal clusters along the forecourt's sides, beside and behind the castle (seen through its glass), and either side of the
+    // stair head (the big ones on open ground are solid)
+    {const castle=(u,v)=>{const x=u/FORT_S,z=(FORT_V0-v)/FORT_S;return Math.abs(x)<4.55&&z>-2.45&&z<2.6};
+      for(let k=0,t=0;k<18&&t<600;t++){const u=sr(-F.hw+90,F.hw-90),v=sr(140,F.dep-60),au=Math.abs(u),open=v<FORT_V0-FORT_ZF*FORT_S;
+        if(open&&(au<F.hw-320||v<200))continue;if(castle(u,v)||castle(u+(u>0?-150:150),v))continue;
+        const q=P(u,v);if(fortSB(F,u,v)>-70||F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<230))continue;
+        const c=Object.assign(q,{r:sr(46,86),n:4+Math.floor(SR()*4),a:sr(0,6.3),h:sr(150,280)});F.crystals.push(c);if(open&&c.r>60)solid(c,c.r*.7);k++}}
     for(const sg of[-1,1]){const q=Object.assign(P(sg*(FORT_SH+60),FORT_OF+8),{r:44,n:4,a:sr(0,6.3),h:sr(130,170)});F.crystals.push(q)}
-    // snow pines on the plateau's flanks, behind the castle (owner 2026-11-23: 14 -> 8)
-    for(let k=0,t=0;k<8&&t<300;t++){const u=sr(-F.hw+120,F.hw-120),v=sr(220,F.dep-120),au=Math.abs(u);if(au<F.hw-300&&v<F.dep-260)continue;
-      if(Math.abs(u)<FORT_CW/2+90&&Math.abs(v-FORT_VC)<FORT_CD/2+90)continue;const q=P(u,v);if(fortSB(F,u,v)>-90)continue;
+    // snow pines behind the castle and in the gaps beside it (owner 2026-11-23: 14 -> 8)
+    for(let k=0,t=0;k<8&&t<400;t++){const u=sr(-F.hw+120,F.hw-120),v=sr(FORT_V0-FORT_ZF*FORT_S+60,F.dep-100),x=u/FORT_S,z=(FORT_V0-v)/FORT_S;
+      if(Math.abs(x)<4.75&&z>-2.75)continue;const q=P(u,v);if(fortSB(F,u,v)>-90)continue;
       if(F.crystals.some(c=>Math.hypot(c.x-q.x,c.y-q.y)<c.r+70)||w.trees.some(t=>Math.abs(t.x-q.x)<120&&Math.abs(t.y-q.y)<120))continue;
       w.trees.push({x:q.x,y:q.y,r:20,cr:sr(58,78),v:2,ph:sr(0,6),h:sr(.9,1.15)});k++}
-    // loot: two chests and gold by the castle gate, a tier-3 weapon and a rune behind the queen, potions at the stair head
-    for(const sg of[-1,1]){const q=P(sg*330,FORT_VC-FORT_CD/2-110);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1});
-      const c=P(sg*420,FORT_VC-FORT_CD/2-150);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
-    // owner 2026-11-23 "ตรงบอสราชินีน้ำแข็ง ไอเทมระดับตำนานยังมีอยู่เลย": the legendary weapon and rune behind the queen are two of the
-    // gilded treasure chests now (vault:2, rolled when opened, b.js openBox); the two draws they used are still taken, so the rest
-    // of the world grows exactly as before
-    SR();SR();for(const u of[-70,70]){const q=P(u,FORT_VA+330);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2,vault:2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1})}
+    // loot: two chests and gold before the gate, potions at the stair head; owner 2026-11-23 "ตรงบอสราชินีน้ำแข็ง ไอเทมระดับตำนานยังมีอยู่เลย":
+    // the legendary weapon and rune are two gilded treasure chests (vault:2, rolled when opened, b.js openBox), now in the inner court
+    // before the keep's door, past the queen
+    for(const sg of[-1,1]){const q=M(sg*2.6,2.45);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1});
+      const c=M(sg*2.95,3.1);w.items.push({id:iid++,k:'c',x:c.x,y:c.y,n:2,gold:true})}
+    for(const sg of[-1,1]){const q=M(sg*.55,.64);w.boxes.push({id:w.boxes.length,x:q.x,y:q.y,a:face+Math.PI/2,vault:2});w.rocks.push({x:q.x,y:q.y,r:26,prop:1})}
     for(const [u,it] of[[-90,'potion'],[90,'mana']]){const q=P(u,190);w.items.push({id:iid++,k:'i',x:q.x,y:q.y,it})}
-    // the Snow Queen (snow-queen.js): alone on her court, no respawn
-    {const g=P(0,FORT_VA+170),camp={id:w.camps.length,x:g.x,y:g.y,tier:'icethrone',mem:[],maxRespawn:0,sc:1,rich:1};
+    // the Snow Queen (snow-queen.js): alone before her gate, no respawn
+    {const g=M(0,3.15),camp={id:w.camps.length,x:g.x,y:g.y,tier:'icethrone',mem:[],maxRespawn:0,sc:1,rich:1};
       const m={id:mid++,x:g.x,y:g.y,kind:'snowqueen',camp:camp.id,sc:1,rich:1};w.mobs.push(m);camp.mem.push(m.id);w.camps.push(camp);F.queen=m.id;F.home={x:g.x,y:g.y}}
+    SR=SR0;
     F.far=0;for(const [u,v] of[[-F.hw,F.dep],[F.hw,F.dep],[0,F.dep+120]]){const q=P(u,v);F.far=Math.max(F.far,Math.hypot(q.x-CX,q.y-CY))}}
   // ---- shrines ----
   const inCastle=(p,m)=>p.x>CS.x-m&&p.x<CS.x+CS.w+m&&p.y>CS.y-m&&p.y<CS.y+CS.h+m;

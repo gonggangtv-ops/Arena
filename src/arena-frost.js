@@ -1,19 +1,20 @@
 /* Arena Royale · the Snow Queen's fort (Claude, 2026-11-22 · index only). Render only.
  * World gen (a.js WD.fort) raises a plateau one step up out of the Frozen Sanctuary, east of the Old Town, with one wide stairway
- * from the valley; the queen (snow-queen.js, drawn by eclipse-fx.js) holds the court in front of her castle. Drawn here:
+ * from the valley; the queen (snow-queen.js, drawn by eclipse-fx.js) holds the forecourt before her castle's gate. Drawn here:
  *  - the castle: the owner's Aurora Nexus Citadel ('aurora-citadel', Blender, 2026-11-24: glacial keep and bastions, curtain walls,
- *    ice pinnacles, aurora standards, crystal spire, its own processional stairs) fitted to world gen's footprint FORT_CW x FORT_CD,
- *    gate toward the valley; if it is ever missing, an ice palace built from simple solids (pale stone walls and merlons, four round
- *    towers and two keep towers under ice-crystal roofs, a gatehouse with a glowing door, the keep and its crystal spire). The regions
- *    module settles snow on its upward faces like every other prop in the Sanctuary;
+ *    ice pinnacles, aurora standards, crystal spire, its own processional dais) — owner 2026-11-24 "ปรับขยายปราสาทให้ใหญ่แทนลานเดิม
+ *    แล้วปรับปราสาทให้เป็นผลึกแก้วใสสวยงาม": ~1.9x its first fit, standing where the moon court was (a.js FORT_S / FORT_V0), in clear
+ *    crystal glass (glassMat: fresnel cover, frosted carving and stained colour from its own texture, an aurora sky and a prism along
+ *    its edges, caustic shimmer, glints, a cold light inside at night); its inner court, side yards and open gate are walkable (a.js
+ *    FORT_WALK). If the model is ever missing, an ice palace built from simple solids over the same footprint;
  *  - the stairway: 28 Blender ice steps up the ramp between two balustrades, its ice glossier with a cold glow inside, its crystal
  *    rails, posts and step noses lit (owner 2026-11-24: "ปรับบันใดน้ำแข็งทางขึ้นให้สวยยิ่งขึ้น"); on it an aurora runner up the middle
  *    of the steps whose light bands flow up toward the queen and glint along every nose, floating crystal lanterns over the ten
  *    posts, a pool of cold light at the foot, small crystal clusters at the foot and against the cliff, motes drifting up the steps;
- *  - the court: the moon circle iced over, frozen braziers burning blue, ice-tinted guardians at the stair head and the gate;
- *  - ice crystal clusters (faceted, glossy, a cold inner glow);
+ *  - the forecourt: frozen braziers burning blue, ice-tinted guardians at the stair head and either side of the gate;
+ *  - ice crystal clusters (faceted, glossy, a cold inner glow), along the forecourt's sides and behind the castle;
  *  - Eternal Winter (the queen's ultimate, aoe 'qwinter'): the air fills with driven snow toward her, frost closes in at the edges of
- *    the screen while it charges, then the court bursts white. Its two warm circles are eclipse-fx's 'usafe'.
+ *    the screen while it charges, then the forecourt bursts white. Its two warm circles are eclipse-fx's 'usafe'.
  * Entering the plateau shows the castle's name once per visit. Collision, loot and the queen are world gen's and snow-queen.js'. */
 (()=>{
   'use strict';
@@ -71,16 +72,98 @@
       const S=mode==='stair'&&STAIR_M[c.name];if(S){if(S.r!==undefined&&'roughness' in c)c.roughness=S.r;if(S.env&&R.hi&&c.isMeshStandardMaterial)c.envMapIntensity=S.env;
         if('emissive' in c){if(S.e){c.emissive=new T.Color(S.e);c.emissiveIntensity=S.k}if(S.x)c.emissiveIntensity=(c.emissiveIntensity||1)*S.x}}
       return R.fow(c,mode==='cut'||mode==='stair'?{key:'fortmcut',cut:true}:{key:'forttint'})})}
+  // ---- the castle's clear crystal glass (owner 2026-11-24 "ปรับปราสาทให้เป็นผลึกแก้วใสสวยงาม") ----
+  // Two passes over the model, neither writing depth, so whatever stands behind or inside the castle stays in view:
+  //  1. absorb (multiplied into the frame): what is seen through the glass takes its tint — deep ice blue at the foot, paler up high,
+  //     stronger toward the edges where the light runs through more glass; overlapping walls and towers tint twice, so thick reads
+  //     deeper; the model's coloured panels stain it, its bright carving frosts it;
+  //  2. light (premultiplied alpha, so the reflections are not dimmed by the glass being clear): a MeshStandardMaterial lit like the
+  //     rest of the world (sharp sun glints; the sky's reflection through envTex on high) recomposed before the fog of war — frosted
+  //     carving from the model's own texture, an aurora sky and a faint prism along the edges, a crisp rim, a slow caustic shimmer,
+  //     twinkling glints, a cold light held inside at night.
+  // Per part: light [base cover, edge cover, frost from, frost to], [specular, sky, prism, glints], emissive, absorb strength, order.
+  const GLASS={'Glacial Module | Meshy PBR atlas':{g:[.02,.18,.6,1],g2:[1,.45,.4,1.1],e:.75,k:1,o:-6},Ice_Full:{g:[.03,.16,.7,1.2],g2:[.5,.28,.35,.8],k:1.05,o:-8},
+    Snow:{g:[.2,.3,.4,.9],g2:[.8,.3,.2,.5],k:.6,o:-9},Ice_Crystal:{g:[.04,.22,.6,1.1],g2:[1.2,.5,.7,1.6],e:.4,k:1.1,o:-5},Glow:{g:[.35,.45,2,3],g2:[1,.5,.4,.5],e:1.8,k:.6,o:-4}};
+  const GLASS_FS=`{vec3 gN=normalize(normal),gV=normalize(vViewPosition);float nv=clamp(dot(gN,gV),0.,1.),fr=pow(1.-nv,2.4);
+ vec3 wR=inverseTransformDirection(reflect(-gV,gN),viewMatrix);float up=wR.y;
+ vec3 sky=mix(vec3(.45,.7,.96),vec3(.08,.2,.5),smoothstep(-.15,.85,up));
+ float au=.5+.5*sin(wR.x*2.6+wR.z*1.3+uTime*.11+1.7*sin(wR.z*3.1-uTime*.17)),band=smoothstep(.05,.45,up)*(1.-smoothstep(.55,.98,up));
+ sky+=mix(vec3(.15,1.,.72),vec3(.62,.38,1.),au)*band*au*au*.85;
+ vec3 tc=diffuseColor.rgb;float lum=dot(tc,vec3(.2126,.7152,.0722)),sat=max(tc.r,max(tc.g,tc.b))-min(tc.r,min(tc.g,tc.b));
+ float frost=smoothstep(uGlass.z,uGlass.w,lum);
+ vec3 tint=mix(vec3(.8,.93,1.),tc/max(lum,.04)*.5,smoothstep(.1,.4,sat));
+ float a=clamp(uGlass.x+frost*.18+fr*uGlass.y,0.,1.);
+ vec3 prism=.55+.45*cos(6.2832*(vec3(0.,.33,.67)+fr*1.6+dot(wR,vec3(.9,.3,.6))));
+ vec3 wp=vec3(vFowW.x,vWY,vFowW.y),cp=floor(wp/9.),fp=fract(wp/9.)-.5;float hs=fract(sin(dot(cp,vec3(12.9898,78.233,37.719)))*43758.5453);
+ float spk=step(.93,hs)*pow(max(0.,sin(uTime*(1.6+hs*2.2)+hs*40.)),12.)*smoothstep(.3,0.,length(fp))*(.4+fr);
+ float cs=sin(wp.x*.045+uTime*.6)+sin(wp.z*.051-uTime*.47)+sin((wp.x+wp.y)*.033+uTime*.39),caus=pow(1.-abs(cs)/3.,10.);
+ float night=1.-uCloud;
+ vec3 col=totalDiffuse*tint*(.15+.85*frost)*a+totalSpecular*uGlass2.x+sky*fr*uGlass2.y+vec3(.72,.9,1.)*pow(fr,3.)*uGlass2.y*.35+prism*fr*fr*uGlass2.z
+   +totalEmissiveRadiance+vec3(.55,.88,1.)*caus*(.16+.45*night)*(.3+a)+tint*vec3(.1,.24,.44)*night*(.35+.65*frost)*(.4+a)+vec3(1.,.97,.9)*spk*uGlass2.w;
+ gl_FragColor=vec4(col/max(a,.03),a);}
+`;
+  function glassMat(R,src){const G=GLASS[src.name]||GLASS.Ice_Full;return R.cached('fort-glass-'+src.uuid,()=>{
+    const m=new T.MeshStandardMaterial({name:src.name,color:'#ffffff',map:src.map||null,normalMap:src.normalMap||null,roughness:.12,metalness:0,
+      transparent:true,depthWrite:false,premultipliedAlpha:true});
+    if(src.color&&!src.map)m.color.copy(src.color);
+    if(m.normalMap)m.normalScale=new T.Vector2(1.15,1.15);
+    if(G.e){const e=src.emissive,lit=e&&e.r+e.g+e.b>.01;m.emissive=lit?e.clone():new T.Color('#2f9fff');m.emissiveMap=lit&&src.emissiveMap||null;m.emissiveIntensity=G.e*(lit&&src.emissiveIntensity||1)}
+    if(R.hi&&R.envTex){m.envMap=R.envTex;m.envMapIntensity=.6}
+    R.fow(m,{key:'fortglass',cut:true});
+    const U={uGlass:{value:new T.Vector4(...G.g)},uGlass2:{value:new T.Vector4(...G.g2)}},ob=m.onBeforeCompile,ck=m.customProgramCacheKey;
+    m.onBeforeCompile=function(sh,rd){if(ob)ob.call(this,sh,rd);Object.assign(sh.uniforms,U);
+      sh.fragmentShader='uniform vec4 uGlass,uGlass2;\n'+sh.fragmentShader.replace('#include <opaque_fragment>',GLASS_FS)};
+    m.customProgramCacheKey=()=>(ck?ck.call(m):'')+'|glass2';m.userData.glassOrder=G.o;return m})}
+  const ABS_VS=`varying vec3 vW,vN;varying vec2 vUv;
+void main(){vec4 p=vec4(position,1.);vec3 n=normal;
+#ifdef USE_INSTANCING
+mat3 im=mat3(instanceMatrix);p=instanceMatrix*p;n/=vec3(dot(im[0],im[0]),dot(im[1],im[1]),dot(im[2],im[2]));n=im*n;
+#endif
+vec4 w=modelMatrix*p;vW=w.xyz;vN=mat3(modelMatrix)*n;vUv=uv;gl_Position=projectionMatrix*viewMatrix*w;}`;
+  const ABS_FS=`uniform vec3 uAbsA,uAbsB;uniform vec2 uAbsY,uFowC;uniform float uAbsK,uFowH,uHasMap,uHasNrm;uniform sampler2D uMap,uNrm;varying vec3 vW,vN;varying vec2 vUv;
+void main(){
+ {vec2 cd=vW.xz-uFowC;float ax=abs(cd.x);if(cd.y>25.&&ax<170.){float lim=uFowH+cd.y*1.48-26.+ax*.9;if(vW.y>lim){float hn=fract(sin(dot(floor(gl_FragCoord.xy),vec2(12.9898,78.233)))*43758.5453);if(hn<smoothstep(0.,30.,vW.y-lim)*smoothstep(170.,110.,ax))discard;}}}
+ vec3 n=normalize(vN),v=normalize(cameraPosition-vW);float fr=pow(1.-abs(dot(n,v)),2.);
+ vec3 ab=mix(uAbsA,uAbsB,smoothstep(uAbsY.x,uAbsY.y,vW.y));
+ float hue=.5+.5*sin(vW.x*.0031+vW.z*.0023+sin(vW.y*.004+vW.x*.0017)*1.6);ab=mix(ab,ab*vec3(1.08,.82,1.)+vec3(.06,0.,0.),hue*.55);   // aurora: cyan drifting to violet
+ if(uHasMap>.5){vec3 tc=texture2D(uMap,vUv).rgb;float l=dot(tc,vec3(.2126,.7152,.0722)),s=max(tc.r,max(tc.g,tc.b))-min(tc.r,min(tc.g,tc.b));
+   ab=mix(ab,clamp(tc/max(l,.04)*.45,0.,1.),smoothstep(.1,.4,s)*.8);ab=mix(ab,vec3(.86,.9,.95),smoothstep(.6,1.,l)*.25);}
+ if(uHasNrm>.5){vec2 d=texture2D(uNrm,vUv).xy*2.-1.;ab*=mix(1.,.7,smoothstep(.12,.55,length(d)));}   // carved edges read deeper
+ gl_FragColor=vec4(mix(vec3(1.),ab,min(1.,uAbsK*(.72+.28*fr))),1.);
+ #include <colorspace_fragment>
+}`;   // a linear factor: on the screen (low quality) it is encoded like any colour, so both qualities tint alike
+  // y0: the castle's base; its tint runs from deep at the foot to pale by 4 model metres up
+  function absMat(R,src,y0,S){const G=GLASS[src.name]||GLASS.Ice_Full,m=R.cached('fort-gabs-'+src.uuid,()=>{
+    const m=new T.ShaderMaterial({vertexShader:ABS_VS,fragmentShader:ABS_FS,transparent:true,depthWrite:false,
+      blending:T.CustomBlending,blendEquation:T.AddEquation,blendSrc:T.ZeroFactor,blendDst:T.SrcColorFactor,blendSrcAlpha:T.ZeroFactor,blendDstAlpha:T.OneFactor,
+      uniforms:{uAbsA:{value:new T.Color(.1,.3,.8)},uAbsB:{value:new T.Color(.3,.56,.95)},uAbsY:{value:new T.Vector2(y0+.4*S,y0+4*S)},uAbsK:{value:G.k},
+        uMap:{value:src.map||null},uHasMap:{value:src.map?1:0},uNrm:{value:src.normalMap||null},uHasNrm:{value:src.normalMap?1:0},uFowC:R.U.fowC,uFowH:R.U.fowH}});
+    m.name='fort-glass-absorb';return m});m.uniforms.uAbsY.value.set(y0+.4*S,y0+4*S);return m}
+  // the citadel at the world's fit (a.js: FORT_S game units per model metre round the GLB's bounds centre F.castle), sunk until its
+  // processional dais is flush with the plateau (the snow bed of its courts lies under the plateau's own snow)
+  const DAIS=.464;   // model metres: the top of the citadel's processional dais (its courts' snow bed is .3)
+  function placeGlass(R,C,y0){const s=A().get('aurora-citadel').inspection.size,parts=R.celestialAsset('aurora-citadel'),S=C.s||FORT_S;if(!parts)return 0;
+    const put=(geo,mat,order)=>{for(const im of R.instC(geo,mat,[C],(q,add)=>add(q.x,y0,q.y,s[0]*S,s[1]*S,s[2]*S,0,q.a,0,null),false,null,9000))im.renderOrder=order};
+    for(const p of parts){const one=Array.isArray(p.mat)?p.mat[0]:p.mat,o=(GLASS[one.name]||GLASS.Ice_Full).o;
+      if(one.name!=='Glow')put(p.geo,Array.isArray(p.mat)?p.mat.map(m=>absMat(R,m,y0,S)):absMat(R,p.mat,y0,S),o-10);
+      put(p.geo,Array.isArray(p.mat)?p.mat.map(m=>glassMat(R,m)):glassMat(R,p.mat),o)}
+    return 1}
   function place(R,key,list,fit,mode){if(!list.length||!loaded(key))return 0;const s=A().get(key).inspection.size,parts=R.celestialAsset(key);if(!parts)return 0;
     for(const p of parts){const mat=mode?(Array.isArray(p.mat)?p.mat.map(m=>remat(R,m,mode)):remat(R,p.mat,mode)):p.mat;
       R.instC(p.geo,mat,list,(q,add)=>{const f=fit(q,s);add(q.x,(q.y0!==undefined?q.y0:R.gY(q.x,q.y))+(q.dy||0),q.y,f[0],f[1],f[2],0,q.a,0,null)},true,null,2600)}
     return list.length}
-  P.buildFort=function(){this.fortStair=this.fortCourt=null;const F=WD&&WD.fort;if(!F)return;const R=this,face=Math.atan2(-F.ox,-F.oy),P2=(u,v)=>cityXY(F,u,v);
-    // the castle: the owner's model when it is in, the ice palace until then
-    const C=F.castle,cy=this.gY(C.x,C.y);
-    if(loaded('aurora-citadel')){place(this,'aurora-citadel',[Object.assign({},C,{dy:-24})],(q,s)=>{const k=Math.min(FORT_CW/s[0],FORT_CD/s[2]);return[s[0]*k,s[1]*k,s[2]*k]},'cut');this.fortModel='aurora-citadel'}   // its glacier bed sinks 24 into the ground
-    else{const pal=palace(this,FORT_CW,FORT_CD);for(const [g,m,sh] of[[pal.stone,stoneM(this),true],[pal.ice,iceM(this),true],[pal.glow,glowM(this),false]]){
-        const me=new T.Mesh(g,m);me.position.set(C.x,cy-4,C.y);me.rotation.y=face;me.castShadow=!!this.hi&&sh;me.receiveShadow=true;this.scene.add(me)}this.fortModel='palace'}
+  P.buildFort=function(){this.fortStair=this.fortCourt=null;const F=WD&&WD.fort;if(!F)return;const R=this,face=Math.atan2(-F.ox,-F.oy),P2=(u,v)=>cityXY(F,u,v),
+      M=(x,z)=>P2(x*FORT_S,FORT_V0-z*FORT_S);
+    // the castle: the owner's citadel in clear crystal glass where the court was (its dais, model y DAIS, flush with the plateau);
+    // an ice palace over the same footprint if the model ever fails
+    const C=F.castle,gate=F.gate||M(0,FORT_ZF);
+    this.fortGlass=null;const S=C.s||FORT_S,yb=this.gY(gate.x,gate.y)-DAIS*S+3;   // yb: the model's base (its y 0)
+    if(loaded('aurora-citadel')&&placeGlass(this,C,yb)){this.fortModel='aurora-citadel';
+      // light caught in the glass: the gate's two crystal pillars, the keep's door over the inner court
+      for(const sg of[-1,1]){const q=M(sg*1.37,2.08);this.glows.push([q.x,yb+2.62*S,q.y,'#9fe8ff',260])}
+      {const d=M(0,.42);this.glows.push([d.x,yb+.95*S,d.y,'#bfefff',300])}this.fortGlass={x:C.x,y:C.y,yb,S}}
+    else{const c=M(0,(FORT_ZF-2.25)/2),pal=palace(this,8.6*FORT_S,(FORT_ZF+2.25)*FORT_S);for(const [g,m,sh] of[[pal.stone,stoneM(this),true],[pal.ice,iceM(this),true],[pal.glow,glowM(this),false]]){
+        const me=new T.Mesh(g,m);me.position.set(c.x,this.gY(c.x,c.y)-4,c.y);me.rotation.y=face;me.castShadow=!!this.hi&&sh;me.receiveShadow=true;this.scene.add(me)}this.fortModel='palace'}
     const start=FORT_SB,end=FORT_OF+10,steps=Object.assign(P2(0,(start+end)/2),{a:face,y0:0});
     if(place(this,'snow-stairs',[steps],(q,size)=>size.map(d=>d*100),'stair')){this.fortStairModel='snow-stairs';try{this.fortStairFx(steps,face)}catch(e){warn('stairfx',e)}}
     else{
@@ -92,8 +175,7 @@
       }
       st.instanceMatrix.needsUpdate=true;st.computeBoundingSphere();
     }
-    // the court: the moon circle iced over; guardians; braziers burning blue
-    {const q=P2(0,FORT_VA);this.fortCourt={x:q.x,y:q.y,r:400};place(this,'moon-arena',[Object.assign(q,{a:face,dy:-4})],(qq,s)=>{const k=820/Math.max(s[0],s[2]);return[s[0]*k,13,s[2]*k]},'ice')}
+    // guardians (ice-tinted), braziers burning blue
     const by=new Map();for(const q of F.props){if(q.k==='snow-castle'||q.k==='aurora-citadel')continue;if(!by.has(q.k))by.set(q.k,[]);by.get(q.k).push(q)}
     for(const [k,list] of by)place(this,k,list,(q,s)=>{const f=q.h?q.h/s[1]:1;return[s[0]*f,s[1]*f,s[2]*f]},list[0].ice?'ice':null);
     if(F.braziers.length){if(loaded('brazier'))place(this,'brazier',F.braziers.map(b=>Object.assign({},b,{a:face})),(q,s)=>{const f=90/s[1];return[s[0]*f,90,s[2]*f]},'ice');
@@ -102,8 +184,6 @@
     // ice crystal clusters: n faceted crystals leaning out of a common root
     {const geo=crystalGeo(),list=[];for(const c of F.crystals){const n=c.n,h0=hash(c.x,c.y);for(let i=0;i<n;i++){const hh=hash(c.x+i*7.1,c.y-i*3.3),a=c.a+i/n*Math.PI*2+hh,d=i?c.r*(.25+.45*hh):0;
         list.push({x:c.x+Math.cos(a)*d,y:c.y+Math.sin(a)*d,h:c.h*(i?.45+.5*hash(c.y+i,c.x):1),r:c.r*(i?.16+.12*hh:.24),tx:i?Math.cos(a)*(.25+.35*h0):0,tz:i?Math.sin(a)*(.25+.35*h0):0,ry:hh*6.28})}}
-      const pal=this.fortModel==='palace'&&F.castle;if(pal){const C2=F.castle;for(const [u,v,h] of[[-FORT_CW/2-40,FORT_VC-FORT_CD/2-50,170],[FORT_CW/2+40,FORT_VC-FORT_CD/2-50,190],[-FORT_CW/2-30,FORT_VC+FORT_CD/2+30,150],[FORT_CW/2+30,FORT_VC+FORT_CD/2+30,160]]){const q=P2(u,v);
-        for(let i=0;i<4;i++){const a=i*1.7+u*.01;list.push({x:q.x+Math.cos(a)*(i?34:0),y:q.y+Math.sin(a)*(i?34:0),h:h*(i?.55:1),r:i?18:28,tx:i?Math.cos(a)*.4:0,tz:i?Math.sin(a)*.4:0,ry:a})}}}
       this.instC(geo,iceM(this),list,(c,add)=>add(c.x,this.gY(c.x,c.y)-8,c.y,c.r,c.h,c.r,c.tz,c.ry,-c.tx,null),!!this.hi,null,2600)}};
   // ---- the stairway's light, in the stair model's own frame (x100: x ±1.61, y 0..3.39, z ±2.5; 28 steps of rise .0857 and run .1786
   // from the valley at +z up to the plateau at -z; a crystal strip on every nose; crystal posts at x ±1.405, z -2.29 -1.16 0 1.19 2.2) ----
@@ -158,9 +238,12 @@ void main(){float t=vP.x,w=abs(vP.y),band=pow(.5+.5*sin((t*5.-uT*.42)*6.2832),8.
     document.body.appendChild(frost);return frost};
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);try{const F=WD&&WD.fort;if(this.fortStair)this.fortStairStep(Math.min(.1,Math.max(0,dt||0)),typeof state!=='undefined'&&state==='play'?L:null);
       if(!F||!L||typeof state==='undefined'||state!=='play')return r;
-      const inF=fortIn(L.x,L.y,-120)&&fortBase(L.x,L.y)>FORT_P-1;if(inF&&!this._inFort&&typeof gameT!=='undefined'&&gameT>3)announce={txt:'❄️ '+F.name+' — ราชินีหิมะรอผู้กล้าอยู่บนลานบัลลังก์น้ำแข็ง',t:3.4};this._inFort=inF;
+      const inF=fortIn(L.x,L.y,-120)&&fortBase(L.x,L.y)>FORT_P-1;if(inF&&!this._inFort&&typeof gameT!=='undefined'&&gameT>3)announce={txt:'❄️ '+F.name+' — ราชินีหิมะรอผู้กล้าอยู่หน้าประตูปราสาทผลึก',t:3.4};this._inFort=inF;
       const near=Math.hypot(L.x-F.x,L.y-F.y)<4200;
       if(near&&dt>0){for(const b of F.braziers){if(Math.random()>dt*9)continue;const y=this.gY(b.x,b.y)+92;this.sp(true,{x:b.x+(Math.random()-.5)*16,y,z:b.y+(Math.random()-.5)*16,vy:60+Math.random()*60,l:.7,s:22,s1:4,c:'#bff2ff',c2:'#3a8ad8',sp:1})}}
+      // glints rising through the crystal castle while a hero is near it
+      const Gl=this.fortGlass;if(Gl&&dt>0&&Math.hypot(L.x-Gl.x,L.y-Gl.y)<2600&&Math.random()<dt*(this.hi?9:3.5)){const x=(Math.random()*2-1)*4.2,z=-2.1+Math.random()*4,q=cityXY(F,x*Gl.S,FORT_V0-z*Gl.S);
+        this.sp(true,{x:q.x,y:Gl.yb+Gl.S*(.6+Math.random()*1.6),z:q.y,vx:0,vy:14+Math.random()*18,vz:0,l:2.6,s:8,s1:1.5,c:Math.random()<.6?'#d8f6ff':'#cdbcff',sp:1})}
       // Eternal Winter: driven snow pulled toward the queen while it charges, frost at the screen's edges, a white burst at the end
       let fr=0;for(const a of aoes){if(a.kind!=='qwinter')continue;const d=Math.hypot(a.x-L.x,a.y-L.y);if(d>a.r+900)continue;
         const k=a.t<a.delay?a.t/a.delay:0;fr=Math.max(fr,a.t<a.delay?k*.38:Math.max(0,a.fxT||0)/(a.vis||1)*.45);
