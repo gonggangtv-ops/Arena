@@ -28,6 +28,9 @@
 .arena-load #moonfallLoadFill{height:100%;position:relative;background:linear-gradient(90deg,#886442,#dca868 69%,#fff0cf);box-shadow:0 0 14px #ffc87882}
 .arena-load #moonfallLoadFill::after{content:'';position:absolute;right:0;top:50%;width:5px;height:5px;background:#fff0d2;box-shadow:0 0 12px #ffbf73;transform:translate(1px,-50%) rotate(45deg)}
 .arena-load #moonfallLoadCount{font-variant-numeric:tabular-nums;color:#c9bda9;letter-spacing:.04em;margin-top:11px}
+.arena-load .arena-load-music{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:6px 14px;font:600 12.5px/1.3 system-ui,sans-serif;letter-spacing:.03em;color:#f5e7d6;background:#1a1522c7;border:1px solid #c9a46e8c;border-radius:999px;cursor:pointer;box-shadow:0 0 14px #ffc8782e;animation:arena-music-hint 2.4s ease-in-out infinite}
+.arena-load .arena-load-music:hover,.arena-load .arena-load-music:focus-visible{border-color:#f0cf96;background:#2a2033d9;outline:none}
+@keyframes arena-music-hint{50%{box-shadow:0 0 20px #ffc87861;border-color:#e8c48ab3}}
 .arena-load[data-phase=ready] #moonfallLoadTitle{color:#ffe5b1}
 .arena-load[data-phase=ready] #moonfallLoadFill{background:linear-gradient(90deg,#a37546,#fff0c4)}
 .arena-load[data-phase=ready]{animation:arena-ready .32s ease-in both}
@@ -45,7 +48,7 @@
   .arena-load-rule{margin:20px 0 13px}
 }
 @media(prefers-reduced-motion:reduce){
-  .arena-load-art,.arena-load-light,.arena-load-mist,.arena-load-embers i,.arena-wordmark-ready::after,#loading.arena-load[data-phase=ready]{animation:none}
+  .arena-load-art,.arena-load-light,.arena-load-mist,.arena-load-embers i,.arena-wordmark-ready::after,#loading.arena-load[data-phase=ready],.arena-load .arena-load-music{animation:none}
   .arena-load-embers{display:none}
   .arena-load #moonfallLoadFill{transition:none}
 }

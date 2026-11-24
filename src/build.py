@@ -32,8 +32,9 @@ if arena and all(k in _man for k in HOUSES):VILLAGE=[k for k in VILLAGE if k not
 CITY_NEW=['city-pillar','city-knight']
 CITY=['moon-dead-tree','temple-gate','moon-stairs','modular-wall','wall-corner','ruin-arch','guardian-statue','moon-arena']+CITY_NEW
 if arena:VILLAGE+=[k for k in CITY if k in _man and k not in VILLAGE]
-# Frozen Sanctuary: the Queen, her scepter, her combat effects and the Blender staircase.
-FORT_NEW=['ice-queen','frost-scepter','snow-castle','snow-stairs','queen-vfx']
+# Frozen Sanctuary: the Queen, her scepter, her combat effects, her castle (owner 2026-11-24: the Aurora Nexus Citadel) and the
+# Blender staircase.
+FORT_NEW=['ice-queen','frost-scepter','aurora-citadel','snow-stairs','queen-vfx']
 FORT=FORT_NEW+['brazier']
 if arena:VILLAGE+=[k for k in FORT if k in _man and k not in VILLAGE]
 # owner 2026-11-23: the Cursed Forest's bone heaps and knights' tombs, the ordinary chest, the health and mana vials (Arena Royale only)
@@ -49,7 +50,7 @@ if arena:game_files[-1:-1]=['arena-vfx-tex.js','arena-vfx-runtime.js','arena-vfx
 if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js','p5-heroes.js']
 if arena:game_files[-1:-1]=['summoner.js','summoner-fx.js']   # fifth class: the Spirit Tome (Arena Royale only)
 if arena:game_files[-1:-1]=['snow-queen.js']   # the Snow Queen, boss of the ice castle (Arena Royale only; an Eclipse-style boss)
-if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-vfx-fire.js','arena-forge.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js','arena-falls.js','arena-frost.js','queen-vfx.js','arena-feel.js','arena-loot.js','arena-npc.js','arena-bots.js','arena-drop.js','arena-buttons.js','arena-tombs.js']
+if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-vfx-fire.js','arena-forge.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js','arena-falls.js','arena-frost.js','queen-vfx.js','arena-queen-aura.js','arena-feel.js','arena-loot.js','arena-npc.js','arena-bots.js','arena-drop.js','arena-buttons.js','arena-tombs.js','arena-load-music.js']
 if arena:game_files.extend(['arena-menu.js','arena-skill-details.js','arena-hud.js','arena-vitals.js','arena-combat-controls.js'])
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in game_files)
 js='const CURSED='+('true' if sys_on else 'false')+';const MOON='+('true' if cur else 'false')+';\n'+js
