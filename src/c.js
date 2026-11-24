@@ -796,7 +796,8 @@ const CREDITS=[['ไอคอนสกิลและอาวุธ',[['Game-ic
   ['Woodland Fantasy (กลางวัน)','Matthew Pablo — matthewpablo.com','CC BY 3.0','https://opengameart.org/node/31929'],
   ['Spooky Forest (กลางคืน)','Bendzer','CC BY 4.0','https://opengameart.org/node/94146'],
   ['Determined Pursuit (ต่อสู้)','Emma_MA','CC0','https://opengameart.org/content/determined-pursuit-epic-orchestra-loop'],
-  ['Land of Fearless (วงสุดท้าย)','Alexandr Zhelanov','CC BY 4.0','https://opengameart.org/node/79931']]],
+  ['Land of Fearless (วงสุดท้าย)','Alexandr Zhelanov','CC BY 4.0','https://opengameart.org/node/79931'],
+  ['Slay the Old God (หน้าโหลด)','จัดหาโดยเจ้าของเกม','','']]],
  ['เสียงเอฟเฟกต์',[
   ['JC Sounds - Fantasy SFX Pack Vol 1','JC Sounds','CC BY 4.0','https://opengameart.org/content/jc-sounds-fantasy-sfx-pack-vol-1'],
   ['8 Magic Attacks · 8 Heals and Buffs SFX','Leohpaz','CC BY 4.0','https://opengameart.org/content/8-magic-attacks'],
@@ -812,7 +813,7 @@ const CREDITS=[['ไอคอนสกิลและอาวุธ',[['Game-ic
   ['Male Grunt/Yelling sounds','HaelDB','CC0','https://opengameart.org/content/male-gruntyelling-sounds'],
   ['15 vocal male strain/hurt/pain sounds','qubodup','CC0','https://opengameart.org/content/15-vocal-male-strainhurtpainjump-sounds'],
   ['wind1','Luke.RUSTLTD','CC0','https://opengameart.org/content/wind1']]]];
-$('credList').innerHTML=CREDITS.map(([h,L])=>`<h4>${h}</h4>`+L.map(([t,a,l,u])=>`<div><b>${t}</b> — ${a} <small>(${l})</small><br><a href="${u}" target="_blank" rel="noopener">${u}</a></div>`).join('')).join('');
+$('credList').innerHTML=CREDITS.map(([h,L])=>`<h4>${h}</h4>`+L.map(([t,a,l,u])=>`<div><b>${t}</b> — ${a}${l?` <small>(${l})</small>`:''}${u?`<br><a href="${u}" target="_blank" rel="noopener">${u}</a>`:''}</div>`).join('')).join('');
 $('credBtn').onclick=()=>{AU.init();AU.play('click');$('credOv').classList.remove('hidden')};
 $('credBack').onclick=()=>{AU.play('click');$('credOv').classList.add('hidden')};
 $('fuseBack').onclick=()=>{AU.play('click');$('fuseOv').classList.add('hidden')};

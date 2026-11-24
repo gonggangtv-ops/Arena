@@ -926,6 +926,14 @@
    "available": true,
    "rotationY": 0,
    "biome": "arena"
+  },
+  "aurora-citadel": {
+   "name": "Aurora Nexus Citadel (owner, Blender) - the Snow Queen's castle on the Frozen Sanctuary's plateau",
+   "source": "owner upload 2026-11-24 Aurora-Nexus-Citadel.blend (34 meshes joined, preview floor/lights/camera removed, transmission dropped, textures JPEG, 26k tris)",
+   "url": "assets/meshy/aurora-citadel.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
   }
  },
  "warrior": {

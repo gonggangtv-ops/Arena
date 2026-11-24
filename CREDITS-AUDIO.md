@@ -11,6 +11,7 @@
 | กลางคืน | Spooky Forest — https://opengameart.org/node/94146 | Bendzer | CC BY 4.0 |
 | ต่อสู้ | Determined Pursuit — https://opengameart.org/content/determined-pursuit-epic-orchestra-loop | Emma_MA | CC0 |
 | วงสุดท้าย | Land of Fearless — https://opengameart.org/node/79931 | Alexandr Zhelanov | CC BY 4.0 |
+| Arena · หน้าโหลดเกม (`loading.mp3`, ตั้งแต่ 2026-11-24) | Slay the Old God — ไฟล์ที่เจ้าของเกมส่งมา (ปรับระดับเสียงเป็น −19 LUFS ให้เท่าเพลงอื่น, MP3 96 kbps สเตอริโอ) | จัดหาโดยเจ้าของเกม (ยังไม่ได้ระบุชื่อผู้แต่ง) | ตามสิทธิ์ที่เจ้าของเกมได้รับ (ยังไม่ได้ระบุ) |
 | ในถ้ำ | cave ambience (from Fantasy Sound Effects Library) | Little Robot Sound Factory | CC BY 3.0 |
 | ลม (เฉพาะ Cursed Realm; Arena ใช้เสียงบรรยากาศดินแดนแทนตั้งแต่ 2026-11-20) | wind1 — https://opengameart.org/content/wind1 | Luke.RUSTLTD | CC0 |
 | Arena · อาณาจักรล่มสลาย (กลางวัน) | Fallen Kingdom (`reg-kingdom.mp3`) — D dorian: พิณ เครื่องสาย ขลุ่ยไม้ เชลโล กลองเฟรม | ต้นฉบับของเกม · แต่งและสังเคราะห์ด้วยโค้ด `src/tools/region-music.py` (Claude) | ของโปรเจกต์ (ไม่มีลิขสิทธิ์บุคคลที่สาม) |
