@@ -117,7 +117,7 @@ iblIrradiance*=regIbl;
 radiance*=regIbl;
 #endif
 `;
-  function classify(key,m){if(/^terr/.test(key)||key==='p5'||key==='moon-warrior'||key==='ecl-sk'||key==='win')return null;
+  function classify(key,m){if(/^terr/.test(key)||key==='p5'||key==='moon-warrior'||key==='ecl-sk'||key==='win'||key==='fortglass')return null;   // the crystal castle is clear glass: no snow on it
     if(!(m&&(m.isMeshStandardMaterial||m.isMeshLambertMaterial||m.isMeshPhongMaterial)))return null;
     if(key==='water')return'water';if(/^wind[GFTH]$/.test(key))return'grass';
     if(key==='fortmcut')return'glacier';if(key==='moon-asset')return'build';if(/^wind/.test(key)||key==='stumpcut')return'flora';return'tint'}

@@ -1,5 +1,5 @@
 // ===================== THE SNOW QUEEN · ราชินีหิมะ (Arena Royale, owner 2026-11-22) =====================
-// The boss of the ice castle on the plateau above the Frozen Sanctuary (a.js WD.fort, her camp 'icethrone', no respawn).
+// The boss of the crystal castle on the plateau above the Frozen Sanctuary (a.js WD.fort, her camp 'icethrone' before its gate, no respawn).
 // Game logic only, host-authoritative: she is an Eclipse-style boss (u.ecl 'queen' through eclipse.js ECL_EXT), so detection, leash,
 // out-of-combat regen, phases and the 'ec' events are the Overlord's; eclipse-fx.js draws her (the owner's rigged Ice Queen holding the
 // owner's Frostwing Scepter) and her boss bar, arena-frost.js her court and her Eternal Winter.
@@ -13,7 +13,7 @@
 //  Glacial Step: she vanishes in frost and steps out beside a target that runs (or now and then at random); the spot frosts over first
 // Death: a tier-4 frost staff, two runes, gold and a tome.
 if(typeof CREEPS!=='undefined'&&typeof ECL_EXT!=='undefined'){
-Object.assign(CREEPS,{snowqueen:{name:'Snow Queen · ราชินีหิมะ',hp:27000,dmg:125,armor:8,spd:150,r:46,atkT:1.4,range:150,xp:2200,col:'#bfe6ff',leash:860,ecl:'queen'}});
+Object.assign(CREEPS,{snowqueen:{name:'Snow Queen · ราชินีหิมะ',hp:27000,dmg:125,armor:8,spd:150,r:46,atkT:1.4,range:150,xp:2200,col:'#bfe6ff',leash:680,ecl:'queen'}});
 const QBARS=3,QIMM=2.3;   // health bars (one per phase), immune seconds while a broken bar turns into the next phase
 // her own aoe kinds, drawn by queen-vfx.js (the Blender ice set); gameplay is the kind-free aoe() of b.js
 AOE_KINDS.push('qwinter','qslash','qlance','qshard','qnova','qblizz','qprison');
@@ -67,7 +67,9 @@ function queenAct(u,t,d,R,dt){const B=u.maxHp/QBARS,ph=u.hp>B*2+.5?0:u.hp>B+.5?1
   if(d<R+12&&u.atkCd<=0){u.atkCd=u.atkCdBase*fast;eclCast(u,'basic',.55);
     aoe({x:u.x,y:u.y,r:R+60,len:R+60,ang,arc:.85,shape:'cone',dmg:dmg,type:'p',owner:u,delay:.3,kind:'qslash',st:'frost',vis:.35});
     if(u.ph>=1)aoe({x:u.x,y:u.y,r:R+80,len:R+80,ang,arc:1.15,shape:'cone',dmg:dmg*.8,type:'p',owner:u,delay:.68,kind:'qslash',st:'frost',vis:.35})}}
-ECL_EXT.queen={detect:620,act:queenAct,
+// owner 2026-11-24: her moon court is gone — she holds the forecourt before her crystal castle's gate, a stone's throw from the stair
+// head, so she wakes a little closer (detect 620 -> 420) and keeps nearer her gate (leash 860 -> 680)
+ECL_EXT.queen={detect:420,act:queenAct,
   wake(u){sndAt('freeze',u.x,u.y);emit({t:'f',s:'❄ ราชินีหิมะตื่นจากบัลลังก์น้ำแข็ง!'});emit({t:'a',s:'❄ SNOW QUEEN · ราชินีหิมะ',d:2.4});emit({t:'k',a:8,x:u.x|0,y:u.y|0})},
   lose(u){emit({t:'f',s:'❄ ราชินีหิมะกลับสู่บัลลังก์และฟื้นพลัง'})}};
 // three bars: a blow stops at the bottom of the bar she is on (no overflow into the next), and she is immune while she turns
