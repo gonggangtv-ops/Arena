@@ -92,6 +92,6 @@
     pass.enabled=any||kick.ca>0||kick.rad>0||kick.fl>0}
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.call(this,Tm,dt,me,L);try{step(this,dt)}catch(e){if(!this._vpErr){this._vpErr=1;console.warn('vfx post step',e)}}return r};
   const _ini=P.initFX;if(_ini)P.initFX=function(){const r=_ini.apply(this,arguments);waves.length=0;heats.length=0;kick.ca=kick.rad=kick.fl=0;if(this._vglow){this._vglow.list=[]}return r};
-  const _ds=P.disposeScene;P.disposeScene=function(){const G=this._vglow;if(G){G.scene.remove(G.mesh);G.g.dispose();G.m.dispose();this._vglow=null}return _ds.apply(this,arguments)};
+  const _ds=P.disposeScene;P.disposeScene=function(){const G=this._vglow;if(G){G.scene.remove(G.mesh);G.mesh.dispose();G.g.dispose();G.m.dispose();this._vglow=null}return _ds.apply(this,arguments)};
   window.ArenaVFXPost={waves,heats,kick};
 })();

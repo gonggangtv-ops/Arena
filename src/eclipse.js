@@ -71,7 +71,17 @@ function eclEv(e){const u=UMAP.get(e.id);
   return _dd(t,amt,type,src,quiet,crit)}}
 
 // ---- AI ----
-const eclHeroNear=(u,R)=>{let best=null,bd=R;for(const h of units){if(!h.hero||h.dead||h.reviveT>0)continue;const d=Math.hypot(h.x-u.x,h.y-u.y);if(d<bd&&(!h.hidden||d<170)){bd=d;best=h}}return best};
+const eclHeroNear=(u,R)=>{
+  let best=null,bd=R;
+  for(const h of tickHeroes){
+    if(h.dead||h.reviveT>0)continue;
+    const dx=h.x-u.x,dy=h.y-u.y;
+    if(Math.abs(dx)>=bd||Math.abs(dy)>=bd)continue;
+    const d=Math.hypot(dx,dy);
+    if(d<bd&&(!h.hidden||d<170)){bd=d;best=h}
+  }
+  return best
+};
 function eclCast(u,n,d){u.busyT=Math.max(u.busyT,d);emit({t:'ec',k:'cast',id:u.id,n,d})}
 function eclThink(u,dt){
   if(u.blockT>0)u.blockT-=dt;if(u.busyT>0)u.busyT-=dt;if(u.blkCd>0)u.blkCd-=dt;if(u.ecT>0)u.ecT-=dt;u.poise=Math.max(0,u.poise-u.maxHp*.04*dt);

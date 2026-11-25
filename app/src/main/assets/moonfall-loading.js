@@ -3,7 +3,7 @@
 window.installMoonfallLoading=function(){
   'use strict';
   const screen=$('loading'),status=$('moonfallLoadStatus'),count=$('moonfallLoadCount'),progress=$('moonfallLoadProgress'),fill=$('moonfallLoadFill'),error=$('moonfallLoadError'),retry=$('moonfallLoadRetry');
-  const arena=screen.classList.contains('arena-load'),title=$('moonfallLoadTitle');
+  const arena=screen.classList.contains('arena-load'),title=$('moonfallLoadTitle'),menu=$('menu');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   if(arena){
     const layer=screen.querySelector('.arena-load-embers');
@@ -72,7 +72,9 @@ window.installMoonfallLoading=function(){
     if(ready&&!failed)return original.client(data);
     const token=++clientToken;net.pendS=[];whenReady.then(()=>{if(token!==clientToken)return;const pending=net.pendS;original.client(data);net.pendS=pending;});
   };
-  R3.menuFrame=function(dt){if(!ready||failed)return;return original.menu.call(this,dt);};
+  R3.menuFrame=function(dt){if(!ready||failed)return;
+    const covered=arena&&menu.dataset.arenaMenu==='1'&&!menu.classList.contains('hidden');
+    return original.menu.call(this,dt,covered);};
   withLoading=function(fn){
     if(!ready||failed||launchBusy)return;launchBusy=true;lock(true);setPhase('preparing');show('กำลังจัดสนามและเตรียมผู้กล้า…');
     if(arena)title.textContent='กำลังเข้าสู่สนาม';
@@ -110,7 +112,15 @@ window.installMoonfallLoading=function(){
         image.onerror=()=>{clearTimeout(timer);reject(Error('โหลดภาพหน้าโหลดไม่สำเร็จ'));};
         image.src=screen.dataset.keyArt||'assets/ui/moonfall-key-art.webp';
       });
-      const audio=Promise.all(music.map(async name=>{const response=await fetch('music/'+name+'.mp3',{cache:'force-cache',signal:AbortSignal.timeout(60000)});if(!response.ok)throw Error('เสียง '+name+': HTTP '+response.status);const bytes=new Uint8Array(await response.arrayBuffer());if(bytes.length<4||!(String.fromCharCode(...bytes.slice(0,3))==='ID3'||(bytes[0]===255&&(bytes[1]&224)===224)))throw Error('ไฟล์เสียงไม่ถูกต้อง: '+name);musicDone++;update();}));
+      const audio=Promise.all(music.map(async name=>{
+        const response=await fetch('music/'+name+'.mp3',{cache:'force-cache',signal:AbortSignal.timeout(60000)});
+        if(!response.ok)throw Error('เสียง '+name+': HTTP '+response.status);
+        const file=await response.blob(),bytes=new Uint8Array(await file.slice(0,4).arrayBuffer());
+        const id3=bytes[0]===73&&bytes[1]===68&&bytes[2]===51;
+        const mpeg=bytes[0]===255&&(bytes[1]&224)===224;
+        if(bytes.length<4||!(id3||mpeg))throw Error('ไฟล์เสียงไม่ถูกต้อง: '+name);
+        musicDone++;update();
+      }));
       const fonts=document.fonts.ready.then(()=>{fontsDone=1;update();});
       await Promise.all([art,audio,fonts,until(()=>packDone>0,'ตัวละคร'),until(()=>MoonfallUI.snapshot().state==='loaded','ภาพไอคอน'),until(()=>CelestialAssets.snapshot().assets.every(a=>a.state==='loaded'),'ฉากเกม')]);
       if(failed)return;
@@ -122,13 +132,13 @@ window.installMoonfallLoading=function(){
       try{original.menu.call(R3,1/60);}finally{window.__noMenu=suppressed;}
       renderDone=1;update();if(failed)return;
       fill.style.width='100%';progress.setAttribute('aria-valuenow','100');count.textContent=total+' / '+total+' รายการ · พร้อมแล้ว';
-      unsubscribe();setPhase('ready');
+      setPhase('ready');
       if(arena){
         title.textContent='สนามพร้อมแล้ว';show('กำลังเปิดเมนูหลัก…');
         if(!reduced.matches)await delay(320);
         if(window.__moonfallCodeFailure)return fail('ไฟล์เกม: '+window.__moonfallCodeFailure);
       }
       ready=true;screen.classList.add('hidden');lock(false);resolveReady();$('soloBtn').focus({preventScroll:true});
-    }catch(e){if(!failed)fail(e.message);}
+    }catch(e){if(!failed)fail(e.message);}finally{unsubscribe();}
   })();
 };

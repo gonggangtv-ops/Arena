@@ -187,6 +187,6 @@ float hy=max(position.y,0.);for(int i=0;i<8;i++){vec4 q=uPush[i];if(q.z<=0.)cont
         list.sort((a,b)=>a[0]-b[0]);for(const [d,u] of list){if(n>=8)break;P8[n++].set(u.x,u.y,(u.r||24)*2.4+26,u.boss?1.2:1)}for(;n<8;n++)P8[n].set(0,0,0,0)}
     }catch(e){}return r};
   // owner 2026-11-18: no short grass tufts anywhere (the camera-following tuft pool stays empty; flowers and tall hiding grass stay)
-  const _ug=P.updateGround;if(_ug)P.updateGround=function(cx,cy){const r=_ug.apply(this,arguments);if(this.gGrass&&this.gGrass.count){this.gGrass.count=0;this.gGrass.instanceMatrix.needsUpdate=true}return r};
+  P.hideShortGrass=true;
   window.ArenaAAA={FX,fireball:(...a)=>P.fireball(...a),shockwave:(...a)=>P.shockwave(...a)};
 })();
