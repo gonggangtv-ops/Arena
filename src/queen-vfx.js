@@ -66,7 +66,9 @@
   function put(p,pos,q,s,a0,a1,a2,a3){if(!p||p.n>=p.cap||!(s.y>.01))return;M1.compose(pos,q,s);p.im.setMatrixAt(p.n,M1);p.at.setXYZW(p.n,a0,a1,a2,a3);p.n++}
   function putM(p,m,a0,a1,a2,a3){if(!p||p.n>=p.cap)return;p.im.setMatrixAt(p.n,m);p.at.setXYZW(p.n,a0,a1,a2,a3);p.n++}
   function flush(p){p.im.count=p.n;p.im.visible=p.n>0;if(p.n){p.im.instanceMatrix.needsUpdate=true;p.at.needsUpdate=true}p.n=0}
-  function dispose(){if(!Q.p)return;for(const k in Q.p){const p=Q.p[k];if(p.im.parent)p.im.parent.remove(p.im);p.g.dispose()}if(Q.mat)Q.mat.dispose();Q.p=null;Q.mat=null;Q.fx.length=0;Q.seen.clear()}
+  function dispose(){if(!Q.p)return;for(const k in Q.p){const p=Q.p[k];if(p.im.parent)p.im.parent.remove(p.im);p.im.dispose();p.g.dispose()}if(Q.mat)Q.mat.dispose();Q.p=null;Q.mat=null;Q.scene=null;Q.G=null;Q.fx.length=0;Q.seen.clear()}
+  const disposeScene=P.disposeScene;
+  P.disposeScene=function(){dispose();return disposeScene.apply(this,arguments)};
   function ensure(R){if(!R.scene)return null;const G=prep();if(!G)return null;
     if(Q.scene!==R.scene||Q.G!==G||!Q.p){dispose();Q.scene=R.scene;Q.G=G;Q.mat=iceMat(R);const hq=qd(R)>=1,c=k=>Math.max(8,Math.round(k*(hq?1:.5)));
       Q.p={spike:pool(R,G.spike,c(90),hq),spike2:pool(R,G.spike2,c(90),hq),shard:pool(R,G.shard,c(340),false),prison:pool(R,G.prison,6,hq),wing:pool(R,G.wing,3,false),wingL:pool(R,G.wingL,3,false)}}

@@ -100,7 +100,7 @@
         time:0,emitted:0,budget:q.reduced?120:q.high?900:420,tmap:new Map(),c:new T.Color(),c2:new T.Color(),v:new T.Vector3(),v2:new T.Vector3(),d:new T.Object3D(),stats:{n:0,drop:0},seen:new WeakMap(),pt:new WeakMap()}}
     finally{Math.random=prev}}
   function dispose(R){const a=R._pfx;if(!a)return;for(const s of[a.add,a.alpha]){a.scene.remove(s.mesh);s.g.dispose();s.base.dispose();s.m.dispose()}
-    for(const t of a.trails){a.scene.remove(t.mesh);t.g.dispose();t.m.dispose()}a.scene.remove(a.scorch.mesh);a.scorch.g.dispose();a.scorch.m.dispose();R._pfx=null}
+    for(const t of a.trails){a.scene.remove(t.mesh);t.g.dispose();t.m.dispose()}a.scene.remove(a.scorch.mesh);a.scorch.mesh.dispose();a.scorch.g.dispose();a.scorch.m.dispose();R._pfx=null}
   function ensure(R){const q=mode(R),a=R._pfx;if(a&&(a.scene!==R.scene||a.q.key!==q.key))dispose(R);if(!R._pfx)R._pfx=alloc(R);return R._pfx}
   const nearL=(x,z,m)=>{const L=typeof listener==='function'?listener():null;return !L||Math.hypot(x-L.x,z-L.y)<(typeof visionR==='function'?visionR():1100)+(m||200)};
   // one particle. kind: 0 glow · 1 spark (stretched by speed) · 2 smoke/mist (alpha) · 3 ember · 4 shard · 5 star

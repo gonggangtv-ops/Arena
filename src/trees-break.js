@@ -41,7 +41,7 @@
   // ---------------- render ----------------
   if(typeof R3==='undefined')return;const P=R3,T=THREE;
   const _ic=P.instC;P.instC=function(geo,mat,items,place,shadow,onInst,csz){const self=this,set=this._treeSet;
-    const wrapped=set?(it,im,i)=>{if(onInst)onInst(it,im,i);if(it&&set.has(it)&&it._i!==undefined)(self.treeAll[it._i]||(self.treeAll[it._i]=[])).push([im,i])}:onInst;
+    const wrapped=set?(it,im,i)=>{if(onInst)onInst(it,im,i);if(it&&set.has(it)&&it._i!==undefined){im.userData.treeBatch=true;(self.treeAll[it._i]||(self.treeAll[it._i]=[])).push([im,i])}}:onInst;
     return _ic.call(this,geo,mat,items,place,shadow,wrapped,csz)};
   const _bw=P.buildWorld;P.buildWorld=function(){this._treeSet=new Set(WD.trees);this.treeAll=[];this._fell=[];this._wob=[];this._stumps=null;try{return _bw.apply(this,arguments)}finally{this._treeSet=null}};
   const M4=new T.Matrix4(),M5=new T.Matrix4(),Q0=new T.Quaternion(),V0=new T.Vector3(),V1=new T.Vector3(),S0=new T.Vector3(),C0=new T.Color();

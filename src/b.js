@@ -896,14 +896,26 @@ function campTick(){const P=mobPow(gameT),grow=(mobGrowT-=1)<=0&&P>1;if(grow)mob
   if(gameT-c.deadAt>wait&&!units.some(u=>u.hero&&!u.dead&&dist(u,c)<750)){const sc=Math.max(1.15,P*1.1);
     for(const id of c.mem){const m=UMAP.get(id);if(!m)continue;mobScale(m,Math.min(mobCap(m),sc*(c.sc||1)));m.dead=false;m.x=m.home.x;m.y=m.home.y;m.aggro=null;m.stunT=0;m.rootT=0;m.slowT=0;m.burnT=0;m.kb=null}
     c.deadAt=-1;c.respawns++;if(c.tier==='boss')emit({t:'f',s:'🐉 มังกรเพลิงกลับมาเฝ้าปราสาท!'})}}}
-let avgLvl=1,frameN=0,HEROES=[];
+let avgLvl=1,frameN=0;
+const HEROES=[],tickHeroes=[];
+const separationGrid=new Map(),separationNext=[];
 // bolts hit the body, not the whole collision circle (owner 2026-11-23: hitboxes felt too generous)
 const HBX=.85;
 function hitArea(a,u){if(a.shape==='line'){const ex=a.x+Math.cos(a.ang)*a.len,ey=a.y+Math.sin(a.ang)*a.len;return segDist(u,[a.x,a.y,ex,ey])<a.w/2+u.r*.5}
   if(a.shape==='cone'){const d=dist(a,u);if(d>a.len+u.r*.5)return false;let da=Math.abs(Math.atan2(u.y-a.y,u.x-a.x)-a.ang);if(da>Math.PI)da=Math.PI*2-da;return da<a.arc||d<u.r+30}
   return dist(a,u)<a.r+u.r*.6}
 function hostUpdate(dt){
-  gameT+=dt;frameN++;if(CURSED)curTick(dt);PATHB=6;HEROES=units.filter(u=>u.hero&&!u.dead);{let n=0,t=0;for(const u of HEROES){n++;t+=u.lvl}avgLvl=n?t/n:1}sndBudget={};zoneTick(dt);dayTick();fuseTick();nightTick(dt);campT-=dt;if(campT<=0){campT=1;campTick()}
+  gameT+=dt;frameN++;if(CURSED)curTick(dt);PATHB=6;
+  HEROES.length=0;tickHeroes.length=0;
+  let levelSum=0;
+  for(const hero of units){
+    if(!hero.hero)continue;
+    // Eclipse can target a hero revived during this tick. Ordinary camps use the living roster at tick start.
+    tickHeroes.push(hero);
+    if(!hero.dead){HEROES.push(hero);levelSum+=hero.lvl}
+  }
+  avgLvl=HEROES.length?levelSum/HEROES.length:1;
+  sndBudget={};zoneTick(dt);dayTick();fuseTick();nightTick(dt);campT-=dt;if(campT<=0){campT=1;campTick()}
   const zph=zone.ph;
   for(const u of units){
     if(u.dead){if(u.reviveT>0){u.reviveT-=dt;if(u.reviveT<=0)reviveUnit(u)}continue}
@@ -957,10 +969,20 @@ function hostUpdate(dt){
     if(u.hero){u.inBush=!!hideAt(u.x,u.y);u.hidden=(u.inBush||u.invisT>0)&&u.revealT<=0||u.invisT>0&&u.revealT<=.5;if(!u.leap){if((u.id+frameN)%3===0)tryPickup(u);if(u.bot&&Math.random()<.05){const bx=boxNear(u);if(bx)openBox(u,bx.id)}}}
   }
   // keep units from overlapping: spatial hash, so 400+ units stay cheap
-  {const SG=new Map(),C=150;for(const a of units){if(a.dead||a.leap)continue;const k=Math.floor(a.x/C)*4096+Math.floor(a.y/C);let c=SG.get(k);if(!c){c=[];SG.set(k,c)}c.push(a)}
+  {const C=150;
+   separationGrid.clear();
+   // Prepend indices in reverse so contacts resolve in the original units order.
+   for(let i=units.length-1;i>=0;i--){const a=units[i];if(a.dead||a.leap)continue;
+     const k=Math.floor(a.x/C)*4096+Math.floor(a.y/C);
+     separationNext[i]=separationGrid.get(k);
+     separationGrid.set(k,i)}
    for(const a of units){if(a.dead||a.leap)continue;const cx=Math.floor(a.x/C),cy=Math.floor(a.y/C);
-    for(let i=cx-1;i<=cx+1;i++)for(let j=cy-1;j<=cy+1;j++){const c=SG.get(i*4096+j);if(!c)continue;
-      for(const b of c){if(b.id<=a.id||b.dead||b.leap)continue;const dx=b.x-a.x,dy=b.y-a.y;if(Math.abs(dx)>140||Math.abs(dy)>140)continue;
+    for(let i=cx-1;i<=cx+1;i++)for(let j=cy-1;j<=cy+1;j++){
+      for(let idx=separationGrid.get(i*4096+j);idx!==undefined;idx=separationNext[idx]){
+        const b=units[idx];
+        if(b.id<=a.id||b.dead||b.leap)continue;
+        const dx=b.x-a.x,dy=b.y-a.y;
+        if(Math.abs(dx)>140||Math.abs(dy)>140)continue;
         const d=Math.hypot(dx,dy),mn=a.r+b.r;if(d<mn&&d>0){// heavier units give way less: a player walking into monsters shoulders them aside instead of being shoved back
           const ma=pushMass(a),mb=pushMass(b),p=(mn-d)*.8/(ma+mb),nx=dx/d,ny=dy/d;a.x-=nx*p*mb;a.y-=ny*p*mb;b.x+=nx*p*ma;b.y+=ny*p*ma}}}}}
   for(const p of projs){

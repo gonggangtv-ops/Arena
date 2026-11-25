@@ -81,10 +81,12 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     for(const arr of groups.values()){const tmp=[];for(const it of arr)place(it,(x,y,z,sx,sy,sz,rx,ry,rz,c)=>tmp.push([x,y,z,sx,sy,sz,rx,ry,rz,c,it]));if(!tmp.length)continue;
       const im=new THREE.InstancedMesh(geo,mat,tmp.length);im.castShadow=!!shadow;im.receiveShadow=true;
       tmp.forEach((q,i)=>{this.setI(im,i,q[0],q[1],q[2],q[3],q[4],q[5],q[6],q[7],q[8],MOON&&q[9]!=null?REG.objCol(q[9],q[0],q[2]):q[9]);if(onInst)onInst(q[10],im,i)});
-      im.instanceMatrix.needsUpdate=true;if(im.instanceColor)im.instanceColor.needsUpdate=true;im.computeBoundingSphere();im.userData.base=im.instanceMatrix.array.slice();this.scene.add(im);out.push(im)}
+      im.instanceMatrix.needsUpdate=true;if(im.instanceColor)im.instanceColor.needsUpdate=true;im.computeBoundingSphere();
+      if(im.userData.treeBatch)im.userData.base=im.instanceMatrix.array.slice();
+      this.scene.add(im);out.push(im)}
     return out},
   inst(geo,mat,n,shadow){const im=new THREE.InstancedMesh(geo,mat,Math.max(1,n));im.count=n;im.castShadow=!!shadow;im.receiveShadow=true;im.frustumCulled=false;this.scene.add(im);return im},
-  disposeScene(){this.scene.traverse(o=>{if(o.geometry&&!this.cachedGeos.has(o.geometry))o.geometry.dispose();if(o.userData&&o.userData.ownMat){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose())}})},
+  disposeScene(){this.scene.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&!this.cachedGeos.has(o.geometry))o.geometry.dispose();if(o.userData&&o.userData.ownMat){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose())}})},
   makeEnv(){const pm=new THREE.PMREMGenerator(this.renderer);const s=new THREE.Scene();const geo=new THREE.SphereGeometry(100,32,16);const cols=[];const pos=geo.attributes.position;
     const ct=new THREE.Color('#9cc4ff'),cb=new THREE.Color('#5a5040'),ch=new THREE.Color('#ffe8c4');
     for(let i=0;i<pos.count;i++){const y=pos.getY(i)/100;const c=y>0?ct.clone().lerp(ch,Math.pow(1-y,3)):cb.clone().lerp(ch,Math.pow(1+y,4));cols.push(c.r,c.g,c.b)}
@@ -299,6 +301,38 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     this.staticGlow=this.glowSet(this.glows);S.add(this.staticGlow);
     this.initFX();
   },
+  // Terrain indices are row-major. Submit one contiguous range per camera,
+  // including both vertex rows of every potentially visible strip.
+  cullTerrainRows(mesh,n){
+    const geometry=mesh.geometry, positions=geometry.attributes.position.array;
+    const rows=n-1, stripSize=16, indicesPerRow=rows*6, strips=[];
+    for(let first=0;first<rows;first+=stripSize){
+      const last=Math.min(first+stripSize,rows);
+      let low=Infinity,high=-Infinity;
+      for(let i=first*n*3+1;i<(last+1)*n*3;i+=3){
+        const height=positions[i];
+        low=Math.min(low,height);
+        high=Math.max(high,height);
+      }
+      strips.push(new THREE.Box3(
+        new THREE.Vector3(positions[0],low,positions[first*n*3+2]),
+        new THREE.Vector3(positions[rows*3],high,positions[last*n*3+2])
+      ));
+    }
+    const clip=new THREE.Matrix4(), frustum=new THREE.Frustum();
+    mesh.onBeforeRender=function(renderer,scene,camera){
+      clip.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse).multiply(this.matrixWorld);
+      frustum.setFromProjectionMatrix(clip,camera.coordinateSystem,camera.reversedDepth);
+      let first=rows,end=0;
+      for(let i=0;i<strips.length;i++){
+        if(!frustum.intersectsBox(strips[i]))continue;
+        first=Math.min(first,i*stripSize);
+        end=Math.min(rows,(i+1)*stripSize);
+      }
+      geometry.setDrawRange(first*indicesPerRow,Math.max(0,end-first)*indicesPerRow);
+    };
+    mesh.onAfterRender=()=>geometry.setDrawRange(0,Infinity);
+  },
   buildTerrain(){const St=50,x0=-1700,x1=WORLD+1700,n=Math.round((x1-x0)/St)+1;const N=n*n;const pos=new Float32Array(N*3),col=new Float32Array(N*3),reg=new Float32Array(N*4),rq=[0,0,0,0],bas=new Float32Array(N);const C=this.col;
     const W1=new THREE.Color('#e8f0c8'),E1=new THREE.Color('#9fd0d8'),F1=new THREE.Color('#9aa880'),M1=new THREE.Color('#c0c8a0');const nz=WD.noise,mN=makeNoise(mulberry32(5),900);
     for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=x0+i*St,y=x0+j*St,k=j*n+i;const h=this.hAt(x,y),hb=WD.city?cityBase(x,y):0;bas[k]=hb+(WD.city?Math.round(cityRock(x,y)*8)*1000:0);pos[k*3]=x;pos[k*3+1]=h;pos[k*3+2]=y;
@@ -331,7 +365,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
            float a1=texture2D(uDetail,q+vec2(uTime*.021,uTime*.014)).r,a2=texture2D(uDetail,q*1.37+vec2(-uTime*.018,uTime*.023)).r;float ca=pow(clamp(1.-abs(a1-a2)*3.2,0.,1.),6.);
            vec3 bed=texture2D(tRock,w*.014).rgb*vec3(.62,.66,.58);c=mix(c,bed,uw*.55);c=mix(c,c*vec3(.42,.58,.54),uw*(.55+dp*.35));c+=vec3(.42,.62,.56)*ca*uw*(1.-dp*.8)*.22;}}`}
          diffuseColor.rgb=c;}`).replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\n normal=normalize(normal+(viewMatrix*vec4(tBump,0.)).xyz);'))});
-    const t=new THREE.Mesh(g,m);t.receiveShadow=true;t.userData.ownMat=1;this.scene.add(t);this.terrain=t;
+    const t=new THREE.Mesh(g,m);t.receiveShadow=true;t.userData.ownMat=1;this.cullTerrainRows(t,n);this.scene.add(t);this.terrain=t;
     // grass density map for the dynamic ground cover (0 = none)
     {const gt=WD.tg,n2=gt.n,M=Math.round(WORLD*.025),md=paintMasks(.025).getContext('2d').getImageData(0,0,M,M).data;const dens=new Uint8Array(n2*n2);
       for(let j=0;j<n2;j++)for(let i=0;i<n2;i++){const k=j*n2+i,h=gt.hg[k]-(WD.city?cityBase((i+.5)*gt.C,(j+.5)*gt.C):0);if(h>20||h<-1.5||gt.blk[k]){continue}const mi=(Math.floor(j/n2*M)*M+Math.floor(i/n2*M))*4;const road=md[mi]/255,cob=md[mi+1]/255,fld=md[mi+2]/255;
@@ -401,7 +435,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     // (before that they fall back to the birch-class look below)
     const BN=this.bananaOn&&this.bananaOn()?(t=>!!t.bn):null;
     const DT=this.deadOn&&this.deadOn()?(t=>!(BN&&BN(t))&&REG.at(t.x,t.y)===1):null,tl=DT||BN?tr.filter(t=>!(DT&&DT(t))&&!(BN&&BN(t))):tr;
-    const reg=(t,im,i)=>{if(t._i!==undefined)this.treeParts[t._i].push([im,i])};const RT=t=>mulberry32(Math.floor(t.x*7+t.y));
+    const reg=(t,im,i)=>{if(t._i!==undefined){im.userData.treeBatch=true;this.treeParts[t._i].push([im,i])}};const RT=t=>mulberry32(Math.floor(t.x*7+t.y));
     const TH=t=>(t.v===2?70:t.v===5?54:t.v===6?44:t.v===1?40:38)*t.h;
     // Arena Royale: birches become the owner's Meshy Verdant Solitude tree (moonfall-village.js) when it is loaded
     const MT0=this.verdantOn&&this.verdantOn()?(t=>t.v===2):(()=>false);
@@ -467,8 +501,11 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     this.instC(G.half,this.bas('#ffffff'),mu,(m,add)=>{const y=this.gY(m.x,m.y);add(m.x,y+m.s*1.5,m.y,m.s*1.15,m.s*.9,m.s*1.15,0,0,0,m.c)},false);
     const cr=WD.crystals;this.instC(G.oct,this.std('#ffffff',.15,.1,{emissive:'#ffffff',emissiveIntensity:.35,transparent:true,opacity:.92}),cr,(c,add)=>{const y=this.gY(c.x,c.y);add(c.x,y+c.s*1.4,c.y,c.s*.7,c.s*1.9,c.s*.7,0,c.x,0,c.c);add(c.x+c.s*.8,y+c.s*.8,c.y+c.s*.3,c.s*.4,c.s*1.1,c.s*.4,.3,c.x,.4,c.c)},false);
     // dynamic ground cover pools (grass tufts + flowers follow the camera)
-    const gm=this.windMat(new THREE.MeshLambertMaterial({map:this.tex('blades'),alphaTest:.45,emissive:'#ffffff',emissiveMap:this.tex('blades'),emissiveIntensity:TOON?.55:.1}),'G',.1);if(TOON)gm.color.setRGB(1.45,1.55,1.05);
-    this.gGrass=this.inst(G.tuft,gm,this.hi?5800:2700,false);this.gGrass.receiveShadow=true;this.gGrass.count=0;this.gGrass.userData.cell=null;
+    this.gGrass=null;
+    if(!this.hideShortGrass){
+      const gm=this.windMat(new THREE.MeshLambertMaterial({map:this.tex('blades'),alphaTest:.45,emissive:'#ffffff',emissiveMap:this.tex('blades'),emissiveIntensity:TOON?.55:.1}),'G',.1);if(TOON)gm.color.setRGB(1.45,1.55,1.05);
+      this.gGrass=this.inst(G.tuft,gm,this.hi?5800:2700,false);this.gGrass.receiveShadow=true;this.gGrass.count=0;
+    }
     const fm=this.windMat(new THREE.MeshLambertMaterial({map:this.tex('flower'),alphaTest:.5}),'F',.06);
     this.gFlow=this.inst(G.card,fm,this.hi?1150:560,false);this.gFlow.count=0;
     // farm crops

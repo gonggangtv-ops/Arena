@@ -173,8 +173,8 @@
       a.emitted=0},
     v3Reset(){const a=ensure(this);if(!a)return;for(const b of Object.values(a.b)){for(const s of b.slots){s.on=false;s.follow=null}b.n=0;b.mesh.count=0;b.mesh.visible=false}
       for(const s of a.deb.slots)s.on=false;a.deb.mesh.count=0;a.deb.mesh.visible=false;a.emitted=0;heroState=new WeakMap();clock=0;trailAt=0},
-    v3Dispose(){const a=this._v3;if(!a)return;for(const b of Object.values(a.b)){a.scene.remove(b.mesh);b.g.dispose();b.m.dispose();for(const s of b.slots)s.follow=null}
-      a.scene.remove(a.deb.mesh);a.deb.g.dispose();a.deb.m.dispose();this._v3=null}
+    v3Dispose(){const a=this._v3;if(!a)return;for(const b of Object.values(a.b)){a.scene.remove(b.mesh);b.mesh.dispose();b.g.dispose();b.m.dispose();for(const s of b.slots)s.follow=null}
+      a.scene.remove(a.deb.mesh);a.deb.mesh.dispose();a.deb.g.dispose();a.deb.m.dispose();this._v3=null}
   });
   // ---------------- recipes ----------------
   const hi=()=>!!(P._v3&&P._v3.q.high),red=()=>!!(P._v3&&P._v3.q.reduced),cnt=(h,l)=>red()?Math.max(2,Math.floor(l*.6)):hi()?h:l;

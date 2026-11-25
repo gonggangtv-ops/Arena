@@ -338,13 +338,16 @@ Object.assign(R3,{
     this.fxExtra(T,dt,me,L);this.hideUnused()},
 
   // ---------- per-frame ----------
-  updateGround(cx,cy){const hi=this.hi,cs=hi?34:46,gx=Math.floor(cx/cs),gy=Math.floor(cy/cs);const key=gx+'_'+gy;if(this.gGrass.userData.cell===key)return;this.gGrass.userData.cell=key;
-    const tg=WD.tg,n=tg.n,d=this.dummy,im=this.gGrass,max=im.instanceMatrix.count;let c=0;const C1=new THREE.Color('#e0f0c0'),C2=new THREE.Color('#a8e0d8'),C=this.col;
-    const ix0=gx-Math.round(1400/cs),ix1=gx+Math.round(1400/cs),iy0=gy-Math.round(1000/cs),iy1=gy+Math.round(760/cs);
-    for(let j=iy0;j<=iy1&&c<max;j++)for(let i=ix0;i<=ix1&&c<max;i++){const h1=Math.sin(i*127.1+j*311.7)*43758.5453,h2=Math.sin(i*269.5+j*183.3)*43758.5453;const r1=h1-Math.floor(h1),r2=h2-Math.floor(h2);
-      const x=(i+r1)*cs,y=(j+r2)*cs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(!dn||r1*r2*255*(TOON?4.2:1.7)*(this.gThin||1)>dn)continue;let gi=-1;if(MOON){gi=REG.at(x,y);if((gi===2||gi===3)&&r2>.22)continue}
-      const s=.7+r2*.8;d.position.set(x,tg.hg[tj*n+ti]-1,y);d.rotation.set(0,r1*6.28,0);d.scale.set(30*s,(20+r1*20)*s,30*s);d.updateMatrix();im.setMatrixAt(c,d.matrix);C.copy(C1).lerp(C2,direK(x,y)).multiplyScalar(TOON?.95+r1*.3:.6+r1*.42);if(this.gCool){const l=C.r*.3+C.g*.59+C.b*.11;C.setRGB(l*.78,l*.88,l)}if(gi>=0)C.multiply(REG.gc(gi));im.setColorAt(c,C);c++}
-    im.count=c;im.instanceMatrix.needsUpdate=true;if(im.instanceColor)im.instanceColor.needsUpdate=true;
+  updateGround(cx,cy){const hi=this.hi,cs=hi?34:46,gx=Math.floor(cx/cs),gy=Math.floor(cy/cs);const key=gx+'_'+gy;if(this.gFlow.userData.cell===key)return;this.gFlow.userData.cell=key;
+    const tg=WD.tg,n=tg.n,d=this.dummy;
+    if(this.gGrass){
+      const im=this.gGrass,max=im.instanceMatrix.count;let c=0;const C1=new THREE.Color('#e0f0c0'),C2=new THREE.Color('#a8e0d8'),C=this.col;
+      const ix0=gx-Math.round(1400/cs),ix1=gx+Math.round(1400/cs),iy0=gy-Math.round(1000/cs),iy1=gy+Math.round(760/cs);
+      for(let j=iy0;j<=iy1&&c<max;j++)for(let i=ix0;i<=ix1&&c<max;i++){const h1=Math.sin(i*127.1+j*311.7)*43758.5453,h2=Math.sin(i*269.5+j*183.3)*43758.5453;const r1=h1-Math.floor(h1),r2=h2-Math.floor(h2);
+        const x=(i+r1)*cs,y=(j+r2)*cs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(!dn||r1*r2*255*(TOON?4.2:1.7)*(this.gThin||1)>dn)continue;let gi=-1;if(MOON){gi=REG.at(x,y);if((gi===2||gi===3)&&r2>.22)continue}
+        const s=.7+r2*.8;d.position.set(x,tg.hg[tj*n+ti]-1,y);d.rotation.set(0,r1*6.28,0);d.scale.set(30*s,(20+r1*20)*s,30*s);d.updateMatrix();im.setMatrixAt(c,d.matrix);C.copy(C1).lerp(C2,direK(x,y)).multiplyScalar(TOON?.95+r1*.3:.6+r1*.42);if(this.gCool){const l=C.r*.3+C.g*.59+C.b*.11;C.setRGB(l*.78,l*.88,l)}if(gi>=0)C.multiply(REG.gc(gi));im.setColorAt(c,C);c++}
+      im.count=c;im.instanceMatrix.needsUpdate=true;if(im.instanceColor)im.instanceColor.needsUpdate=true;
+    }
     const fm=this.gFlow,fmax=fm.instanceMatrix.count,fs=90;let f=0;const PAL=['#ffe36e','#ff9ac2','#ffffff','#c8a0ff','#ff7a5a','#8ac8ff'];
     for(let j=Math.floor((cy-1000)/fs);j<=Math.floor((cy+760)/fs)&&f<fmax;j++)for(let i=Math.floor((cx-1400)/fs);i<=Math.floor((cx+1400)/fs)&&f<fmax;i++){const h1=Math.sin(i*91.7+j*47.3)*43758.5453;const r=h1-Math.floor(h1);
       const x=(i+r)*fs,y=(j+(r*7.13)%1)*fs;const ti=Math.floor(x/tg.C),tj=Math.floor(y/tg.C);if(ti<0||tj<0||ti>=n||tj>=n)continue;const dn=this.gdens[tj*n+ti];if(dn<200)continue;const meadow=WD.noise(x,y)<.44;if(!meadow&&r>.25)continue;if(this.gThin&&(r*37.7)%1>1/this.gThin)continue;
@@ -359,12 +362,14 @@ Object.assign(R3,{
   toScreen(x,y,z){const v=this.v.set(x,y,z).project(this.cam);return{x:(v.x+1)/2*W,y:(1-v.y)/2*H,ok:v.z<1}},
   // screen pixel -> point on the ground plane at the camera target's height (mouse aiming on PC)
   toGround(sx,sy){const o=this.cam.position,d=new THREE.Vector3(sx/W*2-1,1-sy/H*2,.5).unproject(this.cam).sub(o).normalize();const h=this.ly||0;if(Math.abs(d.y)<1e-4)return{x:this.tx,y:this.ty};const t=(h-o.y)/d.y;return{x:o.x+d.x*t,y:o.z+d.z*t}},
-  menuFrame(dt){this.kkLoad();if(window.__noMenu)return;$('gl').style.visibility='visible';if(!this.menuReady){if(!this.menuQueued){this.menuQueued=1;this.menuSeed=Math.floor(Math.random()*1e9);setTimeout(()=>{if(state!=='menu'&&state!=='lobby')return;try{setupWorld(this.menuSeed);this.buildWorld();this.menuReady=1}catch(e){console.warn(e)}},700)}return}
+  menuFrame(dt,covered=false){this.kkLoad();if(window.__noMenu)return;$('gl').style.visibility='visible';if(!this.menuReady){if(!this.menuQueued){this.menuQueued=1;this.menuSeed=Math.floor(Math.random()*1e9);setTimeout(()=>{if(state!=='menu'&&state!=='lobby')return;try{setupWorld(this.menuSeed);this.buildWorld();this.menuReady=1}catch(e){console.warn(e)}},700)}return}
     if(this.world!==WD){this.menuReady=0;this.menuQueued=0;return}
     this.t+=dt;const T=this.t;const V=WD.villages.find(v=>v.main)||{x:CX,y:CY};const a=T*.05;const px=V.x+Math.cos(a)*900,py=V.y+Math.sin(a)*500;
     this.U.fowC.value.set(px,py);this.U.fowH.value=0;this.U.fowR.value=99999;this.U.time.value=T;this.U.zone.value.set(CX,CY,99999);this.U.zoneN.value.z=-1;if(this.zoneWall)this.zoneWall.visible=false;this.U.cloud.value=1;
     this.cam.position.set(px,700,py+600);this.cam.lookAt(px,0,py);this.sun.position.set(px-600,1300,py+420);this.sun.target.position.set(px,0,py);
-    this.updateGround(px,py);this.stepP(this.PA,dt);this.stepP(this.PB,dt);for(const m of this.mills)m.hub.rotation.z+=dt*m.sp;this.draw()},
+    if(!covered)this.updateGround(px,py);
+    this.stepP(this.PA,dt);this.stepP(this.PB,dt);for(const m of this.mills)m.hub.rotation.z+=dt*m.sp;
+    if(!covered)this.draw()},
   frame(dt){
     if(!this.ok)return draw2D();this.sync();this.kkLoad();
     ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,W,H);
