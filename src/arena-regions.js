@@ -353,7 +353,7 @@ void main(){vec2 d=gl_PointCoord-.5;float r=length(d)*2.;if(r>1.)discard;float a
   // derivatives, no stair-steps on the edges); the shader turns them to world space with the decal's own axes, lights them from the
   // scene sun's side but low (32°, like the photo's winter sun: the game's sun stands so high that a wall would hardly catch it), lets
   // the sun-side wall shade the floor next to it, and shades the snow under it by 2x multiply blending
-  const FP={mesh:null,scene:null,i:0,N:900,life:24,last:new Map(),tex:null,U:null,W:19,L:38,STEP:54,SIDE:8};
+  const FP={mesh:null,scene:null,i:0,N:900,life:24,last:new Map(),tex:null,U:null,W:19,L:38,STEP:27,SIDE:8};
   const FP_DEPTH=6;   // world units from the snow's surface down to a print's floor
   function fpTexture(){const W=64,H=128,px=FP.W/W,py=FP.L/H,hgt=new Float32Array(W*H);   // rows run heel (v=0) to toe (v=1)
     const sst=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
@@ -412,7 +412,7 @@ void main(){vec4 t=texture2D(map,vUv);vec3 nt=t.rgb*2.-1.;float h=t.a*1.25-1.;
  gl_FragColor=vec4(clamp(c,.3,1.5)*.5,1.);}`});
     const mesh=new T.InstancedMesh(geo,m,FP.N);mesh.frustumCulled=false;mesh.renderOrder=1;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
     const z=new T.Matrix4().makeScale(0,0,0);for(let i=0;i<FP.N;i++)mesh.setMatrixAt(i,z);mesh.instanceMatrix.needsUpdate=true;
-    R.scene.add(mesh);FP.mesh=mesh;FP.scene=R.scene;FP.i=0;FP.last.clear()}
+    R.scene.add(mesh);FP.mesh=mesh;FP.scene=R.scene;FP.i=0}
   const fpM=new T.Matrix4(),fpR=new T.Matrix4(),fpX=new T.Matrix4().makeRotationX(-Math.PI/2),fpS=new T.Matrix4(),fpV=new T.Vector3();
   // the prints' light: the sun's compass direction, 32° above the horizon
   function fpSun(out,v){let x=v?v.x:-560,z=v?v.z:420;const l=Math.hypot(x,z);if(l<1e-3){x=-560;z=420}const k=Math.cos(.56)/Math.hypot(x,z);out.set(x*k,Math.sin(.56),z*k)}
@@ -420,15 +420,26 @@ void main(){vec4 t=texture2D(map,vUv);vec3 nt=t.rgb*2.-1.;float h=t.a*1.25-1.;
     fpS.makeScale(sx,sy,1);fpR.makeRotationY(-a-Math.PI/2);fpM.makeTranslation(x,R.gY(x,y)+.8,y).multiply(fpR).multiply(fpX).multiply(fpS);
     FP.mesh.setMatrixAt(i,fpM);FP.mesh.instanceMatrix.needsUpdate=true;const g=FP.mesh.geometry.attributes;g.aBorn.array[i]=S.t;g.aBorn.needsUpdate=true}
   function footprints(R,L,dt){if(!R.scene||!R.gY||typeof units==='undefined')return;if(!RM.deep)regionMap();
-    if(FP.mesh&&FP.scene!==R.scene){FP.mesh=null}
+    if(FP.mesh&&FP.scene!==R.scene){FP.mesh=null;FP.last.clear()}
     const me=typeof ME==='function'?ME():null,tx=R.tx||L.x,ty=R.ty||L.y;
     for(const u of units){if(!u.hero||u.dead||Math.abs(u.x-tx)>1600||Math.abs(u.y-ty)>1200){FP.last.delete(u.id);continue}
       const d=deepAt(u.x,u.y);if(d<.45||(typeof unitVisibleTo==='function'&&!unitVisibleTo(u,me,L))||(u.invisT>0&&u!==me)){FP.last.delete(u.id);continue}
-      let s=FP.last.get(u.id);if(!s){FP.last.set(u.id,{x:u.x,y:u.y,side:1});continue}
-      const dx=u.x-s.x,dy=u.y-s.y,dd=Math.hypot(dx,dy);if(dd>180||u.dash){s.x=u.x;s.y=u.y;continue}   // blinked or dashed: no trail across
-      if(dd<FP.STEP)continue;if(!FP.mesh)fpMesh(R);
-      const a=Math.atan2(dy,dx),c=Math.cos(a+1.5708),sn=Math.sin(a+1.5708);s.side=-s.side;
-      fpPut(R,u.x-dx/dd*8+c*FP.SIDE*s.side,u.y-dy/dd*8+sn*FP.SIDE*s.side,a+(Math.random()-.5)*.12,FP.W*s.side,FP.L);s.x=u.x;s.y=u.y}   // left or right of the way, a stride apart
+      let s=FP.last.get(u.id);
+      if(!s){FP.last.set(u.id,{x:u.x,y:u.y,side:1,remaining:FP.STEP});continue}
+      const dx=u.x-s.x,dy=u.y-s.y,dist=Math.hypot(dx,dy);
+      if(dist>180||u.dash){s.x=u.x;s.y=u.y;s.remaining=FP.STEP;continue}
+      if(dist>=s.remaining){
+        if(!FP.mesh)fpMesh(R);
+        const fx=dx/dist,fy=dy/dist,angle=Math.atan2(dy,dx);
+        for(;s.remaining<=dist;s.remaining+=FP.STEP){
+          const along=s.remaining-8;
+          s.side=-s.side;
+          const x=s.x+fx*along-fy*FP.SIDE*s.side,y=s.y+fy*along+fx*FP.SIDE*s.side;
+          if(deepAt(x,y)>=.45)fpPut(R,x,y,angle+Math.sin(x*12.9+y*78.2)*.06,FP.W*s.side,FP.L);
+        }
+      }
+      s.remaining-=dist;s.x=u.x;s.y=u.y;
+    }
     if(FP.mesh){FP.U.uT.value=S.t;FP.U.uLit.value=.3+.7*(typeof R.dayK==='function'?R.dayK():1);
       if(R.sun&&R.sun.target)fpSun(FP.U.uSun.value,fpV.copy(R.sun.position).sub(R.sun.target.position))}}
   // ---------------- per frame ----------------
