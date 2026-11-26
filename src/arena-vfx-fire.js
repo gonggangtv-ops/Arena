@@ -76,7 +76,7 @@
       transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-3});
     const shadows=pool(4,()=>{const m=new T.Mesh(shGeo,shMat.clone());m.renderOrder=2;m.visible=false;R.scene.add(m);return{m}});
     return{scene:R.scene,hi,heads,mets,shadows,geos:[tailGeo,shellGeo,rockGeo,shGeo],seen:new WeakMap(),areas:new Map(),gone:[],d:new T.Object3D(),q:new T.Quaternion(),v:new T.Vector3(),v2:new T.Vector3(),z:new T.Vector3(0,0,1),t:0}}
-  function dispose(R){const a=R._fx2;if(!a)return;for(const h of a.heads.concat(a.mets)){a.scene.remove(h.g);h.g.traverse(o=>{if(o.material)o.material.dispose()})}
+  function dispose(R){const a=R._fx2;if(!a)return;a.meteorField?.dispose();for(const h of a.heads.concat(a.mets)){a.scene.remove(h.g);h.g.traverse(o=>{if(o.material)o.material.dispose()})}
     for(const s of a.shadows){a.scene.remove(s.m);s.m.material.dispose()}for(const g of a.geos)g.dispose();R._fx2=null}
   function ensure(R){if(R._fx2&&R._fx2.scene!==R.scene)dispose(R);if(!R._fx2&&R.scene&&R.ok!==false){const prev=Math.random;try{Math.random=rnd;R._fx2=build(R)}finally{Math.random=prev}}return R._fx2}
   // orient a group so its +z points along (dx,dy,dz) (the tail cone runs back along -z)
@@ -139,6 +139,15 @@
     if(a.gone.length>64)a.gone.splice(0,a.gone.length-64)}
   function stepMeteors(R,a,dt){let mi=0;const used=new Set();
     for(const A of (typeof aoes!=='undefined'?aoes:[])){if(!P.fireOwn.call(R,A)||!near(A.x,A.y,A.r||200))continue;const r=A.r||200;
+      // The two player Meteor casts share this wire signature. Magma slams and regional eruptions have other delays.
+      if(meteorAoe(A)&&A.delay===.85){
+        const previous=Math.random;
+        try{
+          Math.random=rnd; // Three.js allocates UUIDs when a pooled slot is first used.
+          a.meteorField??=R.createMeteorField();
+          if(a.meteorField.track(A,dt))continue;
+        }finally{Math.random=previous}
+      }
       // a client rebuilds the aoe objects with every snapshot: the state is kept by kind, place and size
       const key=A.kind+'|'+Math.round(A.x/6)+'|'+Math.round(A.y/6)+'|'+(r|0);let st=a.areas.get(key);if(!st){st={pre:A.t<A.delay,hit:false,trail:0,dir:rr(0,TAU)};a.areas.set(key,st)}st.last=a.t;
       const gy=R.gY(A.x,A.y),fall=meteorAoe(A)&&A.delay>=.7&&st.pre;
@@ -160,12 +169,14 @@
         else if(!st.ring&&P.avEmit){st.ring=1;P.avEmit('ring',{x:A.x,y:A.y,height:4,r:r*.9,r1:r,c:'#c8401a',c2:'#ff9a5a',life:Math.max(.15,A.delay-A.t),width:.028,a:.24})}
         continue}
       if(!st.hit){st.hit=true;blast(R,A.x,A.y,r,{big:meteorAoe(A)})}}
+    a.meteorField?.step(dt);
     for(const M of a.mets)if(!used.has(M)&&M.g.visible){M.g.visible=false}
     for(let i=0;i<a.shadows.length;i++){const S=a.shadows[i];if(i>=mi&&S.m.visible)S.m.visible=false}
     if(a.areas.size>48)for(const [k,st] of a.areas)if(a.t-st.last>1.5)a.areas.delete(k)}
   function step(R,dt){const a=ensure(R);if(!a)return;dt=Math.max(0,Math.min(.1,fin(dt,0)));a.t+=dt;stepHeads(R,a,dt);stepMeteors(R,a,dt)}
   // ---------------- hooks ----------------
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);try{step(this,dt)}catch(e){warn('step',e)}return r};
+  const rebind=P.rebind;P.rebind=function(){this._fx2?.meteorField?.reset();return rebind.apply(this,arguments)};
   const _ds=P.disposeScene;P.disposeScene=function(){dispose(this);return _ds.apply(this,arguments)};
   const _bw=P.buildWorld;if(_bw)P.buildWorld=function(){const r=_bw.apply(this,arguments);try{ensure(this)}catch(e){warn('build',e)}return r};
 })();

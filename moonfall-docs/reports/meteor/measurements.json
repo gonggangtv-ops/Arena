@@ -1,0 +1,766 @@
+{
+  "high": {
+    "before": {
+      "cast": {
+        "seed": 777,
+        "quality": true,
+        "mobile": false,
+        "spot": {
+          "x": 10440,
+          "y": 9800
+        },
+        "r": 230,
+        "delay": 0.85,
+        "damage": 145.728,
+        "burn": 9,
+        "cooldown": 20
+      },
+      "frames": {
+        "f002": {
+          "elapsed": 3383.199999999255,
+          "calls": 293,
+          "triangles": 8513460,
+          "geometries": 142,
+          "textures": 162,
+          "done": false,
+          "t": 0.06666666666666667,
+          "targetHP": 2400
+        },
+        "warning": {
+          "elapsed": 3228.60000000149,
+          "calls": 293,
+          "triangles": 8511470,
+          "geometries": 143,
+          "textures": 162,
+          "done": false,
+          "t": 0.16666666666666666,
+          "targetHP": 2400
+        },
+        "f008": {
+          "elapsed": 3247.5,
+          "calls": 292,
+          "triangles": 8511098,
+          "geometries": 143,
+          "textures": 162,
+          "done": false,
+          "t": 0.26666666666666666,
+          "targetHP": 2400
+        },
+        "f011": {
+          "elapsed": 3160,
+          "calls": 294,
+          "triangles": 8513702,
+          "geometries": 143,
+          "textures": 162,
+          "done": false,
+          "t": 0.36666666666666664,
+          "targetHP": 2400
+        },
+        "f014": {
+          "elapsed": 3023.5,
+          "calls": 293,
+          "triangles": 8513312,
+          "geometries": 143,
+          "textures": 162,
+          "done": false,
+          "t": 0.4666666666666666,
+          "targetHP": 2400
+        },
+        "f017": {
+          "elapsed": 3244.10000000149,
+          "calls": 296,
+          "triangles": 8514526,
+          "geometries": 144,
+          "textures": 162,
+          "done": false,
+          "t": 0.5666666666666667,
+          "targetHP": 2400
+        },
+        "f020": {
+          "elapsed": 3008.5,
+          "calls": 297,
+          "triangles": 8517272,
+          "geometries": 144,
+          "textures": 162,
+          "done": false,
+          "t": 0.6666666666666666,
+          "targetHP": 2400
+        },
+        "release": {
+          "elapsed": 2900.7000000029802,
+          "calls": 296,
+          "triangles": 8514506,
+          "geometries": 144,
+          "textures": 162,
+          "done": false,
+          "t": 0.7333333333333333,
+          "targetHP": 2400
+        },
+        "f024": {
+          "elapsed": 2969.900000002235,
+          "calls": 296,
+          "triangles": 8514490,
+          "geometries": 144,
+          "textures": 162,
+          "done": false,
+          "t": 0.7999999999999999,
+          "targetHP": 2400
+        },
+        "f025": {
+          "elapsed": 3036.300000000745,
+          "calls": 296,
+          "triangles": 8514490,
+          "geometries": 144,
+          "textures": 162,
+          "done": false,
+          "t": 0.8333333333333333,
+          "targetHP": 2400
+        },
+        "f026": {
+          "elapsed": 3535.5,
+          "calls": 296,
+          "triangles": 8513633,
+          "geometries": 147,
+          "textures": 165,
+          "done": true,
+          "t": 0.8666666666666666,
+          "targetHP": 2343.8364288
+        },
+        "impact": {
+          "elapsed": 3477.5,
+          "calls": 303,
+          "triangles": 8516721,
+          "geometries": 152,
+          "textures": 165,
+          "done": true,
+          "t": 0.9333333333333332,
+          "targetHP": 2342.2487954666663
+        },
+        "f030": {
+          "elapsed": 3212.89999999851,
+          "calls": 303,
+          "triangles": 8517777,
+          "geometries": 152,
+          "textures": 165,
+          "done": true,
+          "t": 0.9999999999999999,
+          "targetHP": 2342.395462133333
+        },
+        "f032": {
+          "elapsed": 3009.300000000745,
+          "calls": 302,
+          "triangles": 8518777,
+          "geometries": 152,
+          "textures": 165,
+          "done": true,
+          "t": 1.0666666666666667,
+          "targetHP": 2342.5421287999993
+        },
+        "f035": {
+          "elapsed": 3163.300000000745,
+          "calls": 302,
+          "triangles": 8519777,
+          "geometries": 152,
+          "textures": 165,
+          "done": true,
+          "t": 1.166666666666667,
+          "targetHP": 2342.762128799999
+        },
+        "f038": {
+          "elapsed": 3446,
+          "calls": 303,
+          "triangles": 8520543,
+          "geometries": 153,
+          "textures": 165,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2342.982128799999
+        },
+        "f041": {
+          "elapsed": 3189.199999999255,
+          "calls": 303,
+          "triangles": 8520555,
+          "geometries": 153,
+          "textures": 165,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2343.2021287999987
+        },
+        "f045": {
+          "elapsed": 3116.199999999255,
+          "calls": 301,
+          "triangles": 8518629,
+          "geometries": 153,
+          "textures": 165,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2341.7611621333317
+        },
+        "crater": {
+          "elapsed": 3317.89999999851,
+          "calls": 302,
+          "triangles": 8520839,
+          "geometries": 153,
+          "textures": 165,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2342.2011621333313
+        },
+        "f058": {
+          "elapsed": 3096.300000000745,
+          "calls": 298,
+          "triangles": 8443518,
+          "geometries": 153,
+          "textures": 165,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2342.714495466664
+        },
+        "f068": {
+          "elapsed": 3217.300000000745,
+          "calls": 300,
+          "triangles": 8519847,
+          "geometries": 153,
+          "textures": 165,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2341.7135287999968
+        },
+        "f082": {
+          "elapsed": 3250.60000000149,
+          "calls": 297,
+          "triangles": 8517061,
+          "geometries": 153,
+          "textures": 165,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2341.0058954666624
+        },
+        "aftermath": {
+          "elapsed": 3551.300000000745,
+          "calls": 297,
+          "triangles": 8502145,
+          "geometries": 153,
+          "textures": 165,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2339.370628799994
+        }
+      },
+      "errors": [],
+      "checks": {}
+    },
+    "after": {
+      "cast": {
+        "seed": 777,
+        "quality": true,
+        "mobile": false,
+        "spot": {
+          "x": 10440,
+          "y": 9800
+        },
+        "r": 230,
+        "delay": 0.85,
+        "damage": 145.728,
+        "burn": 9,
+        "cooldown": 20
+      },
+      "frames": {
+        "f002": {
+          "elapsed": 3333.6999999955297,
+          "calls": 293,
+          "triangles": 8515192,
+          "geometries": 143,
+          "textures": 163,
+          "done": false,
+          "t": 0.06666666666666667,
+          "targetHP": 2400
+        },
+        "warning": {
+          "elapsed": 3050.4000000059605,
+          "calls": 292,
+          "triangles": 8512994,
+          "geometries": 143,
+          "textures": 163,
+          "done": false,
+          "t": 0.16666666666666666,
+          "targetHP": 2400
+        },
+        "f008": {
+          "elapsed": 3215.39999999851,
+          "calls": 292,
+          "triangles": 8513112,
+          "geometries": 143,
+          "textures": 163,
+          "done": false,
+          "t": 0.26666666666666666,
+          "targetHP": 2400
+        },
+        "f011": {
+          "elapsed": 2926.7999999970198,
+          "calls": 294,
+          "triangles": 8515706,
+          "geometries": 143,
+          "textures": 163,
+          "done": false,
+          "t": 0.36666666666666664,
+          "targetHP": 2400
+        },
+        "f014": {
+          "elapsed": 2970,
+          "calls": 293,
+          "triangles": 8515312,
+          "geometries": 143,
+          "textures": 163,
+          "done": false,
+          "t": 0.4666666666666666,
+          "targetHP": 2400
+        },
+        "f017": {
+          "elapsed": 3147.3000000044703,
+          "calls": 294,
+          "triangles": 8515682,
+          "geometries": 143,
+          "textures": 163,
+          "done": false,
+          "t": 0.5666666666666667,
+          "targetHP": 2400
+        },
+        "f020": {
+          "elapsed": 2982.2000000029802,
+          "calls": 295,
+          "triangles": 8518424,
+          "geometries": 143,
+          "textures": 163,
+          "done": false,
+          "t": 0.6666666666666666,
+          "targetHP": 2400
+        },
+        "release": {
+          "elapsed": 3049,
+          "calls": 294,
+          "triangles": 8515654,
+          "geometries": 143,
+          "textures": 163,
+          "done": false,
+          "t": 0.7333333333333333,
+          "targetHP": 2400
+        },
+        "f024": {
+          "elapsed": 3069.3000000044703,
+          "calls": 294,
+          "triangles": 8515636,
+          "geometries": 143,
+          "textures": 163,
+          "done": false,
+          "t": 0.7999999999999999,
+          "targetHP": 2400
+        },
+        "f025": {
+          "elapsed": 3024.5999999940395,
+          "calls": 294,
+          "triangles": 8515634,
+          "geometries": 143,
+          "textures": 163,
+          "done": false,
+          "t": 0.8333333333333333,
+          "targetHP": 2400
+        },
+        "f026": {
+          "elapsed": 4036,
+          "calls": 299,
+          "triangles": 8519638,
+          "geometries": 146,
+          "textures": 166,
+          "done": true,
+          "t": 0.8666666666666666,
+          "targetHP": 2343.8364288
+        },
+        "impact": {
+          "elapsed": 3252.8000000044703,
+          "calls": 299,
+          "triangles": 8519668,
+          "geometries": 146,
+          "textures": 166,
+          "done": true,
+          "t": 0.9333333333333332,
+          "targetHP": 2342.2487954666663
+        },
+        "f030": {
+          "elapsed": 3456.7999999970198,
+          "calls": 298,
+          "triangles": 8519682,
+          "geometries": 146,
+          "textures": 166,
+          "done": true,
+          "t": 0.9999999999999999,
+          "targetHP": 2342.395462133333
+        },
+        "f032": {
+          "elapsed": 3363.7999999970198,
+          "calls": 296,
+          "triangles": 8517100,
+          "geometries": 146,
+          "textures": 166,
+          "done": true,
+          "t": 1.0666666666666667,
+          "targetHP": 2342.5421287999993
+        },
+        "f035": {
+          "elapsed": 3827.5999999940395,
+          "calls": 299,
+          "triangles": 8474722,
+          "geometries": 147,
+          "textures": 166,
+          "done": true,
+          "t": 1.166666666666667,
+          "targetHP": 2342.762128799999
+        },
+        "f038": {
+          "elapsed": 3287.5,
+          "calls": 299,
+          "triangles": 8519958,
+          "geometries": 147,
+          "textures": 166,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2342.982128799999
+        },
+        "f041": {
+          "elapsed": 3304.7999999970198,
+          "calls": 298,
+          "triangles": 8519836,
+          "geometries": 147,
+          "textures": 166,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2343.2021287999987
+        },
+        "f045": {
+          "elapsed": 3587.5,
+          "calls": 299,
+          "triangles": 8520236,
+          "geometries": 147,
+          "textures": 166,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2341.7611621333317
+        },
+        "crater": {
+          "elapsed": 3624,
+          "calls": 299,
+          "triangles": 8518039,
+          "geometries": 148,
+          "textures": 166,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2342.2011621333313
+        },
+        "f058": {
+          "elapsed": 3439.2999999970198,
+          "calls": 298,
+          "triangles": 8504035,
+          "geometries": 148,
+          "textures": 166,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2342.714495466664
+        },
+        "f068": {
+          "elapsed": 3254.2000000029802,
+          "calls": 299,
+          "triangles": 8506251,
+          "geometries": 148,
+          "textures": 166,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2341.7135287999968
+        },
+        "f082": {
+          "elapsed": 3508.5999999940395,
+          "calls": 298,
+          "triangles": 8504051,
+          "geometries": 148,
+          "textures": 166,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2341.0058954666624
+        },
+        "aftermath": {
+          "elapsed": 3197.89999999851,
+          "calls": 297,
+          "triangles": 8503677,
+          "geometries": 148,
+          "textures": 166,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2339.370628799994
+        }
+      },
+      "errors": [],
+      "checks": {
+        "depression": -43.46232223510742,
+        "lift": 20.468721389770508,
+        "collisionHeight": 0,
+        "staff": {
+          "r": 220,
+          "damage": 421.77599999999995,
+          "delay": 0.85,
+          "cooldown": 60
+        },
+        "materials": [
+          {
+            "zone": 2,
+            "tint": "abd5e3",
+            "cooling": 1.26,
+            "crust": true
+          },
+          {
+            "zone": 1,
+            "tint": "826750",
+            "cooling": 0.79,
+            "crust": true
+          },
+          {
+            "zone": "water",
+            "tint": "98b8bc",
+            "cooling": 1.8,
+            "crust": false
+          },
+          {
+            "zone": 0,
+            "tint": "ad9271",
+            "cooling": 0.52,
+            "crust": true
+          },
+          {
+            "zone": 4,
+            "tint": "80758a",
+            "cooling": 0.62,
+            "crust": true
+          },
+          {
+            "zone": 3,
+            "tint": "927565",
+            "cooling": 0.34,
+            "crust": true
+          },
+          {
+            "zone": "deck",
+            "tint": "af916c",
+            "cooling": 0.77,
+            "crust": false
+          }
+        ],
+        "slots": 5,
+        "networkSnapshots": 7,
+        "networkImpacts": 1,
+        "restored": true,
+        "resources": 40,
+        "disposed": 40
+      }
+    }
+  },
+  "low": {
+    "before": {
+      "cast": {
+        "seed": 777,
+        "quality": false,
+        "mobile": true,
+        "spot": {
+          "x": 10440,
+          "y": 9800
+        },
+        "r": 230,
+        "delay": 0.85,
+        "damage": 145.728,
+        "burn": 9,
+        "cooldown": 20
+      },
+      "frames": {
+        "warning": {
+          "elapsed": 1900.8999999985099,
+          "calls": 239,
+          "triangles": 7186872,
+          "geometries": 128,
+          "textures": 136,
+          "done": false,
+          "t": 0.16666666666666666,
+          "targetHP": 2400
+        },
+        "release": {
+          "elapsed": 1884.5999999977648,
+          "calls": 240,
+          "triangles": 7185650,
+          "geometries": 129,
+          "textures": 136,
+          "done": false,
+          "t": 0.7333333333333333,
+          "targetHP": 2400
+        },
+        "impact": {
+          "elapsed": 1885.2000000029802,
+          "calls": 244,
+          "triangles": 7187672,
+          "geometries": 135,
+          "textures": 138,
+          "done": true,
+          "t": 0.9333333333333332,
+          "targetHP": 2342.2487954666663
+        },
+        "crater": {
+          "elapsed": 1741.5,
+          "calls": 243,
+          "triangles": 7187968,
+          "geometries": 136,
+          "textures": 138,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2342.2011621333313
+        },
+        "aftermath": {
+          "elapsed": 1732.1000000014901,
+          "calls": 238,
+          "triangles": 7181274,
+          "geometries": 136,
+          "textures": 138,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2339.370628799994
+        }
+      },
+      "errors": [],
+      "checks": {}
+    },
+    "after": {
+      "cast": {
+        "seed": 777,
+        "quality": false,
+        "mobile": true,
+        "spot": {
+          "x": 10440,
+          "y": 9800
+        },
+        "r": 230,
+        "delay": 0.85,
+        "damage": 145.728,
+        "burn": 9,
+        "cooldown": 20
+      },
+      "frames": {
+        "warning": {
+          "elapsed": 1972.6000000014901,
+          "calls": 237,
+          "triangles": 7187128,
+          "geometries": 127,
+          "textures": 137,
+          "done": false,
+          "t": 0.16666666666666666,
+          "targetHP": 2400
+        },
+        "release": {
+          "elapsed": 1983.8999999985099,
+          "calls": 237,
+          "triangles": 7185722,
+          "geometries": 128,
+          "textures": 137,
+          "done": false,
+          "t": 0.7333333333333333,
+          "targetHP": 2400
+        },
+        "impact": {
+          "elapsed": 2096.89999999851,
+          "calls": 241,
+          "triangles": 7188370,
+          "geometries": 130,
+          "textures": 139,
+          "done": true,
+          "t": 0.9333333333333332,
+          "targetHP": 2342.2487954666663
+        },
+        "crater": {
+          "elapsed": 1761.2000000029802,
+          "calls": 240,
+          "triangles": 7183826,
+          "geometries": 131,
+          "textures": 139,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2342.2011621333313
+        },
+        "aftermath": {
+          "elapsed": 1688.7999999970198,
+          "calls": 240,
+          "triangles": 7183854,
+          "geometries": 131,
+          "textures": 139,
+          "done": true,
+          "t": 1.2000000000000004,
+          "targetHP": 2339.370628799994
+        }
+      },
+      "errors": [],
+      "checks": {
+        "depression": -43.46232223510742,
+        "lift": 20.468721389770508,
+        "collisionHeight": 0,
+        "staff": {
+          "r": 220,
+          "damage": 421.77599999999995,
+          "delay": 0.85,
+          "cooldown": 60
+        },
+        "materials": [
+          {
+            "zone": 2,
+            "tint": "abd5e3",
+            "cooling": 1.26,
+            "crust": true
+          },
+          {
+            "zone": 1,
+            "tint": "826750",
+            "cooling": 0.79,
+            "crust": true
+          },
+          {
+            "zone": "water",
+            "tint": "98b8bc",
+            "cooling": 1.8,
+            "crust": false
+          },
+          {
+            "zone": 0,
+            "tint": "ad9271",
+            "cooling": 0.52,
+            "crust": true
+          },
+          {
+            "zone": 4,
+            "tint": "80758a",
+            "cooling": 0.62,
+            "crust": true
+          },
+          {
+            "zone": 3,
+            "tint": "927565",
+            "cooling": 0.34,
+            "crust": true
+          },
+          {
+            "zone": "deck",
+            "tint": "af916c",
+            "cooling": 0.77,
+            "crust": false
+          }
+        ],
+        "slots": 3,
+        "networkSnapshots": 7,
+        "networkImpacts": 1,
+        "restored": true,
+        "resources": 26,
+        "disposed": 26
+      }
+    }
+  }
+}
