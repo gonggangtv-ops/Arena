@@ -319,6 +319,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
         new THREE.Vector3(positions[rows*3],high,positions[last*n*3+2])
       ));
     }
+    mesh.userData.terrainRowBounds={size:stripSize,strips};
     const clip=new THREE.Matrix4(), frustum=new THREE.Frustum();
     mesh.onBeforeRender=function(renderer,scene,camera){
       clip.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse).multiply(this.matrixWorld);
