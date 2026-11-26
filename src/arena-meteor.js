@@ -1,4 +1,4 @@
-// Falling Meteor, shared by the fire staff and the Meteor special. All coordinates,
+// Falling Meteor, shared by the fire staff, the Meteor special and volcanic hazards. All coordinates,
 // ages and radii come from the authoritative AOE. The terrain stamp touches only
 // Three.js vertex buffers. WD, navigation and the collision heightfield stay independent.
 (()=>{
@@ -313,6 +313,8 @@
       s.active=true;s.group.visible=true;s.ground.visible=true;s.head.visible=s.wake.visible=false;s.crust.mesh.visible=false;s.chips.count=0;
       s.x=a.x;s.z=a.y;s.r=a.r;s.source=a;s.birth=gameT-a.t;s.age=0;s.hit=false;s.trail=0;s.strength=0;
       s.rand=mulberry32((Math.imul(a.x|0,73856093)^Math.imul(a.y|0,19349663)^Math.round(s.birth*20))>>>0);
+      // The longer volcanic warning lets the rock descend from higher above the arena.
+      s.dropHeight=465*(a.delay/.85);
       s.seed=s.rand()*7;s.side=s.rand()<.5?-1:1;s.deck=onBridge(s.x,s.z);
       s.wet=!s.deck&&inWater(s.x,s.z);const zone=REG.at(s.x,s.z);
       s.ice=zone===2;s.surface=zones[s.deck?6:s.wet&&!s.ice?5:zone];
@@ -335,12 +337,12 @@
     function flight(s,a,dt){
       const k=clamp(a.t/a.delay,0,1),f=1-(.18*k+.82*k*k),size=s.r*.252;
       const x=s.x+s.side*s.r*1.32*f,z=s.z+s.r*.84*f;
-      const bottom=height(s,s.x,s.z),y=bottom+size*.45+f*465;
+      const bottom=height(s,s.x,s.z),y=bottom+size*.45+f*s.dropHeight;
       s.u.progress.value=k;s.head.visible=true;s.head.position.set(x,y,z);
       s.head.scale.setScalar(size);s.head.rotation.set(s.seed+k*1.39,k*2.28,s.seed*.6+k*.7);
       s.wake.visible=true;s.wake.position.copy(s.head.position);
       const u=s.wake.material.uniforms;
-      u.aft.value.set(s.side*s.r*1.32,465,s.r*.84).normalize();u.size.value=size;u.phase.value=s.seed;
+      u.aft.value.set(s.side*s.r*1.32,s.dropHeight,s.r*.84).normalize();u.size.value=size;u.phase.value=s.seed;
       s.trail-=dt;if(s.trail>0)return;s.trail=hi?.085:.14;
       const back=s.side*size*.42,h=y-R.gY(x,z);
       puff('smoke',{x:x+back*3.5,y:z+size*.83,h:h+size*3.4,r:size*.70,r1:size*1.63,

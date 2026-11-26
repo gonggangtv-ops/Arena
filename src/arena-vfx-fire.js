@@ -4,7 +4,7 @@
  *  FIREBALL (fire staff skill 1, kind 2; the staff's basic bolt, kind 1, is the small version): a turbulent ball of fire with a
  *    white-hot heart, a comet tail of fire that cools into smoke behind it, sparks shed in flight, and a light under it (aaa).
  *    Impact: a short white flash, a volumetric fireball that cools to smoke, burning shrapnel, a dust and heat shock, a scorch.
- *  METEOR (aoe kind 'meteor' with a fall delay: fire staff skill 3, the Meteor special): a real rock with glowing seams falls from
+ *  METEOR (aoe kind 'meteor' with a fall delay: fire staff skill 3, the Meteor special, volcanic hazards): a real rock with glowing seams falls from
  *    high on a slant, wrapped in a plasma sheath and trailing a long smoke column, its shadow and a heat ring growing on the
  *    target; the impact is a flash, a big fireball, a dust shockwave across the ground, molten rocks thrown out, a smoke column,
  *    a scorched crater with seams that cool, embers. Ground slams with no fall time (magma titan, element slams) get the blast only.
@@ -17,7 +17,7 @@
   try{if(localStorage.getItem('ar_fx_fire')==='0')return}catch(e){}
   const P=R3,T=THREE,TAU=Math.PI*2;
   let seed=0x2c1b3c6d;const rnd=()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return(seed>>>0)/4294967296};
-  const rr=(a,b)=>a+(b-a)*rnd(),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),fin=(v,d)=>Number.isFinite(v)?v:d;
+  const rr=(a,b)=>a+(b-a)*rnd(),fin=(v,d)=>Number.isFinite(v)?v:d;
   const warn=(k,e)=>{if(!P['_fireE'+k]){P['_fireE'+k]=1;console.warn('fire vfx',k,e)}};
   const near=(x,y,pad)=>{const L=typeof listener==='function'?listener():null,R=typeof visionR==='function'?visionR():1100;return !L||Math.hypot(x-L.x,y-L.y)<R+(pad||220)};
   const NX=()=>window.ArenaVFXTex?ArenaVFXTex.uniforms():{vxN:{value:null},vxT:{value:0}};
@@ -44,40 +44,18 @@
     void main(){float n=texture2D(vxN,vUv*vec2(3.0,1.5)+vec2(uSeed,-vxT*1.7)).r*.6+texture2D(vxN,vUv*vec2(6.0,3.0)+vec2(-uSeed,-vxT*2.9)).a*.4;
       float k=smoothstep(.12,.9,vF+(n-.5)*.7)*pow(vF,1.4)*(.55+.6*n)*uA;if(k<.003)discard;
       gl_FragColor=vec4(mix(uC1*vec3(1.0,.55,.3),uC2*1.6,smoothstep(.45,1.0,vF*(.7+.5*n)))*k,0.0);}`;
-  // meteor rock: dark basalt crust (lit), seams of molten rock glowing through the cell walls of the shared noise
-  function rockMat(){const m=new T.MeshStandardMaterial({color:'#2e2622',roughness:.92,metalness:0,emissive:'#ff5a12',emissiveIntensity:1});
-    m.userData.u={vxN:NX().vxN,uHeat:{value:1}};
-    m.onBeforeCompile=sh=>{Object.assign(sh.uniforms,m.userData.u);
-      sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vRk;').replace('#include <begin_vertex>','#include <begin_vertex>\nvRk=position;');
-      sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nuniform sampler2D vxN;uniform float uHeat;varying vec3 vRk;')
-        .replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
-          {vec3 q=normalize(vRk);vec3 w=pow(abs(q),vec3(4.0));w/=w.x+w.y+w.z;
-           float c=texture2D(vxN,q.yz*.9+.13).g*w.x+texture2D(vxN,q.xz*.9+.41).g*w.y+texture2D(vxN,q.xy*.9+.77).g*w.z;
-           float seam=1.0-smoothstep(.02,.12,c);float glow=seam*uHeat;
-           totalEmissiveRadiance=vec3(1.0,.42,.1)*glow*2.4+vec3(1.0,.8,.5)*pow(seam,3.0)*uHeat*1.2;}`)};
-    m.customProgramCacheKey=()=>'fx2rock';return m}
   // ---------------- per scene ----------------
   function build(R){if(!R.scene)return null;const hi=!!R.hi&&!R.mobile;
     const tailGeo=new T.CylinderGeometry(1,0,1,hi?18:10,6,true);tailGeo.translate(0,-.5,0);tailGeo.rotateX(Math.PI/2);   // the wide end at z = 0 (the head), the tip at z = -1
     const shellGeo=new T.SphereGeometry(1,hi?20:12,hi?14:8);
-    const rockGeo=new T.IcosahedronGeometry(1,hi?3:2);{const p=rockGeo.attributes.position,v=new T.Vector3();for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);
-      const n=.78+.2*Math.sin(v.x*3.1+1.3)*Math.cos(v.y*2.7)+.1*Math.sin(v.z*5.3+v.x*2.1)+.06*Math.sin(v.y*9.1);v.multiplyScalar(n);p.setXYZ(i,v.x,v.y,v.z)}rockGeo.computeVertexNormals()}
     const mk=(frag,o)=>new T.ShaderMaterial(Object.assign({uniforms:Object.assign({uC1:{value:new T.Color(FIRE[0])},uC2:{value:new T.Color(FIRE[1])},uA:{value:1},uSeed:{value:rr(0,9)},uFlow:{value:2.2}},NX()),
       vertexShader:TVERT,fragmentShader:frag,transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide,toneMapped:false},o||{}));
     const pool=(n,make)=>Array.from({length:n},make);
     const heads=pool(hi?10:6,()=>{const g=new T.Group();const tail=new T.Mesh(tailGeo,mk(TFRAG)),shell=new T.Mesh(shellGeo,mk(GFRAG,{side:T.FrontSide}));
       tail.renderOrder=8;shell.renderOrder=9;g.add(tail,shell);g.visible=false;R.scene.add(g);return{g,tail,shell,on:false}});
-    const mets=pool(4,()=>{const g=new T.Group();const rock=new T.Mesh(rockGeo,rockMat()),tail=new T.Mesh(tailGeo,mk(TFRAG)),shell=new T.Mesh(shellGeo,mk(GFRAG,{side:T.FrontSide}));
-      rock.castShadow=true;tail.renderOrder=8;shell.renderOrder=9;tail.material.uniforms.uFlow.value=1.4;g.add(rock,tail,shell);g.visible=false;R.scene.add(g);return{g,rock,tail,shell,on:false}});
-    // the meteor's shadow on the target, growing as it comes down
-    const shGeo=new T.CircleGeometry(1,40);shGeo.rotateX(-Math.PI/2);
-    const shMat=new T.ShaderMaterial({uniforms:{uA:{value:0}},vertexShader:'varying vec2 vU;void main(){vU=position.xz;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
-      fragmentShader:'precision highp float;uniform float uA;varying vec2 vU;void main(){float r=length(vU);float k=(1.0-smoothstep(.15,1.0,r))*uA;gl_FragColor=vec4(0.03,0.02,0.02,k);}',
-      transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-3});
-    const shadows=pool(4,()=>{const m=new T.Mesh(shGeo,shMat.clone());m.renderOrder=2;m.visible=false;R.scene.add(m);return{m}});
-    return{scene:R.scene,hi,heads,mets,shadows,geos:[tailGeo,shellGeo,rockGeo,shGeo],seen:new WeakMap(),areas:new Map(),gone:[],d:new T.Object3D(),q:new T.Quaternion(),v:new T.Vector3(),v2:new T.Vector3(),z:new T.Vector3(0,0,1),t:0}}
-  function dispose(R){const a=R._fx2;if(!a)return;a.meteorField?.dispose();for(const h of a.heads.concat(a.mets)){a.scene.remove(h.g);h.g.traverse(o=>{if(o.material)o.material.dispose()})}
-    for(const s of a.shadows){a.scene.remove(s.m);s.m.material.dispose()}for(const g of a.geos)g.dispose();R._fx2=null}
+    return{scene:R.scene,hi,heads,geos:[tailGeo,shellGeo],seen:new WeakMap(),areas:new Map(),gone:[],d:new T.Object3D(),q:new T.Quaternion(),v:new T.Vector3(),v2:new T.Vector3(),z:new T.Vector3(0,0,1),t:0}}
+  function dispose(R){const a=R._fx2;if(!a)return;a.meteorField?.dispose();for(const h of a.heads){a.scene.remove(h.g);h.g.traverse(o=>{if(o.material)o.material.dispose()})}
+    for(const g of a.geos)g.dispose();R._fx2=null}
   function ensure(R){if(R._fx2&&R._fx2.scene!==R.scene)dispose(R);if(!R._fx2&&R.scene&&R.ok!==false){const prev=Math.random;try{Math.random=rnd;R._fx2=build(R)}finally{Math.random=prev}}return R._fx2}
   // orient a group so its +z points along (dx,dy,dz) (the tail cone runs back along -z)
   function aim(a,g,dx,dy,dz){a.v.set(dx,dy,dz);const L=a.v.length();if(L<1e-4)return;a.v.multiplyScalar(1/L);a.q.setFromUnitVectors(a.z,a.v);g.quaternion.copy(a.q)}
@@ -137,41 +115,24 @@
       if(!g.st.big&&near(g.st.x,g.st.y)){hx(R,'fire',{x:g.st.x,y:g.st.y,h:40,r:9,r1:30,life:.32,c:FIRE[0],c2:FIRE[1],vy:30,drag:2});hx(R,'smoke',{x:g.st.x,y:g.st.y,h:44,r:8,r1:34,life:.8,c:'#3a3431',vy:40,gain:.45});
         const A=api(R);if(A)try{A.sparks(A.G(g.st.x,g.st.y,40),5,'#ffd27a','#ff5a10',220,160,{g:700,life:.4,size:.8})}catch(e){}}}
     if(a.gone.length>64)a.gone.splice(0,a.gone.length-64)}
-  function stepMeteors(R,a,dt){let mi=0;const used=new Set();
+  function stepMeteors(R,a,dt){
     for(const A of (typeof aoes!=='undefined'?aoes:[])){if(!P.fireOwn.call(R,A)||!near(A.x,A.y,A.r||200))continue;const r=A.r||200;
-      // The two player Meteor casts share this wire signature. Magma slams and regional eruptions have other delays.
-      if(meteorAoe(A)&&A.delay===.85){
+      // Both host and client carry the fall delay. Shorter magma slams use the ground blast.
+      if(meteorAoe(A)&&A.delay>=.7){
         const previous=Math.random;
         try{
           Math.random=rnd; // Three.js allocates UUIDs when a pooled slot is first used.
           a.meteorField??=R.createMeteorField();
-          if(a.meteorField.track(A,dt))continue;
+          a.meteorField.track(A,dt);
+          continue;
         }finally{Math.random=previous}
       }
       // a client rebuilds the aoe objects with every snapshot: the state is kept by kind, place and size
-      const key=A.kind+'|'+Math.round(A.x/6)+'|'+Math.round(A.y/6)+'|'+(r|0);let st=a.areas.get(key);if(!st){st={pre:A.t<A.delay,hit:false,trail:0,dir:rr(0,TAU)};a.areas.set(key,st)}st.last=a.t;
-      const gy=R.gY(A.x,A.y),fall=meteorAoe(A)&&A.delay>=.7&&st.pre;
-      if(A.t<A.delay){if(fall){const M=a.mets[mi++],S=a.shadows[mi-1];if(M){used.add(M);
-          // in on a slant from the camera's side of the sky: the game camera looks steeply down from the south, so a rock falling
-          // from over it toward the target stays in view for most of the wait (one from the far side would only show at the end)
-          const k=clamp(A.t/A.delay,0,1),e=Math.pow(k,1.2),H=1000,ox=Math.cos(st.dir)*300,oz=220+140*Math.abs(Math.sin(st.dir));
-          const x=A.x+ox*(1-e),y=gy+20+H*(1-e),z=A.y+oz*(1-e),vx=-ox,vy=-H,vz=-oz,sz=clamp(r*.22,40,70);
-          M.g.visible=true;M.g.position.set(x,y,z);aim(a,M.g,vx,vy,vz);M.rock.scale.setScalar(sz);M.rock.rotation.set(A.t*2.3,A.t*1.7,0);
-          M.tail.scale.set(sz*1.25,sz*1.25,sz*(9+5*k));M.shell.scale.setScalar(sz*1.9);M.tail.material.uniforms.uA.value=.95;M.shell.material.uniforms.uA.value=.85;
-          M.rock.material.userData.u.uHeat.value=.8+.4*k;
-          if(S){S.m.visible=true;S.m.position.set(A.x,gy+2.5,A.y);S.m.scale.setScalar(r*(.35+.65*k));S.m.material.uniforms.uA.value=.18+.5*k}
-          st.trail-=dt;if(st.trail<=0){st.trail=a.hi?.03:.06;const L=Math.hypot(vx,vy,vz),bx=-vx/L,by=-vy/L,bz=-vz/L,gyh=R.gY(x,z);
-            hx(R,'fire',{x:x+bx*sz*.8,y:z+bz*sz*.8,h:y-gyh+by*sz*.8,r:sz*.8,r1:sz*1.6,life:.34,c:FIRE[0],c2:FIRE[1],vx:bx*120,vy:by*120,vz:bz*120,drag:2,gain:1});
-            hx(R,'smoke',{x:x+bx*sz*2.6,y:z+bz*sz*2.6,h:y-gyh+by*sz*2.6,r:sz*.7,r1:sz*2.8,life:a.hi?2.2:1.5,c:'#2d2826',vx:bx*40,vy:by*40+20,vz:bz*40,drag:.6,gain:.8});
-            const Ap=api(R);if(Ap)try{Ap.sparks({x,y,z},2,'#ffd27a','#ff5a10',220,140,{g:300,life:.6,size:.9})}catch(e){}}
-          // a heat ring at the edge of the blast, warning where it lands
-          if(P.avEmit&&!st.ring){st.ring=1;P.avEmit('ring',{x:A.x,y:A.y,height:4,r:r*.96,r1:r,c:'#c8401a',c2:'#ff9a5a',life:Math.max(.2,A.delay-A.t),width:.028,a:.24})}}}
-        else if(!st.ring&&P.avEmit){st.ring=1;P.avEmit('ring',{x:A.x,y:A.y,height:4,r:r*.9,r1:r,c:'#c8401a',c2:'#ff9a5a',life:Math.max(.15,A.delay-A.t),width:.028,a:.24})}
+      const key=A.kind+'|'+Math.round(A.x/6)+'|'+Math.round(A.y/6)+'|'+(r|0);let st=a.areas.get(key);if(!st){st={hit:false};a.areas.set(key,st)}st.last=a.t;
+      if(A.t<A.delay){if(!st.ring&&P.avEmit){st.ring=1;P.avEmit('ring',{x:A.x,y:A.y,height:4,r:r*.9,r1:r,c:'#c8401a',c2:'#ff9a5a',life:Math.max(.15,A.delay-A.t),width:.028,a:.24})}
         continue}
       if(!st.hit){st.hit=true;blast(R,A.x,A.y,r,{big:meteorAoe(A)})}}
     a.meteorField?.step(dt);
-    for(const M of a.mets)if(!used.has(M)&&M.g.visible){M.g.visible=false}
-    for(let i=0;i<a.shadows.length;i++){const S=a.shadows[i];if(i>=mi&&S.m.visible)S.m.visible=false}
     if(a.areas.size>48)for(const [k,st] of a.areas)if(a.t-st.last>1.5)a.areas.delete(k)}
   function step(R,dt){const a=ensure(R);if(!a)return;dt=Math.max(0,Math.min(.1,fin(dt,0)));a.t+=dt;stepHeads(R,a,dt);stepMeteors(R,a,dt)}
   // ---------------- hooks ----------------
