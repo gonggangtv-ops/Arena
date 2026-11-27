@@ -75,7 +75,9 @@ window.installArenaMenuUX=function(){
     language.setAttribute('translate','no');
     language.setAttribute('aria-label',nextLanguage==='en'?'Switch to English':'เปลี่ยนเป็นภาษาไทย');
     language.onclick=()=>ArenaLanguage.select(nextLanguage);
-    utilities.append(open,forge,language);menu.querySelector('.moonfall-play-actions').after(utilities);
+    const editor=make('button','arena-menu-tool','ตัวแก้ไขเกม');editor.id='arenaEditorBtn';editor.type='button';
+    editor.prepend(icon('control'));editor.onclick=()=>ArenaEditor.open();
+    utilities.append(open,forge,editor,language);menu.querySelector('.moonfall-play-actions').after(utilities);
 
     const dialog=make('dialog','arena-settings');dialog.id='arenaSettings';dialog.setAttribute('aria-labelledby','arenaSettingsTitle');
     const header=make('header','arena-settings-header'),headingCopy=make('div');

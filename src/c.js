@@ -295,7 +295,7 @@ function heroRow(o){return[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99)
 function selfRow(o){const row=[Math.round(o.xp),o.skl[0],o.skl[1],o.skl[2],o.pts,f1(Math.max(0,o.cd[0])),f1(Math.max(0,o.cd[1])),f1(Math.max(0,o.cd[2])),f1(o.armorV),Math.round(o.atkDmg),Math.round(o.spdB*100),Math.round(o.dmgB*100),Math.round(o.mr*100),f1(Math.max(0,o.shieldT)),
   o.bag[0],o.bag[1],o.bag[2],o.bag[3],f1(Math.max(0,o.bcd[0])),f1(Math.max(0,o.bcd[1])),f1(Math.max(0,o.bcd[2])),f1(Math.max(0,o.bcd[3])),f1(Math.max(0,o.spdPT)),o.wk2?AW.indexOf(o.wk2):-1,o.wt2,o.fury|0,o.gold|0,o.wv|0,o.wv2|0,o.xs|0,o.xl|0,f1(Math.max(0,o.xcd||0)),f1(Math.max(0,o.dgcd||0))];if(ARX)row.push(arenaStatusSnapshot(o));return row}
 function mobRow(o){const r=[o.id,o.x|0,o.y|0,o.hp|0,uflags(o),Math.round(o.fx*99),Math.round(o.fy*99),o.maxHp];if(o.zombie)r.push(ZK.indexOf(o.kind));else if(o.summon)r.push(-1,EK.indexOf(o.kind));return r}
-function aoeRow(a){return[a.x|0,a.y|0,a.r|0,f1(a.t),a.delay,a.dot||0,AOE_KINDS.indexOf(a.kind),f1(a.fxT),a.vis,a.ang!==undefined?Math.round(a.ang*100):0,a.shape==='line'?1:a.shape==='cone'?2:0,a.w||a.arc*100|0||0,a.el?EL.indexOf(a.el):-1]}
+function aoeRow(a){const row=[a.x|0,a.y|0,a.r|0,f1(a.t),a.delay,a.dot||0,AOE_KINDS.indexOf(a.kind),f1(a.fxT),a.vis,a.ang!==undefined?Math.round(a.ang*100):0,a.shape==='line'?1:a.shape==='cone'?2:0,a.w||a.arc*100|0||0,a.el?EL.indexOf(a.el):-1];if(a.skyFall&&a.delay<.7)row.push(1);return row}
 function snapFor(cid,c,budget){let F=evFocus(cid);F=F||{x:CX,y:CY};const R=1500;
   const near=(p,m)=>Math.abs(p.x-F.x)<R+(m||0)&&Math.abs(p.y-F.y)<R*.8+(m||0);
   const h=[],f=[];for(const u of units){if(!u.hero)continue;if(near(u,200))h.push(heroRow(u));else f.push([u.id,u.x|0,u.y|0,uflags(u)])}
@@ -319,7 +319,8 @@ function hostStartMatch2(){
   if(net.mode==='host'&&net.qm)cfg={n:Math.max(QM_TOTAL,players.length),size:'A'};
   else if(net.mode==='host'){if(!(net.cfg.fill|0)&&players.length<2){menuMsg('ปิดบอทอยู่ ต้องมีผู้เล่นอย่างน้อย 2 คน — รอเพื่อนหรือเปิดบอท');return}
     fixTeams();if((net.cfg.ts|0)>1&&!(net.cfg.fill|0)&&new Set(players.map(p=>p.team|0)).size<2){menuMsg('ปิดบอทอยู่ ต้องมีผู้เล่นอย่างน้อย 2 ทีม');return}cfg=cfgGame(net.cfg,players.length)}
-  const seed=hostNewGame(players,ms,cfg);if(view3D&&has3D()&&R3.ok)R3.sync();
+  const project=ARX?ArenaProject.forMatch():null;
+  const seed=hostNewGame(players,project?.seed??ms,cfg,project);if(view3D&&has3D()&&R3.ok)R3.sync();
   for(const cid in net.cl){const c=net.cl[cid];c.q=[];c.seq=0;c.ea=0;const u=units.find(u=>u.ctrl===cid);net.tr.send(cid,{t:'start',seed,cfg:MC,you:u?u.id:0,heroes:units.filter(u=>u.hero).map(u=>[u.id,u.name,u.look,u.ctrl?1:0,u.team])})}
   enterPlay();if(net.tr)net.tr.setState('play');
 }
@@ -348,7 +349,7 @@ function applySnap(d){
   if(units.some(u=>(u.zombie||u.summon)&&!u.inSnap&&(u.dead||++u.missN>90))){units=units.filter(u=>!((u.zombie||u.summon)&&!u.inSnap&&(u.dead||u.missN>90)));UMAP=new Map(units.map(u=>[u.id,u]))}
   if(first){const me=ME();if(me){cam.x=me.x-W/2/Z;cam.y=me.y-H/2/Z}}
   projs=d.p.map(p=>({x:p[0],y:p[1],vx:p[2],vy:p[3],kind:p[4],r:p[5],el:p.length>6?EL[p[6]]||null:null}));
-  aoes=d.o.map(a=>({x:a[0],y:a[1],r:a[2],t:a[3],delay:a[4],dot:a[5],kind:AOE_KINDS[a[6]],fxT:a[7],vis:a[8],ang:a[9]/100,shape:a[10]===1?'line':a[10]===2?'cone':null,len:a[2],w:a[10]===1?a[11]:0,arc:a[10]===2?a[11]/100:0,done:a[3]>=a[4],el:a.length>12&&a[12]>=0?EL[a[12]]:undefined}));
+  aoes=d.o.map(a=>({x:a[0],y:a[1],r:a[2],t:a[3],delay:a[4],dot:a[5],kind:AOE_KINDS[a[6]],fxT:a[7],vis:a[8],ang:a[9]/100,shape:a[10]===1?'line':a[10]===2?'cone':null,len:a[2],w:a[10]===1?a[11]:0,arc:a[10]===2?a[11]/100:0,done:a[3]>=a[4],skyFall:a[13]===1,el:a.length>12&&a[12]>=0?EL[a[12]]:undefined}));
   sndBudget={};for(const q of d.e){if(q[0]<=net.lastEv)continue;net.lastEv=q[0];const e=decEv(q[1]);if(e)applyEvent(e)}net.lastSnap=performance.now();
 }
 function clientUpdate(dt){
@@ -730,7 +731,7 @@ const MP_HINT='เล่นออนไลน์ได้ในแอป APK, �
 function showOnly(id){for(const o of OV)$(o).classList.toggle('hidden',o!==id)}
 function menuMsg(t,c){for(const k of ['menuMsg','roomsMsg']){$(k).textContent=t||'';$(k).style.color=c||''}$('lobbyMsg').textContent=t||''}
 // leaving a room goes back to the room list when that is where the player came from
-function showMenu(){state='menu';if(roomsCtx){showOnly('rooms');listRooms()}else showOnly('menu')}
+function showMenu(){if(ARX&&window.ArenaEditor?.testing){ArenaEditor.returnToEdit();return}state='menu';if(roomsCtx){showOnly('rooms');listRooms()}else showOnly('menu')}
 function showRooms(){roomsCtx=true;showMenu()}
 function showLobby(){state='lobby';listTok++;showOnly('lobby');renderLobby()}
 function inviteLink(){if(!/^https?:$/.test(location.protocol)||net.tr&&net.tr.kind==='room')return '';return location.origin+location.pathname+'?room='+net.code}

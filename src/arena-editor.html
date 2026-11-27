@@ -1,0 +1,71 @@
+<section id="arenaEditor" hidden aria-label="ตัวแก้ไขเกม">
+  <header class="ed-bar">
+    <div class="ed-brand"><b>MuzCruor</b><span>World Editor</span></div>
+    <nav class="ed-modes" aria-label="โหมดแก้ไข">
+      <button type="button" id="edMobs" aria-pressed="true">มอนสเตอร์</button>
+      <button type="button" id="edSkills" aria-pressed="false">Meteor</button>
+    </nav>
+    <div class="ed-actions">
+      <button type="button" id="edUndo" title="ย้อนกลับ" aria-label="ย้อนกลับ" disabled>↶</button>
+      <button type="button" id="edSave" class="ed-primary">บันทึก</button>
+      <button type="button" id="edClose" title="กลับเมนู" aria-label="กลับเมนู">×</button>
+    </div>
+  </header>
+  <div class="ed-layout">
+    <aside class="ed-browser">
+      <div id="edObjects">
+      <header><h2>วัตถุในฉาก</h2><output id="edCount"></output></header>
+      <input type="search" id="edSearch" placeholder="ค้นหาชื่อหรือ ID" aria-label="ค้นหามอนสเตอร์">
+      <div id="edList" class="ed-list" role="group" aria-label="รายชื่อมอนสเตอร์"></div>
+      <div class="ed-atlas">
+        <h3>แผนที่โลก</h3>
+        <canvas id="edMap" width="256" height="256" aria-label="แผนที่โลก คลิกเพื่อย้ายกล้อง"></canvas>
+      </div>
+      </div>
+      <div id="edRange" hidden>
+        <h2>สนามทดสอบ</h2>
+        <div class="ed-target"><h3>หุ่นฝึก</h3><output id="edHealth"></output><progress id="edHealthBar" max="1" value="1" aria-label="พลังชีวิตหุ่นฝึก"></progress></div>
+        <label for="edRank">ระดับสกิลที่ทดสอบ</label>
+        <select id="edRank"><option value="1">Lv. 1</option><option value="2">Lv. 2</option><option value="3">Lv. 3</option></select>
+        <div class="ed-target"><h3>ความเสียหายก่อนหักเกราะเวท</h3><output id="edPower"></output></div>
+        <button type="button" id="edAimDummy">เล็งกลางหุ่นฝึก</button>
+      </div>
+    </aside>
+    <div id="edStage" aria-label="ฉากสามมิติ">
+      <button type="button" id="edBrowse" class="ed-floating">วัตถุในฉาก</button>
+      <button type="button" id="edInspect" class="ed-floating">คุณสมบัติ</button>
+      <div class="ed-zoom"><button type="button" id="edZoomOut" aria-label="ซูมออก" title="ซูมออก">−</button><button type="button" id="edZoomIn" aria-label="ซูมเข้า" title="ซูมเข้า">+</button></div>
+      <div id="edPin" hidden></div>
+      <div class="ed-location"><b id="edRegion"></b><span id="edHint"></span></div>
+    </div>
+    <aside class="ed-inspector">
+      <div class="ed-panel-heading"><span id="edType"></span><h2 id="edName"></h2></div>
+      <div id="edMobFields">
+        <fieldset><legend>จุดเกิด</legend>
+          <div class="ed-grid"><label>X<input id="edX" type="number" min="0" step="1"></label><label>Y<input id="edY" type="number" min="0" step="1"></label></div>
+          <button type="button" id="edPlace" aria-pressed="false">เลือกจุดเกิดบนแผนที่</button>
+          <button type="button" id="edFocus" class="ed-subtle">เลื่อนกล้องไปที่ตัวนี้</button>
+        </fieldset>
+        <fieldset><legend>ค่ามอนสเตอร์</legend>
+          <div class="ed-segment" role="group" aria-label="ขอบเขตการแก้ไข"><button type="button" id="edInstance" aria-pressed="true">เฉพาะตัวนี้</button><button type="button" id="edKind" aria-pressed="false">ทั้งชนิด</button></div>
+          <div id="edStats" class="ed-fields"></div>
+        </fieldset>
+        <button type="button" id="edPlay" class="ed-test">ทดสอบในแมตช์</button>
+      </div>
+      <div id="edSkillFields" hidden>
+        <fieldset><legend>การโจมตี</legend><div id="edSkillStats" class="ed-fields"></div></fieldset>
+        <fieldset><legend>คูลดาวน์ตามระดับ (วิ)</legend><div id="edCooldowns" class="ed-grid ed-three"></div></fieldset>
+        <button type="button" id="edCast" class="ed-test">ร่าย Meteor ทดสอบ</button>
+        <output id="edHit" aria-live="polite"></output>
+      </div>
+      <details class="ed-files"><summary>ไฟล์โปรเจกต์</summary>
+        <p>บันทึกเพื่อใช้ใน Solo บนอุปกรณ์นี้ หรือส่งออก JSON สำหรับ build เกม</p>
+        <div class="ed-grid"><button type="button" id="edImport">นำเข้า JSON</button><button type="button" id="edExport">ส่งออก JSON</button></div>
+        <input type="file" id="edFile" accept=".json,application/json" hidden>
+        <button type="button" class="ed-subtle" id="edDefaults">คืนค่าโปรเจกต์ของเกม</button>
+      </details>
+    </aside>
+  </div>
+  <footer class="ed-footer"><span id="edStatus" role="status"></span><span id="edSeed"></span></footer>
+</section>
+<button type="button" id="edReturn" hidden>กลับไปแก้ไข</button>

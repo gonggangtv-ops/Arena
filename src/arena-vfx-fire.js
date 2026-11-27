@@ -118,7 +118,7 @@
   function stepMeteors(R,a,dt){
     for(const A of (typeof aoes!=='undefined'?aoes:[])){if(!P.fireOwn.call(R,A)||!near(A.x,A.y,A.r||200))continue;const r=A.r||200;
       // Both host and client carry the fall delay. Shorter magma slams use the ground blast.
-      if(meteorAoe(A)&&A.delay>=.7){
+      if(meteorAoe(A)&&(A.skyFall||A.delay>=.7)){
         const previous=Math.random;
         try{
           Math.random=rnd; // Three.js allocates UUIDs when a pooled slot is first used.
