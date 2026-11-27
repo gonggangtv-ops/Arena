@@ -99,7 +99,7 @@ function arenaSkillDetails(me,i){
       blink:'วาร์ปทันทีในระยะ 520 หน่วย',
       heal:'ฟื้นเลือด '+[28,36,44][level]+'% ใน 3 วิ และล้างสถานะช้า',
       rage:'ตีเร็วขึ้น '+[35,45,55][level]+'% วิ่งเร็วขึ้น 30% และเพิ่มความเสียหาย 15% นาน 6 วิ',
-      meteor:'อุกกาบาตตกหลัง 0.85 วิ และเผาศัตรู '+arenaSkillNumber((8+me.lvl)*specialScale(level))+' ต่อวิ',
+      meteor:'อุกกาบาตตกหลัง '+arenaSkillTime(METEOR.delay)+' และเผาศัตรู '+arenaSkillNumber((8+me.lvl)*specialScale(level))+' ต่อวิ',
       ward:'ได้โล่ '+[22,30,38][level]+'% ของเลือดสูงสุด นาน 5 วิ',
       nova:'ระเบิดรอบตัว ตรึงศัตรู 1.2 วิ และลดความเร็ว 40% นาน 2.2 วิ'
     };

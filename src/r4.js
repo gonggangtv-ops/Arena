@@ -373,7 +373,7 @@ Object.assign(R3,{
   frame(dt){
     if(!this.ok)return draw2D();this.sync();this.kkLoad();
     ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,W,H);
-    if(H>W*1.05){ctx.fillStyle='#0a1214';ctx.fillRect(0,0,W,H);ctx.fillStyle='#ffd35a';ctx.font='bold 22px sans-serif';ctx.textAlign='center';ctx.fillText('📱 หมุนมือถือเป็นแนวนอน',W/2,H/2);return}
+    if(H>W*1.05&&state!=='editor'){ctx.fillStyle='#0a1214';ctx.fillRect(0,0,W,H);ctx.fillStyle='#ffd35a';ctx.font='bold 22px sans-serif';ctx.textAlign='center';ctx.fillText('📱 หมุนมือถือเป็นแนวนอน',W/2,H/2);return}
     this.t+=dt;const T=this.t,me=ME(),L=listener()||me;if(!L)return;const G=this.G;
     const k=1-Math.pow(.0008,dt);this.tx=this.tx?lerp(this.tx,L.x,k):L.x;this.ty=this.ty?lerp(this.ty,L.y,k):L.y;if(Math.hypot(this.tx-L.x,this.ty-L.y)>900){this.tx=L.x;this.ty=L.y}
     const gyL=Math.max(this.gY(this.tx,this.ty),-8);this.ly=this.ly===undefined?gyL:lerp(this.ly,gyL,1-Math.pow(.02,dt));
@@ -457,7 +457,7 @@ Object.assign(R3,{
     if(isNight()&&this.graveFx)for(const g of this.graveFx){if(Math.abs(g.x-L.x)>1700||Math.abs(g.y-L.y)>1300)continue;if(Math.random()<dt*7)this.sp(false,{x:g.x+rand(-170,170),y:this.gY(g.x,g.y)+rand(5,25),z:g.y+rand(-170,170),vx:rand(-15,15),vz:rand(-15,15),vy:rand(2,8),l:rand(2,3.5),s:60,s1:150,c:'#8affa0',a:.16,sp:2,dr:.2})}
     this.effects(T,dt,me,L);this.stepP(this.PA,dt);this.stepP(this.PB,dt);this.stepDecals(dt);this.stepTrails(dt);
     this.draw();
-    this.overlay(me,L);drawHUD();
+    if(state!=='editor'){this.overlay(me,L);drawHUD()}
   },
   animHum(o,u,T,dt){const k=o.mvK,ph=o.walk,s=Math.sin(ph);const A=o.arms;const R=A[0],Lh=A[1];
     if(o.legs&&o.legs.length){o.legs[0].hip.rotation.x=-s*.72*k;o.legs[1].hip.rotation.x=s*.72*k;o.legs[0].knee.rotation.x=Math.max(0,s)*1.0*k+.05;o.legs[1].knee.rotation.x=Math.max(0,-s)*1.0*k+.05}

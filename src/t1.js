@@ -87,12 +87,13 @@ function curDmg(t,amt,type,src,quiet){amt=tpsGuard(t,amt,src);if(amt<=0)return 0
   return amt}
 // ---- special skills bought with coins (one slot, key V) ----
 const SPX=[null,{k:'blink',n:'วาร์ปเงา',ic:'🌀',cd:[13,11,9],p:160,d:'วาร์ปไปยังจุดที่เล็งทันที'},{k:'heal',n:'แสงฟื้นฟู',ic:'✨',cd:[26,24,22],p:160,d:'ฟื้นเลือด 28/36/44% ใน 3 วิ และล้างสถานะช้า'},
-  {k:'rage',n:'บ้าคลั่ง',ic:'👹',cd:[26,24,22],p:180,d:'6 วิ: ตีเร็วขึ้น 35/45/55% และดาเมจ +15%'},{k:'meteor',n:'อุกกาบาต',ic:'☄️',cd:[20,18,16],p:200,d:'เรียกอุกกาบาตใส่จุดที่เล็ง เผาศัตรู'},
+  {k:'rage',n:'บ้าคลั่ง',ic:'👹',cd:[26,24,22],p:180,d:'6 วิ: ตีเร็วขึ้น 35/45/55% และดาเมจ +15%'},{k:'meteor',n:'อุกกาบาต',ic:'☄️',baseDamage:120,radius:230,delay:.85,cd:[20,18,16],p:200,d:'เรียกอุกกาบาตใส่จุดที่เล็ง เผาศัตรู'},
   {k:'ward',n:'โล่วิญญาณ',ic:'🔰',cd:[24,22,20],p:160,d:'โล่ 22/30/38% ของเลือด นาน 5 วิ'},{k:'nova',n:'คลื่นเยือกแข็ง',ic:'💠',cd:[18,16,14],p:180,d:'ระเบิดรอบตัว ตรึงศัตรู 1.2 วิ'}];
+const METEOR=SPX.find(s=>s&&s.k==='meteor');
 const specialLevel=u=>clamp(u.xl||1,1,3)-1;
 const specialScale=level=>[1,1.25,1.5][level];
 function specialHitDamage(u,skill){
-  return (skill==='meteor'?120+24*u.lvl:70+16*u.lvl)*specialScale(specialLevel(u))*(1+spellAmp(u));
+  return (skill==='meteor'?METEOR.baseDamage+24*u.lvl:70+16*u.lvl)*specialScale(specialLevel(u))*(1+spellAmp(u));
 }
 function castSpecial(u,ap){if(!u)return false;const S=SPX[u.xs|0];if(!S||u.dead||u.stunT>0||u.xcd>0||u.fuseT>0)return false;if(ap&&!(Number.isFinite(ap.x)&&Number.isFinite(ap.y)))ap=null;const L=specialLevel(u),M=specialScale(L);
   let p=ap||(S.k==='meteor'?aim(u,650):{x:u.x+u.fx*460,y:u.y+u.fy*460});
@@ -100,7 +101,7 @@ function castSpecial(u,ap){if(!u)return false;const S=SPX[u.xs|0];if(!S||u.dead|
     case 'blink':{const q=landSpot(u,clampTo(u,p,520));burstE(u.x,u.y,'#b08aff',18);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(q.y-u.y,q.x-u.x).toFixed(2)});u.x=q.x;u.y=q.y;u.dash=null;burstE(u.x,u.y,'#b08aff',18);sndAt('dash',u.x,u.y);break}
     case 'heal':u.hotT=3;u.hotP=1;u.hotV=u.maxHp*[.28,.36,.44][L]/3;u.slowT=0;fxE('potion',{id:u.id,x:u.x|0,y:u.y|0,c:'#9dffb0'});sndAt('potion',u.x,u.y);break;
     case 'rage':u.asT=6;u.asAmt=Math.max(u.asAmt||0,[.35,.45,.55][L]);u.rageT=6;u.buffT=Math.max(u.buffT||0,6);sndAt('cry',u.x,u.y);fxE('cry',{id:u.id,x:u.x|0,y:u.y|0,r:200});break;
-    case 'meteor':{p=clampTo(u,p,700);aoe({x:p.x,y:p.y,r:230,dmg:specialHitDamage(u,'meteor'),type:'m',owner:u,delay:.85,kind:'meteor',big:true,burn:(8+u.lvl)*M});sndAt('meteor',p.x,p.y);u.castAnim=.4;break}
+    case 'meteor':{p=clampTo(u,p,700);aoe({x:p.x,y:p.y,r:METEOR.radius,dmg:specialHitDamage(u,'meteor'),type:'m',owner:u,skyFall:true,delay:METEOR.delay,kind:'meteor',big:true,burn:(8+u.lvl)*M});sndAt('meteor',p.x,p.y);u.castAnim=.4;break}
     case 'ward':u.shieldHp=Math.max(u.shieldHp,u.maxHp*[.22,.3,.38][L]);u.shieldT=5;sndAt('shield',u.x,u.y);fxE('shield',{id:u.id,x:u.x|0,y:u.y|0});break;
     case 'nova':aoe({x:u.x,y:u.y,r:300,dmg:specialHitDamage(u,'nova'),type:'m',owner:u,delay:.12,kind:'nova',root:1.2,slow:2.2,slowAmt:.4});sndAt('boom',u.x,u.y);u.castAnim=.4;break}
   u.xcd=S.cd[L];u.revealT=Math.max(u.revealT||0,1);if(isHuman(u))fxTextFor(u.x,u.y-92,S.ic+' '+S.n,'#e8d8a0',1.1,[u.id]);return true}
