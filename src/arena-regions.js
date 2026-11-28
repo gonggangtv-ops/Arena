@@ -448,5 +448,5 @@ void main(){vec4 t=texture2D(map,vUv);vec3 nt=t.rgb*2.-1.;float h=t.a*1.25-1.;
   const _ds=P.disposeScene;if(_ds)P.disposeScene=function(){S.fresh=1;try{if(S.lay)for(const l of S.lay){if(l.pts.parent)l.pts.parent.remove(l.pts);l.pts.geometry.dispose();l.m.dispose()}S.lay=null;
       if(RM.tex){RM.tex.dispose();RM.tex=null;U.uRegMap.value=null}if(RM.snow){RM.snow.dispose();RM.snow=null;RM.deep=null;U.uSnowMap.value=null}
       if(FP.mesh){if(FP.mesh.parent)FP.mesh.parent.remove(FP.mesh);FP.mesh.dispose();FP.mesh.geometry.dispose();FP.mesh.material.dispose();FP.mesh=null}FP.last.clear()}catch(e){}return _ds.apply(this,arguments)};
-  window.ArenaRegions={state:S,weights:()=>S.w.slice(),land:()=>S.aud,map:()=>regionMap(),deep:(x,y)=>{if(!RM.deep)regionMap();return deepAt(x,y)},prints:()=>FP};
+  window.ArenaRegions={atmosphere:ATM,refreshPalette(){ATM.forEach((a,i)=>{if(a.fog)AC[i].fog.set(a.fog);AC[i].hemi.set(a.hemi);AC[i].sun.set(a.sun)})},state:S,weights:()=>S.w.slice(),land:()=>S.aud,map:()=>regionMap(),deep:(x,y)=>{if(!RM.deep)regionMap();return deepAt(x,y)},prints:()=>FP};
 })();

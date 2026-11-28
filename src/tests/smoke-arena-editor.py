@@ -3,6 +3,9 @@ import argparse
 import json
 import re
 import shutil
+import secrets
+import subprocess
+from tempfile import TemporaryDirectory
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -17,9 +20,10 @@ class Quiet(SimpleHTTPRequestHandler):
         pass
 
 
-def run(browser, url, pictures):
-    page = browser.new_page(viewport={'width': 1120, 'height': 680}, device_scale_factor=1)
-    page.set_default_timeout(150000)
+def run(browser, url, pictures, password, gate):
+    tab = browser.new_page(viewport={'width': 1120, 'height': 680}, device_scale_factor=1)
+    page = tab
+    tab.set_default_timeout(150000)
     errors = []
     page.on('pageerror', lambda e: errors.append(str(e)))
     page.on('console', lambda m: errors.append(m.text[:400]) if re.search('shader error|WebGLProgram|program not valid', m.text, re.I) else None)
@@ -34,12 +38,12 @@ def run(browser, url, pictures):
         route.fulfill(response=res, body=code.replace(key, f'R3.menuSeed={menu_seed};setupWorld'))
 
     def ready():
-        page.goto(url, wait_until='domcontentloaded')
+        tab.goto(url, wait_until='domcontentloaded')
         page.wait_for_function("window.MoonfallLoading?.isReady()||window.MoonfallLoading?.snapshot().failed||window.__moonfallCodeFailure", polling=100)
         assert page.evaluate('MoonfallLoading.isReady()'), errors
 
     def click(selector):
-        page.locator(selector).click(force=True)
+        page.locator(selector).click()
 
     def fill(selector, value):
         box = page.locator(selector)
@@ -49,13 +53,29 @@ def run(browser, url, pictures):
     def photo(name):
         if pictures:
             pictures.mkdir(parents=True, exist_ok=True)
-            page.screenshot(path=pictures / name)
+            tab.screenshot(path=pictures / name)
 
-    page.route('**/moonfall-loading.js', seed)
+    tab.route('**/moonfall-loading.js', seed)
+    if gate:
+        tab.route('**/editor.html*', lambda route: route.fulfill(path=str(gate), content_type='text/html; charset=utf-8'))
+    tab.goto(url+'?editor=1')
+    tab.wait_for_url('**/editor.html')
+    assert tab.locator('iframe').count()==0
+    photo('MuzCruor-studio-login.png')
+    tab.locator('#password').fill('incorrect password')
+    tab.locator('#unlock').click()
+    tab.wait_for_function("document.getElementById('message').textContent.includes('ไม่ถูกต้อง')", polling=70)
+    assert tab.locator('iframe').count()==0
     ready()
-    page.evaluate("ArenaProject.save({version:1,seed:null,kinds:{},spawns:{},meteor:{}})")
+    assert tab.evaluate("typeof ArenaEditor==='undefined' && !document.querySelector('#arenaEditor')")
+    page.evaluate("localStorage.setItem(ArenaProject.storageKey,JSON.stringify({version:1,seed:null,kinds:{},spawns:{},meteor:{}}))")
     click('#arenaEditorBtn')
-    page.wait_for_function("state==='editor'", polling=100)
+    tab.wait_for_url('**/editor.html')
+    tab.locator('#password').fill(password)
+    tab.locator('#unlock').click()
+    tab.wait_for_selector('iframe')
+    page=tab.locator('iframe').element_handle().content_frame()
+    page.wait_for_function("window.ArenaEditor && state==='editor'", polling=100)
     page.evaluate('ArenaEditor.frame(1/30)')
     # Grab the actual Snow Queen and drop her on another clear point at the same elevation.
     drag = page.evaluate("""() => {
@@ -66,10 +86,10 @@ def run(browser, url, pictures):
         if(!blockedAt({x,y},q.r+8)&&!inWater(x,y)&&Math.abs(R3.gY(x,y)-sy)<10)return {from,to:dot(x,y),start:[q.x,q.y]};
       }throw Error('No walkable destination for fixture');
     }""")
-    page.mouse.move(drag['from']['x'], drag['from']['y'])
-    page.mouse.down()
-    page.mouse.move(drag['to']['x'], drag['to']['y'], steps=3)
-    page.mouse.up()
+    tab.mouse.move(drag['from']['x'], drag['from']['y'])
+    tab.mouse.down()
+    tab.mouse.move(drag['to']['x'], drag['to']['y'], steps=3)
+    tab.mouse.up()
     pos = [int(page.locator('#edX').input_value()), int(page.locator('#edY').input_value())]
     assert max(abs(a-b) for a,b in zip(pos,drag['start'])) > 25, (pos,drag)
     fill('#edX', 0)
@@ -84,6 +104,72 @@ def run(browser, url, pictures):
     assert page.locator('#ed-leash').input_value() == '680'
     page.evaluate('ArenaEditor.frame(1/30)')
     photo('MuzCruor-editor-monsters.png')
+    click('#edLibraryBtn')
+    catalog=page.evaluate("""() => ({
+      weapons:ArenaCatalog.entries.filter(e=>e.group==='weapons').length,
+      skills:ArenaCatalog.entries.filter(e=>e.group==='skills').length,
+      specials:ArenaCatalog.entries.filter(e=>e.group==='specials').length,
+      settings:ArenaCatalog.fields.size
+    })""")
+    assert catalog['skills']==81 and catalog['weapons']==28 and catalog['specials']==6, catalog
+    def setting(group, entry, suffix, value):
+        page.locator('#edCategory').select_option(group)
+        page.locator('#edDataList').select_option(entry)
+        fill(f'[data-setting="{entry}.{suffix}"]', value)
+    setting('heroes','heroes.base','hp',8800)
+    setting('skills','skills.axe.0','cd.0',3.25)
+    setting('skills','skills.axe.0','power.dmg.0',770)
+    setting('skills','skills.fOS_fire.0','power.hp.0',7400)
+    assert page.evaluate("HB.hp===880 && SK.axe[0].cd[0]===3.25 && SKV.axe[0].dmg[0]===77 && SKV.fOS_fire[0].hp[0]===740")
+    setting('specials','specials.heal','heal.0',.48)
+    setting('economy','economy.shop','hp',12)
+    setting('bosses','bosses.snowqueen.0','lance',2.5)
+    setting('rules','rules.match','dash',8)
+    setting('circle','circle.0','w',150)
+    setting('regions','regions.2','bloom',.45)
+    assert page.evaluate("shopPrice(ME(),'hp')===12 && CREEPS.snowqueen.phaseCooldowns[0].lance===2.5 && DASH_CD===8 && PHASES[0].w===150 && ArenaRegions.atmosphere[2].bloom===.45")
+    page.locator('#edCategory').select_option('skills')
+    page.locator('#edDataList').select_option('skills.axe.0')
+    photo('MuzCruor-studio-skills.png')
+    page.locator('#edTrialRank').select_option('3')
+    click('#edTryEntry')
+    page.wait_for_function("state==='play'&&$('loading').classList.contains('hidden')",polling=100)
+    assert page.evaluate("ME().wk==='axe'&&ME().skl[0]===3")
+    click('#edReturn')
+    page.wait_for_function("state==='editor'&&$('edLibrary').open",polling=100)
+    assert page.locator('#edDataList').input_value()=='skills.axe.0'
+    click('[data-tab="map"]')
+    page.locator('#edMapGroup').select_option('boxes')
+    target=page.evaluate("""() => {
+      const b=WD.boxes[0], origin=[b.x,b.y];
+      for(const d of [140,210,350,500,700])for(let i=0;i<24;i++){
+        const x=Math.round(b.x+d*Math.cos(i*Math.PI/12)),y=Math.round(b.y+d*Math.sin(i*Math.PI/12));
+        if(!inWater(x,y)&&!blockedAt({x,y},34))return {origin,at:[x,y]};
+      }
+      throw Error('Missing open ground');
+    }""")
+    fill('#edMapX',target['at'][0]);fill('#edMapY',target['at'][1]);click('#edMapApply')
+    assert page.evaluate('([x,y])=>WD.boxes[0].x===x && WD.boxes[0].y===y && blockedAt({x,y},1) && WD.rocks.some(o=>o.prop&&o.r===26&&o.x===x&&o.y===y)', target['at'])
+    assert not page.evaluate('([x,y])=>WD.rocks.some(o=>o.prop&&o.r===26&&o.x===x&&o.y===y)', target['origin'])
+    fill('#edMapX',0);fill('#edMapY',0);click('#edMapApply')
+    assert page.locator('#edLibraryStatus').get_attribute('data-tone')=='error'
+    assert page.evaluate('([x,y])=>WD.boxes[0].x===x&&WD.boxes[0].y===y',target['at'])
+    click('[data-tab="files"]')
+    file=page.locator('#edLocalSource')
+    file.set_input_files({'name':'settings.json','mimeType':'application/json','buffer':b'{"gold":10}'})
+    page.locator('#edSourceText').fill('{"gold":15}')
+    with tab.expect_download() as source:
+        click('#edDownloadSource')
+    assert source.value.path().read_text()=='{"gold":15}'
+    file.set_input_files({'name':'art.glb','mimeType':'model/gltf-binary','buffer':b'original'})
+    page.locator('#edReplacement').set_input_files({'name':'new.glb','mimeType':'model/gltf-binary','buffer':b'new model'})
+    with tab.expect_download() as binary:
+        click('#edDownloadSource')
+    assert binary.value.suggested_filename=='art.glb' and binary.value.path().read_bytes()==b'new model'
+    file.set_input_files({'name':'clean.txt','mimeType':'text/plain','buffer':b'clean'})
+    page.wait_for_function("$('edSourceName').textContent.startsWith('clean.txt')",polling=50)
+    click('#edLibraryClose')
+    page.locator('#edLibrary').wait_for(state='hidden')
     click('#edSkills')
     fill('#ed-radius', 320)
     fill('#ed-delay', .35)
@@ -109,7 +195,7 @@ def run(browser, url, pictures):
     assert project['seed']==777 and project['spawns'][str(qid)]['position']==pos
     assert project['kinds']['snowqueen']=={'dmg':184}
     page.locator('.ed-files summary').click(force=True)
-    with page.expect_download() as dl:
+    with tab.expect_download() as dl:
         click('#edExport')
     assert json.loads(dl.value.path().read_text()) == project
     click('#edDefaults')
@@ -127,6 +213,9 @@ def run(browser, url, pictures):
     click('#edReturn')
     page.wait_for_function("state==='editor'",polling=100)
     click('#edClose')
+    tab.locator('#unlock').wait_for(state='visible')
+    assert tab.locator('iframe').count()==0
+    page=tab
     # Reload with a different menu world. Standard Solo must select the saved world.
     menu_seed=31415
     ready()
@@ -138,22 +227,37 @@ def run(browser, url, pictures):
         hp:u.maxHp,dmg:u.atkDmg,r:METEOR.radius,savedSeed:ArenaProject.forMatch().seed};
     }""")
     assert actual['seed']==777 and all(p==pos for p in actual['positions']), actual
+    combat=page.evaluate("""() => {
+      const u=ME();u.wk='axe';u.wt=0;u.skl[0]=1;u.cd[0]=0;u.wv=0;recalc(u,true);
+      const cast=cast0(u,0),cost=SK.axe[0].mp[0];
+      u.xs=SPX.indexOf(SPECIAL_BY.heal);u.xl=1;u.xcd=0;
+      const heal=castSpecial(u);
+      return [cast,u.cd[0],u.mp===u.maxMp-cost,heal,Math.round(100*u.hotV*u.hotT/u.maxHp),WD.boxes[0].x,WD.boxes[0].y];
+    }""")
+    assert combat==[True,3.25,True,True,48,*target['at']],combat
     assert actual['hp']==31000 and actual['dmg']==184 and actual['r']==320, actual
     room_defaults=page.evaluate("""() => {net.mode='host';return ArenaProject.forMatch()}""")
     assert room_defaults == page.evaluate('ArenaProject.published')
+    assert page.evaluate('() => {ArenaProject.activate(ArenaProject.forMatch());return HB.hp===700 && SK.axe[0].cd[0]===12 && DASH_CD===45 && ArenaRegions.atmosphere[2].bloom===.7}')
     assert not errors, errors
     page.close()
-    return {'positions':pos,'meteor':skill,'solo':actual}
+    return {'catalog':catalog,'positions':pos,'meteor':skill,'solo':actual,'chest':target,'combat':combat}
 
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--pictures',type=Path)
+    parser.add_argument('--password-file',type=Path,help='Test the shipped editor with a local password file')
     args=parser.parse_args()
-    with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(SITE))) as site:
+    with TemporaryDirectory() as tmp, ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(SITE))) as site:
+        password=args.password_file.read_text().rstrip('\r\n') if args.password_file else secrets.token_urlsafe(24)
+        gate=None
+        if not args.password_file:
+            gate=Path(tmp)/'editor.html'
+            subprocess.run(['node',str(SITE.parents[3]/'src/tools/pack-editor.mjs'),'--test-output',str(gate)],input=password,text=True,check=True)
         Thread(target=site.serve_forever,daemon=True).start()
         with sync_playwright() as pw:
             browser=pw.chromium.launch(executable_path=shutil.which('chromium'),args=['--no-sandbox','--enable-unsafe-swiftshader'])
-            print(json.dumps(run(browser,f'http://127.0.0.1:{site.server_port}/index.html',args.pictures),ensure_ascii=False))
+            print(json.dumps(run(browser,f'http://127.0.0.1:{site.server_port}/index.html',args.pictures,password,gate),ensure_ascii=False))
             browser.close()
         site.shutdown()

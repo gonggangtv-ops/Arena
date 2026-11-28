@@ -50,19 +50,17 @@ if arena:game_files[-1:-1]=['arena-vfx-tex.js','arena-vfx-runtime.js','arena-vfx
 if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js','p5-heroes.js']
 if arena:game_files[-1:-1]=['summoner.js','summoner-fx.js']   # fifth class: the Spirit Tome (Arena Royale only)
 if arena:game_files[-1:-1]=['snow-queen.js']   # the Snow Queen, boss of the ice castle (Arena Royale only; an Eclipse-style boss)
-if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-meteor.js','arena-vfx-fire.js','arena-forge.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js','arena-falls.js','arena-frost.js','queen-vfx.js','arena-queen-aura.js','arena-feel.js','arena-loot.js','arena-npc.js','arena-bots.js','arena-drop.js','arena-buttons.js','arena-tombs.js','arena-load-music.js','arena-project.js','arena-editor.js']
+if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-meteor.js','arena-vfx-fire.js','arena-forge.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js','arena-falls.js','arena-frost.js','queen-vfx.js','arena-queen-aura.js','arena-feel.js','arena-loot.js','arena-npc.js','arena-bots.js','arena-drop.js','arena-buttons.js','arena-tombs.js','arena-load-music.js','arena-catalog.js','arena-project.js']
 if arena:game_files.extend(['arena-menu.js','arena-skill-details.js','arena-hud.js','arena-vitals.js','arena-combat-controls.js'])
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in game_files)
 js='const CURSED='+('true' if sys_on else 'false')+';const MOON='+('true' if cur else 'false')+';\n'+js
 if arena:
     with open(os.path.join(D,'arena-project.json'),encoding='utf-8') as project:
         js='const ARENA_PUBLISHED_PROJECT='+_j.dumps(_j.load(project),ensure_ascii=True).replace('<',r'\u003c')+';\n'+js
-    with open(os.path.join(D,'arena-editor.html'),encoding='utf-8') as editor:
-        sh=sh.replace('<!--LIBS-->',editor.read()+'\n<!--LIBS-->',1)
 MOON=['celestial-assets.js','celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js','moonfall-village.js','moonfall-ui.js','moonfall-menu.js','moonfall-inventory.js','moonfall-loading.js']
 MOONCSS=['celestial-theme.css','moonfall-ui.css','moonfall-menu.css','moonfall-inventory.css','moonfall-loading.css']
 if arena:MOON=[f for f in MOON if f not in ('celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js')]
-arena_style='\n<style>'+'\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['arena-loading.css','arena-menu.css','arena-combat-hud.css','arena-editor.css'])+'</style>\n' if arena else ''
+arena_style='\n<style>'+'\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['arena-loading.css','arena-menu.css','arena-combat-hud.css'])+'</style>\n' if arena else ''
 if sys_on:
     if arena:
         js += "\nmoody=lsGet('ar_tone2','dark')==='dark';syncTone();installArenaMenuUX();\n"
@@ -70,8 +68,6 @@ if sys_on:
     if arena:
         js += "installArenaHud();installArenaVitals();installArenaCombatControls();"
     js += "installMoonfallLoading();\n"
-    if arena:
-        js += "if(new URLSearchParams(location.search).get('editor')==='1')MoonfallLoading.whenReady.then(()=>ArenaEditor.open());\n"
     import re
     sh=sh.replace('<title>Arena Royale</title>',f'<title>{game_title}</title>').replace('<meta name="theme-color" content="#0c0a08">','<meta name="theme-color" content="#080b16">')
     sh=sh.replace('</style>','</style>\n'+'\n'.join("<link rel=\"stylesheet\" href=\"%s\" onerror=\"window.__moonfallCodeFailure='%s';if(window.moonfallCodeFailure)moonfallCodeFailure('%s')\">"%(f,f,f) for f in MOONCSS),1)
@@ -94,6 +90,9 @@ if arena:
         language_script=f.read()
     with open(os.path.join(D,'arena-en.json'),encoding='utf-8') as f:
         catalog=_j.dumps(_j.load(f),ensure_ascii=False,separators=(',',':')).replace('<',r'\u003c')
+    # Forward old bookmarks before downloading the game or initializing its renderer.
+    redirect = "<script>const oldEditor=new URL(location.href);if(oldEditor.searchParams.get('editor')==='1'){oldEditor.searchParams.delete('editor');location.replace('editor.html'+oldEditor.search)}</script>"
+    sh=sh.replace('<head>', '<head>'+redirect,1)
     sh=sh.replace('<body>', '<body>\n<script>'+language_script+'\ninstallArenaLanguage('+catalog+');</script>',1)
 
 def critical_libs(text):
@@ -116,3 +115,7 @@ else:
     p=os.path.join(os.path.dirname(D),'cursed_artifact.html' if cur else 'classic_artifact.html' if classic else 'artifact.html')
 open(p,'w',encoding='utf-8').write(out)
 print(p,len(out))
+
+if arena and not web:
+    import subprocess
+    subprocess.run(['node',os.path.join(D,'tools','pack-editor.mjs')],check=True)

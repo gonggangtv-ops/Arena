@@ -2,20 +2,22 @@
 const ArenaEditor=window.ArenaEditor=(()=>{
   const panel=$('arenaEditor'),stage=$('edStage'),list=$('edList'),status=$('edStatus');
   const copy=o=>JSON.parse(JSON.stringify(o));
-  const empty={version:1,seed:null,kinds:{},spawns:{},meteor:{}};
-  const labels={hp:'พลังชีวิตพื้นฐาน',dmg:'พลังโจมตีพื้นฐาน',leash:'ระยะไล่จากจุดเกิด',
+  const empty={version:2,seed:null,kinds:{},spawns:{},meteor:{},tuning:{},layout:{}};
+  const labels={hp:'พลังชีวิตพื้นฐาน',dmg:'พลังโจมตีพื้นฐาน',leash:'ระยะไล่จากจุดเกิด',armor:'เกราะ',spd:'ความเร็ว',atkT:'ช่วงโจมตี (วิ)',range:'ระยะโจมตี',xp:'ค่าประสบการณ์',
     baseDamage:'ความเสียหายพื้นฐาน',radius:'รัศมีโจมตี',delay:'เวลาตก (วิ)'};
   const names=m=>ArenaLanguage.text(CREEPS[m.kind].name).split(' · ').at(ArenaLanguage.language==='en'?0:-1);
   const isBoss=m=>m.kind==='snowqueen'||m.kind==='overlord'||m.kind==='boss';
   const history=[];
   let draft,saved,seed,origins,spawnById,selected,mode,scope,hero,dummy,practice,aim;
+  let returnToLibrary=false,leaving=false;
   let ring,drag,trial,ray,ndc,drawnX,drawnY,placing=false,zoom=1.3,busy=false,testing=false,previousView,dirtyFrame=true,readError=false;
   function selectedMob(){return spawnById.get(selected)}
   function changed(){return JSON.stringify(draft)!==saved}
   function notice(message,tone){
     status.textContent=message|| (changed()?'มีการแก้ไขที่ยังไม่บันทึก':'ใช้ค่าที่บันทึกไว้');
     status.dataset.tone=tone|| (changed()?'dirty':'clean');
-    $('edUndo').disabled=!history.length;
+    $('edUndo').disabled=$('edLibraryUndo').disabled=!history.length;
+    $('edLibraryStatus').textContent=status.textContent;$('edLibraryStatus').dataset.tone=status.dataset.tone;
   }
   function press(id,on){$(id).setAttribute('aria-pressed',String(on))}
   function moveTo(unit,x,y){unit.x=unit.tx=x;unit.y=unit.ty=y}
@@ -45,7 +47,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     if(!ring)return;
     ring.removeFromParent();ring.geometry.dispose();ring.material.dispose();ring=null;
   }
-  function updateRing(point,invalid=false){
+  function updateRing(point,invalid=false,objectRadius){
     point=point||(mode==='meteor'?aim:selectedMob());if(!point)return;
     if(!ring){
       const geometry=new THREE.BufferGeometry();
@@ -55,7 +57,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     }
     ring.visible=!trial;
     ring.material.color.set(invalid?'#ff604b':mode==='meteor'?'#ffba73':'#93ffe1');
-    const pos=ring.geometry.attributes.position,r=mode==='meteor'?METEOR.radius:CREEPS[selectedMob().kind].r+10;
+    const pos=ring.geometry.attributes.position,r=objectRadius??(mode==='meteor'?METEOR.radius:CREEPS[selectedMob().kind].r+10);
     for(let i=0;i<pos.count;i++){
       const theta=2*Math.PI*i/pos.count,x=point.x+Math.cos(theta)*r,y=point.y+Math.sin(theta)*r;
       pos.setXYZ(i,x,R3.gY(x,y)+3,y);
@@ -127,7 +129,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     dirtyFrame=true;
   }
   function applyDraft(){
-    ArenaProject.activate(draft);
+    ArenaProject.activate(draft);recalc(hero,true);
     for(const m of WD.mobs){
       const base=origins.get(m.id),pos=draft.spawns[m.id]?.position;
       const x=pos?pos[0]:base.x,y=pos?pos[1]:base.y;
@@ -142,9 +144,9 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     }
     return {x:center.x,y:center.y};
   }
-  function prepareScene(sceneSeed){
+  function prepareScene(sceneSeed,project=empty,strict=false){
     removeRing();seed=sceneSeed;
-    setupWorld(seed,undefined,empty);R3.sync();
+    setupWorld(seed,undefined,{...empty,seed,layout:project.layout,tuning:project.tuning},strict);R3.sync();
     spawnById=new Map(WD.mobs.map(m=>[m.id,m]));
     origins=new Map(WD.mobs.map(m=>[m.id,{x:m.x,y:m.y}]));
     if(!spawnById.has(selected))selected=WD.fort?.queen??WD.mobs[0].id;
@@ -169,13 +171,14 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   }
   function edit(next,sceneSeed=next.seed??seed){
     next=ArenaProject.validate(next);
-    const oldSeed=seed,oldSelected=selected,rebuild=sceneSeed!==seed;
+    const worldSettings=p=>JSON.stringify([p.layout,Object.entries(p.tuning).filter(([k])=>k.startsWith('items.')&&k.endsWith('.w'))]);
+    const oldSeed=seed,oldSelected=selected,rebuild=sceneSeed!==seed||worldSettings(next)!==worldSettings(draft);
     if(!rebuild&&JSON.stringify(next)===JSON.stringify(draft)){inspect();return}
     try{
-      if(rebuild)prepareScene(sceneSeed);
+      if(rebuild)prepareScene(sceneSeed,next,true);
       validateScene(next);
     }catch(error){
-      if(rebuild){selected=oldSelected;prepareScene(oldSeed);applyDraft();focusSelection();drawList()}
+      if(rebuild){selected=oldSelected;prepareScene(oldSeed,draft);applyDraft();focusSelection();drawList()}
       throw error;
     }
     history.push({project:draft,seed:oldSeed});if(history.length>40)history.shift();
@@ -183,8 +186,8 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     if(rebuild){drawList();focusSelection()}
   }
   function change(fn){
-    try{const next=copy(draft);fn(next);edit(next)}
-    catch(error){inspect();notice(error.message,'error')}
+    try{const next=copy(draft);fn(next);edit(next);return true}
+    catch(error){inspect();notice(error.message,'error');return false}
   }
   function entry(next,m){
     next.seed=seed;return next.spawns[m.id]??={kind:m.kind};
@@ -193,7 +196,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     const spawn=next.spawns[m.id];
     if(spawn?.stats&&!Object.keys(spawn.stats).length)delete spawn.stats;
     if(spawn&&!spawn.stats&&!spawn.position)delete next.spawns[m.id];
-    if(!Object.keys(next.spawns).length)next.seed=null;
+    // Keep an explicitly selected map even after its final spawn override is reset.
   }
   function moveSpawn(x,y){
     const m=selectedMob(),base=origins.get(m.id);
@@ -283,7 +286,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   }
   stage.addEventListener('pointerdown',e=>{
     if(e.target.closest('button')||e.button!==0||drag||busy)return;
-    const ground=groundAt(e),mob=mode==='mobs'&&!placing?pickMob(e):null;
+    const ground=groundAt(e),mob=mode==='mobs'&&!placing&&!library.picking?pickMob(e):null;
     if(mob)select(mob.id,false);
     drag={pid:e.pointerId,start:ground,screenX:e.clientX,screenY:e.clientY,mob,ox:mob?.x,oy:mob?.y,moved:false};
     stage.setPointerCapture(e.pointerId);stage.classList.add('ed-drag');
@@ -291,7 +294,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   function trackPointer(e){
     if(!drag||e.pointerId!==drag.pid)return;
     if(Math.hypot(e.clientX-drag.screenX,e.clientY-drag.screenY)>3)drag.moved=true;
-    if(!drag.moved||mode==='meteor')return;
+    if(!drag.moved||mode==='meteor'&&!library.picking)return;
     const p=groundAt(e);
     if(drag.mob){
       const x=Math.round(drag.ox+p.x-drag.start.x),y=Math.round(drag.oy+p.y-drag.start.y);
@@ -307,8 +310,9 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     if(accept)trackPointer(e);
     const movement=drag;drag=null;stage.classList.remove('ed-drag');
     if(stage.hasPointerCapture(e.pointerId))stage.releasePointerCapture(e.pointerId);
+    if(library.picking){if(accept&&!movement.moved){library.picked(groundAt(e));inspect()}return}
     if(mode==='meteor'&&accept){
-      stopTrial();aim=clampTo(hero,groundAt(e),700);updateRing();return;
+      stopTrial();aim=clampTo(hero,groundAt(e),METEOR.reach);updateRing();return;
     }
     if(placing&&accept&&!movement.moved){
       const p=groundAt(e);
@@ -357,14 +361,16 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   }
   function undo(){
     const prev=history.pop();if(!prev)return;
-    if(seed!==prev.seed)prepareScene(prev.seed);
+    if(seed!==prev.seed||JSON.stringify([draft.layout,draft.tuning])!==JSON.stringify([prev.project.layout,prev.project.tuning]))prepareScene(prev.seed,prev.project);
     draft=prev.project;applyDraft();focusSelection();drawList();
   }
   function save(){
     if(!validInputs())return;
     try{
+      if(WD.layoutIssue)throw Error(WD.layoutIssue);
       if(!readError&&JSON.stringify(ArenaProject.read())!==saved)throw Error('อีกหน้าต่างบันทึกแล้ว ส่งออกฉบับนี้แล้วเปิดใหม่');
-      ArenaProject.save(draft);saved=JSON.stringify(draft);readError=false;
+      const serialized=JSON.stringify(ArenaProject.validate(draft));
+      localStorage.setItem(ArenaProject.storageKey,serialized);saved=serialized;readError=false;
       notice('บันทึกแล้ว · แมตช์ Solo ถัดไปใช้ค่าชุดนี้');
     }catch(error){notice(error.message,'error')}
   }
@@ -378,7 +384,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   function enterEditor(worldSeed){
     busy=true;$('edReturn').hidden=true;
     try{
-      prepareScene(worldSeed);
+      prepareScene(worldSeed,draft);
       let stale=false;
       for(const [id,entry] of Object.entries(draft.spawns)){
         const m=spawnById.get(Number(id));
@@ -389,19 +395,22 @@ const ArenaEditor=window.ArenaEditor=(()=>{
       }
       showOnly(null);document.body.classList.add('ed-open');panel.hidden=false;$('gl').style.visibility='visible';
       panel.dataset.panel='';applyDraft();focusSelection();drawList();
-      if(stale)notice('พบจุดเกิดเดิมที่ใช้กับแผนที่นี้ไม่ได้ ตรวจสอบฉบับแก้ไขก่อนบันทึก','dirty');
+      if(WD.layoutIssue)notice(WD.layoutIssue,'error');
+      else if(stale)notice('พบจุดเกิดเดิมที่ใช้กับแผนที่นี้ไม่ได้ ตรวจสอบฉบับแก้ไขก่อนบันทึก','dirty');
       else if(readError)notice('อ่านไฟล์ในเครื่องไม่ได้ กำลังใช้ค่าจากเกม','error');
       $('edMobs').focus({preventScroll:true});
     }finally{busy=false}
   }
   function close(){
     if(changed()&&!window.confirm(ArenaLanguage.text('ออกโดยทิ้งการแก้ไขที่ยังไม่บันทึกหรือไม่')))return;
-    stopTrial();removeRing();drag=null;history.length=0;panel.hidden=true;document.body.classList.remove('ed-open');
+    if(!library.confirmFileExit())return;
+    leaving=true;stopTrial();removeRing();drag=null;history.length=0;panel.hidden=true;document.body.classList.remove('ed-open');
     view3D=previousView;myId=0;ArenaProject.activate(ArenaProject.forMatch());
     list.replaceChildren();spawnById=origins=hero=dummy=practice=aim=draft=null;
-    showMenu();$('arenaEditorBtn').focus({preventScroll:true});
+    const lock=new URL('editor.html',location.href);lock.search=location.search;
+    window.top.location.replace(lock.href);
   }
-  function play(){
+  function play(kit){
     if(busy||!validInputs())return;
     busy=true;
     withLoading(()=>{
@@ -411,7 +420,14 @@ const ArenaEditor=window.ArenaEditor=(()=>{
         hostNewGame([{ctrl:'host',name:myName(),look:chosenLook}],seed,undefined,draft);
         R3.sync();DROP.skip();
         const player=ME(),mob=UMAP.get(who),start=nearSpot(mob,player.r+3,260);
-        moveTo(player,start.x,start.y);player.xs=SPX.indexOf(METEOR);player.xl=1;
+        moveTo(player,start.x,start.y);
+        player.xs=kit?.special?SPX.indexOf(SPECIAL_BY[kit.special]):SPX.indexOf(METEOR);
+        player.xl=kit?.special?kit.rank:1;
+        if(kit?.weapon&&kit.weapon!=='unarmed'){
+          player.wk=kit.weapon;player.wt=0;player.wv=0;player.skl=[1,1,1];
+          if(kit.slot!==undefined)player.skl[kit.slot]=kit.rank;
+          recalc(player,true);
+        }
         R3.tx=player.x;R3.ty=player.y;R3.ly=R3.gY(player.x,player.y);
         testing=true;enterPlay();$('edReturn').hidden=false;
       }finally{busy=false}
@@ -420,6 +436,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   function returnToEdit(){
     if(!testing||busy)return;
     testing=false;enterEditor(seed);
+    if(returnToLibrary){returnToLibrary=false;library.open()}
   }
   list.onclick=e=>{const b=e.target.closest('[data-id]');if(b)select(Number(b.dataset.id),true)};
   function setZoom(factor){zoom=clamp(zoom*factor,.7,2.3);dirtyFrame=true}
@@ -444,7 +461,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   $('edMobs').onclick=()=>setMode('mobs');$('edSkills').onclick=()=>setMode('meteor');
   $('edInstance').onclick=()=>{scope='instance';inspect()};$('edKind').onclick=()=>{scope='kind';inspect()};
   $('edFocus').onclick=focusSelection;$('edUndo').onclick=undo;$('edCast').onclick=castTrial;
-  $('edPlay').onclick=play;$('edReturn').onclick=returnToEdit;$('edClose').onclick=close;$('edSave').onclick=save;
+  $('edPlay').onclick=()=>play();$('edReturn').onclick=returnToEdit;$('edClose').onclick=close;$('edSave').onclick=save;
   $('edBrowse').onclick=()=>panel.dataset.panel=panel.dataset.panel==='list'?'':'list';
   $('edInspect').onclick=()=>panel.dataset.panel=panel.dataset.panel==='inspector'?'':'inspector';
   $('edDefaults').onclick=()=>{edit(copy(ArenaProject.published));notice()};
@@ -463,11 +480,22 @@ const ArenaEditor=window.ArenaEditor=(()=>{
       edit(imported);notice('นำเข้าแล้ว · กดบันทึกเพื่อใช้ใน Solo','dirty');
     }catch(error){notice(error instanceof SyntaxError?'อ่าน JSON ไม่สำเร็จ':error.message,'error')}
   };
+  addEventListener('beforeunload',e=>{if(!leaving&&draft&&changed()){e.preventDefault();e.returnValue=''}});
   addEventListener('resize',()=>{dirtyFrame=true});
   addEventListener('keydown',e=>{
-    if(state!=='editor')return;
+    if(state!=='editor'||e.target.closest?.('[data-page="files"]'))return;
+    if(e.key==='Escape'&&library.picking){library.picked(null);inspect();return}
     if((e.ctrlKey||e.metaKey)&&e.code==='KeyS'){e.preventDefault();document.activeElement?.blur();save()}
     if((e.ctrlKey||e.metaKey)&&e.code==='KeyZ'&&e.target.tagName!=='INPUT'){e.preventDefault();undo()}
+  });
+  const library=installEditorLibrary({
+    draft:()=>draft,change,save,undo,notice,meteor:()=>setMode('meteor'),
+    play(kit){returnToLibrary=true;play(kit)},
+    pick(point){
+      if(mode!=='mobs')setMode('mobs');
+      panel.dataset.panel='';focusAt(point.x,point.y);updateRing(point,false,38);stage.classList.add('ed-aim');
+      $('edHint').textContent=ArenaLanguage.language==='en'?'Tap the ground to select a position':'แตะพื้นเพื่อเลือกตำแหน่ง';
+    }
   });
   return {open,frame,returnToEdit,get zoom(){return zoom},get testing(){return testing}};
 })();

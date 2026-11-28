@@ -3,12 +3,13 @@
     <div class="ed-brand"><b>MuzCruor</b><span>World Editor</span></div>
     <nav class="ed-modes" aria-label="โหมดแก้ไข">
       <button type="button" id="edMobs" aria-pressed="true">มอนสเตอร์</button>
+      <button type="button" id="edLibraryBtn">ข้อมูลเกม</button>
       <button type="button" id="edSkills" aria-pressed="false">Meteor</button>
     </nav>
     <div class="ed-actions">
       <button type="button" id="edUndo" title="ย้อนกลับ" aria-label="ย้อนกลับ" disabled>↶</button>
       <button type="button" id="edSave" class="ed-primary">บันทึก</button>
-      <button type="button" id="edClose" title="กลับเมนู" aria-label="กลับเมนู">×</button>
+      <button type="button" id="edClose" title="ล็อกตัวแก้ไขเกม" aria-label="ล็อกตัวแก้ไขเกม">×</button>
     </div>
   </header>
   <div class="ed-layout">
@@ -69,3 +70,30 @@
   <footer class="ed-footer"><span id="edStatus" role="status"></span><span id="edSeed"></span></footer>
 </section>
 <button type="button" id="edReturn" hidden>กลับไปแก้ไข</button>
+
+<dialog id="edLibrary" aria-labelledby="edLibraryTitle">
+  <header><h2 id="edLibraryTitle">ข้อมูลเกม</h2><button type="button" id="edLibraryClose" aria-label="ปิด">×</button></header>
+  <nav aria-label="เครื่องมือ"><button type="button" data-tab="balance">ปรับสมดุล</button><button type="button" data-tab="map">วางวัตถุ</button><button type="button" data-tab="files">ไฟล์เกม</button></nav>
+  <section data-page="balance" class="ed-catalog">
+    <aside>
+      <label for="edCategory">หมวดข้อมูล</label><select id="edCategory"></select>
+      <input type="search" id="edFindData" placeholder="ค้นหาในหมวดนี้" aria-label="ค้นหาในหมวดนี้">
+      <select id="edDataList" size="11" aria-label="รายการข้อมูล"></select>
+    </aside>
+    <div id="edDataBody"><h3 id="edDataName"></h3><div id="edDataFields"></div><div class="ed-tools" id="edTrialKit" hidden><label id="edTrialLevel">ระดับสกิล<select id="edTrialRank"></select></label><button type="button" id="edTryEntry">ลองใช้ในแมตช์</button></div><button type="button" id="edMeteorLab" hidden>เปิดสนามทดสอบ Meteor</button></div>
+  </section>
+  <section data-page="map" hidden>
+    <div class="ed-map-seed"><label for="edMapSeed">Seed แผนที่</label><input id="edMapSeed" type="number" min="0" max="2147483647" step="1" required><button type="button" id="edUseSeed">ใช้แผนที่นี้</button><button type="button" id="edRandomSeed">สุ่มแผนที่ในแมตช์ใหม่</button></div>
+    <label for="edMapGroup">ประเภทวัตถุ</label><select id="edMapGroup"></select>
+    <label for="edMapRow">วัตถุบนแผนที่</label><select id="edMapRow"></select>
+    <div class="ed-coords"><label>X<input id="edMapX" type="number" min="0" step="1" required></label><label>Y<input id="edMapY" type="number" min="0" step="1" required></label></div>
+    <div class="ed-tools"><button type="button" id="edMapPick">เลือกตำแหน่งบนฉาก</button><button type="button" id="edMapApply">ใช้ตำแหน่ง</button><button type="button" id="edMapReset">คืนจุดเดิม</button></div>
+  </section>
+  <section data-page="files" hidden>
+    <p id="edFileHelp"></p><div class="ed-tools"><button type="button" id="edOpenSource">เปิดไฟล์เกม</button><button type="button" id="edReplaceSource" disabled>แทนที่ด้วยไฟล์อื่น</button></div>
+    <input type="file" id="edLocalSource" hidden><input type="file" id="edReplacement" hidden>
+    <h3 id="edSourceName"></h3><textarea id="edSourceText" rows="12" spellcheck="false" hidden aria-label="เนื้อหาไฟล์"></textarea>
+    <div class="ed-tools"><button type="button" id="edWriteSource" hidden>บันทึกลงไฟล์เดิม</button><button type="button" id="edDownloadSource" disabled>ดาวน์โหลดไฟล์</button></div>
+  </section>
+  <footer><output id="edLibraryStatus" role="status"></output><button type="button" id="edLibraryUndo">ย้อนกลับ</button><button type="button" id="edLibrarySave">บันทึกโปรเจกต์</button></footer>
+</dialog>

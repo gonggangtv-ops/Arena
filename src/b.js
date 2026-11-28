@@ -29,9 +29,9 @@ function mkZombie(id,kind,x,y,sc){const d=ARX?ArenaProject.definition({kind,id})
 function mkMob(m){const d=ARX?ArenaProject.definition(m):CREEPS[m.kind];const u=mkUnit({id:m.id,type:m.kind,kind:m.kind,def:d,name:d.name,mob:true,team:0,x:m.x,y:m.y,home:{x:m.x,y:m.y},camp:m.camp,golem:m.kind==='golem'||m.kind==='guardian'||m.kind==='magma',boss:m.kind==='boss',undead:!!m.undead,big:!!d.big,lord:!!d.lord,rich:m.rich|0});setMobStats(u,m.sc||1);u.tx=m.x;u.ty=m.y;return u}
 function addUnit(u){units.push(u);UMAP.set(u.id,u)}
 
-function setupWorld(seed,cfg,project){
+function setupWorld(seed,cfg,project,strictLayout=false){
   if(ARX)ArenaProject.activate(project||ArenaProject.forMatch());
-  WD=genWorld(seed);buildCollide(WD);if(ARX)ArenaProject.placeSpawns(WD);buildMini();GROUND2D=null;
+  WD=genWorld(seed);buildCollide(WD);if(ARX){ArenaProject.placeLayout(WD,strictLayout);ArenaProject.placeSpawns(WD)}buildMini();GROUND2D=null;
   units=[];UMAP=new Map();projs=[];aoes=[];parts=[];texts=[];swings=[];feedList=[];flies=[];fxq=[];deathOrder=[];
   items=WD.items.map(i=>Object.assign({},i));boxes=(WD.boxes||[]).map(b=>Object.assign({},b,{open:false}));
   for(const m of WD.mobs)addUnit(mkMob(m));
@@ -317,7 +317,7 @@ function cast0(u,i,ap){
     case 'sword0':{face();const sp=1400;u.dash={vx:nx*sp,vy:ny*sp,t:Math.min(d+30,rngS)/sp,dmg:hit,stun:V.stun[li],hit:new Set(),stop:true};sndAt('dash',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(ny,nx).toFixed(2)});break}
     case 'sword1':u.shieldHp=V.sh[li]+.08*u.maxHp;u.shieldT=4;u.castAnim=.4;sndAt('shield',u.x,u.y);fxE('shield',{id:u.id,x:u.x|0,y:u.y|0});break;
     case 'sword2':{face();const p=landSpot(u,clampTo(u,tg,rngS));u.leap={sx:u.x,sy:u.y,tx:p.x,ty:p.y,t:0,T:.55,dmg:hit,stun:V.stun[li],r:V.r[li]};sndAt('leap',u.x,u.y);fxE('leap',{id:u.id,x:p.x|0,y:p.y|0,r:V.r[li]});break}
-    case 'axe0':u.spinT=1.75;u.spinTick=0;u.spinR=0;u.spinDmg=hit;u.atkAnim=0;sndAt('spin',u.x,u.y);fxE('spin',{id:u.id,x:u.x|0,y:u.y|0});break;
+    case 'axe0':u.spinT=V.n*.25;u.spinTick=0;u.spinR=rngS;u.spinDmg=hit;u.atkAnim=0;sndAt('spin',u.x,u.y);fxE('spin',{id:u.id,x:u.x|0,y:u.y|0});break;
     case 'axe1':{u.castAnim=.4;for(const o of units){if(o.dead||!isEnemy(u,o)||dist(u,o)>rngS+o.r*.5)continue;o.slowT=Math.max(o.slowT,2.5);o.slowAmt=Math.max(o.slowT>2.5?o.slowAmt:0,V.slow[li])}
       u.asT=5;u.asAmt=V.as[li];u.buffT=3;sndAt('cry',u.x,u.y);fxE('cry',{id:u.id,x:u.x|0,y:u.y|0,r:rngS});break}
     case 'axe2':{face();const ang=Math.atan2(ny,nx);aoe({x:u.x+nx*20,y:u.y+ny*20,r:rngS,ang,len:rngS,w:V.w,shape:'line',dmg:hit,type:'p',owner:u,delay:.45,kind:'line',stun:V.stun[li],big:true});sndAt('heavy',u.x,u.y);break}
@@ -326,7 +326,7 @@ function cast0(u,i,ap){
       if(!spot)return false;u.x=spot.x;u.y=spot.y;u.fx=(t.x-u.x)/(dist(u,t)||1);u.fy=(t.y-u.y)/(dist(u,t)||1);u.revealT=1.2;u.castAnim=.3;
       dealDamage(t,hit,'p',u);u.critNext=true;u.atkCd=0;sndAt('blink',u.x,u.y);fxE('blink',{x:ox|0,y:oy|0,x2:u.x|0,y2:u.y|0});break}
     case 'dagger1':u.invisT=V.t[li];u.invisSpd=V.spd[li];u.bsDmg=V.bs[li];u.bsReady=false;sndAt('invis',u.x,u.y);fxE('smoke',{x:u.x|0,y:u.y|0});break;
-    case 'dagger2':u.lotusT=1.2;u.lotusTick=0;u.lotusDmg=hit;u.lotusR=rngS;u.slowT=0;u.rootT=0;sndAt('lotus',u.x,u.y);fxE('lotus',{id:u.id,x:u.x|0,y:u.y|0,r:rngS});break;
+    case 'dagger2':u.lotusT=V.n/5;u.lotusTick=0;u.lotusDmg=hit;u.lotusR=rngS;u.slowT=0;u.rootT=0;sndAt('lotus',u.x,u.y);fxE('lotus',{id:u.id,x:u.x|0,y:u.y|0,r:rngS});break;
     case 'bow0':{face();const hs=new Set();for(let k=-2;k<=2;k++){const a=Math.atan2(ny,nx)+k*.13;proj(u,Math.cos(a),Math.sin(a),{spd:1150,r:9,dmg:hit,type:'p',kind:0,life:rngS/1150,hit:hs})}sndAt('shoot',u.x,u.y);break}
     case 'bow1':{face();proj(u,nx,ny,{spd:1300,r:12,dmg:hit,type:'p',kind:5,root:V.root[li],life:rngS/1300});
       let mx=-nx,my=-ny;u.dash={vx:mx*1100,vy:my*1100,t:.26,hit:null};sndAt('dash',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(my,mx).toFixed(2)});break}
@@ -453,7 +453,7 @@ function equipWeapon(u,it){it.dead=true;removeItem(it);const slot=wSlot(u,it),H=
   const drop=(k,t,v)=>dropItem({k:'w',x:u.x+rand(-25,25),y:u.y+30,wk:k,tier:t,wv:v,np:{id:u.id,until:gameT+3}});const nv=CURSED?itWV(it):0;
   if(slot==='upBack'||slot==='back'){if(slot==='upBack')drop(u.wk2,u.wt2,u.wv2);u.wk2=it.wk;u.wt2=it.tier;u.wv2=nv;sndAt('armor',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:TIERS[it.tier].c});
     if(H){const fk=!FUSED[u.wk]&&!FUSED[it.wk]?fuseKey(u.wk,it.wk):null;fxTextFor(u.x,u.y-84,`🎒 อาวุธสำรอง: ${wName(it.wk,it.tier)}`,TIERS[it.tier].c,2,H);
-      if(fk&&gameT<FUSE_AT)fxTextFor(u.x,u.y-110,`⚒️ นาที 10 จะหลอมเป็น ${WEAPONS[fk].ic} ${WEAPONS[fk].n}`,WEAPONS[fk].col,2.6,H)}
+      if(fk&&gameT<FUSE_AT)fxTextFor(u.x,u.y-110,`⚒️ เวลา ${fmtT(FUSE_AT)} จะหลอมเป็น ${WEAPONS[fk].ic} ${WEAPONS[fk].n}`,WEAPONS[fk].col,2.6,H)}
     return}
   if(slot==='upMain')drop(u.wk,u.wt,u.wv);else if(slot==='push'){drop(u.wk2,u.wt2,u.wv2);u.wk2=u.wk;u.wt2=u.wt;u.wv2=u.wv}else if(slot==='lift'){u.wk2=u.wk;u.wt2=u.wt;u.wv2=u.wv}
   u.wk=it.wk;u.wt=it.tier;u.wv=nv;u.spinT=0;u.lotusT=0;u.rapid=null;recalc(u);sndAt('weapon',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:TIERS[it.tier].c});
@@ -483,7 +483,7 @@ function fuseNow(u){u.fuseT=0;if(!canFuse(u))return;const a=u.wk,b=u.wk2,fk=fuse
     fxTextFor(u.x,u.y-96,`${F.ic} ${F.n}`,F.col,2.4,[u.id],1)}
   if(t===4)fxE('ssr',{id:u.id,x:u.x|0,y:u.y|0})}
 let fuseWarn=0;
-function fuseTick(){if(fuseWarn===0&&gameT>25){fuseWarn=1;emit({t:'f',s:'⚒️ พกอาวุธ 2 ชนิด · นาทีที่ 10 หลอมเป็นอาวุธใหม่'})}
+function fuseTick(){if(fuseWarn===0&&gameT>25){fuseWarn=1;emit({t:'f',s:'⚒️ พกอาวุธ 2 ชนิด · '+fmtT(FUSE_AT)+' หลอมเป็นอาวุธใหม่'})}
   if(fuseWarn===1&&gameT>=FUSE_AT-180){fuseWarn=2;emit({t:'f',s:'⚒️ อีก 3 นาทีหลอมอาวุธ · แตะรูปอาวุธเพื่อสลับ'})}
   if(fuseWarn===2&&gameT>=FUSE_AT-30){fuseWarn=3;emit({t:'a',s:'⚒️ อีก 30 วิหลอมอาวุธ — พกอาวุธ 2 ชนิดไว้!',d:4});emit({t:'s',n:'fusewarn',x:0,y:0,g:1})}
   if(fuseWarn===3&&gameT>=FUSE_AT){fuseWarn=4;emit({t:'a',s:'⚒️ ถึงเวลาหลอมอาวุธ!',d:3.5});emit({t:'f',s:'⚒️ เริ่มหลอม! ได้ชิ้นที่ 2 เมื่อไหร่หลอมทันที'})}}

@@ -2,7 +2,7 @@
 // Instance IDs belong to one generated world. Room clients use the build's project.
 const ArenaProject=(()=>{
   const key='muzcruor.editor.project.v1';
-  const statRanges={hp:[1,1000000],dmg:[0,10000],leash:[1,5000]};
+  const statRanges={hp:[1,1000000],dmg:[0,10000],leash:[1,5000],armor:[0,1000],spd:[0,2000],atkT:[.05,60],range:[1,6000],xp:[0,1000000]};
   const skillRanges={baseDamage:[0,10000],radius:[12,1200],delay:[.1,8]};
   const cooldownRange=[.1,300];
   const defaults={baseDamage:METEOR.baseDamage,radius:METEOR.radius,delay:METEOR.delay,cd:METEOR.cd.slice()};
@@ -17,10 +17,14 @@ const ArenaProject=(()=>{
     return result;
   }
   function validate(data){
-    record(data);check(data.version===1);
+    record(data);check(data.version===1||data.version===2);
     const seed=data.seed;
     check(seed===null||Number.isInteger(seed)&&seed>=0&&seed<=2147483647);
-    const project={version:1,seed,kinds:{},spawns:{},meteor:{}};
+    const project={version:2,seed,kinds:{},spawns:{},meteor:{},tuning:ArenaCatalog.validate(data.tuning??{}),layout:{}};
+    for(const [path,pos] of Object.entries(record(data.layout??{}))){
+      check(seed!==null&&/^(npcs|boxes|items|spawns)\.(0|[1-9]\d{0,4})$/.test(path)&&Array.isArray(pos)&&pos.length===2);
+      project.layout[path]=pos.map(v=>number(v,[0,WORLD]));
+    }
     for(const [kind,stats] of Object.entries(record(data.kinds))){
       check(Object.hasOwn(CREEPS,kind));project.kinds[kind]=fields(stats,statRanges);
     }
@@ -54,6 +58,7 @@ const ArenaProject=(()=>{
   }
   function activate(project){
     current=project;
+    ArenaCatalog.activate(project.tuning);
     Object.assign(METEOR,defaults,project.meteor);
   }
   function instance(m){
@@ -82,6 +87,46 @@ const ArenaProject=(()=>{
       if(pos&&canPlace(m,...pos))place(w,m,...pos);
     }
   }
-  return {published,defaults,statRanges,skillRanges,cooldownRange,validate,read,forMatch,activate,definition,canPlace,place,placeSpawns,
-    save(project){localStorage.setItem(key,JSON.stringify(validate(project)))}};
+  // Resolve every destination against the same untouched generated world. A chest's rock
+  // collider and the house/cave used for visibility and interaction travel with it.
+  function placeLayout(w,strict){
+    if(w.seed!==current.seed||!current.layout||!Object.keys(current.layout).length)return;
+    const moves=[],chests=[],oldChestRocks=new Set();
+    const rockKey=(x,y)=>x+','+y;
+    function apply(){
+      for(const [path,[x,y]] of Object.entries(current.layout)){
+        const [group,index]=path.split('.'),obj=w[group][index];
+        if(!obj)throw Error('วัตถุไม่ตรงกับแผนที่');
+        const move={group,obj,x,y,r:group==='boxes'||group==='spawns'?26:group==='npcs'?18:8};
+        if(group==='boxes'){
+          move.rock=w.rocks.find(o=>o.prop&&o.r===26&&o.x===obj.x&&o.y===obj.y);
+          if(!move.rock)throw Error('กล่องไม่ตรงกับแผนที่');
+          oldChestRocks.add(rockKey(obj.x,obj.y));chests.push(move);
+        }
+        moves.push(move);
+      }
+      for(const m of moves){
+        const {x,y,r}=m;
+        const blocked=sdfAt(x,y)<r||inWater(x,y)||forObstacles(x,y,r,o=>{
+          if(o.c!==1)return circRect(x,y,r,o);
+          if(o.r===26&&oldChestRocks.has(rockKey(o.x,o.y)))return false;
+          return (x-o.x)**2+(y-o.y)**2<(o.r+r)**2;
+        })||chests.some(c=>c!==m&&(x-c.x)**2+(y-c.y)**2<(r+c.r)**2);
+        if(blocked)throw Error('จุดวางต้องอยู่บนพื้นที่เดินได้');
+      }
+      for(const {group,obj,x,y,rock} of moves){
+        obj.x=x;obj.y=y;
+        if(rock){rock.x=x;rock.y=y}
+        if(group==='boxes'||group==='items'){
+          const h=houseAt(obj),c=caveAt(obj);
+          if(h)obj.house=w.houses.indexOf(h);else delete obj.house;
+          if(c)obj.cave=w.caves.indexOf(c);else delete obj.cave;
+        }
+      }
+      if(chests.length)buildCollide(w);
+      w.authoredLayout=JSON.stringify(current.layout);
+    }
+    try{apply()}catch(error){if(strict)throw error;w.layoutIssue=error.message}
+  }
+  return {storageKey:key,placeLayout,published,defaults,statRanges,skillRanges,cooldownRange,validate,read,forMatch,activate,definition,canPlace,place,placeSpawns};
 })();

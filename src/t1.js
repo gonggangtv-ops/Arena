@@ -80,33 +80,35 @@ function castX(u,i,ap){const rn=u.hero?wvR(u.wv,i):0,mp0=u.mp,a0=u.atkDmg,d0=u.d
   else if(rn===8)u.mp=Math.min(u.maxMp,u.mp+Math.max(0,mp0-u.mp)*.6);return ok}
 // ---- every hit passes through here: dodge / block first, then weapon traits and what the local monsters do ----
 function curDmg(t,amt,type,src,quiet){amt=tpsGuard(t,amt,src);if(amt<=0)return 0;if(!src||src===t)return amt;
-  if(src.hero){const tr=wvT(src.wv);if(tr===5&&t.hp<t.maxHp*.35)amt*=1.25;else if(tr===6&&t.mob)amt*=1.3;else if(tr===7&&t.hp>t.maxHp*.8)amt*=1.18;if(src.rageT>0)amt*=1.15;
+  if(src.hero){const tr=wvT(src.wv);if(tr===5&&t.hp<t.maxHp*.35)amt*=1.25;else if(tr===6&&t.mob)amt*=1.3;else if(tr===7&&t.hp>t.maxHp*.8)amt*=1.18;if(src.rageT>0)amt*=1+SPECIAL_BY.rage.damageBonus;
     if(!quiet&&tr&&tr<=4&&!CUR.busy&&isEnemy(src,t)){CUR.busy=1;if(tr===4)heal(src,amt*.07);else if(gameT-(t._et||-9)>.45||t._es!==src.id){t._et=gameT;t._es=src.id;elemHit(src,t,EL[tr-1],.6)}CUR.busy=0}}
   else if(src.mob&&t.hero&&!quiet&&src.rg>0){const g=src.rg;if(g===2){t.slowAmt=Math.max(t.slowT>1.5?t.slowAmt:0,.3);t.slowT=Math.max(t.slowT,1.5)}else if(g===4)t.mp=Math.max(0,t.mp-(8+src.atkDmg*.12));
     else{const dps=g===3?6+src.atkDmg*.2:4+src.atkDmg*.12;if(t.burnT<=0||t.burnDps<dps){t.burnDps=dps;t.burnSrc=null}t.burnT=Math.max(t.burnT,g===3?2.5:3)}}
   return amt}
 // ---- special skills bought with coins (one slot, key V) ----
-const SPX=[null,{k:'blink',n:'วาร์ปเงา',ic:'🌀',cd:[13,11,9],p:160,d:'วาร์ปไปยังจุดที่เล็งทันที'},{k:'heal',n:'แสงฟื้นฟู',ic:'✨',cd:[26,24,22],p:160,d:'ฟื้นเลือด 28/36/44% ใน 3 วิ และล้างสถานะช้า'},
-  {k:'rage',n:'บ้าคลั่ง',ic:'👹',cd:[26,24,22],p:180,d:'6 วิ: ตีเร็วขึ้น 35/45/55% และดาเมจ +15%'},{k:'meteor',n:'อุกกาบาต',ic:'☄️',baseDamage:120,radius:230,delay:.85,cd:[20,18,16],p:200,d:'เรียกอุกกาบาตใส่จุดที่เล็ง เผาศัตรู'},
-  {k:'ward',n:'โล่วิญญาณ',ic:'🔰',cd:[24,22,20],p:160,d:'โล่ 22/30/38% ของเลือด นาน 5 วิ'},{k:'nova',n:'คลื่นเยือกแข็ง',ic:'💠',cd:[18,16,14],p:180,d:'ระเบิดรอบตัว ตรึงศัตรู 1.2 วิ'}];
-const METEOR=SPX.find(s=>s&&s.k==='meteor');
+const SPX=[null,{k:'blink',reach:520,n:'วาร์ปเงา',ic:'🌀',cd:[13,11,9],p:160,d:'วาร์ปไปยังจุดที่เล็งทันที'},{k:'heal',duration:3,heal:[.28,.36,.44],n:'แสงฟื้นฟู',ic:'✨',cd:[26,24,22],p:160,d:'ฟื้นเลือด 28/36/44% ใน 3 วิ และล้างสถานะช้า'},
+  {k:'rage',duration:6,haste:[.35,.45,.55],damageBonus:.15,n:'บ้าคลั่ง',ic:'👹',cd:[26,24,22],p:180,d:'6 วิ: ตีเร็วขึ้น 35/45/55% และดาเมจ +15%'},{k:'meteor',reach:700,perLevel:24,burn:8,n:'อุกกาบาต',ic:'☄️',baseDamage:120,radius:230,delay:.85,cd:[20,18,16],p:200,d:'เรียกอุกกาบาตใส่จุดที่เล็ง เผาศัตรู'},
+  {k:'ward',duration:5,shield:[.22,.3,.38],n:'โล่วิญญาณ',ic:'🔰',cd:[24,22,20],p:160,d:'โล่ 22/30/38% ของเลือด นาน 5 วิ'},{k:'nova',baseDamage:70,perLevel:16,radius:300,delay:.12,root:1.2,slow:2.2,slowAmt:.4,n:'คลื่นเยือกแข็ง',ic:'💠',cd:[18,16,14],p:180,d:'ระเบิดรอบตัว ตรึงศัตรู 1.2 วิ'}];
+const SPECIAL_BY=Object.fromEntries(SPX.filter(Boolean).map(s=>[s.k,s]));
+const METEOR=SPECIAL_BY.meteor;
 const specialLevel=u=>clamp(u.xl||1,1,3)-1;
 const specialScale=level=>[1,1.25,1.5][level];
 function specialHitDamage(u,skill){
-  return (skill==='meteor'?METEOR.baseDamage+24*u.lvl:70+16*u.lvl)*specialScale(specialLevel(u))*(1+spellAmp(u));
+  const s=SPECIAL_BY[skill];return (s.baseDamage+s.perLevel*u.lvl)*specialScale(specialLevel(u))*(1+spellAmp(u));
 }
 function castSpecial(u,ap){if(!u)return false;const S=SPX[u.xs|0];if(!S||u.dead||u.stunT>0||u.xcd>0||u.fuseT>0)return false;if(ap&&!(Number.isFinite(ap.x)&&Number.isFinite(ap.y)))ap=null;const L=specialLevel(u),M=specialScale(L);
   let p=ap||(S.k==='meteor'?aim(u,650):{x:u.x+u.fx*460,y:u.y+u.fy*460});
   switch(S.k){
-    case 'blink':{const q=landSpot(u,clampTo(u,p,520));burstE(u.x,u.y,'#b08aff',18);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(q.y-u.y,q.x-u.x).toFixed(2)});u.x=q.x;u.y=q.y;u.dash=null;burstE(u.x,u.y,'#b08aff',18);sndAt('dash',u.x,u.y);break}
-    case 'heal':u.hotT=3;u.hotP=1;u.hotV=u.maxHp*[.28,.36,.44][L]/3;u.slowT=0;fxE('potion',{id:u.id,x:u.x|0,y:u.y|0,c:'#9dffb0'});sndAt('potion',u.x,u.y);break;
-    case 'rage':u.asT=6;u.asAmt=Math.max(u.asAmt||0,[.35,.45,.55][L]);u.rageT=6;u.buffT=Math.max(u.buffT||0,6);sndAt('cry',u.x,u.y);fxE('cry',{id:u.id,x:u.x|0,y:u.y|0,r:200});break;
-    case 'meteor':{p=clampTo(u,p,700);aoe({x:p.x,y:p.y,r:METEOR.radius,dmg:specialHitDamage(u,'meteor'),type:'m',owner:u,skyFall:true,delay:METEOR.delay,kind:'meteor',big:true,burn:(8+u.lvl)*M});sndAt('meteor',p.x,p.y);u.castAnim=.4;break}
-    case 'ward':u.shieldHp=Math.max(u.shieldHp,u.maxHp*[.22,.3,.38][L]);u.shieldT=5;sndAt('shield',u.x,u.y);fxE('shield',{id:u.id,x:u.x|0,y:u.y|0});break;
-    case 'nova':aoe({x:u.x,y:u.y,r:300,dmg:specialHitDamage(u,'nova'),type:'m',owner:u,delay:.12,kind:'nova',root:1.2,slow:2.2,slowAmt:.4});sndAt('boom',u.x,u.y);u.castAnim=.4;break}
+    case 'blink':{const q=landSpot(u,clampTo(u,p,S.reach));burstE(u.x,u.y,'#b08aff',18);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(q.y-u.y,q.x-u.x).toFixed(2)});u.x=q.x;u.y=q.y;u.dash=null;burstE(u.x,u.y,'#b08aff',18);sndAt('dash',u.x,u.y);break}
+    case 'heal':u.hotT=S.duration;u.hotP=1;u.hotV=u.maxHp*S.heal[L]/S.duration;u.slowT=0;fxE('potion',{id:u.id,x:u.x|0,y:u.y|0,c:'#9dffb0'});sndAt('potion',u.x,u.y);break;
+    case 'rage':u.asT=S.duration;u.asAmt=Math.max(u.asAmt||0,S.haste[L]);u.rageT=S.duration;u.buffT=Math.max(u.buffT||0,S.duration);sndAt('cry',u.x,u.y);fxE('cry',{id:u.id,x:u.x|0,y:u.y|0,r:200});break;
+    case 'meteor':{p=clampTo(u,p,S.reach);aoe({x:p.x,y:p.y,r:METEOR.radius,dmg:specialHitDamage(u,'meteor'),type:'m',owner:u,skyFall:true,delay:METEOR.delay,kind:'meteor',big:true,burn:(S.burn+u.lvl)*M});sndAt('meteor',p.x,p.y);u.castAnim=.4;break}
+    case 'ward':u.shieldHp=Math.max(u.shieldHp,u.maxHp*S.shield[L]);u.shieldT=S.duration;sndAt('shield',u.x,u.y);fxE('shield',{id:u.id,x:u.x|0,y:u.y|0});break;
+    case 'nova':aoe({x:u.x,y:u.y,r:S.radius,dmg:specialHitDamage(u,'nova'),type:'m',owner:u,delay:S.delay,kind:'nova',root:S.root,slow:S.slow,slowAmt:S.slowAmt});sndAt('boom',u.x,u.y);u.castAnim=.4;break}
   u.xcd=S.cd[L];u.revealT=Math.max(u.revealT||0,1);if(isHuman(u))fxTextFor(u.x,u.y-92,S.ic+' '+S.n,'#e8d8a0',1.1,[u.id]);return true}
 // ---- shop: open anywhere, pay with coins ----
-function shopPrice(u,k){if(k==='hp')return 25;if(k==='mp')return 20;if(k==='big')return 70;if(k==='lv')return u.lvl>=MAXL?null:100+60*(u.lvl-1);if(k==='rf')return u.wk?50+25*Math.max(0,u.wt):null;
+const SHOP_RATES={hp:25,mp:20,big:70,level:100,levelStep:60,reforge:50,reforgeStep:25};
+function shopPrice(u,k){if(k==='hp'||k==='mp'||k==='big')return SHOP_RATES[k];if(k==='lv')return u.lvl>=MAXL?null:SHOP_RATES.level+SHOP_RATES.levelStep*(u.lvl-1);if(k==='rf')return u.wk?SHOP_RATES.reforge+SHOP_RATES.reforgeStep*Math.max(0,u.wt):null;
   if(k[0]==='x'){const S=SPX[+k[1]];if(!S)return null;if((u.xs|0)===+k[1])return (u.xl||1)>=3?null:Math.round(S.p*.6*(u.xl||1));return S.p}return null}
 function shopBuy(u,k){if(!u||!u.hero||u.dead)return false;const pr=shopPrice(u,k),H=isHuman(u)?[u.id]:null,no=s=>{if(H)fxTextFor(u.x,u.y-84,s,'#ffb0a0',1.2,H);return false};
   if(pr==null)return no('ซื้อไม่ได้');if((u.gold||0)<pr)return no('เหรียญไม่พอ');let msg='';
@@ -133,7 +135,7 @@ function curTick(dt){for(let k=ERUPT.length-1;k>=0;k--){const e=ERUPT[k];e.t-=dt
       if(k==='heal'||k==='ward'){if(hurt)castSpecial(u)}else if(k==='blink'){if(hurt&&t&&u.hp<u.maxHp*.3)castSpecial(u,{x:u.x+(u.x-t.x)/(d||1)*500,y:u.y+(u.y-t.y)/(d||1)*500})}
       else if(t&&d<(k==='nova'?250:k==='rage'?320:620))castSpecial(u,{x:t.x,y:t.y})}}}
 // ---- dodge / block / stamina (host) ----
-const DASH_CD=45;
+let DASH_CD=45;
 function tpsHost(u,inp,dt){if(u.sta===undefined){u.sta=100;u.blkT=0;u.rollT=0}u.blk=false;if(u.rollT>0)u.rollT-=dt;if(u.dgcd>0)u.dgcd-=dt}
 function dashCd(me){return me&&me.dgcd>0?me.dgcd:0}
 // พุ่ง: a long burst forward (or where you are moving), untouchable while it lasts, 45 s cooldown

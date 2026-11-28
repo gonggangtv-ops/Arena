@@ -1,7 +1,9 @@
 {
-  "version": 1,
+  "version": 2,
   "seed": null,
   "kinds": {},
   "spawns": {},
-  "meteor": {}
+  "meteor": {},
+  "tuning": {},
+  "layout": {}
 }
