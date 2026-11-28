@@ -169,6 +169,10 @@ cp src/index.html app/src/main/assets/index.html
 python3 -c "import getpass, subprocess; subprocess.run(['node','src/tools/pack-editor.mjs','--set-password'], input=getpass.getpass('New editor passphrase (12+ characters): '), text=True, check=True)"
 ```
 
+## พรีวิวบน Cloudflare Workers
+
+Workers Builds ของ Worker `arena` ใช้รากของ repo และคำสั่งพรีวิว `npx wrangler preview` ไฟล์ `wrangler.json` ชี้ไปยังเกมและทรัพยากรที่ build ไว้ใน `app/src/main/assets` จึงเว้นช่อง Build command ได้
+
 ## เล่นออนไลน์บนเว็บ (GitHub Pages)
 1. อัปโหลดไฟล์ทั้งหมดในโฟลเดอร์นี้ขึ้น branch `main` (รวมโฟลเดอร์ `.github`)
 2. workflow "Deploy web game (GitHub Pages)" จะคัดลอกเกมไปไว้ที่ branch `gh-pages` ให้เองทุกครั้ง (รอ 1–2 นาที)
