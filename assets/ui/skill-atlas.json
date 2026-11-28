@@ -1,0 +1,563 @@
+{
+  "version": 2,
+  "image": "assets/ui/moonfall-skills.webp",
+  "width": 1374,
+  "height": 1145,
+  "columns": 6,
+  "rows": 5,
+  "provenance": "New artwork generated for Arena Royale Moonfall; no Meshy calls or credits.",
+  "skills": {
+    "sword": [
+      0,
+      1,
+      2
+    ],
+    "axe": [
+      3,
+      4,
+      5
+    ],
+    "dagger": [
+      6,
+      7,
+      8
+    ],
+    "bow": [
+      9,
+      10,
+      11
+    ],
+    "fire": [
+      12,
+      13,
+      14
+    ],
+    "frost": [
+      15,
+      16,
+      17
+    ],
+    "gsword": [
+      18,
+      19,
+      20
+    ],
+    "xbow": [
+      21,
+      22,
+      23
+    ],
+    "storm": [
+      24,
+      25,
+      26
+    ]
+  },
+  "reservedUtilities": {
+    "attack": 27,
+    "health": 28,
+    "mana": 29
+  },
+  "skillNames": {
+    "sword": [
+      "โล่กระแทก",
+      "ป้อมปราการ",
+      "ดาบพิพากษา"
+    ],
+    "axe": [
+      "พายุขวาน",
+      "คำรามศึก",
+      "ผ่าปฐพี"
+    ],
+    "dagger": [
+      "ก้าวเงา",
+      "ม่านควัน",
+      "ระบำมรณะ"
+    ],
+    "bow": [
+      "ยิงกระจาย",
+      "ถอยยิงตรึง",
+      "ฝนธนู"
+    ],
+    "fire": [
+      "ลูกไฟ",
+      "ระเบิดเพลิง",
+      "อุกกาบาต"
+    ],
+    "frost": [
+      "หอกน้ำแข็ง",
+      "วงน้ำแข็ง",
+      "พายุหิมะ"
+    ],
+    "gsword": [
+      "ฟันจันทร์เสี้ยว",
+      "หมุนกระแทก",
+      "คลื่นดาบสวรรค์"
+    ],
+    "xbow": [
+      "ลูกดอกระเบิด",
+      "ตาข่ายดักจับ",
+      "ระดมยิงถล่ม"
+    ],
+    "storm": [
+      "สายฟ้าลูกโซ่",
+      "สนามไฟฟ้า",
+      "อัสนีบาต"
+    ],
+    "soul": [
+      "อัญเชิญภูติ",
+      "บัญชาวิญญาณ",
+      "ผู้พิทักษ์จันทรา"
+    ],
+    "fOM": [
+      "กองทัพวิญญาณ",
+      "บัญชาบุกทะลวง",
+      "ขุนพลวิญญาณ"
+    ],
+    "fOR": [
+      "ภูติพราน",
+      "ห่าศรวิญญาณ",
+      "ฝนศรวิญญาณ"
+    ],
+    "fOS_fire": [
+      "อัญเชิญภูติเพลิง",
+      "หอกวิญญาณเพลิง",
+      "อสูรเพลิง"
+    ],
+    "fOS_frost": [
+      "อัญเชิญภูติเหมันต์",
+      "หอกวิญญาณเหมันต์",
+      "ยักษ์น้ำแข็ง"
+    ],
+    "fOS_storm": [
+      "อัญเชิญภูติอัสนี",
+      "หอกวิญญาณอัสนี",
+      "ยักษ์อัสนี"
+    ]
+  },
+  "weaponNames": {
+    "sword": "ดาบและโล่",
+    "axe": "ขวานยักษ์",
+    "dagger": "มีดคู่",
+    "bow": "ธนูยาว",
+    "fire": "คทาเพลิง",
+    "frost": "คทาน้ำแข็ง",
+    "gsword": "ดาบใหญ่",
+    "xbow": "หน้าไม้",
+    "storm": "คทาสายฟ้า",
+    "soul": "คัมภีร์วิญญาณ",
+    "fOM": "คัมภีร์ขุนพลวิญญาณ",
+    "fOR": "คัมภีร์พรานวิญญาณ",
+    "fOS_fire": "คัมภีร์วิญญาณเพลิง",
+    "fOS_frost": "คัมภีร์วิญญาณเหมันต์",
+    "fOS_storm": "คัมภีร์วิญญาณอัสนี"
+  },
+  "weaponPortraits": {
+    "fist": 0,
+    "sword": 1,
+    "axe": 2,
+    "dagger": 3,
+    "bow": 4,
+    "fire": 5,
+    "frost": 6,
+    "gsword": 7,
+    "xbow": 8,
+    "storm": 9,
+    "soul": 10,
+    "fMM": 11,
+    "fMR": 12,
+    "fMS_fire": 13,
+    "fRS_fire": 14,
+    "fMS_frost": 15,
+    "fRS_frost": 16,
+    "fMS_storm": 17,
+    "fRS_storm": 18,
+    "fRR": 19,
+    "fSS_steam": 20,
+    "fSS_blaze": 21,
+    "fSS_tempest": 22,
+    "fOM": 23,
+    "fOR": 24,
+    "fOS_fire": 25,
+    "fOS_frost": 26,
+    "fOS_storm": 27
+  },
+  "sheets": {
+    "armory": {
+      "image": "assets/ui/arena-armory.webp",
+      "width": 864,
+      "height": 720,
+      "columns": 6,
+      "rows": 5,
+      "gridHeight": 720
+    },
+    "base": {
+      "image": "assets/ui/moonfall-skills.webp",
+      "width": 1374,
+      "height": 1145,
+      "columns": 6,
+      "rows": 5,
+      "gridHeight": 1145
+    },
+    "fusion": {
+      "image": "assets/ui/moonfall-fusion.webp",
+      "width": 1536,
+      "height": 1024,
+      "columns": 6,
+      "rows": 4,
+      "gridHeight": 1024
+    },
+    "items": {
+      "image": "assets/ui/moonfall-items.webp",
+      "width": 1374,
+      "height": 1145,
+      "columns": 6,
+      "rows": 5,
+      "gridHeight": 1088
+    },
+    "soul": {
+      "image": "assets/ui/moonfall-soul.webp",
+      "width": 1374,
+      "height": 229,
+      "columns": 6,
+      "rows": 1,
+      "gridHeight": 229
+    },
+    "soul2": {
+      "image": "assets/ui/moonfall-soul2.webp",
+      "width": 1374,
+      "height": 687,
+      "columns": 6,
+      "rows": 3,
+      "gridHeight": 687
+    }
+  },
+  "fusionSkills": {
+    "fMM": [
+      {
+        "sheet": "fusion",
+        "cell": 0
+      },
+      {
+        "sheet": "fusion",
+        "cell": 1
+      },
+      {
+        "sheet": "fusion",
+        "cell": 2
+      }
+    ],
+    "fMR": [
+      {
+        "sheet": "fusion",
+        "cell": 3
+      },
+      {
+        "sheet": "fusion",
+        "cell": 4
+      },
+      {
+        "sheet": "fusion",
+        "cell": 5
+      }
+    ],
+    "fMS_fire": [
+      {
+        "sheet": "fusion",
+        "cell": 6
+      },
+      {
+        "sheet": "fusion",
+        "cell": 7
+      },
+      {
+        "sheet": "fusion",
+        "cell": 8
+      }
+    ],
+    "fMS_frost": [
+      {
+        "sheet": "fusion",
+        "cell": 9
+      },
+      {
+        "sheet": "fusion",
+        "cell": 10
+      },
+      {
+        "sheet": "fusion",
+        "cell": 11
+      }
+    ],
+    "fMS_storm": [
+      {
+        "sheet": "fusion",
+        "cell": 12
+      },
+      {
+        "sheet": "fusion",
+        "cell": 13
+      },
+      {
+        "sheet": "fusion",
+        "cell": 14
+      }
+    ],
+    "fRS_fire": [
+      {
+        "sheet": "fusion",
+        "cell": 15
+      },
+      {
+        "sheet": "fusion",
+        "cell": 16
+      },
+      {
+        "sheet": "fusion",
+        "cell": 17
+      }
+    ],
+    "fRS_frost": [
+      {
+        "sheet": "fusion",
+        "cell": 18
+      },
+      {
+        "sheet": "fusion",
+        "cell": 19
+      },
+      {
+        "sheet": "fusion",
+        "cell": 20
+      }
+    ],
+    "fRS_storm": [
+      {
+        "sheet": "fusion",
+        "cell": 21
+      },
+      {
+        "sheet": "fusion",
+        "cell": 22
+      },
+      {
+        "sheet": "fusion",
+        "cell": 23
+      }
+    ],
+    "fRR": [
+      {
+        "sheet": "items",
+        "cell": 0
+      },
+      {
+        "sheet": "items",
+        "cell": 1
+      },
+      {
+        "sheet": "items",
+        "cell": 2
+      }
+    ],
+    "fSS_steam": [
+      {
+        "sheet": "items",
+        "cell": 3
+      },
+      {
+        "sheet": "items",
+        "cell": 4
+      },
+      {
+        "sheet": "items",
+        "cell": 5
+      }
+    ],
+    "fSS_blaze": [
+      {
+        "sheet": "items",
+        "cell": 6
+      },
+      {
+        "sheet": "items",
+        "cell": 7
+      },
+      {
+        "sheet": "items",
+        "cell": 8
+      }
+    ],
+    "fSS_tempest": [
+      {
+        "sheet": "items",
+        "cell": 9
+      },
+      {
+        "sheet": "items",
+        "cell": 10
+      },
+      {
+        "sheet": "items",
+        "cell": 11
+      }
+    ],
+    "soul": [
+      {
+        "sheet": "soul",
+        "cell": 0
+      },
+      {
+        "sheet": "soul",
+        "cell": 1
+      },
+      {
+        "sheet": "soul",
+        "cell": 2
+      }
+    ],
+    "fOM": [
+      {
+        "sheet": "soul2",
+        "cell": 0
+      },
+      {
+        "sheet": "soul2",
+        "cell": 1
+      },
+      {
+        "sheet": "soul2",
+        "cell": 2
+      }
+    ],
+    "fOR": [
+      {
+        "sheet": "soul2",
+        "cell": 3
+      },
+      {
+        "sheet": "soul2",
+        "cell": 4
+      },
+      {
+        "sheet": "soul2",
+        "cell": 5
+      }
+    ],
+    "fOS_fire": [
+      {
+        "sheet": "soul2",
+        "cell": 6
+      },
+      {
+        "sheet": "soul2",
+        "cell": 7
+      },
+      {
+        "sheet": "soul2",
+        "cell": 8
+      }
+    ],
+    "fOS_frost": [
+      {
+        "sheet": "soul2",
+        "cell": 9
+      },
+      {
+        "sheet": "soul2",
+        "cell": 10
+      },
+      {
+        "sheet": "soul2",
+        "cell": 11
+      }
+    ],
+    "fOS_storm": [
+      {
+        "sheet": "soul2",
+        "cell": 12
+      },
+      {
+        "sheet": "soul2",
+        "cell": 13
+      },
+      {
+        "sheet": "soul2",
+        "cell": 14
+      }
+    ]
+  },
+  "utilities": {
+    "hp": {
+      "sheet": "items",
+      "cell": 12
+    },
+    "mp": {
+      "sheet": "items",
+      "cell": 13
+    },
+    "big": {
+      "sheet": "items",
+      "cell": 14
+    },
+    "spd": {
+      "sheet": "items",
+      "cell": 15
+    },
+    "lv": {
+      "sheet": "items",
+      "cell": 16
+    },
+    "rf": {
+      "sheet": "items",
+      "cell": 17
+    },
+    "x1": {
+      "sheet": "items",
+      "cell": 18
+    },
+    "x2": {
+      "sheet": "items",
+      "cell": 19
+    },
+    "x3": {
+      "sheet": "items",
+      "cell": 20
+    },
+    "x4": {
+      "sheet": "items",
+      "cell": 21
+    },
+    "x5": {
+      "sheet": "items",
+      "cell": 22
+    },
+    "x6": {
+      "sheet": "items",
+      "cell": 23
+    },
+    "coin": {
+      "sheet": "items",
+      "cell": 24
+    },
+    "bag": {
+      "sheet": "items",
+      "cell": 25
+    },
+    "shop": {
+      "sheet": "items",
+      "cell": 26
+    },
+    "block": {
+      "sheet": "items",
+      "cell": 27
+    },
+    "dodge": {
+      "sheet": "items",
+      "cell": 28
+    },
+    "special": {
+      "sheet": "items",
+      "cell": 29
+    }
+  }
+}

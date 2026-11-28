@@ -1,0 +1,954 @@
+{
+ "version": 3,
+ "assets": {
+  "moon-arena": {
+   "name": "Moon Arena",
+   "taskId": "01a1e3b2-07b9-74a5-a370-4d8171618ca6",
+   "url": "assets/meshy/moon-arena.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 1,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "modular-floor": {
+   "name": "Modular Floor",
+   "taskId": "01a1e3b2-1966-7224-83c0-2bdbeea548a3",
+   "url": "assets/meshy/modular-floor.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 1,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "modular-wall": {
+   "name": "Modular Wall",
+   "taskId": "01a1e3b2-29fa-7146-aa67-e377d41d78fa",
+   "url": "assets/meshy/modular-wall.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 1,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "ancient-pillar": {
+   "name": "Ancient Pillar",
+   "taskId": "01a1e3b2-a03c-7483-ae7e-4ee77550bd8c",
+   "url": "assets/meshy/ancient-pillar.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 1,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "celestial-warrior": {
+   "name": "Celestial Warrior",
+   "taskId": "01a1e3b2-af58-7625-a8ed-b148d3cfcf1d",
+   "url": "assets/meshy/celestial-warrior.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 1,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "moon-stairs": {
+   "name": "Moon Stairs",
+   "taskId": "01a1e4ef-59c3-75ce-8019-606c53d74925",
+   "url": "assets/meshy/moon-stairs.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "wall-corner": {
+   "name": "Wall Corner",
+   "taskId": "01a1e4ef-7820-7509-aa6f-85d568e6a53e",
+   "url": "assets/meshy/wall-corner.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "temple-gate": {
+   "name": "Temple Gate",
+   "taskId": "01a1e4ef-8405-73dc-93d6-004c7f2ca49f",
+   "url": "assets/meshy/temple-gate.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "ruin-arch": {
+   "name": "Ruin Arch",
+   "taskId": "01a1e4ef-8ea6-7073-b3ce-37695394cd7e",
+   "url": "assets/meshy/ruin-arch.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "guardian-statue": {
+   "name": "Guardian Statue",
+   "taskId": "01a1e4ef-9a7d-7191-a43f-e89ab12b0a92",
+   "url": "assets/meshy/guardian-statue.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "portal-frame": {
+   "name": "Portal Frame",
+   "taskId": "01a1e4ef-b382-71aa-a201-bf72f103dea8",
+   "url": "assets/meshy/portal-frame.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "rubble": {
+   "name": "Rubble",
+   "taskId": "01a1e4ef-bf35-7484-a476-086101d99d22",
+   "url": "assets/meshy/rubble.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "brazier": {
+   "name": "Brazier",
+   "taskId": "01a1e4ef-c952-7560-b980-300c4359c684",
+   "url": "assets/meshy/brazier.glb",
+   "available": true,
+   "rotationY": 0,
+   "phase": 2,
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "moon-dead-tree": {
+   "name": "Gnarled leafless moon tree",
+   "taskId": "01a1e5de-ff15-723e-8432-05aa2913190b",
+   "url": "assets/meshy/moon-dead-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "moon-silver-tree": {
+   "name": "Silver-leaf moon tree",
+   "taskId": "01a1e5df-10c3-7669-a8ad-db3b59a3e26a",
+   "url": "assets/meshy/moon-silver-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "moon-boulder": {
+   "name": "Rough dark basalt boulder",
+   "taskId": "01a1e5df-21c4-76b4-98f0-2115d5c09dad",
+   "url": "assets/meshy/moon-boulder.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "moon-rock-cluster": {
+   "name": "Moonstone rock cluster",
+   "taskId": "01a1e5df-5a17-76bf-bdc1-778215cc0611",
+   "url": "assets/meshy/moon-rock-cluster.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "house-cottage": {
+   "name": "Stone village cottage",
+   "taskId": "01a1e779-1e73-7377-a6ea-c80cf949ad44",
+   "url": "assets/meshy/house-cottage.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "house-long": {
+   "name": "Timber longhouse",
+   "taskId": "01a1e779-7668-7374-b5ba-96204013dbf1",
+   "url": "assets/meshy/house-long.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "house-witch": {
+   "name": "Crooked witch hut",
+   "taskId": "01a1e779-ff83-7121-925d-1f69a8ada07a",
+   "url": "assets/meshy/house-witch.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "house-timber": {
+   "name": "Timberstone Cottage (owner, Meshy) - houses in the Fallen Kingdom, Frozen Sanctuary and Ashen Wastes",
+   "url": "assets/meshy/house-timber.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "arena",
+   "source": "owner upload 2026-11-20 (Meshy_AI_Timberstone_Cottage_1120102340), 2.4M -> 16k tris"
+  },
+  "house-candle": {
+   "name": "The Last Candle (owner, Meshy) - houses in the Cursed Forest",
+   "url": "assets/meshy/house-candle.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "arena",
+   "source": "owner upload 2026-11-20 (Meshy_AI_The_Last_Candle_1120101757): 2.65M tris re-simplified by shape to 30k, fresh UV atlas (xatlas), base colour and normal map baked from the full model at 1024, albedo lifted (gamma .5)"
+  },
+  "house-potion": {
+   "name": "Magic Potion House (owner, Meshy) - houses in the Abyss",
+   "url": "assets/meshy/house-potion.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "arena",
+   "source": "owner upload 2026-11-20 (Meshy_AI_Magic_Potion_House_1120103817), 97k -> 12k tris"
+  },
+  "market-stall": {
+   "name": "Market stall",
+   "taskId": "01a1e77b-1119-75f5-a5a3-4410effc1b5f",
+   "url": "assets/meshy/market-stall.glb",
+   "available": true,
+   "rotationY": 0,
+   "doorAngle": 1.5708,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "village-well": {
+   "name": "Village stone well",
+   "taskId": "01a1e8c1-8a21-714e-93ea-31f2340d553e",
+   "url": "assets/meshy/village-well.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "street-lantern": {
+   "name": "Iron street lantern",
+   "taskId": "01a1e821-5e7f-7732-a02b-97302734db44",
+   "url": "assets/meshy/street-lantern.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "stone-bridge": {
+   "name": "Stone bridge arch segment",
+   "taskId": "01a1e821-7f8d-71a6-b6eb-4d1d6a409d90",
+   "url": "assets/meshy/stone-bridge.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "plaza-fountain": {
+   "name": "Plaza fountain",
+   "taskId": "01a1e821-9fe0-748a-b683-a14d5548d563",
+   "url": "assets/meshy/plaza-fountain.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "moonfall",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "mossy-boulder": {
+   "name": "Mossy granite boulder",
+   "taskId": "01a1e8e7-85b9-7756-b0fc-f58446cda204",
+   "url": "assets/meshy/mossy-boulder.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "nebula-bloom": {
+   "name": "Nebula Bloom (glowing violet fantasy flower)",
+   "source": "Meshy_AI_Nebula_Bloom_1118115412 (owner upload, simplified to ~5k tris)",
+   "url": "assets/meshy/nebula-bloom.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "rocky-meadow": {
+   "name": "Rocky Meadow patch (stones, moss, wildflowers)",
+   "source": "Meshy_AI_Rocky_Meadow_Scene_1117204216 (owner upload, simplified to ~5k tris)",
+   "url": "assets/meshy/rocky-meadow.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "banana-plant": {
+   "name": "Banana plant",
+   "source": "Meshy_AI_Banana_Plant_1117165733 (owner upload, simplified to ~5k tris)",
+   "url": "assets/meshy/banana-plant.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "river-stones": {
+   "name": "River stones cluster",
+   "taskId": "01a1e8e7-b726-7436-a68d-38338f3ab0b0",
+   "url": "assets/meshy/river-stones.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED"
+  },
+  "celestial-overlord": {
+   "name": "Celestial Overlord (boss, Meshy auto-rig + 6 clips)",
+   "taskId": "01a1e994-9a14-715f-9105-30d8606c53f1",
+   "url": "assets/meshy/celestial-overlord.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Slow_Orc_Walk_inplace",
+    "Sword_Judgment",
+    "Charged_Spell_Cast",
+    "Charged_Ground_Slam",
+    "Dead"
+   ],
+   "rigTaskId": "01a1e9f7-65d4-7039-a329-8e4671097bac",
+   "animationTaskId": "01a1e9f9-5727-7183-8eb0-1510c9fae885"
+  },
+  "dark-sentinel": {
+   "name": "Dark Sentinel (elite melee, Meshy auto-rig + 6 clips)",
+   "taskId": "01a1e994-ab2c-743a-84b2-c753dbf7de31",
+   "url": "assets/meshy/dark-sentinel.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Casual_Walk_inplace",
+    "Triple_Combo_Attack",
+    "Sword_Parry",
+    "Hit_Reaction",
+    "Dead"
+   ],
+   "rigTaskId": "01a1e9f7-3549-74b9-a788-e2da9f9d0bb8",
+   "animationTaskId": "01a1e9f9-4dfc-7175-b249-47b946d06bc6"
+  },
+  "lunar-construct": {
+   "name": "Lunar Construct (heavy golem, Meshy auto-rig + 6 clips)",
+   "taskId": "01a1e994-ba44-7630-a09c-83fe5a4b587b",
+   "url": "assets/meshy/lunar-construct.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Slow_Orc_Walk_inplace",
+    "Heavy_Hammer_Swing",
+    "Charged_Ground_Slam",
+    "Hit_Reaction",
+    "Knock_Down"
+   ],
+   "rigTaskId": "01a1e9f7-5230-775c-9b95-708193aa4eed",
+   "animationTaskId": "01a1e9f9-528b-7511-b930-e1c0d88360b9"
+  },
+  "lunar-greatsword": {
+   "name": "Lunar Greatsword (legendary weapon)",
+   "taskId": "01a1e994-ca3f-747d-af1e-cff70b42a5a4",
+   "url": "assets/meshy/lunar-greatsword.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "eclipse-scythe": {
+   "name": "Eclipse Scythe (legendary weapon)",
+   "taskId": "01a1e994-daa8-7076-a9e4-bc5cd60ee263",
+   "url": "assets/meshy/eclipse-scythe.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "moon-staff": {
+   "name": "Moon Staff (legendary weapon)",
+   "taskId": "01a1e994-eb99-710a-b535-2ce5b760958a",
+   "url": "assets/meshy/moon-staff.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "eclipse",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5-warrior": {
+   "name": "Celestial Warrior (owner, Meshy, Mixamo rig) - Warrior class hero",
+   "url": "assets/meshy/p5-warrior.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Running",
+    "Double_Combo_Attack",
+    "Charged_Overhead_Slam",
+    "Sprint_Dodge",
+    "Death_Backwards"
+   ],
+   "source": "owner upload 2026-11-20 (Meshy_AI_A_full_body_male_Celestial_Warrior_20261120_animated_mixamo_All_animation): bones without the mixamorig: prefix; clips Combat_Stance (made from Double_Combo_Attack frame 0 + breathing), Running, Double_Combo_Attack, Charged_Overhead_Slam (= Attack), Sprint_Dodge (= Running), Death_Backwards (= dying_backwards)"
+  },
+  "p5-assassin": {
+   "name": "Celestial Armory Assassin (Phase 5 class hero, Meshy auto-rig + 6 clips)",
+   "taskId": "01a1ea29-8ca6-7010-812c-6e3cc7d9889e",
+   "rigTaskId": "01a1ea5f-7993-77ee-826c-ad25558fdcde",
+   "animationTaskId": "01a1ea60-70a0-7558-9461-75e99810a682",
+   "url": "assets/meshy/p5-assassin.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "image-to-3d",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Run_02",
+    "Double_Combo_Attack",
+    "Double_Blade_Spin",
+    "Roll_Dodge",
+    "Dead"
+   ]
+  },
+  "p5-archer": {
+   "name": "Celestial Archer (owner, Meshy, Mixamo rig) - Archer class hero",
+   "url": "assets/meshy/p5-archer.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Running",
+    "Crossbow_Shot",
+    "Spell_Cast",
+    "Roll_Dodge",
+    "Death_Backwards"
+   ],
+   "source": "owner upload 2026-11-21 (Meshy_AI_celestial_archer_t_pose_3d_20261120_animated_mixamo_All_animation): bones without the mixamorig: prefix; clips Combat_Stance (Walk_Fight_Back frame 0 turned 14 deg + breathing), Running, Crossbow_Shot (Rifle_Aim_Turn_Right frame 0 turned 20 deg + recoil), Spell_Cast (= mage_soell_cast_8), Roll_Dodge (Forward_Roll_and_Fire 0.35-1.8 s), Death_Backwards (= dying_backwards); the bow is drawn by p5BowPose"
+  },
+  "p5-mage": {
+   "name": "Celestial Mage (owner, Meshy, Mixamo rig) - Mage and Summoner class hero",
+   "url": "assets/meshy/p5-mage.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Running",
+    "Staff_Attack",
+    "Spell_Cast",
+    "Sprint_Dodge",
+    "Death_Backwards"
+   ],
+   "source": "owner upload 2026-11-21 (Meshy_AI_A_full_body_female_Celestial_Mage_20261120_animated_mixamo_All_animation): bones without the mixamorig: prefix; clips Combat_Stance (mage_soell_cast_7 frame 0 turned 40 deg + breathing), Running, Staff_Attack (mage_soell_cast_7 0.5-1.75 s), Spell_Cast (mage_soell_cast_3 0.2-2.2 s), Sprint_Dodge (= Running), Death_Backwards (= dying_backwards); also the Summoner (p5-heroes P5.summoner)"
+  },
+  "p5-summoner": {
+   "name": "Celestial Mage as the Summoner (alias of p5-mage.glb, kept for pages built before 2026-11-21)",
+   "url": "assets/meshy/p5-mage.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Running",
+    "Staff_Attack",
+    "Spell_Cast",
+    "Sprint_Dodge",
+    "Death_Backwards"
+   ],
+   "source": "same file as p5-mage; current builds load p5-mage once for both classes (p5-heroes P5.summoner), a cached older index.html still finds its p5-summoner key"
+  },
+  "p5w-w0-ironblade": {
+   "name": "Ironblade (Celestial Armory normal weapon)",
+   "taskId": "01a1ea85-4354-717d-ac3b-01056f5b309d",
+   "url": "assets/meshy/p5w-w0-ironblade.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-a0-shadow-fang": {
+   "name": "Shadow Fang (Celestial Armory normal weapon)",
+   "taskId": "01a1ea85-53c2-77c4-899d-abcb1a82b6cc",
+   "url": "assets/meshy/p5w-a0-shadow-fang.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-b0-hunter-bow": {
+   "name": "Hunter Bow (Celestial Armory normal weapon)",
+   "taskId": "01a1ea85-63c8-7471-8275-5652976c315a",
+   "url": "assets/meshy/p5w-b0-hunter-bow.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-m0-apprentice-staff": {
+   "name": "Apprentice Staff (Celestial Armory normal weapon)",
+   "taskId": "01a1ea85-736a-7123-8538-da4a95e68f2b",
+   "url": "assets/meshy/p5w-m0-apprentice-staff.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-s0-spirit-orb": {
+   "name": "Spirit Orb (Celestial Armory normal weapon)",
+   "taskId": "01a1ea85-8390-7768-bbb1-6838c6bce306",
+   "url": "assets/meshy/p5w-s0-spirit-orb.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-w1-bloodcrest": {
+   "name": "Bloodcrest (Celestial Armory epic weapon)",
+   "taskId": "01a1ea85-95b7-7382-8c5c-e8b5cc122d4e",
+   "url": "assets/meshy/p5w-w1-bloodcrest.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-a1-night-veil": {
+   "name": "Night Veil (Celestial Armory epic weapon)",
+   "taskId": "01a1ea85-a826-7266-b440-08ab3ddf2700",
+   "url": "assets/meshy/p5w-a1-night-veil.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-b1-windleaf": {
+   "name": "Windleaf (Celestial Armory epic weapon)",
+   "taskId": "01a1ea85-b934-7408-b383-760816a931a0",
+   "url": "assets/meshy/p5w-b1-windleaf.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-m1-arcane-staff": {
+   "name": "Arcane Staff (Celestial Armory epic weapon)",
+   "taskId": "01a1ea85-caed-77d3-8de3-aa259335a86a",
+   "url": "assets/meshy/p5w-m1-arcane-staff.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-s1-soul-tome": {
+   "name": "Soul Tome (Celestial Armory epic weapon)",
+   "taskId": "01a1ea85-dbeb-707d-b8a5-27a21faf60bc",
+   "url": "assets/meshy/p5w-s1-soul-tome.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-w2-solar-justice": {
+   "name": "Solar Justice (Celestial Armory legendary weapon)",
+   "taskId": "01a1ea86-cd92-75d7-af28-11c3d0f940b3",
+   "url": "assets/meshy/p5w-w2-solar-justice.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-a2-eclipse-twin": {
+   "name": "Eclipse Twin (Celestial Armory legendary weapon)",
+   "taskId": "01a1ea86-d8a1-748c-ad9e-c7b68cdff490",
+   "url": "assets/meshy/p5w-a2-eclipse-twin.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-b2-lunar-longbow": {
+   "name": "Lunar Longbow (Celestial Armory legendary weapon)",
+   "taskId": "01a1ea87-2f69-7561-a04d-a5bd42569c7d",
+   "url": "assets/meshy/p5w-b2-lunar-longbow.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-m2-astral-nexus": {
+   "name": "Astral Nexus (Celestial Armory legendary weapon)",
+   "taskId": "01a1ea87-802d-7084-bce1-33ce520cc86f",
+   "url": "assets/meshy/p5w-m2-astral-nexus.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "p5w-s2-genesis-grimoire": {
+   "name": "Genesis Grimoire (Celestial Armory legendary weapon)",
+   "taskId": "01a1ea87-96d7-74e6-976c-fed23b010006",
+   "url": "assets/meshy/p5w-s2-genesis-grimoire.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "taskType": "text-to-3d-refine",
+   "verifiedTaskStatus": "SUCCEEDED",
+   "rigged": false,
+   "animations": []
+  },
+  "mystic-mushrooms": {
+   "name": "Mystic mushrooms (forest floor decor)",
+   "source": "Meshy_AI_mystic_mushrooms_1117151438 (owner upload, simplified)",
+   "url": "assets/meshy/mystic-mushrooms.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "emerald-crystals": {
+   "name": "Emerald crystal cluster (decor)",
+   "source": "Meshy_AI_Emerald_Crystal_Clust_1117151716 (owner upload, simplified)",
+   "url": "assets/meshy/emerald-crystals.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "dungeon-wall": {
+   "name": "Dungeon torch wall (side of ground_and_floor)",
+   "source": "ground_and_floor_ (owner upload, simplified)",
+   "url": "assets/meshy/dungeon-wall.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "verdant-tree": {
+   "name": "Verdant Solitude tree (replaces birch)",
+   "source": "Meshy_AI_Verdant_Solitude_1117192544 (owner upload, simplified)",
+   "url": "assets/meshy/verdant-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "p5w-x0-molten-axe": {
+   "name": "Molten Inferno Axe (axe, every tier)",
+   "source": "Meshy_AI_Molten_Inferno_Axe_1117205310 (owner upload, simplified to 6k tris)",
+   "url": "assets/meshy/p5w-x0-molten-axe.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": false
+  },
+  "stone-guardian": {
+   "name": "Stone Guardian (replaces the rock golem)",
+   "source": "Meshy_AI_Stone_Guardian animated (owner upload, simplified)",
+   "url": "assets/meshy/stone-guardian.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Walking",
+    "Reaping_Swing",
+    "Angry_Ground_Stomp_2",
+    "Hit_Reaction",
+    "dying_backwards"
+   ]
+  },
+  "magma-titan": {
+   "name": "Magma Titan (replaces the crystal guardian)",
+   "source": "Meshy_AI_Magma_Titan animated (owner upload, simplified)",
+   "url": "assets/meshy/magma-titan.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Walking",
+    "Attack",
+    "Flying_Fist_Kick",
+    "Hit_Reaction",
+    "dying_backwards"
+   ]
+  },
+  "pine-tree": {
+   "name": "Pine tree (replaces the procedural pines)",
+   "source": "Meshy_AI_pine_tree_3d (owner upload, simplified)",
+   "url": "assets/meshy/pine-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "pine-tree-lo": {
+   "name": "Pine tree, low detail (mountain forests)",
+   "source": "Meshy_AI_pine_tree_3d (owner upload, simplified to 1.6k tris)",
+   "url": "assets/meshy/pine-tree-lo.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "wide-rock": {
+   "name": "Detailed wide rock (replaces every boulder)",
+   "source": "detailed_wide_rock (owner upload, simplified)",
+   "url": "assets/meshy/wide-rock.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "bastion-hill": {
+   "name": "Ironvein Bastion (hill outcrops)",
+   "source": "Ironvein_Bastion (owner upload, simplified)",
+   "url": "assets/meshy/bastion-hill.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "mango-tree": {
+   "name": "Big Mango Tree (10% more trees on open ground)",
+   "source": "Meshy_AI_Big_Mango_Tree image-to-3d (owner upload, 6.9M tris simplified to 8.8k)",
+   "url": "assets/meshy/mango-tree.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "goblin-shaman": {
+   "name": "Gloombraid Goblin Shaman (replaces the goblin)",
+   "source": "Meshy_AI_Gloombraid_Goblin_Shaman animated mixamo (owner upload, simplified)",
+   "url": "assets/meshy/goblin-shaman.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Walking",
+    "Attack",
+    "Axe_Spin_Attack",
+    "Hit_Reaction_1",
+    "dying_backwards"
+   ]
+  },
+  "city-pillar": {
+   "name": "Ancient celestial lamp pillar (owner, Meshy, old_towe.zip) - the Old Town's street lamps",
+   "url": "assets/meshy/city-pillar.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "source": "owner upload 2026-11-21 (old_towe.zip: Meshy_AI_ONE_ancient_celestial_1118112809)"
+  },
+  "city-knight": {
+   "name": "Dark celestial knight (owner, Meshy, old_towe.zip) - the Old Town's knight statues",
+   "url": "assets/meshy/city-knight.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "source": "owner upload 2026-11-21 (old_towe.zip: Meshy_AI_ONE_full_body_dark_ce_1118112841), 20k -> 7k tris"
+  },
+  "ice-queen": {
+   "name": "Snow Queen (owner, Meshy, Mixamo rig) - boss of the ice castle on the Frozen Sanctuary's plateau",
+   "url": "assets/meshy/ice-queen.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": true,
+   "animations": [
+    "Combat_Stance",
+    "Walking",
+    "Scepter_Strike",
+    "Spell_Cast",
+    "Frost_Nova",
+    "Death_Backwards"
+   ],
+   "source": "owner upload 2026-11-22 (Meshy_AI_Ice_Queen_No_Cloak_20261120, 15 Mixamo clips): bones without the mixamorig: prefix; clips Combat_Stance (mage_soell_cast_7 frame 0 turned 40 deg + breathing), Walking, Scepter_Strike (mage_soell_cast_4 0.35-1.5 s), Spell_Cast (mage_soell_cast 0.3-1.75 s), Frost_Nova (mage_soell_cast_1 0.45-2.7 s), Death_Backwards (dying_backwards); textures 1024/512 JPEG"
+  },
+  "frost-scepter": {
+   "name": "Frostwing Scepter (owner, Meshy) - the Snow Queen's weapon",
+   "url": "assets/meshy/frost-scepter.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": false,
+   "animations": [],
+   "source": "owner upload 2026-11-22 (Meshy_AI_Frostwing_Scepter): 13.9k -> 4.2k tris, 512 base / 256 normal JPEG, the base colour doubles as a cold emissive map (the ice glows)"
+  },
+  "snow-stairs": {
+   "name": "Frozen Stair (Codex, Blender) - the glacier palace's 28-step ascent from the valley",
+   "url": "assets/meshy/snow-stairs.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": false,
+   "animations": [],
+   "source": "Blender script moonfall-docs/blender/snow_castle.py --stairs (5 m run, 2.4 m rise, valley +Z)"
+  },
+  "queen-vfx": {
+   "name": "Snow Queen VFX (Claude, Blender) - ice spike clusters, shard, ice tomb, crystal wing, frost sigil and ice-fracture textures",
+   "url": "assets/meshy/queen-vfx.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena",
+   "rigged": false,
+   "animations": [],
+   "source": "Blender script moonfall-docs/blender/queen_vfx.py (procedural, seeded; textures rendered with Cycles)"
+  },
+  "bone-heap": {
+   "name": "Human bones heap (Cursed Forest decor)",
+   "source": "Meshy_AI_Human_Bones_Heap (owner upload 2026-11-23, 3.5M tris simplified to 20k)",
+   "url": "assets/meshy/bone-heap.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "knight-tomb": {
+   "name": "Mossbound Knight on his tomb (Cursed Forest, searchable)",
+   "source": "Meshy_AI_Mossbound_Knight (owner upload 2026-11-23, 2.6M tris simplified to 15k)",
+   "url": "assets/meshy/knight-tomb.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "chest-eye": {
+   "name": "Enchanted Sentinel chest (ordinary chests)",
+   "source": "Enchanted_Sentinel (owner upload 2026-11-23, 645k tris simplified to 6.8k)",
+   "url": "assets/meshy/chest-eye.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "potion-hp": {
+   "name": "Inferno Vial (health potion on the ground)",
+   "source": "Meshy_AI_Inferno_Vial (owner upload 2026-11-23, 518k tris simplified to 3k)",
+   "url": "assets/meshy/potion-hp.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "potion-mana": {
+   "name": "Mana vial (mana potion on the ground)",
+   "source": "Meshy_AI_A_small_medieval_fantasy_mana (owner upload 2026-11-23, 443k tris simplified to 3.1k)",
+   "url": "assets/meshy/potion-mana.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  },
+  "aurora-citadel": {
+   "name": "Aurora Nexus Citadel (owner, Blender) - the Snow Queen's castle on the Frozen Sanctuary's plateau",
+   "source": "owner upload 2026-11-24 Aurora-Nexus-Citadel.blend (34 meshes joined, preview floor/lights/camera removed, transmission dropped, textures JPEG, 26k tris)",
+   "url": "assets/meshy/aurora-citadel.glb",
+   "available": true,
+   "rotationY": 0,
+   "biome": "arena"
+  }
+ },
+ "warrior": {
+  "height": 132,
+  "bones": {
+   "rightHand": "",
+   "leftHand": ""
+  },
+  "clips": {
+   "idle": "",
+   "walk": "",
+   "attack": "",
+   "cast": "",
+   "hit": "",
+   "death": ""
+  }
+ }
+}
