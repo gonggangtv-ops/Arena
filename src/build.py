@@ -51,7 +51,7 @@ if sys_on:game_files[-1:-1]=['eclipse.js','eclipse-fx.js','p5-heroes.js']
 if arena:game_files[-1:-1]=['summoner.js','summoner-fx.js']   # fifth class: the Spirit Tome (Arena Royale only)
 if arena:game_files[-1:-1]=['snow-queen.js']   # the Snow Queen, boss of the ice castle (Arena Royale only; an Eclipse-style boss)
 if arena:game_files[-1:-1]=['arena-gfx.js','arena-vfx-particles.js','arena-vfx-hero.js','arena-meteor.js','arena-vfx-fire.js','arena-forge.js','boss-titan.js','golem-meshy.js','trees-break.js','arena-atmosphere.js','arena-aaa.js','arena-shading.js','arena-vfx-post.js','arena-ice.js','arena-regions.js','arena-city.js','arena-falls.js','arena-frost.js','queen-vfx.js','arena-queen-aura.js','arena-feel.js','arena-loot.js','arena-npc.js','arena-bots.js','arena-drop.js','arena-buttons.js','arena-tombs.js','arena-load-music.js','arena-catalog.js','arena-population.js','arena-project.js']
-if arena:game_files.extend(['arena-menu.js','arena-skill-details.js','arena-hud.js','arena-vitals.js','arena-combat-controls.js'])
+if arena:game_files.extend(['arena-menu.js','arena-boss-trial.js','arena-skill-details.js','arena-hud.js','arena-vitals.js','arena-combat-controls.js'])
 js='\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in game_files)
 js='const CURSED='+('true' if sys_on else 'false')+';const MOON='+('true' if cur else 'false')+';\n'+js
 if arena:
@@ -66,7 +66,7 @@ if arena:
 MOON=['celestial-assets.js','celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js','moonfall-village.js','moonfall-ui.js','moonfall-menu.js','moonfall-inventory.js','moonfall-loading.js']
 MOONCSS=['celestial-theme.css','moonfall-ui.css','moonfall-menu.css','moonfall-inventory.css','moonfall-loading.css']
 if arena:MOON=[f for f in MOON if f not in ('celestial-render.js','moonfall-collision-data.js','moonfall-environment.js','moonfall-biome.js')]
-arena_style='\n<style>'+'\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['arena-loading.css','arena-menu.css','arena-combat-hud.css'])+'</style>\n' if arena else ''
+arena_style='\n<style>'+'\n'.join(open(os.path.join(D,f),encoding='utf-8').read() for f in ['arena-loading.css','arena-menu.css','arena-boss-trial.css','arena-combat-hud.css'])+'</style>\n' if arena else ''
 if sys_on:
     if arena:
         js += "\nmoody=lsGet('ar_tone2','dark')==='dark';syncTone();installArenaMenuUX();\n"
@@ -92,6 +92,8 @@ if sys_on:
     else:sh=sh.replace('</head>','<script>window.CELESTIAL_SKIP='+repr(NATURE+P5+P5W+HOUSES+CITY_NEW+FORT_NEW).replace("'",'"')+'</script>\n</head>',1)  # Moonfall has no meadow dressing
     sh=sh.replace('<!--TURN-->','<!--TURN-->\n'+'\n'.join("<script src=\"%s\" onerror=\"moonfallCodeFailure('%s')\"></script>"%(f,f) for f in MOON),1)
 if arena:
+    with open(os.path.join(D,'arena-boss-trial.html'),encoding='utf-8') as trial:
+        sh=sh.replace('<!--LIBS-->',trial.read()+'\n<!--LIBS-->',1)
     with open(os.path.join(D,'arena-language.js'),encoding='utf-8') as f:
         language_script=f.read()
     with open(os.path.join(D,'arena-en.json'),encoding='utf-8') as f:

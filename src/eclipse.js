@@ -123,12 +123,12 @@ function constructAct(u,t,d,R,dt){
     aoe({x:u.x,y:u.y,r:230,len:230,ang,arc:.6,shape:'cone',dmg:u.atkDmg*1.5,type:'p',owner:u,delay:.85,kind:'hstrike',vis:.45})}}
 // ---- Celestial Overlord: phase A 100-70% · B 70-35% · C <35% ----
 const OVC={A:{basic:1,slash:6.5,heavy:9},B:{basic:1,slash:5.5,heavy:8,burst:10,summon:22},C:{basic:.85,slash:4.5,heavy:7,burst:9,rain:9,cage:12,ult:28}};
-function overlordAct(u,t,d,R,dt){const hr=u.hp/u.maxHp,ph=hr>.7?0:hr>.35?1:2;
+function overlordAct(u,t,d,R,dt,choice){const hr=u.hp/u.maxHp,ph=hr>.7?0:hr>.35?1:2;
   if(ph>(u.ph|0)){u.ph=ph;u.cds=ph===2?{ult:9,cage:3,rain:2}:{};eclCast(u,'phase',1.6);u.stunT=0;emit({t:'ec',k:'ph',id:u.id,p:ph});emit({t:'k',a:14,x:u.x|0,y:u.y|0});sndAt('roar',u.x,u.y);
     emit({t:'a',s:ph===1?'☾ สุริยคราสเริ่มต้น — Overlord เรียกบริวาร!':'☾ คราสเต็มดวง — ระวัง Ultimate Eclipse!',d:3});
     aoe({x:u.x,y:u.y,r:300,dmg:u.atkDmg*.8,type:'m',owner:u,delay:.9,kind:'eburst',kb:520,vis:.6,big:true});return}
   const P=['A','B','C'][u.ph|0],C=OVC[P],sp=u.ph===2?.72:u.ph===1?.86:1,cd=u.cds;for(const k in cd)cd[k]-=dt;
-  if(u.busyT>0)return;const ready=k=>C[k]&&!(cd[k]>0),use=(k,b)=>{cd[k]=C[k]*(b||1)};
+  if(u.busyT>0)return;const ready=(k,inRange=true)=>C[k]&&!(cd[k]>0)&&(choice===undefined?inRange:choice===k),use=(k,b)=>{cd[k]=C[k]*(b||1)};
   const dmg=u.atkDmg,ang=Math.atan2(t.y-u.y,t.x-u.x);
   if(ready('ult')){use('ult');eclCast(u,'ultimate',3.4);const a=Math.random()*6.283,sd=420;const sx=u.x+Math.cos(a)*sd,sy=u.y+Math.sin(a)*sd;
     aoe({x:u.x,y:u.y,r:1050,dmg:dmg*4.2,type:'m',owner:u,delay:3.2,kind:'ueclipse',safe:{x:sx,y:sy,r:170},big:true,vis:1.2});
@@ -136,13 +136,13 @@ function overlordAct(u,t,d,R,dt){const hr=u.hp/u.maxHp,ph=hr>.7?0:hr>.35?1:2;
     emit({t:'a',s:'☾ ULTIMATE ECLIPSE — วิ่งเข้าวงแสงจันทร์!',d:3});return}
   if(ready('summon')){use('summon');eclCast(u,'summon',1.2);const live=u.summons.filter(id=>{const m=UMAP.get(id);return m&&!m.dead}).length;
     for(let i=0;i<Math.min(2,4-live);i++){const a=ang+Math.PI+(i?.8:-.8);eclSummon(u,'sentinel',u.x+Math.cos(a)*170,u.y+Math.sin(a)*170)}return}
-  if(ready('cage')&&d<700){use('cage');eclCast(u,'cage',1.1);aoe({x:t.x,y:t.y,r:220,dmg:dmg*2.1,type:'m',owner:u,delay:1.9,kind:'vcage',root:1.4,vis:.7});return}
-  if(ready('rain')&&d<900){use('rain');eclCast(u,'rain',1.3);const tg=units.filter(h=>h.hero&&!h.dead&&Math.hypot(h.x-u.x,h.y-u.y)<900);
+  if(ready('cage',d<700)){use('cage');eclCast(u,'cage',1.1);aoe({x:t.x,y:t.y,r:220,dmg:dmg*2.1,type:'m',owner:u,delay:1.9,kind:'vcage',root:1.4,vis:.7});return}
+  if(ready('rain',d<900)){use('rain');eclCast(u,'rain',1.3);const tg=units.filter(h=>h.hero&&!h.dead&&Math.hypot(h.x-u.x,h.y-u.y)<900);
     for(let i=0;i<(u.ph===2?11:8);i++){const h=tg[i%Math.max(1,tg.length)]||t,rr=Math.random()*260,a=Math.random()*6.283;aoe({x:h.x+Math.cos(a)*rr,y:h.y+Math.sin(a)*rr,r:95,dmg:dmg*1.05,type:'m',owner:u,delay:.9+i*.17,kind:'crain',vis:.35})}return}
-  if(ready('burst')&&d<460){use('burst');eclCast(u,'burst',1.4);aoe({x:u.x,y:u.y,r:440,dmg:dmg*1.6,type:'m',owner:u,delay:1.25,kind:'eburst',kb:420,vis:.6,big:true});return}
-  if(ready('heavy')&&d<520){use('heavy');eclCast(u,'heavy',1.2);aoe({x:t.x,y:t.y,r:175,dmg:dmg*2,type:'p',owner:u,delay:1,kind:'hstrike',stun:.5,vis:.45,big:true});return}
-  if(ready('slash')&&d<560){use('slash');eclCast(u,'slash',.95);aoe({x:u.x,y:u.y,r:560,len:560,ang,arc:.42,shape:'cone',dmg:dmg*1.45,type:'m',owner:u,delay:.75,kind:'mslash',vis:.45});return}
-  if(d<R+12&&u.atkCd<=0){u.atkCd=u.atkCdBase*sp;eclCast(u,'basic',.45);eclSwing(u,t,1,'#9fd0ff')}}
+  if(ready('burst',d<460)){use('burst');eclCast(u,'burst',1.4);aoe({x:u.x,y:u.y,r:440,dmg:dmg*1.6,type:'m',owner:u,delay:1.25,kind:'eburst',kb:420,vis:.6,big:true});return}
+  if(ready('heavy',d<520)){use('heavy');eclCast(u,'heavy',1.2);aoe({x:t.x,y:t.y,r:175,dmg:dmg*2,type:'p',owner:u,delay:1,kind:'hstrike',stun:.5,vis:.45,big:true});return}
+  if(ready('slash',d<560)){use('slash');eclCast(u,'slash',.95);aoe({x:u.x,y:u.y,r:560,len:560,ang,arc:.42,shape:'cone',dmg:dmg*1.45,type:'m',owner:u,delay:.75,kind:'mslash',vis:.45});return}
+  if((choice===undefined?d<R+12:choice==='basic')&&u.atkCd<=0){u.atkCd=u.atkCdBase*sp;eclCast(u,'basic',.45);eclSwing(u,t,1,'#9fd0ff')}}
 
 // ---- death: the Overlord drops all three legendary weapons ----
 {const _k=kill;kill=function(t,src){if(!t||t.dead)return;const r=_k.apply(this,arguments);

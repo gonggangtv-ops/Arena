@@ -37,6 +37,9 @@ for(const k in WEAPONS){const w=WEAPONS[k];if(w&&w.pspd)w.pspd=Math.round(w.pspd
 const feelFury=u=>{const f=u.fury||0;if(f>0)u.atkCd*=(1+FURY_AS*f)/(1+FURY_AS*FEEL.furyAS*f)};
 const angD=(a,b)=>{let d=a-b;return Math.atan2(Math.sin(d),Math.cos(d))};
 const FW_N=new Map(),ENG_N=new Map(),REACT=[];
+FEEL.clearReactions=()=>{REACT.length=0;FW_N.clear();ENG_N.clear()};
+FEEL.startWind=feelStartWind;
+FEEL.tickWind=feelWindTick;
 // ---- movement: eased velocity (called by b.js hostUpdate for every unit) ----
 var feelMove=function(u,m,dt){
   if(u.stunT>0||u.rootT>0||u.leap||u.kb||u.fw){u._vx=0;u._vy=0;return u.fw?{mx:0,my:0}:m}

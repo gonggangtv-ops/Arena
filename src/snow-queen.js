@@ -26,10 +26,10 @@ function qSafeSpot(u,a0,d){const base=cityBase(u.x,u.y);for(let i=0;i<14;i++){co
     if(walkable(x,y,60)&&Math.abs(cityBase(x,y)-base)<30&&!blockedAt({x,y},40))return{x,y}}
   const F=WD&&WD.fort;return F&&F.home?{x:F.home.x+Math.cos(a0)*160,y:F.home.y+Math.sin(a0)*160}:{x:u.x,y:u.y}}
 // a spot for Glacial Step: just past the target, on the queen's own ground, inside her leash
-function qBlinkSpot(u,t){const base=cityBase(u.x,u.y),a0=Math.atan2(t.y-u.y,t.x-u.x),L=(u.def&&u.def.leash||860)-120;
+function qBlinkSpot(u,t,origin=u.home){const base=cityBase(u.x,u.y),a0=Math.atan2(t.y-u.y,t.x-u.x),L=(u.def&&u.def.leash||860)-120;
   for(let i=0;i<7;i++){const a=a0+(i%2?1:-1)*Math.ceil(i/2)*.5,x=t.x+Math.cos(a)*170,y=t.y+Math.sin(a)*170;
-    if(walkable(x,y,60)&&Math.abs(cityBase(x,y)-base)<30&&!blockedAt({x,y},40)&&Math.hypot(x-u.home.x,y-u.home.y)<L)return{x,y}}return null}
-function queenAct(u,t,d,R,dt){const B=u.maxHp/QBARS,ph=u.hp>B*2+.5?0:u.hp>B+.5?1:2;
+    if(walkable(x,y,60)&&Math.abs(cityBase(x,y)-base)<30&&!blockedAt({x,y},40)&&Math.hypot(x-origin.x,y-origin.y)<L)return{x,y}}return null}
+function queenAct(u,t,d,R,dt,choice){const B=u.maxHp/QBARS,ph=u.hp>B*2+.5?0:u.hp>B+.5?1:2;
   // Glacial Step in progress: she is gone, the frost marks where she comes back
   if(u.qBlink&&gameT-u.qBlink.at>1.6)u.qBlink=null;   // a step left hanging (she lost her target, was stunned): forget it
   if(u.qBlink){u.qBlink.t-=dt;if(u.qBlink.t<=0){u.x=u.qBlink.x;u.y=u.qBlink.y;u.qBlink=null;u.fx=Math.cos(Math.atan2(t.y-u.y,t.x-u.x));u.fy=Math.sin(Math.atan2(t.y-u.y,t.x-u.x));emit({t:'k',a:7,x:u.x|0,y:u.y|0});sndAt('freeze',u.x,u.y)}return}
@@ -38,7 +38,7 @@ function queenAct(u,t,d,R,dt){const B=u.maxHp/QBARS,ph=u.hp>B*2+.5?0:u.hp>B+.5?1
     aoe({x:u.x,y:u.y,r:120,dmg:0,type:'m',owner:u,delay:.2,kind:'qprison',fxOnly:true,vis:.5});   // she encases herself while the next bar fills
     aoe({x:u.x,y:u.y,r:360,dmg:u.atkDmg*.9,type:'m',owner:u,delay:QIMM-.3,kind:'qnova',root:.9,slow:2,slowAmt:.45,st:'frost',stN:2,vis:.6,big:true});u.busyT=Math.max(u.busyT||0,QIMM);return}
   const C=QV[u.ph|0],cd=u.cds||(u.cds={});for(const k in cd)cd[k]-=dt;
-  if(u.busyT>0)return;const ready=k=>C[k]&&!(cd[k]>0),use=k=>{cd[k]=C[k]};
+  if(u.busyT>0)return;const ready=(k,inRange=true)=>C[k]&&!(cd[k]>0)&&(choice===undefined?inRange:choice===k),use=k=>{cd[k]=C[k]};
   const dmg=u.atkDmg,ang=Math.atan2(t.y-u.y,t.x-u.x),fast=u.ph===2?.8:u.ph===1?.92:1;
   // Eternal Winter: the court freezes over; two warm circles on her ground are the only shelter
   if(ready('winter')){use('winter');eclCast(u,'ultimate',3.6);const a0=Math.random()*6.283,S=[0,1].map(i=>{const p=qSafeSpot(u,a0+i*Math.PI+qRand(-.35,.35),qRand(380,520));return{x:p.x,y:p.y,r:155}});
@@ -46,25 +46,25 @@ function queenAct(u,t,d,R,dt){const B=u.maxHp/QBARS,ph=u.hp>B*2+.5?0:u.hp>B+.5?1
     for(const s of S)aoe({x:s.x,y:s.y,r:s.r,dmg:0,type:'m',owner:u,delay:3.4,kind:'usafe',fxOnly:true,vis:.6});
     emit({t:'a',s:'❄ ฤดูหนาวนิรันดร์ — วิ่งเข้าวงไฟอุ่น!',d:3});sndAt('freeze',u.x,u.y);return}
   // Ice Prison: the target's spot glazes over, then it is frozen solid
-  if(ready('prison')&&d<650){use('prison');eclCast(u,'cage',1.1);aoe({x:t.x,y:t.y,r:150,dmg:dmg*1.5,type:'m',owner:u,delay:1.25,kind:'qprison',root:1.6,st:'frost',stN:5,vis:.55});return}
+  if(ready('prison',d<650)){use('prison');eclCast(u,'cage',1.1);aoe({x:t.x,y:t.y,r:150,dmg:dmg*1.5,type:'m',owner:u,delay:1.25,kind:'qprison',root:1.6,st:'frost',stN:5,vis:.55});return}
   // Blizzard: the frost staff's storm on the target (every tick chills; the field ends in a freeze)
-  if(ready('blizz')&&d<800){use('blizz');eclCast(u,'rain',1.2);aoe({x:t.x,y:t.y,r:320,dmg:dmg*.3,type:'m',owner:u,delay:.6,kind:'qblizz',dot:3.6,tick:.45,slow:1.2,slowAmt:.5,endStun:.9,st:'frost'});return}
+  if(ready('blizz',d<800)){use('blizz');eclCast(u,'rain',1.2);aoe({x:t.x,y:t.y,r:320,dmg:dmg*.3,type:'m',owner:u,delay:.6,kind:'qblizz',dot:3.6,tick:.45,slow:1.2,slowAmt:.5,endStun:.9,st:'frost'});return}
   // Frost Nova: arms flung wide, the ice bursts out of the ground all round her
-  if(ready('nova')&&d<330){use('nova');eclCast(u,'burst',1.3);aoe({x:u.x,y:u.y,r:360,dmg:dmg*1.5,type:'m',owner:u,delay:1,kind:'qnova',root:1.1,slow:2.2,slowAmt:.45,st:'frost',stN:2,vis:.6,big:true});return}
+  if(ready('nova',d<330)){use('nova');eclCast(u,'burst',1.3);aoe({x:u.x,y:u.y,r:360,dmg:dmg*1.5,type:'m',owner:u,delay:1,kind:'qnova',root:1.1,slow:2.2,slowAmt:.45,st:'frost',stN:2,vis:.6,big:true});return}
   // Glacial Step: the target runs (or now and then for no reason) — she vanishes and steps out beside it
-  if(ready('blink')&&(d>420||Math.random()<.2)){const p=qBlinkSpot(u,t);if(p){use('blink');eclCast(u,'cast',.6);u.busyT=Math.max(u.busyT||0,.8);u.qBlink={x:p.x,y:p.y,t:.62,at:gameT};
+  if(ready('blink')&&(choice==='blink'||d>420||Math.random()<.2)){const p=qBlinkSpot(u,t,choice==='blink'?u:u.home);if(p){use('blink');eclCast(u,'cast',.6);u.busyT=Math.max(u.busyT||0,.8);u.qBlink={x:p.x,y:p.y,t:.62,at:gameT};
       aoe({x:u.x,y:u.y,r:200,dmg:0,type:'m',owner:u,delay:.05,kind:'qnova',fxOnly:true,vis:.4});
       aoe({x:p.x,y:p.y,r:230,dmg:dmg*1.3,type:'m',owner:u,delay:.62,kind:'qnova',root:.6,slow:1.6,slowAmt:.4,st:'frost',stN:1,vis:.5});return}}
   // Shard Rain: the scepter raised to the sky, ice crystals fall on everyone near her
-  if(ready('shards')&&d<900){use('shards');eclCast(u,'rain',1.3);const tg=units.filter(h=>h.hero&&!h.dead&&Math.hypot(h.x-u.x,h.y-u.y)<900);
+  if(ready('shards',d<900)){use('shards');eclCast(u,'rain',1.3);const tg=units.filter(h=>h.hero&&!h.dead&&Math.hypot(h.x-u.x,h.y-u.y)<900);
     for(let i=0;i<(u.ph===2?12:u.ph===1?9:6);i++){const h=tg[i%Math.max(1,tg.length)]||t,rr=Math.random()*220,a=Math.random()*6.283;aoe({x:h.x+Math.cos(a)*rr,y:h.y+Math.sin(a)*rr,r:95,dmg:dmg*.95,type:'m',owner:u,delay:.85+i*.16,kind:'qshard',st:'frost',vis:.35})}return}
   // Ice Lance: a thrust of the scepter, ice spikes erupt one after another along the line toward the target (phase II: three lines,
   // phase III: five)
-  if(ready('lance')&&d<760&&d>160){use('lance');eclCast(u,'slash',1);const fan=u.ph===2?[0,-.3,.3,-.6,.6]:u.ph===1?[0,-.38,.38]:[0];
+  if(ready('lance',d<760&&d>160)){use('lance');eclCast(u,'slash',1);const fan=u.ph===2?[0,-.3,.3,-.6,.6]:u.ph===1?[0,-.38,.38]:[0];
     for(const o of fan){const cx=Math.cos(ang+o),cy=Math.sin(ang+o);
       for(let i=0;i<6;i++){const s=120+i*150;aoe({x:u.x+cx*s,y:u.y+cy*s,r:92,dmg:dmg*(o?1:1.2),type:'m',owner:u,delay:.5+i*.08+Math.abs(o)*.25,kind:'qlance',root:.5,slow:1.4,slowAmt:.4,st:'frost',vis:.35})}}return}
   // the scepter thrust: an ice-blue arc in front of her, chills what it hits; from phase II a second, wider sweep follows
-  if(d<R+12&&u.atkCd<=0){u.atkCd=u.atkCdBase*fast;eclCast(u,'basic',.55);
+  if((choice===undefined?d<R+12:choice==='basic')&&u.atkCd<=0){u.atkCd=u.atkCdBase*fast;eclCast(u,'basic',.55);
     aoe({x:u.x,y:u.y,r:R+60,len:R+60,ang,arc:.85,shape:'cone',dmg:dmg,type:'p',owner:u,delay:.3,kind:'qslash',st:'frost',vis:.35});
     if(u.ph>=1)aoe({x:u.x,y:u.y,r:R+80,len:R+80,ang,arc:1.15,shape:'cone',dmg:dmg*.8,type:'p',owner:u,delay:.68,kind:'qslash',st:'frost',vis:.35})}}
 // owner 2026-11-24: her moon court is gone — she holds the forecourt before her crystal castle's gate, a stone's throw from the stair

@@ -42,8 +42,14 @@ window.installArenaMenuUX=function(){
     const legend=menu.querySelector('.moonfall-menu-legend');
     if(legend)legend.remove();
     menu.querySelector('.moonfall-cloak')?.remove();
+    const trial=make('button','go ghost');trial.id='bossTrialBtn';trial.type='button';
+    trial.setAttribute('aria-haspopup','dialog');trial.setAttribute('aria-controls','bossTrialPicker');
+    document.getElementById('soloBtn').after(trial);
+    trial.onclick=()=>ArenaBossTrial.open();trial.disabled=!MoonfallLoading.isReady();
+    MoonfallLoading.whenReady.then(()=>{trial.disabled=false});
     for(const [id,graphic,label,description] of [
       ['soloBtn','sword','เข้าสู่สนาม','เล่นคนเดียว · ฝึกฝนกับบอท'],
+      ['bossTrialBtn','forge','ทดลองเล่นเป็นบอส','เลือกบอสและต่อสู้กับผู้ท้าชิง'],
       ['qmBtn','people','จับคู่ด่วน','ออนไลน์ · ผู้เล่นจริง'],
       ['roomsBtn','gate','ห้องออนไลน์','สร้างห้อง · เล่นกับเพื่อน']
     ]){

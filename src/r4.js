@@ -457,7 +457,7 @@ Object.assign(R3,{
     if(isNight()&&this.graveFx)for(const g of this.graveFx){if(Math.abs(g.x-L.x)>1700||Math.abs(g.y-L.y)>1300)continue;if(Math.random()<dt*7)this.sp(false,{x:g.x+rand(-170,170),y:this.gY(g.x,g.y)+rand(5,25),z:g.y+rand(-170,170),vx:rand(-15,15),vz:rand(-15,15),vy:rand(2,8),l:rand(2,3.5),s:60,s1:150,c:'#8affa0',a:.16,sp:2,dr:.2})}
     this.effects(T,dt,me,L);this.stepP(this.PA,dt);this.stepP(this.PB,dt);this.stepDecals(dt);this.stepTrails(dt);
     this.draw();
-    if(state!=='editor'){this.overlay(me,L);drawHUD()}
+    if(state!=='editor'){this.overlay(me,L);if(state==='bossTrial')this.eclHud?.(me,L,dt);else drawHUD()}
   },
   animHum(o,u,T,dt){const k=o.mvK,ph=o.walk,s=Math.sin(ph);const A=o.arms;const R=A[0],Lh=A[1];
     if(o.legs&&o.legs.length){o.legs[0].hip.rotation.x=-s*.72*k;o.legs[1].hip.rotation.x=s*.72*k;o.legs[0].knee.rotation.x=Math.max(0,s)*1.0*k+.05;o.legs[1].knee.rotation.x=Math.max(0,-s)*1.0*k+.05}
@@ -497,7 +497,7 @@ Object.assign(R3,{
     const flap=u.castAnim>0&&!br?Math.sin(T*14)*.7:Math.sin(T*1.6)*.12;o.wings.forEach(w=>{w.w.rotation.z=w.s*(-.25+flap);w.w.rotation.y=w.s*-.2});
     if(br&&Math.random()<.9){o.head.getWorldPosition(this.v);const a=o.rot;const dx=Math.sin(a),dz=Math.cos(a);for(let i=0;i<4;i++)this.sp(true,{x:this.v.x+dx*30,y:this.v.y-6,z:this.v.z+dz*30,vx:dx*rand(500,800)+rand(-90,90),vy:rand(-120,-30),vz:dz*rand(500,800)+rand(-90,90),l:.6,s:30,s1:120,c:'#ffe08a',c2:'#ff2a00',sp:3,dr:1})}},
   overlay(me,L){
-    for(const u of units){if(u.dead||!unitVisibleTo(u,me,L))continue;if(u.mob&&u.hp>=u.maxHp)continue;if(u.invisT>0&&u!==me&&dist(u,L)>170)continue;
+    for(const u of units){if(u.dead||u===me&&state==='bossTrial'||!unitVisibleTo(u,me,L))continue;if(u.mob&&u.hp>=u.maxHp)continue;if(u.invisT>0&&u!==me&&dist(u,L)>170)continue;
       const top=u.hero?(this.qn?(camNear?158:146):camNear?162:138):u.ecl&&this.eclTop?this.eclTop(u):u.boss?(this.bossTop?this.bossTop(u):280):u.zombie||u.undead?(u.lord?170:u.big?150:112):u.kind==='ogre'?158:u.golem?(this.golemTop&&this.golemTop(u)||(u.kind==='guardian'?172:146)):u.kind==='wolf'?68:(this.golemTop&&this.golemTop(u)||74);const o=this.objs.get(u.id);
       const p=this.toScreen(u.x,(o?o.gy:0)+top+(o&&o.body?o.body.position.y:0),u.y);if(!p.ok||p.x<-80||p.x>W+80||p.y<-40||p.y>H+40)continue;drawBars(p.x,p.y,u,me,clamp(UI.s*.95,.8,1.15))}
     ctx.textAlign='center';

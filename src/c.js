@@ -440,7 +440,7 @@ function draw2D(){
   for(const h of hitFl)drawHitFlash(h,h.x,h.y-40,1/Z);ctx.textAlign='center';for(const t of texts)drawFloatText(t,t.x,t.y,1.15/Z);ctx.globalAlpha=1;
   ctx.setTransform(DPR,0,0,DPR,0,0);
   for(const u of units){if(u.dead||!vis(u.x,u.y,80)||!unitVisibleTo(u,me,L))continue;if(u.mob&&u.hp>=u.maxHp)continue;drawBars((u.x-cam.x)*Z,(u.y-u.r-26-cam.y)*Z,u,me,clamp(Z,.75,1.2))}
-  drawHUD();
+  if(state!=='bossTrial')drawHUD();
 }
 function drawLighting2D(L){
   const inCave=L&&(WD.caves.some(c=>dist(L,c)<c.R+6)||inDG(L));const dark=inCave?.82:isNight()?.62:(L&&isDire(L.x,L.y)?.3:.12);
