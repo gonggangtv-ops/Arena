@@ -29,9 +29,16 @@ function mkZombie(id,kind,x,y,sc){const d=ARX?ArenaProject.definition({kind,id})
 function mkMob(m){const d=ARX?ArenaProject.definition(m):CREEPS[m.kind];const u=mkUnit({id:m.id,type:m.kind,kind:m.kind,def:d,name:d.name,mob:true,team:0,x:m.x,y:m.y,home:{x:m.x,y:m.y},camp:m.camp,golem:m.kind==='golem'||m.kind==='guardian'||m.kind==='magma',boss:m.kind==='boss',undead:!!m.undead,big:!!d.big,lord:!!d.lord,rich:m.rich|0});setMobStats(u,m.sc||1);u.tx=m.x;u.ty=m.y;return u}
 function addUnit(u){units.push(u);UMAP.set(u.id,u)}
 
-function setupWorld(seed,cfg,project,strictLayout=false){
-  if(ARX)ArenaProject.activate(project||ArenaProject.forMatch());
-  WD=genWorld(seed);buildCollide(WD);if(ARX){ArenaProject.placeLayout(WD,strictLayout);ArenaProject.placeSpawns(WD)}buildMini();GROUND2D=null;
+function setupWorld(seed,cfg,project,strictLayout=false,lootSeed){
+  if(ARX){project=project||ArenaProject.forMatch();ArenaProject.activate(project)}
+  WD=genWorld(seed);buildCollide(WD);
+  if(ARX){
+    ArenaProject.placeLayout(WD,strictLayout);
+    ArenaPopulation.populate(WD,project.encounters,strictLayout);
+    ArenaProject.placeSpawns(WD);
+    ArenaPopulation.scatter(WD,project.chests,lootSeed,project.seed===seed);
+  }
+  buildMini();GROUND2D=null;
   units=[];UMAP=new Map();projs=[];aoes=[];parts=[];texts=[];swings=[];feedList=[];flies=[];fxq=[];deathOrder=[];
   items=WD.items.map(i=>Object.assign({},i));boxes=(WD.boxes||[]).map(b=>Object.assign({},b,{open:false}));
   for(const m of WD.mobs)addUnit(mkMob(m));
@@ -41,7 +48,10 @@ function setupWorld(seed,cfg,project,strictLayout=false){
   zone={x:ARENA.x,y:ARENA.y,r:ARENA.r,sx:0,sy:0,sr:0,tx:ARENA.x,ty:ARENA.y,tr:PHASES[0].r*ARENA.f,ph:0,st:'wait',t:PHASES[0].w*zTime()};
 }
 function hostNewGame(players,seed,cfg,project){
-  seed=seed??Math.floor(Math.random()*1e9);setupWorld(seed,cfg,project);buildNav();const N=MC.n,ts=MC.ts,NT=Math.round(N/ts),SP=ASP||WD.spawns;
+  seed=seed??Math.floor(Math.random()*1e9);
+  if(ARX)project=project||ArenaProject.forMatch();
+  const lootSeed=ARX&&ArenaPopulation.hasScatter(project.chests)?Math.floor(Math.random()*4294967296):undefined;
+  setupWorld(seed,cfg,project,false,lootSeed);buildNav();const N=MC.n,ts=MC.ts,NT=Math.round(N/ts),SP=ASP||WD.spawns;
   for(const c of WD.camps){c.deadAt=-1;c.respawns=0}
   const names=[...BOT_NAMES].sort(()=>Math.random()-.5);myId=0;const order=SP.map((s,i)=>i).sort(()=>Math.random()-.5);
   // team slots: players keep the team they picked in the lobby, bots fill the empty seats

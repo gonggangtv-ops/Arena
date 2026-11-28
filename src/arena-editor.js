@@ -2,10 +2,10 @@
 const ArenaEditor=window.ArenaEditor=(()=>{
   const panel=$('arenaEditor'),stage=$('edStage'),list=$('edList'),status=$('edStatus');
   const copy=o=>JSON.parse(JSON.stringify(o));
-  const empty={version:2,seed:null,kinds:{},spawns:{},meteor:{},tuning:{},layout:{}};
+  const empty={version:2,seed:null,kinds:{},spawns:{},meteor:{},tuning:{},layout:{},chests:{radius:0,boxes:{}},encounters:{}};
   const labels={hp:'พลังชีวิตพื้นฐาน',dmg:'พลังโจมตีพื้นฐาน',leash:'ระยะไล่จากจุดเกิด',armor:'เกราะ',spd:'ความเร็ว',atkT:'ช่วงโจมตี (วิ)',range:'ระยะโจมตี',xp:'ค่าประสบการณ์',
     baseDamage:'ความเสียหายพื้นฐาน',radius:'รัศมีโจมตี',delay:'เวลาตก (วิ)'};
-  const names=m=>ArenaLanguage.text(CREEPS[m.kind].name).split(' · ').at(ArenaLanguage.language==='en'?0:-1);
+  const names=m=>m.encounter?ArenaProject.definition(m).name:ArenaLanguage.text(CREEPS[m.kind].name).split(' · ').at(ArenaLanguage.language==='en'?0:-1);
   const isBoss=m=>m.kind==='snowqueen'||m.kind==='overlord'||m.kind==='boss';
   const history=[];
   let draft,saved,seed,origins,spawnById,selected,mode,scope,hero,dummy,practice,aim;
@@ -107,7 +107,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
       METEOR.cd.forEach((v,i)=>$('ed-cd'+i).value=v);
     }else{
       $('edX').value=Math.round(m.x);$('edY').value=Math.round(m.y);
-      const def=scope==='kind'?{...CREEPS[m.kind],...draft.kinds[m.kind]}:ArenaProject.definition(m);
+      const def=scope==='kind'?{...CREEPS[m.kind],...draft.kinds[m.kind],...draft.encounters[m.encounter]?.stats}:ArenaProject.definition(m);
       for(const key of Object.keys(ArenaProject.statRanges))$('ed-'+key).value=(def[key]??420)*displayScale(key);
     }
     $('edSeed').textContent='SEED '+seed;region();mapView();updateRing();
@@ -146,7 +146,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   }
   function prepareScene(sceneSeed,project=empty,strict=false){
     removeRing();seed=sceneSeed;
-    setupWorld(seed,undefined,{...empty,seed,layout:project.layout,tuning:project.tuning},strict);R3.sync();
+    setupWorld(seed,undefined,{...empty,seed,layout:project.layout,tuning:project.tuning,encounters:project.encounters},strict);R3.sync();
     spawnById=new Map(WD.mobs.map(m=>[m.id,m]));
     origins=new Map(WD.mobs.map(m=>[m.id,{x:m.x,y:m.y}]));
     if(!spawnById.has(selected))selected=WD.fort?.queen??WD.mobs[0].id;
@@ -160,6 +160,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     gameT=90;DROP.st='off';DROP.fall=null;state='editor';
   }
   function validateScene(project){
+    for(const id of Object.keys(project.chests.boxes))if(!WD.boxes[id])throw Error('กล่องไม่ตรงกับแผนที่');
     for(const [id,entry] of Object.entries(project.spawns)){
       const m=spawnById.get(Number(id));
       if(!m||m.kind!==entry.kind)throw Error('ข้อมูลมอนสเตอร์ไม่ตรงกับแผนที่');
@@ -169,9 +170,12 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   function focusSelection(){
     const point=mode==='meteor'?practice:selectedMob();focusAt(point.x,point.y);
   }
+  function worldSettings(p){
+    const creatures=Object.entries(p.encounters).map(([id,t])=>[id,t.kind,t.count]);
+    return JSON.stringify([p.layout,creatures,Object.entries(p.tuning).filter(([k])=>k.startsWith('items.')&&k.endsWith('.w'))]);
+  }
   function edit(next,sceneSeed=next.seed??seed){
     next=ArenaProject.validate(next);
-    const worldSettings=p=>JSON.stringify([p.layout,Object.entries(p.tuning).filter(([k])=>k.startsWith('items.')&&k.endsWith('.w'))]);
     const oldSeed=seed,oldSelected=selected,rebuild=sceneSeed!==seed||worldSettings(next)!==worldSettings(draft);
     if(!rebuild&&JSON.stringify(next)===JSON.stringify(draft)){inspect();return}
     try{
@@ -182,8 +186,10 @@ const ArenaEditor=window.ArenaEditor=(()=>{
       throw error;
     }
     history.push({project:draft,seed:oldSeed});if(history.length>40)history.shift();
+    const rename=Object.entries(next.encounters).some(([id,t])=>t.name!==draft.encounters[id]?.name);
     draft=next;applyDraft();
-    if(rebuild){drawList();focusSelection()}
+    if(rebuild||rename)drawList();
+    if(rebuild)focusSelection();
   }
   function change(fn){
     try{const next=copy(draft);fn(next);edit(next);return true}
@@ -212,12 +218,17 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     const m=selectedMob();
     change(next=>{
       const kindStats=next.kinds[m.kind]||{},base=CREEPS[m.kind][key]??420;
+      const type=next.encounters[m.encounter];
       if(scope==='kind'){
+        if(type){
+          if(value===(kindStats[key]??base))delete type.stats[key];else type.stats[key]=value;
+          return;
+        }
         if(value===base)delete kindStats[key];else kindStats[key]=value;
         if(Object.keys(kindStats).length)next.kinds[m.kind]=kindStats;else delete next.kinds[m.kind];
       }else{
         const spawn=entry(next,m);spawn.stats??={};
-        if(value===(kindStats[key]??base))delete spawn.stats[key];else spawn.stats[key]=value;
+        if(value===(type?.stats[key]??kindStats[key]??base))delete spawn.stats[key];else spawn.stats[key]=value;
         prune(next,m);
       }
     });
@@ -361,7 +372,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   }
   function undo(){
     const prev=history.pop();if(!prev)return;
-    if(seed!==prev.seed||JSON.stringify([draft.layout,draft.tuning])!==JSON.stringify([prev.project.layout,prev.project.tuning]))prepareScene(prev.seed,prev.project);
+    if(seed!==prev.seed||worldSettings(draft)!==worldSettings(prev.project))prepareScene(prev.seed,prev.project);
     draft=prev.project;applyDraft();focusSelection();drawList();
   }
   function save(){
@@ -419,7 +430,8 @@ const ArenaEditor=window.ArenaEditor=(()=>{
         const who=selected;
         hostNewGame([{ctrl:'host',name:myName(),look:chosenLook}],seed,undefined,draft);
         R3.sync();DROP.skip();
-        const player=ME(),mob=UMAP.get(who),start=nearSpot(mob,player.r+3,260);
+        const player=ME(),mob=UMAP.get(who),box=WD.boxes[kit?.chest];
+        const start=box?ArenaPopulation.approach(box,player.r)||nearSpot(box,player.r,58):nearSpot(mob,player.r+3,260);
         moveTo(player,start.x,start.y);
         player.xs=kit?.special?SPX.indexOf(SPECIAL_BY[kit.special]):SPX.indexOf(METEOR);
         player.xl=kit?.special?kit.rank:1;
@@ -489,7 +501,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     if((e.ctrlKey||e.metaKey)&&e.code==='KeyZ'&&e.target.tagName!=='INPUT'){e.preventDefault();undo()}
   });
   const library=installEditorLibrary({
-    draft:()=>draft,change,save,undo,notice,meteor:()=>setMode('meteor'),
+    draft:()=>draft,change,save,undo,notice,select,meteor:()=>setMode('meteor'),
     play(kit){returnToLibrary=true;play(kit)},
     pick(point){
       if(mode!=='mobs')setMode('mobs');
