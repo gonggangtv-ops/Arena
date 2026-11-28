@@ -17,10 +17,27 @@ const ArenaProject=(()=>{
     return result;
   }
   function validate(data){
-    record(data);check(data.version===1||data.version===2);
+    record(data);check([1,2,3].includes(data.version));
     const seed=data.seed;
     check(seed===null||Number.isInteger(seed)&&seed>=0&&seed<=2147483647);
     const project={version:2,seed,kinds:{},spawns:{},meteor:{},tuning:ArenaCatalog.validate(data.tuning??{}),layout:{}};
+    const chests=record(data.chests??{});
+    project.chests={radius:number(chests.radius??0,[0,ArenaPopulation.maxRadius]),boxes:{}};
+    for(const [id,radius] of Object.entries(record(chests.boxes??{}))){
+      check(seed!==null&&/^(0|[1-9]\d{0,4})$/.test(id));
+      project.chests.boxes[id]=number(radius,[0,ArenaPopulation.maxRadius]);
+    }
+    project.encounters={};let total=0;
+    for(const [type,value] of Object.entries(record(data.encounters??{}))){
+      check(/^[1-9]\d{0,2}$/.test(type)&&Number(type)<=ArenaPopulation.maxTypes);
+      const t=record(value);
+      check(ArenaPopulation.bases.includes(t.kind)&&typeof t.name==='string'&&
+        t.name.trim().length>0&&t.name.length<=60&&!/[<>&"'\x00-\x1f]/.test(t.name));
+      check(Number.isInteger(t.count)&&t.count>=1&&t.count<=ArenaPopulation.stride);
+      total+=t.count;check(total<=ArenaPopulation.maxUnits);
+      project.encounters[type]={kind:t.kind,name:t.name.trim(),count:t.count,stats:fields(t.stats??{},statRanges)};
+    }
+    if(total||project.chests.radius||Object.keys(project.chests.boxes).length)project.version=3;
     for(const [path,pos] of Object.entries(record(data.layout??{}))){
       check(seed!==null&&/^(npcs|boxes|items|spawns)\.(0|[1-9]\d{0,4})$/.test(path)&&Array.isArray(pos)&&pos.length===2);
       project.layout[path]=pos.map(v=>number(v,[0,WORLD]));
@@ -67,7 +84,8 @@ const ArenaProject=(()=>{
     return spawn?.kind===m.kind?spawn:null;
   }
   function definition(m){
-    const base=CREEPS[m.kind],kind=current.kinds[m.kind],stats=instance(m)?.stats;
+    const base=CREEPS[m.kind],kind=current.kinds[m.kind],type=current.encounters?.[m.encounter],stats=instance(m)?.stats;
+    if(type)return {...base,...kind,...type.stats,...stats,name:type.name};
     return kind||stats?Object.assign({},base,kind,stats):base;
   }
   function place(w,m,x,y){
@@ -92,7 +110,7 @@ const ArenaProject=(()=>{
   function placeLayout(w,strict){
     if(w.seed!==current.seed||!current.layout||!Object.keys(current.layout).length)return;
     const moves=[],chests=[],oldChestRocks=new Set();
-    const rockKey=(x,y)=>x+','+y;
+    const rockKey=ArenaPopulation.pointKey;
     function apply(){
       for(const [path,[x,y]] of Object.entries(current.layout)){
         const [group,index]=path.split('.'),obj=w[group][index];
@@ -107,22 +125,10 @@ const ArenaProject=(()=>{
       }
       for(const m of moves){
         const {x,y,r}=m;
-        const blocked=sdfAt(x,y)<r||inWater(x,y)||forObstacles(x,y,r,o=>{
-          if(o.c!==1)return circRect(x,y,r,o);
-          if(o.r===26&&oldChestRocks.has(rockKey(o.x,o.y)))return false;
-          return (x-o.x)**2+(y-o.y)**2<(o.r+r)**2;
-        })||chests.some(c=>c!==m&&(x-c.x)**2+(y-c.y)**2<(r+c.r)**2);
+        const blocked=!ArenaPopulation.groundFree(x,y,r,oldChestRocks)||chests.some(c=>c!==m&&(x-c.x)**2+(y-c.y)**2<(r+c.r)**2);
         if(blocked)throw Error('จุดวางต้องอยู่บนพื้นที่เดินได้');
       }
-      for(const {group,obj,x,y,rock} of moves){
-        obj.x=x;obj.y=y;
-        if(rock){rock.x=x;rock.y=y}
-        if(group==='boxes'||group==='items'){
-          const h=houseAt(obj),c=caveAt(obj);
-          if(h)obj.house=w.houses.indexOf(h);else delete obj.house;
-          if(c)obj.cave=w.caves.indexOf(c);else delete obj.cave;
-        }
-      }
+      for(const {group,obj,x,y,rock} of moves)ArenaPopulation.moveObject(w,group,obj,x,y,rock);
       if(chests.length)buildCollide(w);
       w.authoredLayout=JSON.stringify(current.layout);
     }

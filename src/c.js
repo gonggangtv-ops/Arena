@@ -321,11 +321,11 @@ function hostStartMatch2(){
     fixTeams();if((net.cfg.ts|0)>1&&!(net.cfg.fill|0)&&new Set(players.map(p=>p.team|0)).size<2){menuMsg('ปิดบอทอยู่ ต้องมีผู้เล่นอย่างน้อย 2 ทีม');return}cfg=cfgGame(net.cfg,players.length)}
   const project=ARX?ArenaProject.forMatch():null;
   const seed=hostNewGame(players,project?.seed??ms,cfg,project);if(view3D&&has3D()&&R3.ok)R3.sync();
-  for(const cid in net.cl){const c=net.cl[cid];c.q=[];c.seq=0;c.ea=0;const u=units.find(u=>u.ctrl===cid);net.tr.send(cid,{t:'start',seed,cfg:MC,you:u?u.id:0,heroes:units.filter(u=>u.hero).map(u=>[u.id,u.name,u.look,u.ctrl?1:0,u.team])})}
+  for(const cid in net.cl){const c=net.cl[cid];c.q=[];c.seq=0;c.ea=0;const u=units.find(u=>u.ctrl===cid);net.tr.send(cid,{t:'start',seed,...(WD.lootSeed===undefined?{}:{lootSeed:WD.lootSeed}),cfg:MC,you:u?u.id:0,heroes:units.filter(u=>u.hero).map(u=>[u.id,u.name,u.look,u.ctrl?1:0,u.team])})}
   enterPlay();if(net.tr)net.tr.setState('play');
 }
 function clientStart(d){net.pendS=[];withLoading(()=>clientStart2(d))}
-function clientStart2(d){setupWorld(d.seed,d.cfg);if(view3D&&has3D()&&R3.ok)R3.sync();for(const h of d.heroes)addUnit(mkHero(h[0],h[1],h[3]?'remote':null,h[2],h[4]|0||h[0]));myId=d.you;alive=d.heroes.length;net.lastN=0;net.lastEv=0;enterPlay();const P=net.pendS||[];net.pendS=null;for(const q of P)applySnap(q)}
+function clientStart2(d){setupWorld(d.seed,d.cfg,undefined,false,d.lootSeed);if(view3D&&has3D()&&R3.ok)R3.sync();for(const h of d.heroes)addUnit(mkHero(h[0],h[1],h[3]?'remote':null,h[2],h[4]|0||h[0]));myId=d.you;alive=d.heroes.length;net.lastN=0;net.lastEv=0;enterPlay();const P=net.pendS||[];net.pendS=null;for(const q of P)applySnap(q)}
 function setFlags(u,fl){u.dead=!!(fl&1);u.stunT=fl&2?1:0;u.slowT=fl&4?1:0;u.buffT=fl&8?1:0;u.hurtT=fl&16?.1:0;u.hidden=!!(fl&32);u.inBush=!!(fl&64);u.dash=fl&128?{}:null;
   u.rootT=fl&256?1:0;u.reviveT=fl&512?1:0;if(fl&1024)u.atkAnim=Math.max(u.atkAnim,.2);if(fl&2048)u.castAnim=Math.max(u.castAnim,.3);u.wet=!!(fl&4096);
   u.shieldHp=fl&8192?Math.max(1,u.shieldHp):0;u.spinT=fl&16384?1:0;u.lotusT=fl&32768?1:0;u.leap=fl&65536?(u.leap||{c:1}):null;u.invisT=fl&131072?1:0;u.burnT=fl&262144?1:0;u.aegis=!!(fl&524288);u.kb=fl&1048576?{}:null;u.rise=fl&2097152?1:0;u.spdPT=fl&4194304?1:0;u.fuseT=fl&8388608?1:0;u.ign=fl&16777216?3:0;u.ignT=u.ign?1:0;u.stat=fl&33554432?2:0;u.statT=u.stat?1:0;u.rotT=fl&67108864?1:0}

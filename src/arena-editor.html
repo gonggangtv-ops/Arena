@@ -73,7 +73,7 @@
 
 <dialog id="edLibrary" aria-labelledby="edLibraryTitle">
   <header><h2 id="edLibraryTitle">ข้อมูลเกม</h2><button type="button" id="edLibraryClose" aria-label="ปิด">×</button></header>
-  <nav aria-label="เครื่องมือ"><button type="button" data-tab="balance">ปรับสมดุล</button><button type="button" data-tab="map">วางวัตถุ</button><button type="button" data-tab="files">ไฟล์เกม</button></nav>
+  <nav aria-label="เครื่องมือ"><button type="button" data-tab="balance">ปรับสมดุล</button><button type="button" data-tab="map">วางวัตถุ</button><button type="button" data-tab="encounters">มอนสเตอร์ใหม่</button><button type="button" data-tab="files">ไฟล์เกม</button></nav>
   <section data-page="balance" class="ed-catalog">
     <aside>
       <label for="edCategory">หมวดข้อมูล</label><select id="edCategory"></select>
@@ -88,6 +88,25 @@
     <label for="edMapRow">วัตถุบนแผนที่</label><select id="edMapRow"></select>
     <div class="ed-coords"><label>X<input id="edMapX" type="number" min="0" step="1" required></label><label>Y<input id="edMapY" type="number" min="0" step="1" required></label></div>
     <div class="ed-tools"><button type="button" id="edMapPick">เลือกตำแหน่งบนฉาก</button><button type="button" id="edMapApply">ใช้ตำแหน่ง</button><button type="button" id="edMapReset">คืนจุดเดิม</button></div>
+    <fieldset id="edChestRules" hidden><legend>สุ่มตำแหน่งกล่องทุกแมตช์</legend>
+      <div class="ed-spawn-fields">
+        <label>ใช้กับ<select id="edChestScope"><option value="all">กล่องทุกใบ</option><option value="one">เฉพาะกล่องที่เลือก</option></select></label>
+        <label>รัศมี (หน่วยเกม)<input id="edChestRadius" type="number" min="0" step="1" required aria-describedby="edChestHint"></label>
+      </div>
+      <p id="edChestHint">รัศมี 0 ใช้จุดเดิม ยิ่งเพิ่มรัศมี กล่องยิ่งเกิดได้ไกลจากจุดตั้งต้น</p>
+      <div class="ed-tools"><button type="button" id="edChestApply">ใช้รัศมี</button><button type="button" id="edChestInherit" hidden>ใช้ค่ากล่องทุกใบ</button><button type="button" id="edChestTry">ลองเกิดข้างกล่อง</button></div>
+    </fieldset>
+  </section>
+  <section data-page="encounters" hidden>
+    <label for="edCreatureRecord">ชนิดมอนสเตอร์ในโปรเจกต์</label><select id="edCreatureRecord"></select>
+    <p>เลือกต้นแบบสำหรับโมเดลและพฤติกรรม มอนสเตอร์ชนิดใหม่จะเกิดใกล้ค่ายบนแต่ละแผนที่</p>
+    <div class="ed-spawn-fields">
+      <label>ต้นแบบ<select id="edCreatureBase"></select></label>
+      <label>ชื่อมอนสเตอร์<input id="edCreatureName" maxlength="60" required></label>
+      <label>จำนวนต่อแผนที่<input id="edCreatureCount" type="number" min="1" step="1" required></label>
+    </div>
+    <fieldset><legend>ค่าสเตตัสพื้นฐาน</legend><div id="edCreatureStats" class="ed-spawn-fields"></div></fieldset>
+    <div class="ed-tools"><button type="button" id="edCreatureApply">เพิ่มลงแผนที่</button><button type="button" id="edCreatureFocus" disabled>ดูตัวแรกในฉาก</button><button type="button" id="edCreatureDelete" disabled>ลบชนิดนี้</button></div>
   </section>
   <section data-page="files" hidden>
     <p id="edFileHelp"></p><div class="ed-tools"><button type="button" id="edOpenSource">เปิดไฟล์เกม</button><button type="button" id="edReplaceSource" disabled>แทนที่ด้วยไฟล์อื่น</button></div>

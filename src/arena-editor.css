@@ -81,4 +81,10 @@ body.ed-open #c,body.ed-open #vig{visibility:hidden}
 @media(max-width:600px){#arenaEditor .ed-brand{display:none}#edLibrary{width:97vw;max-height:97dvh}.ed-catalog{grid-template-columns:1fr;gap:4px}#edDataList{min-height:0;height:74px}.ed-catalog aside{display:grid;grid-template-columns:1fr 1fr;gap:4px}.ed-catalog aside>label{grid-column:1/-1}.ed-catalog aside>*{margin:0}#edDataList{grid-column:1/-1}#edLibrary section{padding:10px}.ed-bar .ed-modes{flex-wrap:wrap}#edLibrary header,#edLibrary nav,#edLibrary footer{padding:7px 10px}}
 
 #edLibrary *,#edLibrary *::before,#edLibrary *::after{box-sizing:border-box}#edDataFields fieldset{min-inline-size:0}
+#edLibrary nav{flex-wrap:wrap}
+#edChestRules,#edLibrary [data-page=encounters] fieldset{margin:12px 0 0;padding:10px 12px 2px;min-inline-size:0;border:1px solid #46545b;border-radius:4px}
+#edLibrary legend{color:#dbc8a7}
+#edLibrary .ed-spawn-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(155px,100%),1fr));gap:8px 12px;margin-bottom:10px}
+#edLibrary .ed-spawn-fields input,#edLibrary .ed-spawn-fields select{width:100%;display:block;margin-top:3px}
+#edChestHint,#edLibrary [data-page=encounters] p{color:#b2bfba;font-size:13px}
 @media(min-width:601px){#edLibrary .ed-catalog{overflow:hidden}.ed-catalog aside,#edDataBody{overflow:auto;min-height:0;scrollbar-gutter:stable}.ed-catalog aside{align-self:start}.ed-catalog #edDataBody{padding-right:4px}}

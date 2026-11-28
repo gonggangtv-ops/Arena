@@ -20,6 +20,71 @@ class Quiet(SimpleHTTPRequestHandler):
         pass
 
 
+def exercise_spawns(page, click, fill, photo):
+    anchor=page.evaluate('WD.boxes.map(b=>[b.x,b.y])')
+    click('[data-tab="encounters"]')
+    page.locator('#edCreatureBase').select_option('wolf')
+    fill('#edCreatureName','หมาป่าเถ้าถ่าน')
+    fill('#edCreatureCount',3)
+    fill('#edCreature-hp',7200)
+    click('#edCreatureApply')
+    assert page.locator('#edCreatureRecord').input_value()=='1'
+    assert page.evaluate("WD.mobs.filter(m=>m.encounter==='1').length===3 && UMAP.get(50002).def.hp===720")
+    photo('MuzCruor-spawn-monsters.png')
+    click('#edCreatureFocus')
+    assert page.locator('#edName').inner_text()=='หมาป่าเถ้าถ่าน'
+    click('#edKind')
+    fill('#ed-dmg',330)
+    click('#edInstance')
+    fill('#ed-hp',8100)
+    assert page.evaluate("UMAP.get(50000).def.hp===810 && UMAP.get(50001).def.hp===720 && UMAP.get(50001).def.dmg===33 && CREEPS.wolf.dmg===20")
+    click('#edLibraryBtn')
+    page.page.once('dialog',lambda d:d.accept())
+    click('#edCreatureDelete')
+    assert page.evaluate('!UMAP.has(50000)')
+    click('#edLibraryUndo')
+    assert page.evaluate('UMAP.get(50000).def.hp===810')
+    click('[data-tab="map"]')
+    page.locator('#edMapRow').select_option('0')
+    fill('#edChestRadius',600)
+    click('#edChestApply')
+    page.locator('#edChestScope').select_option('one')
+    fill('#edChestRadius',0)
+    click('#edChestApply')
+    click('#edChestInherit')
+    assert page.locator('#edChestRadius').input_value()=='600'
+    click('#edLibraryUndo')
+    assert page.locator('#edChestRadius').input_value()=='0'
+    page.locator('#edMapRow').select_option('1')
+    photo('MuzCruor-spawn-chests.png')
+    click('#edChestTry')
+    page.wait_for_function("state==='play'&&$('loading').classList.contains('hidden')",polling=100)
+    result=page.evaluate("""anchors=>{
+      const changed=WD.boxes.filter((b,i)=>dist(b,{x:anchors[i][0],y:anchors[i][1]})>0);
+      const aligned=changed.every(b=>{
+        const [kit,index]=R3.chestAt.get(b.id),p=kit.P[index];
+        return p.x===b.x&&p.z===b.y&&blockedAt(b,1)&&!inWater(b.x,b.y)&&
+          Math.hypot(b.x-anchors[b.id][0],b.y-anchors[b.id][1])<=600&&ArenaPopulation.approach(b,26);
+      });
+      const b=boxes[1],u=ME(),near=boxNear(u)?.id;pressSwap();
+      return {moved:changed.length,aligned,fixed:!changed.some(v=>!v.id),near,opened:b.open,roll:WD.lootSeed};
+    }""",anchor)
+    assert result['moved']>0 and result['aligned'] and result['fixed'],result
+    assert result['near']==1 and result['opened'] and isinstance(result['roll'],int),result
+    click('#edReturn')
+    page.wait_for_function("state==='editor'&&$('edLibrary').open",polling=100)
+    assert page.evaluate('WD.boxes.map(b=>[b.x,b.y])')==anchor
+    page.page.once('dialog',lambda d:d.accept())
+    click('#edRandomSeed')
+    page.locator('#edMapRow').select_option('0')
+    assert page.locator('#edChestRadius').input_value()=='600'
+    assert page.evaluate('UMAP.get(50000).def.hp===720 && UMAP.get(50002).def.dmg===33')
+    click('#edLibraryUndo')
+    assert page.locator('#edChestRadius').input_value()=='0'
+    assert page.evaluate('UMAP.get(50000).def.hp===810')
+    return result
+
+
 def run(browser, url, pictures, password, gate):
     tab = browser.new_page(viewport={'width': 1120, 'height': 680}, device_scale_factor=1)
     page = tab
@@ -154,6 +219,7 @@ def run(browser, url, pictures, password, gate):
     fill('#edMapX',0);fill('#edMapY',0);click('#edMapApply')
     assert page.locator('#edLibraryStatus').get_attribute('data-tone')=='error'
     assert page.evaluate('([x,y])=>WD.boxes[0].x===x&&WD.boxes[0].y===y',target['at'])
+    spawn_result=exercise_spawns(page,click,fill,photo)
     click('[data-tab="files"]')
     file=page.locator('#edLocalSource')
     file.set_input_files({'name':'settings.json','mimeType':'application/json','buffer':b'{"gold":10}'})
@@ -194,6 +260,8 @@ def run(browser, url, pictures, password, gate):
     qid = page.evaluate('WD.fort.queen')
     assert project['seed']==777 and project['spawns'][str(qid)]['position']==pos
     assert project['kinds']['snowqueen']=={'dmg':184}
+    assert project['version']==3 and project['chests']=={'radius':600,'boxes':{'0':0}}
+    assert project['encounters']['1']=={'kind':'wolf','name':'หมาป่าเถ้าถ่าน','count':3,'stats':{'hp':720,'dmg':33}}
     page.locator('.ed-files summary').click(force=True)
     with tab.expect_download() as dl:
         click('#edExport')
@@ -236,12 +304,13 @@ def run(browser, url, pictures, password, gate):
     }""")
     assert combat==[True,3.25,True,True,48,*target['at']],combat
     assert actual['hp']==31000 and actual['dmg']==184 and actual['r']==320, actual
+    assert page.evaluate('Number.isInteger(WD.lootSeed) && UMAP.get(50000).def.hp===810 && UMAP.get(50001).def.hp===720')
     room_defaults=page.evaluate("""() => {net.mode='host';return ArenaProject.forMatch()}""")
     assert room_defaults == page.evaluate('ArenaProject.published')
     assert page.evaluate('() => {ArenaProject.activate(ArenaProject.forMatch());return HB.hp===700 && SK.axe[0].cd[0]===12 && DASH_CD===45 && ArenaRegions.atmosphere[2].bloom===.7}')
     assert not errors, errors
     page.close()
-    return {'catalog':catalog,'positions':pos,'meteor':skill,'solo':actual,'chest':target,'combat':combat}
+    return {'catalog':catalog,'positions':pos,'meteor':skill,'solo':actual,'chest':target,'combat':combat,'spawns':spawn_result}
 
 
 if __name__=='__main__':

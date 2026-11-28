@@ -89,15 +89,94 @@ function installEditorLibrary(api){
     objects.selectedIndex=clamp(index,0,objects.length-1);coordinates();$('edMapSeed').value=WD.seed;
   }
   function coordinates(){
+    chestControls();
     const obj=WD[group.value][objects.value];if(!obj)return;
     $('edMapX').value=Math.round(obj.x);$('edMapY').value=Math.round(obj.y);
   }
+  const chestScope=$('edChestScope'),chestRadius=$('edChestRadius');
+  chestRadius.max=ArenaPopulation.maxRadius;
+  function chestControls(){
+    const isChest=group.value==='boxes',single=chestScope.value==='one';
+    $('edChestRules').hidden=!isChest;if(!isChest)return;
+    const {boxes,radius}=api.draft().chests,id=objects.value;
+    chestRadius.value=(single?boxes[id]:undefined)??radius;
+    $('edChestInherit').hidden=!single;$('edChestInherit').disabled=!Object.hasOwn(boxes,id);
+    $('edChestTry').disabled=!WD.boxes[id];
+  }
+  chestScope.onchange=chestControls;
+  $('edChestApply').onclick=()=>{
+    if(!chestRadius.reportValidity())return;
+    if(api.change(next=>{
+      if(chestScope.value==='all')next.chests.radius=chestRadius.valueAsNumber;
+      else{next.seed=WD.seed;next.chests.boxes[objects.value]=chestRadius.valueAsNumber}
+    }))chestControls();
+  };
+  $('edChestInherit').onclick=()=>{api.change(next=>{delete next.chests.boxes[objects.value]});chestControls()};
+  $('edChestTry').onclick=()=>{dialog.close();api.play({chest:Number(objects.value)})};
+
+  const creatureRecord=$('edCreatureRecord'),creatureBase=$('edCreatureBase'),creatureCount=$('edCreatureCount'),creatureName=$('edCreatureName');
+  const statInputs=new Map();
+  creatureCount.max=ArenaPopulation.stride;
+  for(const kind of ArenaPopulation.bases)option(creatureBase,kind,ArenaLanguage.text(CREEPS[kind].name));
+  for(const [key,[min,max]] of Object.entries(ArenaProject.statRanges)){
+    const label=document.createElement('label'),input=document.createElement('input'),scale=['hp','dmg'].includes(key)?DS:1;
+    label.textContent=pair(names[key]);input.id='edCreature-'+key;input.type='number';input.step='any';input.min=min*scale;input.max=max*scale;
+    statInputs.set(key,{input,scale});label.append(input);$('edCreatureStats').append(label);
+  }
+  function baseHints(){
+    const kind=creatureBase.value,base={...CREEPS[kind],...api.draft().kinds[kind]};
+    for(const [key,{input,scale}] of statInputs)input.placeholder=String((base[key]??420)*scale);
+  }
+  creatureBase.onchange=baseHints;
+  function showCreature(){
+    const spec=api.draft().encounters[creatureRecord.value];
+    creatureBase.value=spec?.kind??ArenaPopulation.bases[0];creatureCount.value=spec?.count??1;creatureName.value=spec?.name??'';
+    for(const [key,{input,scale}] of statInputs)input.value=spec?.stats[key]===undefined?'':spec.stats[key]*scale;
+    baseHints();
+    $('edCreatureApply').textContent=spec?tr('ใช้การแก้ไข','Apply changes'):tr('เพิ่มลงแผนที่','Add to map');
+    $('edCreatureFocus').disabled=$('edCreatureDelete').disabled=!spec;
+  }
+  function renderCreatures(selected=creatureRecord.value){
+    const types=api.draft().encounters;
+    creatureRecord.replaceChildren();option(creatureRecord,'',tr('สร้างชนิดใหม่','Create a monster type'));
+    for(const [id,spec] of Object.entries(types))option(creatureRecord,id,spec.name+' × '+spec.count);
+    creatureRecord.value=Object.hasOwn(types,selected)?selected:'';showCreature();
+  }
+  creatureRecord.onchange=showCreature;
+  function removedSpawns(type,kind,count){
+    const start=ArenaPopulation.firstId(type);
+    return Object.keys(api.draft().spawns).filter(id=>id>=start&&id<start+ArenaPopulation.stride&&
+      (id>=start+count||api.draft().spawns[id].kind!==kind));
+  }
+  $('edCreatureApply').onclick=()=>{
+    if(![creatureName,creatureCount,...Array.from(statInputs.values(),s=>s.input)].every(input=>input.reportValidity()))return;
+    const name=creatureName.value.trim(),kind=creatureBase.value,count=creatureCount.valueAsNumber,stats={};
+    for(const [key,{input,scale}] of statInputs)if(input.value!=='')stats[key]=input.valueAsNumber/scale;
+    const types=api.draft().encounters;
+    let type=Number(creatureRecord.value);
+    if(!type){type=1;while(Object.hasOwn(types,type))type++}
+    if(type>ArenaPopulation.maxTypes||Object.entries(types).reduce((n,[id,t])=>n+(Number(id)===type?0:t.count),count)>ArenaPopulation.maxUnits){
+      api.notice(tr('เพิ่มได้สูงสุด 128 ชนิด รวม 256 ตัวต่อแผนที่','Limit of 128 types and 256 monsters per map'),'error');return;
+    }
+    const removed=removedSpawns(type,kind,count);
+    if(removed.length&&!confirm(tr('การเปลี่ยนนี้จะลบจุดเกิดและค่ารายตัวที่ใช้ต่อไม่ได้ ดำเนินการหรือไม่','Remove individual overrides that no longer match this type?')))return;
+    if(api.change(next=>{
+      next.encounters[type]={kind,name,count,stats};
+      for(const id of removed)delete next.spawns[id];
+    }))renderCreatures(String(type));
+  };
+  $('edCreatureFocus').onclick=()=>{dialog.close();api.select(ArenaPopulation.firstId(creatureRecord.value),true)};
+  $('edCreatureDelete').onclick=()=>{
+    const type=creatureRecord.value;if(!type||!confirm(tr('ลบมอนสเตอร์ชนิดนี้และจุดเกิดของมันหรือไม่','Remove this monster type and its spawns?')))return;
+    const removed=removedSpawns(type,'',0);
+    if(api.change(next=>{delete next.encounters[type];for(const id of removed)delete next.spawns[id]}))renderCreatures('');
+  };
   function activate(name){
     page=name;
     for(const el of dialog.querySelectorAll('[data-page]'))el.hidden=el.dataset.page!==name;
     for(const btn of dialog.querySelectorAll('[data-tab]'))btn.setAttribute('aria-pressed',String(btn.dataset.tab===name));
     $('edLibrarySave').hidden=$('edLibraryUndo').hidden=name==='files';
-    if(name==='balance')filter();if(name==='map')renderMap();
+    if(name==='balance')filter();if(name==='map')renderMap();if(name==='encounters')renderCreatures();
   }
   const valid=()=>Array.from(dialog.querySelectorAll('[data-page="balance"] input')).every(i=>i.reportValidity());
   function open(){activate(page);dialog.showModal()}
@@ -117,18 +196,20 @@ function installEditorLibrary(api){
   group.onchange=renderMap;objects.onchange=coordinates;
   for(const id of ['edMapX','edMapY'])$(id).max=WORLD;
   const path=()=>group.value+'.'+objects.value;
+  const pinnedRules=p=>[p.spawns,p.layout,p.chests.boxes].some(o=>Object.keys(o).length);
+  function clearPinned(p){p.spawns={};p.layout={};p.chests.boxes={}}
   $('edUseSeed').onclick=()=>{
     const input=$('edMapSeed');if(!input.reportValidity())return;
     const seed=input.valueAsNumber,old=api.draft();
-    if(seed!==WD.seed&&(Object.keys(old.spawns).length||Object.keys(old.layout).length)&&
-      !confirm(tr('เปลี่ยนแผนที่และล้างตำแหน่งที่ผูกกับแผนที่เดิมหรือไม่','Change map and clear placements tied to the previous seed?')))return;
-    api.change(next=>{if(seed!==WD.seed){next.spawns={};next.layout={}}next.seed=seed});renderMap();
+    if(seed!==WD.seed&&pinnedRules(old)&&
+      !confirm(tr('เปลี่ยนแผนที่และล้างค่ารายตัว จุดวาง และรัศมีรายกล่องของแผนที่เดิมหรือไม่','Change map and clear individual overrides, placements and per-chest radii tied to the previous seed?')))return;
+    api.change(next=>{if(seed!==WD.seed)clearPinned(next);next.seed=seed});renderMap();
   };
   $('edRandomSeed').onclick=()=>{
     const old=api.draft();
-    if((Object.keys(old.spawns).length||Object.keys(old.layout).length)&&
-      !confirm(tr('ล้างตำแหน่งที่ผูกกับแผนที่นี้แล้วสุ่มแผนที่ในแมตช์ใหม่หรือไม่','Clear seed-specific placements and randomize future matches?')))return;
-    api.change(next=>{next.seed=null;next.layout={};next.spawns={}});renderMap();
+    if(pinnedRules(old)&&
+      !confirm(tr('ล้างค่ารายตัว จุดวาง และรัศมีรายกล่องของแผนที่นี้ แล้วสุ่มแผนที่ใหม่หรือไม่','Clear individual overrides, placements and per-chest radii, and randomize future maps?')))return;
+    api.change(next=>{next.seed=null;clearPinned(next)});renderMap();
   };
   $('edMapApply').onclick=()=>{
     if(![$('edMapX'),$('edMapY')].every(i=>i.reportValidity()))return;
