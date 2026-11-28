@@ -43,7 +43,7 @@ def run(browser, url, pictures, password, gate):
         assert page.evaluate('MoonfallLoading.isReady()'), errors
 
     def click(selector):
-        page.locator(selector).click(force=True)
+        page.locator(selector).click()
 
     def fill(selector, value):
         box = page.locator(selector)
@@ -167,7 +167,9 @@ def run(browser, url, pictures, password, gate):
         click('#edDownloadSource')
     assert binary.value.suggested_filename=='art.glb' and binary.value.path().read_bytes()==b'new model'
     file.set_input_files({'name':'clean.txt','mimeType':'text/plain','buffer':b'clean'})
+    page.wait_for_function("$('edSourceName').textContent.startsWith('clean.txt')",polling=50)
     click('#edLibraryClose')
+    page.locator('#edLibrary').wait_for(state='hidden')
     click('#edSkills')
     fill('#ed-radius', 320)
     fill('#ed-delay', .35)
