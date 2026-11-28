@@ -287,7 +287,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     for(const o of this.objs.values())this.scene.remove(o.root);this.objs=new Map();for(const g of this.itemObjs.values())this.scene.remove(g);this.itemObjs=new Map();
     for(const d of this.decalPool){d.on=false;d.m.visible=false}this.PA.list=[];this.PB.list=[];this.spikes=[];this.treeHidden.fill(0);for(const t of this.trees)if(t._i===undefined)t._i=0;
     WD.trees.forEach((t,i)=>t._i=i)},
-  sync(){if(this.world===WD)return;if(this.world&&this.scene&&this.world.seed===WD.seed&&this.world.houses.length===WD.houses.length)this.rebind();else this.buildWorld()},
+  sync(){if(this.world===WD)return;if(this.world&&this.scene&&this.world.seed===WD.seed&&this.world.authoredLayout===WD.authoredLayout&&this.world.houses.length===WD.houses.length)this.rebind();else this.buildWorld()},
   buildWorld(){
     if(this.scene)this.disposeScene();
     const S=this.scene=new THREE.Scene();this.world=WD;this.objs=new Map();this.itemObjs=new Map();this.pool={};this.decals=[];this.trails=[];this.deadObjs=[];const G=this.G;

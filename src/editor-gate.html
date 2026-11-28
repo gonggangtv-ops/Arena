@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e171b">
+<link rel="icon" href="assets/ui/muzcruor-mark.webp">
+<title>World Editor · MuzCruor</title>
+<!--BUILD-->
+<style>
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{color:#eee8d7;background:#10181d;color-scheme:dark;font:16px/1.5 system-ui,sans-serif}
+main{min-height:100%;display:grid;align-content:center;padding:clamp(22px,8vw,110px);background:linear-gradient(90deg,#0b131af5 0%,#111b21de 36%,#151b2540 72%),url('assets/ui/arena-citadel.webp') 65% center/cover}
+form{width:min(370px,100%);padding:28px clamp(18px,4vw,35px) 24px;border:1px solid #8f8164;background:#111a20ed;box-shadow:0 20px 70px #0008}
+img{display:block;width:165px;max-width:85%;height:auto}h1{font:500 clamp(30px,5vw,42px)/1.15 Georgia,serif;color:#f4e7cb;margin:18px 0 25px}
+label{display:block;font-size:14px;color:#d9d0ba}input,button{font:inherit;width:100%;border-radius:3px}input{background:#091217;color:white;border:1px solid #647176;padding:10px;margin:6px 0 12px}button{background:#d8c193;border:1px solid #f0d9ab;color:#1a1918;font-weight:650;padding:10px;cursor:pointer}button:disabled{opacity:.6}
+:focus-visible{outline:3px solid #87dcd5;outline-offset:3px}p{min-height:1.45em;color:#e9bc9b;font-size:14px;margin:12px 0}a{color:#dacfbb;text-underline-offset:4px;font-size:14px}
+iframe{position:fixed;inset:0;border:0;width:100%;height:100%;background:#111} [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main id="gate"><form id="signin">
+<img src="assets/ui/muzcruor-mark.webp" alt="MuzCruor" width="1344" height="437">
+<h1>World Editor</h1>
+<label id="passLabel" for="password">รหัสผ่านผู้ดูแล</label>
+<input type="password" id="password" autocomplete="current-password" required>
+<button type="submit" id="unlock">เปิดตัวแก้ไขเกม</button>
+<p id="message" role="status" aria-live="polite"></p>
+<a id="play" href="index.html">กลับไปหน้าเกม</a>
+</form></main>
+<script>
+'use strict';
+const envelope=/*ENVELOPE*/null;
+const form=document.getElementById('signin'),field=document.getElementById('password');
+const button=document.getElementById('unlock'),message=document.getElementById('message'),gate=document.getElementById('gate');
+const query=new URLSearchParams(location.search);
+let savedLanguage;try{savedLanguage=localStorage.getItem('ar_language')}catch{}
+const en=(query.get('lang')||savedLanguage)==='en';
+const words=(th,english)=>en?english:th;
+const gameURL=new URL('index.html',location.href);
+if(['en','th'].includes(query.get('lang')))gameURL.searchParams.set('lang',query.get('lang'));
+document.documentElement.lang=en?'en':'th';
+document.getElementById('play').href=gameURL.href;
+if(en){
+  document.getElementById('passLabel').textContent='Admin password';
+  button.textContent='Open World Editor';document.getElementById('play').textContent='Back to game';
+}
+const bytes=base64=>Uint8Array.from(atob(base64),ch=>ch.charCodeAt(0));
+const unseal=(key,box)=>crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(box.iv)},key,bytes(box.data));
+let frame,attempt=0;
+function reset(){
+  attempt++;if(frame){frame.remove();frame=null}
+  gate.hidden=false;form.reset();button.disabled=false;message.textContent='';
+}
+function launch(bundle){
+  frame=document.createElement('iframe');frame.title='MuzCruor World Editor';
+  frame.addEventListener('load',()=>{
+    try{
+      const game=frame.contentWindow,doc=frame.contentDocument;
+      if(!game.MoonfallLoading)throw Error('runtime');
+      const style=doc.createElement('style');style.textContent=bundle.css;doc.head.append(style);
+      const ui=doc.createElement('template');ui.innerHTML=bundle.html;doc.body.append(ui.content);
+      const script=doc.createElement('script');script.textContent=bundle.js;doc.body.append(script);
+      if(!game.ArenaEditor)throw Error('editor');
+      game.MoonfallLoading.whenReady.then(()=>game.ArenaEditor.open());
+    }catch{reset();message.textContent=words('โหลดตัวแก้ไขเกมไม่สำเร็จ กรุณาลองอีกครั้ง','Could not load the editor. Try again.')}
+  });
+  frame.src=gameURL.href;document.body.append(frame);gate.hidden=true;frame.focus();
+}
+form.addEventListener('submit',async event=>{
+  event.preventDefault();if(button.disabled)return;
+  if(!window.crypto?.subtle){message.textContent=words('เปิดหน้านี้ผ่าน HTTPS หรือ localhost','Open this page over HTTPS or localhost.');return}
+  button.disabled=true;const token=++attempt;
+  message.textContent=words('กำลังเปิดตัวแก้ไขเกม…','Opening World Editor…');
+  try{
+    const raw=await crypto.subtle.importKey('raw',new TextEncoder().encode(field.value),'PBKDF2',false,['deriveKey']);
+    field.value='';
+    const wrappingKey=await crypto.subtle.deriveKey({name:'PBKDF2',salt:bytes(envelope.salt),iterations:envelope.iterations,hash:'SHA-256'},raw,{name:'AES-GCM',length:256},false,['decrypt']);
+    const privateKey=await crypto.subtle.importKey('pkcs8',await unseal(wrappingKey,envelope.locked),{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+    const contentKey=await crypto.subtle.decrypt({name:'RSA-OAEP'},privateKey,bytes(envelope.session));
+    const key=await crypto.subtle.importKey('raw',contentKey,'AES-GCM',false,['decrypt']);
+    const bundle=JSON.parse(new TextDecoder().decode(await unseal(key,envelope.payload)));
+    if(token===attempt)launch(bundle);
+  }catch{
+    if(token===attempt){button.disabled=false;message.textContent=words('รหัสผ่านไม่ถูกต้อง','Incorrect password');field.focus()}
+  }
+});
+window.addEventListener('pageshow',e=>{if(e.persisted)reset()});
+window.addEventListener('pagehide',reset);
+</script>
+</body>
+</html>

@@ -19,7 +19,7 @@ const QBARS=3,QIMM=2.3;   // health bars (one per phase), immune seconds while a
 AOE_KINDS.push('qwinter','qslash','qlance','qshard','qnova','qblizz','qprison');
 Object.assign(AOE_COL,{qwinter:'#e8f6ff',qslash:'#bfe8ff',qlance:'#9fd8ff',qshard:'#cfe4ff',qnova:'#bfeaff',qblizz:'#e8f6ff',qprison:'#bfe6ff'});
 // cooldowns (s) per phase; the basic thrust runs on the mob attack timer
-const QV=[{lance:6,shards:9,blink:13},{lance:5,shards:8,nova:10,blizz:13,blink:10},{lance:4,shards:7,nova:8,blizz:11,prison:11,winter:26,blink:8}];
+const QV=CREEPS.snowqueen.phaseCooldowns=[{lance:6,shards:9,blink:13},{lance:5,shards:8,nova:10,blizz:13,blink:10},{lance:4,shards:7,nova:8,blizz:11,prison:11,winter:26,blink:8}];
 const qRand=(a,b)=>a+Math.random()*(b-a);
 // a spot on the same ground as the queen (the plateau), d away from her, for her warm circles
 function qSafeSpot(u,a0,d){const base=cityBase(u.x,u.y);for(let i=0;i<14;i++){const a=a0+(i%2?1:-1)*Math.ceil(i/2)*.42,x=u.x+Math.cos(a)*d,y=u.y+Math.sin(a)*d;

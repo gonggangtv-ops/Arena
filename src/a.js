@@ -6,7 +6,7 @@ const TIERS=[{n:'ธรรมดา',c:'#dcdcdc',m:1,sa:0},{n:'หายาก',
 const HB={hp:700,mp:290,hpR:2.2,mpR:1.5,dmg:45,armor:2,mr:.18,spd:205};
 const HG={hp:100,mp:22,hpR:.18,mpR:.09,dmg:4.6,armor:.28,as:.028};
 // basic attacks: every weapon swings faster, and landing hits back to back builds fury (faster and harder, up to FURY_MAX stacks)
-const AS_K=.78,AS_MIN=.18,FURY_MAX=15,FURY_AS=.04,FURY_DMG=.02,FURY_T=3.2,CRIT_BASE=.08,CRIT_BONUS=.15,PVP_K=.47,SKILL_K=1.45;   // hero-vs-hero damage is damped so duels last; skills hit harder across the board
+let AS_K=.78,AS_MIN=.18,FURY_MAX=15,FURY_AS=.04,FURY_DMG=.02,FURY_T=3.2,CRIT_BASE=.08,CRIT_BONUS=.15,PVP_K=.47,SKILL_K=1.45;   // hero-vs-hero damage is damped so duels last; skills hit harder across the board
 const FISTS={n:'มือเปล่า',ic:'✊',melee:1,range:70,atkT:.8,dmg:.55};
 const WEAPONS={
   sword:{n:'ดาบและโล่',ic:'🗡️',melee:1,range:92,atkT:.9,dmg:1,hp:90,armor:3,mr:.05,col:'#cfd8e6',
@@ -72,7 +72,7 @@ const SKV={
 // ===================== WEAPON FUSION =====================
 // Carry two different weapons; once the match clock passes 10:00 they fuse into one of these (new skills, better stats).
 // Recipe = the two weapons' families: M melee · R ranged · S spell (the spell's element flavours the result).
-const FUSE_AT=600;
+let FUSE_AT=600;
 const WCAT={sword:'M',axe:'M',dagger:'M',gsword:'M',bow:'R',xbow:'R',fire:'S',frost:'S',storm:'S'};
 const CATN={M:'อาวุธประชิด',R:'อาวุธยิงไกล',S:'คทาเวท'};
 const ELEM={fire:{c:'#ff7a2a',n:'เพลิง',ic:'🔥',k:2,aoe:'burn',big:'meteor'},frost:{c:'#8fe3ff',n:'เหมันต์',ic:'❄️',k:3,aoe:'blizz',big:'blizz'},storm:{c:'#b9a6ff',n:'อัสนี',ic:'⚡',k:10,aoe:'static',big:'thunder'}};
@@ -160,7 +160,8 @@ const LOOKS=[{n:'แดง',c:'#b8322e'},{n:'น้ำเงิน',c:'#2e5cb8'}
 // Arena Royale (owner 2026-11-21, ARX = index only): the map grows north by one step, an old town on a plateau above the waterfall.
 // The world square is 22000 there with the valley moved 2000 south (CY) to make room; The Cursed Realm and classic keep 20000.
 const ARX=CURSED&&!MOON;
-const MS=2,WORLD=ARX?22000:20000,CX=WORLD/2,CY=ARX?12000:10000,MAXL=18,TOTAL_HEROES=32,MAX_HUMANS=32,DAY=150,NIGHT=100,WL=-5;
+const MS=2,WORLD=ARX?22000:20000,CX=WORLD/2,CY=ARX?12000:10000,MAXL=18,TOTAL_HEROES=32,MAX_HUMANS=32,WL=-5;
+let DAY=150,NIGHT=100;
 const PHASES=[{w:165,s:84,r:6600},{w:110,s:70,r:4900},{w:88,s:62,r:3500},{w:72,s:55,r:2400},{w:60,s:47,r:1520},{w:50,s:39,r:840},{w:38,s:30,r:360},{w:28,s:28,r:0}];
 const BOT_NAMES=['พายุ','ไฟป่า','เงามืด','สายฟ้า','หมาป่า','นินจา','ทอร์นาโด','เพชฌฆาต','มังกร','ฟีนิกซ์','อสุรา','กระทิง','พยัคฆ์','ราชสีห์','ภูตพราย','นาคา','อัศวินดำ','จิ้งจอก','เหยี่ยว','พรานป่า',
   'ครุฑ','หนุมาน','ยักษ์ทมิฬ','เทพธิดา','จอมขมังเวทย์','นักดาบเงา','ราชันย์','อินทรี','เสือดำ','สิงห์ทอง','วายุ','อัคนี','ธารา','ปฐพี','จันทรา','สุริยา','เพลิงนรก','น้ำแข็ง','ม้าศึก','แมงป่อง'];
@@ -279,8 +280,8 @@ const AU={ctx:null,mode:lsGet('ar_mute','0')==='1'?2:(+lsGet('ar_snd','0')||0), 
   fade(name,vol){const T=this.track(name);if(!T.ok)return;const t=this.ctx.currentTime;T.g.gain.cancelScheduledValues(t);
     if(vol>0){clearTimeout(T.to);if(T.el.paused){const p=T.el.play();if(p&&p.catch)p.catch(()=>{T.pend=true})}T.g.gain.setTargetAtTime(vol,t,.8)}
     else{T.g.gain.setTargetAtTime(0,t,.7);clearTimeout(T.to);T.to=setTimeout(()=>{if(this.musCur!==name&&this.ambCur!==name)T.el.pause()},3500)}},
-  setMusic(m){if(this.mode!==0)m=null;if(m===this.musCur)return;if(this.musCur)this.fade(this.musCur,0);this.musCur=m;if(m)this.fade(m,MUS_VOL[m]||.8)},
-  setAmb(a){if(a===this.ambCur)return;if(this.ambCur)this.fade(this.ambCur,0);this.ambCur=a;if(a)this.fade(a,AMB_VOL[a]||.5)},
+  setMusic(m){if(this.mode!==0)m=null;if(m===this.musCur)return;if(this.musCur)this.fade(this.musCur,0);this.musCur=m;if(m)this.fade(m,MUS_VOL[m]??.8)},
+  setAmb(a){if(a===this.ambCur)return;if(this.ambCur)this.fade(this.ambCur,0);this.ambCur=a;if(a)this.fade(a,AMB_VOL[a]??.5)},
   gesture(){for(const k in this.trk){const T=this.trk[k];if(T.pend&&(k===this.musCur||k===this.ambCur)){T.pend=false;const p=T.el.play();if(p&&p.catch)p.catch(()=>{T.pend=true})}}},
   pickMusic(){if(!this.ctx)return;let m='menu',a=null;
     if(state==='play'&&WD){const me=ME(),L=listener();

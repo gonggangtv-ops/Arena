@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="th">
-<head>
+<head><script>const oldEditor=new URL(location.href);if(oldEditor.searchParams.get('editor')==='1'){oldEditor.searchParams.delete('editor');location.replace('editor.html'+oldEditor.search)}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#080b16">
@@ -357,72 +357,6 @@ body.moody #vig{background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 38%,
 }
 .arena-combat-hud #codex .arena-weapon-portrait{margin:0 auto 3px}
 .arena-combat-hud #fuseGrid .arena-weapon-portrait{width:46px;height:46px}
-
-#arenaEditor,#edReturn{--ed-panel:#141b20;--ed-line:#384246;--ed-muted:#a2b2b1;--ed-gold:#e7c895;color:#edf1eb;font:14px/1.45 system-ui,"Noto Sans Thai",sans-serif}
-#arenaEditor{position:fixed;inset:0;z-index:53;display:grid;grid-template-rows:auto minmax(0,1fr) auto;isolation:isolate;color-scheme:dark}
-#arenaEditor *,#arenaEditor *::before,#arenaEditor *::after{box-sizing:border-box}
-#arenaEditor [hidden],#arenaEditor[hidden],#edReturn[hidden]{display:none!important}
-body.ed-open #c,body.ed-open #vig{visibility:hidden}
-#arenaEditor button,#arenaEditor input,#edReturn{font:inherit;letter-spacing:normal;text-shadow:none}
-#arenaEditor button,#edReturn{min-height:34px;padding:6px 11px;border:1px solid var(--ed-line);border-radius:5px;background:#232d31;color:#f0f0e8;cursor:pointer}
-#arenaEditor button:hover:not(:disabled),#edReturn:hover{background:#344044;border-color:#899189}
-#arenaEditor button:focus-visible,#arenaEditor input:focus-visible,#arenaEditor summary:focus-visible,#edReturn:focus-visible{outline:2px solid #a8dfd7;outline-offset:1px}
-#arenaEditor button:disabled{cursor:default;opacity:.4}
-#arenaEditor h2,#arenaEditor h3{margin:0;color:#eef0e8;font-family:inherit;letter-spacing:0}
-#arenaEditor .ed-bar{position:relative;z-index:3;display:flex;align-items:center;gap:24px;padding:10px max(16px,env(safe-area-inset-right)) 10px max(18px,env(safe-area-inset-left));background:#12171b;border-bottom:1px solid #5b5446}
-.ed-brand{display:flex;align-items:baseline;gap:12px;white-space:nowrap}.ed-brand b{font:700 23px/1 'Arena Cinzel',Georgia,serif;color:var(--ed-gold)}.ed-brand span{color:var(--ed-muted);font-size:12px}
-.ed-modes,.ed-segment,.ed-actions{display:flex;align-items:center;gap:4px}
-.ed-modes,.ed-segment{padding:3px;border:1px solid #344144;border-radius:6px;background:#0e1519}
-#arenaEditor .ed-modes button,#arenaEditor .ed-segment button{background:none;border:0;min-height:30px;color:#afbcba}
-#arenaEditor button[aria-pressed=true]{color:#f8e0b6;background:#354043;box-shadow:0 0 0 1px #756754 inset}
-.ed-actions{margin-left:auto;gap:8px}#arenaEditor .ed-primary{background:#e9cb99;color:#24221d;border-color:#f6dbac;font-weight:700;min-width:74px}
-#arenaEditor .ed-primary:hover{background:#f2dab4}#edUndo,#edClose{font-size:21px!important;line-height:1;padding:4px 10px!important}
-.ed-layout{display:grid;grid-template-columns:clamp(184px,19vw,252px) minmax(0,1fr) clamp(222px,23vw,300px);min-height:0}
-.ed-browser,.ed-inspector{min-width:0;background:var(--ed-panel)}
-.ed-browser{display:flex;flex-direction:column;gap:10px;padding:16px 12px 12px;border-right:1px solid var(--ed-line);overflow:hidden}
-.ed-browser>header{display:flex;align-items:center;justify-content:space-between}.ed-browser h2{font-size:16px}
-#edCount{color:var(--ed-muted);font:12px monospace}
-#arenaEditor input:not([type=file]){display:block;width:100%;min-width:0;background:#0d1418;color:#edf2ef;border:1px solid #425156;border-radius:4px;padding:7px 8px;user-select:text;touch-action:manipulation}
-#arenaEditor input::placeholder{color:#9ba9a8;font-size:12px}
-.ed-list,.ed-inspector{overflow:auto;overscroll-behavior:contain;touch-action:pan-y;scrollbar-color:#485653 transparent;scrollbar-width:thin}
-.ed-list{flex:1;min-height:50px}.ed-list h3{font-size:11px;font-weight:600;color:#acbbb7!important;padding:11px 5px 5px}
-#arenaEditor .ed-object{width:100%;display:flex;align-items:center;gap:8px;min-height:32px;border:0;background:none;text-align:left;padding:6px 7px}
-.ed-object::before{content:"";width:7px;height:7px;flex:none;border:1px solid #899c96;transform:rotate(45deg)}
-.ed-object.ed-boss::before{background:#bf9763;border-color:#f2d2a0}
-.ed-object span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ed-object small{margin-left:auto;color:#96a49f;font:11px monospace}
-#arenaEditor .ed-object[aria-current=true]{background:#313a38;border-left:2px solid #d8b979;color:#f6d8a2}
-.ed-atlas{display:flex;align-items:center;flex-direction:column;gap:5px;border-top:1px solid var(--ed-line);padding-top:9px}
-.ed-atlas h3{align-self:flex-start;font-size:12px}#edMap{width:min(100%,15vh);aspect-ratio:1;cursor:crosshair;touch-action:none;border:1px solid #526160;border-radius:4px}
-#edStage{position:relative;overflow:hidden;touch-action:none;cursor:grab}#edStage.ed-drag{cursor:grabbing}#edStage.ed-aim{cursor:crosshair}
-#edPin,.ed-location{position:absolute;pointer-events:none;border:1px solid #a3927280;background:#111a1feb;box-shadow:0 2px 10px #06101555;color:#f3e5c9}
-#edPin{top:0;left:0;padding:3px 8px;font-size:12px;white-space:nowrap;border-radius:4px;transform:translate(-50%,-100%)}
-.ed-location{bottom:12px;left:12px;max-width:calc(100% - 24px);padding:7px 11px;border-radius:4px}.ed-location b,.ed-location span{display:block}
-.ed-location b{font-weight:600}.ed-location span{color:#c1cdcb;font-size:11px;margin-top:2px}
-.ed-inspector{border-left:1px solid var(--ed-line);padding:19px 16px 12px}
-.ed-panel-heading{margin-bottom:16px}.ed-panel-heading span{color:var(--ed-gold);font:11px/1.4 monospace;letter-spacing:.08em}.ed-panel-heading h2{font-size:22px;line-height:1.3;margin-top:3px!important}
-#arenaEditor fieldset{min-width:0;margin:0 0 17px;border:0;padding:0}#arenaEditor legend{width:100%;font-size:13px;font-weight:650;border-bottom:1px solid var(--ed-line);padding:0 0 6px;margin:0 0 9px}
-.ed-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ed-grid.ed-three{grid-template-columns:repeat(3,minmax(0,1fr))}
-#arenaEditor label{display:block;font-size:12px;color:#bac8c5}#arenaEditor label input{margin-top:3px;font:14px/1.2 ui-monospace,monospace}
-.ed-fields{display:grid;gap:8px}.ed-fields label{display:grid!important;grid-template-columns:1fr minmax(54px,39%);gap:6px;align-items:center}
-.ed-segment{margin-bottom:10px}.ed-segment button{flex:1;padding:4px!important;font-size:12px!important}
-#arenaEditor button.ed-subtle{min-height:26px;padding:4px 0;color:#c8d9d4;font-size:12px;border:0;background:none;text-align:left}
-#arenaEditor button.ed-test,#edReturn{width:100%;border-color:#677e76;color:#def0e4;background:#263b36;font-weight:650}
-#edHit{display:block;margin-top:8px;color:#e3cdaa;font-variant-numeric:tabular-nums;font-size:12px}
-.ed-files{border-top:1px solid var(--ed-line);padding-top:12px;margin-top:20px}.ed-files summary{cursor:pointer;font-size:13px}.ed-files p{color:#aebeba;font-size:12px}.ed-files button{font-size:12px!important}
-.ed-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#10181c;border-top:1px solid var(--ed-line);padding:5px 14px max(5px,env(safe-area-inset-bottom));font-size:12px;color:#bbc8c2}
-#edStatus::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#9ac5ad;margin-right:8px;vertical-align:middle}#edStatus[data-tone=dirty]::before{background:#efc080}#edStatus[data-tone=error]{color:#ffbea6}#edStatus[data-tone=error]::before{background:#fc977c}#edSeed{white-space:nowrap;font:11px monospace;color:#93a39d}
-#edReturn{position:fixed;z-index:60;top:max(7px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:auto;box-shadow:0 3px 10px #0008}
-#arenaEditor .ed-floating{display:none}
-@media(max-width:860px){.ed-layout{grid-template-columns:minmax(0,1fr) 216px}.ed-browser{display:none}#arenaEditor[data-panel=list] .ed-browser{position:absolute;z-index:2;display:flex;top:57px;left:0;bottom:29px;width:206px;box-shadow:4px 4px 24px #0006}
-#arenaEditor .ed-floating{display:block;position:absolute;z-index:1;left:8px;top:8px;background:#111b20ed;font-size:12px}#arenaEditor #edInspect{display:none}.ed-bar{gap:12px!important}.ed-brand span{display:none}.ed-inspector{padding:12px}}
-@media(max-width:600px){.ed-layout{display:block}.ed-bar{gap:6px!important;padding:8px!important}.ed-brand b{font-size:16px}.ed-actions{gap:3px}.ed-primary{min-width:0!important}.ed-modes button{padding:4px 7px!important;font-size:12px!important}#edStage{height:100%}.ed-inspector{display:none}#arenaEditor #edInspect{display:block;left:auto;right:8px}#arenaEditor[data-panel=inspector] .ed-inspector{display:block;position:absolute;right:0;top:96px;bottom:29px;width:min(255px,76vw);z-index:2;box-shadow:-4px 5px 24px #0007}#arenaEditor[data-panel=list] .ed-browser{top:96px}.ed-location{max-width:95%}}
-@media(max-height:520px){.ed-atlas{display:none}.ed-bar{padding-top:4px!important;padding-bottom:4px!important}.ed-inspector{padding-top:10px}.ed-panel-heading{margin-bottom:7px}}
-#edObjects{display:contents}#edObjects>header{display:flex;align-items:center;justify-content:space-between}
-.ed-zoom{position:absolute;right:10px;bottom:12px;z-index:1;display:flex;gap:2px}#arenaEditor .ed-zoom button{background:#121b21e8;min-height:28px;padding:1px 8px;border-color:#afa4868a}
-.ed-location{max-width:calc(100% - 94px)}
-#arenaEditor #edPlace{display:block;width:100%;font-size:12px;margin-top:8px}
-#edRange h2{margin-bottom:14px}#edRange select{width:100%;font:inherit;background:#10191e;color:#f5eee1;padding:6px;border:1px solid #515e60;border-radius:4px}
-.ed-target{margin:12px 0 16px;padding:10px 0;border-top:1px solid var(--ed-line)}.ed-target h3{font-size:12px;font-weight:500;color:var(--ed-muted)!important}.ed-target output{display:block;margin-top:4px;color:#e7ddbd;font:14px/1.5 ui-monospace,monospace}.ed-target progress{display:block;width:100%;height:6px;accent-color:#98c8ab;margin-top:6px}
 </style>
 </head>
 <body>
@@ -523,7 +457,7 @@ function installArenaLanguage(english) {
   observer.observe(document.documentElement, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:attrs});
 }
 
-installArenaLanguage({"โหลดไฟล์เกมไม่สำเร็จ":"Game files could not be loaded","ยังเข้าเกมไม่ได้ กรุณาโหลดใหม่":"Please reload before entering the arena","ธรรมดา":"Common","หายาก":"Rare","มหากาพย์":"Epic","ตำนาน":"Legendary","มือเปล่า":"Unarmed","ดาบและโล่":"Sword and Shield","ดาบเหล็กกับโล่ไม้":"Iron Sword and Wooden Shield","ดาบอัศวิน":"Knight Sword","ดาบจันทราเงิน":"Silvermoon Sword","ดาบราชันย์มังกร":"Dragon King Sword","ดาบเทพสวรรค์":"Celestial Sword","ทนทาน พุ่งกระแทกสตัน โล่ดูดซับดาเมจ กระโดดฟาดพื้น":"A durable fighter. Stun with a shield charge, absorb damage and leap into a ground slam.","ขวานยักษ์":"Greataxe","ขวานตัดไม้":"Woodcutter Axe","ขวานศึก":"Battle Axe","ขวานอัสนี":"Thunder Axe","ขวานไททัน":"Titan Axe","ขวานเทพอสูร":"Demon God Axe","ฟันกวาดหลายตัว ดูดเลือด หมุนเป็นพายุ ผ่าแผ่นดิน":"Cleave through groups, steal health, spin into a whirlwind and split the earth.","มีดคู่":"Twin Daggers","มีดสั้นคู่":"Paired Daggers","มีดเงาคู่":"Twin Shadow Blades","เขี้ยวอสรพิษ":"Serpent Fangs","มีดจันทร์เสี้ยว":"Crescent Blades","มีดเงามรณะ":"Deathshade Daggers","โจมตีไวคริแรง วาร์ปหลังศัตรู ล่องหน ระบำมรณะ":"Strike fast and land heavy critical hits. Blink behind enemies, vanish and unleash Death Dance.","ธนูยาว":"Longbow","ธนูไม้":"Wooden Bow","ธนูพราน":"Hunter Bow","ธนูเอลฟ์":"Elven Bow","ธนูเทพพฤกษา":"Wildwood Bow","ธนูสุริยัน":"Sun Bow","ยิงไกล ยิงกระจาย ถอยหลบพร้อมยิงตรึง ฝนธนู":"Attack from range with spread shots, a retreating pinning shot and a rain of arrows.","คทาเพลิง":"Fire Staff","คทาถ่านไฟ":"Ember Staff","คทาเปลวเพลิง":"Flame Staff","คทาฟีนิกซ์":"Phoenix Staff","คทาสุริยะ":"Solar Staff","คทาไฟนรก":"Hellfire Staff","ลูกไฟระเบิด ระเบิดเพลิงผลักศัตรู อุกกาบาต":"Cast explosive fireballs, knock enemies back with a blast and call down a meteor.","คทาน้ำแข็ง":"Frost Staff","คทาน้ำค้างแข็ง":"Rime Staff","คทาธารน้ำแข็ง":"Glacier Staff","คทาพายุหิมะ":"Blizzard Staff","คทาราชินีหิมะ":"Snow Queen Staff","คทานิรันดร์กาล":"Staff of Eternity","หอกน้ำแข็งทะลุ ตรึงศัตรู พายุหิมะแช่แข็ง":"Pierce enemies with ice lances, root them in place and freeze them in a blizzard.","ดาบใหญ่":"Greatsword","ดาบใหญ่ทหาร":"Soldier Greatsword","ดาบใหญ่อัศวินดำ":"Black Knight Greatsword","ดาบใหญ่ไฟสวรรค์":"Heavenfire Greatsword","ดาบใหญ่ผ่าภพ":"Worldsplitter","ดาบใหญ่ทลายฟ้า":"Skybreaker","ฟันกวาดจันทร์เสี้ยว หมุนดาบกระแทกกระเด็น ปล่อยคลื่นดาบทะลุทุกสิ่ง":"Sweep in a crescent, spin to knock foes back and send a blade wave through enemies.","หน้าไม้":"Crossbow","หน้าไม้ไม้โอ๊ก":"Oak Crossbow","หน้าไม้พรานป่า":"Ranger Crossbow","หน้าไม้เหล็กกล้า":"Steel Crossbow","หน้าไม้อัสนีบาต":"Thunderbolt Crossbow","หน้าไม้มังกรทมิฬ":"Black Dragon Crossbow","ยิงหนักแม่นยำ ลูกดอกระเบิด ตาข่ายตรึง ระดมยิงถล่ม":"Fire heavy precision bolts, explosive shots, a binding net and a relentless barrage.","คทาสายฟ้า":"Storm Staff","คทาประกายไฟฟ้า":"Spark Staff","คทาฟ้าคะนอง":"Thunder Staff","คทาเทพสายฟ้า":"Thunder God Staff","คทาราชาอัสนี":"Storm King Staff","คทาเทพพายุ":"Tempest Staff","สายฟ้าลูกโซ่กระโดดหลายเป้า สนามไฟฟ้าทำช้า อัสนีบาตฟาดลงมา":"Chain lightning between targets, slow enemies in an electric field and call down thunderbolts.","โล่กระแทก":"Shield Bash","ป้อมปราการ":"Bulwark","ดาบพิพากษา":"Judgment Blade","พายุขวาน":"Axe Tempest","คำรามศึก":"War Cry","ผ่าปฐพี":"Earthsplitter","ก้าวเงา":"Shadow Step","ม่านควัน":"Smoke Veil","ระบำมรณะ":"Death Dance","ยิงกระจาย":"Spread Shot","ถอยยิงตรึง":"Retreating Shot","ฝนธนู":"Arrow Rain","ลูกไฟ":"Fireball","ระเบิดเพลิง":"Flame Burst","อุกกาบาต":"Meteor","หอกน้ำแข็ง":"Ice Lance","วงน้ำแข็ง":"Ice Ring","พายุหิมะ":"Blizzard","ฟันจันทร์เสี้ยว":"Crescent Slash","หมุนกระแทก":"Whirling Bash","คลื่นดาบสวรรค์":"Heavenly Blade Wave","ลูกดอกระเบิด":"Explosive Bolt","ตาข่ายดักจับ":"Binding Net","ระดมยิงถล่ม":"Bolt Barrage","สายฟ้าลูกโซ่":"Chain Lightning","สนามไฟฟ้า":"Static Field","อัสนีบาต":"Thunderbolt","อาวุธประชิด":"Melee weapon","อาวุธยิงไกล":"Ranged weapon","คทาเวท":"Magic staff","เพลิง":"Flame","เหมันต์":"Frost","อัสนี":"Storm","ชั้นสูง":"Advanced","ดาบคู่ราชันย์":"Sovereign Twinblades","ดาบคู่โจมตีไวหนัก ดูดเลือด พุ่งทะลวงแนวศัตรู เลือดราชันย์บัฟตัวเอง กระโดดประหารฟันสองจังหวะ":"Strike fast and hard, steal health, dash through enemies, empower yourself with Royal Blood and leap into a two-hit execution.","หอกล่าวิญญาณ":"Soulhunter Spear","หอกระยะประชิดยาว ขว้างหอกทะลุ ก้าวลมพุ่งไปพร้อมคริ พายุวิญญาณหมุนรอบตัว":"A long-reaching spear. Throw it through enemies, dash with a critical strike and whirl spirits around you.","ดาบเพลิงนรก":"Inferno Blade","ดาบเหมันต์นิรันดร์":"Everfrost Blade","ดาบอัสนีบาต":"Thunderstrike Blade","ดาบธาตุ":"Elemental blade","ฟันติดธาตุ ปล่อยคลื่นดาบ":"Inflict elemental stacks and release a blade wave of","ออร่า":"Aura","รอบตัว กระโดดถล่มธาตุใส่พื้นที่":"around you, then leap into an elemental blast.","ธนูสุริยันเพลิง":"Solarfire Bow","ธนูจันทร์เหมันต์":"Frostmoon Bow","ธนูวายุอัสนี":"Stormwind Bow","ธนูธาตุ":"Elemental bow","ศรติดธาตุ ยิงศรสามทาง บ่อ":"Fire elemental arrows in three directions, create a pool of","ใส่พื้นที่ ฝนศร":"on the ground and rain down arrows of","หน้าไม้มังกรคู่":"Twin Dragon Crossbows","หน้าไม้คู่ยิงรัว กับดักระเบิดตรึง ศรมังกรทะลวงทุกสิ่งในแนวยาว":"Fire twin crossbows in rapid bursts, set an explosive snare and pierce a line of foes with a dragon bolt.","คทาสุริยันจันทรา":"Sun and Moon Staff","คทาพายุเพลิง":"Firestorm Staff","คทาพายุหิมะอัสนี":"Froststorm Staff","คทาสองธาตุ":"Dual-element staff","ลูกแก้วคู่ธาตุ ระเบิดสองธาตุรอบตัว พายุสองธาตุถล่มพื้นที่":"Launch twin elemental orbs, detonate both elements around you and blanket an area in a dual-element storm.","พายุดาบคู่":"Twinblade Tempest","เลือดราชันย์":"Royal Blood","ราชันย์ประหาร":"Royal Execution","ขว้างหอกทะลุ":"Piercing Spear","ก้าวลม":"Wind Step","พายุวิญญาณ":"Spirit Tempest","คลื่นดาบ":"Blade Wave","ถล่มปฐพี":"Earthshatter","ศร":"Arrow","สามทาง":"Volley","บ่อ":"Pool","ฝนศร":"Arrow Rain","ยิงรัวมังกร":"Dragon Flurry","กับดักระเบิด":"Explosive Trap","ศรมังกรทะลวงฟ้า":"Sky-Piercing Dragon Bolt","ลูกแก้วคู่ธาตุ":"Twin Orbs","ระเบิดสองธาตุ":"Elemental Burst","พายุสองธาตุ":"Twin Tempest","ชุดผ้าเดินทาง":"Traveler Garb","เกราะหนัง":"Leather Armor","เกราะโซ่":"Chainmail","เกราะเหล็ก":"Iron Armor","เกราะมังกร":"Dragon Armor","ก็อบลิน":"Goblin","หมาป่าเงิน":"Silver Wolf","โทรลล์ภูเขา":"Mountain Troll","โกเลมหินผา":"Stone Golem","ผู้พิทักษ์คริสตัล":"Crystal Guardian","ไททันลาวา":"Lava Titan","มังกรเพลิง":"Fire Dragon","ซอมบี้":"Zombie","ซอมบี้วิ่งไว":"Runner Zombie","ซอมบี้ยักษ์":"Giant Zombie","ราชาซอมบี้":"Zombie King","ยาฟื้นพลัง":"Healing Potion","ยามานา":"Mana Potion","หินลับคม":"Whetstone","ดาเมจ":"damage","รองเท้าเร็ว":"Swift Boots","ความเร็ว":"speed","หัวใจยักษ์":"Giant Heart","เลือด":"HP","ผ้าคลุมเวท":"Enchanted Cloak","ต้านเวท":"magic resistance","ภูตพิทักษ์ เกราะ":"Guardian Spirit • Armor","คัมภีร์ปัญญา":"Tome of Wisdom","ยาเลือด":"Health Potion","ฟื้นเลือด":"Healing","ใน":"over","วิ":"s","โดนตีอยู่":"in combat","ฟื้นมานา":"Mana regen","ยาฟื้นฟูใหญ่":"Greater Elixir","ฟื้นเลือดและมานาเต็ม":"Fully restores HP and mana","ยาเร่งฝีเท้า":"Haste Potion","วิ่งเร็วขึ้น":"Increase movement speed by","นาน":"for","แดง":"Red","น้ำเงิน":"Blue","เขียว":"Green","ม่วง":"Purple","ทอง":"Gold","ดำ":"Black","ขาว":"White","ชมพู":"Pink","พายุ":"Tempest","ไฟป่า":"Wildfire","เงามืด":"Shade","สายฟ้า":"Lightning","หมาป่า":"Wolf","นินจา":"Ninja","ทอร์นาโด":"Tornado","เพชฌฆาต":"Executioner","มังกร":"Dragon","ฟีนิกซ์":"Phoenix","อสุรา":"Asura","กระทิง":"Bull","พยัคฆ์":"Tiger","ราชสีห์":"Lion","ภูตพราย":"Wraith","นาคา":"Naga","อัศวินดำ":"Black Knight","จิ้งจอก":"Fox","เหยี่ยว":"Hawk","พรานป่า":"Ranger","ครุฑ":"Garuda","หนุมาน":"Hanuman","ยักษ์ทมิฬ":"Dark Giant","เทพธิดา":"Goddess","จอมขมังเวทย์":"Sorcerer","นักดาบเงา":"Shadowblade","ราชันย์":"Sovereign","อินทรี":"Eagle","เสือดำ":"Panther","สิงห์ทอง":"Golden Lion","วายุ":"Gale","อัคนี":"Ember","ธารา":"Tide","ปฐพี":"Terra","จันทรา":"Luna","สุริยา":"Sol","เพลิงนรก":"Hellfire","น้ำแข็ง":"Ice","ม้าศึก":"Warhorse","แมงป่อง":"Scorpion","เสียง":"Audio","เปิดทั้งหมด":"All on","ปิดเพลง":"Music off","ปิด":"Off","นครเก่าเหนือน้ำตก":"Old Town Falls","ปราสาทราชินีหิมะ":"Snow Queen Castle","เมืองน้ำพุ":"Fountain Town","ฟาร์มกังหันลม":"Windmill Farm","หมู่บ้านริมทะเลสาบ":"Lakeside Village","หมู่บ้านแม่มด":"Witch Village","ค่ายคนตัดไม้":"Lumber Camp","หมู่บ้านปลายหุบ":"Valley End","หมู่บ้านเนินดอกไม้":"Blossom Hill","หมู่บ้านสนเขา":"Pine Ridge","หมู่บ้านจันทร์เสี้ยว":"Crescent Village","หมู่บ้านหุบหมอก":"Mistvale","หมู่บ้านผาแดง":"Redcliff","หมู่บ้านชาวประมง":"Fishing Village","ค่ายนักล่า":"Hunter Camp","หมู่บ้านทุ่งดอกไม้":"Flowerfield","หมู่บ้านร้าง":"Abandoned Village","เล็ก":"Small","กลาง":"Medium","ใหญ่":"Large","เก็บอาวุธใกล้ตัวเพื่อรับสกิล แล้วแตะ":"Pick up a nearby weapon to unlock its skills, then tap","อัปสกิลแรก":"to learn your first skill","คุณถูกโค่น":"You fell in battle","ทีมยังสู้อยู่ กำลังดูเพื่อนร่วมทีม":"Your team is still fighting. Spectating a teammate","ใครบางคน":"Someone","ปราบผู้คุมคุกใต้ดิน":"defeated the dungeon warden","กลับขึ้นสู่หุบเขา":"Return to the valley","คุกใต้ดิน":"Dungeon","ปีศาจเฝ้าสมบัติทุกห้อง":"Demons guard the treasure in every chamber","ใช้โล่อมตะ จะฟื้นใน":"used a revival shield. Reviving in","ปราบมังกรเพลิง":"slew the Fire Dragon","สมบัติอยู่ในปราสาท":"Treasure awaits in the castle","มังกรเพลิงพ่ายแพ้":"Fire Dragon defeated","ผู้พิทักษ์คริสตัลพ่ายแพ้":"Crystal Guardian defeated","ไททันลาวาพ่ายแพ้":"Lava Titan defeated","ถูก":"was struck by","ฆ่า":"Kills","ตายในวง":"fell to the storm","ทีมของ":"Team","ถูกกำจัด":"eliminated","อันดับ":"Rank","ฟื้นคืนชีพ":"Revived","ต้องเก็บอาวุธก่อนจึงใช้สกิลได้":"Pick up a weapon to unlock skills","แช่แข็ง":"Frozen","ช็อต":"Shocked","อาวุธสำรอง":"Reserve weapon","นาที":"min","จะหลอมเป็น":"will fuse into","ได้อาวุธตำนาน":"found a legendary weapon","ถืออาวุธระดับ":"is wielding a weapon of tier","โดนโจมตีอยู่ สลับอาวุธไม่ได้":"Cannot switch weapons under attack","สลับอาวุธได้อีก":"Weapon switch ready in","กำลังหลอมอาวุธ":"Fusing weapons","หลอมสำเร็จ":"Fusion complete","พกอาวุธ":"Carry","ชนิด":"types","นาทีที่":"At minute","หลอมเป็นอาวุธใหม่":"fuse into a new weapon","อีก":"In","นาทีหลอมอาวุธ":"minutes until fusion","แตะรูปอาวุธเพื่อสลับ":"Tap the weapon icon to switch","วิหลอมอาวุธ":"seconds until fusion","ชนิดไว้":"types equipped","ถึงเวลาหลอมอาวุธ":"Time to fuse your weapons","เริ่มหลอม":"Begin fusion","ได้ชิ้นที่":"Get weapon number","เมื่อไหร่หลอมทันที":"to fuse immediately","สมบัติผู้คุม":"Warden Treasure","สมบัติราชินีหิมะ":"Snow Queen Treasure","สมบัติวิหาร":"Temple Treasure","สมบัติ":"Treasure","เจอของ":"Found","ว่างเปล่า":"Empty","กระเป๋าเต็ม":"Bag full","ได้โล่อมตะ":"Revival shield obtained","ฟื้นได้":"Revives","ครั้ง":"time(s)","มีอาวุธนี้ที่ดีกว่าแล้ว":"You already have a better version of this weapon","กดปุ่ม":"Press","เพื่อรับอาวุธนี้":"to take this weapon","มีเกราะที่ดีกว่าแล้ว":"You already have better armor","โดนโจมตีอยู่":"Under attack","ยาได้ผลครึ่งเดียว":"Potions are half as effective","ค่ำแล้ว":"Nightfall","ซอมบี้ออกล่า":"Zombies are hunting","มอนสเตอร์ดุร้ายขึ้น":"Monsters grow more dangerous","ซ่อนในพุ่มหญ้าได้":"Hide in tall grass","ซอมบี้ลุกขึ้นจากหลุม":"Zombies rise from their graves","ฆ่าแล้วสุ่มได้ไอเทม":"Slay them for a chance at loot","รุ่งเช้า ซอมบี้สลายเป็นผุยผง":"Dawn breaks. Zombies crumble to dust","อาวุธระดับเทพหล่นจากซอมบี้":"A zombie dropped a divine weapon","ได้อาวุธ":"obtained","จากซอมบี้":"from a zombie","ปราบราชาซอมบี้":"defeated the Zombie King","วงกำลังหด":"The storm is closing in","วินาทีจะค่ำ":"seconds until nightfall","ซอมบี้กำลังจะลุกขึ้น":"Zombies are about to rise","หาที่ซ่อนหรือเตรียมสู้":"Find cover or prepare to fight","เช้าแล้ว":"Daybreak","มังกรเพลิงกลับมาเฝ้าปราสาท":"The Fire Dragon has returned to the castle","ค้นพบถ้ำลับ":"Secret cave discovered","ผู้เล่น":"Player","สร้างห้องแล้ว":"Room created","รหัส":"Code","ห้องออนไลน์ของหน้านี้ใช้ไม่ได้":"Online rooms are unavailable here","ต้องล็อกอิน":"Sign in","และได้รับเชิญ":"with an invitation","เชื่อมต่อเซิร์ฟเวอร์ห้องไม่ได้ ตรวจอินเทอร์เน็ต":"Cannot reach the room server. Check your connection","ห้อง":"Room","กำลังสร้างห้อง":"Creating room","สร้างห้องไม่สำเร็จ ลองอีกครั้ง":"Could not create the room. Try again","ยังหาห้องไม่ได้ ลองกดจับคู่อีกครั้ง":"No room found. Try matchmaking again","เชื่อมต่อเซิร์ฟเวอร์จับคู่ไม่ได้ ตรวจอินเทอร์เน็ต":"Cannot reach matchmaking. Check your connection","ห้องเต็มหรือเริ่มไปแล้ว":"Room full or match in progress","กำลังหาห้องใหม่":"Looking for another room","เพื่อน":"Friend","เข้าห้อง":"Join room","ออกจากห้อง":"Leave room","บอท":"Bot","หลุดจากเกม":"disconnected","ทุกคนเป็นศัตรู":"Free-for-all","ทีมละ":"Team size","คน":"players","อัตโนมัติ":"Auto","คนจริงสูงสุด":"Human player limit","เติมบอทให้ครบ":"Fill with bots up to","ไม่มีบอท":"No bots","แมพ":"Map","ยังไม่มีข้อความ":"No messages yet","ทักทายกันได้เลย":"Say hello","ถูกเชิญออก":"was removed","ห้องเดิมปิดไป":"The previous room closed","หลุดจากห้อง":"Disconnected from the room","โฮสต์ออกหรือเน็ตหลุด":"The host left or lost connection","ไม่พบห้อง":"Room not found","ห้องนี้ใช้เกมคนละเวอร์ชัน ให้ทุกคนอัปเดต":"Game versions differ. All players must update","เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ต":"Connection failed. Check your connection","รหัสห้องต้องมี":"Room codes must be","ตัว":"characters","กำลังเข้าห้อง":"Joining room","เข้าห้องไม่สำเร็จ ลองอีกครั้ง หรือใช้":"Could not join. Try again or use the same","เดียวกัน":"network","ห้องเต็มแล้ว":"Room full","ห้องนี้กำลังเล่นอยู่ รอจบเกมก่อน":"Match in progress. Wait for it to end","รหัสผ่านห้องไม่ถูกต้อง":"Incorrect room password","คุณถูกเชิญออกจากห้อง":"You were removed from the room","ปิดบอทอยู่ ต้องมีผู้เล่นอย่างน้อย":"With bots off, you need at least","รอเพื่อนหรือเปิดบอท":"Wait for a friend or enable bots","ทีม":"Team","หมุนมือถือเป็นแนวนอน":"Rotate your device to landscape","วงหดใน":"Storm closes in","วงสุดท้าย":"Final circle","จับคู่ด่วน":"Quick Match","กำลังดู":"Spectating","แตะจอเพื่อเปลี่ยน":"Tap to switch","กำลังฟื้นคืนชีพ":"Reviving","อยู่นอกวง":"Outside the circle","รีบกลับเข้าวง":"Return to the safe zone","ทางขึ้นคุกใต้ดินอยู่นอกวง":"The dungeon exit is outside the circle","รีบขึ้นไป":"Get to the surface","ซ่อนตัวอยู่":"Hidden","ศัตรูมองไม่เห็น":"Enemies cannot see you","อยู่ในพุ่ม":"In the brush","เพิ่งโจมตี จึงถูกเห็น":"Attacking revealed you","ม":"m","อาวุธสำรองหลอมแล้ว":"Reserve weapon fused","แตะรูปอาวุธเพื่อใช้":"Tap the weapon icon to equip","หลอมอาวุธใน":"Fusion in","ต้องมีอาวุธ":"Requires","เก็บอาวุธอีกชนิด":"Pick up a different weapon","หลอมทันที":"Fuse immediately","เปิดกล่อง":"Open chest","รับ":"Take","ทิ้ง":"Drop","เก็บ":"Pick up","กระเป๋า":"Bag","แตะเพื่อใช้":"Tap to use","รอ":"Wait","ยกเลิก":"Cancel","กำจัดแล้ว":"Eliminated","แต้มสกิล":"Skill points","ไม่มีอาวุธ":"No weapon","เล่นออนไลน์ได้ในแอป":"Play online in the app","หน้าเว็บ":"website","หรือหน้า":"or an","ที่ได้รับเชิญ":"invited session","ดวลผู้เล่นจริง":"Battle other players","เชิญออก":"Kick","เชิญ":"Remove","เข้าทีม":"Join team","ว่าง":"Open","เริ่มเลย":"Start now","เริ่มเกม":"Start game","กำลังค้นหาผู้เล่นจริงที่รออยู่":"Searching for other players","ผู้เล่นจริง":"Human players","หมดเวลาแล้วเริ่มทันที คนไม่ครบเติมบอท":"The match starts when the timer ends. Bots fill empty slots","รวม":"Total","รอเจ้าของห้องกดเริ่ม":"Waiting for the host to start","ใครกดจับคู่ตอนนี้จะมาเจอกันในห้องนี้":"Players joining Quick Match now will enter this room","เพื่อนเปิดหน้านี้ใน":"Friends can open this page in","แล้วเลือกห้องจากรายการ หรือพิมพ์รหัสห้อง":"and select the room or enter its code","ห้องนี้แสดงในรายการห้องออนไลน์":"This room is listed publicly","ห้องส่วนตัว":"Private room","แชร์รหัสหรือลิงก์ให้เพื่อนได้":"Share the code or invite link with friends","แอป":"App","กับเว็บเล่นด้วยกันได้":"and web players can play together","ผู้ชนะ":"Victory","ตกรอบ":"Eliminated","ทีมได้อันดับ":"Team placement","จาก":"of","เลเวล":"Level","รอด":"Survived","รอเกมจบก่อน":"Wait for the match to finish","คุณเป็นโฮสต์":"You are the host","จับคู่ใหม่":"Play again","กลับห้อง":"Return to room","รอในห้อง":"Wait in room","กลับเมนู":"Main menu","จบเกม":"Game over","ทีมผู้ชนะ":"Winning team","ผู้ชนะคือ":"Winner","สีผ้าคลุม":"Cloak color","ประชิด":"Melee","ยิงไกล":"Ranged","คทา":"Staff","ธาตุ":"Element","ไอคอนสกิลและอาวุธ":"Skill and weapon icons","และผู้ร่วมสร้าง":"and contributors","เพลง":"Music","เมนู":"Menu","กลางวัน":"Day","กลางคืน":"Night","ต่อสู้":"Battle","เสียงเอฟเฟกต์":"Sound effects","กำลังค้นหาห้อง":"Searching for rooms","กำลังค้นหาห้องออนไลน์":"Finding online rooms","พบ":"Found","อัปเดตอัตโนมัติ":"Updates automatically","ยังไม่มีห้องเปิดอยู่":"No rooms are open","ยังไม่มีห้องที่เปิดให้เห็นตอนนี้":"No public rooms available","สร้างห้องของคุณเองทางขวา แล้วให้เพื่อนกดเข้าจากรายการนี้":"Create a room on the right and invite friends to join here","คนละเวอร์ชัน":"Version mismatch","กำลังเล่น":"In game","เต็ม":"Full","รอผู้เล่น":"Waiting","บอทเติมครบ":"Fill to","รหัสผ่าน":"Password","รหัสผ่านห้อง":"Room password","เข้า":"Join","ห้องนี้ล็อกไว้ ใส่รหัสผ่านก่อน":"This room is locked. Enter the password first","คัดลอกแล้ว":"Copied","คัดลอกลิงก์":"Copy link","ได้รับลิงก์เชิญห้อง":"Invited to room","ใส่ชื่อแล้วกด":"Enter your name and press","ห้องเดิมไม่เริ่มเกม":"The previous game did not start","พบห้องอื่นที่รออยู่":"Found another waiting room","กำลังย้ายไปรวมกัน":"Moving players together","อาณาจักรล่มสลาย":"Fallen Kingdom","ป่าต้องสาป":"Cursed Forest","วิหารน้ำแข็ง":"Frozen Sanctuary","แดนเถ้าถ่าน":"Ashen Wastes","ห้วงอเวจี":"The Abyss","ต้องสาป":"Cursed","เถ้าถ่าน":"Ashen","อเวจี":"Abyssal","เหรียญจากมอนสเตอร์":"Coins from monsters","มอนสเตอร์ว่องไวและมีพิษ":"Monsters are swift and venomous","โดนตีแล้วช้าลง":"Getting hit slows you","ฟื้นมานาเร็วขึ้น":"Mana regenerates faster","โดนตีแล้วติดไฟ":"Getting hit sets you ablaze","ระวังลาวาปะทุ":"Watch for lava eruptions","มอนสเตอร์แกร่งมาก":"Monsters are much stronger","เหรียญ":"Coins","การโจมตีทำให้ติดไฟ":"Attacks inflict burn","เยือกแข็ง":"Frigid","การโจมตีทำให้ศัตรูช้าลง":"Attacks slow enemies","มีโอกาสปล่อยสายฟ้าลูกโซ่":"Chance to unleash chain lightning","โลหิต":"Sanguine","ดูดเลือด":"Lifesteal","ของดาเมจ":"of damage dealt","พิฆาต":"Executioner","แรงขึ้น":"Increased damage","ใส่เป้าหมายที่เลือดต่ำกว่า":"against targets below","นักล่า":"Hunter","ใส่มอนสเตอร์":"against monsters","เปิดศึก":"Opener","ใส่เป้าหมายที่เลือดเกิน":"against targets above","สะท้อน":"Echo","ร่ายซ้ำอีกครั้งด้วยพลัง":"Recast at","ว่องไว":"Swift","คูลดาวน์":"Cooldown","หนักหน่วง":"Heavy","ฟื้นฟู":"Recovery","ร่ายแล้วฟื้นเลือด":"Casting restores","เกราะ":"Armor","ร่ายแล้วได้โล่":"Casting grants a shield worth","ของเลือด":"of HP","เร่ง":"Haste","ร่ายแล้ววิ่งเร็วขึ้น":"Casting increases movement speed","เดือด":"Fury","ร่ายแล้วได้ความเดือด":"Casting grants rage","ประหยัด":"Low","คืนมานา":"Refund mana","วาร์ปเงา":"Shadow Blink","วาร์ปไปยังจุดที่เล็งทันที":"Instantly blink to the target point","แสงฟื้นฟู":"Healing Light","วิ และล้างสถานะช้า":"s and clears slows","บ้าคลั่ง":"Frenzy","ตีเร็วขึ้น":"Increase attack speed by","และดาเมจ":"and damage","เรียกอุกกาบาตใส่จุดที่เล็ง เผาศัตรู":"Call down a meteor at the target point, burning enemies","โล่วิญญาณ":"Spirit Shield","โล่":"Shield","ของเลือด นาน":"of HP for","คลื่นเยือกแข็ง":"Frost Wave","ระเบิดรอบตัว ตรึงศัตรู":"Blast nearby enemies and root them for","ซื้อไม่ได้":"Purchase failed","เหรียญไม่พอ":"Not enough coins","ไม่มีความสามารถพิเศษ":"No special ability","พุ่ง":"Dash","ร้านค้าแห่งแดนต้องสาป":"Cursed Lands Market","เสบียง":"Supplies","สมุดเลเวล":"Level Tome","เลื่อนเป็นเลเวล":"Advance to level","ทันที":"immediately","ได้แต้มสกิล":"Gain skill points","อาวุธในมือ":"Equipped weapon","ไม่มีลักษณะพิเศษ":"No weapon trait","สกิล":"Skill","ตี":"Attack","ใหม่":"New","จ่ายเพื่อสุ่มความสามารถของอาวุธชิ้นนี้ใหม่":"Pay to reroll this weapon’s abilities","ยังไม่มีอาวุธ":"No weapon equipped","สกิลพิเศษ":"Special skill","กด":"Press","หรือปุ่ม":"or tap","ถือได้":"Equip up to","สกิล ซื้อซ้ำเพื่ออัปเลเวล สูงสุด":"skill. Buy it again to level up. Max","ฆ่ามอนสเตอร์เก็บ":"Slay monsters for","แล้วกด":"then press","ซื้อยา สมุดเลเวล สกิลพิเศษ":"to buy potions, level tomes and special skills","จอมราชันย์สุริยคราส":"Celestial Overlord","ผู้เฝ้ายามทมิฬ":"Dark Sentinel","โกเลมจันทรา":"Lunar Construct","ดาบใหญ่จันทรา":"Lunar Greatsword","เคียวสุริยคราส":"Eclipse Scythe","คทาจันทรา":"Moon Staff","จุดอ่อน":"Weakness","ตื่นจากแท่นสุริยคราส":"has awakened at the Eclipse Altar","กลับสู่แท่นบูชาและฟื้นพลัง":"returned to the altar to recover","สุริยคราสเริ่มต้น":"The eclipse begins","เรียกบริวาร":"Summoning minions","คราสเต็มดวง":"Total Eclipse","ระวัง":"Beware","วิ่งเข้าวงแสงจันทร์":"Run into a pool of moonlight","ถูกโค่นแล้ว":"was defeated","อาวุธในตำนานร่วงลงบนแท่นบูชา":"A legendary weapon has fallen on the altar","อาวุธในตำนาน":"Legendary weapon","ราชินีหิมะ":"Snow Queen","คัมภีร์วิญญาณ":"Spirit Tome","ลูกแก้ววิญญาณ":"Spirit Orb","ลูกแก้วดวงจันทร์":"Moon Orb","คัมภีร์ดวงวิญญาณ":"Tome of Souls","คัมภีร์ปฐมกาล":"Primordial Tome","คัมภีร์เทพอัญเชิญ":"Divine Summoner Tome","อาชีพ":"Class","อัญเชิญภูติยิงพลังวิญญาณ สั่งวิญญาณทั้งหมดรุมเป้าหมาย เรียกผู้พิทักษ์จันทรายักษ์ลงมาสู้ข้างกาย":"Summon spirits that fire bolts, command them to focus a target and call a giant Lunar Guardian to fight beside you.","อัญเชิญภูติ":"Summon Spirit","บัญชาวิญญาณ":"Spirit Command","ผู้พิทักษ์จันทรา":"Lunar Guardian","ภูติวิญญาณ":"Wisp","หมาป่าวิญญาณ":"Spirit Wolf","อัศวินวิญญาณ":"Spectral Knight","ขุนพลวิญญาณ":"Spirit General","ภูติพราน":"Spirit Ranger","คัมภีร์ขุนพลวิญญาณ":"Spirit General Tome","คัมภีร์วิญญาณหลอมกับอาวุธประชิด":"Fuse the Spirit Tome with a melee weapon","อัญเชิญอัศวินวิญญาณถึกทน สั่งวิญญาณทั้งหมดพุ่งชนจนมึน เรียกขุนพลวิญญาณยักษ์":"Summon sturdy spectral knights, order a stunning charge and call a giant Spirit General","ขณะขุนพลอยู่ ผู้ใช้รับดาเมจลดลง":"While the general is present, you take less damage","กองทัพวิญญาณ":"Spectral Legion","บัญชาบุกทะลวง":"Command Charge","คัมภีร์พรานวิญญาณ":"Spirit Ranger Tome","คัมภีร์วิญญาณหลอมกับอาวุธยิงไกล":"Fuse the Spirit Tome with a ranged weapon","อัญเชิญภูติพรานยิงศรวิญญาณทะลุ สั่งวิญญาณทั้งหมดระดมยิงพร้อมตีตราเป้าหมาย ฝนศรวิญญาณที่ทิ้งภูติพรานไว้อีก":"Summon rangers with piercing arrows. Order a marked volley, then rain arrows and summon","ตน":"rangers","ห่าศรวิญญาณ":"Spirit Volley","ฝนศรวิญญาณ":"Spirit Arrow Rain","อสูรเพลิง":"Flame Demon","ยักษ์น้ำแข็ง":"Frost Giant","ยักษ์อัสนี":"Storm Giant","คัมภีร์วิญญาณหลอมกับคทา":"Fuse the Spirit Tome with a staff","ภูติ หมาป่า และผู้พิทักษ์กลายเป็นธาตุ":"Your wisps, wolves and guardian gain the element of","ทุกการโจมตีของวิญญาณติดสถานะธาตุ หอกวิญญาณ":"Spirit attacks apply elemental stacks. Launch a spirit lance of","ผู้พิทักษ์":"Guardian","ถล่มพื้นที่":"area slam","หอกวิญญาณ":"Spirit Lance","ตีตรา":"Marked","หลอดเลือดแรกแตก":"First health bar shattered","ราชินีหิมะพิโรธ พายุหิมะกำลังมา":"The Snow Queen is enraged. A blizzard is coming","หลอดสุดท้าย":"Final health bar","ฤดูหนาวนิรันดร์ใกล้มาถึง เตรียมหาวงไฟอุ่น":"Eternal Winter approaches. Find a circle of fire","ฤดูหนาวนิรันดร์":"Eternal Winter","วิ่งเข้าวงไฟอุ่น":"Run into a circle of fire","ราชินีหิมะตื่นจากบัลลังก์น้ำแข็ง":"The Snow Queen rises from her frozen throne","ราชินีหิมะกลับสู่บัลลังก์และฟื้นพลัง":"The Snow Queen returns to her throne to recover","ราชินีหิมะถูกโค่นแล้ว":"Snow Queen defeated","สมบัติแห่งบัลลังก์น้ำแข็งร่วงลงบนลาน":"Treasure from the frozen throne has fallen in the courtyard","ไททันลาวาบรรพกาล":"Ancient Lava Titan","เพลงประจำดินแดน":"Regional themes","และเสียงบรรยากาศของแต่ละดินแดน":"and regional ambience","แต่งและสังเคราะห์ด้วยโค้ดสำหรับเกมนี้":"composed and synthesized for this game","ต้นฉบับ":"Original","ซากเมืองหลวงของอาณาจักร":"Ruins of the kingdom’s capital","ผู้เฝ้ายามทมิฬเฝ้าวิหาร":"The Dark Sentinel guards the temple","ราชินีหิมะรอผู้กล้าอยู่บนลานบัลลังก์น้ำแข็ง":"The Snow Queen awaits challengers at her frozen throne","ราชินีหิมะรอผู้กล้าอยู่หน้าประตูปราสาทผลึก":"The Snow Queen awaits challengers before her crystal castle's gate","หลบ":"Dodge","ซื้อได้ที่พ่อค้าในหมู่บ้าน":"Visit a village merchant to buy this","เปิดร้านค้า":"Open shop","ร้านค้า":"Shop","ร้านค้าอยู่กับพ่อค้าในหมู่บ้าน":"Find merchants in villages","เดินไปหาแผงขายของกลางหมู่บ้าน แล้วกดคุย":"Walk to a stall in the village center and interact","ค้นบ้าน เปิดกล่อง ล่ามอนสเตอร์หาอาวุธ":"Search houses and chests or hunt monsters for weapons","ซื้อของกับพ่อค้าในหมู่บ้าน":"Trade with the village merchant","ปุ่มโจมตีตีฮีโร่ก่อน":"Attack prioritizes heroes","ปุ่มเล็ก":"Small button","ตีมอน":"Hunt","พุ่งอยู่ซ้ายขวดเลือด":"Dash is left of your health potion","โจมตี":"Attack","ฮีโร่ก่อน":"Heroes first","พ่อค้า":"Merchant","จุดของคุณ":"Your marker","เลือกจุดลงจากฟ้า":"Choose a landing site","แตะบนแผนที่":"Tap the map","ในวงพายุ":"inside the storm circle","เพื่อเลือกจุดลง":"to mark your landing site","หมู่บ้านมีอาวุธในบ้าน กล่องสมบัติ และพ่อค้าขายของ":"Find gear and merchants in villages.","ไม่เลือก":"No selection","สุ่มให้":"random landing","กำลังรอโฮสต์":"Waiting for host","สุ่มหมู่บ้าน":"Random village","พร้อมแล้ว":"Ready!","พร้อม":"Ready","ลงเลย":"Land now","ไม่มีมอนสเตอร์ในระยะ":"No monsters in range","ยังไม่ทันเจออะไร":"Nothing found yet","เจอเหรียญ":"Found coins","ค้นร่างอัศวิน":"Search fallen knight","กำลังค้น":"Searching","แตะเพื่อเก็บของ":"Tap to collect loot","ยังไม่เจออะไร":"Nothing found","ลุ้นของตำนาน":"Legendary chance","ได้ของธรรมดา":"Common loot","ค้นต่อได้ของดีขึ้น":"Keep searching for better loot","สูง":"High","มุมมอง":"View","กราฟิก":"Graphics","เครื่องนี้ไม่รองรับ":"Unsupported on this device","กล้อง":"Camera","ใกล้":"Near","ไกล":"Far","โทนภาพ":"Color grading","มืดสมจริง":"Dark","สดใส":"Bright","เงาลึก":"Deep shadows","เปิด":"On","ซ่อนวิธีเล่น":"Hide controls","วิธีเล่นและการควบคุม":"How to play","ผู้กล้า":"champions","เก็บอาวุธ ปลดปล่อยสกิล":"Find weapons. Unleash your skills.","เหลือเพียงตำนานเดียว":"One survivor.","เข้าสู่สนาม":"Enter the Arena","เล่นคนเดียว":"Solo","ฝึกฝนกับบอท":"Practice with bots","ออนไลน์":"Online","ห้องออนไลน์":"Online Rooms","สร้างห้อง":"Create a room","เล่นกับเพื่อน":"Play with friends","เครื่องมือเกม":"Game tools","ตั้งค่า":"Settings","สูตรหลอมอาวุธ":"Weapon Fusion","ตั้งค่าเกม":"Game settings","ปิดการตั้งค่า":"Close settings","หมวดการตั้งค่า":"Settings categories","การควบคุม":"Controls","คุณภาพกราฟิก":"Graphics quality","อัตโนมัติปรับตามอุปกรณ์":"Auto adjusts to your device","ประหยัดช่วยให้ภาพลื่นขึ้น":"Low improves frame rate","บรรยากาศ":"Lighting","ซิเนมาติกให้เงาลึกและแสงอุ่น":"Cinematic adds deep shadows and warm light","เป็นกลางให้ภาพสว่างอ่านง่าย":"Neutral makes the scene brighter","มิติของเงา":"Ambient occlusion","เพิ่มเงาตามพื้นและมุมวัตถุ":"Adds contact shadows to floors and corners","ปิดเพื่อลดภาระกราฟิก":"Turn off to reduce GPU load","มุมมองเกม":"Game view","สลับภาพ":"Switch between","และ":"and","โดยใช้ระบบเกมเดียวกัน":"with the same gameplay","ระยะกล้อง":"Camera distance","ใกล้เห็นตัวละครชัด":"Near gives a closer view of your hero","ไกลเห็นพื้นที่รอบตัวมากขึ้น":"Far shows more of the battlefield","คีย์ลัดและสัมผัส":"Keyboard and touch","เคลื่อนที่":"Move","ตีฮีโร่ก่อนเสมอ ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์":"Prioritize heroes, then attack monsters if no hero is in range","ตีมอนสเตอร์อย่างเดียว":"Attack monsters only","ข้างปุ่มโจมตี":"beside the attack button","สกิลอาวุธ":"Weapon skills","กดค้างเล็งตามเมาส์ ปล่อยร่าย":"Hold to aim with the mouse, release to cast","คลิกขวายกเลิก":"Right-click to cancel","พุ่ง อมตะระหว่างพุ่ง คูลดาวน์":"Dash with invulnerability. Cooldown","ปุ่ม":"button","ซ้ายขวดเลือด":"left of the health potion","เหนือปุ่มพุ่ง":"above Dash","ใช้ยา":"Use potion","เปิดกระเป๋า":"Open bag","เก็บอาวุธ":"Pick up weapon","สลับอาวุธ":"Switch weapons","วิ ห้ามสลับตอนโดนตี":"s. Cannot switch under attack","ต้องยืนใกล้พ่อค้าในหมู่บ้าน":"Stand near a village merchant","ปุ่มสกิลบนจอ":"On-screen skills","แตะแล้วปล่อยเพื่อใช้":"Tap and release to cast","กดค้างเพื่อดูความเสียหายและความสามารถ":"Hold for damage and skill effects","มือถือ":"Mobile","จอยซ้ายเดิน":"Move with the left stick","ลากจากปุ่มสกิลเพื่อเล็ง แล้วปล่อยเพื่อร่าย":"Drag a skill to aim, release to cast","เพลงและเอฟเฟกต์":"Music and effects","แตะเพื่อสลับเสียงทั้งหมด":"Tap to cycle through all audio","เฉพาะเอฟเฟกต์":"effects only","ปิดเสียง":"Mute","ปรับแล้วมีผลทันที":"Changes take effect immediately","เก็บการตั้งค่าไว้ในเครื่องนี้":"Saved on this device","ภาพ":"Lighting","ซิเนมาติก":"Cinematic","เป็นกลาง":"Neutral","พุ่งกระแทกเป้าหมายแรกและทำให้มึน":"Charge into the first target and stun it for","ได้โล่":"Gain a shield worth","กระโดดฟันพื้นที่และทำให้ศัตรูมึน":"Leap and strike an area, stunning enemies for","หมุนรอบตัวนาน":"Spin for","วิ โดนทุก":"s, hitting every","วิ และฟื้นเลือด":"s and restoring","ของความเสียหาย":"of damage dealt","ลดความเร็วศัตรู":"Slow enemies by","ฟาดพื้นเป็นแนวหลัง":"Slam the ground in a line after","วิ และทำให้มึน":"s and stun for","วาร์ปประชิดเป้าหมาย การโจมตีปกติครั้งถัดไปติดคริติคอล":"Blink to the target. Your next basic attack is a critical hit","ล่องหน":"Become invisible","และฟันจากเงาแรงขึ้น":"and strike harder from stealth","หมุนฟันศัตรูใกล้ตัวทุก":"Slash nearby enemies every","วิ นาน":"s for","วิ ลดความเร็วศัตรู":"s. Slows enemies by","และล้างสถานะช้ากับตรึงของผู้ใช้":"and clears your slows and roots","ยิงศร":"Fire arrows in","ทิศ เป้าหมายหนึ่งตัวรับความเสียหายได้ครั้งเดียว":"directions. Each target can be hit once","ถอยจากจุดยิงและยิงศรตรึง":"Leap back and root the target for","ศรตกทุก":"Arrows fall every","วิ และลดความเร็ว":"s, slowing enemies by","ยิงลูกไฟที่ระเบิดเป็นวงและสะสมสถานะเพลิง":"Launch an explosive fireball that applies Burn stacks","ผลักศัตรูรอบตัวและเผา":"Knock nearby foes back and burn them for","ต่อวิ นาน":"per second for","อุกกาบาตตกหลัง":"The meteor lands after","วิ และเผา":"s and burns for","ต่อวิ":"per second","หอกทะลุเป้าหมาย ลดความเร็ว":"Pierce targets and slow them by","วิ และสะสมเย็นจัด":"s and apply Chill stacks","ตรึงรอบตัว":"Root nearby enemies for","ลดความเร็ว":"Slow by","และสะสมเย็นจัด":"and apply Chill stacks","พายุโจมตีทุก":"The storm strikes every","วิ ลดความเร็วและทำให้มึน":"s, slows enemies and stuns for","ตอนจบ":"at the end","ฟันเป็นกรวย ลดความเร็ว":"Slash in a cone and slow enemies by","หมุนผลักศัตรูรอบตัวและทำให้มึน":"Spin to knock nearby enemies back and stun for","ปล่อยคลื่นทะลุศัตรู ลดความเร็ว":"Send a piercing wave that slows enemies by","ลูกดอกระเบิดเมื่อกระทบเป้าหมายหรือสุดระยะ":"The bolt explodes on impact or at maximum range","ยิงตาข่ายเป็นวง ตรึงศัตรู":"Cast a net that roots enemies for","และลดความเร็ว":"and slows them by","กระหน่ำยิงทุก":"Fire a barrage every","ชิ่งได้สูงสุด":"Chain to up to","เป้าหมาย ความเสียหายลด":"targets. Damage falls by","ต่อการชิ่ง ทำให้มึน":"per bounce. Stuns for","วิ และสะสมประจุ":"s and applies Charge stacks","สนามไฟฟ้าตามตัว โจมตีทุก":"An electric field follows you and hits every","วิ ลดความเร็วและสะสมประจุ":"s, slowing enemies and applying Charge stacks","สายฟ้าฟาดทุก":"Lightning strikes every","วิ ทำให้มึน":"s, stunning for","พุ่งฟันผ่านศัตรู ลดความเร็ว":"Dash through enemies, slowing them by","และดูดเลือด":"and stealing","กระโดดฟัน ทำให้มึน":"Leap and slash, stunning for","แล้วฟันซ้ำ":"then strike again","ขว้างหอกทะลุศัตรู ลดความเร็ว":"Throw a piercing spear that slows by","พุ่งและวิ่งเร็วขึ้น":"Dash and gain movement speed for","วิ การโจมตีถัดไปติดคริติคอลและแรงขึ้น":"s. Your next attack always crits and deals bonus damage","พายุรอบตัวโจมตีทุก":"A storm surrounds you and strikes every","ปล่อยคลื่นดาบทะลุศัตรูและสะสมสถานะธาตุ":"Release a piercing blade wave that applies elemental stacks","ออร่าธาตุตามตัว โจมตีทุก":"An elemental aura follows you and hits every","กระโดดลงกลางวงระเบิดธาตุ และทำให้มึน":"Leap into an elemental blast and stun for","ศรธาตุสามทิศ เป้าหมายหนึ่งตัวรับความเสียหายได้ครั้งเดียว":"Fire elemental arrows in three directions. Each target can be hit once","สร้างบ่อธาตุ โจมตีทุก":"Create an elemental pool that hits every","ฝนศรธาตุทุก":"Rain elemental arrows every","ยิงรัว":"Rapidly fire","นัดไปที่เป้าหมาย ลูกดอกแต่ละนัดระเบิดเมื่อกระทบ":"bolts at the target. Each explodes on impact","กับดักระเบิดหลัง":"The trap explodes after","วิ ตรึง":"s and roots for","แล้วลดความเร็ว":"then slows by","ศรยักษ์ทะลุเป้าหมาย ผลักศัตรูและสะสมสถานะเพลิง":"Fire a giant piercing arrow that knocks enemies back and applies Burn","ปล่อยลูกแก้วสองธาตุแยกทิศ แต่ละลูกระเบิดเมื่อกระทบ":"Send two elemental orbs in different directions. Each explodes on impact","ระเบิดรอบตัว ผลักศัตรูและสะสมสถานะทั้งสองธาตุ":"Blast nearby enemies, knock them back and apply both elemental effects","พายุสองธาตุซ้อนกัน โจมตีทุก":"Two overlapping elemental storms strike every","ภูติ":"Spirit","เรียก":"Summon","ตน นาน":"for","ตัว โจมตี":"units. Attack","สั่งวิญญาณรุมเป้าหมายและฟื้นเลือดให้พวกมัน":"Order spirits to focus the target and heal them for","อัศวินพุ่งชนด้วย":"Knights charge for","ของพลังโจมตี ทำให้มึน":"of attack power and stun for","วิญญาณยิง":"Spirits fire","นัด นัดละ":"shots, each dealing","ของพลังโจมตี และตีตราให้วิญญาณตีแรงขึ้น":"of attack power. Mark the target for increased spirit damage","เพิ่มความเสียหายของวิญญาณ":"Increases spirit damage by","หอกสะสมสถานะ":"The lance applies","ฝนศรทุก":"Rain arrows every","วิ พร้อมเรียกภูติพราน":"s and summon a Spirit Ranger","กระแทกพื้นที่ ทำให้มึน":"Slam the area and stun for","อยู่":"active","ผู้ใช้รับความเสียหายลดลง":"Incoming damage reduced by","ซื้อสกิลจากพ่อค้าในหมู่บ้าน":"Buy a skill from a village merchant","วาร์ปทันทีในระยะ":"Blink instantly up to","หน่วย":"units","และเพิ่มความเสียหาย":"and increase damage by","วิ และเผาศัตรู":"s and burns enemies for","ของเลือดสูงสุด นาน":"of max HP for","พร้อมใช้":"Ready","เวท":"Magic","ช่องสกิล":"Skill slot","เก็บอาวุธเพื่อปลดล็อกสกิล":"Pick up a weapon to unlock skills","ต่อธาตุต่อจังหวะ":"per element per tick","ต่อจังหวะ":"per tick","ต่อนัด":"per shot","ต่อลูก":"per orb","ยังไม่ปลดล็อก":"Locked","ค่าของเลเวล":"Values at level","มานาไม่พอ":"Not enough mana","ติดสถานะมึน":"Stunned","กายภาพ":"Physical","เร่งวิ่ง":"Haste","ตีเร็ว":"Attack speed","ตีครั้งถัดไปแรงขึ้น":"Next attack empowered","โล่อมตะ":"Revival Shield","หลบความเสียหาย":"Evade damage","ขุนพลคุ้มกัน":"General’s Guard","มึน":"Stunned","ตรึง":"Rooted","เคลื่อนที่ช้า":"Slowed","เผาไหม้":"Burning","เย็นจัด":"Chilled","ประจุไฟฟ้า":"Charged","เน่าเปื่อย":"Decay","ถูกตีตรา":"Marked","เปียก":"Wet","แทนช่องสำรอง":"Replace reserve","ต่ำ":"Low","ล็อก":"Locked","อาวุธ":"Weapon","ผู้กล้า ล่ามอนสเตอร์ เก็บเหรียญ หนึ่งผู้รอดชีวิต":"champions. Hunt monsters, collect coins and be the last survivor.","ชื่อ":"Name","ผ้าคลุม":"Cloak","กำลังตรวจสอบไฟล์โมเดล":"Checking model files","ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด":"Fight other players in a free-for-all. Wait up to","วิ คนไม่ครบเติมบอทให้ครบ":"s. Bots fill the roster to","รายการห้อง":"Room list","ตั้งชื่อ":"Set a name","เลือกโหมด":"Choose a mode","ทุกคนศัตรู":"Free-for-all","จำนวนคน บอท ขนาดแมพ":"player limit, bots and map size","แชทในห้องรอ":"Lobby chat","ทุกคนลงมาจากฟ้า แตะบนแผนที่":"Drop from the sky. Tap the map","เพื่อเลือกจุดลง ไม่เลือก":"to choose your landing site. No selection","ปุ่มโจมตี":"Attack button","ฮีโร่ก่อนเสมอ":"heroes first.","ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์":"Attacks monsters when no heroes are in range","ข้างปุ่มโจมตี ตีเฉพาะมอนสเตอร์":"next to Attack targets monsters only","อมตะระหว่างพุ่ง คูลดาวน์":"Invulnerable while dashing. Cooldown","วิ ปุ่มอยู่ซ้ายขวดเลือด":"s. The button is left of the health potion","อยู่เหนือปุ่มพุ่ง":"above the dash button","เล็งสกิล":"Aim skills","กดค้างปุ่มสกิลแล้วลากไปทิศ":"Hold a skill button and drag toward a direction","จุดที่ต้องการ ปล่อยเพื่อร่าย":"or location. Release to cast","ลากไป":"Drag to","เพื่อยกเลิก":"to cancel","แตะเฉยๆ":"Tap once","เล็งอัตโนมัติ":"Auto-aim","คอมพิวเตอร์":"Desktop","กดค้าง":"Hold","เล็งตามเมาส์ ปล่อยเพื่อร่าย":"to aim with the mouse. Release to cast","ยืนใกล้แล้วแตะ":"Stand nearby and tap","หรือ":"or","ซื้อยา สมุดเลเวล สกิลพิเศษ สุ่มความสามารถอาวุธใหม่":"Buy potions, level tomes and special skills, or reroll weapon abilities","ได้จากมอนสเตอร์และกล่อง":"Dropped by monsters and found in chests","ค้นตามบ้าน":"Search houses","กล่องสมบัติ":"Treasure chests","คีย์":"key","ได้ของ":"contain loot","มอนสเตอร์ทุกตัวมีโอกาสดรอป ยิ่งตัวใหญ่ยิ่งดี":"All monsters can drop loot. Larger monsters offer better drops","พื้นโล่งมีน้อย":"Open ground has fewer items","ยาใหญ่":"Greater Elixir","ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้":"Haste Potion. Tap beside the status bar to use","ระหว่างโดนตียาฟื้นได้ครึ่งเดียว":"Potions restore half as much under attack","กลางคืน มอนสเตอร์ดุร้ายขึ้นและ":"At night, monsters grow stronger and","ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา":"zombies rise from graves to hunt. Slay them for potions","อาวุธ มีโอกาส":"or weapons, with a chance of","ซ่อนตัวใน":"Hide in","พุ่มหญ้าสูงได้":"tall grass","บอส":"Bosses","ไททันลาวาบรรพกาลในปราสาท":"Ancient Lava Titan in the castle","ราชินีหิมะบนปราสาทน้ำแข็ง":"Snow Queen at the ice castle","หลอด หลอดแตกเข้าเฟสใหม่ ระหว่างเปลี่ยนเฟสตีไม่เข้า":"health bars. Breaking one triggers a new phase with brief invulnerability","ที่แท่นสุริยคราส":"at the Eclipse Altar","ศาลภูตฟื้นเลือด":"Spirit shrines restore HP","มานา":"Mana","ถ้ำลับในภูเขามีสมบัติ":"Find treasure in hidden mountain caves","ตัดต้นไม้ล้มได้":"Trees can be cut down","ต้นกล้วยตีทีเดียวล้ม":"Banana trees fall in one hit","ร่างอัศวินที่ยังเรืองแสงวิญญาณสีเขียวค้นได้ ยืนใกล้แล้วแตะ":"Fallen knights glowing green can be searched. Stand nearby and tap","เพื่อค้น แตะอีกครั้งเพื่อเก็บของ":"to search. Tap again to take the loot","ยิ่งค้นนาน ยิ่งลุ้นของดี":"Search longer for better loot.","ค้นครบ":"Search for","วิ ลุ้นของตำนาน":"s for a legendary chance of","เดินออกหรือโดนตีจะหยุดค้น":"Moving away or taking damage stops the search","หลุมละครั้ง":"Once per grave","กล่องสมบัติทอง":"Golden chests","เปิดได้ของหายากทุกใบ":"always contain rare loot","ห้องผู้คุมในคุกใต้ดิน":"Dungeon warden chamber","ใบ":"chests","หลังราชินีหิมะ":"behind the Snow Queen","วิหารนครเก่า":"Old Town temple","หลอมอาวุธ":"Weapon fusion","พกได้":"Carry up to","ชิ้น":"weapons","มือ":"equipped","สำรอง":"reserve","เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง":"Walk over a different weapon to store it in reserve","แตะรูปอาวุธหรือคีย์":"Tap the weapon icon or press","สลับ":"to switch","โดนตีอยู่สลับไม่ได้":"Cannot switch under attack","ครบ":"After","นาทีหลอมเป็นอาวุธใหม่":"minutes, fuse them into a new weapon with","สกิลใหม่":"new skills","อย่าง":"types","จอยซ้าย":"Left stick","เดิน":"Move","เดินชนอาวุธเพื่อเก็บ":"Walk over a weapon to pick it up","รับอาวุธ":"Take weapon","แตะ":"Tap","อัปสกิล":"Upgrade skill","อัลติเลเวล":"Ultimate at level","เครดิตเสียงและเพลง":"Audio credits","แตะเพื่อเปิดเพลง":"Tap to play music","หน้าโหลด":"Loading screen","จัดหาโดยเจ้าของเกม":"Provided by the game's owner","กลับ":"Back","เสียงทั้งหมดเป็นผลงานเปิด":"Audio uses open licenses","ตัดต่อ ปรับระดับเสียง และแปลงเป็น":"Edited, normalized and converted to","สำหรับเกมนี้":"for this game","ในมือ":"equipped","จะหลอมรวมเป็นอาวุธใหม่ พร้อมสกิลใหม่":"fuse into a new weapon with","ได้ระดับของชิ้นที่ดีกว่า ถ้าระดับเท่ากันตั้งแต่มหากาพย์ขึ้นไปจะได้สูงขึ้น":"new skills. Inherit the higher tier. Two matching Epic or better weapons gain","ขั้น":"tier","ทำช้า":"Slows","สายฟ้ากระโดด":"Lightning chains","กำลังโหลดรายการห้อง":"Loading rooms","รีเฟรช":"Refresh","สร้างห้องใหม่":"Create room","ชื่อห้อง":"Room name","เว้นว่าง":"Leave blank","ไม่ล็อก":"unlocked","แสดงในรายการห้อง":"List this room publicly","เข้าด้วยรหัสห้อง":"Join by room code","รหัสห้อง":"Room code","ส่งรหัสห้องให้เพื่อน":"Share your room code","ลิงก์เชิญ":"Invite link","โหมด":"Mode","บอทเติมให้ครบ":"Fill roster with bots to","ขนาดแมพ":"Map size","แชทในห้อง":"Room chat","พิมพ์ข้อความ":"Type a message","ข้อความแชท":"Chat message","ส่ง":"Send","กำลังเปิดประตูสนาม":"Opening the arena gates","กำลังตรวจสอบไฟล์เกม":"Checking game files","ความคืบหน้าโหลดเกม":"Loading progress","กำลังเตรียมข้อมูล":"Preparing game data","โหลดใหม่อีกครั้ง":"Retry","ดูต่อ":"Spectate","เดินด้วย":"Move with","หรือจอยซ้าย โจมตีด้วย":"or the left stick. Attack with","ตีฮีโร่ก่อนเสมอ":"to target heroes first","หรือปุ่มเล็กข้างปุ่มโจมตีตีเฉพาะมอนสเตอร์ สกิล":"or the small attack button to target monsters only. Skills","บนจอเพื่ออัปสกิล":"on screen to upgrade skills","หรือปุ่มซ้ายขวดเลือดเพื่อพุ่ง":"or the button left of the health potion to dash","สกิลพิเศษ มือถือกดค้างแล้วลากเพื่อเล็ง ปล่อยเพื่อร่าย":"Special skill. On mobile, hold and drag to aim, then release to cast","แตะสกิลเพื่อใช้ กดค้างเพื่ออ่านรายละเอียด":"Tap to cast. Hold for details","อัปสกิลได้":"Upgrade available","กำลังฟื้นฟู":"Recovering","ความเสียหาย":"Damage","ค่าพื้นฐานก่อนลดทอน":"before mitigation","รูน":"Rune","ข้างสกิลเพื่ออัปสกิล":"beside a skill to upgrade it","ยังเข้าเกมไม่ได้":"Cannot enter the arena yet","โหลดข้อมูลไม่สำเร็จ":"Game data could not be loaded","ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง":"Required art and models must load","ตรวจสอบการเชื่อมต่อแล้วลองโหลดใหม่":"Check your connection and retry","ไฟล์เกม":"Game file","รายการโมเดล":"Model list","ไม่มีโมเดลในรายการ":"No models listed","ไม่มีไฟล์ที่จำเป็น":"Required file missing","ภาพไอคอน":"Icon art","รายการ":"items","หมดเวลารอ":"Timed out","กำลังจัดสนามและเตรียมผู้กล้า":"Preparing the arena and champions","กำลังเข้าสู่สนาม":"Entering the arena","กำลังเตรียมสนาม":"Preparing the battlefield","เตรียมสนาม":"Preparing arena","ไฟล์ตัวละครไม่ครบ":"Character files incomplete","ของผู้เล่นไม่ครบ":"Player data incomplete","อุปกรณ์ไม่พร้อมสำหรับกราฟิก":"Device does not support these graphics","กำลังอ่านฉากและภาพไอคอน":"Loading the scene and icons","รายการไฟล์เกม":"Game files","รายการตัวละครไม่ครบ":"Character list incomplete","หมดเวลารอภาพหน้าโหลด":"Loading artwork timed out","ภาพหน้าโหลดไม่ถูกต้อง":"Invalid loading artwork","โหลดภาพหน้าโหลดไม่สำเร็จ":"Could not load the loading artwork","ไฟล์เสียงไม่ถูกต้อง":"Invalid audio file","ตัวละคร":"Characters","ฉากเกม":"Game scene","กำลังเตรียมภาพและแสงจันทร์":"Preparing visuals and moonlight","กำลังเตรียมภาพสนามประลอง":"Preparing the arena visuals","สนามพร้อมแล้ว":"Arena ready","กำลังเปิดเมนูหลัก":"Opening the main menu","เลือกการเล่น":"Choose a game mode","เริ่มมือเปล่า":"Start unarmed","เก็บอาวุธในสนาม":"Find weapons in the arena","อัปสกิลเพื่อเอาตัวรอด":"Upgrade your skills to survive","ภาพ เสียง และสูตรหลอมอาวุธ":"Graphics, audio and weapon fusion","รู้จักอาวุธและสกิล":"Weapon and skill guide","แบบ":"types","ดูสูตรหลอมและสกิลหลอมทั้ง":"Explore fusion recipes and all","ใต้เงาจันทราที่แตกสลาย":"Beneath the shattered moon","ซื้อ":"Buy","ราคา":"Price","เต็มแล้ว":"Full","ปิดร้านค้า":"Close shop","อัญเชิญภูติเพลิง":"Summon Flame Spirit","หอกวิญญาณเพลิง":"Flame Spirit Lance","อัญเชิญภูติเหมันต์":"Summon Frost Spirit","หอกวิญญาณเหมันต์":"Frost Spirit Lance","อัญเชิญภูติอัสนี":"Summon Storm Spirit","หอกวิญญาณอัสนี":"Storm Spirit Lance","คัมภีร์วิญญาณเพลิง":"Flame Spirit Tome","คัมภีร์วิญญาณเหมันต์":"Frost Spirit Tome","คัมภีร์วิญญาณอัสนี":"Storm Spirit Tome","⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน":"⚡ Quick Match puts you in a free-for-all with other players. After 30 seconds, bots fill the remaining slots for a 32-player match.","🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด":"🏠 In Online Rooms, set a room name, an optional password and a mode.","ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4":"Free-for-all / Duos / Squads","· จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ":"Choose the player limit, bots and map size. Chat in the lobby.","🪂 เริ่มเกม: ทุกคนลงมาจากฟ้า แตะบนแผนที่ (ในวงพายุ) เพื่อเลือกจุดลง ไม่เลือก = สุ่มให้":"🪂 Tap inside the storm circle to choose where to land. Leave it unmarked for a random drop.","⚔️ ปุ่มโจมตี (J / Space) ตี":"⚔️ Attack (J / Space) targets","ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์ · ปุ่มเล็ก 🐲":"If no hero is in range, it targets monsters. Use the small 🐲","(K) ข้างปุ่มโจมตี ตีเฉพาะมอนสเตอร์":"button (K) to target monsters exclusively.","💨 พุ่ง (Shift) อมตะระหว่างพุ่ง คูลดาวน์ 45 วิ ปุ่มอยู่ซ้ายขวดเลือด · ✦ สกิลพิเศษ (V) อยู่เหนือปุ่มพุ่ง":"💨 Dash (Shift) grants brief invulnerability and has a 45-second cooldown. Find it left of the health potion, with Special Skill (V) just above it.","🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: กดค้าง Q E R เล็งตามเมาส์ ปล่อยเพื่อร่าย)":"🎯 Hold and drag a skill to aim. Release to cast, drag to ✕ to cancel, or tap for auto-aim. On desktop, hold Q, E or R to aim with the mouse and release to cast.","🛒 ร้านค้าอยู่กับพ่อค้าในหมู่บ้าน: ยืนใกล้แล้วแตะ \"ร้านค้า\" (หรือ P) ซื้อยา สมุดเลเวล สกิลพิเศษ สุ่มความสามารถอาวุธใหม่ · เหรียญ 🪙 ได้จากมอนสเตอร์และกล่อง":"🛒 At a village merchant, tap Shop or press P to buy potions, level tomes and special skills, or reroll your weapon abilities. Earn coins from monsters and chests.","🗡️ อาวุธ/เกราะ: ค้นตามบ้าน 📦 กล่องสมบัติ (คีย์ F) ได้ของ 68% · มอนสเตอร์ทุกตัวมีโอกาสดรอป ยิ่งตัวใหญ่ยิ่งดี · พื้นโล่งมีน้อย":"🗡️ Search houses for weapons and armor. Open chests with F for a 68% chance of loot. Every monster can drop loot, with better rewards from larger foes. Items are scarce on open ground.","🎒 กระเป๋า: 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า) · ระหว่างโดนตียาฟื้นได้ครึ่งเดียว":"🎒 Tap the potion buttons or press 4–7 to use health, mana, elixir or haste potions. Press B to open your bag. Potions restore half as much while under attack.","🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้":"🌙 Monsters grow stronger at night. Zombies rise from graves and can drop potions or weapons, including a 1% chance of SSR loot. Hide in tall grass to evade them.","👑 บอส: 🌋 ไททันลาวาบรรพกาลในปราสาท 🏰 · ❄ ราชินีหิมะบนปราสาทน้ำแข็ง (เลือด 3 หลอด หลอดแตกเข้าเฟสใหม่ ระหว่างเปลี่ยนเฟสตีไม่เข้า) · ☾ Celestial Overlord ที่แท่นสุริยคราส":"👑 Find the Ancient Lava Titan in the castle, the Snow Queen at the ice castle and the Celestial Overlord at the Eclipse Altar. The Queen has three health bars and is briefly invulnerable between phases.","✨ ศาลภูตฟื้นเลือด/มานา · ถ้ำลับในภูเขามีสมบัติ · 🌳 ตัดต้นไม้ล้มได้ (ต้นกล้วยตีทีเดียวล้ม)":"✨ Spirit shrines restore health and mana. Mountain caves hide treasure. Trees can be felled, and banana trees fall in one hit.","🪦 ป่าต้องสาป: ร่างอัศวินที่ยังเรืองแสงวิญญาณสีเขียวค้นได้ ยืนใกล้แล้วแตะ 🔍 (หรือ F) เพื่อค้น แตะอีกครั้งเพื่อเก็บของ ·":"🪦 In the Cursed Forest, approach a fallen knight glowing green and tap 🔍 or press F to search. Tap again to collect your loot.","(ค้นครบ 10 วิ ลุ้นของตำนาน 15%) · เดินออกหรือโดนตีจะหยุดค้น · หลุมละครั้ง":"A full 10-second search gives a 15% chance of legendary loot. Moving away or taking damage interrupts the search. Each grave can be searched once.","💎 กล่องสมบัติทอง (เปิดได้ของหายากทุกใบ): ห้องผู้คุมในคุกใต้ดิน 6 ใบ · หลังราชินีหิมะ 2 ใบ · วิหารนครเก่า 2 ใบ":"💎 Gold chests always contain rare loot. Find six in the dungeon warden’s chamber, two behind the Snow Queen and two in the Old Town temple.","⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ (คูลดาวน์ 5 วิ · โดนตีอยู่สลับไม่ได้) · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง":"⚒️ Carry one equipped weapon and one in reserve. Walk over a different weapon to store it. Tap the weapon icon or press T to switch, with a 5-second cooldown. You cannot switch under attack. At 10 minutes, your weapons fuse and grant three new skills.","จอยซ้าย = เดิน · เดินชนอาวุธเพื่อเก็บ (🔄 รับอาวุธ) · แตะ ＋ อัปสกิล (อัลติเลเวล 6/11/16)":"Move with the left stick. Walk over weapons to pick them up, or use the swap prompt. Tap ＋ to upgrade a skill. Upgrade your ultimate at levels 6, 11 and 16.","32 ผู้กล้า · เก็บอาวุธ ปลดปล่อยสกิล · เหลือเพียงตำนานเดียว":"32 champions. Find your weapon. Be the last one standing.","เริ่มมือเปล่า · เก็บอาวุธในสนาม · อัปสกิลเพื่อเอาตัวรอด":"Start unarmed. Find a weapon and master its skills to survive.","ได้ของธรรมดา–หายาก":"Common or rare loot","ทีมละ 2 คน":"Duos","ทีมละ 4 คน":"Squads","ใส่ชื่อแล้วกด \"เข้าห้อง\"":"Enter your name and select Join room","ฟื้นคืนชีพ!":"revived!","แตะบนแผนที่ (ในวงพายุ) เพื่อเลือกจุดลง":"Tap inside the circle to land.","ไม่เลือก = สุ่มให้":"No marker? Land at random.","หลอดเลือดแรกแตก — ราชินีหิมะพิโรธ พายุหิมะกำลังมา!":"First health bar shattered! The Snow Queen is calling a blizzard.","อีก 30 วิหลอมอาวุธ — พกอาวุธ 2 ชนิดไว้!":"Fusion in 30 seconds! Carry two different weapons.","พกอาวุธ 2 ชนิด · นาทีที่ 10 หลอมเป็นอาวุธใหม่":"Carry two different weapons to fuse them at 10 minutes.","เริ่มหลอม! ได้ชิ้นที่ 2 เมื่อไหร่หลอมทันที":"Fusion unlocked! Pick up a second weapon to fuse.","อีก 3 นาทีหลอมอาวุธ":"Fusion in 3 minutes","ดูสูตรหลอมและสกิลหลอมทั้ง 36 สกิล":"View fusion recipes and all 36 fusion skills","หมุนรอบตัวนาน 1.75 วิ โดนทุก 0.25 วิ และฟื้นเลือด 15% ของความเสียหาย":"Spin for 1.75 seconds, hitting every 0.25 seconds and healing for 15% of damage dealt.","ยังไม่ปลดล็อก · ค่าของเลเวล 1":"Locked · Level 1 preview","ภาพ: ซิเนมาติก":"Lighting: Cinematic","ภาพ: เป็นกลาง":"Lighting: Neutral","กราฟิก: ประหยัด":"Graphics: Low","เข้าห้องไม่สำเร็จ ลองอีกครั้ง หรือใช้ Wi-Fi เดียวกัน":"Could not join. Try again or connect to the same Wi-Fi network.","MP ต่ำ":"Low MP","รู้จักอาวุธและสกิล · 10 แบบ":"Weapon and skill guide · 10 weapons","พกอาวุธ 2 ชนิด (ในมือ + สำรอง) · ครบ":"Carry two different weapons, one equipped and one in reserve. At","จะหลอมรวมเป็นอาวุธใหม่ พร้อมสกิลใหม่ 3 อย่าง · ได้ระดับของชิ้นที่ดีกว่า ถ้าระดับเท่ากันตั้งแต่มหากาพย์ขึ้นไปจะได้สูงขึ้น 1 ขั้น":"they fuse into a new weapon with three skills. It inherits the higher tier. Two equal-tier weapons of Epic quality or better gain one tier.","ว่าง (บอท)":"Open (bot)","ปิดบอทอยู่ ต้องมีผู้เล่นอย่างน้อย 2 คน":"At least two players are required with bots off","ศรเพลิงสามทาง":"Triple Flame Arrow","คลื่นดาบเพลิง":"Flame Blade Wave","ออร่าเพลิง":"Flame Aura","เพลิงถล่มปฐพี":"Flame Earthshatter","บ่อเพลิง":"Flame Pool","ฝนศรเพลิง":"Flame Arrow Rain","ธาตุเพลิง":"Flame","ภูติธาตุเพลิง":"Flame Spirit","ผู้พิทักษ์ธาตุเพลิง":"Flame Guardian","ดาบธาตุเพลิง ฟันติดธาตุ ปล่อยคลื่นดาบเพลิง ออร่าเพลิงรอบตัว กระโดดถล่มธาตุใส่พื้นที่":"Inflict elemental stacks with each slash. Release a piercing Flame wave, surround yourself with an aura and leap into an elemental blast.","ธนูธาตุเพลิง ศรติดธาตุ ยิงศรสามทาง บ่อเพลิงใส่พื้นที่ ฝนศรเพลิง":"Inflict elemental stacks with your arrows. Fire a three-way Flame volley, form a damaging pool and rain arrows on an area.","คัมภีร์วิญญาณหลอมกับคทาเพลิง: ภูติ หมาป่า และผู้พิทักษ์กลายเป็นธาตุเพลิง ทุกการโจมตีของวิญญาณติดสถานะธาตุ หอกวิญญาณเพลิง ผู้พิทักษ์เพลิงถล่มพื้นที่":"Fuse a Spirit Tome with a Flame staff. Your wisps, wolves and guardian gain elemental attacks. Hurl a Flame Spirit Lance and summon a guardian to slam the area.","ศรเหมันต์สามทาง":"Triple Frost Arrow","คลื่นดาบเหมันต์":"Frost Blade Wave","ออร่าเหมันต์":"Frost Aura","เหมันต์ถล่มปฐพี":"Frost Earthshatter","บ่อเหมันต์":"Frost Pool","ฝนศรเหมันต์":"Frost Arrow Rain","ธาตุเหมันต์":"Frost","ภูติธาตุเหมันต์":"Frost Spirit","ผู้พิทักษ์ธาตุเหมันต์":"Frost Guardian","ดาบธาตุเหมันต์ ฟันติดธาตุ ปล่อยคลื่นดาบเหมันต์ ออร่าเหมันต์รอบตัว กระโดดถล่มธาตุใส่พื้นที่":"Inflict elemental stacks with each slash. Release a piercing Frost wave, surround yourself with an aura and leap into an elemental blast.","ธนูธาตุเหมันต์ ศรติดธาตุ ยิงศรสามทาง บ่อเหมันต์ใส่พื้นที่ ฝนศรเหมันต์":"Inflict elemental stacks with your arrows. Fire a three-way Frost volley, form a damaging pool and rain arrows on an area.","คัมภีร์วิญญาณหลอมกับคทาเหมันต์: ภูติ หมาป่า และผู้พิทักษ์กลายเป็นธาตุเหมันต์ ทุกการโจมตีของวิญญาณติดสถานะธาตุ หอกวิญญาณเหมันต์ ผู้พิทักษ์เหมันต์ถล่มพื้นที่":"Fuse a Spirit Tome with a Frost staff. Your wisps, wolves and guardian gain elemental attacks. Hurl a Frost Spirit Lance and summon a guardian to slam the area.","ศรอัสนีสามทาง":"Triple Storm Arrow","คลื่นดาบอัสนี":"Storm Blade Wave","ออร่าอัสนี":"Storm Aura","อัสนีถล่มปฐพี":"Storm Earthshatter","บ่ออัสนี":"Storm Pool","ฝนศรอัสนี":"Storm Arrow Rain","ธาตุอัสนี":"Storm","ภูติธาตุอัสนี":"Storm Spirit","ผู้พิทักษ์ธาตุอัสนี":"Storm Guardian","ดาบธาตุอัสนี ฟันติดธาตุ ปล่อยคลื่นดาบอัสนี ออร่าอัสนีรอบตัว กระโดดถล่มธาตุใส่พื้นที่":"Inflict elemental stacks with each slash. Release a piercing Storm wave, surround yourself with an aura and leap into an elemental blast.","ธนูธาตุอัสนี ศรติดธาตุ ยิงศรสามทาง บ่ออัสนีใส่พื้นที่ ฝนศรอัสนี":"Inflict elemental stacks with your arrows. Fire a three-way Storm volley, form a damaging pool and rain arrows on an area.","คัมภีร์วิญญาณหลอมกับคทาอัสนี: ภูติ หมาป่า และผู้พิทักษ์กลายเป็นธาตุอัสนี ทุกการโจมตีของวิญญาณติดสถานะธาตุ หอกวิญญาณอัสนี ผู้พิทักษ์อัสนีถล่มพื้นที่":"Fuse a Spirit Tome with a Storm staff. Your wisps, wolves and guardian gain elemental attacks. Hurl a Storm Spirit Lance and summon a guardian to slam the area.","ดาบคู่ราชันย์ชั้นสูง":"Advanced Sovereign Twinblades","ดาบคู่ราชันย์มหากาพย์":"Epic Sovereign Twinblades","ดาบคู่ราชันย์ตำนาน":"Legendary Sovereign Twinblades","หอกล่าวิญญาณชั้นสูง":"Advanced Soulhunter Spear","หอกล่าวิญญาณมหากาพย์":"Epic Soulhunter Spear","หอกล่าวิญญาณตำนาน":"Legendary Soulhunter Spear","ดาบเพลิงนรกชั้นสูง":"Advanced Inferno Blade","ดาบเพลิงนรกมหากาพย์":"Epic Inferno Blade","ดาบเพลิงนรกตำนาน":"Legendary Inferno Blade","ดาบเหมันต์นิรันดร์ชั้นสูง":"Advanced Everfrost Blade","ดาบเหมันต์นิรันดร์มหากาพย์":"Epic Everfrost Blade","ดาบเหมันต์นิรันดร์ตำนาน":"Legendary Everfrost Blade","ดาบอัสนีบาตชั้นสูง":"Advanced Thunderstrike Blade","ดาบอัสนีบาตมหากาพย์":"Epic Thunderstrike Blade","ดาบอัสนีบาตตำนาน":"Legendary Thunderstrike Blade","ธนูสุริยันเพลิงชั้นสูง":"Advanced Solarfire Bow","ธนูสุริยันเพลิงมหากาพย์":"Epic Solarfire Bow","ธนูสุริยันเพลิงตำนาน":"Legendary Solarfire Bow","ธนูจันทร์เหมันต์ชั้นสูง":"Advanced Frostmoon Bow","ธนูจันทร์เหมันต์มหากาพย์":"Epic Frostmoon Bow","ธนูจันทร์เหมันต์ตำนาน":"Legendary Frostmoon Bow","ธนูวายุอัสนีชั้นสูง":"Advanced Stormwind Bow","ธนูวายุอัสนีมหากาพย์":"Epic Stormwind Bow","ธนูวายุอัสนีตำนาน":"Legendary Stormwind Bow","หน้าไม้มังกรคู่ชั้นสูง":"Advanced Twin Dragon Crossbows","หน้าไม้มังกรคู่มหากาพย์":"Epic Twin Dragon Crossbows","หน้าไม้มังกรคู่ตำนาน":"Legendary Twin Dragon Crossbows","คทาสุริยันจันทราชั้นสูง":"Advanced Sun and Moon Staff","คทาสุริยันจันทรามหากาพย์":"Epic Sun and Moon Staff","คทาสุริยันจันทราตำนาน":"Legendary Sun and Moon Staff","คทาพายุเพลิงชั้นสูง":"Advanced Firestorm Staff","คทาพายุเพลิงมหากาพย์":"Epic Firestorm Staff","คทาพายุเพลิงตำนาน":"Legendary Firestorm Staff","คทาพายุหิมะอัสนีชั้นสูง":"Advanced Froststorm Staff","คทาพายุหิมะอัสนีมหากาพย์":"Epic Froststorm Staff","คทาพายุหิมะอัสนีตำนาน":"Legendary Froststorm Staff","คัมภีร์ขุนพลวิญญาณชั้นสูง":"Advanced Spirit General Tome","คัมภีร์ขุนพลวิญญาณมหากาพย์":"Epic Spirit General Tome","คัมภีร์ขุนพลวิญญาณตำนาน":"Legendary Spirit General Tome","คัมภีร์พรานวิญญาณชั้นสูง":"Advanced Spirit Ranger Tome","คัมภีร์พรานวิญญาณมหากาพย์":"Epic Spirit Ranger Tome","คัมภีร์พรานวิญญาณตำนาน":"Legendary Spirit Ranger Tome","คัมภีร์วิญญาณเพลิงชั้นสูง":"Advanced Flame Spirit Tome","คัมภีร์วิญญาณเพลิงมหากาพย์":"Epic Flame Spirit Tome","คัมภีร์วิญญาณเพลิงตำนาน":"Legendary Flame Spirit Tome","คัมภีร์วิญญาณเหมันต์ชั้นสูง":"Advanced Frost Spirit Tome","คัมภีร์วิญญาณเหมันต์มหากาพย์":"Epic Frost Spirit Tome","คัมภีร์วิญญาณเหมันต์ตำนาน":"Legendary Frost Spirit Tome","คัมภีร์วิญญาณอัสนีชั้นสูง":"Advanced Storm Spirit Tome","คัมภีร์วิญญาณอัสนีมหากาพย์":"Epic Storm Spirit Tome","คัมภีร์วิญญาณอัสนีตำนาน":"Legendary Storm Spirit Tome","สร้างห้อง · เล่นกับเพื่อน":"Host or join friends","ออนไลน์ · ผู้เล่นจริง":"Play against people","ต้องมีอาวุธ 2 ชนิด (1/2)":"Find a second weapon (1/2)","สกิลพิเศษ (กด V หรือปุ่ม ✦ · ถือได้ 1 สกิล ซื้อซ้ำเพื่ออัปเลเวล สูงสุด 3)":"Special skill (V or ✦). Equip one at a time. Buy it again to upgrade, up to level 3.","เก็บอาวุธใกล้ตัวเพื่อรับสกิล แล้วแตะ ＋ อัปสกิลแรก!":"Pick up a weapon, then tap ＋ to learn your first skill!","ยังไม่มีข้อความ · ทักทายกันได้เลย":"No messages yet. Say hello!","อาวุธ/เกราะ":"Weapons and armor","นาทีที่ 10 หลอมเป็นอาวุธใหม่":"Fuse at 10 minutes","อีก 15 วินาทีจะค่ำ":"Night falls in 15 seconds","ตัวแก้ไขเกม":"World Editor","โหมดแก้ไข":"Editor mode","ย้อนกลับ":"Undo","วัตถุในฉาก":"Scene objects","ค้นหาชื่อหรือ ID":"Search by name or ID","ค้นหามอนสเตอร์":"Search monsters","รายชื่อมอนสเตอร์":"Monster list","แผนที่โลก คลิกเพื่อย้ายกล้อง":"World map. Click to move the camera.","ฉากสามมิติ":"3D scene","คุณสมบัติ":"Inspector","จุดเกิด":"Spawn position","เลื่อนกล้องไปที่ตัวนี้":"Focus on this monster","ค่ามอนสเตอร์":"Monster stats","ขอบเขตการแก้ไข":"Edit scope","เฉพาะตัวนี้":"This instance","ทั้งชนิด":"All of this kind","ทดสอบในแมตช์":"Playtest encounter","คูลดาวน์ตามระดับ (วิ)":"Cooldown by rank (s)","ร่าย Meteor ทดสอบ":"Test cast Meteor","ไฟล์โปรเจกต์":"Project files","บันทึกเพื่อใช้ใน Solo บนอุปกรณ์นี้ หรือส่งออก JSON สำหรับ build เกม":"Save to use in Solo on this device, or export JSON for a game build.","นำเข้า JSON":"Import JSON","ส่งออก JSON":"Export JSON","คืนค่าโปรเจกต์ของเกม":"Restore game project","กลับไปแก้ไข":"Return to editor","รูปแบบโปรเจกต์หรือค่าอยู่นอกช่วงที่รองรับ":"Invalid project format or value out of range","พลังชีวิตพื้นฐาน":"Base health","พลังโจมตีพื้นฐาน":"Base attack","ระยะไล่จากจุดเกิด":"Chase distance","ความเสียหายพื้นฐาน":"Base damage","เวลาตก (วิ)":"Fall delay (s)","มีการแก้ไขที่ยังไม่บันทึก":"Unsaved changes","ใช้ค่าที่บันทึกไว้":"Saved project","หุ่นฝึก":"Training dummy","ไม่พบมอนสเตอร์":"No monsters found","แตะพื้นเพื่อเล็ง แล้วกดร่ายทดสอบ":"Tap the ground to aim, then test cast","ลากตัวมอนสเตอร์เพื่อย้าย · ลากพื้นเพื่อเลื่อนกล้อง":"Drag a monster to move it · Drag the ground to pan","ข้อมูลมอนสเตอร์ไม่ตรงกับแผนที่":"Monster does not match this world","จุดเกิดต้องอยู่บนพื้นที่เดินได้":"Choose walkable ground for this spawn","ยังร่ายสกิลไม่ได้":"Cannot cast yet","กำลังรอแรงกระแทก":"Waiting for impact","ความเสียหายตอนกระแทก":"Impact damage","ตรวจสอบค่าที่กรอก":"Check the value entered","อีกหน้าต่างบันทึกแล้ว ส่งออกฉบับนี้แล้วเปิดใหม่":"Project changed in another tab. Export this draft and reopen.","บันทึกแล้ว · แมตช์ Solo ถัดไปใช้ค่าชุดนี้":"Saved · Your next Solo match will use these settings","อ่านไฟล์ในเครื่องไม่ได้ กำลังใช้ค่าจากเกม":"Local save unavailable. Using the built-in project.","ออกโดยทิ้งการแก้ไขที่ยังไม่บันทึกหรือไม่":"Leave and discard unsaved edits?","ไฟล์โปรเจกต์ใหญ่เกินไป":"Project file is too large","นำเข้าแล้ว · กดบันทึกเพื่อใช้ใน Solo":"Imported · Save to use in Solo","อ่าน JSON ไม่สำเร็จ":"Invalid JSON","บันทึก":"Save","แผนที่โลก":"World map","การโจมตี":"Attack","รัศมีโจมตี":"Attack radius","มอนสเตอร์":"Monsters","สนามทดสอบ":"Practice range","พลังชีวิตหุ่นฝึก":"Dummy health","ระดับสกิลที่ทดสอบ":"Test skill rank","เล็งกลางหุ่นฝึก":"Aim at dummy","ความเสียหายก่อนหักเกราะเวท":"Damage before magic resistance","ซูมออก":"Zoom out","ซูมเข้า":"Zoom in","เลือกจุดเกิดบนแผนที่":"Place on map","คลิกแผนที่เพื่อเลื่อนกล้อง แล้วแตะพื้นเพื่อวาง":"Use the map to navigate, then tap the ground to place","พบจุดเกิดเดิมที่ใช้กับแผนที่นี้ไม่ได้ ตรวจสอบฉบับแก้ไขก่อนบันทึก":"Some saved spawns no longer fit this world. Review the draft before saving."});</script>
+installArenaLanguage({"โหลดไฟล์เกมไม่สำเร็จ":"Game files could not be loaded","ยังเข้าเกมไม่ได้ กรุณาโหลดใหม่":"Please reload before entering the arena","ธรรมดา":"Common","หายาก":"Rare","มหากาพย์":"Epic","ตำนาน":"Legendary","มือเปล่า":"Unarmed","ดาบและโล่":"Sword and Shield","ดาบเหล็กกับโล่ไม้":"Iron Sword and Wooden Shield","ดาบอัศวิน":"Knight Sword","ดาบจันทราเงิน":"Silvermoon Sword","ดาบราชันย์มังกร":"Dragon King Sword","ดาบเทพสวรรค์":"Celestial Sword","ทนทาน พุ่งกระแทกสตัน โล่ดูดซับดาเมจ กระโดดฟาดพื้น":"A durable fighter. Stun with a shield charge, absorb damage and leap into a ground slam.","ขวานยักษ์":"Greataxe","ขวานตัดไม้":"Woodcutter Axe","ขวานศึก":"Battle Axe","ขวานอัสนี":"Thunder Axe","ขวานไททัน":"Titan Axe","ขวานเทพอสูร":"Demon God Axe","ฟันกวาดหลายตัว ดูดเลือด หมุนเป็นพายุ ผ่าแผ่นดิน":"Cleave through groups, steal health, spin into a whirlwind and split the earth.","มีดคู่":"Twin Daggers","มีดสั้นคู่":"Paired Daggers","มีดเงาคู่":"Twin Shadow Blades","เขี้ยวอสรพิษ":"Serpent Fangs","มีดจันทร์เสี้ยว":"Crescent Blades","มีดเงามรณะ":"Deathshade Daggers","โจมตีไวคริแรง วาร์ปหลังศัตรู ล่องหน ระบำมรณะ":"Strike fast and land heavy critical hits. Blink behind enemies, vanish and unleash Death Dance.","ธนูยาว":"Longbow","ธนูไม้":"Wooden Bow","ธนูพราน":"Hunter Bow","ธนูเอลฟ์":"Elven Bow","ธนูเทพพฤกษา":"Wildwood Bow","ธนูสุริยัน":"Sun Bow","ยิงไกล ยิงกระจาย ถอยหลบพร้อมยิงตรึง ฝนธนู":"Attack from range with spread shots, a retreating pinning shot and a rain of arrows.","คทาเพลิง":"Fire Staff","คทาถ่านไฟ":"Ember Staff","คทาเปลวเพลิง":"Flame Staff","คทาฟีนิกซ์":"Phoenix Staff","คทาสุริยะ":"Solar Staff","คทาไฟนรก":"Hellfire Staff","ลูกไฟระเบิด ระเบิดเพลิงผลักศัตรู อุกกาบาต":"Cast explosive fireballs, knock enemies back with a blast and call down a meteor.","คทาน้ำแข็ง":"Frost Staff","คทาน้ำค้างแข็ง":"Rime Staff","คทาธารน้ำแข็ง":"Glacier Staff","คทาพายุหิมะ":"Blizzard Staff","คทาราชินีหิมะ":"Snow Queen Staff","คทานิรันดร์กาล":"Staff of Eternity","หอกน้ำแข็งทะลุ ตรึงศัตรู พายุหิมะแช่แข็ง":"Pierce enemies with ice lances, root them in place and freeze them in a blizzard.","ดาบใหญ่":"Greatsword","ดาบใหญ่ทหาร":"Soldier Greatsword","ดาบใหญ่อัศวินดำ":"Black Knight Greatsword","ดาบใหญ่ไฟสวรรค์":"Heavenfire Greatsword","ดาบใหญ่ผ่าภพ":"Worldsplitter","ดาบใหญ่ทลายฟ้า":"Skybreaker","ฟันกวาดจันทร์เสี้ยว หมุนดาบกระแทกกระเด็น ปล่อยคลื่นดาบทะลุทุกสิ่ง":"Sweep in a crescent, spin to knock foes back and send a blade wave through enemies.","หน้าไม้":"Crossbow","หน้าไม้ไม้โอ๊ก":"Oak Crossbow","หน้าไม้พรานป่า":"Ranger Crossbow","หน้าไม้เหล็กกล้า":"Steel Crossbow","หน้าไม้อัสนีบาต":"Thunderbolt Crossbow","หน้าไม้มังกรทมิฬ":"Black Dragon Crossbow","ยิงหนักแม่นยำ ลูกดอกระเบิด ตาข่ายตรึง ระดมยิงถล่ม":"Fire heavy precision bolts, explosive shots, a binding net and a relentless barrage.","คทาสายฟ้า":"Storm Staff","คทาประกายไฟฟ้า":"Spark Staff","คทาฟ้าคะนอง":"Thunder Staff","คทาเทพสายฟ้า":"Thunder God Staff","คทาราชาอัสนี":"Storm King Staff","คทาเทพพายุ":"Tempest Staff","สายฟ้าลูกโซ่กระโดดหลายเป้า สนามไฟฟ้าทำช้า อัสนีบาตฟาดลงมา":"Chain lightning between targets, slow enemies in an electric field and call down thunderbolts.","โล่กระแทก":"Shield Bash","ป้อมปราการ":"Bulwark","ดาบพิพากษา":"Judgment Blade","พายุขวาน":"Axe Tempest","คำรามศึก":"War Cry","ผ่าปฐพี":"Earthsplitter","ก้าวเงา":"Shadow Step","ม่านควัน":"Smoke Veil","ระบำมรณะ":"Death Dance","ยิงกระจาย":"Spread Shot","ถอยยิงตรึง":"Retreating Shot","ฝนธนู":"Arrow Rain","ลูกไฟ":"Fireball","ระเบิดเพลิง":"Flame Burst","อุกกาบาต":"Meteor","หอกน้ำแข็ง":"Ice Lance","วงน้ำแข็ง":"Ice Ring","พายุหิมะ":"Blizzard","ฟันจันทร์เสี้ยว":"Crescent Slash","หมุนกระแทก":"Whirling Bash","คลื่นดาบสวรรค์":"Heavenly Blade Wave","ลูกดอกระเบิด":"Explosive Bolt","ตาข่ายดักจับ":"Binding Net","ระดมยิงถล่ม":"Bolt Barrage","สายฟ้าลูกโซ่":"Chain Lightning","สนามไฟฟ้า":"Static Field","อัสนีบาต":"Thunderbolt","อาวุธประชิด":"Melee weapon","อาวุธยิงไกล":"Ranged weapon","คทาเวท":"Magic staff","เพลิง":"Flame","เหมันต์":"Frost","อัสนี":"Storm","ชั้นสูง":"Advanced","ดาบคู่ราชันย์":"Sovereign Twinblades","ดาบคู่โจมตีไวหนัก ดูดเลือด พุ่งทะลวงแนวศัตรู เลือดราชันย์บัฟตัวเอง กระโดดประหารฟันสองจังหวะ":"Strike fast and hard, steal health, dash through enemies, empower yourself with Royal Blood and leap into a two-hit execution.","หอกล่าวิญญาณ":"Soulhunter Spear","หอกระยะประชิดยาว ขว้างหอกทะลุ ก้าวลมพุ่งไปพร้อมคริ พายุวิญญาณหมุนรอบตัว":"A long-reaching spear. Throw it through enemies, dash with a critical strike and whirl spirits around you.","ดาบเพลิงนรก":"Inferno Blade","ดาบเหมันต์นิรันดร์":"Everfrost Blade","ดาบอัสนีบาต":"Thunderstrike Blade","ดาบธาตุ":"Elemental blade","ฟันติดธาตุ ปล่อยคลื่นดาบ":"Inflict elemental stacks and release a blade wave of","ออร่า":"Aura","รอบตัว กระโดดถล่มธาตุใส่พื้นที่":"around you, then leap into an elemental blast.","ธนูสุริยันเพลิง":"Solarfire Bow","ธนูจันทร์เหมันต์":"Frostmoon Bow","ธนูวายุอัสนี":"Stormwind Bow","ธนูธาตุ":"Elemental bow","ศรติดธาตุ ยิงศรสามทาง บ่อ":"Fire elemental arrows in three directions, create a pool of","ใส่พื้นที่ ฝนศร":"on the ground and rain down arrows of","หน้าไม้มังกรคู่":"Twin Dragon Crossbows","หน้าไม้คู่ยิงรัว กับดักระเบิดตรึง ศรมังกรทะลวงทุกสิ่งในแนวยาว":"Fire twin crossbows in rapid bursts, set an explosive snare and pierce a line of foes with a dragon bolt.","คทาสุริยันจันทรา":"Sun and Moon Staff","คทาพายุเพลิง":"Firestorm Staff","คทาพายุหิมะอัสนี":"Froststorm Staff","คทาสองธาตุ":"Dual-element staff","ลูกแก้วคู่ธาตุ ระเบิดสองธาตุรอบตัว พายุสองธาตุถล่มพื้นที่":"Launch twin elemental orbs, detonate both elements around you and blanket an area in a dual-element storm.","พายุดาบคู่":"Twinblade Tempest","เลือดราชันย์":"Royal Blood","ราชันย์ประหาร":"Royal Execution","ขว้างหอกทะลุ":"Piercing Spear","ก้าวลม":"Wind Step","พายุวิญญาณ":"Spirit Tempest","คลื่นดาบ":"Blade Wave","ถล่มปฐพี":"Earthshatter","ศร":"Arrow","สามทาง":"Volley","บ่อ":"Pool","ฝนศร":"Arrow Rain","ยิงรัวมังกร":"Dragon Flurry","กับดักระเบิด":"Explosive Trap","ศรมังกรทะลวงฟ้า":"Sky-Piercing Dragon Bolt","ลูกแก้วคู่ธาตุ":"Twin Orbs","ระเบิดสองธาตุ":"Elemental Burst","พายุสองธาตุ":"Twin Tempest","ชุดผ้าเดินทาง":"Traveler Garb","เกราะหนัง":"Leather Armor","เกราะโซ่":"Chainmail","เกราะเหล็ก":"Iron Armor","เกราะมังกร":"Dragon Armor","ก็อบลิน":"Goblin","หมาป่าเงิน":"Silver Wolf","โทรลล์ภูเขา":"Mountain Troll","โกเลมหินผา":"Stone Golem","ผู้พิทักษ์คริสตัล":"Crystal Guardian","ไททันลาวา":"Lava Titan","มังกรเพลิง":"Fire Dragon","ซอมบี้":"Zombie","ซอมบี้วิ่งไว":"Runner Zombie","ซอมบี้ยักษ์":"Giant Zombie","ราชาซอมบี้":"Zombie King","ยาฟื้นพลัง":"Healing Potion","ยามานา":"Mana Potion","หินลับคม":"Whetstone","ดาเมจ":"damage","รองเท้าเร็ว":"Swift Boots","ความเร็ว":"speed","หัวใจยักษ์":"Giant Heart","เลือด":"HP","ผ้าคลุมเวท":"Enchanted Cloak","ต้านเวท":"magic resistance","ภูตพิทักษ์ เกราะ":"Guardian Spirit • Armor","คัมภีร์ปัญญา":"Tome of Wisdom","ยาเลือด":"Health Potion","ฟื้นเลือด":"Healing","ใน":"over","วิ":"s","โดนตีอยู่":"in combat","ฟื้นมานา":"Mana regen","ยาฟื้นฟูใหญ่":"Greater Elixir","ฟื้นเลือดและมานาเต็ม":"Fully restores HP and mana","ยาเร่งฝีเท้า":"Haste Potion","วิ่งเร็วขึ้น":"Increase movement speed by","นาน":"for","แดง":"Red","น้ำเงิน":"Blue","เขียว":"Green","ม่วง":"Purple","ทอง":"Gold","ดำ":"Black","ขาว":"White","ชมพู":"Pink","พายุ":"Tempest","ไฟป่า":"Wildfire","เงามืด":"Shade","สายฟ้า":"Lightning","หมาป่า":"Wolf","นินจา":"Ninja","ทอร์นาโด":"Tornado","เพชฌฆาต":"Executioner","มังกร":"Dragon","ฟีนิกซ์":"Phoenix","อสุรา":"Asura","กระทิง":"Bull","พยัคฆ์":"Tiger","ราชสีห์":"Lion","ภูตพราย":"Wraith","นาคา":"Naga","อัศวินดำ":"Black Knight","จิ้งจอก":"Fox","เหยี่ยว":"Hawk","พรานป่า":"Ranger","ครุฑ":"Garuda","หนุมาน":"Hanuman","ยักษ์ทมิฬ":"Dark Giant","เทพธิดา":"Goddess","จอมขมังเวทย์":"Sorcerer","นักดาบเงา":"Shadowblade","ราชันย์":"Sovereign","อินทรี":"Eagle","เสือดำ":"Panther","สิงห์ทอง":"Golden Lion","วายุ":"Gale","อัคนี":"Ember","ธารา":"Tide","ปฐพี":"Terra","จันทรา":"Luna","สุริยา":"Sol","เพลิงนรก":"Hellfire","น้ำแข็ง":"Ice","ม้าศึก":"Warhorse","แมงป่อง":"Scorpion","เสียง":"Audio","เปิดทั้งหมด":"All on","ปิดเพลง":"Music off","ปิด":"Off","นครเก่าเหนือน้ำตก":"Old Town Falls","ปราสาทราชินีหิมะ":"Snow Queen Castle","เมืองน้ำพุ":"Fountain Town","ฟาร์มกังหันลม":"Windmill Farm","หมู่บ้านริมทะเลสาบ":"Lakeside Village","หมู่บ้านแม่มด":"Witch Village","ค่ายคนตัดไม้":"Lumber Camp","หมู่บ้านปลายหุบ":"Valley End","หมู่บ้านเนินดอกไม้":"Blossom Hill","หมู่บ้านสนเขา":"Pine Ridge","หมู่บ้านจันทร์เสี้ยว":"Crescent Village","หมู่บ้านหุบหมอก":"Mistvale","หมู่บ้านผาแดง":"Redcliff","หมู่บ้านชาวประมง":"Fishing Village","ค่ายนักล่า":"Hunter Camp","หมู่บ้านทุ่งดอกไม้":"Flowerfield","หมู่บ้านร้าง":"Abandoned Village","เล็ก":"Small","กลาง":"Medium","ใหญ่":"Large","เก็บอาวุธใกล้ตัวเพื่อรับสกิล แล้วแตะ":"Pick up a nearby weapon to unlock its skills, then tap","อัปสกิลแรก":"to learn your first skill","คุณถูกโค่น":"You fell in battle","ทีมยังสู้อยู่ กำลังดูเพื่อนร่วมทีม":"Your team is still fighting. Spectating a teammate","ใครบางคน":"Someone","ปราบผู้คุมคุกใต้ดิน":"defeated the dungeon warden","กลับขึ้นสู่หุบเขา":"Return to the valley","คุกใต้ดิน":"Dungeon","ปีศาจเฝ้าสมบัติทุกห้อง":"Demons guard the treasure in every chamber","ใช้โล่อมตะ จะฟื้นใน":"used a revival shield. Reviving in","ปราบมังกรเพลิง":"slew the Fire Dragon","สมบัติอยู่ในปราสาท":"Treasure awaits in the castle","มังกรเพลิงพ่ายแพ้":"Fire Dragon defeated","ผู้พิทักษ์คริสตัลพ่ายแพ้":"Crystal Guardian defeated","ไททันลาวาพ่ายแพ้":"Lava Titan defeated","ถูก":"was struck by","ฆ่า":"Kills","ตายในวง":"fell to the storm","ทีมของ":"Team","ถูกกำจัด":"eliminated","อันดับ":"Rank","ฟื้นคืนชีพ":"Revived","ต้องเก็บอาวุธก่อนจึงใช้สกิลได้":"Pick up a weapon to unlock skills","แช่แข็ง":"Frozen","ช็อต":"Shocked","อาวุธสำรอง":"Reserve weapon","นาที":"min","จะหลอมเป็น":"will fuse into","ได้อาวุธตำนาน":"found a legendary weapon","ถืออาวุธระดับ":"is wielding a weapon of tier","โดนโจมตีอยู่ สลับอาวุธไม่ได้":"Cannot switch weapons under attack","สลับอาวุธได้อีก":"Weapon switch ready in","กำลังหลอมอาวุธ":"Fusing weapons","หลอมสำเร็จ":"Fusion complete","พกอาวุธ":"Carry","ชนิด":"types","นาทีที่":"At minute","หลอมเป็นอาวุธใหม่":"fuse into a new weapon","อีก":"In","นาทีหลอมอาวุธ":"minutes until fusion","แตะรูปอาวุธเพื่อสลับ":"Tap the weapon icon to switch","วิหลอมอาวุธ":"seconds until fusion","ชนิดไว้":"types equipped","ถึงเวลาหลอมอาวุธ":"Time to fuse your weapons","เริ่มหลอม":"Begin fusion","ได้ชิ้นที่":"Get weapon number","เมื่อไหร่หลอมทันที":"to fuse immediately","สมบัติผู้คุม":"Warden Treasure","สมบัติราชินีหิมะ":"Snow Queen Treasure","สมบัติวิหาร":"Temple Treasure","สมบัติ":"Treasure","เจอของ":"Found","ว่างเปล่า":"Empty","กระเป๋าเต็ม":"Bag full","ได้โล่อมตะ":"Revival shield obtained","ฟื้นได้":"Revives","ครั้ง":"time(s)","มีอาวุธนี้ที่ดีกว่าแล้ว":"You already have a better version of this weapon","กดปุ่ม":"Press","เพื่อรับอาวุธนี้":"to take this weapon","มีเกราะที่ดีกว่าแล้ว":"You already have better armor","โดนโจมตีอยู่":"Under attack","ยาได้ผลครึ่งเดียว":"Potions are half as effective","ค่ำแล้ว":"Nightfall","ซอมบี้ออกล่า":"Zombies are hunting","มอนสเตอร์ดุร้ายขึ้น":"Monsters grow more dangerous","ซ่อนในพุ่มหญ้าได้":"Hide in tall grass","ซอมบี้ลุกขึ้นจากหลุม":"Zombies rise from their graves","ฆ่าแล้วสุ่มได้ไอเทม":"Slay them for a chance at loot","รุ่งเช้า ซอมบี้สลายเป็นผุยผง":"Dawn breaks. Zombies crumble to dust","อาวุธระดับเทพหล่นจากซอมบี้":"A zombie dropped a divine weapon","ได้อาวุธ":"obtained","จากซอมบี้":"from a zombie","ปราบราชาซอมบี้":"defeated the Zombie King","วงกำลังหด":"The storm is closing in","วินาทีจะค่ำ":"seconds until nightfall","ซอมบี้กำลังจะลุกขึ้น":"Zombies are about to rise","หาที่ซ่อนหรือเตรียมสู้":"Find cover or prepare to fight","เช้าแล้ว":"Daybreak","มังกรเพลิงกลับมาเฝ้าปราสาท":"The Fire Dragon has returned to the castle","ค้นพบถ้ำลับ":"Secret cave discovered","ผู้เล่น":"Player","สร้างห้องแล้ว":"Room created","รหัส":"Code","ห้องออนไลน์ของหน้านี้ใช้ไม่ได้":"Online rooms are unavailable here","ต้องล็อกอิน":"Sign in","และได้รับเชิญ":"with an invitation","เชื่อมต่อเซิร์ฟเวอร์ห้องไม่ได้ ตรวจอินเทอร์เน็ต":"Cannot reach the room server. Check your connection","ห้อง":"Room","กำลังสร้างห้อง":"Creating room","สร้างห้องไม่สำเร็จ ลองอีกครั้ง":"Could not create the room. Try again","ยังหาห้องไม่ได้ ลองกดจับคู่อีกครั้ง":"No room found. Try matchmaking again","เชื่อมต่อเซิร์ฟเวอร์จับคู่ไม่ได้ ตรวจอินเทอร์เน็ต":"Cannot reach matchmaking. Check your connection","ห้องเต็มหรือเริ่มไปแล้ว":"Room full or match in progress","กำลังหาห้องใหม่":"Looking for another room","เพื่อน":"Friend","เข้าห้อง":"Join room","ออกจากห้อง":"Leave room","บอท":"Bot","หลุดจากเกม":"disconnected","ทุกคนเป็นศัตรู":"Free-for-all","ทีมละ":"Team size","คน":"players","อัตโนมัติ":"Auto","คนจริงสูงสุด":"Human player limit","เติมบอทให้ครบ":"Fill with bots up to","ไม่มีบอท":"No bots","แมพ":"Map","ยังไม่มีข้อความ":"No messages yet","ทักทายกันได้เลย":"Say hello","ถูกเชิญออก":"was removed","ห้องเดิมปิดไป":"The previous room closed","หลุดจากห้อง":"Disconnected from the room","โฮสต์ออกหรือเน็ตหลุด":"The host left or lost connection","ไม่พบห้อง":"Room not found","ห้องนี้ใช้เกมคนละเวอร์ชัน ให้ทุกคนอัปเดต":"Game versions differ. All players must update","เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ต":"Connection failed. Check your connection","รหัสห้องต้องมี":"Room codes must be","ตัว":"characters","กำลังเข้าห้อง":"Joining room","เข้าห้องไม่สำเร็จ ลองอีกครั้ง หรือใช้":"Could not join. Try again or use the same","เดียวกัน":"network","ห้องเต็มแล้ว":"Room full","ห้องนี้กำลังเล่นอยู่ รอจบเกมก่อน":"Match in progress. Wait for it to end","รหัสผ่านห้องไม่ถูกต้อง":"Incorrect room password","คุณถูกเชิญออกจากห้อง":"You were removed from the room","ปิดบอทอยู่ ต้องมีผู้เล่นอย่างน้อย":"With bots off, you need at least","รอเพื่อนหรือเปิดบอท":"Wait for a friend or enable bots","ทีม":"Team","หมุนมือถือเป็นแนวนอน":"Rotate your device to landscape","วงหดใน":"Storm closes in","วงสุดท้าย":"Final circle","จับคู่ด่วน":"Quick Match","กำลังดู":"Spectating","แตะจอเพื่อเปลี่ยน":"Tap to switch","กำลังฟื้นคืนชีพ":"Reviving","อยู่นอกวง":"Outside the circle","รีบกลับเข้าวง":"Return to the safe zone","ทางขึ้นคุกใต้ดินอยู่นอกวง":"The dungeon exit is outside the circle","รีบขึ้นไป":"Get to the surface","ซ่อนตัวอยู่":"Hidden","ศัตรูมองไม่เห็น":"Enemies cannot see you","อยู่ในพุ่ม":"In the brush","เพิ่งโจมตี จึงถูกเห็น":"Attacking revealed you","ม":"m","อาวุธสำรองหลอมแล้ว":"Reserve weapon fused","แตะรูปอาวุธเพื่อใช้":"Tap the weapon icon to equip","หลอมอาวุธใน":"Fusion in","ต้องมีอาวุธ":"Requires","เก็บอาวุธอีกชนิด":"Pick up a different weapon","หลอมทันที":"Fuse immediately","เปิดกล่อง":"Open chest","รับ":"Take","ทิ้ง":"Drop","เก็บ":"Pick up","กระเป๋า":"Bag","แตะเพื่อใช้":"Tap to use","รอ":"Wait","ยกเลิก":"Cancel","กำจัดแล้ว":"Eliminated","แต้มสกิล":"Skill points","ไม่มีอาวุธ":"No weapon","เล่นออนไลน์ได้ในแอป":"Play online in the app","หน้าเว็บ":"website","หรือหน้า":"or an","ที่ได้รับเชิญ":"invited session","ดวลผู้เล่นจริง":"Battle other players","เชิญออก":"Kick","เชิญ":"Remove","เข้าทีม":"Join team","ว่าง":"Open","เริ่มเลย":"Start now","เริ่มเกม":"Start game","กำลังค้นหาผู้เล่นจริงที่รออยู่":"Searching for other players","ผู้เล่นจริง":"Human players","หมดเวลาแล้วเริ่มทันที คนไม่ครบเติมบอท":"The match starts when the timer ends. Bots fill empty slots","รวม":"Total","รอเจ้าของห้องกดเริ่ม":"Waiting for the host to start","ใครกดจับคู่ตอนนี้จะมาเจอกันในห้องนี้":"Players joining Quick Match now will enter this room","เพื่อนเปิดหน้านี้ใน":"Friends can open this page in","แล้วเลือกห้องจากรายการ หรือพิมพ์รหัสห้อง":"and select the room or enter its code","ห้องนี้แสดงในรายการห้องออนไลน์":"This room is listed publicly","ห้องส่วนตัว":"Private room","แชร์รหัสหรือลิงก์ให้เพื่อนได้":"Share the code or invite link with friends","แอป":"App","กับเว็บเล่นด้วยกันได้":"and web players can play together","ผู้ชนะ":"Victory","ตกรอบ":"Eliminated","ทีมได้อันดับ":"Team placement","จาก":"of","เลเวล":"Level","รอด":"Survived","รอเกมจบก่อน":"Wait for the match to finish","คุณเป็นโฮสต์":"You are the host","จับคู่ใหม่":"Play again","กลับห้อง":"Return to room","รอในห้อง":"Wait in room","กลับเมนู":"Main menu","จบเกม":"Game over","ทีมผู้ชนะ":"Winning team","ผู้ชนะคือ":"Winner","สีผ้าคลุม":"Cloak color","ประชิด":"Melee","ยิงไกล":"Ranged","คทา":"Staff","ธาตุ":"Element","ไอคอนสกิลและอาวุธ":"Skill and weapon icons","และผู้ร่วมสร้าง":"and contributors","เพลง":"Music","เมนู":"Menu","กลางวัน":"Day","กลางคืน":"Night","ต่อสู้":"Battle","เสียงเอฟเฟกต์":"Sound effects","กำลังค้นหาห้อง":"Searching for rooms","กำลังค้นหาห้องออนไลน์":"Finding online rooms","พบ":"Found","อัปเดตอัตโนมัติ":"Updates automatically","ยังไม่มีห้องเปิดอยู่":"No rooms are open","ยังไม่มีห้องที่เปิดให้เห็นตอนนี้":"No public rooms available","สร้างห้องของคุณเองทางขวา แล้วให้เพื่อนกดเข้าจากรายการนี้":"Create a room on the right and invite friends to join here","คนละเวอร์ชัน":"Version mismatch","กำลังเล่น":"In game","เต็ม":"Full","รอผู้เล่น":"Waiting","บอทเติมครบ":"Fill to","รหัสผ่าน":"Password","รหัสผ่านห้อง":"Room password","เข้า":"Join","ห้องนี้ล็อกไว้ ใส่รหัสผ่านก่อน":"This room is locked. Enter the password first","คัดลอกแล้ว":"Copied","คัดลอกลิงก์":"Copy link","ได้รับลิงก์เชิญห้อง":"Invited to room","ใส่ชื่อแล้วกด":"Enter your name and press","ห้องเดิมไม่เริ่มเกม":"The previous game did not start","พบห้องอื่นที่รออยู่":"Found another waiting room","กำลังย้ายไปรวมกัน":"Moving players together","อาณาจักรล่มสลาย":"Fallen Kingdom","ป่าต้องสาป":"Cursed Forest","วิหารน้ำแข็ง":"Frozen Sanctuary","แดนเถ้าถ่าน":"Ashen Wastes","ห้วงอเวจี":"The Abyss","ต้องสาป":"Cursed","เถ้าถ่าน":"Ashen","อเวจี":"Abyssal","เหรียญจากมอนสเตอร์":"Coins from monsters","มอนสเตอร์ว่องไวและมีพิษ":"Monsters are swift and venomous","โดนตีแล้วช้าลง":"Getting hit slows you","ฟื้นมานาเร็วขึ้น":"Mana regenerates faster","โดนตีแล้วติดไฟ":"Getting hit sets you ablaze","ระวังลาวาปะทุ":"Watch for lava eruptions","มอนสเตอร์แกร่งมาก":"Monsters are much stronger","เหรียญ":"Coins","การโจมตีทำให้ติดไฟ":"Attacks inflict burn","เยือกแข็ง":"Frigid","การโจมตีทำให้ศัตรูช้าลง":"Attacks slow enemies","มีโอกาสปล่อยสายฟ้าลูกโซ่":"Chance to unleash chain lightning","โลหิต":"Sanguine","ดูดเลือด":"Lifesteal","ของดาเมจ":"of damage dealt","พิฆาต":"Executioner","แรงขึ้น":"Increased damage","ใส่เป้าหมายที่เลือดต่ำกว่า":"against targets below","นักล่า":"Hunter","ใส่มอนสเตอร์":"against monsters","เปิดศึก":"Opener","ใส่เป้าหมายที่เลือดเกิน":"against targets above","สะท้อน":"Echo","ร่ายซ้ำอีกครั้งด้วยพลัง":"Recast at","ว่องไว":"Swift","คูลดาวน์":"Cooldown","หนักหน่วง":"Heavy","ฟื้นฟู":"Recovery","ร่ายแล้วฟื้นเลือด":"Casting restores","เกราะ":"Armor","ร่ายแล้วได้โล่":"Casting grants a shield worth","ของเลือด":"of HP","เร่ง":"Haste","ร่ายแล้ววิ่งเร็วขึ้น":"Casting increases movement speed","เดือด":"Fury","ร่ายแล้วได้ความเดือด":"Casting grants rage","ประหยัด":"Low","คืนมานา":"Refund mana","วาร์ปเงา":"Shadow Blink","วาร์ปไปยังจุดที่เล็งทันที":"Instantly blink to the target point","แสงฟื้นฟู":"Healing Light","วิ และล้างสถานะช้า":"s and clears slows","บ้าคลั่ง":"Frenzy","ตีเร็วขึ้น":"Increase attack speed by","และดาเมจ":"and damage","เรียกอุกกาบาตใส่จุดที่เล็ง เผาศัตรู":"Call down a meteor at the target point, burning enemies","โล่วิญญาณ":"Spirit Shield","โล่":"Shield","ของเลือด นาน":"of HP for","คลื่นเยือกแข็ง":"Frost Wave","ระเบิดรอบตัว ตรึงศัตรู":"Blast nearby enemies and root them for","ซื้อไม่ได้":"Purchase failed","เหรียญไม่พอ":"Not enough coins","ไม่มีความสามารถพิเศษ":"No special ability","พุ่ง":"Dash","ร้านค้าแห่งแดนต้องสาป":"Cursed Lands Market","เสบียง":"Supplies","สมุดเลเวล":"Level Tome","เลื่อนเป็นเลเวล":"Advance to level","ทันที":"immediately","ได้แต้มสกิล":"Gain skill points","อาวุธในมือ":"Equipped weapon","ไม่มีลักษณะพิเศษ":"No weapon trait","สกิล":"Skill","ตี":"Attack","ใหม่":"New","จ่ายเพื่อสุ่มความสามารถของอาวุธชิ้นนี้ใหม่":"Pay to reroll this weapon’s abilities","ยังไม่มีอาวุธ":"No weapon equipped","สกิลพิเศษ":"Special skill","กด":"Press","หรือปุ่ม":"or tap","ถือได้":"Equip up to","สกิล ซื้อซ้ำเพื่ออัปเลเวล สูงสุด":"skill. Buy it again to level up. Max","ฆ่ามอนสเตอร์เก็บ":"Slay monsters for","แล้วกด":"then press","ซื้อยา สมุดเลเวล สกิลพิเศษ":"to buy potions, level tomes and special skills","จอมราชันย์สุริยคราส":"Celestial Overlord","ผู้เฝ้ายามทมิฬ":"Dark Sentinel","โกเลมจันทรา":"Lunar Construct","ดาบใหญ่จันทรา":"Lunar Greatsword","เคียวสุริยคราส":"Eclipse Scythe","คทาจันทรา":"Moon Staff","จุดอ่อน":"Weakness","ตื่นจากแท่นสุริยคราส":"has awakened at the Eclipse Altar","กลับสู่แท่นบูชาและฟื้นพลัง":"returned to the altar to recover","สุริยคราสเริ่มต้น":"The eclipse begins","เรียกบริวาร":"Summoning minions","คราสเต็มดวง":"Total Eclipse","ระวัง":"Beware","วิ่งเข้าวงแสงจันทร์":"Run into a pool of moonlight","ถูกโค่นแล้ว":"was defeated","อาวุธในตำนานร่วงลงบนแท่นบูชา":"A legendary weapon has fallen on the altar","อาวุธในตำนาน":"Legendary weapon","ราชินีหิมะ":"Snow Queen","คัมภีร์วิญญาณ":"Spirit Tome","ลูกแก้ววิญญาณ":"Spirit Orb","ลูกแก้วดวงจันทร์":"Moon Orb","คัมภีร์ดวงวิญญาณ":"Tome of Souls","คัมภีร์ปฐมกาล":"Primordial Tome","คัมภีร์เทพอัญเชิญ":"Divine Summoner Tome","อาชีพ":"Class","อัญเชิญภูติยิงพลังวิญญาณ สั่งวิญญาณทั้งหมดรุมเป้าหมาย เรียกผู้พิทักษ์จันทรายักษ์ลงมาสู้ข้างกาย":"Summon spirits that fire bolts, command them to focus a target and call a giant Lunar Guardian to fight beside you.","อัญเชิญภูติ":"Summon Spirit","บัญชาวิญญาณ":"Spirit Command","ผู้พิทักษ์จันทรา":"Lunar Guardian","ภูติวิญญาณ":"Wisp","หมาป่าวิญญาณ":"Spirit Wolf","อัศวินวิญญาณ":"Spectral Knight","ขุนพลวิญญาณ":"Spirit General","ภูติพราน":"Spirit Ranger","คัมภีร์ขุนพลวิญญาณ":"Spirit General Tome","คัมภีร์วิญญาณหลอมกับอาวุธประชิด":"Fuse the Spirit Tome with a melee weapon","อัญเชิญอัศวินวิญญาณถึกทน สั่งวิญญาณทั้งหมดพุ่งชนจนมึน เรียกขุนพลวิญญาณยักษ์":"Summon sturdy spectral knights, order a stunning charge and call a giant Spirit General","ขณะขุนพลอยู่ ผู้ใช้รับดาเมจลดลง":"While the general is present, you take less damage","กองทัพวิญญาณ":"Spectral Legion","บัญชาบุกทะลวง":"Command Charge","คัมภีร์พรานวิญญาณ":"Spirit Ranger Tome","คัมภีร์วิญญาณหลอมกับอาวุธยิงไกล":"Fuse the Spirit Tome with a ranged weapon","อัญเชิญภูติพรานยิงศรวิญญาณทะลุ สั่งวิญญาณทั้งหมดระดมยิงพร้อมตีตราเป้าหมาย ฝนศรวิญญาณที่ทิ้งภูติพรานไว้อีก":"Summon rangers with piercing arrows. Order a marked volley, then rain arrows and summon","ตน":"rangers","ห่าศรวิญญาณ":"Spirit Volley","ฝนศรวิญญาณ":"Spirit Arrow Rain","อสูรเพลิง":"Flame Demon","ยักษ์น้ำแข็ง":"Frost Giant","ยักษ์อัสนี":"Storm Giant","คัมภีร์วิญญาณหลอมกับคทา":"Fuse the Spirit Tome with a staff","ภูติ หมาป่า และผู้พิทักษ์กลายเป็นธาตุ":"Your wisps, wolves and guardian gain the element of","ทุกการโจมตีของวิญญาณติดสถานะธาตุ หอกวิญญาณ":"Spirit attacks apply elemental stacks. Launch a spirit lance of","ผู้พิทักษ์":"Guardian","ถล่มพื้นที่":"area slam","หอกวิญญาณ":"Spirit Lance","ตีตรา":"Marked","หลอดเลือดแรกแตก":"First health bar shattered","ราชินีหิมะพิโรธ พายุหิมะกำลังมา":"The Snow Queen is enraged. A blizzard is coming","หลอดสุดท้าย":"Final health bar","ฤดูหนาวนิรันดร์ใกล้มาถึง เตรียมหาวงไฟอุ่น":"Eternal Winter approaches. Find a circle of fire","ฤดูหนาวนิรันดร์":"Eternal Winter","วิ่งเข้าวงไฟอุ่น":"Run into a circle of fire","ราชินีหิมะตื่นจากบัลลังก์น้ำแข็ง":"The Snow Queen rises from her frozen throne","ราชินีหิมะกลับสู่บัลลังก์และฟื้นพลัง":"The Snow Queen returns to her throne to recover","ราชินีหิมะถูกโค่นแล้ว":"Snow Queen defeated","สมบัติแห่งบัลลังก์น้ำแข็งร่วงลงบนลาน":"Treasure from the frozen throne has fallen in the courtyard","ไททันลาวาบรรพกาล":"Ancient Lava Titan","เพลงประจำดินแดน":"Regional themes","และเสียงบรรยากาศของแต่ละดินแดน":"and regional ambience","แต่งและสังเคราะห์ด้วยโค้ดสำหรับเกมนี้":"composed and synthesized for this game","ต้นฉบับ":"Original","ซากเมืองหลวงของอาณาจักร":"Ruins of the kingdom’s capital","ผู้เฝ้ายามทมิฬเฝ้าวิหาร":"The Dark Sentinel guards the temple","ราชินีหิมะรอผู้กล้าอยู่บนลานบัลลังก์น้ำแข็ง":"The Snow Queen awaits challengers at her frozen throne","ราชินีหิมะรอผู้กล้าอยู่หน้าประตูปราสาทผลึก":"The Snow Queen awaits challengers before her crystal castle's gate","หลบ":"Dodge","ซื้อได้ที่พ่อค้าในหมู่บ้าน":"Visit a village merchant to buy this","เปิดร้านค้า":"Open shop","ร้านค้า":"Shop","ร้านค้าอยู่กับพ่อค้าในหมู่บ้าน":"Find merchants in villages","เดินไปหาแผงขายของกลางหมู่บ้าน แล้วกดคุย":"Walk to a stall in the village center and interact","ค้นบ้าน เปิดกล่อง ล่ามอนสเตอร์หาอาวุธ":"Search houses and chests or hunt monsters for weapons","ซื้อของกับพ่อค้าในหมู่บ้าน":"Trade with the village merchant","ปุ่มโจมตีตีฮีโร่ก่อน":"Attack prioritizes heroes","ปุ่มเล็ก":"Small button","ตีมอน":"Hunt","พุ่งอยู่ซ้ายขวดเลือด":"Dash is left of your health potion","โจมตี":"Attack","ฮีโร่ก่อน":"Heroes first","พ่อค้า":"Merchant","จุดของคุณ":"Your marker","เลือกจุดลงจากฟ้า":"Choose a landing site","แตะบนแผนที่":"Tap the map","ในวงพายุ":"inside the storm circle","เพื่อเลือกจุดลง":"to mark your landing site","หมู่บ้านมีอาวุธในบ้าน กล่องสมบัติ และพ่อค้าขายของ":"Find gear and merchants in villages.","ไม่เลือก":"No selection","สุ่มให้":"random landing","กำลังรอโฮสต์":"Waiting for host","สุ่มหมู่บ้าน":"Random village","พร้อมแล้ว":"Ready!","พร้อม":"Ready","ลงเลย":"Land now","ไม่มีมอนสเตอร์ในระยะ":"No monsters in range","ยังไม่ทันเจออะไร":"Nothing found yet","เจอเหรียญ":"Found coins","ค้นร่างอัศวิน":"Search fallen knight","กำลังค้น":"Searching","แตะเพื่อเก็บของ":"Tap to collect loot","ยังไม่เจออะไร":"Nothing found","ลุ้นของตำนาน":"Legendary chance","ได้ของธรรมดา":"Common loot","ค้นต่อได้ของดีขึ้น":"Keep searching for better loot","สูง":"High","มุมมอง":"View","กราฟิก":"Graphics","เครื่องนี้ไม่รองรับ":"Unsupported on this device","กล้อง":"Camera","ใกล้":"Near","ไกล":"Far","โทนภาพ":"Color grading","มืดสมจริง":"Dark","สดใส":"Bright","เงาลึก":"Deep shadows","เปิด":"On","ซ่อนวิธีเล่น":"Hide controls","วิธีเล่นและการควบคุม":"How to play","ผู้กล้า":"champions","เก็บอาวุธ ปลดปล่อยสกิล":"Find weapons. Unleash your skills.","เหลือเพียงตำนานเดียว":"One survivor.","เข้าสู่สนาม":"Enter the Arena","เล่นคนเดียว":"Solo","ฝึกฝนกับบอท":"Practice with bots","ออนไลน์":"Online","ห้องออนไลน์":"Online Rooms","สร้างห้อง":"Create a room","เล่นกับเพื่อน":"Play with friends","เครื่องมือเกม":"Game tools","ตั้งค่า":"Settings","สูตรหลอมอาวุธ":"Weapon Fusion","ตั้งค่าเกม":"Game settings","ปิดการตั้งค่า":"Close settings","หมวดการตั้งค่า":"Settings categories","การควบคุม":"Controls","คุณภาพกราฟิก":"Graphics quality","อัตโนมัติปรับตามอุปกรณ์":"Auto adjusts to your device","ประหยัดช่วยให้ภาพลื่นขึ้น":"Low improves frame rate","บรรยากาศ":"Lighting","ซิเนมาติกให้เงาลึกและแสงอุ่น":"Cinematic adds deep shadows and warm light","เป็นกลางให้ภาพสว่างอ่านง่าย":"Neutral makes the scene brighter","มิติของเงา":"Ambient occlusion","เพิ่มเงาตามพื้นและมุมวัตถุ":"Adds contact shadows to floors and corners","ปิดเพื่อลดภาระกราฟิก":"Turn off to reduce GPU load","มุมมองเกม":"Game view","สลับภาพ":"Switch between","และ":"and","โดยใช้ระบบเกมเดียวกัน":"with the same gameplay","ระยะกล้อง":"Camera distance","ใกล้เห็นตัวละครชัด":"Near gives a closer view of your hero","ไกลเห็นพื้นที่รอบตัวมากขึ้น":"Far shows more of the battlefield","คีย์ลัดและสัมผัส":"Keyboard and touch","เคลื่อนที่":"Move","ตีฮีโร่ก่อนเสมอ ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์":"Prioritize heroes, then attack monsters if no hero is in range","ตีมอนสเตอร์อย่างเดียว":"Attack monsters only","ข้างปุ่มโจมตี":"beside the attack button","สกิลอาวุธ":"Weapon skills","กดค้างเล็งตามเมาส์ ปล่อยร่าย":"Hold to aim with the mouse, release to cast","คลิกขวายกเลิก":"Right-click to cancel","พุ่ง อมตะระหว่างพุ่ง คูลดาวน์":"Dash with invulnerability. Cooldown","ปุ่ม":"button","ซ้ายขวดเลือด":"left of the health potion","เหนือปุ่มพุ่ง":"above Dash","ใช้ยา":"Use potion","เปิดกระเป๋า":"Open bag","เก็บอาวุธ":"Pick up weapon","สลับอาวุธ":"Switch weapons","วิ ห้ามสลับตอนโดนตี":"s. Cannot switch under attack","ต้องยืนใกล้พ่อค้าในหมู่บ้าน":"Stand near a village merchant","ปุ่มสกิลบนจอ":"On-screen skills","แตะแล้วปล่อยเพื่อใช้":"Tap and release to cast","กดค้างเพื่อดูความเสียหายและความสามารถ":"Hold for damage and skill effects","มือถือ":"Mobile","จอยซ้ายเดิน":"Move with the left stick","ลากจากปุ่มสกิลเพื่อเล็ง แล้วปล่อยเพื่อร่าย":"Drag a skill to aim, release to cast","เพลงและเอฟเฟกต์":"Music and effects","แตะเพื่อสลับเสียงทั้งหมด":"Tap to cycle through all audio","เฉพาะเอฟเฟกต์":"effects only","ปิดเสียง":"Mute","ปรับแล้วมีผลทันที":"Changes take effect immediately","เก็บการตั้งค่าไว้ในเครื่องนี้":"Saved on this device","ภาพ":"Lighting","ซิเนมาติก":"Cinematic","เป็นกลาง":"Neutral","พุ่งกระแทกเป้าหมายแรกและทำให้มึน":"Charge into the first target and stun it for","ได้โล่":"Gain a shield worth","กระโดดฟันพื้นที่และทำให้ศัตรูมึน":"Leap and strike an area, stunning enemies for","หมุนรอบตัวนาน":"Spin for","วิ โดนทุก":"s, hitting every","วิ และฟื้นเลือด":"s and restoring","ของความเสียหาย":"of damage dealt","ลดความเร็วศัตรู":"Slow enemies by","ฟาดพื้นเป็นแนวหลัง":"Slam the ground in a line after","วิ และทำให้มึน":"s and stun for","วาร์ปประชิดเป้าหมาย การโจมตีปกติครั้งถัดไปติดคริติคอล":"Blink to the target. Your next basic attack is a critical hit","ล่องหน":"Become invisible","และฟันจากเงาแรงขึ้น":"and strike harder from stealth","หมุนฟันศัตรูใกล้ตัวทุก":"Slash nearby enemies every","วิ นาน":"s for","วิ ลดความเร็วศัตรู":"s. Slows enemies by","และล้างสถานะช้ากับตรึงของผู้ใช้":"and clears your slows and roots","ยิงศร":"Fire arrows in","ทิศ เป้าหมายหนึ่งตัวรับความเสียหายได้ครั้งเดียว":"directions. Each target can be hit once","ถอยจากจุดยิงและยิงศรตรึง":"Leap back and root the target for","ศรตกทุก":"Arrows fall every","วิ และลดความเร็ว":"s, slowing enemies by","ยิงลูกไฟที่ระเบิดเป็นวงและสะสมสถานะเพลิง":"Launch an explosive fireball that applies Burn stacks","ผลักศัตรูรอบตัวและเผา":"Knock nearby foes back and burn them for","ต่อวิ นาน":"per second for","อุกกาบาตตกหลัง":"The meteor lands after","วิ และเผา":"s and burns for","ต่อวิ":"per second","หอกทะลุเป้าหมาย ลดความเร็ว":"Pierce targets and slow them by","วิ และสะสมเย็นจัด":"s and apply Chill stacks","ตรึงรอบตัว":"Root nearby enemies for","ลดความเร็ว":"Slow by","และสะสมเย็นจัด":"and apply Chill stacks","พายุโจมตีทุก":"The storm strikes every","วิ ลดความเร็วและทำให้มึน":"s, slows enemies and stuns for","ตอนจบ":"at the end","ฟันเป็นกรวย ลดความเร็ว":"Slash in a cone and slow enemies by","หมุนผลักศัตรูรอบตัวและทำให้มึน":"Spin to knock nearby enemies back and stun for","ปล่อยคลื่นทะลุศัตรู ลดความเร็ว":"Send a piercing wave that slows enemies by","ลูกดอกระเบิดเมื่อกระทบเป้าหมายหรือสุดระยะ":"The bolt explodes on impact or at maximum range","ยิงตาข่ายเป็นวง ตรึงศัตรู":"Cast a net that roots enemies for","และลดความเร็ว":"and slows them by","กระหน่ำยิงทุก":"Fire a barrage every","ชิ่งได้สูงสุด":"Chain to up to","เป้าหมาย ความเสียหายลด":"targets. Damage falls by","ต่อการชิ่ง ทำให้มึน":"per bounce. Stuns for","วิ และสะสมประจุ":"s and applies Charge stacks","สนามไฟฟ้าตามตัว โจมตีทุก":"An electric field follows you and hits every","วิ ลดความเร็วและสะสมประจุ":"s, slowing enemies and applying Charge stacks","สายฟ้าฟาดทุก":"Lightning strikes every","วิ ทำให้มึน":"s, stunning for","พุ่งฟันผ่านศัตรู ลดความเร็ว":"Dash through enemies, slowing them by","และดูดเลือด":"and stealing","กระโดดฟัน ทำให้มึน":"Leap and slash, stunning for","แล้วฟันซ้ำ":"then strike again","ขว้างหอกทะลุศัตรู ลดความเร็ว":"Throw a piercing spear that slows by","พุ่งและวิ่งเร็วขึ้น":"Dash and gain movement speed for","วิ การโจมตีถัดไปติดคริติคอลและแรงขึ้น":"s. Your next attack always crits and deals bonus damage","พายุรอบตัวโจมตีทุก":"A storm surrounds you and strikes every","ปล่อยคลื่นดาบทะลุศัตรูและสะสมสถานะธาตุ":"Release a piercing blade wave that applies elemental stacks","ออร่าธาตุตามตัว โจมตีทุก":"An elemental aura follows you and hits every","กระโดดลงกลางวงระเบิดธาตุ และทำให้มึน":"Leap into an elemental blast and stun for","ศรธาตุสามทิศ เป้าหมายหนึ่งตัวรับความเสียหายได้ครั้งเดียว":"Fire elemental arrows in three directions. Each target can be hit once","สร้างบ่อธาตุ โจมตีทุก":"Create an elemental pool that hits every","ฝนศรธาตุทุก":"Rain elemental arrows every","ยิงรัว":"Rapidly fire","นัดไปที่เป้าหมาย ลูกดอกแต่ละนัดระเบิดเมื่อกระทบ":"bolts at the target. Each explodes on impact","กับดักระเบิดหลัง":"The trap explodes after","วิ ตรึง":"s and roots for","แล้วลดความเร็ว":"then slows by","ศรยักษ์ทะลุเป้าหมาย ผลักศัตรูและสะสมสถานะเพลิง":"Fire a giant piercing arrow that knocks enemies back and applies Burn","ปล่อยลูกแก้วสองธาตุแยกทิศ แต่ละลูกระเบิดเมื่อกระทบ":"Send two elemental orbs in different directions. Each explodes on impact","ระเบิดรอบตัว ผลักศัตรูและสะสมสถานะทั้งสองธาตุ":"Blast nearby enemies, knock them back and apply both elemental effects","พายุสองธาตุซ้อนกัน โจมตีทุก":"Two overlapping elemental storms strike every","ภูติ":"Spirit","เรียก":"Summon","ตน นาน":"for","ตัว โจมตี":"units. Attack","สั่งวิญญาณรุมเป้าหมายและฟื้นเลือดให้พวกมัน":"Order spirits to focus the target and heal them for","อัศวินพุ่งชนด้วย":"Knights charge for","ของพลังโจมตี ทำให้มึน":"of attack power and stun for","วิญญาณยิง":"Spirits fire","นัด นัดละ":"shots, each dealing","ของพลังโจมตี และตีตราให้วิญญาณตีแรงขึ้น":"of attack power. Mark the target for increased spirit damage","เพิ่มความเสียหายของวิญญาณ":"Increases spirit damage by","หอกสะสมสถานะ":"The lance applies","ฝนศรทุก":"Rain arrows every","วิ พร้อมเรียกภูติพราน":"s and summon a Spirit Ranger","กระแทกพื้นที่ ทำให้มึน":"Slam the area and stun for","อยู่":"active","ผู้ใช้รับความเสียหายลดลง":"Incoming damage reduced by","ซื้อสกิลจากพ่อค้าในหมู่บ้าน":"Buy a skill from a village merchant","วาร์ปทันทีในระยะ":"Blink instantly up to","หน่วย":"units","และเพิ่มความเสียหาย":"and increase damage by","วิ และเผาศัตรู":"s and burns enemies for","ของเลือดสูงสุด นาน":"of max HP for","พร้อมใช้":"Ready","เวท":"Magic","ช่องสกิล":"Skill slot","เก็บอาวุธเพื่อปลดล็อกสกิล":"Pick up a weapon to unlock skills","ต่อธาตุต่อจังหวะ":"per element per tick","ต่อจังหวะ":"per tick","ต่อนัด":"per shot","ต่อลูก":"per orb","ยังไม่ปลดล็อก":"Locked","ค่าของเลเวล":"Values at level","มานาไม่พอ":"Not enough mana","ติดสถานะมึน":"Stunned","กายภาพ":"Physical","เร่งวิ่ง":"Haste","ตีเร็ว":"Attack speed","ตีครั้งถัดไปแรงขึ้น":"Next attack empowered","โล่อมตะ":"Revival Shield","หลบความเสียหาย":"Evade damage","ขุนพลคุ้มกัน":"General’s Guard","มึน":"Stunned","ตรึง":"Rooted","เคลื่อนที่ช้า":"Slowed","เผาไหม้":"Burning","เย็นจัด":"Chilled","ประจุไฟฟ้า":"Charged","เน่าเปื่อย":"Decay","ถูกตีตรา":"Marked","เปียก":"Wet","แทนช่องสำรอง":"Replace reserve","ต่ำ":"Low","ล็อก":"Locked","อาวุธ":"Weapon","ผู้กล้า ล่ามอนสเตอร์ เก็บเหรียญ หนึ่งผู้รอดชีวิต":"champions. Hunt monsters, collect coins and be the last survivor.","ชื่อ":"Name","ผ้าคลุม":"Cloak","กำลังตรวจสอบไฟล์โมเดล":"Checking model files","ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด":"Fight other players in a free-for-all. Wait up to","วิ คนไม่ครบเติมบอทให้ครบ":"s. Bots fill the roster to","รายการห้อง":"Room list","ตั้งชื่อ":"Set a name","เลือกโหมด":"Choose a mode","ทุกคนศัตรู":"Free-for-all","จำนวนคน บอท ขนาดแมพ":"player limit, bots and map size","แชทในห้องรอ":"Lobby chat","ทุกคนลงมาจากฟ้า แตะบนแผนที่":"Drop from the sky. Tap the map","เพื่อเลือกจุดลง ไม่เลือก":"to choose your landing site. No selection","ปุ่มโจมตี":"Attack button","ฮีโร่ก่อนเสมอ":"heroes first.","ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์":"Attacks monsters when no heroes are in range","ข้างปุ่มโจมตี ตีเฉพาะมอนสเตอร์":"next to Attack targets monsters only","อมตะระหว่างพุ่ง คูลดาวน์":"Invulnerable while dashing. Cooldown","วิ ปุ่มอยู่ซ้ายขวดเลือด":"s. The button is left of the health potion","อยู่เหนือปุ่มพุ่ง":"above the dash button","เล็งสกิล":"Aim skills","กดค้างปุ่มสกิลแล้วลากไปทิศ":"Hold a skill button and drag toward a direction","จุดที่ต้องการ ปล่อยเพื่อร่าย":"or location. Release to cast","ลากไป":"Drag to","เพื่อยกเลิก":"to cancel","แตะเฉยๆ":"Tap once","เล็งอัตโนมัติ":"Auto-aim","คอมพิวเตอร์":"Desktop","กดค้าง":"Hold","เล็งตามเมาส์ ปล่อยเพื่อร่าย":"to aim with the mouse. Release to cast","ยืนใกล้แล้วแตะ":"Stand nearby and tap","หรือ":"or","ซื้อยา สมุดเลเวล สกิลพิเศษ สุ่มความสามารถอาวุธใหม่":"Buy potions, level tomes and special skills, or reroll weapon abilities","ได้จากมอนสเตอร์และกล่อง":"Dropped by monsters and found in chests","ค้นตามบ้าน":"Search houses","กล่องสมบัติ":"Treasure chests","คีย์":"key","ได้ของ":"contain loot","มอนสเตอร์ทุกตัวมีโอกาสดรอป ยิ่งตัวใหญ่ยิ่งดี":"All monsters can drop loot. Larger monsters offer better drops","พื้นโล่งมีน้อย":"Open ground has fewer items","ยาใหญ่":"Greater Elixir","ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้":"Haste Potion. Tap beside the status bar to use","ระหว่างโดนตียาฟื้นได้ครึ่งเดียว":"Potions restore half as much under attack","กลางคืน มอนสเตอร์ดุร้ายขึ้นและ":"At night, monsters grow stronger and","ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา":"zombies rise from graves to hunt. Slay them for potions","อาวุธ มีโอกาส":"or weapons, with a chance of","ซ่อนตัวใน":"Hide in","พุ่มหญ้าสูงได้":"tall grass","บอส":"Bosses","ไททันลาวาบรรพกาลในปราสาท":"Ancient Lava Titan in the castle","ราชินีหิมะบนปราสาทน้ำแข็ง":"Snow Queen at the ice castle","หลอด หลอดแตกเข้าเฟสใหม่ ระหว่างเปลี่ยนเฟสตีไม่เข้า":"health bars. Breaking one triggers a new phase with brief invulnerability","ที่แท่นสุริยคราส":"at the Eclipse Altar","ศาลภูตฟื้นเลือด":"Spirit shrines restore HP","มานา":"Mana","ถ้ำลับในภูเขามีสมบัติ":"Find treasure in hidden mountain caves","ตัดต้นไม้ล้มได้":"Trees can be cut down","ต้นกล้วยตีทีเดียวล้ม":"Banana trees fall in one hit","ร่างอัศวินที่ยังเรืองแสงวิญญาณสีเขียวค้นได้ ยืนใกล้แล้วแตะ":"Fallen knights glowing green can be searched. Stand nearby and tap","เพื่อค้น แตะอีกครั้งเพื่อเก็บของ":"to search. Tap again to take the loot","ยิ่งค้นนาน ยิ่งลุ้นของดี":"Search longer for better loot.","ค้นครบ":"Search for","วิ ลุ้นของตำนาน":"s for a legendary chance of","เดินออกหรือโดนตีจะหยุดค้น":"Moving away or taking damage stops the search","หลุมละครั้ง":"Once per grave","กล่องสมบัติทอง":"Golden chests","เปิดได้ของหายากทุกใบ":"always contain rare loot","ห้องผู้คุมในคุกใต้ดิน":"Dungeon warden chamber","ใบ":"chests","หลังราชินีหิมะ":"behind the Snow Queen","วิหารนครเก่า":"Old Town temple","หลอมอาวุธ":"Weapon fusion","พกได้":"Carry up to","ชิ้น":"weapons","มือ":"equipped","สำรอง":"reserve","เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง":"Walk over a different weapon to store it in reserve","แตะรูปอาวุธหรือคีย์":"Tap the weapon icon or press","สลับ":"to switch","โดนตีอยู่สลับไม่ได้":"Cannot switch under attack","ครบ":"After","นาทีหลอมเป็นอาวุธใหม่":"minutes, fuse them into a new weapon with","สกิลใหม่":"new skills","อย่าง":"types","จอยซ้าย":"Left stick","เดิน":"Move","เดินชนอาวุธเพื่อเก็บ":"Walk over a weapon to pick it up","รับอาวุธ":"Take weapon","แตะ":"Tap","อัปสกิล":"Upgrade skill","อัลติเลเวล":"Ultimate at level","เครดิตเสียงและเพลง":"Audio credits","แตะเพื่อเปิดเพลง":"Tap to play music","หน้าโหลด":"Loading screen","จัดหาโดยเจ้าของเกม":"Provided by the game's owner","กลับ":"Back","เสียงทั้งหมดเป็นผลงานเปิด":"Audio uses open licenses","ตัดต่อ ปรับระดับเสียง และแปลงเป็น":"Edited, normalized and converted to","สำหรับเกมนี้":"for this game","ในมือ":"equipped","จะหลอมรวมเป็นอาวุธใหม่ พร้อมสกิลใหม่":"fuse into a new weapon with","ได้ระดับของชิ้นที่ดีกว่า ถ้าระดับเท่ากันตั้งแต่มหากาพย์ขึ้นไปจะได้สูงขึ้น":"new skills. Inherit the higher tier. Two matching Epic or better weapons gain","ขั้น":"tier","ทำช้า":"Slows","สายฟ้ากระโดด":"Lightning chains","กำลังโหลดรายการห้อง":"Loading rooms","รีเฟรช":"Refresh","สร้างห้องใหม่":"Create room","ชื่อห้อง":"Room name","เว้นว่าง":"Leave blank","ไม่ล็อก":"unlocked","แสดงในรายการห้อง":"List this room publicly","เข้าด้วยรหัสห้อง":"Join by room code","รหัสห้อง":"Room code","ส่งรหัสห้องให้เพื่อน":"Share your room code","ลิงก์เชิญ":"Invite link","โหมด":"Mode","บอทเติมให้ครบ":"Fill roster with bots to","ขนาดแมพ":"Map size","แชทในห้อง":"Room chat","พิมพ์ข้อความ":"Type a message","ข้อความแชท":"Chat message","ส่ง":"Send","กำลังเปิดประตูสนาม":"Opening the arena gates","กำลังตรวจสอบไฟล์เกม":"Checking game files","ความคืบหน้าโหลดเกม":"Loading progress","กำลังเตรียมข้อมูล":"Preparing game data","โหลดใหม่อีกครั้ง":"Retry","ดูต่อ":"Spectate","เดินด้วย":"Move with","หรือจอยซ้าย โจมตีด้วย":"or the left stick. Attack with","ตีฮีโร่ก่อนเสมอ":"to target heroes first","หรือปุ่มเล็กข้างปุ่มโจมตีตีเฉพาะมอนสเตอร์ สกิล":"or the small attack button to target monsters only. Skills","บนจอเพื่ออัปสกิล":"on screen to upgrade skills","หรือปุ่มซ้ายขวดเลือดเพื่อพุ่ง":"or the button left of the health potion to dash","สกิลพิเศษ มือถือกดค้างแล้วลากเพื่อเล็ง ปล่อยเพื่อร่าย":"Special skill. On mobile, hold and drag to aim, then release to cast","แตะสกิลเพื่อใช้ กดค้างเพื่ออ่านรายละเอียด":"Tap to cast. Hold for details","อัปสกิลได้":"Upgrade available","กำลังฟื้นฟู":"Recovering","ความเสียหาย":"Damage","ค่าพื้นฐานก่อนลดทอน":"before mitigation","รูน":"Rune","ข้างสกิลเพื่ออัปสกิล":"beside a skill to upgrade it","ยังเข้าเกมไม่ได้":"Cannot enter the arena yet","โหลดข้อมูลไม่สำเร็จ":"Game data could not be loaded","ระบบจะไม่ใช้ภาพหรือโมเดลสำรอง":"Required art and models must load","ตรวจสอบการเชื่อมต่อแล้วลองโหลดใหม่":"Check your connection and retry","ไฟล์เกม":"Game files","รายการโมเดล":"Model list","ไม่มีโมเดลในรายการ":"No models listed","ไม่มีไฟล์ที่จำเป็น":"Required file missing","ภาพไอคอน":"Icon art","รายการ":"items","หมดเวลารอ":"Timed out","กำลังจัดสนามและเตรียมผู้กล้า":"Preparing the arena and champions","กำลังเข้าสู่สนาม":"Entering the arena","กำลังเตรียมสนาม":"Preparing the battlefield","เตรียมสนาม":"Preparing arena","ไฟล์ตัวละครไม่ครบ":"Character files incomplete","ของผู้เล่นไม่ครบ":"Player data incomplete","อุปกรณ์ไม่พร้อมสำหรับกราฟิก":"Device does not support these graphics","กำลังอ่านฉากและภาพไอคอน":"Loading the scene and icons","รายการไฟล์เกม":"Game files","รายการตัวละครไม่ครบ":"Character list incomplete","หมดเวลารอภาพหน้าโหลด":"Loading artwork timed out","ภาพหน้าโหลดไม่ถูกต้อง":"Invalid loading artwork","โหลดภาพหน้าโหลดไม่สำเร็จ":"Could not load the loading artwork","ไฟล์เสียงไม่ถูกต้อง":"Invalid audio file","ตัวละคร":"Characters","ฉากเกม":"Game scene","กำลังเตรียมภาพและแสงจันทร์":"Preparing visuals and moonlight","กำลังเตรียมภาพสนามประลอง":"Preparing the arena visuals","สนามพร้อมแล้ว":"Arena ready","กำลังเปิดเมนูหลัก":"Opening the main menu","เลือกการเล่น":"Choose a game mode","เริ่มมือเปล่า":"Start unarmed","เก็บอาวุธในสนาม":"Find weapons in the arena","อัปสกิลเพื่อเอาตัวรอด":"Upgrade your skills to survive","ภาพ เสียง และสูตรหลอมอาวุธ":"Graphics, audio and weapon fusion","รู้จักอาวุธและสกิล":"Weapon and skill guide","แบบ":"types","ดูสูตรหลอมและสกิลหลอมทั้ง":"Explore fusion recipes and all","ใต้เงาจันทราที่แตกสลาย":"Beneath the shattered moon","ซื้อ":"Buy","ราคา":"Price","เต็มแล้ว":"Full","ปิดร้านค้า":"Close shop","อัญเชิญภูติเพลิง":"Summon Flame Spirit","หอกวิญญาณเพลิง":"Flame Spirit Lance","อัญเชิญภูติเหมันต์":"Summon Frost Spirit","หอกวิญญาณเหมันต์":"Frost Spirit Lance","อัญเชิญภูติอัสนี":"Summon Storm Spirit","หอกวิญญาณอัสนี":"Storm Spirit Lance","คัมภีร์วิญญาณเพลิง":"Flame Spirit Tome","คัมภีร์วิญญาณเหมันต์":"Frost Spirit Tome","คัมภีร์วิญญาณอัสนี":"Storm Spirit Tome","⚡ จับคู่ด่วน = ดวลผู้เล่นจริง ทุกคนเป็นศัตรู รอสูงสุด 30 วิ คนไม่ครบเติมบอทให้ครบ 32 คน":"⚡ Quick Match puts you in a free-for-all with other players. After 30 seconds, bots fill the remaining slots for a 32-player match.","🏠 ห้องออนไลน์ = รายการห้อง · ตั้งชื่อ/รหัสผ่าน · เลือกโหมด":"🏠 In Online Rooms, set a room name, an optional password and a mode.","ทุกคนศัตรู / ทีมละ 2 / ทีมละ 4":"Free-for-all / Duos / Squads","· จำนวนคน บอท ขนาดแมพ · แชทในห้องรอ":"Choose the player limit, bots and map size. Chat in the lobby.","🪂 เริ่มเกม: ทุกคนลงมาจากฟ้า แตะบนแผนที่ (ในวงพายุ) เพื่อเลือกจุดลง ไม่เลือก = สุ่มให้":"🪂 Tap inside the storm circle to choose where to land. Leave it unmarked for a random drop.","⚔️ ปุ่มโจมตี (J / Space) ตี":"⚔️ Attack (J / Space) targets","ไม่มีฮีโร่ในระยะจึงตีมอนสเตอร์ · ปุ่มเล็ก 🐲":"If no hero is in range, it targets monsters. Use the small 🐲","(K) ข้างปุ่มโจมตี ตีเฉพาะมอนสเตอร์":"button (K) to target monsters exclusively.","💨 พุ่ง (Shift) อมตะระหว่างพุ่ง คูลดาวน์ 45 วิ ปุ่มอยู่ซ้ายขวดเลือด · ✦ สกิลพิเศษ (V) อยู่เหนือปุ่มพุ่ง":"💨 Dash (Shift) grants brief invulnerability and has a 45-second cooldown. Find it left of the health potion, with Special Skill (V) just above it.","🎯 เล็งสกิล: กดค้างปุ่มสกิลแล้วลากไปทิศ/จุดที่ต้องการ ปล่อยเพื่อร่าย (ลากไป ✕ เพื่อยกเลิก · แตะเฉยๆ = เล็งอัตโนมัติ · คอมพิวเตอร์: กดค้าง Q E R เล็งตามเมาส์ ปล่อยเพื่อร่าย)":"🎯 Hold and drag a skill to aim. Release to cast, drag to ✕ to cancel, or tap for auto-aim. On desktop, hold Q, E or R to aim with the mouse and release to cast.","🛒 ร้านค้าอยู่กับพ่อค้าในหมู่บ้าน: ยืนใกล้แล้วแตะ \"ร้านค้า\" (หรือ P) ซื้อยา สมุดเลเวล สกิลพิเศษ สุ่มความสามารถอาวุธใหม่ · เหรียญ 🪙 ได้จากมอนสเตอร์และกล่อง":"🛒 At a village merchant, tap Shop or press P to buy potions, level tomes and special skills, or reroll your weapon abilities. Earn coins from monsters and chests.","🗡️ อาวุธ/เกราะ: ค้นตามบ้าน 📦 กล่องสมบัติ (คีย์ F) ได้ของ 68% · มอนสเตอร์ทุกตัวมีโอกาสดรอป ยิ่งตัวใหญ่ยิ่งดี · พื้นโล่งมีน้อย":"🗡️ Search houses for weapons and armor. Open chests with F for a 68% chance of loot. Every monster can drop loot, with better rewards from larger foes. Items are scarce on open ground.","🎒 กระเป๋า: 🧪 ยาเลือด 💧 ยามานา ⚗️ ยาใหญ่ 🍃 ยาเร่ง กดปุ่มข้างแถบสถานะเพื่อใช้ (คีย์ 4-7 · B เปิดกระเป๋า) · ระหว่างโดนตียาฟื้นได้ครึ่งเดียว":"🎒 Tap the potion buttons or press 4–7 to use health, mana, elixir or haste potions. Press B to open your bag. Potions restore half as much while under attack.","🌙 กลางคืน มอนสเตอร์ดุร้ายขึ้นและ 🧟 ซอมบี้ลุกจากสุสานออกล่า ฆ่าแล้วสุ่มได้ยา/อาวุธ มีโอกาส 🌈 SSR 1% · ซ่อนตัวใน 🌿 พุ่มหญ้าสูงได้":"🌙 Monsters grow stronger at night. Zombies rise from graves and can drop potions or weapons, including a 1% chance of SSR loot. Hide in tall grass to evade them.","👑 บอส: 🌋 ไททันลาวาบรรพกาลในปราสาท 🏰 · ❄ ราชินีหิมะบนปราสาทน้ำแข็ง (เลือด 3 หลอด หลอดแตกเข้าเฟสใหม่ ระหว่างเปลี่ยนเฟสตีไม่เข้า) · ☾ Celestial Overlord ที่แท่นสุริยคราส":"👑 Find the Ancient Lava Titan in the castle, the Snow Queen at the ice castle and the Celestial Overlord at the Eclipse Altar. The Queen has three health bars and is briefly invulnerable between phases.","✨ ศาลภูตฟื้นเลือด/มานา · ถ้ำลับในภูเขามีสมบัติ · 🌳 ตัดต้นไม้ล้มได้ (ต้นกล้วยตีทีเดียวล้ม)":"✨ Spirit shrines restore health and mana. Mountain caves hide treasure. Trees can be felled, and banana trees fall in one hit.","🪦 ป่าต้องสาป: ร่างอัศวินที่ยังเรืองแสงวิญญาณสีเขียวค้นได้ ยืนใกล้แล้วแตะ 🔍 (หรือ F) เพื่อค้น แตะอีกครั้งเพื่อเก็บของ ·":"🪦 In the Cursed Forest, approach a fallen knight glowing green and tap 🔍 or press F to search. Tap again to collect your loot.","(ค้นครบ 10 วิ ลุ้นของตำนาน 15%) · เดินออกหรือโดนตีจะหยุดค้น · หลุมละครั้ง":"A full 10-second search gives a 15% chance of legendary loot. Moving away or taking damage interrupts the search. Each grave can be searched once.","💎 กล่องสมบัติทอง (เปิดได้ของหายากทุกใบ): ห้องผู้คุมในคุกใต้ดิน 6 ใบ · หลังราชินีหิมะ 2 ใบ · วิหารนครเก่า 2 ใบ":"💎 Gold chests always contain rare loot. Find six in the dungeon warden’s chamber, two behind the Snow Queen and two in the Old Town temple.","⚒️ หลอมอาวุธ: พกได้ 2 ชิ้น (มือ + สำรอง) เดินชนอาวุธต่างชนิดเพื่อเก็บเป็นสำรอง · แตะรูปอาวุธหรือคีย์ T สลับ (คูลดาวน์ 5 วิ · โดนตีอยู่สลับไม่ได้) · ครบ 10 นาทีหลอมเป็นอาวุธใหม่ + สกิลใหม่ 3 อย่าง":"⚒️ Carry one equipped weapon and one in reserve. Walk over a different weapon to store it. Tap the weapon icon or press T to switch, with a 5-second cooldown. You cannot switch under attack. At 10 minutes, your weapons fuse and grant three new skills.","จอยซ้าย = เดิน · เดินชนอาวุธเพื่อเก็บ (🔄 รับอาวุธ) · แตะ ＋ อัปสกิล (อัลติเลเวล 6/11/16)":"Move with the left stick. Walk over weapons to pick them up, or use the swap prompt. Tap ＋ to upgrade a skill. Upgrade your ultimate at levels 6, 11 and 16.","32 ผู้กล้า · เก็บอาวุธ ปลดปล่อยสกิล · เหลือเพียงตำนานเดียว":"32 champions. Find your weapon. Be the last one standing.","เริ่มมือเปล่า · เก็บอาวุธในสนาม · อัปสกิลเพื่อเอาตัวรอด":"Start unarmed. Find a weapon and master its skills to survive.","ได้ของธรรมดา–หายาก":"Common or rare loot","ทีมละ 2 คน":"Duos","ทีมละ 4 คน":"Squads","ใส่ชื่อแล้วกด \"เข้าห้อง\"":"Enter your name and select Join room","ฟื้นคืนชีพ!":"revived!","แตะบนแผนที่ (ในวงพายุ) เพื่อเลือกจุดลง":"Tap inside the circle to land.","ไม่เลือก = สุ่มให้":"No marker? Land at random.","หลอดเลือดแรกแตก — ราชินีหิมะพิโรธ พายุหิมะกำลังมา!":"First health bar shattered! The Snow Queen is calling a blizzard.","อีก 30 วิหลอมอาวุธ — พกอาวุธ 2 ชนิดไว้!":"Fusion in 30 seconds! Carry two different weapons.","พกอาวุธ 2 ชนิด · นาทีที่ 10 หลอมเป็นอาวุธใหม่":"Carry two different weapons to fuse them at 10 minutes.","เริ่มหลอม! ได้ชิ้นที่ 2 เมื่อไหร่หลอมทันที":"Fusion unlocked! Pick up a second weapon to fuse.","อีก 3 นาทีหลอมอาวุธ":"Fusion in 3 minutes","ดูสูตรหลอมและสกิลหลอมทั้ง 36 สกิล":"View fusion recipes and all 36 fusion skills","หมุนรอบตัวนาน 1.75 วิ โดนทุก 0.25 วิ และฟื้นเลือด 15% ของความเสียหาย":"Spin for 1.75 seconds, hitting every 0.25 seconds and healing for 15% of damage dealt.","ยังไม่ปลดล็อก · ค่าของเลเวล 1":"Locked · Level 1 preview","ภาพ: ซิเนมาติก":"Lighting: Cinematic","ภาพ: เป็นกลาง":"Lighting: Neutral","กราฟิก: ประหยัด":"Graphics: Low","เข้าห้องไม่สำเร็จ ลองอีกครั้ง หรือใช้ Wi-Fi เดียวกัน":"Could not join. Try again or connect to the same Wi-Fi network.","MP ต่ำ":"Low MP","รู้จักอาวุธและสกิล · 10 แบบ":"Weapon and skill guide · 10 weapons","พกอาวุธ 2 ชนิด (ในมือ + สำรอง) · ครบ":"Carry two different weapons, one equipped and one in reserve. At","จะหลอมรวมเป็นอาวุธใหม่ พร้อมสกิลใหม่ 3 อย่าง · ได้ระดับของชิ้นที่ดีกว่า ถ้าระดับเท่ากันตั้งแต่มหากาพย์ขึ้นไปจะได้สูงขึ้น 1 ขั้น":"they fuse into a new weapon with three skills. It inherits the higher tier. Two equal-tier weapons of Epic quality or better gain one tier.","ว่าง (บอท)":"Open (bot)","ปิดบอทอยู่ ต้องมีผู้เล่นอย่างน้อย 2 คน":"At least two players are required with bots off","ศรเพลิงสามทาง":"Triple Flame Arrow","คลื่นดาบเพลิง":"Flame Blade Wave","ออร่าเพลิง":"Flame Aura","เพลิงถล่มปฐพี":"Flame Earthshatter","บ่อเพลิง":"Flame Pool","ฝนศรเพลิง":"Flame Arrow Rain","ธาตุเพลิง":"Flame","ภูติธาตุเพลิง":"Flame Spirit","ผู้พิทักษ์ธาตุเพลิง":"Flame Guardian","ดาบธาตุเพลิง ฟันติดธาตุ ปล่อยคลื่นดาบเพลิง ออร่าเพลิงรอบตัว กระโดดถล่มธาตุใส่พื้นที่":"Inflict elemental stacks with each slash. Release a piercing Flame wave, surround yourself with an aura and leap into an elemental blast.","ธนูธาตุเพลิง ศรติดธาตุ ยิงศรสามทาง บ่อเพลิงใส่พื้นที่ ฝนศรเพลิง":"Inflict elemental stacks with your arrows. Fire a three-way Flame volley, form a damaging pool and rain arrows on an area.","คัมภีร์วิญญาณหลอมกับคทาเพลิง: ภูติ หมาป่า และผู้พิทักษ์กลายเป็นธาตุเพลิง ทุกการโจมตีของวิญญาณติดสถานะธาตุ หอกวิญญาณเพลิง ผู้พิทักษ์เพลิงถล่มพื้นที่":"Fuse a Spirit Tome with a Flame staff. Your wisps, wolves and guardian gain elemental attacks. Hurl a Flame Spirit Lance and summon a guardian to slam the area.","ศรเหมันต์สามทาง":"Triple Frost Arrow","คลื่นดาบเหมันต์":"Frost Blade Wave","ออร่าเหมันต์":"Frost Aura","เหมันต์ถล่มปฐพี":"Frost Earthshatter","บ่อเหมันต์":"Frost Pool","ฝนศรเหมันต์":"Frost Arrow Rain","ธาตุเหมันต์":"Frost","ภูติธาตุเหมันต์":"Frost Spirit","ผู้พิทักษ์ธาตุเหมันต์":"Frost Guardian","ดาบธาตุเหมันต์ ฟันติดธาตุ ปล่อยคลื่นดาบเหมันต์ ออร่าเหมันต์รอบตัว กระโดดถล่มธาตุใส่พื้นที่":"Inflict elemental stacks with each slash. Release a piercing Frost wave, surround yourself with an aura and leap into an elemental blast.","ธนูธาตุเหมันต์ ศรติดธาตุ ยิงศรสามทาง บ่อเหมันต์ใส่พื้นที่ ฝนศรเหมันต์":"Inflict elemental stacks with your arrows. Fire a three-way Frost volley, form a damaging pool and rain arrows on an area.","คัมภีร์วิญญาณหลอมกับคทาเหมันต์: ภูติ หมาป่า และผู้พิทักษ์กลายเป็นธาตุเหมันต์ ทุกการโจมตีของวิญญาณติดสถานะธาตุ หอกวิญญาณเหมันต์ ผู้พิทักษ์เหมันต์ถล่มพื้นที่":"Fuse a Spirit Tome with a Frost staff. Your wisps, wolves and guardian gain elemental attacks. Hurl a Frost Spirit Lance and summon a guardian to slam the area.","ศรอัสนีสามทาง":"Triple Storm Arrow","คลื่นดาบอัสนี":"Storm Blade Wave","ออร่าอัสนี":"Storm Aura","อัสนีถล่มปฐพี":"Storm Earthshatter","บ่ออัสนี":"Storm Pool","ฝนศรอัสนี":"Storm Arrow Rain","ธาตุอัสนี":"Storm","ภูติธาตุอัสนี":"Storm Spirit","ผู้พิทักษ์ธาตุอัสนี":"Storm Guardian","ดาบธาตุอัสนี ฟันติดธาตุ ปล่อยคลื่นดาบอัสนี ออร่าอัสนีรอบตัว กระโดดถล่มธาตุใส่พื้นที่":"Inflict elemental stacks with each slash. Release a piercing Storm wave, surround yourself with an aura and leap into an elemental blast.","ธนูธาตุอัสนี ศรติดธาตุ ยิงศรสามทาง บ่ออัสนีใส่พื้นที่ ฝนศรอัสนี":"Inflict elemental stacks with your arrows. Fire a three-way Storm volley, form a damaging pool and rain arrows on an area.","คัมภีร์วิญญาณหลอมกับคทาอัสนี: ภูติ หมาป่า และผู้พิทักษ์กลายเป็นธาตุอัสนี ทุกการโจมตีของวิญญาณติดสถานะธาตุ หอกวิญญาณอัสนี ผู้พิทักษ์อัสนีถล่มพื้นที่":"Fuse a Spirit Tome with a Storm staff. Your wisps, wolves and guardian gain elemental attacks. Hurl a Storm Spirit Lance and summon a guardian to slam the area.","ดาบคู่ราชันย์ชั้นสูง":"Advanced Sovereign Twinblades","ดาบคู่ราชันย์มหากาพย์":"Epic Sovereign Twinblades","ดาบคู่ราชันย์ตำนาน":"Legendary Sovereign Twinblades","หอกล่าวิญญาณชั้นสูง":"Advanced Soulhunter Spear","หอกล่าวิญญาณมหากาพย์":"Epic Soulhunter Spear","หอกล่าวิญญาณตำนาน":"Legendary Soulhunter Spear","ดาบเพลิงนรกชั้นสูง":"Advanced Inferno Blade","ดาบเพลิงนรกมหากาพย์":"Epic Inferno Blade","ดาบเพลิงนรกตำนาน":"Legendary Inferno Blade","ดาบเหมันต์นิรันดร์ชั้นสูง":"Advanced Everfrost Blade","ดาบเหมันต์นิรันดร์มหากาพย์":"Epic Everfrost Blade","ดาบเหมันต์นิรันดร์ตำนาน":"Legendary Everfrost Blade","ดาบอัสนีบาตชั้นสูง":"Advanced Thunderstrike Blade","ดาบอัสนีบาตมหากาพย์":"Epic Thunderstrike Blade","ดาบอัสนีบาตตำนาน":"Legendary Thunderstrike Blade","ธนูสุริยันเพลิงชั้นสูง":"Advanced Solarfire Bow","ธนูสุริยันเพลิงมหากาพย์":"Epic Solarfire Bow","ธนูสุริยันเพลิงตำนาน":"Legendary Solarfire Bow","ธนูจันทร์เหมันต์ชั้นสูง":"Advanced Frostmoon Bow","ธนูจันทร์เหมันต์มหากาพย์":"Epic Frostmoon Bow","ธนูจันทร์เหมันต์ตำนาน":"Legendary Frostmoon Bow","ธนูวายุอัสนีชั้นสูง":"Advanced Stormwind Bow","ธนูวายุอัสนีมหากาพย์":"Epic Stormwind Bow","ธนูวายุอัสนีตำนาน":"Legendary Stormwind Bow","หน้าไม้มังกรคู่ชั้นสูง":"Advanced Twin Dragon Crossbows","หน้าไม้มังกรคู่มหากาพย์":"Epic Twin Dragon Crossbows","หน้าไม้มังกรคู่ตำนาน":"Legendary Twin Dragon Crossbows","คทาสุริยันจันทราชั้นสูง":"Advanced Sun and Moon Staff","คทาสุริยันจันทรามหากาพย์":"Epic Sun and Moon Staff","คทาสุริยันจันทราตำนาน":"Legendary Sun and Moon Staff","คทาพายุเพลิงชั้นสูง":"Advanced Firestorm Staff","คทาพายุเพลิงมหากาพย์":"Epic Firestorm Staff","คทาพายุเพลิงตำนาน":"Legendary Firestorm Staff","คทาพายุหิมะอัสนีชั้นสูง":"Advanced Froststorm Staff","คทาพายุหิมะอัสนีมหากาพย์":"Epic Froststorm Staff","คทาพายุหิมะอัสนีตำนาน":"Legendary Froststorm Staff","คัมภีร์ขุนพลวิญญาณชั้นสูง":"Advanced Spirit General Tome","คัมภีร์ขุนพลวิญญาณมหากาพย์":"Epic Spirit General Tome","คัมภีร์ขุนพลวิญญาณตำนาน":"Legendary Spirit General Tome","คัมภีร์พรานวิญญาณชั้นสูง":"Advanced Spirit Ranger Tome","คัมภีร์พรานวิญญาณมหากาพย์":"Epic Spirit Ranger Tome","คัมภีร์พรานวิญญาณตำนาน":"Legendary Spirit Ranger Tome","คัมภีร์วิญญาณเพลิงชั้นสูง":"Advanced Flame Spirit Tome","คัมภีร์วิญญาณเพลิงมหากาพย์":"Epic Flame Spirit Tome","คัมภีร์วิญญาณเพลิงตำนาน":"Legendary Flame Spirit Tome","คัมภีร์วิญญาณเหมันต์ชั้นสูง":"Advanced Frost Spirit Tome","คัมภีร์วิญญาณเหมันต์มหากาพย์":"Epic Frost Spirit Tome","คัมภีร์วิญญาณเหมันต์ตำนาน":"Legendary Frost Spirit Tome","คัมภีร์วิญญาณอัสนีชั้นสูง":"Advanced Storm Spirit Tome","คัมภีร์วิญญาณอัสนีมหากาพย์":"Epic Storm Spirit Tome","คัมภีร์วิญญาณอัสนีตำนาน":"Legendary Storm Spirit Tome","สร้างห้อง · เล่นกับเพื่อน":"Host or join friends","ออนไลน์ · ผู้เล่นจริง":"Play against people","ต้องมีอาวุธ 2 ชนิด (1/2)":"Find a second weapon (1/2)","สกิลพิเศษ (กด V หรือปุ่ม ✦ · ถือได้ 1 สกิล ซื้อซ้ำเพื่ออัปเลเวล สูงสุด 3)":"Special skill (V or ✦). Equip one at a time. Buy it again to upgrade, up to level 3.","เก็บอาวุธใกล้ตัวเพื่อรับสกิล แล้วแตะ ＋ อัปสกิลแรก!":"Pick up a weapon, then tap ＋ to learn your first skill!","ยังไม่มีข้อความ · ทักทายกันได้เลย":"No messages yet. Say hello!","อาวุธ/เกราะ":"Weapons and armor","นาทีที่ 10 หลอมเป็นอาวุธใหม่":"Fuse at 10 minutes","อีก 15 วินาทีจะค่ำ":"Night falls in 15 seconds","ตัวแก้ไขเกม":"World Editor","โหมดแก้ไข":"Editor mode","ย้อนกลับ":"Undo","วัตถุในฉาก":"Scene objects","ค้นหาชื่อหรือ ID":"Search by name or ID","ค้นหามอนสเตอร์":"Search monsters","รายชื่อมอนสเตอร์":"Monster list","แผนที่โลก คลิกเพื่อย้ายกล้อง":"World map. Click to move the camera.","ฉากสามมิติ":"3D scene","คุณสมบัติ":"Inspector","จุดเกิด":"Spawn position","เลื่อนกล้องไปที่ตัวนี้":"Focus on this monster","ค่ามอนสเตอร์":"Monster stats","ขอบเขตการแก้ไข":"Edit scope","เฉพาะตัวนี้":"This instance","ทั้งชนิด":"All of this kind","ทดสอบในแมตช์":"Playtest encounter","คูลดาวน์ตามระดับ (วิ)":"Cooldown by rank (s)","ร่าย Meteor ทดสอบ":"Test cast Meteor","ไฟล์โปรเจกต์":"Project files","บันทึกเพื่อใช้ใน Solo บนอุปกรณ์นี้ หรือส่งออก JSON สำหรับ build เกม":"Save to use in Solo on this device, or export JSON for a game build.","นำเข้า JSON":"Import JSON","ส่งออก JSON":"Export JSON","คืนค่าโปรเจกต์ของเกม":"Restore game project","กลับไปแก้ไข":"Return to editor","รูปแบบโปรเจกต์หรือค่าอยู่นอกช่วงที่รองรับ":"Invalid project format or value out of range","พลังชีวิตพื้นฐาน":"Base health","พลังโจมตีพื้นฐาน":"Base attack","ระยะไล่จากจุดเกิด":"Chase distance","ความเสียหายพื้นฐาน":"Base damage","เวลาตก (วิ)":"Fall delay (s)","มีการแก้ไขที่ยังไม่บันทึก":"Unsaved changes","ใช้ค่าที่บันทึกไว้":"Saved project","หุ่นฝึก":"Training dummy","ไม่พบมอนสเตอร์":"No monsters found","แตะพื้นเพื่อเล็ง แล้วกดร่ายทดสอบ":"Tap the ground to aim, then test cast","ลากตัวมอนสเตอร์เพื่อย้าย · ลากพื้นเพื่อเลื่อนกล้อง":"Drag a monster to move it · Drag the ground to pan","ข้อมูลมอนสเตอร์ไม่ตรงกับแผนที่":"Monster does not match this world","จุดเกิดต้องอยู่บนพื้นที่เดินได้":"Choose walkable ground for this spawn","ยังร่ายสกิลไม่ได้":"Cannot cast yet","กำลังรอแรงกระแทก":"Waiting for impact","ความเสียหายตอนกระแทก":"Impact damage","ตรวจสอบค่าที่กรอก":"Check the value entered","อีกหน้าต่างบันทึกแล้ว ส่งออกฉบับนี้แล้วเปิดใหม่":"Project changed in another tab. Export this draft and reopen.","บันทึกแล้ว · แมตช์ Solo ถัดไปใช้ค่าชุดนี้":"Saved · Your next Solo match will use these settings","อ่านไฟล์ในเครื่องไม่ได้ กำลังใช้ค่าจากเกม":"Local save unavailable. Using the built-in project.","ออกโดยทิ้งการแก้ไขที่ยังไม่บันทึกหรือไม่":"Leave and discard unsaved edits?","ไฟล์โปรเจกต์ใหญ่เกินไป":"Project file is too large","นำเข้าแล้ว · กดบันทึกเพื่อใช้ใน Solo":"Imported · Save to use in Solo","อ่าน JSON ไม่สำเร็จ":"Invalid JSON","บันทึก":"Save","แผนที่โลก":"World map","การโจมตี":"Attack","รัศมีโจมตี":"Attack radius","มอนสเตอร์":"Monsters","สนามทดสอบ":"Practice range","พลังชีวิตหุ่นฝึก":"Dummy health","ระดับสกิลที่ทดสอบ":"Test skill rank","เล็งกลางหุ่นฝึก":"Aim at dummy","ความเสียหายก่อนหักเกราะเวท":"Damage before magic resistance","ซูมออก":"Zoom out","ซูมเข้า":"Zoom in","เลือกจุดเกิดบนแผนที่":"Place on map","คลิกแผนที่เพื่อเลื่อนกล้อง แล้วแตะพื้นเพื่อวาง":"Use the map to navigate, then tap the ground to place","พบจุดเกิดเดิมที่ใช้กับแผนที่นี้ไม่ได้ ตรวจสอบฉบับแก้ไขก่อนบันทึก":"Some saved spawns no longer fit this world. Review the draft before saving.","ข้อมูลเกม":"Game data","ปรับสมดุล":"Balance","วางวัตถุ":"Map objects","หมวดข้อมูล":"Category","ค้นหาในหมวดนี้":"Search this category","รายการข้อมูล":"Entries","เปิดสนามทดสอบ Meteor":"Open Meteor range","Seed แผนที่":"Map seed","ใช้แผนที่นี้":"Use this map","ประเภทวัตถุ":"Object type","วัตถุบนแผนที่":"Map objects","เลือกตำแหน่งบนฉาก":"Pick on the map","ใช้ตำแหน่ง":"Apply position","คืนจุดเดิม":"Reset position","เปิดไฟล์เกม":"Open game file","แทนที่ด้วยไฟล์อื่น":"Replace file","เนื้อหาไฟล์":"File contents","บันทึกลงไฟล์เดิม":"Save to original file","ดาวน์โหลดไฟล์":"Download file","บันทึกโปรเจกต์":"Save project","ล็อกตัวแก้ไขเกม":"Lock World Editor","ช่วงโจมตี (วิ)":"Attack interval (s)","ค่าไม่ถูกต้อง":"Invalid value","จุดวางต้องอยู่บนพื้นที่เดินได้":"Choose a walkable position","รัศมีวงบีบต้องลดลงหรือเท่าเดิมในแต่ละช่วง":"Each circle must be no larger than the preceding phase","วัตถุไม่ตรงกับแผนที่":"Object does not belong to this map","รูปแบบข้อมูลเกมไม่ถูกต้อง":"Invalid game data","ไม่พบคุณสมบัติในเกม":"Unknown game setting","กล่องไม่ตรงกับแผนที่":"Chest does not belong to this map","ลองใช้ในแมตช์":"Try in match","ระดับสกิล":"Skill level","สุ่มแผนที่ในแมตช์ใหม่":"Randomize future matches"});</script>
 <div id="safe"></div>
 <canvas id="gl"></canvas><div id="vig"></div>
 <canvas id="c"></canvas>
@@ -651,78 +585,6 @@ if(window.__moonfallCodeFailure)moonfallCodeFailure(window.__moonfallCodeFailure
   <div class="stats" id="endStats"></div>
   <div class="row"><button class="go ghost" id="watchBtn">ดูต่อ</button><button class="go" id="againBtn">กลับเมนู</button><button class="go ghost hidden" id="endMenu">เมนู</button></div>
 </div>
-<section id="arenaEditor" hidden aria-label="ตัวแก้ไขเกม">
-  <header class="ed-bar">
-    <div class="ed-brand"><b>MuzCruor</b><span>World Editor</span></div>
-    <nav class="ed-modes" aria-label="โหมดแก้ไข">
-      <button type="button" id="edMobs" aria-pressed="true">มอนสเตอร์</button>
-      <button type="button" id="edSkills" aria-pressed="false">Meteor</button>
-    </nav>
-    <div class="ed-actions">
-      <button type="button" id="edUndo" title="ย้อนกลับ" aria-label="ย้อนกลับ" disabled>↶</button>
-      <button type="button" id="edSave" class="ed-primary">บันทึก</button>
-      <button type="button" id="edClose" title="กลับเมนู" aria-label="กลับเมนู">×</button>
-    </div>
-  </header>
-  <div class="ed-layout">
-    <aside class="ed-browser">
-      <div id="edObjects">
-      <header><h2>วัตถุในฉาก</h2><output id="edCount"></output></header>
-      <input type="search" id="edSearch" placeholder="ค้นหาชื่อหรือ ID" aria-label="ค้นหามอนสเตอร์">
-      <div id="edList" class="ed-list" role="group" aria-label="รายชื่อมอนสเตอร์"></div>
-      <div class="ed-atlas">
-        <h3>แผนที่โลก</h3>
-        <canvas id="edMap" width="256" height="256" aria-label="แผนที่โลก คลิกเพื่อย้ายกล้อง"></canvas>
-      </div>
-      </div>
-      <div id="edRange" hidden>
-        <h2>สนามทดสอบ</h2>
-        <div class="ed-target"><h3>หุ่นฝึก</h3><output id="edHealth"></output><progress id="edHealthBar" max="1" value="1" aria-label="พลังชีวิตหุ่นฝึก"></progress></div>
-        <label for="edRank">ระดับสกิลที่ทดสอบ</label>
-        <select id="edRank"><option value="1">Lv. 1</option><option value="2">Lv. 2</option><option value="3">Lv. 3</option></select>
-        <div class="ed-target"><h3>ความเสียหายก่อนหักเกราะเวท</h3><output id="edPower"></output></div>
-        <button type="button" id="edAimDummy">เล็งกลางหุ่นฝึก</button>
-      </div>
-    </aside>
-    <div id="edStage" aria-label="ฉากสามมิติ">
-      <button type="button" id="edBrowse" class="ed-floating">วัตถุในฉาก</button>
-      <button type="button" id="edInspect" class="ed-floating">คุณสมบัติ</button>
-      <div class="ed-zoom"><button type="button" id="edZoomOut" aria-label="ซูมออก" title="ซูมออก">−</button><button type="button" id="edZoomIn" aria-label="ซูมเข้า" title="ซูมเข้า">+</button></div>
-      <div id="edPin" hidden></div>
-      <div class="ed-location"><b id="edRegion"></b><span id="edHint"></span></div>
-    </div>
-    <aside class="ed-inspector">
-      <div class="ed-panel-heading"><span id="edType"></span><h2 id="edName"></h2></div>
-      <div id="edMobFields">
-        <fieldset><legend>จุดเกิด</legend>
-          <div class="ed-grid"><label>X<input id="edX" type="number" min="0" step="1"></label><label>Y<input id="edY" type="number" min="0" step="1"></label></div>
-          <button type="button" id="edPlace" aria-pressed="false">เลือกจุดเกิดบนแผนที่</button>
-          <button type="button" id="edFocus" class="ed-subtle">เลื่อนกล้องไปที่ตัวนี้</button>
-        </fieldset>
-        <fieldset><legend>ค่ามอนสเตอร์</legend>
-          <div class="ed-segment" role="group" aria-label="ขอบเขตการแก้ไข"><button type="button" id="edInstance" aria-pressed="true">เฉพาะตัวนี้</button><button type="button" id="edKind" aria-pressed="false">ทั้งชนิด</button></div>
-          <div id="edStats" class="ed-fields"></div>
-        </fieldset>
-        <button type="button" id="edPlay" class="ed-test">ทดสอบในแมตช์</button>
-      </div>
-      <div id="edSkillFields" hidden>
-        <fieldset><legend>การโจมตี</legend><div id="edSkillStats" class="ed-fields"></div></fieldset>
-        <fieldset><legend>คูลดาวน์ตามระดับ (วิ)</legend><div id="edCooldowns" class="ed-grid ed-three"></div></fieldset>
-        <button type="button" id="edCast" class="ed-test">ร่าย Meteor ทดสอบ</button>
-        <output id="edHit" aria-live="polite"></output>
-      </div>
-      <details class="ed-files"><summary>ไฟล์โปรเจกต์</summary>
-        <p>บันทึกเพื่อใช้ใน Solo บนอุปกรณ์นี้ หรือส่งออก JSON สำหรับ build เกม</p>
-        <div class="ed-grid"><button type="button" id="edImport">นำเข้า JSON</button><button type="button" id="edExport">ส่งออก JSON</button></div>
-        <input type="file" id="edFile" accept=".json,application/json" hidden>
-        <button type="button" class="ed-subtle" id="edDefaults">คืนค่าโปรเจกต์ของเกม</button>
-      </details>
-    </aside>
-  </div>
-  <footer class="ed-footer"><span id="edStatus" role="status"></span><span id="edSeed"></span></footer>
-</section>
-<button type="button" id="edReturn" hidden>กลับไปแก้ไข</button>
-
 <script src="engine.min.js" onerror="moonfallCodeFailure('engine.min.js')"></script>
 <script src="models2.js" onerror="moonfallCodeFailure('models2.js')" async></script>
 <script src="models4.js" async></script>
@@ -736,7 +598,7 @@ if(window.__moonfallCodeFailure)moonfallCodeFailure(window.__moonfallCodeFailure
 <script src="moonfall-inventory.js" onerror="moonfallCodeFailure('moonfall-inventory.js')"></script>
 <script src="moonfall-loading.js" onerror="moonfallCodeFailure('moonfall-loading.js')"></script>
 <script>
-const ARENA_PUBLISHED_PROJECT={"version": 1, "seed": null, "kinds": {}, "spawns": {}, "meteor": {}};
+const ARENA_PUBLISHED_PROJECT={"version": 2, "seed": null, "kinds": {}, "spawns": {}, "meteor": {}, "tuning": {}, "layout": {}};
 const CURSED=true;const MOON=false;
 "use strict";
 const $=id=>document.getElementById(id);
@@ -746,7 +608,7 @@ const TIERS=[{n:'ธรรมดา',c:'#dcdcdc',m:1,sa:0},{n:'หายาก',
 const HB={hp:700,mp:290,hpR:2.2,mpR:1.5,dmg:45,armor:2,mr:.18,spd:205};
 const HG={hp:100,mp:22,hpR:.18,mpR:.09,dmg:4.6,armor:.28,as:.028};
 // basic attacks: every weapon swings faster, and landing hits back to back builds fury (faster and harder, up to FURY_MAX stacks)
-const AS_K=.78,AS_MIN=.18,FURY_MAX=15,FURY_AS=.04,FURY_DMG=.02,FURY_T=3.2,CRIT_BASE=.08,CRIT_BONUS=.15,PVP_K=.47,SKILL_K=1.45;   // hero-vs-hero damage is damped so duels last; skills hit harder across the board
+let AS_K=.78,AS_MIN=.18,FURY_MAX=15,FURY_AS=.04,FURY_DMG=.02,FURY_T=3.2,CRIT_BASE=.08,CRIT_BONUS=.15,PVP_K=.47,SKILL_K=1.45;   // hero-vs-hero damage is damped so duels last; skills hit harder across the board
 const FISTS={n:'มือเปล่า',ic:'✊',melee:1,range:70,atkT:.8,dmg:.55};
 const WEAPONS={
   sword:{n:'ดาบและโล่',ic:'🗡️',melee:1,range:92,atkT:.9,dmg:1,hp:90,armor:3,mr:.05,col:'#cfd8e6',
@@ -812,7 +674,7 @@ const SKV={
 // ===================== WEAPON FUSION =====================
 // Carry two different weapons; once the match clock passes 10:00 they fuse into one of these (new skills, better stats).
 // Recipe = the two weapons' families: M melee · R ranged · S spell (the spell's element flavours the result).
-const FUSE_AT=600;
+let FUSE_AT=600;
 const WCAT={sword:'M',axe:'M',dagger:'M',gsword:'M',bow:'R',xbow:'R',fire:'S',frost:'S',storm:'S'};
 const CATN={M:'อาวุธประชิด',R:'อาวุธยิงไกล',S:'คทาเวท'};
 const ELEM={fire:{c:'#ff7a2a',n:'เพลิง',ic:'🔥',k:2,aoe:'burn',big:'meteor'},frost:{c:'#8fe3ff',n:'เหมันต์',ic:'❄️',k:3,aoe:'blizz',big:'blizz'},storm:{c:'#b9a6ff',n:'อัสนี',ic:'⚡',k:10,aoe:'static',big:'thunder'}};
@@ -900,7 +762,8 @@ const LOOKS=[{n:'แดง',c:'#b8322e'},{n:'น้ำเงิน',c:'#2e5cb8'}
 // Arena Royale (owner 2026-11-21, ARX = index only): the map grows north by one step, an old town on a plateau above the waterfall.
 // The world square is 22000 there with the valley moved 2000 south (CY) to make room; The Cursed Realm and classic keep 20000.
 const ARX=CURSED&&!MOON;
-const MS=2,WORLD=ARX?22000:20000,CX=WORLD/2,CY=ARX?12000:10000,MAXL=18,TOTAL_HEROES=32,MAX_HUMANS=32,DAY=150,NIGHT=100,WL=-5;
+const MS=2,WORLD=ARX?22000:20000,CX=WORLD/2,CY=ARX?12000:10000,MAXL=18,TOTAL_HEROES=32,MAX_HUMANS=32,WL=-5;
+let DAY=150,NIGHT=100;
 const PHASES=[{w:165,s:84,r:6600},{w:110,s:70,r:4900},{w:88,s:62,r:3500},{w:72,s:55,r:2400},{w:60,s:47,r:1520},{w:50,s:39,r:840},{w:38,s:30,r:360},{w:28,s:28,r:0}];
 const BOT_NAMES=['พายุ','ไฟป่า','เงามืด','สายฟ้า','หมาป่า','นินจา','ทอร์นาโด','เพชฌฆาต','มังกร','ฟีนิกซ์','อสุรา','กระทิง','พยัคฆ์','ราชสีห์','ภูตพราย','นาคา','อัศวินดำ','จิ้งจอก','เหยี่ยว','พรานป่า',
   'ครุฑ','หนุมาน','ยักษ์ทมิฬ','เทพธิดา','จอมขมังเวทย์','นักดาบเงา','ราชันย์','อินทรี','เสือดำ','สิงห์ทอง','วายุ','อัคนี','ธารา','ปฐพี','จันทรา','สุริยา','เพลิงนรก','น้ำแข็ง','ม้าศึก','แมงป่อง'];
@@ -1019,8 +882,8 @@ const AU={ctx:null,mode:lsGet('ar_mute','0')==='1'?2:(+lsGet('ar_snd','0')||0), 
   fade(name,vol){const T=this.track(name);if(!T.ok)return;const t=this.ctx.currentTime;T.g.gain.cancelScheduledValues(t);
     if(vol>0){clearTimeout(T.to);if(T.el.paused){const p=T.el.play();if(p&&p.catch)p.catch(()=>{T.pend=true})}T.g.gain.setTargetAtTime(vol,t,.8)}
     else{T.g.gain.setTargetAtTime(0,t,.7);clearTimeout(T.to);T.to=setTimeout(()=>{if(this.musCur!==name&&this.ambCur!==name)T.el.pause()},3500)}},
-  setMusic(m){if(this.mode!==0)m=null;if(m===this.musCur)return;if(this.musCur)this.fade(this.musCur,0);this.musCur=m;if(m)this.fade(m,MUS_VOL[m]||.8)},
-  setAmb(a){if(a===this.ambCur)return;if(this.ambCur)this.fade(this.ambCur,0);this.ambCur=a;if(a)this.fade(a,AMB_VOL[a]||.5)},
+  setMusic(m){if(this.mode!==0)m=null;if(m===this.musCur)return;if(this.musCur)this.fade(this.musCur,0);this.musCur=m;if(m)this.fade(m,MUS_VOL[m]??.8)},
+  setAmb(a){if(a===this.ambCur)return;if(this.ambCur)this.fade(this.ambCur,0);this.ambCur=a;if(a)this.fade(a,AMB_VOL[a]??.5)},
   gesture(){for(const k in this.trk){const T=this.trk[k];if(T.pend&&(k===this.musCur||k===this.ambCur)){T.pend=false;const p=T.el.play();if(p&&p.catch)p.catch(()=>{T.pend=true})}}},
   pickMusic(){if(!this.ctx)return;let m='menu',a=null;
     if(state==='play'&&WD){const me=ME(),L=listener();
@@ -1988,9 +1851,9 @@ function mkZombie(id,kind,x,y,sc){const d=ARX?ArenaProject.definition({kind,id})
 function mkMob(m){const d=ARX?ArenaProject.definition(m):CREEPS[m.kind];const u=mkUnit({id:m.id,type:m.kind,kind:m.kind,def:d,name:d.name,mob:true,team:0,x:m.x,y:m.y,home:{x:m.x,y:m.y},camp:m.camp,golem:m.kind==='golem'||m.kind==='guardian'||m.kind==='magma',boss:m.kind==='boss',undead:!!m.undead,big:!!d.big,lord:!!d.lord,rich:m.rich|0});setMobStats(u,m.sc||1);u.tx=m.x;u.ty=m.y;return u}
 function addUnit(u){units.push(u);UMAP.set(u.id,u)}
 
-function setupWorld(seed,cfg,project){
+function setupWorld(seed,cfg,project,strictLayout=false){
   if(ARX)ArenaProject.activate(project||ArenaProject.forMatch());
-  WD=genWorld(seed);buildCollide(WD);if(ARX)ArenaProject.placeSpawns(WD);buildMini();GROUND2D=null;
+  WD=genWorld(seed);buildCollide(WD);if(ARX){ArenaProject.placeLayout(WD,strictLayout);ArenaProject.placeSpawns(WD)}buildMini();GROUND2D=null;
   units=[];UMAP=new Map();projs=[];aoes=[];parts=[];texts=[];swings=[];feedList=[];flies=[];fxq=[];deathOrder=[];
   items=WD.items.map(i=>Object.assign({},i));boxes=(WD.boxes||[]).map(b=>Object.assign({},b,{open:false}));
   for(const m of WD.mobs)addUnit(mkMob(m));
@@ -2276,7 +2139,7 @@ function cast0(u,i,ap){
     case 'sword0':{face();const sp=1400;u.dash={vx:nx*sp,vy:ny*sp,t:Math.min(d+30,rngS)/sp,dmg:hit,stun:V.stun[li],hit:new Set(),stop:true};sndAt('dash',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(ny,nx).toFixed(2)});break}
     case 'sword1':u.shieldHp=V.sh[li]+.08*u.maxHp;u.shieldT=4;u.castAnim=.4;sndAt('shield',u.x,u.y);fxE('shield',{id:u.id,x:u.x|0,y:u.y|0});break;
     case 'sword2':{face();const p=landSpot(u,clampTo(u,tg,rngS));u.leap={sx:u.x,sy:u.y,tx:p.x,ty:p.y,t:0,T:.55,dmg:hit,stun:V.stun[li],r:V.r[li]};sndAt('leap',u.x,u.y);fxE('leap',{id:u.id,x:p.x|0,y:p.y|0,r:V.r[li]});break}
-    case 'axe0':u.spinT=1.75;u.spinTick=0;u.spinR=0;u.spinDmg=hit;u.atkAnim=0;sndAt('spin',u.x,u.y);fxE('spin',{id:u.id,x:u.x|0,y:u.y|0});break;
+    case 'axe0':u.spinT=V.n*.25;u.spinTick=0;u.spinR=rngS;u.spinDmg=hit;u.atkAnim=0;sndAt('spin',u.x,u.y);fxE('spin',{id:u.id,x:u.x|0,y:u.y|0});break;
     case 'axe1':{u.castAnim=.4;for(const o of units){if(o.dead||!isEnemy(u,o)||dist(u,o)>rngS+o.r*.5)continue;o.slowT=Math.max(o.slowT,2.5);o.slowAmt=Math.max(o.slowT>2.5?o.slowAmt:0,V.slow[li])}
       u.asT=5;u.asAmt=V.as[li];u.buffT=3;sndAt('cry',u.x,u.y);fxE('cry',{id:u.id,x:u.x|0,y:u.y|0,r:rngS});break}
     case 'axe2':{face();const ang=Math.atan2(ny,nx);aoe({x:u.x+nx*20,y:u.y+ny*20,r:rngS,ang,len:rngS,w:V.w,shape:'line',dmg:hit,type:'p',owner:u,delay:.45,kind:'line',stun:V.stun[li],big:true});sndAt('heavy',u.x,u.y);break}
@@ -2285,7 +2148,7 @@ function cast0(u,i,ap){
       if(!spot)return false;u.x=spot.x;u.y=spot.y;u.fx=(t.x-u.x)/(dist(u,t)||1);u.fy=(t.y-u.y)/(dist(u,t)||1);u.revealT=1.2;u.castAnim=.3;
       dealDamage(t,hit,'p',u);u.critNext=true;u.atkCd=0;sndAt('blink',u.x,u.y);fxE('blink',{x:ox|0,y:oy|0,x2:u.x|0,y2:u.y|0});break}
     case 'dagger1':u.invisT=V.t[li];u.invisSpd=V.spd[li];u.bsDmg=V.bs[li];u.bsReady=false;sndAt('invis',u.x,u.y);fxE('smoke',{x:u.x|0,y:u.y|0});break;
-    case 'dagger2':u.lotusT=1.2;u.lotusTick=0;u.lotusDmg=hit;u.lotusR=rngS;u.slowT=0;u.rootT=0;sndAt('lotus',u.x,u.y);fxE('lotus',{id:u.id,x:u.x|0,y:u.y|0,r:rngS});break;
+    case 'dagger2':u.lotusT=V.n/5;u.lotusTick=0;u.lotusDmg=hit;u.lotusR=rngS;u.slowT=0;u.rootT=0;sndAt('lotus',u.x,u.y);fxE('lotus',{id:u.id,x:u.x|0,y:u.y|0,r:rngS});break;
     case 'bow0':{face();const hs=new Set();for(let k=-2;k<=2;k++){const a=Math.atan2(ny,nx)+k*.13;proj(u,Math.cos(a),Math.sin(a),{spd:1150,r:9,dmg:hit,type:'p',kind:0,life:rngS/1150,hit:hs})}sndAt('shoot',u.x,u.y);break}
     case 'bow1':{face();proj(u,nx,ny,{spd:1300,r:12,dmg:hit,type:'p',kind:5,root:V.root[li],life:rngS/1300});
       let mx=-nx,my=-ny;u.dash={vx:mx*1100,vy:my*1100,t:.26,hit:null};sndAt('dash',u.x,u.y);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(my,mx).toFixed(2)});break}
@@ -2412,7 +2275,7 @@ function equipWeapon(u,it){it.dead=true;removeItem(it);const slot=wSlot(u,it),H=
   const drop=(k,t,v)=>dropItem({k:'w',x:u.x+rand(-25,25),y:u.y+30,wk:k,tier:t,wv:v,np:{id:u.id,until:gameT+3}});const nv=CURSED?itWV(it):0;
   if(slot==='upBack'||slot==='back'){if(slot==='upBack')drop(u.wk2,u.wt2,u.wv2);u.wk2=it.wk;u.wt2=it.tier;u.wv2=nv;sndAt('armor',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:TIERS[it.tier].c});
     if(H){const fk=!FUSED[u.wk]&&!FUSED[it.wk]?fuseKey(u.wk,it.wk):null;fxTextFor(u.x,u.y-84,`🎒 อาวุธสำรอง: ${wName(it.wk,it.tier)}`,TIERS[it.tier].c,2,H);
-      if(fk&&gameT<FUSE_AT)fxTextFor(u.x,u.y-110,`⚒️ นาที 10 จะหลอมเป็น ${WEAPONS[fk].ic} ${WEAPONS[fk].n}`,WEAPONS[fk].col,2.6,H)}
+      if(fk&&gameT<FUSE_AT)fxTextFor(u.x,u.y-110,`⚒️ เวลา ${fmtT(FUSE_AT)} จะหลอมเป็น ${WEAPONS[fk].ic} ${WEAPONS[fk].n}`,WEAPONS[fk].col,2.6,H)}
     return}
   if(slot==='upMain')drop(u.wk,u.wt,u.wv);else if(slot==='push'){drop(u.wk2,u.wt2,u.wv2);u.wk2=u.wk;u.wt2=u.wt;u.wv2=u.wv}else if(slot==='lift'){u.wk2=u.wk;u.wt2=u.wt;u.wv2=u.wv}
   u.wk=it.wk;u.wt=it.tier;u.wv=nv;u.spinT=0;u.lotusT=0;u.rapid=null;recalc(u);sndAt('weapon',u.x,u.y);fxE('equip',{id:u.id,x:u.x|0,y:u.y|0,c:TIERS[it.tier].c});
@@ -2442,7 +2305,7 @@ function fuseNow(u){u.fuseT=0;if(!canFuse(u))return;const a=u.wk,b=u.wk2,fk=fuse
     fxTextFor(u.x,u.y-96,`${F.ic} ${F.n}`,F.col,2.4,[u.id],1)}
   if(t===4)fxE('ssr',{id:u.id,x:u.x|0,y:u.y|0})}
 let fuseWarn=0;
-function fuseTick(){if(fuseWarn===0&&gameT>25){fuseWarn=1;emit({t:'f',s:'⚒️ พกอาวุธ 2 ชนิด · นาทีที่ 10 หลอมเป็นอาวุธใหม่'})}
+function fuseTick(){if(fuseWarn===0&&gameT>25){fuseWarn=1;emit({t:'f',s:'⚒️ พกอาวุธ 2 ชนิด · '+fmtT(FUSE_AT)+' หลอมเป็นอาวุธใหม่'})}
   if(fuseWarn===1&&gameT>=FUSE_AT-180){fuseWarn=2;emit({t:'f',s:'⚒️ อีก 3 นาทีหลอมอาวุธ · แตะรูปอาวุธเพื่อสลับ'})}
   if(fuseWarn===2&&gameT>=FUSE_AT-30){fuseWarn=3;emit({t:'a',s:'⚒️ อีก 30 วิหลอมอาวุธ — พกอาวุธ 2 ชนิดไว้!',d:4});emit({t:'s',n:'fusewarn',x:0,y:0,g:1})}
   if(fuseWarn===3&&gameT>=FUSE_AT){fuseWarn=4;emit({t:'a',s:'⚒️ ถึงเวลาหลอมอาวุธ!',d:3.5});emit({t:'f',s:'⚒️ เริ่มหลอม! ได้ชิ้นที่ 2 เมื่อไหร่หลอมทันที'})}}
@@ -4183,7 +4046,7 @@ const R3={ok:false,world:null,objs:new Map(),itemObjs:new Map(),emojiTex:new Map
     for(const o of this.objs.values())this.scene.remove(o.root);this.objs=new Map();for(const g of this.itemObjs.values())this.scene.remove(g);this.itemObjs=new Map();
     for(const d of this.decalPool){d.on=false;d.m.visible=false}this.PA.list=[];this.PB.list=[];this.spikes=[];this.treeHidden.fill(0);for(const t of this.trees)if(t._i===undefined)t._i=0;
     WD.trees.forEach((t,i)=>t._i=i)},
-  sync(){if(this.world===WD)return;if(this.world&&this.scene&&this.world.seed===WD.seed&&this.world.houses.length===WD.houses.length)this.rebind();else this.buildWorld()},
+  sync(){if(this.world===WD)return;if(this.world&&this.scene&&this.world.seed===WD.seed&&this.world.authoredLayout===WD.authoredLayout&&this.world.houses.length===WD.houses.length)this.rebind();else this.buildWorld()},
   buildWorld(){
     if(this.scene)this.disposeScene();
     const S=this.scene=new THREE.Scene();this.world=WD;this.objs=new Map();this.itemObjs=new Map();this.pool={};this.decals=[];this.trails=[];this.deadObjs=[];const G=this.G;
@@ -5914,33 +5777,35 @@ function castX(u,i,ap){const rn=u.hero?wvR(u.wv,i):0,mp0=u.mp,a0=u.atkDmg,d0=u.d
   else if(rn===8)u.mp=Math.min(u.maxMp,u.mp+Math.max(0,mp0-u.mp)*.6);return ok}
 // ---- every hit passes through here: dodge / block first, then weapon traits and what the local monsters do ----
 function curDmg(t,amt,type,src,quiet){amt=tpsGuard(t,amt,src);if(amt<=0)return 0;if(!src||src===t)return amt;
-  if(src.hero){const tr=wvT(src.wv);if(tr===5&&t.hp<t.maxHp*.35)amt*=1.25;else if(tr===6&&t.mob)amt*=1.3;else if(tr===7&&t.hp>t.maxHp*.8)amt*=1.18;if(src.rageT>0)amt*=1.15;
+  if(src.hero){const tr=wvT(src.wv);if(tr===5&&t.hp<t.maxHp*.35)amt*=1.25;else if(tr===6&&t.mob)amt*=1.3;else if(tr===7&&t.hp>t.maxHp*.8)amt*=1.18;if(src.rageT>0)amt*=1+SPECIAL_BY.rage.damageBonus;
     if(!quiet&&tr&&tr<=4&&!CUR.busy&&isEnemy(src,t)){CUR.busy=1;if(tr===4)heal(src,amt*.07);else if(gameT-(t._et||-9)>.45||t._es!==src.id){t._et=gameT;t._es=src.id;elemHit(src,t,EL[tr-1],.6)}CUR.busy=0}}
   else if(src.mob&&t.hero&&!quiet&&src.rg>0){const g=src.rg;if(g===2){t.slowAmt=Math.max(t.slowT>1.5?t.slowAmt:0,.3);t.slowT=Math.max(t.slowT,1.5)}else if(g===4)t.mp=Math.max(0,t.mp-(8+src.atkDmg*.12));
     else{const dps=g===3?6+src.atkDmg*.2:4+src.atkDmg*.12;if(t.burnT<=0||t.burnDps<dps){t.burnDps=dps;t.burnSrc=null}t.burnT=Math.max(t.burnT,g===3?2.5:3)}}
   return amt}
 // ---- special skills bought with coins (one slot, key V) ----
-const SPX=[null,{k:'blink',n:'วาร์ปเงา',ic:'🌀',cd:[13,11,9],p:160,d:'วาร์ปไปยังจุดที่เล็งทันที'},{k:'heal',n:'แสงฟื้นฟู',ic:'✨',cd:[26,24,22],p:160,d:'ฟื้นเลือด 28/36/44% ใน 3 วิ และล้างสถานะช้า'},
-  {k:'rage',n:'บ้าคลั่ง',ic:'👹',cd:[26,24,22],p:180,d:'6 วิ: ตีเร็วขึ้น 35/45/55% และดาเมจ +15%'},{k:'meteor',n:'อุกกาบาต',ic:'☄️',baseDamage:120,radius:230,delay:.85,cd:[20,18,16],p:200,d:'เรียกอุกกาบาตใส่จุดที่เล็ง เผาศัตรู'},
-  {k:'ward',n:'โล่วิญญาณ',ic:'🔰',cd:[24,22,20],p:160,d:'โล่ 22/30/38% ของเลือด นาน 5 วิ'},{k:'nova',n:'คลื่นเยือกแข็ง',ic:'💠',cd:[18,16,14],p:180,d:'ระเบิดรอบตัว ตรึงศัตรู 1.2 วิ'}];
-const METEOR=SPX.find(s=>s&&s.k==='meteor');
+const SPX=[null,{k:'blink',reach:520,n:'วาร์ปเงา',ic:'🌀',cd:[13,11,9],p:160,d:'วาร์ปไปยังจุดที่เล็งทันที'},{k:'heal',duration:3,heal:[.28,.36,.44],n:'แสงฟื้นฟู',ic:'✨',cd:[26,24,22],p:160,d:'ฟื้นเลือด 28/36/44% ใน 3 วิ และล้างสถานะช้า'},
+  {k:'rage',duration:6,haste:[.35,.45,.55],damageBonus:.15,n:'บ้าคลั่ง',ic:'👹',cd:[26,24,22],p:180,d:'6 วิ: ตีเร็วขึ้น 35/45/55% และดาเมจ +15%'},{k:'meteor',reach:700,perLevel:24,burn:8,n:'อุกกาบาต',ic:'☄️',baseDamage:120,radius:230,delay:.85,cd:[20,18,16],p:200,d:'เรียกอุกกาบาตใส่จุดที่เล็ง เผาศัตรู'},
+  {k:'ward',duration:5,shield:[.22,.3,.38],n:'โล่วิญญาณ',ic:'🔰',cd:[24,22,20],p:160,d:'โล่ 22/30/38% ของเลือด นาน 5 วิ'},{k:'nova',baseDamage:70,perLevel:16,radius:300,delay:.12,root:1.2,slow:2.2,slowAmt:.4,n:'คลื่นเยือกแข็ง',ic:'💠',cd:[18,16,14],p:180,d:'ระเบิดรอบตัว ตรึงศัตรู 1.2 วิ'}];
+const SPECIAL_BY=Object.fromEntries(SPX.filter(Boolean).map(s=>[s.k,s]));
+const METEOR=SPECIAL_BY.meteor;
 const specialLevel=u=>clamp(u.xl||1,1,3)-1;
 const specialScale=level=>[1,1.25,1.5][level];
 function specialHitDamage(u,skill){
-  return (skill==='meteor'?METEOR.baseDamage+24*u.lvl:70+16*u.lvl)*specialScale(specialLevel(u))*(1+spellAmp(u));
+  const s=SPECIAL_BY[skill];return (s.baseDamage+s.perLevel*u.lvl)*specialScale(specialLevel(u))*(1+spellAmp(u));
 }
 function castSpecial(u,ap){if(!u)return false;const S=SPX[u.xs|0];if(!S||u.dead||u.stunT>0||u.xcd>0||u.fuseT>0)return false;if(ap&&!(Number.isFinite(ap.x)&&Number.isFinite(ap.y)))ap=null;const L=specialLevel(u),M=specialScale(L);
   let p=ap||(S.k==='meteor'?aim(u,650):{x:u.x+u.fx*460,y:u.y+u.fy*460});
   switch(S.k){
-    case 'blink':{const q=landSpot(u,clampTo(u,p,520));burstE(u.x,u.y,'#b08aff',18);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(q.y-u.y,q.x-u.x).toFixed(2)});u.x=q.x;u.y=q.y;u.dash=null;burstE(u.x,u.y,'#b08aff',18);sndAt('dash',u.x,u.y);break}
-    case 'heal':u.hotT=3;u.hotP=1;u.hotV=u.maxHp*[.28,.36,.44][L]/3;u.slowT=0;fxE('potion',{id:u.id,x:u.x|0,y:u.y|0,c:'#9dffb0'});sndAt('potion',u.x,u.y);break;
-    case 'rage':u.asT=6;u.asAmt=Math.max(u.asAmt||0,[.35,.45,.55][L]);u.rageT=6;u.buffT=Math.max(u.buffT||0,6);sndAt('cry',u.x,u.y);fxE('cry',{id:u.id,x:u.x|0,y:u.y|0,r:200});break;
-    case 'meteor':{p=clampTo(u,p,700);aoe({x:p.x,y:p.y,r:METEOR.radius,dmg:specialHitDamage(u,'meteor'),type:'m',owner:u,skyFall:true,delay:METEOR.delay,kind:'meteor',big:true,burn:(8+u.lvl)*M});sndAt('meteor',p.x,p.y);u.castAnim=.4;break}
-    case 'ward':u.shieldHp=Math.max(u.shieldHp,u.maxHp*[.22,.3,.38][L]);u.shieldT=5;sndAt('shield',u.x,u.y);fxE('shield',{id:u.id,x:u.x|0,y:u.y|0});break;
-    case 'nova':aoe({x:u.x,y:u.y,r:300,dmg:specialHitDamage(u,'nova'),type:'m',owner:u,delay:.12,kind:'nova',root:1.2,slow:2.2,slowAmt:.4});sndAt('boom',u.x,u.y);u.castAnim=.4;break}
+    case 'blink':{const q=landSpot(u,clampTo(u,p,S.reach));burstE(u.x,u.y,'#b08aff',18);fxE('dash',{id:u.id,x:u.x|0,y:u.y|0,a:+Math.atan2(q.y-u.y,q.x-u.x).toFixed(2)});u.x=q.x;u.y=q.y;u.dash=null;burstE(u.x,u.y,'#b08aff',18);sndAt('dash',u.x,u.y);break}
+    case 'heal':u.hotT=S.duration;u.hotP=1;u.hotV=u.maxHp*S.heal[L]/S.duration;u.slowT=0;fxE('potion',{id:u.id,x:u.x|0,y:u.y|0,c:'#9dffb0'});sndAt('potion',u.x,u.y);break;
+    case 'rage':u.asT=S.duration;u.asAmt=Math.max(u.asAmt||0,S.haste[L]);u.rageT=S.duration;u.buffT=Math.max(u.buffT||0,S.duration);sndAt('cry',u.x,u.y);fxE('cry',{id:u.id,x:u.x|0,y:u.y|0,r:200});break;
+    case 'meteor':{p=clampTo(u,p,S.reach);aoe({x:p.x,y:p.y,r:METEOR.radius,dmg:specialHitDamage(u,'meteor'),type:'m',owner:u,skyFall:true,delay:METEOR.delay,kind:'meteor',big:true,burn:(S.burn+u.lvl)*M});sndAt('meteor',p.x,p.y);u.castAnim=.4;break}
+    case 'ward':u.shieldHp=Math.max(u.shieldHp,u.maxHp*S.shield[L]);u.shieldT=S.duration;sndAt('shield',u.x,u.y);fxE('shield',{id:u.id,x:u.x|0,y:u.y|0});break;
+    case 'nova':aoe({x:u.x,y:u.y,r:S.radius,dmg:specialHitDamage(u,'nova'),type:'m',owner:u,delay:S.delay,kind:'nova',root:S.root,slow:S.slow,slowAmt:S.slowAmt});sndAt('boom',u.x,u.y);u.castAnim=.4;break}
   u.xcd=S.cd[L];u.revealT=Math.max(u.revealT||0,1);if(isHuman(u))fxTextFor(u.x,u.y-92,S.ic+' '+S.n,'#e8d8a0',1.1,[u.id]);return true}
 // ---- shop: open anywhere, pay with coins ----
-function shopPrice(u,k){if(k==='hp')return 25;if(k==='mp')return 20;if(k==='big')return 70;if(k==='lv')return u.lvl>=MAXL?null:100+60*(u.lvl-1);if(k==='rf')return u.wk?50+25*Math.max(0,u.wt):null;
+const SHOP_RATES={hp:25,mp:20,big:70,level:100,levelStep:60,reforge:50,reforgeStep:25};
+function shopPrice(u,k){if(k==='hp'||k==='mp'||k==='big')return SHOP_RATES[k];if(k==='lv')return u.lvl>=MAXL?null:SHOP_RATES.level+SHOP_RATES.levelStep*(u.lvl-1);if(k==='rf')return u.wk?SHOP_RATES.reforge+SHOP_RATES.reforgeStep*Math.max(0,u.wt):null;
   if(k[0]==='x'){const S=SPX[+k[1]];if(!S)return null;if((u.xs|0)===+k[1])return (u.xl||1)>=3?null:Math.round(S.p*.6*(u.xl||1));return S.p}return null}
 function shopBuy(u,k){if(!u||!u.hero||u.dead)return false;const pr=shopPrice(u,k),H=isHuman(u)?[u.id]:null,no=s=>{if(H)fxTextFor(u.x,u.y-84,s,'#ffb0a0',1.2,H);return false};
   if(pr==null)return no('ซื้อไม่ได้');if((u.gold||0)<pr)return no('เหรียญไม่พอ');let msg='';
@@ -5967,7 +5832,7 @@ function curTick(dt){for(let k=ERUPT.length-1;k>=0;k--){const e=ERUPT[k];e.t-=dt
       if(k==='heal'||k==='ward'){if(hurt)castSpecial(u)}else if(k==='blink'){if(hurt&&t&&u.hp<u.maxHp*.3)castSpecial(u,{x:u.x+(u.x-t.x)/(d||1)*500,y:u.y+(u.y-t.y)/(d||1)*500})}
       else if(t&&d<(k==='nova'?250:k==='rage'?320:620))castSpecial(u,{x:t.x,y:t.y})}}}
 // ---- dodge / block / stamina (host) ----
-const DASH_CD=45;
+let DASH_CD=45;
 function tpsHost(u,inp,dt){if(u.sta===undefined){u.sta=100;u.blkT=0;u.rollT=0}u.blk=false;if(u.rollT>0)u.rollT-=dt;if(u.dgcd>0)u.dgcd-=dt}
 function dashCd(me){return me&&me.dgcd>0?me.dgcd:0}
 // พุ่ง: a long burst forward (or where you are moving), untouchable while it lasts, 45 s cooldown
@@ -7761,7 +7626,7 @@ const QBARS=3,QIMM=2.3;   // health bars (one per phase), immune seconds while a
 AOE_KINDS.push('qwinter','qslash','qlance','qshard','qnova','qblizz','qprison');
 Object.assign(AOE_COL,{qwinter:'#e8f6ff',qslash:'#bfe8ff',qlance:'#9fd8ff',qshard:'#cfe4ff',qnova:'#bfeaff',qblizz:'#e8f6ff',qprison:'#bfe6ff'});
 // cooldowns (s) per phase; the basic thrust runs on the mob attack timer
-const QV=[{lance:6,shards:9,blink:13},{lance:5,shards:8,nova:10,blizz:13,blink:10},{lance:4,shards:7,nova:8,blizz:11,prison:11,winter:26,blink:8}];
+const QV=CREEPS.snowqueen.phaseCooldowns=[{lance:6,shards:9,blink:13},{lance:5,shards:8,nova:10,blizz:13,blink:10},{lance:4,shards:7,nova:8,blizz:11,prison:11,winter:26,blink:8}];
 const qRand=(a,b)=>a+Math.random()*(b-a);
 // a spot on the same ground as the queen (the plateau), d away from her, for her warm circles
 function qSafeSpot(u,a0,d){const base=cityBase(u.x,u.y);for(let i=0;i<14;i++){const a=a0+(i%2?1:-1)*Math.ceil(i/2)*.42,x=u.x+Math.cos(a)*d,y=u.y+Math.sin(a)*d;
@@ -10790,7 +10655,7 @@ void main(){vec4 t=texture2D(map,vUv);vec3 nt=t.rgb*2.-1.;float h=t.a*1.25-1.;
   const _ds=P.disposeScene;if(_ds)P.disposeScene=function(){S.fresh=1;try{if(S.lay)for(const l of S.lay){if(l.pts.parent)l.pts.parent.remove(l.pts);l.pts.geometry.dispose();l.m.dispose()}S.lay=null;
       if(RM.tex){RM.tex.dispose();RM.tex=null;U.uRegMap.value=null}if(RM.snow){RM.snow.dispose();RM.snow=null;RM.deep=null;U.uSnowMap.value=null}
       if(FP.mesh){if(FP.mesh.parent)FP.mesh.parent.remove(FP.mesh);FP.mesh.dispose();FP.mesh.geometry.dispose();FP.mesh.material.dispose();FP.mesh=null}FP.last.clear()}catch(e){}return _ds.apply(this,arguments)};
-  window.ArenaRegions={state:S,weights:()=>S.w.slice(),land:()=>S.aud,map:()=>regionMap(),deep:(x,y)=>{if(!RM.deep)regionMap();return deepAt(x,y)},prints:()=>FP};
+  window.ArenaRegions={atmosphere:ATM,refreshPalette(){ATM.forEach((a,i)=>{if(a.fog)AC[i].fog.set(a.fog);AC[i].hemi.set(a.hemi);AC[i].sun.set(a.sun)})},state:S,weights:()=>S.w.slice(),land:()=>S.aud,map:()=>regionMap(),deep:(x,y)=>{if(!RM.deep)regionMap();return deepAt(x,y)},prints:()=>FP};
 })();
 
 /* Arena Royale · the Old Town above the waterfall (Claude, 2026-11-21 · index only). Render only.
@@ -12451,11 +12316,145 @@ void main(){float f=1.-abs(dot(normalize(vN),normalize(vV)));float k=.85+.15*sin
   play();
 })();
 
+// Only authored leaves are serialized. Game systems keep their original tables, array
+// lengths and network IDs. Capture defaults after all weapon and boss packs install.
+function createArenaCatalog(){
+  const entries=[],fields=new Map();
+  const integer=[0,1000000,1],positive=[.01,600],amount=[0,1000000],unit=[0,1];
+  const bounds={
+    atkT:[.05,60],cd:[.1,300],duration:positive,delay:[.01,20],range:[0,6000],reach:[1,6000],
+    r:[1,2000],radius:[1,2000],n:[1,32,1],wolf:[0,8,1],max:[1,99,1],every:[1,100,1],
+    mr:[0,.95],slowAmt:unit,slow:[0,60],heal:unit,shield:unit,haste:[0,5],crit:unit,ls:unit,
+    chill:unit,mark:unit,dr:[0,.95],root:[0,120],stun:[0,120],t:positive,
+    xp:integer,p:integer,perLevel:amount,dmg:amount,hp:[1,1000000],leash:[1,5000],spd:[0,2000]
+  };
+  function add(group,id,label){
+    const entry={group,id:group+'.'+id,label,fields:[]};entries.push(entry);return entry;
+  }
+  function bind(entry,obj,key,code=key,limits,caption=key,rank=0){
+    const value=obj[key];
+    if(Array.isArray(value)){
+      value.forEach((_,i)=>bind(entry,value,i,code+'.'+i,limits,caption,i+1));
+      return;
+    }
+    const type=typeof value;
+    if(type!=='number'&&type!=='string')return;
+    const kind=type==='number'?'number':/^#[0-9a-f]{6}$/i.test(value)?'color':'text';
+    const path=entry.id+'.'+code;
+    const field={path,caption,rank,initial:value,kind,limits:limits||bounds[caption]||amount,
+      write(v){obj[key]=v}};
+    fields.set(path,field);entry.fields.push(field);
+  }
+  function bindKeys(entry,obj,keys,overrides={}){
+    for(const k of keys)if(Object.hasOwn(obj,k))bind(entry,obj,k,k,overrides[k]);
+  }
+  const base=add('heroes','base','Base hero'),growth=add('heroes','growth','Per level');
+  bindKeys(base,HB,Object.keys(HB),{spd:[1,2000]});bindKeys(growth,HG,Object.keys(HG),{hp:amount});
+  const weaponKeys=['n','ic','desc','names','range','atkT','dmg','hp','mp','mpR','armor','mr','spd','ls','cleave','crit','critM','pspd','chill','col','glow'];
+  for(const [id,w] of Object.entries({unarmed:FISTS,...WEAPONS})){
+    bindKeys(add('weapons',id,w.n),w,weaponKeys,{hp:amount,dmg:[0,50],spd:[-.9,5]});
+  }
+  for(const [weapon,slots] of Object.entries(SK))slots.forEach((skill,i)=>{
+    const entry=add('skills',weapon+'.'+i,WEAPONS[weapon].n+' · '+'QER'[i]+' · '+skill.n);
+    bindKeys(entry,skill,['n','ic','cd','mp','range']);
+    const power=SKV[weapon][i];
+    for(const k of Object.keys(power))bind(entry,power,k,'power.'+k,bounds[k],k==='n'?'count':k);
+  });
+  for(const s of SPX.filter(Boolean)){
+    const entry=add('specials',s.k,s.n);
+    // Meteor's original project fields and its 3D inspector share a single override.
+    const dedicated=['cd','baseDamage','radius','delay'];
+    bindKeys(entry,s,Object.keys(s).filter(k=>k!=='k'&&(s!==METEOR||!dedicated.includes(k))));
+  }
+  for(const [id,d] of Object.entries(CREEPS)){
+    bindKeys(add('creatures',id,d.name),d,['name','hp','dmg','armor','spd','r','atkT','range','xp','col','leash']);
+  }
+  for(const [id,rows] of [['snowqueen',CREEPS.snowqueen.phaseCooldowns],['overlord',Object.values(OVC)]]){
+    rows.forEach((row,i)=>{
+      const e=add('bosses',id+'.'+i,CREEPS[id].name+' · '+(i+1));
+      for(const k of Object.keys(row))bind(e,row,k,k,positive);
+    });
+  }
+  ARMORS.forEach((a,i)=>bindKeys(add('equipment','armor'+i,a.n),a,['n','ic','c','hp','mr','armor','spd','regen'],{spd:[-.9,5]}));
+  TIERS.forEach((t,i)=>bindKeys(add('equipment','tier'+i,t.n),t,['n','c','m','sa']));
+  LEG.filter(Boolean).forEach(l=>bindKeys(add('equipment',l.key,l.n),l,['n','c','every']));
+  ITEMS.forEach(it=>bindKeys(add('items',it.id,it.name),it,['name','ic','w'],{w:[.01,10000]}));
+  BAG.forEach(b=>bindKeys(add('items','bag-'+b.k,b.n),b,['n','ic','d','cd','max']));
+  bindKeys(add('economy','shop','Shop prices'),SHOP_RATES,Object.keys(SHOP_RATES),Object.fromEntries(Object.keys(SHOP_RATES).map(k=>[k,integer])));
+  const coins=add('economy','coins','Coins per monster');
+  for(const k of Object.keys(COIN))bind(coins,COIN,k,k,[1,1000000,1],CREEPS[k]?.name||k);
+  // Other game code reads these scalar bindings directly, including the HUD and bots.
+  const rules={
+    get day(){return DAY},set day(v){DAY=v},get night(){return NIGHT},set night(v){NIGHT=v},
+    get fusion(){return FUSE_AT},set fusion(v){FUSE_AT=v},get dash(){return DASH_CD},set dash(v){DASH_CD=v},
+    get pvp(){return PVP_K},set pvp(v){PVP_K=v},get skill(){return SKILL_K},set skill(v){SKILL_K=v},
+    get critical(){return CRIT_BASE},set critical(v){CRIT_BASE=v}
+  };
+  bindKeys(add('rules','match','Match rules'),rules,Object.keys(rules),
+    {day:[1,3600],night:[1,3600],fusion:[1,3600],dash:[.1,300],pvp:[0,10],skill:[0,10],critical:unit});
+  PHASES.forEach((p,i)=>bindKeys(add('circle',String(i),'Phase '+(i+1)),p,['w','s','r'],{w:[.1,3600],s:[.1,3600],r:[0,9400]}));
+  REG.N.forEach((name,i)=>{
+    const entry=add('regions',String(i),name);
+    for(const [key,arr] of [['name',REG.N],['ic',REG.IC],['tip',REG.TIP]])bind(entry,arr,i,key,null,key);
+    const light=window.ArenaRegions?.atmosphere[i];
+    if(light)bindKeys(entry,light,Object.keys(light).filter(k=>light[k]!==null&&(i!==0||k!=='fogD')),
+      {lift:[-1,1],gain:[0,4],fogD:[0,.02],hl:unit,mist:[0,5],ap:[0,5],bloom:[0,5],hemiK:[0,5],sunK:[0,5],vig:unit,con:[0,5],sat:[0,5]});
+  });
+  const music=add('audio','music','Music volume'),ambience=add('audio','ambience','Ambient volume');
+  for(const k of Object.keys(MUS_VOL))bind(music,MUS_VOL,k,k,unit);
+  for(const k of Object.keys(AMB_VOL))bind(ambience,AMB_VOL,k,k,unit);
+
+  function validate(input){
+    if(!input||typeof input!=='object'||Array.isArray(input))throw Error('รูปแบบข้อมูลเกมไม่ถูกต้อง');
+    const result={};
+    for(const [path,v] of Object.entries(input)){
+      const f=fields.get(path);
+      if(!f)throw Error('ไม่พบคุณสมบัติในเกม · '+path);
+      const [min,max,step]=f.limits;
+      const valid=f.kind==='number'?Number.isFinite(v)&&v>=min&&v<=max&&(step!==1||Number.isInteger(v)):
+        typeof v==='string'&&(f.kind==='color'?/^#[a-f0-9]{6}$/i.test(v):v.trim().length>0&&v.length<=512&&!/[<>&"'\x00-\x1f]/.test(v));
+      if(!valid)throw Error('ค่าไม่ถูกต้อง · '+path);
+      if(v!==f.initial)result[path]=v;
+    }
+    for(let i=1;i<PHASES.length;i++){
+      const radius=j=>result['circle.'+j+'.r']??fields.get('circle.'+j+'.r').initial;
+      if(radius(i)>radius(i-1))throw Error('รัศมีวงบีบต้องลดลงหรือเท่าเดิมในแต่ละช่วง');
+    }
+    return result;
+  }
+  let applied={};
+  function activate(next={}){
+    let palette=false;
+    for(const path of new Set([...Object.keys(applied),...Object.keys(next)])){
+      const f=fields.get(path),v=next[path]??f.initial;
+      if(v===(applied[path]??f.initial))continue;
+      f.write(v);
+      if(AU.ctx&&(path==='audio.music.'+AU.musCur||path==='audio.ambience.'+AU.ambCur))AU.fade(path.split('.')[2],v);
+      if(path.startsWith('regions.'))palette=true;
+    }
+    if(palette)window.ArenaRegions?.refreshPalette();
+    applied={...next};
+  }
+  return {entries,fields,validate,activate};
+}
+
+// A player using the default project needs none of the inspector's field descriptors.
+const ArenaCatalog=(()=>{
+  let catalog;
+  const get=()=>catalog??=createArenaCatalog();
+  const empty=o=>o&&typeof o==='object'&&!Array.isArray(o)&&Object.keys(o).length===0;
+  return {
+    get entries(){return get().entries},get fields(){return get().fields},
+    validate(o){return empty(o)?{}:get().validate(o)},
+    activate(o={}){if(catalog||!empty(o))get().activate(o)}
+  };
+})();
+
 // Authoring data shared by the editor, world setup, monster factory and skill tables.
 // Instance IDs belong to one generated world. Room clients use the build's project.
 const ArenaProject=(()=>{
   const key='muzcruor.editor.project.v1';
-  const statRanges={hp:[1,1000000],dmg:[0,10000],leash:[1,5000]};
+  const statRanges={hp:[1,1000000],dmg:[0,10000],leash:[1,5000],armor:[0,1000],spd:[0,2000],atkT:[.05,60],range:[1,6000],xp:[0,1000000]};
   const skillRanges={baseDamage:[0,10000],radius:[12,1200],delay:[.1,8]};
   const cooldownRange=[.1,300];
   const defaults={baseDamage:METEOR.baseDamage,radius:METEOR.radius,delay:METEOR.delay,cd:METEOR.cd.slice()};
@@ -12470,10 +12469,14 @@ const ArenaProject=(()=>{
     return result;
   }
   function validate(data){
-    record(data);check(data.version===1);
+    record(data);check(data.version===1||data.version===2);
     const seed=data.seed;
     check(seed===null||Number.isInteger(seed)&&seed>=0&&seed<=2147483647);
-    const project={version:1,seed,kinds:{},spawns:{},meteor:{}};
+    const project={version:2,seed,kinds:{},spawns:{},meteor:{},tuning:ArenaCatalog.validate(data.tuning??{}),layout:{}};
+    for(const [path,pos] of Object.entries(record(data.layout??{}))){
+      check(seed!==null&&/^(npcs|boxes|items|spawns)\.(0|[1-9]\d{0,4})$/.test(path)&&Array.isArray(pos)&&pos.length===2);
+      project.layout[path]=pos.map(v=>number(v,[0,WORLD]));
+    }
     for(const [kind,stats] of Object.entries(record(data.kinds))){
       check(Object.hasOwn(CREEPS,kind));project.kinds[kind]=fields(stats,statRanges);
     }
@@ -12507,6 +12510,7 @@ const ArenaProject=(()=>{
   }
   function activate(project){
     current=project;
+    ArenaCatalog.activate(project.tuning);
     Object.assign(METEOR,defaults,project.meteor);
   }
   function instance(m){
@@ -12535,482 +12539,48 @@ const ArenaProject=(()=>{
       if(pos&&canPlace(m,...pos))place(w,m,...pos);
     }
   }
-  return {published,defaults,statRanges,skillRanges,cooldownRange,validate,read,forMatch,activate,definition,canPlace,place,placeSpawns,
-    save(project){localStorage.setItem(key,JSON.stringify(validate(project)))}};
-})();
-
-// The workbench uses the game's renderer and generated world; only a playtest runs the host simulation.
-const ArenaEditor=window.ArenaEditor=(()=>{
-  const panel=$('arenaEditor'),stage=$('edStage'),list=$('edList'),status=$('edStatus');
-  const copy=o=>JSON.parse(JSON.stringify(o));
-  const empty={version:1,seed:null,kinds:{},spawns:{},meteor:{}};
-  const labels={hp:'พลังชีวิตพื้นฐาน',dmg:'พลังโจมตีพื้นฐาน',leash:'ระยะไล่จากจุดเกิด',
-    baseDamage:'ความเสียหายพื้นฐาน',radius:'รัศมีโจมตี',delay:'เวลาตก (วิ)'};
-  const names=m=>ArenaLanguage.text(CREEPS[m.kind].name).split(' · ').at(ArenaLanguage.language==='en'?0:-1);
-  const isBoss=m=>m.kind==='snowqueen'||m.kind==='overlord'||m.kind==='boss';
-  const history=[];
-  let draft,saved,seed,origins,spawnById,selected,mode,scope,hero,dummy,practice,aim;
-  let ring,drag,trial,ray,ndc,drawnX,drawnY,placing=false,zoom=1.3,busy=false,testing=false,previousView,dirtyFrame=true,readError=false;
-  function selectedMob(){return spawnById.get(selected)}
-  function changed(){return JSON.stringify(draft)!==saved}
-  function notice(message,tone){
-    status.textContent=message|| (changed()?'มีการแก้ไขที่ยังไม่บันทึก':'ใช้ค่าที่บันทึกไว้');
-    status.dataset.tone=tone|| (changed()?'dirty':'clean');
-    $('edUndo').disabled=!history.length;
-  }
-  function press(id,on){$(id).setAttribute('aria-pressed',String(on))}
-  function moveTo(unit,x,y){unit.x=unit.tx=x;unit.y=unit.ty=y}
-  function focusAt(x,y){
-    moveTo(hero,clamp(x,0,WORLD),clamp(y,0,WORLD));
-    R3.tx=hero.x;R3.ty=hero.y;R3.ly=R3.gY(hero.x,hero.y);
-    for(const house of WD.houses)house.roofA=inRect(hero,house,-4)?0:1;
-    for(const cave of WD.caves)cave.roofA=dist(hero,cave)<cave.R+6?0:1;
-    dirtyFrame=true;mapView();region();
-  }
-  function region(){
-    $('edRegion').textContent=inDG(hero)?'ดันเจียน':REG.N[REG.at(hero.x,hero.y)];
-  }
-  function mapView(){
-    const map=$('edMap'),context=map.getContext('2d'),scale=map.width/WORLD;
-    if(!MINI)return;
-    context.drawImage(MINI,0,0,map.width,map.height);
-    for(const m of WD.mobs){
-      context.fillStyle=isBoss(m)?'#ffe3a0':'#d4deda';
-      const r=isBoss(m)?2.5:1;
-      context.fillRect(m.x*scale-r,m.y*scale-r,2*r,2*r);
-    }
-    context.strokeStyle='#ffffff';context.lineWidth=2;
-    context.strokeRect(hero.x*scale-6,hero.y*scale-5,12,10);
-  }
-  function removeRing(){
-    if(!ring)return;
-    ring.removeFromParent();ring.geometry.dispose();ring.material.dispose();ring=null;
-  }
-  function updateRing(point,invalid=false){
-    point=point||(mode==='meteor'?aim:selectedMob());if(!point)return;
-    if(!ring){
-      const geometry=new THREE.BufferGeometry();
-      geometry.setAttribute('position',new THREE.Float32BufferAttribute(new Float32Array(96*3),3));
-      ring=new THREE.LineLoop(geometry,new THREE.LineBasicMaterial({transparent:true,opacity:.96,depthWrite:false}));
-      ring.frustumCulled=false;ring.renderOrder=10;R3.scene.add(ring);
-    }
-    ring.visible=!trial;
-    ring.material.color.set(invalid?'#ff604b':mode==='meteor'?'#ffba73':'#93ffe1');
-    const pos=ring.geometry.attributes.position,r=mode==='meteor'?METEOR.radius:CREEPS[selectedMob().kind].r+10;
-    for(let i=0;i<pos.count;i++){
-      const theta=2*Math.PI*i/pos.count,x=point.x+Math.cos(theta)*r,y=point.y+Math.sin(theta)*r;
-      pos.setXYZ(i,x,R3.gY(x,y)+3,y);
-    }
-    pos.needsUpdate=true;dirtyFrame=true;
-  }
-  function pin(){
-    const el=$('edPin'),m=mode==='meteor'?dummy:UMAP.get(selected);
-    if(!m){el.hidden=true;return}
-    const p=R3.toScreen(m.x,R3.gY(m.x,m.y)+m.r*(m.ecl==='queen'?4:3),m.y),rect=stage.getBoundingClientRect();
-    el.hidden=!p.ok||p.x<rect.left+5||p.x>rect.right-5||p.y<rect.top+22||p.y>rect.bottom;
-    if(!el.hidden){
-      el.style.left=(p.x-rect.left)+'px';el.style.top=(p.y-rect.top)+'px';
-      el.textContent=mode==='meteor'?'หุ่นฝึก · '+fmtN(dummy.hp)+' HP':names(selectedMob());
-    }
-  }
-  function drawList(){
-    const query=$('edSearch').value.trim().toLowerCase(),fragment=document.createDocumentFragment();
-    const mobs=WD.mobs.filter(m=>(m.id+' '+m.kind+' '+CREEPS[m.kind].name+' '+names(m)).toLowerCase().includes(query));
-    mobs.sort((a,b)=>Number(isBoss(b))-Number(isBoss(a))||a.kind.localeCompare(b.kind)||a.id-b.id);
-    let group;
-    for(const m of mobs){
-      const heading=isBoss(m)?'บอส':'มอนสเตอร์';
-      if(heading!==group){const h=document.createElement('h3');h.textContent=group=heading;fragment.append(h)}
-      const button=document.createElement('button');button.type='button';button.dataset.id=m.id;
-      button.className='ed-object'+(isBoss(m)?' ed-boss':'');button.setAttribute('aria-current',String(selected===m.id&&mode==='mobs'));
-      const name=document.createElement('span'),id=document.createElement('small');
-      name.textContent=names(m);id.textContent='#'+m.id;button.append(name,id);fragment.append(button);
-    }
-    if(!mobs.length){const note=document.createElement('p');note.textContent='ไม่พบมอนสเตอร์';fragment.append(note)}
-    list.replaceChildren(fragment);$('edCount').textContent=mobs.length;
-  }
-  function inspect(){
-    const skill=mode==='meteor',m=selectedMob();
-    press('edSkills',skill);press('edMobs',!skill);
-    press('edInstance',scope==='instance');press('edKind',scope==='kind');
-    $('edMobFields').hidden=skill;$('edSkillFields').hidden=!skill;
-    $('edObjects').hidden=skill;$('edRange').hidden=!skill;
-    $('edBrowse').textContent=skill?'สนามทดสอบ':'วัตถุในฉาก';
-    press('edPlace',placing);stage.classList.toggle('ed-aim',skill||placing);
-    $('edType').textContent=skill?'สกิลพิเศษ':'#'+m.id+'  /  '+m.kind;
-    $('edName').textContent=skill?'Meteor':names(m);
-    $('edHint').textContent=skill?'แตะพื้นเพื่อเล็ง แล้วกดร่ายทดสอบ':placing?'คลิกแผนที่เพื่อเลื่อนกล้อง แล้วแตะพื้นเพื่อวาง':'ลากตัวมอนสเตอร์เพื่อย้าย · ลากพื้นเพื่อเลื่อนกล้อง';
-    if(skill){
-      for(const key of Object.keys(ArenaProject.skillRanges))$('ed-'+key).value=METEOR[key]*displayScale(key);
-      targetStats();
-      METEOR.cd.forEach((v,i)=>$('ed-cd'+i).value=v);
-    }else{
-      $('edX').value=Math.round(m.x);$('edY').value=Math.round(m.y);
-      const def=scope==='kind'?{...CREEPS[m.kind],...draft.kinds[m.kind]}:ArenaProject.definition(m);
-      for(const key of Object.keys(ArenaProject.statRanges))$('ed-'+key).value=(def[key]??420)*displayScale(key);
-    }
-    $('edSeed').textContent='SEED '+seed;region();mapView();updateRing();
-  }
-  function targetStats(){
-    $('edHealth').textContent=fmtN(dummy.hp)+' / '+fmtN(dummy.maxHp)+' HP';
-    $('edHealthBar').value=dummy.hp/dummy.maxHp;
-    $('edPower').textContent=fmtN(specialHitDamage(hero,'meteor'));
-  }
-  function stopTrial(){
-    trial=null;aoes=[];fxq=[];parts=[];texts=[];shakeA=0;
-    R3._fx2?.meteorField?.reset();$('edHit').textContent='';
-  }
-  function roster(){
-    stopTrial();
-    units=mode==='mobs'?WD.mobs.map(m=>mkMob(m)):[hero,dummy];
-    UMAP=new Map(units.map(u=>[u.id,u]));UMAP.set(hero.id,hero);
-    if(mode==='meteor'){dummy.hp=dummy.maxHp;hero.xcd=0}
-    dirtyFrame=true;
-  }
-  function applyDraft(){
-    ArenaProject.activate(draft);
-    for(const m of WD.mobs){
-      const base=origins.get(m.id),pos=draft.spawns[m.id]?.position;
-      const x=pos?pos[0]:base.x,y=pos?pos[1]:base.y;
-      if(m.x!==x||m.y!==y)ArenaProject.place(WD,m,x,y);
-    }
-    roster();inspect();notice();
-  }
-  function nearSpot(center,radius,from=170){
-    for(let d=from;d<=from+480;d+=32)for(let i=0;i<16;i++){
-      const a=(i+.5)*Math.PI/8,x=center.x+Math.cos(a)*d,y=center.y+Math.sin(a)*d;
-      if(!blockedAt({x,y},radius)&&!inWater(x,y)&&Math.abs(R3.gY(x,y)-R3.gY(center.x,center.y))<70)return {x,y};
-    }
-    return {x:center.x,y:center.y};
-  }
-  function prepareScene(sceneSeed){
-    removeRing();seed=sceneSeed;
-    setupWorld(seed,undefined,empty);R3.sync();
-    spawnById=new Map(WD.mobs.map(m=>[m.id,m]));
-    origins=new Map(WD.mobs.map(m=>[m.id,{x:m.x,y:m.y}]));
-    if(!spawnById.has(selected))selected=WD.fort?.queen??WD.mobs[0].id;
-    hero=mkHero(1,myName(),'host',chosenLook,1);myId=hero.id;
-    hero.xs=SPX.indexOf(METEOR);hero.xl=Number($('edRank').value);
-    const center=WD.spawns.find(p=>!inWater(p.x,p.y)&&!blockedAt(p,35)&&REG.at(p.x,p.y)===0)||WD.spawns[0];
-    practice={x:center.x,y:center.y};
-    const spot=nearSpot(center,50);
-    dummy=mkMob({id:-71,kind:'golem',camp:-1,x:spot.x,y:spot.y});
-    dummy.hp=dummy.maxHp=50000;dummy.mr=.15;aim={...spot};
-    gameT=90;DROP.st='off';DROP.fall=null;state='editor';
-  }
-  function validateScene(project){
-    for(const [id,entry] of Object.entries(project.spawns)){
-      const m=spawnById.get(Number(id));
-      if(!m||m.kind!==entry.kind)throw Error('ข้อมูลมอนสเตอร์ไม่ตรงกับแผนที่');
-      if(entry.position&&!ArenaProject.canPlace(m,...entry.position))throw Error('จุดเกิดต้องอยู่บนพื้นที่เดินได้');
-    }
-  }
-  function focusSelection(){
-    const point=mode==='meteor'?practice:selectedMob();focusAt(point.x,point.y);
-  }
-  function edit(next,sceneSeed=next.seed??seed){
-    next=ArenaProject.validate(next);
-    const oldSeed=seed,oldSelected=selected,rebuild=sceneSeed!==seed;
-    if(!rebuild&&JSON.stringify(next)===JSON.stringify(draft)){inspect();return}
-    try{
-      if(rebuild)prepareScene(sceneSeed);
-      validateScene(next);
-    }catch(error){
-      if(rebuild){selected=oldSelected;prepareScene(oldSeed);applyDraft();focusSelection();drawList()}
-      throw error;
-    }
-    history.push({project:draft,seed:oldSeed});if(history.length>40)history.shift();
-    draft=next;applyDraft();
-    if(rebuild){drawList();focusSelection()}
-  }
-  function change(fn){
-    try{const next=copy(draft);fn(next);edit(next)}
-    catch(error){inspect();notice(error.message,'error')}
-  }
-  function entry(next,m){
-    next.seed=seed;return next.spawns[m.id]??={kind:m.kind};
-  }
-  function prune(next,m){
-    const spawn=next.spawns[m.id];
-    if(spawn?.stats&&!Object.keys(spawn.stats).length)delete spawn.stats;
-    if(spawn&&!spawn.stats&&!spawn.position)delete next.spawns[m.id];
-    if(!Object.keys(next.spawns).length)next.seed=null;
-  }
-  function moveSpawn(x,y){
-    const m=selectedMob(),base=origins.get(m.id);
-    change(next=>{
-      if(!ArenaProject.canPlace(m,x,y))throw Error('จุดเกิดต้องอยู่บนพื้นที่เดินได้');
-      const spawn=entry(next,m);
-      if(x===Math.round(base.x)&&y===Math.round(base.y))delete spawn.position;
-      else spawn.position=[x,y];
-      prune(next,m);
-    });
-  }
-  function updateStat(key,value){
-    const m=selectedMob();
-    change(next=>{
-      const kindStats=next.kinds[m.kind]||{},base=CREEPS[m.kind][key]??420;
-      if(scope==='kind'){
-        if(value===base)delete kindStats[key];else kindStats[key]=value;
-        if(Object.keys(kindStats).length)next.kinds[m.kind]=kindStats;else delete next.kinds[m.kind];
-      }else{
-        const spawn=entry(next,m);spawn.stats??={};
-        if(value===(kindStats[key]??base))delete spawn.stats[key];else spawn.stats[key]=value;
-        prune(next,m);
+  // Resolve every destination against the same untouched generated world. A chest's rock
+  // collider and the house/cave used for visibility and interaction travel with it.
+  function placeLayout(w,strict){
+    if(w.seed!==current.seed||!current.layout||!Object.keys(current.layout).length)return;
+    const moves=[],chests=[],oldChestRocks=new Set();
+    const rockKey=(x,y)=>x+','+y;
+    function apply(){
+      for(const [path,[x,y]] of Object.entries(current.layout)){
+        const [group,index]=path.split('.'),obj=w[group][index];
+        if(!obj)throw Error('วัตถุไม่ตรงกับแผนที่');
+        const move={group,obj,x,y,r:group==='boxes'||group==='spawns'?26:group==='npcs'?18:8};
+        if(group==='boxes'){
+          move.rock=w.rocks.find(o=>o.prop&&o.r===26&&o.x===obj.x&&o.y===obj.y);
+          if(!move.rock)throw Error('กล่องไม่ตรงกับแผนที่');
+          oldChestRocks.add(rockKey(obj.x,obj.y));chests.push(move);
+        }
+        moves.push(move);
       }
-    });
-  }
-  function select(id,focus){
-    if(!spawnById.has(id))return;
-    selected=id;placing=false;
-    if(mode!=='mobs'){mode='mobs';roster()}
-    if(focus)focusSelection();
-    for(const b of list.querySelectorAll('[aria-current=true]'))b.setAttribute('aria-current','false');
-    list.querySelector('[data-id="'+id+'"]')?.setAttribute('aria-current','true');
-    inspect();notice();panel.dataset.panel='';
-  }
-  function setMode(next){
-    if(next===mode)return;
-    mode=next;placing=false;roster();focusSelection();drawList();inspect();notice();
-    if(innerWidth<=600)panel.dataset.panel='inspector';
-  }
-  function castTrial(){
-    if(!validInputs())return;
-    stopTrial();dummy.hp=dummy.maxHp;dummy.dead=false;dummy.hurtT=0;hero.xcd=0;
-    if(!castSpecial(hero,aim)){notice('ยังร่ายสกิลไม่ได้','error');return}
-    targetStats();trial={t:0,hp:dummy.hp,impact:false};ring.visible=false;
-    $('edHit').textContent='กำลังรอแรงกระแทก';dirtyFrame=true;
-  }
-  function frame(dt){
-    if(trial){
-      gameT+=dt;trial.t+=dt;
-      const hp=dummy.hp;stepAreas(dt);fxUpdate(dt);if(dummy.hp!==hp)targetStats();
-      if(!trial.impact&&trial.t>=METEOR.delay){
-        trial.impact=true;
-        $('edHit').textContent='ความเสียหายตอนกระแทก · '+fmtN(trial.hp-dummy.hp)+' HP';
+      for(const m of moves){
+        const {x,y,r}=m;
+        const blocked=sdfAt(x,y)<r||inWater(x,y)||forObstacles(x,y,r,o=>{
+          if(o.c!==1)return circRect(x,y,r,o);
+          if(o.r===26&&oldChestRocks.has(rockKey(o.x,o.y)))return false;
+          return (x-o.x)**2+(y-o.y)**2<(o.r+r)**2;
+        })||chests.some(c=>c!==m&&(x-c.x)**2+(y-c.y)**2<(r+c.r)**2);
+        if(blocked)throw Error('จุดวางต้องอยู่บนพื้นที่เดินได้');
       }
-      if(trial.t>METEOR.delay+7.3){trial=null;updateRing()}
-    }
-    if(!dirtyFrame&&!trial)return;
-    dirtyFrame=false;R3.frame(dt);drawnX=R3.tx;drawnY=R3.ty;pin();
-  }
-
-  // Intersect the pointer ray with the same terrain/bridge surface used to draw the actors.
-
-  function groundAt(event){
-    ray??=new THREE.Raycaster();ndc??=new THREE.Vector2();
-    const rect=$('gl').getBoundingClientRect();
-    ndc.set((event.clientX-rect.left)/rect.width*2-1,1-(event.clientY-rect.top)/rect.height*2);
-    ray.setFromCamera(ndc,R3.cam);
-    const {origin,direction}=ray.ray;let h=R3.ly||0,x,y;
-    for(let i=0;i<8;i++){
-      const t=(h-origin.y)/direction.y;x=origin.x+direction.x*t;y=origin.z+direction.z*t;
-      const surface=R3.gY(x,y);if(Math.abs(surface-h)<.25)break;h=surface;
-    }
-    return {x,y};
-  }
-  function pickMob(event){
-    let best=null,score=1;
-    for(const m of WD.mobs){
-      const model=R3.objs.get(m.id);if(!model?.root.visible)continue;
-      const r=CREEPS[m.kind].r,h=R3.gY(m.x,m.y),base=R3.toScreen(m.x,h,m.y);
-      const top=R3.toScreen(m.x,h+2.8*r,m.y),side=R3.toScreen(m.x+r,h,m.y);
-      if(!base.ok)continue;
-      const width=Math.max(14,Math.abs(side.x-base.x)*1.25);
-      const dx=(event.clientX-base.x)/width,dy=(event.clientY-clamp(event.clientY,Math.min(base.y,top.y),Math.max(base.y,top.y)))/width;
-      const d=dx*dx+dy*dy;if(d<score){score=d;best=m}
-    }
-    return best;
-  }
-  stage.addEventListener('pointerdown',e=>{
-    if(e.target.closest('button')||e.button!==0||drag||busy)return;
-    const ground=groundAt(e),mob=mode==='mobs'&&!placing?pickMob(e):null;
-    if(mob)select(mob.id,false);
-    drag={pid:e.pointerId,start:ground,screenX:e.clientX,screenY:e.clientY,mob,ox:mob?.x,oy:mob?.y,moved:false};
-    stage.setPointerCapture(e.pointerId);stage.classList.add('ed-drag');
-  });
-  function trackPointer(e){
-    if(!drag||e.pointerId!==drag.pid)return;
-    if(Math.hypot(e.clientX-drag.screenX,e.clientY-drag.screenY)>3)drag.moved=true;
-    if(!drag.moved||mode==='meteor')return;
-    const p=groundAt(e);
-    if(drag.mob){
-      const x=Math.round(drag.ox+p.x-drag.start.x),y=Math.round(drag.oy+p.y-drag.start.y);
-      drag.point={x,y};moveTo(UMAP.get(drag.mob.id),x,y);$('edX').value=x;$('edY').value=y;
-      updateRing(drag.point,!ArenaProject.canPlace(drag.mob,x,y));
-    }else{
-      focusAt(drawnX+drag.start.x-p.x,drawnY+drag.start.y-p.y);
-    }
-  }
-  stage.addEventListener('pointermove',trackPointer);
-  function finishPointer(e,accept){
-    if(!drag||drag.pid!==e.pointerId)return;
-    if(accept)trackPointer(e);
-    const movement=drag;drag=null;stage.classList.remove('ed-drag');
-    if(stage.hasPointerCapture(e.pointerId))stage.releasePointerCapture(e.pointerId);
-    if(mode==='meteor'&&accept){
-      stopTrial();aim=clampTo(hero,groundAt(e),700);updateRing();return;
-    }
-    if(placing&&accept&&!movement.moved){
-      const p=groundAt(e);
-      if(ArenaProject.canPlace(selectedMob(),Math.round(p.x),Math.round(p.y)))placing=false;
-      moveSpawn(Math.round(p.x),Math.round(p.y));return;
-    }
-    if(movement.mob){
-      moveTo(UMAP.get(movement.mob.id),movement.mob.x,movement.mob.y);
-      if(accept&&movement.point)moveSpawn(movement.point.x,movement.point.y);else inspect();
-    }
-  }
-  stage.addEventListener('pointerup',e=>finishPointer(e,true));
-  stage.addEventListener('pointercancel',e=>finishPointer(e,false));
-  stage.addEventListener('lostpointercapture',e=>finishPointer(e,false));
-  // HP and damage use the same displayed units as the in-game HUD.
-  function displayScale(key){return ['hp','dmg','baseDamage'].includes(key)?DS:1}
-  function field(container,key,title,range,action){
-    const label=document.createElement('label'),input=document.createElement('input');
-    label.textContent=title;input.id='ed-'+key;input.type='number';
-    const scale=displayScale(key);input.min=range[0]*scale;input.max=range[1]*scale;input.step='any';input.required=true;
-    input.onchange=()=>{
-      if(!input.value||!input.checkValidity()){input.reportValidity();notice('ตรวจสอบค่าที่กรอก','error');return}
-      action(input.valueAsNumber/scale);
-    };
-    label.append(input);$(container).append(label);
-  }
-  for(const [key,range] of Object.entries(ArenaProject.statRanges))
-    field('edStats',key,labels[key],range,v=>updateStat(key,v));
-  for(const [key,range] of Object.entries(ArenaProject.skillRanges))
-    field('edSkillStats',key,labels[key],range,v=>change(next=>{
-      if(v===ArenaProject.defaults[key])delete next.meteor[key];else next.meteor[key]=v;
-    }));
-  for(let i=0;i<3;i++)field('edCooldowns','cd'+i,'Lv. '+(i+1),ArenaProject.cooldownRange,v=>change(next=>{
-    const cd=next.meteor.cd||[...ArenaProject.defaults.cd];cd[i]=v;
-    if(cd.every((n,j)=>n===ArenaProject.defaults.cd[j]))delete next.meteor.cd;else next.meteor.cd=cd;
-  }));
-  function validInputs(){
-    for(const input of $(mode==='meteor'?'edSkillFields':'edMobFields').querySelectorAll('input')){
-      if(!input.value||!input.checkValidity()){input.reportValidity();input.focus();return false}
-    }
-    return true;
-  }
-  for(const id of ['edX','edY']){
-    const input=$(id);input.max=WORLD;input.required=true;
-    input.onchange=()=>{if(validInputs())moveSpawn($('edX').valueAsNumber,$('edY').valueAsNumber)};
-  }
-  function undo(){
-    const prev=history.pop();if(!prev)return;
-    if(seed!==prev.seed)prepareScene(prev.seed);
-    draft=prev.project;applyDraft();focusSelection();drawList();
-  }
-  function save(){
-    if(!validInputs())return;
-    try{
-      if(!readError&&JSON.stringify(ArenaProject.read())!==saved)throw Error('อีกหน้าต่างบันทึกแล้ว ส่งออกฉบับนี้แล้วเปิดใหม่');
-      ArenaProject.save(draft);saved=JSON.stringify(draft);readError=false;
-      notice('บันทึกแล้ว · แมตช์ Solo ถัดไปใช้ค่าชุดนี้');
-    }catch(error){notice(error.message,'error')}
-  }
-  function open(){
-    if(state!=='menu'||net.mode!=='solo'||!MoonfallLoading.isReady()||busy)return;
-    placing=false;zoom=1.3;$('edRank').value='1';previousView=view3D;view3D=true;history.length=0;mode='mobs';scope='instance';selected=null;readError=false;
-    try{draft=ArenaProject.read()}catch{draft=ArenaProject.published;readError=true}
-    saved=JSON.stringify(draft);draft=copy(draft);$('edSearch').value='';
-    enterEditor(draft.seed??WD.seed);
-  }
-  function enterEditor(worldSeed){
-    busy=true;$('edReturn').hidden=true;
-    try{
-      prepareScene(worldSeed);
-      let stale=false;
-      for(const [id,entry] of Object.entries(draft.spawns)){
-        const m=spawnById.get(Number(id));
-        if(!m||m.kind!==entry.kind){delete draft.spawns[id];stale=true}
-        else if(entry.position&&!ArenaProject.canPlace(m,...entry.position)){
-          delete entry.position;prune(draft,m);stale=true;
+      for(const {group,obj,x,y,rock} of moves){
+        obj.x=x;obj.y=y;
+        if(rock){rock.x=x;rock.y=y}
+        if(group==='boxes'||group==='items'){
+          const h=houseAt(obj),c=caveAt(obj);
+          if(h)obj.house=w.houses.indexOf(h);else delete obj.house;
+          if(c)obj.cave=w.caves.indexOf(c);else delete obj.cave;
         }
       }
-      showOnly(null);document.body.classList.add('ed-open');panel.hidden=false;$('gl').style.visibility='visible';
-      panel.dataset.panel='';applyDraft();focusSelection();drawList();
-      if(stale)notice('พบจุดเกิดเดิมที่ใช้กับแผนที่นี้ไม่ได้ ตรวจสอบฉบับแก้ไขก่อนบันทึก','dirty');
-      else if(readError)notice('อ่านไฟล์ในเครื่องไม่ได้ กำลังใช้ค่าจากเกม','error');
-      $('edMobs').focus({preventScroll:true});
-    }finally{busy=false}
+      if(chests.length)buildCollide(w);
+      w.authoredLayout=JSON.stringify(current.layout);
+    }
+    try{apply()}catch(error){if(strict)throw error;w.layoutIssue=error.message}
   }
-  function close(){
-    if(changed()&&!window.confirm(ArenaLanguage.text('ออกโดยทิ้งการแก้ไขที่ยังไม่บันทึกหรือไม่')))return;
-    stopTrial();removeRing();drag=null;history.length=0;panel.hidden=true;document.body.classList.remove('ed-open');
-    view3D=previousView;myId=0;ArenaProject.activate(ArenaProject.forMatch());
-    list.replaceChildren();spawnById=origins=hero=dummy=practice=aim=draft=null;
-    showMenu();$('arenaEditorBtn').focus({preventScroll:true});
-  }
-  function play(){
-    if(busy||!validInputs())return;
-    busy=true;
-    withLoading(()=>{
-      try{
-        stopTrial();removeRing();panel.hidden=true;document.body.classList.remove('ed-open');
-        const who=selected;
-        hostNewGame([{ctrl:'host',name:myName(),look:chosenLook}],seed,undefined,draft);
-        R3.sync();DROP.skip();
-        const player=ME(),mob=UMAP.get(who),start=nearSpot(mob,player.r+3,260);
-        moveTo(player,start.x,start.y);player.xs=SPX.indexOf(METEOR);player.xl=1;
-        R3.tx=player.x;R3.ty=player.y;R3.ly=R3.gY(player.x,player.y);
-        testing=true;enterPlay();$('edReturn').hidden=false;
-      }finally{busy=false}
-    });
-  }
-  function returnToEdit(){
-    if(!testing||busy)return;
-    testing=false;enterEditor(seed);
-  }
-  list.onclick=e=>{const b=e.target.closest('[data-id]');if(b)select(Number(b.dataset.id),true)};
-  function setZoom(factor){zoom=clamp(zoom*factor,.7,2.3);dirtyFrame=true}
-  $('edZoomIn').onclick=()=>setZoom(.82);$('edZoomOut').onclick=()=>setZoom(1/.82);
-  stage.addEventListener('wheel',e=>{e.preventDefault();setZoom(e.deltaY<0?.92:1/.92)},{passive:false});
-  $('edPlace').onclick=()=>{
-    placing=!placing;panel.dataset.panel='';inspect();notice();
-  };
-  $('edAimDummy').onclick=()=>{
-    stopTrial();aim={x:dummy.x,y:dummy.y};updateRing();panel.dataset.panel='';
-  };
-  $('edRank').onchange=()=>{
-    stopTrial();hero.xl=Number($('edRank').value);dummy.hp=dummy.maxHp;targetStats();updateRing();
-  };
-  $('edSearch').oninput=drawList;
-  $('edMap').onpointerdown=e=>{
-    if(mode!=='mobs')return;
-    const rect=e.currentTarget.getBoundingClientRect();
-    focusAt((e.clientX-rect.left)/rect.width*WORLD,(e.clientY-rect.top)/rect.height*WORLD);
-    panel.dataset.panel='';
-  };
-  $('edMobs').onclick=()=>setMode('mobs');$('edSkills').onclick=()=>setMode('meteor');
-  $('edInstance').onclick=()=>{scope='instance';inspect()};$('edKind').onclick=()=>{scope='kind';inspect()};
-  $('edFocus').onclick=focusSelection;$('edUndo').onclick=undo;$('edCast').onclick=castTrial;
-  $('edPlay').onclick=play;$('edReturn').onclick=returnToEdit;$('edClose').onclick=close;$('edSave').onclick=save;
-  $('edBrowse').onclick=()=>panel.dataset.panel=panel.dataset.panel==='list'?'':'list';
-  $('edInspect').onclick=()=>panel.dataset.panel=panel.dataset.panel==='inspector'?'':'inspector';
-  $('edDefaults').onclick=()=>{edit(copy(ArenaProject.published));notice()};
-  $('edExport').onclick=()=>{
-    if(!validInputs())return;
-    const url=URL.createObjectURL(new Blob([JSON.stringify(draft,null,2)+'\n'],{type:'application/json'}));
-    const a=document.createElement('a');a.href=url;a.download='arena-project.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
-  };
-  $('edImport').onclick=()=>$('edFile').click();
-  $('edFile').onchange=async e=>{
-    const file=e.target.files[0];e.target.value='';if(!file)return;
-    try{
-      if(file.size>1024*1024)throw Error('ไฟล์โปรเจกต์ใหญ่เกินไป');
-      const imported=ArenaProject.validate(JSON.parse(await file.text()));
-      if(state!=='editor')return;
-      edit(imported);notice('นำเข้าแล้ว · กดบันทึกเพื่อใช้ใน Solo','dirty');
-    }catch(error){notice(error instanceof SyntaxError?'อ่าน JSON ไม่สำเร็จ':error.message,'error')}
-  };
-  addEventListener('resize',()=>{dirtyFrame=true});
-  addEventListener('keydown',e=>{
-    if(state!=='editor')return;
-    if((e.ctrlKey||e.metaKey)&&e.code==='KeyS'){e.preventDefault();document.activeElement?.blur();save()}
-    if((e.ctrlKey||e.metaKey)&&e.code==='KeyZ'&&e.target.tagName!=='INPUT'){e.preventDefault();undo()}
-  });
-  return {open,frame,returnToEdit,get zoom(){return zoom},get testing(){return testing}};
+  return {storageKey:key,placeLayout,published,defaults,statRanges,skillRanges,cooldownRange,validate,read,forMatch,activate,definition,canPlace,place,placeSpawns};
 })();
 
 // ===================== SETTINGS: view + graphics quality =====================
@@ -13153,7 +12723,7 @@ window.installArenaMenuUX=function(){
     language.setAttribute('aria-label',nextLanguage==='en'?'Switch to English':'เปลี่ยนเป็นภาษาไทย');
     language.onclick=()=>ArenaLanguage.select(nextLanguage);
     const editor=make('button','arena-menu-tool','ตัวแก้ไขเกม');editor.id='arenaEditorBtn';editor.type='button';
-    editor.prepend(icon('control'));editor.onclick=()=>ArenaEditor.open();
+    editor.prepend(icon('control'));editor.onclick=()=>location.assign('editor.html'+(location.search.includes('lang=')?'?lang='+ArenaLanguage.language:''));
     utilities.append(open,forge,editor,language);menu.querySelector('.moonfall-play-actions').after(utilities);
 
     const dialog=make('dialog','arena-settings');dialog.id='arenaSettings';dialog.setAttribute('aria-labelledby','arenaSettingsTitle');
@@ -13324,12 +12894,12 @@ function arenaSkillDetails(me,i){
     if(!S)return {name:'สกิลพิเศษ',state:'ซื้อสกิลจากพ่อค้าในหมู่บ้าน'};
     const level=specialLevel(me),hit=S.k==='meteor'||S.k==='nova'?specialHitDamage(me,S.k):null;
     const notes={
-      blink:'วาร์ปทันทีในระยะ 520 หน่วย',
-      heal:'ฟื้นเลือด '+[28,36,44][level]+'% ใน 3 วิ และล้างสถานะช้า',
-      rage:'ตีเร็วขึ้น '+[35,45,55][level]+'% วิ่งเร็วขึ้น 30% และเพิ่มความเสียหาย 15% นาน 6 วิ',
-      meteor:'อุกกาบาตตกหลัง '+arenaSkillTime(METEOR.delay)+' และเผาศัตรู '+arenaSkillNumber((8+me.lvl)*specialScale(level))+' ต่อวิ',
-      ward:'ได้โล่ '+[22,30,38][level]+'% ของเลือดสูงสุด นาน 5 วิ',
-      nova:'ระเบิดรอบตัว ตรึงศัตรู 1.2 วิ และลดความเร็ว 40% นาน 2.2 วิ'
+      blink:'วาร์ปทันทีในระยะ '+SPECIAL_BY.blink.reach+' หน่วย',
+      heal:'ฟื้นเลือด '+Math.round(SPECIAL_BY.heal.heal[level]*100)+'% ใน '+SPECIAL_BY.heal.duration+' วิ และล้างสถานะช้า',
+      rage:'ตีเร็วขึ้น '+Math.round(SPECIAL_BY.rage.haste[level]*100)+'% วิ่งเร็วขึ้น 30% และเพิ่มความเสียหาย '+Math.round(SPECIAL_BY.rage.damageBonus*100)+'% นาน '+SPECIAL_BY.rage.duration+' วิ',
+      meteor:'อุกกาบาตตกหลัง '+arenaSkillTime(METEOR.delay)+' และเผาศัตรู '+arenaSkillNumber((METEOR.burn+me.lvl)*specialScale(level))+' ต่อวิ',
+      ward:'ได้โล่ '+Math.round(SPECIAL_BY.ward.shield[level]*100)+'% ของเลือดสูงสุด นาน '+SPECIAL_BY.ward.duration+' วิ',
+      nova:'ระเบิดรอบตัว ตรึงศัตรู '+SPECIAL_BY.nova.root+' วิ และลดความเร็ว '+Math.round(SPECIAL_BY.nova.slowAmt*100)+'% นาน '+SPECIAL_BY.nova.slow+' วิ'
     };
     return {name:S.n,level:level+1,state:me.xcd>0?'ฟื้นฟู '+arenaSkillTime(Math.ceil(me.xcd)):'พร้อมใช้',
       cooldown:S.cd[level],damage:hit==null?null:'เวท '+arenaSkillNumber(hit),note:notes[S.k]};
@@ -13933,7 +13503,6 @@ window.installArenaCombatControls=function(){
 moody=lsGet('ar_tone2','dark')==='dark';syncTone();installArenaMenuUX();
 
 installMoonfallInventory();installArenaHud();installArenaVitals();installArenaCombatControls();installMoonfallLoading();
-if(new URLSearchParams(location.search).get('editor')==='1')MoonfallLoading.whenReady.then(()=>ArenaEditor.open());
 
 </script>
 </body>

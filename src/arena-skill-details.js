@@ -96,12 +96,12 @@ function arenaSkillDetails(me,i){
     if(!S)return {name:'สกิลพิเศษ',state:'ซื้อสกิลจากพ่อค้าในหมู่บ้าน'};
     const level=specialLevel(me),hit=S.k==='meteor'||S.k==='nova'?specialHitDamage(me,S.k):null;
     const notes={
-      blink:'วาร์ปทันทีในระยะ 520 หน่วย',
-      heal:'ฟื้นเลือด '+[28,36,44][level]+'% ใน 3 วิ และล้างสถานะช้า',
-      rage:'ตีเร็วขึ้น '+[35,45,55][level]+'% วิ่งเร็วขึ้น 30% และเพิ่มความเสียหาย 15% นาน 6 วิ',
-      meteor:'อุกกาบาตตกหลัง '+arenaSkillTime(METEOR.delay)+' และเผาศัตรู '+arenaSkillNumber((8+me.lvl)*specialScale(level))+' ต่อวิ',
-      ward:'ได้โล่ '+[22,30,38][level]+'% ของเลือดสูงสุด นาน 5 วิ',
-      nova:'ระเบิดรอบตัว ตรึงศัตรู 1.2 วิ และลดความเร็ว 40% นาน 2.2 วิ'
+      blink:'วาร์ปทันทีในระยะ '+SPECIAL_BY.blink.reach+' หน่วย',
+      heal:'ฟื้นเลือด '+Math.round(SPECIAL_BY.heal.heal[level]*100)+'% ใน '+SPECIAL_BY.heal.duration+' วิ และล้างสถานะช้า',
+      rage:'ตีเร็วขึ้น '+Math.round(SPECIAL_BY.rage.haste[level]*100)+'% วิ่งเร็วขึ้น 30% และเพิ่มความเสียหาย '+Math.round(SPECIAL_BY.rage.damageBonus*100)+'% นาน '+SPECIAL_BY.rage.duration+' วิ',
+      meteor:'อุกกาบาตตกหลัง '+arenaSkillTime(METEOR.delay)+' และเผาศัตรู '+arenaSkillNumber((METEOR.burn+me.lvl)*specialScale(level))+' ต่อวิ',
+      ward:'ได้โล่ '+Math.round(SPECIAL_BY.ward.shield[level]*100)+'% ของเลือดสูงสุด นาน '+SPECIAL_BY.ward.duration+' วิ',
+      nova:'ระเบิดรอบตัว ตรึงศัตรู '+SPECIAL_BY.nova.root+' วิ และลดความเร็ว '+Math.round(SPECIAL_BY.nova.slowAmt*100)+'% นาน '+SPECIAL_BY.nova.slow+' วิ'
     };
     return {name:S.n,level:level+1,state:me.xcd>0?'ฟื้นฟู '+arenaSkillTime(Math.ceil(me.xcd)):'พร้อมใช้',
       cooldown:S.cd[level],damage:hit==null?null:'เวท '+arenaSkillNumber(hit),note:notes[S.k]};
