@@ -236,8 +236,9 @@ void main(){float t=vP.x,w=abs(vP.y),band=pow(.5+.5*sin((t*5.-uT*.42)*6.2832),8.
   let frost=null;const frostDom=()=>{if(frost||typeof document==='undefined')return frost;frost=document.createElement('div');
     frost.style.cssText='position:fixed;inset:0;z-index:6;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,#ffffff00 38%,#d8f0ffcc 80%,#ffffffee 100%);mix-blend-mode:screen';
     document.body.appendChild(frost);return frost};
-  const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);try{const F=WD&&WD.fort;if(this.fortStair)this.fortStairStep(Math.min(.1,Math.max(0,dt||0)),typeof state!=='undefined'&&state==='play'?L:null);
-      if(!F||!L||typeof state==='undefined'||state!=='play')return r;
+  P.clearFortFrost=function(){this._fortFr=0;if(frost)frost.style.opacity=0};
+  const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);try{const F=WD&&WD.fort;if(this.fortStair)this.fortStairStep(Math.min(.1,Math.max(0,dt||0)),arenaInCombat()?L:null);
+      if(!F||!L||!arenaInCombat())return r;
       const inF=fortIn(L.x,L.y,-120)&&fortBase(L.x,L.y)>FORT_P-1;if(inF&&!this._inFort&&typeof gameT!=='undefined'&&gameT>3)announce={txt:'❄️ '+F.name+' — ราชินีหิมะรอผู้กล้าอยู่หน้าประตูปราสาทผลึก',t:3.4};this._inFort=inF;
       const near=Math.hypot(L.x-F.x,L.y-F.y)<4200;
       if(near&&dt>0){for(const b of F.braziers){if(Math.random()>dt*9)continue;const y=this.gY(b.x,b.y)+92;this.sp(true,{x:b.x+(Math.random()-.5)*16,y,z:b.y+(Math.random()-.5)*16,vy:60+Math.random()*60,l:.7,s:22,s1:4,c:'#bff2ff',c2:'#3a8ad8',sp:1})}}

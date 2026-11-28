@@ -23,6 +23,7 @@ let last=performance.now(),perfHost=0;
 function loop(now){
   const dt=Math.min(.05,(now-last)/1000);last=now;
   if(ARX&&state==='editor')ArenaEditor.frame(dt);
+  else if(ARX&&state==='bossTrial')ArenaBossTrial.frame(dt);
   else if(state==='play'&&WD){
     if(!window.__pause&&(!(H>W*1.05)||net.mode!=='solo')){
       const t0=performance.now();

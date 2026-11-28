@@ -244,13 +244,13 @@ radiance*=regIbl;
     if(R.sun){R.sun.color.lerp(A.sun,.32*(.35+.65*A.dk));R.sun.intensity*=A.sk}
     if(R.bloom)R.bloom.strength*=A.bl}
   function hookScene(R){const sc=R.scene;if(!sc||sc._reg)return;sc._reg=1;const ob=sc.onBeforeRender;
-    sc.onBeforeRender=function(){if(S.done!==S.frame&&typeof state!=='undefined'&&state==='play'){S.done=S.frame;try{applyLight(R)}catch(e){warn('light',e)}}
+    sc.onBeforeRender=function(){if(S.done!==S.frame&&playing()){S.done=S.frame;try{applyLight(R)}catch(e){warn('light',e)}}
       if(ob)return ob.apply(this,arguments)}}
   // ground mist and aerial haze of the depth grade follow the land (the pass resets them every frame: read through a getter)
   function hookGrade(R){const g=R.dgrade,u=g&&g.mat&&g.mat.uniforms;if(!u||u._reg)return;u._reg=1;
     const wrap=(name,f)=>{const q=u[name];if(!q)return;let base=q.value;Object.defineProperty(q,'value',{configurable:true,get(){return base*f()},set(v){base=v}})};
     wrap('uMist',()=>playing()?S.mist:1);wrap('uAP',()=>playing()?S.ap:1)}
-  const playing=()=>typeof state!=='undefined'&&state==='play';
+  const playing=arenaInCombat;
   // the colour grade itself: saturation, contrast, lift/gain tints and a vignette, right before bloom (high quality post only)
   const GVS='varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}';
   const GFS=`precision highp float;varying vec2 vUv;uniform sampler2D tColor;uniform vec4 uG;uniform vec3 uLift,uGain;uniform vec2 uAsp;
@@ -331,10 +331,10 @@ void main(){vec2 d=gl_PointCoord-.5;float r=length(d)*2.;if(r>1.)discard;float a
   // the menu's sound credits: these tracks are original, made in code for this game (src/tools/region-music.py)
   try{const cl=document.getElementById('credList');if(cl&&MUS)cl.insertAdjacentHTML('beforeend','<h4>เพลงประจำดินแดน</h4><div><b>Fallen Kingdom · Cursed Forest · Frozen Sanctuary · Ashen Wastes · The Abyss และเสียงบรรยากาศของแต่ละดินแดน</b> — แต่งและสังเคราะห์ด้วยโค้ดสำหรับเกมนี้ <small>(ต้นฉบับ)</small></div>')}catch(e){}
   if(MUS&&typeof AU!=='undefined'&&AU.setMusic){const _sm=AU.setMusic;
-    AU.setMusic=function(m){try{if(state==='play'&&!this.inCave&&(m==='day'||(m==='night'&&S.aud!==0))){const r=TRK[S.aud];if(r&&!failed(r))m=r}}catch(e){}return _sm.call(this,m)}}
+    AU.setMusic=function(m){try{if(playing()&&!this.inCave&&(m==='day'||(m==='night'&&S.aud!==0))){const r=TRK[S.aud];if(r&&!failed(r))m=r}}catch(e){}return _sm.call(this,m)}}
   // the ambience follows the land whether or not the land music is on (it replaces the old wind loop)
   if(typeof AU!=='undefined'&&AU.setAmb){const _sa=AU.setAmb;
-    AU.setAmb=function(a){try{if(state==='play'&&this.mode!==2&&(a==='wind'||(a===null&&!this.inCave&&!gameOver))){const r=ambFor(S.aud);if(r&&!failed(r))a=r}}catch(e){}return _sa.call(this,a)}}
+    AU.setAmb=function(a){try{if(playing()&&this.mode!==2&&(a==='wind'||(a===null&&!this.inCave&&!gameOver))){const r=ambFor(S.aud);if(r&&!failed(r))a=r}}catch(e){}return _sa.call(this,a)}}
   // which land the music follows: the one clearly underfoot for a moment (no flapping on the borders)
   function audioLand(L,dt){let b=0;for(let i=1;i<5;i++)if(S.w[i]>S.w[b])b=i;
     if(S.fresh){S.fresh=0;if(b!==S.aud){S.aud=b;S.domT=0;if(typeof AU!=='undefined')AU.mt=0}}   // a new match: start on the land underfoot
@@ -444,7 +444,7 @@ void main(){vec4 t=texture2D(map,vUv);vec3 nt=t.rgb*2.-1.;float h=t.a*1.25-1.;
       if(R.sun&&R.sun.target)fpSun(FP.U.uSun.value,fpV.copy(R.sun.position).sub(R.sun.target.position))}}
   // ---------------- per frame ----------------
   const _fx=P.fxExtra;P.fxExtra=function(Tm,dt,me,L){const r=_fx.apply(this,arguments);
-    try{if(L&&typeof state!=='undefined'&&state==='play'){dt=Math.min(.1,Math.max(0,dt||0));S.t=(S.t+dt)%3600;atmosphere(this,L,dt);weather(this,L,dt);audioLand(L,dt);footprints(this,L,dt)}}catch(e){warn('frame',e)}return r};
+    try{if(L&&playing()){dt=Math.min(.1,Math.max(0,dt||0));S.t=(S.t+dt)%3600;atmosphere(this,L,dt);weather(this,L,dt);audioLand(L,dt);footprints(this,L,dt)}}catch(e){warn('frame',e)}return r};
   const _ds=P.disposeScene;if(_ds)P.disposeScene=function(){S.fresh=1;try{if(S.lay)for(const l of S.lay){if(l.pts.parent)l.pts.parent.remove(l.pts);l.pts.geometry.dispose();l.m.dispose()}S.lay=null;
       if(RM.tex){RM.tex.dispose();RM.tex=null;U.uRegMap.value=null}if(RM.snow){RM.snow.dispose();RM.snow=null;RM.deep=null;U.uSnowMap.value=null}
       if(FP.mesh){if(FP.mesh.parent)FP.mesh.parent.remove(FP.mesh);FP.mesh.dispose();FP.mesh.geometry.dispose();FP.mesh.material.dispose();FP.mesh=null}FP.last.clear()}catch(e){}return _ds.apply(this,arguments)};

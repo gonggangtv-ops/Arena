@@ -8,6 +8,8 @@
 
 ## มีอะไรใหม่
 
+- **ทดลองเล่นเป็นบอส** เปิดจากเมนูหลัก เลือกราชินีหิมะ จอมราชันย์สุริยคราส หรือไททันลาวาบรรพกาล แล้วสู้กับผู้ท้าชิงสามคนได้ทันที สองบอสแรกเลือกเฟส I–III ได้ เดินด้วย WASD หรือลูกศร กด J หรือ Space เพื่อโจมตี และใช้ปุ่มที่กำกับบนสกิล บนมือถือใช้จอยซ้ายกับปุ่มสกิลขวา แตะผู้ท้าชิงเพื่อเลือกเป้า ใน World Editor เลือกตัวบอสแล้วกด **ทดลองเล่นเป็นบอส** เพื่อใช้ค่าฉบับร่าง
+
 - **จุดเกิดใน World Editor** กล่องสมบัติสุ่มตำแหน่งใหม่ทุกแมตช์ได้แม้ล็อกแผนที่ เพิ่มมอนสเตอร์จากต้นแบบ ตั้งชื่อ จำนวน และค่าสเตตัส แล้วเข้าแมตช์ทดสอบได้ทันที
 
 - **World Editor** มีหน้า `editor.html` พร้อมรหัสผู้ดูแล ย้ายวัตถุบนแผนที่ ปรับฮีโร่ อาวุธ สกิลอาวุธทั้ง 81 สกิล พ่อค้า แสง เสียง และกติกา แล้วลองเล่นด้วยค่าที่แก้ได้ [เปิด World Editor](https://gonggangtv-ops.github.io/Arena/editor.html)
@@ -166,6 +168,10 @@ cp src/index.html app/src/main/assets/index.html
 ```sh
 python3 -c "import getpass, subprocess; subprocess.run(['node','src/tools/pack-editor.mjs','--set-password'], input=getpass.getpass('New editor passphrase (12+ characters): '), text=True, check=True)"
 ```
+
+## พรีวิวบน Cloudflare Workers
+
+Workers Builds ของ Worker `arena` ใช้รากของ repo และคำสั่งพรีวิว `npx wrangler preview` ไฟล์ `wrangler.json` ชี้ไปยังเกมและทรัพยากรที่ build ไว้ใน `app/src/main/assets` จึงเว้นช่อง Build command ได้
 
 ## เล่นออนไลน์บนเว็บ (GitHub Pages)
 1. อัปโหลดไฟล์ทั้งหมดในโฟลเดอร์นี้ขึ้น branch `main` (รวมโฟลเดอร์ `.github`)

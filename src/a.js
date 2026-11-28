@@ -284,9 +284,9 @@ const AU={ctx:null,mode:lsGet('ar_mute','0')==='1'?2:(+lsGet('ar_snd','0')||0), 
   setAmb(a){if(a===this.ambCur)return;if(this.ambCur)this.fade(this.ambCur,0);this.ambCur=a;if(a)this.fade(a,AMB_VOL[a]??.5)},
   gesture(){for(const k in this.trk){const T=this.trk[k];if(T.pend&&(k===this.musCur||k===this.ambCur)){T.pend=false;const p=T.el.play();if(p&&p.catch)p.catch(()=>{T.pend=true})}}},
   pickMusic(){if(!this.ctx)return;let m='menu',a=null;
-    if(state==='play'&&WD){const me=ME(),L=listener();
+    if(arenaInCombat()&&WD){const me=ME(),L=listener();
       if(me&&!me.dead&&L){for(const u of units){if(!u.hero||u===me||u.dead||!isEnemy(me,u)||Math.abs(u.x-me.x)>700||Math.abs(u.y-me.y)>700)continue;if(dist(u,me)<650){this.combatT=gameT;break}}}
-      const fin=zone&&(zone.ph>=6||alive<=4),hot=gameT-this.combatT<10||battleHeat()>=1;
+      const fin=state==='play'&&zone&&(zone.ph>=6||alive<=4),hot=gameT-this.combatT<10||battleHeat()>=1;
       m=gameOver?null:fin?'final':isNight()?'night':hot?'battle':'day';
       if(this.inCave){a='cave';if(m==='day')m=null}else a=isNight()||gameOver?null:'wind'}
     this.setMusic(m);this.setAmb(this.mode===2?null:a)},

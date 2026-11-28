@@ -167,6 +167,19 @@ def run(browser, url, pictures, password, gate):
     fill('#ed-leash', 800)
     click('#edUndo')
     assert page.locator('#ed-leash').input_value() == '680'
+    # Possess this edited instance before saving it, then return to the same draft.
+    stored=page.evaluate('localStorage.getItem(ArenaProject.storageKey)')
+    click('#edBossTrial')
+    assert page.locator('#btForm input:checked').input_value()=='snowqueen'
+    page.locator('#btPhase').select_option('0')
+    click('#btForm button[type=submit]')
+    page.wait_for_function("state==='bossTrial'&&$('loading').classList.contains('hidden')",polling=100)
+    assert page.evaluate("ME().id===WD.fort.queen && ME().maxHp===31000 && ME().atkDmg===184")
+    assert page.evaluate("[ME().x,ME().y]")==pos
+    click('#btLeave')
+    page.wait_for_function("state==='editor'&&!$('arenaEditor').hidden",polling=100)
+    assert page.locator('#ed-hp').input_value()=='310000'
+    assert page.evaluate('localStorage.getItem(ArenaProject.storageKey)')==stored
     page.evaluate('ArenaEditor.frame(1/30)')
     photo('MuzCruor-editor-monsters.png')
     click('#edLibraryBtn')

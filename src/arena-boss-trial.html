@@ -1,0 +1,26 @@
+<dialog id="bossTrialPicker" class="bt-dialog" aria-labelledby="btPickerTitle">
+  <header><h2 id="btPickerTitle">ทดลองเล่นเป็นบอส</h2><button type="button" class="bt-close" id="btCancel" aria-label="ปิด">×</button></header>
+  <form id="btForm">
+    <fieldset class="bt-roster"><legend>เลือกบอส</legend>
+      <label class="bt-card bt-ice"><input type="radio" name="trialBoss" value="snowqueen" checked>
+        <span class="bt-portrait"></span><strong>ราชินีหิมะ</strong><span>ปราสาทน้ำแข็ง</span></label>
+      <label class="bt-card bt-eclipse"><input type="radio" name="trialBoss" value="overlord">
+        <span class="bt-portrait"></span><strong>จอมราชันย์สุริยคราส</strong><span>แท่นบูชาสุริยคราส</span></label>
+      <label class="bt-card bt-lava"><input type="radio" name="trialBoss" value="boss">
+        <span class="bt-portrait"></span><strong>ไททันลาวาบรรพกาล</strong><span>ป้อมปราการ</span></label>
+    </fieldset>
+    <div class="bt-options"><label id="btPhaseField">เฟสเริ่มต้น<select id="btPhase"><option value="0">I</option><option value="1">II</option><option value="2" selected>III</option></select></label>
+      <p id="btKit"></p></div>
+    <p class="bt-help">เดินด้วย WASD หรือจอย · แตะผู้ท้าชิงเพื่อเลือกเป้าหมาย</p>
+    <footer><span id="btPickerNote" role="status">ต่อสู้กับผู้ท้าชิง 3 คน</span><button class="bt-gold" type="submit">เริ่มทดลอง</button></footer>
+  </form>
+</dialog>
+<section id="bossTrialHud" aria-label="สนามทดลองบอส" hidden>
+  <div class="bt-status"><strong id="btName"></strong><span id="btPhaseNow"></span><progress id="btHp" aria-label="พลังชีวิตบอส" max="1" value="1"></progress>
+    <small id="btHpText"></small><small id="btRemaining"></small></div>
+  <nav class="bt-nav"><button type="button" id="btPick">เลือกบอส</button><button type="button" id="btLeave">กลับเมนู</button></nav>
+  <div id="btStick" aria-label="จอยเคลื่อนที่"><span></span></div>
+  <i id="btAimMark" aria-hidden="true" hidden></i>
+  <div class="bt-deck"><span id="btTarget"></span><div id="btActions" role="group" aria-label="ท่าของบอส"></div></div>
+  <div id="btResult" hidden><strong id="btOutcome" role="status"></strong><button id="btRetry" class="bt-gold" type="button">ทดลองอีกครั้ง</button></div>
+</section>

@@ -147,7 +147,7 @@ DROP.ui();
 {const _cs2=clientStart2;clientStart2=function(d){DROP.readyMe=false;return _cs2.apply(this,arguments)}}
 // ---------------------------------------------------------------- 3D: the fall ----------------------------------------------------------------
 if(typeof R3!=='undefined'&&typeof THREE!=='undefined'){const R=R3;
-  {const _fr=R.frame;R.frame=function(dt){this.camK=state==='editor'?ArenaEditor.zoom:DROP.camK();return _fr.apply(this,arguments)}}
+  {const _fr=R.frame;R.frame=function(dt){this.camK=state==='editor'?ArenaEditor.zoom:state==='bossTrial'?1.35:DROP.camK();return _fr.apply(this,arguments)}}
   {const _qa=R.qnAnim;R.qnAnim=function(o,u,Tm,dt,mv){const r=_qa.apply(this,arguments);try{if(u&&u.hero&&DROP.fall)dropFallBody(this,o,u,dt)}catch(e){}return r}}
   function dropFallBody(R,o,u,dt){const f=DROP.fall,q=f.L.get(u.id);if(!q)return;const k=(DROP.now()-f.t0-q.d)/f.F;if(k<0||!o.body)return;
     if(k<1){const hh=DROP.H0*(1-k)*(1-k);o.body.position.y+=hh;o.body.rotation.x+=.35*(1-k);

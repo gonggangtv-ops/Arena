@@ -43,7 +43,7 @@ R.eclSkModel=function(o,u,M){const a=CA().get(M.key),model=AR_GLTF.SkeletonUtils
   model.traverse(n=>{if(n.isMesh){n.castShadow=!!this.hi;n.receiveShadow=true;n.frustumCulled=false;if(this.fow){const paint=src=>this.cached('ecl-sk-'+src.uuid,()=>{const m=src.clone();if(m.isMeshStandardMaterial){m.envMap=this.envTex||null;m.envMapIntensity=.5}return this.fow(m,{key:'ecl-sk'})});n.material=Array.isArray(n.material)?n.material.map(paint):paint(n.material)}}});
   o.sk=1;o.mixer=new T.AnimationMixer(model);o.act={};const clips=eclClips(a,u.ecl);for(const k in clips)if(clips[k])o.act[k]=o.mixer.clipAction(clips[k]);
   o.hand=null;model.traverse(n=>{if(n.isBone&&/^(mixamorig[:_]?)?RightHand$/i.test(n.name))o.hand=n});o.pivot=pivot;try{this.eclArm(o)}catch(e){o.wpnPending=0}
-  if(o.act.idle)o.act.idle.play();if(o.act.walk){o.act.walk.play();o.act.walk.setEffectiveWeight(0)}(this._eclSk||(this._eclSk=new Set())).add(o);return pivot};
+  if(o.act.idle)o.act.idle.play();if(o.act.walk){o.act.walk.play();o.act.walk.setEffectiveWeight(0)}return pivot};
 // the creatures were generated empty-handed: they carry the legendary weapon models in the rigged right hand
 const ECW={overlord:{lg:1,len:.62},sentinel:{lg:2,len:.72},construct:{lg:3,len:.62},
   queen:{key:'frost-scepter',grip:.36,len:.66,c:'#bfeaff',p:[-.0129,.08,-.0092],d:[-.285,.172,.943]}};   // Mixamo hand: palm centre and fist axis (the Mage's)
@@ -123,13 +123,14 @@ let D=null;const dom=()=>{if(D)return D;const st=document.createElement('style')
   const b=document.createElement('div');b.id='eclBoss';b.innerHTML='<div class="n"></div><div class="bar"><div class="u"></div><div class="lag"></div><div class="f"></div><div class="m" style="left:70%"></div><div class="m" style="left:35%"></div><div class="x"></div></div>';
   const dk=document.createElement('div');dk.id='eclDark';const fl=document.createElement('div');fl.id='eclFlash';document.body.append(dk,fl,b);
   D={b,n:b.querySelector('.n'),f:b.querySelector('.f'),lag:b.querySelector('.lag'),u:b.querySelector('.u'),x:b.querySelector('.x'),ms:[...b.querySelectorAll('.m')],dk,fl};return D};
+R.clearEncounterScreen=function(){if(!D)return;D.b.style.opacity=D.dk.style.opacity=D.fl.style.opacity=0;this._eclDk=0;this._eclBossShown=false};
 R.eclFlash=function(c,a){if(typeof document==='undefined')return;const d=dom();d.fl.style.transition='none';d.fl.style.background=c;d.fl.style.opacity=a;requestAnimationFrame(()=>{d.fl.style.transition='opacity .9s';d.fl.style.opacity=0})};
 const BOSSUI={overlord:{t:'☾ CELESTIAL OVERLORD',ph:['PHASE I','PHASE II · ECLIPSE','PHASE III · TOTALITY'],bg:'linear-gradient(90deg,#5a3ad8,#9fb8ff)'},
   // the Snow Queen (owner 2026-11-23): three health bars, one per phase; each bar its own colour, the next one shows dimmed beneath it
   queen:{t:'❄ SNOW QUEEN · ราชินีหิมะ',ph:['PHASE I','PHASE II · BLIZZARD','PHASE III · ETERNAL WINTER'],bg:'linear-gradient(90deg,#3a8ad8,#e8f6ff)',bars:3,
     bgs:['linear-gradient(90deg,#3a8ad8,#e8f6ff)','linear-gradient(90deg,#6a4ae0,#d8d2ff)','linear-gradient(90deg,#0fb8d0,#f4feff)']}};
 R.eclHud=function(me,L,dt){const F=me||L;if(!F||typeof document==='undefined')return;let b=null,bd=1e9;const cl=typeof net!=='undefined'&&net.mode==='client';for(const u of units){if(!BOSSUI[u.ecl]||u.dead||(cl&&!u.inSnap))continue;const d=Math.hypot(u.x-F.x,u.y-F.y);if(d<bd){bd=d;b=u}}
-  const show=!!b&&bd<1600&&(b.hp<b.maxHp-1||bd<720);this._eclBossShown=show;if(!show&&!D)return;const d=dom();d.b.style.opacity=show?1:0;
+  const show=state!=='bossTrial'&&!!b&&bd<1600&&(b.hp<b.maxHp-1||bd<720);this._eclBossShown=show;if(!show&&!D&&!(state==='bossTrial'&&b))return;const d=dom();d.b.style.opacity=show?1:0;
   if(show){const U=BOSSUI[b.ecl],r=Math.max(0,b.hp/b.maxHp);let ph,w,t,bg=U.bg,nb=0;
     if(U.bars){const B=b.maxHp/U.bars;nb=Math.max(1,Math.ceil(b.hp/B-1e-6));ph=Math.min(U.bars-1,U.bars-nb);const cur=Math.max(0,b.hp-(nb-1)*B);
       w=(Math.min(1,cur/B)*100).toFixed(1)+'%';bg=U.bgs[ph];t=U.t+' <b>· '+U.ph[ph]+'</b> · '+fmtN(cur)+' / '+fmtN(B)}

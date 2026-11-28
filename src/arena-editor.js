@@ -95,6 +95,7 @@ const ArenaEditor=window.ArenaEditor=(()=>{
     press('edSkills',skill);press('edMobs',!skill);
     press('edInstance',scope==='instance');press('edKind',scope==='kind');
     $('edMobFields').hidden=skill;$('edSkillFields').hidden=!skill;
+    $('edBossTrial').hidden=skill||!isBoss(m);
     $('edObjects').hidden=skill;$('edRange').hidden=!skill;
     $('edBrowse').textContent=skill?'สนามทดสอบ':'วัตถุในฉาก';
     press('edPlace',placing);stage.classList.toggle('ed-aim',skill||placing);
@@ -473,6 +474,13 @@ const ArenaEditor=window.ArenaEditor=(()=>{
   $('edMobs').onclick=()=>setMode('mobs');$('edSkills').onclick=()=>setMode('meteor');
   $('edInstance').onclick=()=>{scope='instance';inspect()};$('edKind').onclick=()=>{scope='kind';inspect()};
   $('edFocus').onclick=focusSelection;$('edUndo').onclick=undo;$('edCast').onclick=castTrial;
+  $('edBossTrial').onclick=()=>{
+    if(busy||!validInputs())return;
+    const m=selectedMob();
+    ArenaBossTrial.open({kind:m.kind,actorId:m.id,seed,project:draft,enter(){
+      stopTrial();removeRing();panel.hidden=true;document.body.classList.remove('ed-open');
+    },exit(){enterEditor(seed)}});
+  };
   $('edPlay').onclick=()=>play();$('edReturn').onclick=returnToEdit;$('edClose').onclick=close;$('edSave').onclick=save;
   $('edBrowse').onclick=()=>panel.dataset.panel=panel.dataset.panel==='list'?'':'list';
   $('edInspect').onclick=()=>panel.dataset.panel=panel.dataset.panel==='inspector'?'':'inspector';
